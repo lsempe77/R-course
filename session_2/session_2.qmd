@@ -1,0 +1,59 @@
+---
+title: "Learning R"
+subtitle: "Session 2: Data Manipulation in R"
+format: 
+  revealjs:
+    theme: [clean.scss]
+    transition: slide
+    highlight-style: github
+    code-copy: true
+    auto-stretch: false
+    fig-dpi: 300
+---
+
+# Part A: Exploring and Cleaning Data
+
+In this session we will learn how to examine and clean our data in R.
+
+First, we need some packages to be loaded in. You can install the core packages from the `tidyverse` by simply typing `install.packages("tidyverse")` in the console.
+
+```{r}
+#| echo: true
+#| eval: false
+
+
+# Install the packages if needed
+# You only need to install a package once per device
+install.packages("tidyverse", "dplyr")
+
+# Load the packages
+library(tidyverse)
+library(dplyr)
+
+```
+
+## Introduction to tidyverse
+
+The Tidyverse is a collection of R packages that can help you import, clean, and understand data.
+
+Tidyverse documentation:
+
+Tidyverse tools use pipes and tibbles to make R code more human readable. The pipe, %\>%, allows the output of one command to be used as an input in the next command, which is cleaner than using nested functions.
+
+\*note: shortcut to write the pipe command is SHIFT+command+M
+
+## Data filtering and selection using dplyr
+
+## Sorting and arranging data
+
+## Creating new variables with mutate()
+
+# Part B: Exploring Data {.section}
+
+## Grouping data with group_by()
+
+## Summarizing data with summarize()
+
+## Joining datasets
+
+## Handling missing values
