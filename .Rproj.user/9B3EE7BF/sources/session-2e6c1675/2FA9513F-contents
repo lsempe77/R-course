@@ -1,0 +1,474 @@
+---
+title: "Learning R"
+subtitle: "Session 1: Foundations of R Programming"
+format: 
+  revealjs:
+    theme: [clean.scss]
+    transition: slide
+    highlight-style: github
+    code-copy: true
+    auto-stretch: false
+    fig-dpi: 300
+---
+
+# Part A: Getting Started with R {.section}
+
+## Welcome to R!
+
+R is a powerful programming language for:
+
+-   Statistical computing
+-   Data analysis
+-   Data visualization
+-   Machine learning
+
+## Let's install R!
+
+![](install.png){.absolute top=160 left=0 width="100%" height="auto"}
+
+
+
+**For downloading R: https://cran.r-project.org/mirrors.html** 
+
+
+## Let's install R Studio!
+
+
+![](studio.png){.absolute top=160 left=0 width="100%" height="auto"}
+
+**For downloading R Studio:** https://posit.co/products/open-source/rstudio/
+
+## RStudio Interface
+
+![](console.png){.absolute top=50 left=0 width="100%" height="auto"}
+
+::: {.absolute top=400 left=0 style="font-size: 90%;"}
+
+::: incremental
+
+- Script Editor (top-left) 
+- Console (bottom-left) 
+- Environment (top-right) 
+- Files/Plots/Help (bottom-right)
+- **See this video for a how to: [R Studio](https://alexd106.github.io/intro2R/howto.html#rstudio-vid)**
+:::
+
+::: 
+
+## Creating Your First Project
+
+::: incremental
+1.  File → New Project
+2.  Choose Directory Location
+3.  Name Your Project
+4.  Click "Create Project"
+:::
+
+::: {.fragment}
+
+
+::: callout-tip
+
+**See this video for a how to: [R Studio Project](https://alexd106.github.io/intro2R/howto.html#rstudio_proj-vid)**
+
+Projects help organize your work and make it reproducible!
+:::
+
+:::
+
+## Data Types
+
+::: {.compact-text}
+
+Let's understand data types:
+:::
+
+**Numeric**
+```{r}
+#| echo: true
+
+x <- 42
+class(x)
+
+```
+
+**Character**
+```{r}
+#| echo: true
+
+name <- "UAE"
+class(name)
+
+```
+
+**Logical**
+```{r}
+#| echo: true
+
+is_fun <- TRUE
+class(is_fun)
+
+```
+
+
+## 🔨 Practice Time!
+
+Try these exercises in your console:
+
+1.  Create a numeric variable called `Time_to_travel_home` with the time you spend travelling
+2.  Create a character variable `Where_do_I_work`
+3.  Create a logical variable `Learning_impact_evaluation`
+4.  Use `class()` to check their types
+
+## 🔨 Results
+
+```{r}
+#| eval: false
+#| echo: true
+
+
+Time_to_travel_home <- 
+Where_do_I_work <- 
+Learning_impact_evaluation <- 
+  
+```
+
+::: {.fragment}
+
+::: callout-warning
+
+Watch out for this common mistakes!
+
+```{r}
+#| eval: false
+#| echo: true
+
+
+Time to travel home <- 45
+
+Where do I work == ADEO 
+
+Learning-impact-evaluation <- TRUE  
+
+```
+::: 
+:::
+
+# Part B: Working with Data {.section}
+
+## Vectors in R
+
+Vectors are one-dimensional arrays:
+
+```{r}
+#| echo: true
+
+# Creating vectors
+numbers <- c(1, 2, 3, 4, 5)
+
+gulf_countries <- c("UAE", "Saudi Arabia", "Oman")
+
+logical_values <- c(TRUE, FALSE, TRUE)
+
+```
+
+::: {.fragment}
+
+::: callout-important
+
+Try this vector operations!
+
+```{r}
+#| eval: false
+#| echo: true
+
+numbers + 2
+
+numbers * 2
+
+gulf_countries  * 2
+
+```
+
+:::
+:::
+
+## 🔨 Practice Time: Vectors
+
+Create these vectors and perform operations:
+
+```{r}
+#| eval: false
+#| echo: true
+
+# Create a vector of 5 numbers
+numbers <- 
+
+# Create a vector of 3 cities in UAE
+cities <- 
+
+# Multiple your vector with numbers by 10
+  
+```
+
+## Built-in Functions (1)
+
+R has many useful built-in functions:
+
+```{r}
+#| echo: true
+
+# Statistical functions
+numbers <- c(1, 2, 3, 4, 5)
+mean(numbers)
+sum(numbers)
+max(numbers)
+min(numbers)
+```
+
+## Built-in Functions (2)
+
+```{r}
+#| echo: true
+
+# Character functions
+text <- "United Arab Emirates"
+toupper(text)
+nchar(text)
+
+```
+
+## Getting Help in R
+
+Three ways to get help:
+
+1.  Use `?` before function name:
+
+```{r}
+#| eval: false
+#| echo: true
+
+
+?mean
+
+```
+
+2.  Use `help()`:
+
+```{r}
+#| eval: false
+#| echo: true
+
+help(sum)
+
+```
+
+3.  Use examples:
+
+```{r}
+#| eval: false
+#| echo: true
+
+example(max)
+
+```
+
+## Installing Packages
+
+Packages extend R's functionality:
+
+```{r}
+#| echo: true
+#| eval: false
+
+
+# Install a package
+install.packages("tidyverse")
+
+# Load a package
+library(tidyverse)
+
+```
+
+::: fragment
+
+::: callout-warning
+Run `install.packages()` once per computer Run `library()` in each new session
+:::
+
+:::
+
+# Part C: Working with Data Frames {.section}
+
+## Creating Data Frames
+
+Data frames are 2-dimensional data structures:
+
+```{r}
+#| echo: true
+
+# Create a simple data frame
+df <- data.frame(
+  emirate = c("Abu Dhabi", "Dubai", "Ajman", "Fujairah","Sharjah","Ras Al Khaimah","Umm Al Quwain"),
+  area = c(67340,259,4114,1450,1684,2590,720),
+  international_airport = c(TRUE, TRUE, FALSE, TRUE, TRUE, FALSE, FALSE)
+)
+```
+
+
+::: {.fragment}
+
+Let's see the dataframe:
+
+```{r}
+#| echo: true
+
+# View the data frame
+df
+
+```
+
+:::
+
+## Reading Data into R
+
+If we want to import real data:
+
+```{r}
+#| eval: false
+#| echo: true
+
+
+# Read CSV file
+
+data <- read.csv("your_file.csv")
+
+# Read tab-delimited file
+data <- read.table("your_file.txt", 
+                   header = TRUE, 
+                   sep = "\t")
+
+# Read excel file
+library(readxl)
+data <- read_excel("your_file.xlsx")
+
+
+```
+
+## 🔨 Practice Time: Reading Data
+
+Download and read the iris dataset:
+
+```{r}
+#| echo: true
+
+# Built-in dataset
+data(iris)
+
+variable.names(iris)
+
+```
+
+::: {.fragment}
+```{r}
+#| echo: true
+
+iris
+
+```
+:::
+## Basic Data Inspection (1)
+
+```{r}
+#| echo: true
+
+# First few rows
+head(iris)
+```
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+# Last few rows
+tail(iris)
+
+```
+
+:::
+## Basic Data Inspection (2)
+
+Essential functions for data exploration:
+
+```{r}
+#| echo: true
+
+# Structure of the data
+str(iris)
+
+```
+
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+# Statistical summary
+summary(iris)
+
+```
+
+:::
+
+## Creating columns
+
+```{r}
+#| echo: true
+
+iris$sepal.area <- iris$Sepal.Length *  iris$Sepal.Width
+
+mean(iris$sepal.area)
+
+```
+
+## Final Exercise
+
+Create a complete analysis:
+
+1.  Create a new script file
+2.  Load the mtcars dataset
+3.  Calculate mean of the first 3 numeric columns
+4.  Create a new column for computing `hp` / `hp`
+
+```{r}
+#| eval: false
+#| echo: true
+
+# Your code here!
+data(mtcars)
+
+head(mtcars)
+# Calculate means
+# ...
+
+# Create new column
+# ...
+```
+
+# Thank You! {.section}
+
+## Resources for Learning More
+
+-  [Installing R and RStudio](https://alexd106.github.io/intro2R/howto.html)
+-   [R for Data Science](https://r4ds.had.co.nz/)
+-   [RStudio Cheat Sheets](https://www.rstudio.com/resources/cheatsheets/)
+-   [R Documentation](https://www.rdocumentation.org/)
+
+## Exercise Solutions
+
+Will be posted after class!
+
+::: callout-tip
+Remember: Practice is key to learning R!
+:::
