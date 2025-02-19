@@ -11,9 +11,25 @@ format:
     fig-dpi: 300
 ---
 
-# Part A: Exploring and Cleaning Data
+# Part A: Introduction to Data Manipulation {.section}
+
+## Welcome to Data Manipulation in R!
+
+Data manipulation is a crucial part of data analysis and preparation.
+
+-   Cleaning and transforming data
+
+-   Filtering and selecting relevant information
+
+-   Summarizing and grouping data
+
+-   Handling missing values
 
 In this session we will learn how to examine and clean our data in R.
+
+## Introduction to Tidyverse
+
+The Tidyverse is a collection of R packages designed for data science that can help you import, clean, and understand data.
 
 First, we need some packages to be loaded in. You can install the core packages from the `tidyverse` by simply typing `install.packages("tidyverse")` in the console.
 
@@ -32,28 +48,197 @@ library(dplyr)
 
 ```
 
-## Introduction to tidyverse
+For more information on Tidyverse, explore the documentation here: <https://www.tidyverse.org/>
 
-The Tidyverse is a collection of R packages that can help you import, clean, and understand data.
+Tidyverse tools use pipes and tibbles to make R code more human readable. The pipe, %\>%, allows the output of one command to be used as an input in the next command, which is cleaner than using nested functions. This is an easy and common way to write and decipher R code.
 
-Tidyverse documentation:
+\*Note: a shortcut to write the pipe command is ctrl+SHIFT+M (Windows) or command+SHIFT+M (Mac).
 
-Tidyverse tools use pipes and tibbles to make R code more human readable. The pipe, %\>%, allows the output of one command to be used as an input in the next command, which is cleaner than using nested functions.
+```{r}
+## A single command 
+sqrt(65)  
 
-\*note: shortcut to write the pipe command is SHIFT+command+M
+## Base R method of running more than one command 
+round(sqrt(65), digit = 2)  
 
-## Data filtering and selection using dplyr
+## Running more than one command with piping 
+sqrt(65) %>% round(digit = 2)
+```
 
-## Sorting and arranging data
+## Filtering and Selecting Data with dplyr
 
-## Creating new variables with mutate()
+One of the most useful tools in the Tidyverse is dplyr. Dplyr has many handy functions that can help with data wrangling, including:
 
-# Part B: Exploring Data {.section}
+-   `select()` extracts columns of interest.
 
-## Grouping data with group_by()
+-   `arrange()` changes the ordering of the rows.
 
-## Summarizing data with summarize()
+-   `filter()` filters cases based on their values.
 
-## Joining datasets
+-   `mutate()` creates/adds new variables based on conditions of existing variables.
 
-## Handling missing values
+-   `rename()` easily changes the name of a column(s)
+
+-   `summarise()` reduces multiple values down to a single summary.
+
+-   `pull()` extracts a single column as a vector.
+
+-   `_join()` group of functions that merge two data frames together, includes (`inner_join()`, `left_join()`, `right_join()`, and `full_join()`).
+
+### Filtering Rows
+
+Use `filter()` to subset data based on conditions.
+
+```{r}
+#| echo: true  
+
+# Load built-in dataset 
+data(mtcars)  
+
+# Filter for rows where mpg is greater than 20 
+mtcars %>% filter(mpg > 20)
+```
+
+### Selecting Columns
+
+Use `select()` to choose specific columns.
+
+```{r}
+#| echo: true  
+
+# Select only mpg and hp columns 
+mtcars %>% select(mpg, hp)
+```
+
+## Sorting and Arranging Data
+
+Use `arrange()` to sort data.
+
+```{r}
+#| echo: true  
+
+# Arrange data in ascending order of mpg 
+mtcars %>% arrange(mpg)  
+
+# Arrange data in descending order of mpg 
+mtcars %>% arrange(desc(mpg))
+```
+
+## Creating New Variables with mutate()
+
+Use `mutate()` to add new variables.
+
+```{r}
+#| echo: true  
+
+# Create a new variable: power-to-weight ratio 
+mtcars %>% mutate(power_to_weight = hp / wt)
+```
+
+## 🔨 Practice Time!
+
+Try these exercises in your console:
+
+1.  View the mtcars data set to see the columns available.
+2.  Filter the data set for cars with less than 6 cylinders.
+3.  
+
+## 🔨 Results
+
+```{r}
+#| eval: false
+#| echo: true
+
+# view mtcars dataset
+head(mtcars)
+# or view just the column names
+colnames(mtcars)
+
+# Filter rows where cyl is less than 6 
+mtcars %>% filter(cyl < 6)
+```
+
+# Part B: Grouping and Summarizing Data {.section}
+
+## Grouping Data with group_by()
+
+Use `group_by()` to categorize data before summarization.
+
+```{r}
+#| echo: true  
+
+# Group by number of cylinders 
+mtcars %>% group_by(cyl)
+```
+
+## Summarizing Data with summarize()
+
+Use `summarize()` to aggregate data.
+
+```{r}
+#| echo: true  
+
+# Compute mean mpg by cylinder 
+mtcars %>% group_by(cyl) %>% summarize(mean_mpg = mean(mpg))
+```
+
+## Joining Datasets
+
+Use `left_join()` to combine datasets.
+
+```{r}
+#| echo: true  
+
+# Create sample data frames 
+df1 <- data.frame(ID = c(1, 2, 3), Score = c(90, 85, 88)) 
+df2 <- data.frame(ID = c(1, 2, 3), Name = c("Alice", "Bob", "Charlie"))  
+
+# Join data frames 
+merged_df <- left_join(df1, df2, by = "ID")
+```
+
+## Handling Missing Values
+
+Use `na.omit()` to remove missing values.
+
+```{r}
+#| echo: true  
+
+# Remove rows with missing values 
+clean_data <- na.omit(mtcars)
+```
+
+## Replacing Missing Values
+
+Use `replace_na()` to fill in missing data.
+
+```{r}
+#| echo: true  
+
+# Replace missing values in a column with a default value 
+mtcars %>% mutate(mpg = replace_na(mpg, 0))
+```
+
+## 🔨 Practice Time!
+
+Try these exercises in your console:
+
+1.  
+
+## 🔨 Results
+
+# Thank You! {.section}
+
+## Additional Resources
+
+-   [Tidyverse Documentation](https://www.tidyverse.org/)
+
+-   [dplyr Cheatsheet](https://rstudio.com/resources/cheatsheets/)
+
+-   [Data Wrangling in R](https://r4ds.had.co.nz/)
+
+## Exercise Solutions
+
+Solutions will be posted after the session!
+
+::: callout-tip Keep practicing for better data manipulation skills! :::
