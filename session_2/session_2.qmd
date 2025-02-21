@@ -50,7 +50,7 @@ library(dplyr)
 
 For more information on Tidyverse, explore the documentation here: <https://www.tidyverse.org/>
 
-Tidyverse tools use pipes and tibbles to make R code more human readable. The pipe, %\>%, allows the output of one command to be used as an input in the next command, which is cleaner than using nested functions. This is an easy and common way to write and decipher R code.
+Tidyverse tools use pipes and tibbles to make R code more human readable. The pipe, %\>%, allows the output of one command to be used as an input in the next command, which is cleaner than using nested functions. There are multiple ways to get to the final solution in R, but using tidyverse is an easy and common way to write and decipher R code.
 
 \*Note: a shortcut to write the pipe command is ctrl+SHIFT+M (Windows) or command+SHIFT+M (Mac).
 
@@ -81,9 +81,9 @@ One of the most useful tools in the Tidyverse is dplyr. Dplyr has many handy fun
 
 -   `summarise()` reduces multiple values down to a single summary.
 
--   `pull()` extracts a single column as a vector.
-
 -   `_join()` group of functions that merge two data frames together, includes (`inner_join()`, `left_join()`, `right_join()`, and `full_join()`).
+
+Note: if you do not have the necessary libraries loaded and you try to use pipes or these functions, you will get an error. Remember to always first load in the packages you need with `library()`.
 
 ### Filtering Rows
 
@@ -92,16 +92,33 @@ Use `filter()` to subset data based on conditions.
 ```{r}
 #| echo: true  
 
-# Load built-in dataset 
+# Load built-in R dataset 
 data(mtcars)  
 
 # Filter for rows where mpg is greater than 20 
 mtcars %>% filter(mpg > 20)
 ```
 
+The above code allows us to view the mtcars dataset when it is filtered but does not change the underlying mtcars dataset so anytime we view mtcars it will be the original version.
+
+```{r}
+# View mtcars - note this is the original, non-filtered dataset
+head(mtcars)
+```
+
+If we want to create a new dataset that is a filtered version of our mtcars dataset that we can build on that in later steps, we can assign (`<-`) it a new name like this: `mtcars_filter <-`
+
+```{r}
+# Create a new dataset that is filtered, rather than overriding mtcars
+mtcars_filter <- mtcars %>% filter(mpg > 20)
+
+# View the new mtcars_filter dataset
+head(mtcars_filter)
+```
+
 ### Selecting Columns
 
-Use `select()` to choose specific columns.
+We can perform other functions with dplyr such as subsetting our data to view only a few columns at a time. Use `select()` to choose specific columns.
 
 ```{r}
 #| echo: true  
@@ -140,8 +157,9 @@ mtcars %>% mutate(power_to_weight = hp / wt)
 Try these exercises in your console:
 
 1.  View the mtcars data set to see the columns available.
-2.  Filter the data set for cars with less than 6 cylinders.
-3.  
+2.  Filter the data set for cars with less than 6 cylinders AND select only the mpg column in one operation.
+3.  Create a new variable that is the mean of mpg.
+4.  Now combine steps 2 and 3.
 
 ## 🔨 Results
 
@@ -149,13 +167,24 @@ Try these exercises in your console:
 #| eval: false
 #| echo: true
 
+# load in mtcars dataset
+data(mtcars)
+
 # view mtcars dataset
 head(mtcars)
 # or view just the column names
 colnames(mtcars)
 
-# Filter rows where cyl is less than 6 
-mtcars %>% filter(cyl < 6)
+# Filter rows where cyl is less than 6 AND select only mpg
+mtcars %>% filter(cyl < 6) %>% select(mpg)
+
+# Create a new variable: mean of mpg
+mtcars %>% mutate(mean_mpg = mean(mpg))
+
+# Filter rows, select mpg, and create new column that is mean_mpg
+mtcars %>% filter(cyl < 6) %>% select(mpg) %>% mutate(mean_mpg = mean(mpg))
+
+# Note: The new column mean_mpg contains the same value for all rows.
 ```
 
 # Part B: Grouping and Summarizing Data {.section}
@@ -219,13 +248,48 @@ Use `replace_na()` to fill in missing data.
 mtcars %>% mutate(mpg = replace_na(mpg, 0))
 ```
 
-## 🔨 Practice Time!
+## 🔨 Final Exercise
 
-Try these exercises in your console:
+Create a new dataset that combines multiple steps you've learned:
 
-1.  
+1.  Load the mtcars dataset
+2.  Filter `mtcars` for cars with more than 4 cylinders and select `mpg`, `hp`, and `wt` columns.
+3.  Create a new column in this dataset that calculates `hp` per unit weight.
+4.  Merge this dataset back to the original `mtcars` dataset.
 
-## 🔨 Results
+```{r}
+#| eval: false
+#| echo: true
+
+# Add your code here!
+# Load the mtcars data
+data(mtcars)
+
+# View the mtcars data
+head(mtcars)
+
+# Create a new dataset filtered and with new column
+# ...
+
+# Merge back to mtcars data
+# ...
+```
+
+```{r}
+#| eval: false
+#| echo: false
+
+# Example solution
+
+# Filter data and create new column
+new_data <- mtcars %>% 
+  filter(cyl > 4) %>% 
+  select(mpg, hp, wt) %>% 
+  mutate(hp_per_wt = hp / wt)
+
+# Merge with original mtcars dataset
+mtcars_merged <- left_join(mtcars, new_data, by = c("mpg", "hp", "wt"))
+```
 
 # Thank You! {.section}
 
@@ -233,7 +297,7 @@ Try these exercises in your console:
 
 -   [Tidyverse Documentation](https://www.tidyverse.org/)
 
--   [dplyr Cheatsheet](https://rstudio.com/resources/cheatsheets/)
+-   [dplyr Cheatsheet](https://nyu-cdsc.github.io/learningr/assets/data-transformation.pdf)
 
 -   [Data Wrangling in R](https://r4ds.had.co.nz/)
 
