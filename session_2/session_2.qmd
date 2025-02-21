@@ -228,24 +228,74 @@ merged_df <- left_join(df1, df2, by = "ID")
 
 ## Handling Missing Values
 
-Use `na.omit()` to remove missing values.
+R can help us check whether and how much missing data we have in our data. To identify missing values we can use the `is.na()` function which will return TRUE in the observations that contain missing values. Let's create a vector with some missing data and see if R can identify it.
 
 ```{r}
-#| echo: true  
+# Create a vector with missing data
+x <- c(500, NA, 6, 40, NA, 13)
+
+# Are there missings? Which ones?
+is.na(x)
+
+# Check how many are missing
+sum(is.na(x))
+```
+
+To deal with missing we can use `na.omit()` to remove missing values.
+
+```{r}
+#| echo: true 
 
 # Remove rows with missing values 
-clean_data <- na.omit(mtcars)
+na.omit(x)
 ```
 
 ## Replacing Missing Values
 
-Use `replace_na()` to fill in missing data.
+However, if we don't want to remove missing values, we can also replace them with the mean. We can use `replace_na()` to fill in missing data.
 
 ```{r}
 #| echo: true  
 
-# Replace missing values in a column with a default value 
+# Recode NA with the mean
+x <- replace_na(x, mean(x, na.rm = TRUE))
+
+# Round all our values to two decimals
+round(x, 2)
+```
+
+In some cases we will have data where missing values have been coded as a number like 99. We should convert them to `NA` so we can clearly identify them as missing values.
+
+```{r}
+# Convert 999 to NAs
+y <- c(1, 999, 6, 3, 999, 9)
+y[y == 999] <- NA
+```
+
+Here is how this might look in our mtcars dataset. First, we check for missing data. For the purposes of this example, we can add some random missingness.
+
+```{r}
+#| echo: true  
+
+# Check for missings - there are none in this dataset
+sum(is.na(mtcars))
+
+# Add some missing values randomly in the mpg and hp columns
+set.seed(123)  # For reproducibility
+mtcars[sample(nrow(mtcars), 5), "mpg"] <- 999  # Introduce 5 999 values in mpg
+mtcars[sample(nrow(mtcars), 3), "hp"] <- NA   # Introduce 3 NA values in hp
+
+# Check for missing values again
+sum(is.na(mtcars))
+
+# First, we know the 999 values in this case are missing values so let's replace them with NA
+mtcars <- mtcars %>% mutate(mpg = na_if(mpg, 999))
+
+# Then we can use replace_na to replace missing values in mpg with 0, or some other value 
 mtcars %>% mutate(mpg = replace_na(mpg, 0))
+
+# Replace missing values in a column with the mean of the column
+mtcars %>% mutate(hp = replace_na(hp, mean(hp, na.rm = TRUE)))
 ```
 
 ## 🔨 Final Exercise

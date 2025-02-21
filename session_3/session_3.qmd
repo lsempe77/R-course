@@ -1,0 +1,297 @@
+---
+title: "Learning R"
+subtitle: "Session 3: Data Visualization and Basic Statistics in R"
+format: 
+  revealjs:
+    theme: [clean.scss]
+    transition: slide
+    highlight-style: github
+    code-copy: true
+    auto-stretch: false
+    fig-dpi: 300
+---
+
+## Part A: Basic Statistical Concepts {.section}
+
+## Welcome to Basic Statistics in R!
+
+Statistics help us summarize, interpret, and analyze data. In this session we will learn how to do basic versions of the following in R:
+
+-   Descriptive statistics
+
+-   Probability distributions
+
+-   Hypothesis testing
+
+## Descriptive Statistics
+
+In this session, let's use a different dataset. We are going to use the gapminder data which is stored within the gapminder package in R.
+
+```{r}
+install.packages("gapminder")
+library(gapminder)
+
+# View data
+head(gapminder)
+```
+
+As we learned in the first session, we can use R's built-in functions to get key statistics.
+
+```{r}
+# Summary statistics of all variables
+summary(gapminder)
+
+# Mean and standard deviation of pop
+mean(gapminder$pop)
+sd(gapminder$pop)
+```
+
+We can also use dplyr to view summary statistics of key variables in our dataset. Dplyr's functionality makes it easier to layer multiple commands and view stats by a particular variable or subgroup.
+
+```{r}
+library(tidyverse)
+library(dplyr)
+
+# Compute mean, count, and std dev of pop - these will match our previous estimates
+gapminder %>% summarize(mean_pop = mean(pop), n=n(), sd=sd(pop))
+
+# Compute mean pop by country 
+gapminder %>% group_by(country) %>% summarize(mean_pop = mean(pop))
+```
+
+## Basic Probability Distributions
+
+Probability distributions describe how values are distributed within a dataset. They are used to model different types of data in statistics. Some common probability distributions include:
+
+-   **Normal Distribution**: A symmetric, bell-shaped distribution common in natural and social sciences.
+
+-   **Uniform Distribution**: All values within a specified range occur with equal probability.
+
+-   **Binomial Distribution**: Used for binary outcomes, such as success/failure.
+
+Below are examples of generating and visualizing random probability distributions in R. We will discuss the specific features of ggplot in a moment. For now, use the visualize to understand how these distributions are different.
+
+```{r}
+# Normal distribution
+normal_data <- rnorm(1000, mean = 50, sd = 10)
+ggplot(data.frame(x = normal_data), aes(x = x)) +
+  geom_histogram() 
+
+# Uniform distribution
+uniform_data <- runif(1000, min = 0, max = 100)
+ggplot(data.frame(x = uniform_data), aes(x = x)) +
+  geom_histogram()
+
+# Binomial distribution
+binom_data <- rbinom(10, size = 10, prob = 0.5)
+ggplot(data.frame(x = binom_data), aes(x = x)) +
+  geom_histogram()
+```
+
+## Simple Hypothesis Testing
+
+Hypothesis testing is a statistical method used to make inferences about a population based on a sample. It helps determine if an observed effect is statistically significant or if it could have occurred by chance.
+
+### When and Why Do We Use Hypothesis Testing?
+
+-   When we want to compare sample data against a known value or another dataset.
+
+-   To test assumptions in scientific studies, such as "Is the average life expectancy significantly different from a specific value?"
+
+### Steps in Hypothesis Testing:
+
+1.  **Define Null and Alternative Hypotheses:**
+
+    -   Null Hypothesis (H₀): Assumes no effect or difference.
+
+    -   Alternative Hypothesis (H₁): Assumes a significant effect or difference.
+
+2.  **Choose a Significance Level (α):** Commonly set at 0.05.
+
+3.  **Select a Statistical Test:** T-tests, Chi-square tests, ANOVA, etc.
+
+4.  **Compute the Test Statistic:** Using R functions like `t.test()`.
+
+5.  **Compare with the Critical Value/P-value:** If p \< α, reject the null hypothesis.
+
+Example: Testing if the mean `lifeExp` differs significantly from 20. Is the life expectancy statistically significantly different from 20?
+
+```{r}
+# One-sample t-test
+t.test(gapminder$lifeExp, mu = 20)
+```
+
+In hypothesis testing, the result is considered statistically different from 20 if the **p-value** from the t-test is less than the chosen significance level (commonly 0.05).
+
+-   If **p \< 0.05**, we **reject the null hypothesis** (H₀), meaning the mean `lifeExp` is significantly different from 20.
+
+-   If **p ≥ 0.05**, we **fail to reject the null hypothesis**, meaning there is not enough evidence to conclude a significant difference.
+
+# Part B: Introduction to ggplot2 {.section}
+
+## What is ggplot2?
+
+`ggplot2` is a powerful data visualization package in R. As with the other packages we have worked with, we need to make sure we have installed ggplot (which we only need to do once). Then we need to make sure to load in the library in order to be able to use it.
+
+```{r}
+# Install and load ggplot2
+install.packages("ggplot2")
+library(ggplot2)
+```
+
+## The Grammar of Graphics
+
+The **Grammar of Graphics** provides a structured way to create visualizations.
+
+Charts in R using ggplot have a basic structure that we can build on. We need data, which must be in a data frame format. We first need to tell ggplot where our data is stored. Then, we choose the type of graph, or geom, and we add it. From there, we can add more characteristics to the chart, such as adjusted scales, titles and labels.
+
+Let's say we want to plot a histogram of life expectancy and percapita GDP. We will create an object that contains the basic information and build our chart from there. First we tell the ggplot() function what the data is that we will use.
+
+```{r}
+p <- ggplot(data = gapminder)
+```
+
+Now ggplot knows our data but we still need to specify which variables should be represented by which visual elements in the chart (this is known as mapping), and then we need to chose which type of chart we want. Mappings are specified by the `aes()` function and plot types (such as `geom_histogram()`) are added to that.
+
+For instance, we can visualize the distribution of the life expectancy across the globe using our gapminder data. What kind of distribution is this?
+
+```{r}
+ggplot(data = gapminder, aes(x = lifeExp)) +
+  geom_histogram() 
+```
+
+## Basic Plot Types
+
+### Scatter Plot
+
+Let's say we want to plot life expectancy and GDP per-capita. We can do this with a scatter plot, specified by geom_point().
+
+```{r}
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)) +
+  geom_point()
+```
+
+### Line Plot
+
+We can visualize the same information as a line plot.
+
+```{r}
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)) +
+  geom_line()
+```
+
+### Bar Plot
+
+A bar plot is commonly used to display categorical information. For instance, we can visualize how often each continent appears in the data.
+
+```{r}
+ggplot(gapminder, aes(x = factor(continent))) +
+  geom_bar()
+```
+
+## Customizing Aesthetics
+
+There are many ways we can modify colors, shapes, and labels.
+
+```{r}
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp, color = factor(continent))) +
+  geom_point(size = 3) +
+  labs(title = "GDP vs lifeExp", x = "GDP", y = "Life Expectancy")
+```
+
+# Part C: Advanced Plotting Techniques {.section}
+
+## Faceting: Multiple Plots
+
+There are some cases in which we want to visualize multiple plots at once, for instance, for multiple groups. Faceting allows us to easily lay out multiple plots in a panel.
+
+Let's revisit our scatterplot of `gdpPercap` vs `lifeExp`. We can `facet` it by the variable `continent` using `facet_wrap`.
+
+```{r}
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)) +
+  geom_point() +
+  facet_wrap(~ continent)
+```
+
+## Adding Statistical Layers
+
+Overlay trend lines or confidence intervals.
+
+```{r}
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = TRUE)
+```
+
+## Themes and Color Schemes
+
+Customize the appearance of plots. For instance, theme_minimal() provides a cleaner look, without background annotations.
+
+```{r}
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp, color = factor(continent))) +
+  geom_point() +
+  theme_minimal()
+```
+
+## 🔨 Final Exercise
+
+Try completing the following exercise using the `gapminder` dataset:
+
+1.  Load the gapminder dataset (in this case, load in the package).
+2.  Compute the mean and median of `gdpPercap` for each continent.
+3.  Create a histogram of `lifeExp` to visualize its distribution.
+4.  Perform a hypothesis test to check if the average `lifeExp` in Europe is significantly different from the global average.
+5.  Generate a scatter plot of `gdpPercap` vs `lifeExp`, coloring points by continent.
+
+```{r}
+# Load in data
+library(gapminder)
+
+# View data
+
+
+```
+
+### Example solution: 
+
+```{r}
+# Load necessary libraries
+library(dplyr)
+library(ggplot2)
+library(gapminder)
+
+# Compute mean and median GDP per continent
+gapminder %>% 
+  group_by(continent) %>% 
+  summarize(mean_gdp = mean(gdpPercap), median_gdp = median(gdpPercap))
+
+# Create histogram of life expectancy
+ggplot(gapminder, aes(x = lifeExp)) +
+  geom_histogram()
+
+# Hypothesis test: Is Europe's life expectancy different from the global average?
+t.test(gapminder$lifeExp[gapminder$continent == "Europe"], 
+       mu = mean(gapminder$lifeExp))
+
+# Scatter plot of GDP per capita vs Life Expectancy
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point()
+```
+
+# Thank You! {.section}
+
+## Additional Resources
+
+-   [ggplot2 Documentation](https://ggplot2.tidyverse.org/reference/)
+
+-   [R for Data Science](https://r4ds.had.co.nz/)
+
+-   [ggplot2 Cheatsheet](https://rstudio.github.io/cheatsheets/html/data-visualization.html)
+
+-   [Grammar of Graphics](https://ramnathv.github.io/pycon2014-r/visualize/ggplot2.html)
+
+## Exercise Solutions
+
+Solutions will be posted after the session!
+
+::: callout-tip Practice makes perfect! Experiment with different datasets. :::
