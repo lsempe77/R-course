@@ -69,7 +69,7 @@ Probability distributions describe how values are distributed within a dataset. 
 
 -   **Binomial Distribution**: Used for binary outcomes, such as success/failure.
 
-Below are examples of generating and visualizing random probability distributions in R. We will discuss the specific features of ggplot in a moment. For now, use the visualize to understand how these distributions are different.
+Below are examples of generating and visualizing random probability distributions in R. We will discuss the specific features of ggplot in a moment. For now, use the visualizations to understand how these distributions are different.
 
 ```{r}
 # Normal distribution
@@ -180,6 +180,32 @@ ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)) +
   geom_line()
 ```
 
+We can also visualize the life expectancy of each continent over time.
+
+```{r}
+# Create a naive line plot
+ggplot(gapminder, aes(x = year, y = lifeExp, group = continent, color = continent)) + 
+  geom_line()
+```
+
+This looks odd. What's wrong with this graph? Let's try and fix it.
+
+```{r}
+# We have multiple values per year in each continent (each country has its own value)
+# First, we need to get the mean life expectancy each year for each continent
+gapminder_continent <- gapminder %>%
+  group_by(continent, year) %>%
+  summarize(mean_lifeExp = mean(lifeExp), .groups = "drop")
+
+# Create the line plot
+ggplot(gapminder_continent, aes(x = year, y = mean_lifeExp, group = continent, color = continent)) +
+  geom_line() 
+
+# We can also use ggplot's stat_summary to simplify this into one step
+ggplot(gapminder, aes(x = year, y = lifeExp, group = continent, color = continent)) +
+  stat_summary(fun = mean, geom = "line") 
+```
+
 ### Bar Plot
 
 A bar plot is commonly used to display categorical information. For instance, we can visualize how often each continent appears in the data.
@@ -191,12 +217,61 @@ ggplot(gapminder, aes(x = factor(continent))) +
 
 ## Customizing Aesthetics
 
-There are many ways we can modify colors, shapes, and labels.
+There are many ways we can modify colors, shapes, and labels. Refer to this guide for more information on color options: <https://ggplot2.tidyverse.org/reference/aes_colour_fill_alpha.html> and this one on label and scale options: <https://ggplot2-book.org/scales-guides>
 
 ```{r}
-ggplot(gapminder, aes(x = gdpPercap, y = lifeExp, color = factor(continent))) +
+plot <- ggplot(gapminder, aes(x = gdpPercap, y = lifeExp, color = factor(continent))) +
   geom_point(size = 3) +
-  labs(title = "GDP vs lifeExp", x = "GDP", y = "Life Expectancy")
+  labs(title = "GDP vs lifeExp", x = "GDP", y = "Life Expectancy") 
+
+# Change label formatting to dollars
+plot + scale_x_continuous(labels = scales::label_dollar())
+```
+
+## 🔨 Practice Time!
+
+Try recreating the above graph and then change the features:
+
+1.  Recreate the graph above.
+2.  Change the x labels to be more frequent using the `breaks` feature within `scale_x_continuous()`.
+3.  Use the `alpha` aesthetic to adjust transparency, making points for Africa darker and all other continents lighter.
+4.  Filter and display GDP and life expectancy only in Africa.
+5.  Filter and display GDP and life expectancy only in 2007 for all continents.
+
+## 🔨 Results
+
+```{r}
+#| eval: false
+#| echo: true
+
+# load in gapminder dataset
+library(gapminder)
+
+# Recreate the original scatter plot
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point()
+
+# Change x and y labels to have more frequent breaks
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  scale_x_continuous(breaks = seq(0, 120000, by = 10000)) 
+
+# Use the alpha aesthetic to change transparency of some of the points
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp, color = continent, alpha = continent)) +
+  geom_point() +
+  scale_alpha_manual(values = c("Europe" = 0.2, "Asia" = 0.2, "Africa" = 1, "Americas" = 0.2, "Oceania" = 0.2))
+
+# Filter to display GDP and life expectancy to only in Africa
+gapminder %>%
+  filter(continent == "Africa") %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point(colour="blue")
+
+# Filter to display GDP and life expectancy only in 2007
+gapminder %>%
+  filter(year == 2007) %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point()
 ```
 
 # Part C: Advanced Plotting Techniques {.section}
@@ -223,9 +298,19 @@ ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)) +
   geom_smooth(method = "lm", se = TRUE)
 ```
 
+We can also display one countries' life expectancy over time.
+
+```{r}
+gapminder %>%
+  filter(country == "Kenya") %>%
+  ggplot(aes(x = year, y = lifeExp)) +
+  geom_point() +  # Scatter plot
+  geom_smooth(method = "lm", se = TRUE)
+```
+
 ## Themes and Color Schemes
 
-Customize the appearance of plots. For instance, theme_minimal() provides a cleaner look, without background annotations.
+Customize the appearance of plots. For instance, theme_minimal() provides a cleaner look, without background annotations. Explore this resource for other themes to find the ones you like best: <https://ggplot2.tidyverse.org/reference/ggtheme.html>
 
 ```{r}
 ggplot(gapminder, aes(x = gdpPercap, y = lifeExp, color = factor(continent))) +
@@ -238,10 +323,11 @@ ggplot(gapminder, aes(x = gdpPercap, y = lifeExp, color = factor(continent))) +
 Try completing the following exercise using the `gapminder` dataset:
 
 1.  Load the gapminder dataset (in this case, load in the package).
-2.  Compute the mean and median of `gdpPercap` for each continent.
-3.  Create a histogram of `lifeExp` to visualize its distribution.
-4.  Perform a hypothesis test to check if the average `lifeExp` in Europe is significantly different from the global average.
-5.  Generate a scatter plot of `gdpPercap` vs `lifeExp`, coloring points by continent.
+2.  Create a data frame that contains only observations for the year 2007, which we will use from now on.
+3.  Compute the mean and median of `gdpPercap` for each continent.
+4.  Create a histogram of `lifeExp` to visualize its distribution.
+5.  Perform a hypothesis test to check if the average `lifeExp` in Europe is significantly different from the global average.
+6.  Generate a scatter plot of `gdpPercap` vs `lifeExp`, coloring points by continent.
 
 ```{r}
 # Load in data
@@ -252,7 +338,7 @@ library(gapminder)
 
 ```
 
-### Example solution: 
+### Example solution:
 
 ```{r}
 # Load necessary libraries
@@ -260,21 +346,25 @@ library(dplyr)
 library(ggplot2)
 library(gapminder)
 
+# Filter for 2007
+gapminder_2007 <- gapminder %>% 
+  filter(year==2007)
+
 # Compute mean and median GDP per continent
-gapminder %>% 
+gapminder_2007 %>% 
   group_by(continent) %>% 
   summarize(mean_gdp = mean(gdpPercap), median_gdp = median(gdpPercap))
 
 # Create histogram of life expectancy
-ggplot(gapminder, aes(x = lifeExp)) +
+ggplot(gapminder_2007, aes(x = lifeExp)) +
   geom_histogram()
 
 # Hypothesis test: Is Europe's life expectancy different from the global average?
-t.test(gapminder$lifeExp[gapminder$continent == "Europe"], 
-       mu = mean(gapminder$lifeExp))
+t.test(gapminder_2007$lifeExp[gapminder_2007$continent == "Europe"], 
+       mu = mean(gapminder_2007$lifeExp))
 
 # Scatter plot of GDP per capita vs Life Expectancy
-ggplot(gapminder, aes(x = gdpPercap, y = lifeExp, color = continent)) +
+ggplot(gapminder_2007, aes(x = gdpPercap, y = lifeExp, color = continent)) +
   geom_point()
 ```
 
