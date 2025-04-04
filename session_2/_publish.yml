@@ -1,0 +1,4 @@
+- source: session_2.qmd
+  quarto-pub:
+    - id: 2043a21b-2f11-4184-920e-2041e932eea6
+      url: 'https://lsempe.quarto.pub/learning-r-a312'

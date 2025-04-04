@@ -1,0 +1,314 @@
+---
+title: "Randomized Assignment"
+subtitle: "Econometrics with R"
+author: "Your Name"
+format: 
+  revealjs:
+    theme: simple
+    slide-number: true
+    code-fold: false
+    highlight-style: github
+---
+
+## Randomized Assignment: The Gold Standard
+
+:::: {.columns}
+
+::: {.column width="60%"}
+- **Core idea**: Randomly select who receives the treatment
+- **Result**: Treatment and control groups are statistically identical (in expectation)
+- **Advantage**: Differences in outcomes can be attributed to the program
+- **Why it works**: Randomization creates a valid counterfactual
+:::
+
+::: {.column width="40%"}
+```{r, echo=FALSE, fig.height=4}
+library(ggplot2)
+set.seed(123)
+
+# Create data
+n <- 100
+data <- data.frame(
+  id = 1:n,
+  potential_outcome = rnorm(n, mean = 50, sd = 10)
+)
+
+# Randomly assign treatment
+data$treatment <- sample(c(0, 1), n, replace = TRUE)
+
+# Add some treatment effect
+data$actual_outcome <- data$potential_outcome + data$treatment * 10 + rnorm(n, 0, 2)
+
+# Plot
+ggplot(data, aes(x = treatment, y = actual_outcome, group = treatment)) +
+  geom_jitter(width = 0.1, alpha = 0.5) +
+  stat_summary(fun = mean, geom = "point", size = 4, color = "red") +
+  stat_summary(fun = mean, geom = "line", aes(group = 1), color = "red") +
+  labs(title = "Treatment Effect with Random Assignment",
+       x = "Treatment Status",
+       y = "Outcome") +
+  scale_x_continuous(breaks = c(0, 1), labels = c("Control", "Treatment")) +
+  theme_minimal()
+```
+:::
+
+::::
+
+## Implementing Randomized Assignment
+
+1. Define population of eligible units
+2. Decide on level of randomization (individuals, households, villages)
+3. Determine sample size (power calculations)
+4. Randomly select units to receive treatment
+5. Verify balance between treatment and control groups
+6. Implement program and collect data
+
+## HISP Case Study: Randomized Villages
+
+- HISP was implemented as a pilot in 100 villages randomly selected from all rural villages
+- 100 additional randomly selected villages serve as controls
+- This design ensures that treatment and control villages are statistically identical
+- Only households below the poverty line in treatment villages were eligible
+
+## Verifying Balance at Baseline
+
+```{r, eval=FALSE, echo=TRUE}
+# Check if treatment and control villages are balanced at baseline
+df_elig %>%
+  filter(round == 0) %>%
+  select(treatment_locality, age_hh, age_sp, educ_hh, educ_sp, 
+         female_hh, indigenous, hhsize, dirtfloor, bathroom, 
+         land, hospital_distance) %>%
+  pivot_longer(-c("treatment_locality")) %>%
+  group_by(name) %>%
+  do(tidy(lm_robust(value ~ treatment_locality, data = .))) %>%
+  filter(term == "treatment_locality") %>%
+  select(name, estimate, std.error, p.value)
+```
+
+:::: {.columns}
+
+::: {.column width="50%"}
+- Results show most characteristics are balanced
+- Small differences in education of household head and distance to hospital
+- With many characteristics, some differences by chance are expected
+:::
+
+::: {.column width="50%"}
+```{r, echo=FALSE}
+library(knitr)
+library(kableExtra)
+
+balance_table <- data.frame(
+  Variable = c("Age household head", "Age spouse", "Education household head", 
+               "Distance to hospital", "Female household head", "Indigenous"),
+  Difference = c(-0.64, -0.04, 0.16, 2.91, -0.004, 0.009),
+  p_value = c(0.091, 0.901, 0.021, 0.010, 0.559, 0.490)
+)
+
+kable(balance_table, digits = 3)
+```
+:::
+
+::::
+
+## Estimating Program Impact: Simple Comparison of Means
+
+```{r, eval=FALSE, echo=TRUE}
+# Compare health expenditures in treatment and control villages at follow-up
+out_round1 <- lm_robust(health_expenditures ~ treatment_locality,
+                        data = df_elig %>% filter(round == 1),
+                        clusters = locality_identifier)
+```
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**Results**:
+- Treatment effect: -10.14 USD
+- Standard error: 0.40
+- 95% CI: [-10.93, -9.35]
+- Highly statistically significant
+:::
+
+::: {.column width="50%"}
+```{r, echo=FALSE}
+library(ggplot2)
+
+# Create data frame with estimated means
+estimates <- data.frame(
+  Group = c("Control", "Treatment"),
+  Mean = c(17.98, 7.84),
+  SE = c(0.32, 0.25)
+)
+
+# Plot
+ggplot(estimates, aes(x = Group, y = Mean)) +
+  geom_bar(stat = "identity", width = 0.5, fill = "steelblue") +
+  geom_errorbar(aes(ymin = Mean - 1.96*SE, ymax = Mean + 1.96*SE), 
+                width = 0.2) +
+  labs(title = "Health Expenditures at Follow-up",
+       y = "Health Expenditures (USD)") +
+  ylim(0, 20) +
+  theme_minimal()
+```
+:::
+
+::::
+
+## Using Regression Analysis
+
+```{r, eval=FALSE, echo=TRUE}
+# Simple regression
+out_simple <- lm_robust(health_expenditures ~ treatment_locality,
+                      data = df_elig %>% filter(round == 1),
+                      clusters = locality_identifier)
+
+# Multivariate regression with controls
+out_controls <- lm_robust(health_expenditures ~ treatment_locality +
+                        age_hh + age_sp + educ_hh + educ_sp + 
+                        female_hh + indigenous + hhsize + dirtfloor +
+                        bathroom + land + hospital_distance,
+                      data = df_elig %>% filter(round == 1),
+                      clusters = locality_identifier)
+```
+
+## Regression Results
+
+```{r, echo=FALSE}
+library(knitr)
+library(kableExtra)
+
+# Create a table with regression results
+results_table <- data.frame(
+  Model = c("Simple Regression", "With Covariates"),
+  Estimate = c(-10.14, -10.01),
+  SE = c(0.40, 0.35),
+  CI_Lower = c(-10.93, -10.70),
+  CI_Upper = c(-9.35, -9.32),
+  R_squared = c(0.30, 0.43)
+)
+
+kable(results_table, 
+      col.names = c("Model", "Estimate", "Std. Error", "CI Lower", "CI Upper", "R²"),
+      digits = 2,
+      caption = "Impact of HISP on Health Expenditures")
+```
+
+- Treatment effect remains stable with addition of control variables
+- Controls improve precision (smaller standard errors)
+- Adding controls increases R² from 0.30 to 0.43
+
+## Why Covariates Don't Change the Estimate Much
+
+In randomized experiments:
+
+1. Treatment assignment is independent of observed and unobserved characteristics
+2. Control variables are uncorrelated with treatment status (in expectation)
+3. Including controls may:
+   - Increase precision (reduce standard errors)
+   - Account for any chance imbalances
+   - But should not substantially change the point estimate
+
+## Visualizing the Results
+
+```{r, echo=FALSE}
+library(ggplot2)
+
+# Create data for visualization
+time_points <- c("Baseline", "Follow-up")
+treatment <- c(14.49, 7.84)
+control <- c(14.57, 17.98)
+
+data <- data.frame(
+  Time = rep(time_points, 2),
+  Group = rep(c("Treatment", "Control"), each = 2),
+  Value = c(treatment, control)
+)
+
+# Create the plot
+ggplot(data, aes(x = Time, y = Value, group = Group, color = Group)) +
+  geom_line(size = 1.2) +
+  geom_point(size = 3) +
+  annotate("bracket", xmin = 2, xmax = 2, y = c(7.84, 17.98), 
+           label = "Impact: -10.14", size = 0.7) +
+  labs(title = "HISP Impact on Health Expenditures",
+       y = "Health Expenditures (USD)") +
+  scale_color_manual(values = c("Control" = "red", "Treatment" = "blue")) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+- Similar baseline values confirm balance between groups
+- Clear divergence after the program
+- Treatment group shows significant reduction in expenditures
+- Control group shows slight increase over time
+
+## Strength of the Results
+
+- **Internal validity**: Strong - randomization ensures that the impact is attributable to the program
+- **External validity**: Limited to similar contexts
+- **Precision**: High - narrow confidence intervals
+- **Policy relevance**: Impact exceeds the $10 threshold
+
+## From Analysis to Policy Decision
+
+**Policy question**: Should HISP be scaled up nationally?
+
+**Decision criterion**: Program must reduce health expenditures by at least $10.
+
+**Results from randomized evaluation**:
+- Impact: -$10.14 (95% CI: [-$10.93, -$9.35])
+- Exceeds threshold of $10 reduction
+
+**Recommendation**: The program should be scaled up nationally.
+
+## Limitations of Randomized Assignment
+
+:::: {.columns}
+
+::: {.column width="50%"}
+1. **Ethical concerns**
+   - Denying benefits to control group
+   - Informed consent issues
+
+2. **Practical challenges**
+   - Political constraints
+   - Implementation costs
+   - Scale vs. pilot differences
+:::
+
+::: {.column width="50%"}
+3. **Technical issues**
+   - Spillover effects
+   - Hawthorne effects
+   - Attrition and non-compliance
+   - External validity
+
+4. **Timing**
+   - Long-term outcomes
+   - Delay in results for urgent policies
+:::
+
+::::
+
+## When Randomization Isn't Possible
+
+When randomization is not feasible, we can use quasi-experimental methods:
+
+1. **Instrumental Variables**: Using random encouragement
+2. **Regression Discontinuity**: Exploiting eligibility thresholds
+3. **Difference-in-Differences**: Comparing changes over time
+4. **Matching Methods**: Creating comparable groups
+
+## Key Takeaways
+
+1. Randomization creates comparable treatment and control groups
+2. With randomization, differences in outcomes can be attributed to the program
+3. Including covariates doesn't substantially change estimates but can improve precision
+4. The HISP reduces health expenditures by $10.14, exceeding the threshold
+5. Based on the randomized evaluation, HISP should be scaled up nationally
+
+## Next Session
+
+**Instrumental Variables**: Leveraging randomized promotion to evaluate programs with imperfect compliance

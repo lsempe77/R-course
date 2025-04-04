@@ -1,0 +1,553 @@
+---
+title: "Matching Methods"
+subtitle: "Econometrics with R"
+author: "Dr. Lucas Sempé"
+format: 
+  revealjs:
+    theme: [clean.scss]
+    slide-number: true
+    code-fold: false
+    highlight-style: github
+editor_options: 
+  chunk_output_type: console
+---
+
+## Recap: The Program Evaluation Challenge
+
+:::: {.columns}
+
+::: {.column width="60%"}
+- **Waste recycling Program** subsidizes waste recycling plants for industries
+- **Program goal**: Reduce waste management costs 
+- **Decision criterion**: Reduce expenditures by at least $10,000
+- **Evaluation approaches**:
+  - ✅ Randomized Assignment
+  - ✅ Instrumental Variables
+  - ✅ Regression Discontinuity
+  - ✅ Difference-in-Differences
+  - ✅ Matching
+:::
+
+::: {.column width="40%"}
+```{r, echo=FALSE, fig.height=15}
+library(ggplot2)
+library(dplyr)
+
+# Create a summary data frame of all methods
+methods_df <- data.frame(
+  Method = c("Randomized", "IV", "RDD", "DiD", "Matching"),
+  Estimate = c(-10140, -9829, -9051, -8163, -10000),
+  LowerCI = c(-10922, -11684, -9921, -8792, -10723),
+  UpperCI = c(-9358, -7973, -8181, -7534, -9277)
+)
+
+
+# Create a forest plot
+ggplot(methods_df, aes(y = reorder(Method, -abs(Estimate)), x = Estimate)) +
+  geom_vline(xintercept = -10000, linetype = "dashed", color = "red") +
+  geom_point(size = 3) +
+  geom_errorbarh(aes(xmin = LowerCI, xmax = UpperCI), height = 0.2) +
+  labs(title = "Impact of Program Across Methods",
+       x = "Impact on Waste Expenditures (Thousands USD)",
+       y = "") +
+  theme_minimal() +
+  annotate("text", x = -10000, y = 5.5, label = "Threshold", 
+           vjust = -0.5, color = "red", hjust = 1.2)
+```
+:::
+
+::::
+
+## Synthesis of Results Across Methods
+
+```{r, echo=FALSE}
+library(knitr)
+library(kableExtra)
+
+# Create a summary table with all results and key details
+synthesis <- data.frame(
+  Method = c("Randomized Assignment", "Instrumental Variables", 
+             "Regression Discontinuity", "Difference-in-Differences", 
+             "Matching (Full)"),
+  Estimate = c("-10,140", "-9,829", "-9,051", "-8,163", "-10,000"),
+  CI = c("[-10,922, -9,358]", "[-11,684, -7,973]", "[-9,921, -8,181]", 
+         "[-8,792, -7,534]", "[-10,723, -9,277]"),
+  Key_Assumption = c("Random assignment", "Exclusion restriction", 
+                    "No manipulation at threshold", "Parallel trends", 
+                    "Selection on observables"),
+  Population = c("All eligible", "Compliers", "At threshold", "All enrolled", "Matched enrolled")
+)
+
+kable(synthesis, 
+      col.names = c("Method", "Estimate", "95% CI", "Key Assumption", "Population"),
+      caption = "Synthesis of Impact Evaluation Results") %>%
+  kable_styling(bootstrap_options = "striped", full_width = TRUE)
+```
+
+- Differences in estimates reflect different methods and populations
+- Randomized assignment is the gold standard
+- Quasi-experimental methods provide valuable complementary evidence
+- Triangulation of methods strengthens overall conclusions
+
+## Explaining Differences in Results
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**Estimation Differences**:
+- Different identification strategies
+- Different modeling approaches
+- Different standard errors
+
+**Population Differences**:
+- RDD: Households near poverty threshold
+- IV: Compliers who respond to promotion
+- DiD/Matching: Enrolled households
+- Randomized: All eligible households
+:::
+
+::: {.column width="50%"}
+**Treatment Effect Heterogeneity**:
+- Impact may vary across different types of households
+- E.g., poorer households may benefit more
+- Methods capture effects for different subpopulations
+
+**Data and Implementation**:
+- Sample restrictions
+- Variable inclusion
+- Specification choices
+:::
+
+::::
+
+## Understanding R Implementation Across Methods
+
+```{r, echo=FALSE}
+library(knitr)
+
+# Create a table summarizing key R functions
+r_implementation <- data.frame(
+  Method = c("Randomized Assignment", "Instrumental Variables", 
+             "Regression Discontinuity", "Difference-in-Differences", 
+             "Matching"),
+  Key_Functions = c("lm_robust()", "iv_robust()", 
+                   "lm_robust(), rdrobust()", 
+                   "lm_robust(), feols()", 
+                   "matchit(), lm_robust()"),
+  Key_Packages = c("estimatr", "estimatr, AER", 
+                  "estimatr, rdrobust", 
+                  "estimatr, fixest, did", 
+                  "MatchIt, estimatr"),
+  Data_Structure = c("Cross-sectional", "Cross-sectional", 
+                    "Cross-sectional", "Panel/repeated cross-section", 
+                    "Cross-sectional")
+)
+
+kable(r_implementation, 
+      col.names = c("Method", "Key Functions", "Key Packages", "Data Structure"),
+      caption = "R Implementation of Impact Evaluation Methods")
+```
+
+- Common infrastructure: `tidyverse` for data manipulation
+- Robust standard errors essential for all methods
+- Modern implementations leverage recent methodological advances
+- Fixed effects approaches common in many methods
+
+## Common Analytical Steps Across Methods
+
+1. **Data Preparation**
+   - Identifying treatment and outcome variables
+   - Creating necessary indicators or transformations
+   - Handling missing data and outliers
+
+2. **Model Specification**
+   - Choosing appropriate functional form
+   - Selecting control variables
+   - Determining clustering level for standard errors
+
+3. **Assumption Validation**
+   - Testing method-specific assumptions
+   - Assessing threats to validity
+   - Examining balance or pre-trends
+
+4. **Robustness Checks**
+   - Alternative specifications
+   - Placebo tests
+   - Subsample analysis
+
+5. **Interpretation**
+   - Statistical vs. practical significance
+   - Population to which results apply
+   - Policy implications
+
+## Integrating Qualitative and Quantitative Evidence
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**Beyond Impact Estimates**:
+- Implementation context
+- Participant experiences
+- Unexpected outcomes
+- Mechanisms of impact
+
+**Mixed Methods Approach**:
+- Impact evaluation: *If* it works
+- Process evaluation: *How* it works
+- Both needed for informed policy
+:::
+
+::: {.column width="50%"}
+```{r, echo=FALSE, fig.height=4}
+library(DiagrammeR)
+
+grViz("
+digraph mixed_methods {
+  node [shape=box, fontname=Helvetica, fontsize=10, style=filled, fillcolor=lightblue];
+  
+  Quant [label='Quantitative\nMethods', fillcolor=lightblue];
+  Qual [label='Qualitative\nMethods', fillcolor=lightgreen];
+  
+  Quant -> Impact [label='Measure'];
+  Qual -> Mechanisms [label='Explain'];
+  Qual -> Context [label='Describe'];
+  
+  Impact [label='Impact\nEstimates'];
+  Mechanisms [label='Causal\nMechanisms'];
+  Context [label='Implementation\nContext'];
+  
+  {rank=same; Quant; Qual;}
+  
+  Impact -> Policy;
+  Mechanisms -> Policy;
+  Context -> Policy;
+  
+  Policy [label='Policy\nDecisions', fillcolor=lightgrey];
+}
+")
+```
+:::
+
+::::
+
+## Assessing External Validity
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**Will results generalize?**
+
+1. **Sample vs. Population**
+   - How representative is the evaluation sample?
+   - Which characteristics matter for generalizability?
+
+2. **Scale Effects**
+   - Will effects change at larger scale?
+   - Are there general equilibrium effects?
+
+3. **Context Dependence**
+   - Which contextual factors matter?
+   - How similar are implementation conditions?
+:::
+
+::: {.column width="50%"}
+**Improving External Validity**:
+
+1. **Stratified sampling designs**
+   - Ensure representative samples
+   - Enable subgroup analysis
+
+2. **Multi-site trials**
+   - Test in varied contexts
+   - Identify context dependencies
+
+3. **Structural modeling**
+   - Explore mechanisms
+   - Simulate counterfactual scenarios
+
+4. **Meta-analysis**
+   - Synthesize multiple studies
+   - Identify patterns across contexts
+:::
+
+::::
+
+## Cost-Effectiveness Analysis
+
+Beyond impact: Is the program worth its cost?
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**Steps in Cost-Effectiveness Analysis**:
+
+1. Calculate total program costs
+   - Implementation costs
+   - Administrative costs
+   - Opportunity costs
+
+2. Express impact in standardized units
+   - Per beneficiary
+   - Per dollar spent
+   - Compared to alternatives
+:::
+
+::: {.column width="50%"}
+**Comparing Interventions**:
+
+```{r, echo=FALSE, fig.height=3.5}
+library(ggplot2)
+
+# Create hypothetical cost-effectiveness data
+ce_data <- data.frame(
+  Intervention = c("HISP", "Community Health Workers", 
+                  "Health Education", "Clinic Improvement"),
+  Cost_per_Household = c(50, 30, 15, 75),
+  Impact_on_Expenditures = c(10, 4, 2, 13)
+)
+
+# Add cost-effectiveness ratio
+ce_data$CE_Ratio <- ce_data$Impact_on_Expenditures / ce_data$Cost_per_Household
+
+# Plot
+ggplot(ce_data, aes(x = Cost_per_Household, y = Impact_on_Expenditures, 
+                    label = Intervention)) +
+  geom_point(aes(size = CE_Ratio), alpha = 0.7) +
+  geom_text(hjust = -0.2, vjust = 0.5, size = 3) +
+  geom_abline(slope = 0.2, linetype = "dashed", color = "red") +
+  labs(title = "Cost-Effectiveness Comparison",
+       x = "Cost per Household (USD)",
+       y = "Impact on Health Expenditures (USD)") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+:::
+
+::::
+
+## From Evidence to Policy Action
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**Policy Decision Making**:
+- Statistical significance vs. practical significance
+- Weighing uncertain evidence
+- Value judgments: What outcomes matter?
+- Resource constraints and opportunity costs
+- Political feasibility
+
+**Implementation Considerations**:
+- Design features to maintain or improve
+- Necessary adaptations for scale-up
+- Capacity requirements
+- Monitoring systems
+:::
+
+::: {.column width="50%"}
+```{r, echo=FALSE, fig.height=4}
+library(DiagrammeR)
+
+grViz("
+digraph policy_process {
+  node [shape=box, fontname=Helvetica, fontsize=10, style=filled, fillcolor=lightblue];
+  
+  Evidence [label='Impact\nEvidence', fillcolor=lightblue];
+  
+  Evidence -> Decision;
+  
+  Context [label='Political\nContext', fillcolor=lightgreen];
+  Resources [label='Resource\nConstraints', fillcolor=lightgreen];
+  Values [label='Values &\nPriorities', fillcolor=lightgreen];
+  
+  Context -> Decision;
+  Resources -> Decision;
+  Values -> Decision;
+  
+  Decision [label='Policy\nDecision', fillcolor=lightgrey];
+  
+  Decision -> Implementation;
+  Decision -> Adaptation;
+  Decision -> Monitoring;
+  
+  Implementation [label='Implementation\nPlan'];
+  Adaptation [label='Program\nAdaptation'];
+  Monitoring [label='Monitoring &\nEvaluation'];
+}
+")
+```
+:::
+
+::::
+
+## Ethical Considerations in Impact Evaluation
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**Research Ethics**:
+- Informed consent
+- Confidentiality and privacy
+- Equitable subject selection
+- IRB approval and oversight
+
+**Program Ethics**:
+- Denying benefits to control group
+- Targeting most vulnerable
+- Balancing rigor with timely information
+- Transparency in findings
+:::
+
+::: {.column width="50%"}
+**Ethical Frameworks**:
+
+1. **Consequentialist**
+   - Benefits outweigh harms
+   - Long-term social good
+
+2. **Rights-based**
+   - Protection of individual rights
+   - Informed consent
+   - Equitable treatment
+
+3. **Virtue Ethics**
+   - Researcher integrity
+   - Stakeholder engagement
+   - Responsible use of findings
+:::
+
+::::
+
+## Building an Impact Evaluation Mindset
+
+**Key principles for evaluation practitioners**:
+
+1. **Counterfactual thinking**
+   - Always ask: "Compared to what?"
+   - Identify appropriate comparison groups
+
+2. **Methodological pluralism**
+   - Choose methods to fit the context
+   - Triangulate with multiple approaches
+
+3. **Assumption transparency**
+   - Clarify what must be true for results to be valid
+   - Test assumptions where possible
+
+4. **Effect heterogeneity awareness**
+   - Look beyond average effects
+   - Identify who benefits most/least
+
+5. **Implementation sensitivity**
+   - Programs are complex interventions
+   - Context and implementation quality matter
+
+## R Skills for Impact Evaluation
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**Core Competencies**:
+- Data manipulation with `tidyverse`
+- Regression analysis with `estimatr`
+- Data visualization with `ggplot2`
+- Reproducible workflows with R Markdown/Quarto
+
+**Method-Specific Packages**:
+- `MatchIt` for matching
+- `rdrobust` for RDD
+- `AER` and `ivpack` for IV
+- `did` and `fixest` for DiD
+:::
+
+::: {.column width="50%"}
+**Advanced Skills**:
+- Power analysis with `pwr`
+- Robust standard errors with `sandwich`
+- Sensitivity analysis with `sensemakr`
+- Causal forests with `grf`
+- Synthetic control with `Synth`
+- Mediation analysis with `mediation`
+- Bayesian modeling with `brms`
+- Interactive apps with `shiny`
+:::
+
+::::
+
+## Resources for Further Learning
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**Books**:
+- Gertler et al. "Impact Evaluation in Practice"
+- Angrist & Pischke "Mostly Harmless Econometrics"
+- Cunningham "Causal Inference: The Mixtape"
+- Huntington-Klein "The Effect"
+
+**Online Courses**:
+- J-PAL's "Evaluating Social Programs"
+- World Bank's "Impact Evaluation Methods"
+- DataCamp's "Causal Inference with R"
+:::
+
+::: {.column width="50%"}
+**Websites & Communities**:
+- 3ie (International Initiative for Impact Evaluation)
+- J-PAL (Abdul Latif Jameel Poverty Action Lab)
+- World Bank DIME (Development Impact Evaluation)
+- R for Data Science Community
+- Stack Overflow for R questions
+
+**Journals**:
+- Journal of Development Effectiveness
+- Journal of Policy Analysis and Management
+- American Economic Journal: Applied Economics
+:::
+
+::::
+
+## Course Summary
+
+**What we've learned**:
+
+1. **Causal inference fundamentals**
+   - The counterfactual framework
+   - Selection bias and confounding
+   - Experimental and quasi-experimental approaches
+
+2. **Method-specific knowledge**
+   - When and how to apply each method
+   - Key assumptions and limitations
+   - Implementation in R
+
+3. **Practical skills**
+   - Data preprocessing and analysis
+   - Results interpretation
+   - Policy recommendations
+
+## Final Policy Recommendation on HISP
+
+Based on the comprehensive evaluation with multiple methods:
+
+- **Randomized evaluation (gold standard)** shows reduction of $10.14
+- Most quasi-experimental methods show effects close to $10
+- Consistent evidence of substantial positive impact
+- Effect appears to meet or be very close to the $10 threshold
+- Program targets poor households effectively
+
+**RECOMMENDATION**: Scale up HISP nationally, with monitoring systems to track ongoing performance and cost-effectiveness.
+
+## Thank You!
+
+**Questions for discussion**:
+
+1. How would you design the national scale-up of HISP?
+2. What additional data would you collect during scale-up?
+3. How would you evaluate the long-term impacts?
+4. What complementary interventions might enhance HISP's effects?
+
+**Contact information**:
+- Email: [your.email@institution.edu](mailto:your.email@institution.edu)
+- Website: [www.yourwebsite.com](https://www.yourwebsite.com)
+- GitHub: [github.com/yourusername](https://github.com/yourusername)

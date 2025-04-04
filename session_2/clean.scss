@@ -33,7 +33,7 @@ $presentation-heading-color: $jet !default;
 $presentation-heading-font-weight: lighter;
 //$presentation-heading-line-height: 2;
 //$presentation-block-margin: 28px;
-$presentation-font-size-root: 32px;
+$presentation-font-size-root: 28px;
 
 // colors
 //$body-bg: #f0f1eb !default;
@@ -376,3 +376,8 @@ $selection-bg: #26351c !default;
 .reveal .columns6040 div.column:not(:first-child) {
   width: 40%;
 }      
+
+.scrolling {
+  max-height: 500px;
+  overflow-y: auto;
+}

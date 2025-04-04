@@ -1,0 +1,444 @@
+---
+title: "Matching Methods"
+subtitle: "Econometrics with R"
+author: "Dr. Lucas Sempé"
+format: 
+  revealjs:
+    theme: [clean.scss]
+    slide-number: true
+    code-fold: false
+    highlight-style: github
+editor_options: 
+  chunk_output_type: console
+---
+
+## Matching Methods: Overview
+
+:::: {.columns}
+
+::: {.column width="60%"}
+- **Core idea**: Create comparable treatment and control groups based on observable characteristics
+- **Setting**: When treatment assignment is related to observable factors
+- **Advantage**: Reduces selection bias from observable differences
+- **Assumption**: No unobserved differences affecting both treatment and outcomes
+- **Methods**: Exact matching, propensity score matching, nearest neighbor, etc.
+:::
+
+::: {.column width="40%"}
+```{r, echo=FALSE, fig.height=4}
+
+# Load required packages
+library(tidyverse)
+library(MatchIt)
+library(estimatr)
+library(kableExtra)
+library(modelsummary)
+
+# Set rendering options
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  echo = TRUE,
+  fig.width = 10, 
+  fig.height = 6
+)
+
+set.seed(123)
+
+df <- read.csv("./evaluation_data.csv")
+df$waste_management_costs<-df$waste_management_costs*1000
+
+# Create simulated data for matching visualization
+set.seed(123)
+n <- 200
+
+# Create two variables that predict both treatment and outcome
+x1 <- runif(n, -2, 2)
+x2 <- runif(n, -2, 2)
+
+# Generate treatment with higher probability for larger x1, x2
+p_treat <- plogis(0.5 + 0.7*x1 + 0.7*x2)
+treatment <- rbinom(n, 1, p_treat)
+
+# Create data frame
+matching_data <- data.frame(
+  x1 = x1,
+  x2 = x2,
+  treatment = factor(treatment, labels = c("Control", "Treatment"))
+)
+
+# Plot
+ggplot(matching_data, aes(x = x1, y = x2, color = treatment, shape = treatment)) +
+  geom_point(size = 2) +
+  labs(title = "Before Matching: Imbalanced Groups",
+       x = "Variable X1",
+       y = "Variable X2",
+       color = "Group",
+       shape = "Group") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+:::
+
+::::
+
+## Why Matching?
+
+
+**Problem**: Selection bias
+
+- Treatment group systematically differs from control group
+- Direct comparison leads to biased impact estimates
+
+**Solution**: Matching
+
+- Select control units similar to treated units
+- Create balance on observable characteristics
+- Approximates an experimental setting
+
+## Preparing the Data
+
+Converting from long to wide format:
+
+```{r}
+# Create a wide-format dataset
+df_w <- df %>%
+  # Then create wide format
+  pivot_wider(
+    id_cols = c(zone_identifier, facility_identifier, treatment_zone, 
+                promotion_zone, eligible, enrolled, enrolled_rp),
+    names_from = round, # variable that determines new columns
+    # variables that should be made "wide"
+    values_from = c(waste_management_costs, 
+                    efficiency_index, age_manager, age_deputy,
+                    educ_manager, educ_deputy, female_manager,
+                    foreign_owned, staff_size, advanced_filtration,
+                    water_treatment_system, facility_area,
+                    recycling_center_distance, recycling_compliance)) %>%
+  # remove the industries that has missing values
+  # as missing values are not allowed when using matchit
+  filter(!is.na(waste_management_costs_0)) 
+
+# Also check the first few rows to confirm format
+head(select(df_w, facility_identifier, enrolled, 
+           waste_management_costs_0, waste_management_costs_1))
+```
+
+## Propensity Score Matching
+
+Two scenarios for predicting enrollment:
+
+1. **Limited set of variables**:
+   - Only age and education of facility manager
+
+2. **Full set of variables**:
+   - All available baseline characteristics
+
+## Estimating Propensity Scores
+
+```{r}
+# Limited set of variables
+psm_r <- matchit(enrolled ~ age_manager_0 + educ_manager_0,
+                 data = df_w %>% dplyr::select(-recycling_compliance_0,
+                                               -recycling_compliance_1), 
+                    distance = "glm",
+                  link = "probit")
+
+# Full set of variables
+psm_ur <- matchit(enrolled ~ age_manager_0 + educ_manager_0 + 
+                   age_deputy_0 + educ_deputy_0 +
+                   female_manager_0 + foreign_owned_0 + staff_size_0 + 
+                   advanced_filtration_0 + water_treatment_system_0 + 
+                   facility_area_0 + recycling_center_distance_0,
+   data = df_w %>% dplyr::select(-recycling_compliance_0,
+                                               -recycling_compliance_1), 
+   distance = "glm",link = "probit")
+```
+
+## Propensity Score Models
+
+```{r}
+# Create a model summary table
+modelsummary(list("Limited Set" = psm_r$model, 
+                  "Full Set" = psm_ur$model),
+             coef_map = c('age_manager_0' = "Age (Manager) at Baseline",
+                          'educ_manager_0' = "Education (Manager) at Baseline",
+                          'age_deputy_0' = "Age (Deputy) at Baseline",
+                          'educ_deputy_0' = "Education (Deputy) at Baseline",
+                          'female_manager_0' = "Female Manager at Baseline",
+                          'foreign_owned_0' = "Foreign Owned at Baseline",
+                          'staff_size_0' = "Number of Staff at Baseline",
+                          'advanced_filtration_0' = "Advanced Filtration at Baseline",
+                          'water_treatment_system_0' = "Water Treatment System at Baseline",
+                          'facility_area_0' = "Facility Area at Baseline",
+                          'recycling_center_distance_0' = "Distance From Recycling Center"),
+             title = "Estimating the Propensity Score Based on Baseline Characteristics")
+```
+
+## Interpreting the Propensity Score Models
+
+- Which characteristics predict program enrollment?
+- Are facilities with certain characteristics more likely to enroll?
+- Does this align with program objectives?
+
+## Checking Common Support
+
+Let's plot the distribution of propensity scores by enrollment status:
+
+```{r}
+# Add propensity scores to our dataset
+df_w <- df_w %>%
+  mutate(ps_ur = psm_ur$model$fitted.values)
+
+# Plot the distribution
+df_w %>%
+  mutate(enrolled_lab = ifelse(enrolled == 1, "Enrolled", "Not Enrolled")) %>%
+  ggplot(aes(x = ps_ur,
+             group = enrolled_lab, colour = enrolled_lab, fill = enrolled_lab)) +
+  geom_density(alpha = 0.2) +
+  xlab("Propensity Score") +
+  labs(title = "Distribution of Propensity Score by Enrollment Status") +
+  scale_fill_viridis_d("Status:", end = 0.7) +
+  scale_colour_viridis_d("Status:", end = 0.7) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+## What is Common Support?
+
+- **Common support** = overlap in propensity scores between groups
+- Essential for valid comparisons
+- Without common support, we can't find comparable units
+
+## Checking Balance Before Matching
+
+```{r}
+kableExtra::kable(summary(psm_ur)$sum.all,
+      caption = "Balance Before Matching") %>%
+  kable_styling(font_size = 10)
+```
+
+## Checking Balance After Matching
+
+```{r}
+kableExtra::kable(summary(psm_ur)$sum.matched,
+      caption = "Balance After Matching") %>%
+  kable_styling(font_size = 10)
+```
+
+## Understanding Balance
+
+- **Mean Diff** should be closer to zero after matching
+- Standardized mean differences (not shown) should be < 0.25
+- Good balance ensures we're comparing similar facilities
+
+## Estimating Program Impact
+
+First, extract the matched dataset:
+
+```{r}
+# Extract matched datasets
+match_df_r <- match.data(psm_r)   # Limited set
+match_df_ur <- match.data(psm_ur) # Full set
+```
+
+## Regression with Matched Data
+
+```{r}
+# Regression with matched data
+out_lm_r <- lm_robust(waste_management_costs_1 ~ enrolled,
+                      data = match_df_r,  weights = weights,
+                      clusters = zone_identifier)
+
+out_lm_ur <- lm_robust(waste_management_costs_1 ~ enrolled,
+                      data = match_df_ur, weights = weights,
+                      clusters = zone_identifier)
+
+# Show results
+modelsummary(list("Limited Set" = out_lm_r, 
+                  "Full Set" = out_lm_ur),
+             title = "Impact on Waste Management Costs: Matching Approach")
+```
+
+## Matched Difference-in-Differences
+
+Combine matching with difference-in-differences:
+
+```{r}
+# Merge matching weights back into long format
+df_long_match_r <- df %>%
+  left_join(match_df_r %>% dplyr::select(facility_identifier, weights)) %>%
+  filter(!is.na(weights))
+
+df_long_match_ur <- df %>%
+  left_join(match_df_ur %>% dplyr::select(facility_identifier, weights)) %>%
+  filter(!is.na(weights))
+```
+
+## Difference-in-Differences Results
+
+```{r}
+# Run DiD regression
+did_reg_r <- lm_robust(waste_management_costs ~ enrolled * round,
+                        data = df_long_match_r, weights = weights,
+                        clusters = zone_identifier)
+
+did_reg_ur <- lm_robust(waste_management_costs ~ enrolled * round,
+                        data = df_long_match_ur, weights = weights,
+                        clusters = zone_identifier)
+
+# Show results
+modelsummary(list("Limited Set" = did_reg_r, 
+                  "Full Set" = did_reg_ur),
+             coef_map = c('enrolled' = "Enrollment",
+                          'round' = "Round",
+                          'enrolled:round' = "Enrollment × Round"),
+             title = "Impact on Waste Management Costs: Matched DiD Approach")
+```
+
+## Interpretation of Results
+
+- **Enrolled** coefficient: Baseline difference between groups
+- **Round** coefficient: Time trend for all facilities
+- **Enrollment × Round**: The program's causal effect
+
+::: {.callout-note}
+The interaction coefficient (Enrollment × Round) represents our estimate of the causal impact of the program on waste management costs.
+:::
+
+## Advantages of Matching
+
+- Reduces selection bias
+- Makes treatment and control groups comparable
+- Can combine with difference-in-differences for robust estimation
+- Works even without baseline randomization
+
+## Limitations of Matching
+
+- Only controls for **observed** variables
+- Cannot account for unobserved confounders
+- Requires good data on pre-treatment characteristics
+- Common support may be limited in some contexts
+
+## Summary
+
+1. **Propensity Score Matching** helps create comparable groups
+2. First **estimate propensity scores** based on baseline characteristics
+3. Check for **common support** and **balance** after matching
+4. Combine with **regression** or **difference-in-differences** to estimate impacts
+5. Interpret results with appropriate caution about unobserved confounders
+
+## Resources for Further Learning
+
+- **Ho, Imai, King, and Stuart (2007)**: "Matching as Nonparametric Preprocessing for Reducing Model Dependence in Parametric Causal Inference"
+- **Stuart (2010)**: "Matching Methods for Causal Inference: A Review and a Look Forward"
+- The **MatchIt** package documentation: [https://kosukeimai.github.io/MatchIt/](https://kosukeimai.github.io/MatchIt/)
+- **"Mastering Metrics"** by Angrist and Pischke (Chapter 3)
+
+## Thank You!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Comparative Results Across Methods
+
+```{r, echo=FALSE, fig.height=4}
+library(ggplot2)
+
+# Create data frame with results from all methods
+all_results <- data.frame(
+  Method = c("Randomized Assignment", "Instrumental Variables", 
+             "Regression Discontinuity", "Difference-in-Differences", 
+             "Matching (Full Set)"),
+  Estimate = c(-10.14, -9.74, -9.03, -8.16, -10.00),
+  SE = c(0.35, 0.96, 0.44, 0.33, 0.37),
+  CI_Lower = c(-10.83, -11.63, -9.90, -8.81, -10.73),
+  CI_Upper = c(-9.45, -7.86, -8.16, -7.52, -9.27)
+)
+
+# Sort by effect size
+all_results <- all_results %>%
+  arrange(Estimate)
+
+# Plot forest plot of results
+ggplot(all_results, aes(y = reorder(Method, Estimate), x = Estimate)) +
+  geom_vline(xintercept = -10, linetype = "dashed", color = "red") +
+  geom_point(size = 3) +
+  geom_errorbarh(aes(xmin = CI_Lower, xmax = CI_Upper), height = 0.3) +
+  labs(title = "Impact of HISP on Health Expenditures",
+       subtitle = "Comparison Across Evaluation Methods",
+       x = "Effect on Health Expenditures (USD)",
+       y = "") +
+  theme_minimal() +
+  annotate("text", x = -10, y = 5.5, label = "Threshold", color = "red", hjust = 1.2)
+```
+
+## Final Policy Recommendation
+
+- Methods produce consistent results in the range of -$8.16 to -$10.14
+- Randomized assignment (gold standard): -$10.14
+- Most quasi-experimental methods: Effect slightly below $10
+- Given uncertainty in estimates and consistency in direction, HISP shows promising results
+
+**RECOMMENDATION**: The preponderance of evidence suggests HISP reduces health expenditures by approximately $10, which meets the threshold criterion. Given the consistency across methods and the gold-standard randomized result, HISP should be scaled up nationally.
+
+## Conclusion: Choosing the Right Method
+
+| Method | When to Use | Key Assumption | Strengths | Limitations |
+|--------|-------------|----------------|-----------|-------------|
+| **Randomized** | Feasible to randomize | Random assignment | Gold standard; controls for all confounders | Implementation challenges; external validity |
+| **IV** | Imperfect compliance; valid instrument exists | Exclusion restriction | Addresses selection; natural experiments | Local effect; requires strong instrument |
+| **RDD** | Clear eligibility threshold | No manipulation of running variable | Credible quasi-experimental design | Local to threshold; requires threshold |
+| **DiD** | Panel data; non-random assignment | Parallel trends | Controls for fixed differences and time trends | Cannot address time-varying confounders |
+| **Matching** | Rich observational data | Selection on observables | Uses existing data; intuitive | Cannot address unobserved confounders |
+
+## Next Steps in Impact Evaluation
+
+1. **Heterogeneity analysis**
+   - Does impact vary across subgroups?
+   - Who benefits most from HISP?
+
+2. **Cost-effectiveness analysis**
+   - Beyond impact, is HISP cost-effective?
+   - How does it compare to alternative programs?
+
+3. **Implementation research**
+   - What factors affect successful implementation?
+   - How to optimize national scale-up?
+
+4. **Long-term follow-up**
+   - Do impacts persist over time?
+   - Are there additional benefits or unintended consequences?
+
+## Key Course Takeaways
+
+1. Impact evaluation requires identifying a valid counterfactual
+2. Randomized experiments provide the most credible counterfactual
+3. Quasi-experimental methods can provide rigorous evidence when randomization isn't possible
+4. Multiple methods with consistent results strengthen the evidence base
+5. Statistical significance must be paired with policy significance
+6. The choice of method depends on context, data, and research question
+7. R provides powerful tools for implementing all these methods
+
+## Thank You!
+
+**Additional Resources**:
+
+- Gertler, P. J., et al. (2016). *Impact Evaluation in Practice*, Second Edition. World Bank.
+- Angrist, J. D., & Pischke, J. S. (2008). *Mostly Harmless Econometrics*. Princeton University Press.
+- Cunningham, S. (2021). *Causal Inference: The Mixtape*. Yale University Press.
+- R packages: `estimatr`, `MatchIt`, `rdrobust`, `did`, `fixest`, `AER`

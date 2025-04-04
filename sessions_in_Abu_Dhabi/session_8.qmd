@@ -1,0 +1,490 @@
+---
+title: "Regression Discontinuity Design"
+subtitle: "Econometrics with R"
+author: "Dr. Lucas Sempé"
+format: 
+  revealjs:
+    theme: [clean.scss]
+    slide-number: true
+    code-fold: false
+    highlight-style: github
+editor_options: 
+  chunk_output_type: console
+---
+
+## Regression Discontinuity Design: Overview
+
+:::: {.columns}
+
+::: {.column width="60%"}
+- **Core idea**: Compare units just above and below an eligibility threshold
+- **Setting**: Assignment based on a continuous "running variable"
+- **Assumption**: Units close to threshold are similar except for treatment status
+- **Advantage**: Credible causal inference from non-experimental data
+- **Types**: Sharp RDD (deterministic cutoff) vs. Fuzzy RDD (probabilistic cutoff)
+:::
+
+::: {.column width="40%"}
+```{r, echo=FALSE, fig.height=4.5}
+library(tidyverse)
+library(estimatr)
+library(kableExtra)
+library(modelsummary)
+
+set.seed(123)
+
+df <- read.csv("./evaluation_data.csv")
+df$waste_management_costs<-df$waste_management_costs*1000
+# Create data subset with only treatment localities
+df_treat <- df %>%
+  filter(treatment_zone == 1)
+
+# Create simulated RDD data
+n <- 200
+cutoff <- 0
+data <- data.frame(
+  running_var = runif(n, -5, 5),
+  noise = rnorm(n, 0, 0.5)
+)
+
+# Generate outcome with discontinuity at cutoff
+data$outcome <- 0.2 * data$running_var + 
+                ifelse(data$running_var >= cutoff, -1.5, 0) + 
+                data$noise
+
+# Create RDD plot
+ggplot(data, aes(x = running_var, y = outcome)) +
+  geom_point(alpha = 0.5) +
+  geom_vline(xintercept = cutoff, linetype = "dashed") +
+  geom_smooth(data = subset(data, running_var < cutoff), 
+              method = "lm", color = "blue") +
+  geom_smooth(data = subset(data, running_var >= cutoff), 
+              method = "lm", color = "red") +
+  annotate("text", x = -2.5, y = 0, label = "Control Group") +
+  annotate("text", x = 2.5, y = -1.5, label = "Treatment Group") +
+  labs(title = "Regression Discontinuity Design",
+       x = "Running Variable",
+       y = "Outcome") +
+  theme_minimal()
+```
+:::
+
+::::
+
+## Case: Efficiency Index Threshold
+
+- Program targets industries using a national efficiency index
+- Index assigns scores from 20 to 100 based on industry characteristics
+- Official efficiency line set at 58
+- Industries with score ≤ 58 are eligible for HISP
+- Only eligible industries in treatment zones enrolled
+
+## Checking for Manipulation
+
+Before applying RDD, we must check for manipulation of the eligibility index:
+
+```{r, eval=T, echo=TRUE}
+# Plot density of efficiency index
+ggplot(df_treat, aes(x = efficiency_index )) +
+  geom_vline(xintercept = 58) +
+  geom_density() +
+  labs(x = "Efficiency Index") + theme_minimal()
+
+```
+
+:::: {.columns}
+
+::: {.column width="50%"}
+- No evidence of "bunching" just below cutoff
+- Formal McCrary density test confirms
+- Households do not appear to manipulate their scores
+:::
+
+::: {.column width="50%"}
+```{r, echo=FALSE, fig.height=4}
+
+# Formal test for manipulation
+library(rddensity)
+
+test_density <- rdplotdensity(rdd = rddensity(df_treat$efficiency_index, c = 58), 
+                              X = df_treat$efficiency_index, 
+                              type = "both")
+
+```
+:::
+
+::::
+
+## Verifying Compliance (Sharp RDD)
+
+
+:::: {.columns}
+
+::: {.column width="50%"}
+- Perfect compliance with eligibility rules
+- All Industries with score ≤ 58 enrolled
+- No Industries with score > 58 enrolled
+- This is a "sharp" RDD with deterministic assignment
+:::
+
+::: {.column width="50%"}
+```{r, eval=T, echo=TRUE}
+# Check if eligibility rules were followed
+ggplot(df_treat, aes(y = enrolled, x = efficiency_index)) +
+  geom_vline(xintercept = 58) +
+  geom_point() +
+  labs(title = "Enrollment by Efficiency Index (Sharp RDD)",
+       x = "Efficiency Index",
+       y = "Enrolled (1 = Yes, 0 = No)") +
+  scale_y_continuous(breaks = c(0, 1)) +
+  theme_minimal()
+```
+:::
+
+::::
+
+## Visualizing the RDD Relationship
+
+:::: {.columns}
+
+::: {.column width="50%"}
+- Clear discontinuity at cutoff (58)
+- Waste expenditures jump higher above the threshold
+- Linear relationship within each group
+- Visual evidence of program impact
+:::
+
+::: {.column width="50%"}
+
+```{r, eval=T, echo=T}
+# Plot relationship between efficiency index and health expenditures
+df_treat %>%
+  filter(round == 1) %>%
+  mutate(enrolled_lab = ifelse(enrolled == 1, "Enrolled", "Not Enrolled")) %>%
+  ggplot(aes(x = efficiency_index, y = waste_management_costs,
+             group = enrolled_lab, colour = enrolled_lab)) +
+  geom_point(alpha = 0.03) +
+  geom_smooth(method = "lm") +
+  geom_vline(xintercept = 58) +
+  labs(x = "Efficiency Index", y = "Waste Expenditures") + theme_minimal()
+```
+
+:::
+
+::::
+
+## Estimating the RDD Impact
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+```{r, eval=T, echo=TRUE}
+#| class: small-code
+
+# Prepare data by centering the running variable
+df_treat <- df_treat %>%
+  mutate(efficiency_index_c0 = efficiency_index - 58)
+
+# Basic RDD regression with covariates
+out_rdd <- lm_robust(waste_management_costs ~ 
+                  efficiency_index_c0 * enrolled +
+                  age_manager + age_deputy +
+                  female_manager + foreign_owned + 
+                  staff_size +
+                  advanced_filtration + facility_area +
+                  recycling_center_distance,
+                  data = df_treat %>% filter(round == 1))
+```
+
+:::
+
+::: {.column width="50%"}
+
+```{r}
+
+modelsummary(list("Sharp RDD"= out_rdd), stars = TRUE,coef_omit = c(-3),
+             gof_map = c("nobs", "r.squared","adj.r.squared"),output = 'kableExtra') %>%
+  kable_styling (font_size = 15) 
+
+```
+
+- Treatment reduces waste expenditures by approximately $9051
+
+:::
+::::
+
+## Quadratic and polinomial models
+:::: {.columns}
+
+::: {.column width="50%"}
+
+```{r, eval=T, echo=TRUE}
+#| class: small-code
+
+out_rdd_quadratic  <- lm_robust(waste_management_costs ~ 
+                  efficiency_index_c0 * enrolled +
+                    enrolled * I(efficiency_index_c0^2) +
+                  age_manager + age_deputy +
+                  female_manager + foreign_owned + 
+                  staff_size +
+                  advanced_filtration + facility_area +
+                  recycling_center_distance,
+                  data = df_treat %>% filter(round == 1))
+
+out_rdd_cubic  <- lm_robust(waste_management_costs ~ 
+                  efficiency_index_c0 * enrolled +
+                    enrolled * I(efficiency_index_c0^2) + 
+                        enrolled * I(efficiency_index_c0^3) +
+                  age_manager + age_deputy +
+                  female_manager + foreign_owned + 
+                  staff_size +
+                  advanced_filtration + facility_area +
+                  recycling_center_distance,
+                  data = df_treat %>% filter(round == 1))
+```
+
+:::
+
+::: {.column width="50%"}
+
+```{r}
+
+modelsummary(coef_omit = c(-3),
+             list("Quadratic RDD"= out_rdd_quadratic,"Cubic RDD" = out_rdd_cubic), stars = TRUE,
+             gof_map = c("nobs", "r.squared","adj.r.squared"), output = 'kableExtra') %>%
+  kable_styling (font_size = 15)
+
+```
+
+- RDD estimates are robust across different specifications
+- Effect is statistically significant but below the $10,000 threshold
+- Results are similar to the IV estimates
+
+:::
+::::
+
+## Robustness Checks for RDD
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+**1. Bandwidth selection**
+```{r, eval=T, echo=TRUE}
+# Restrict to observations near cutoff
+out_rdd5 <- lm_robust(
+  waste_management_costs ~ 
+    enrolled * efficiency_index_c0 +
+          age_manager + age_deputy +
+           female_manager + foreign_owned + 
+           staff_size +
+                  advanced_filtration + facility_area +
+                  recycling_center_distance,
+  data = df_treat %>% 
+    filter(round == 1 & 
+           abs(efficiency_index_c0) <= 53))
+
+```
+
+```{r}
+
+modelsummary(coef_omit = c(-2),
+             out_rdd5, stars = TRUE,
+             gof_map = c("nobs", "r.squared","adj.r.squared"), output = 'kableExtra') %>%
+  kable_styling (font_size = 15)
+
+```
+
+:::
+
+::: {.column width="50%"}
+
+
+**2. Placebo tests**
+
+- Test for "effects" at fake cutoff points
+- Examine outcomes that shouldn't be affected
+
+:::
+
+::::
+
+## Local Treatment Effect in RDD
+
+:::: {.columns}
+
+::: {.column width="50%"}
+- RDD estimates are **local** to the threshold
+- They represent the effect for industries with scores near 58
+- Industries at the margin of eligibility
+- Less representative of very low efficiency (low scores)
+- External validity depends on whether effects vary with efficiency level
+:::
+
+::: {.column width="50%"}
+```{r, echo=FALSE, fig.height=4}
+library(ggplot2)
+
+# Create data for local effect illustration
+x_range <- seq(40, 80, by = 0.1)
+cutoff <- 58
+
+# Generate treatment effects that vary with efficiency index
+effects <- data.frame(
+  efficiency_index = x_range,
+  effect_size = -15 + 0.1 * (x_range - 40)
+)
+
+# Plot varying treatment effects
+ggplot(effects, aes(x = efficiency_index, y = effect_size)) +
+  geom_line(size = 1, color = "blue") +
+  geom_vline(xintercept = cutoff, linetype = "dashed", color = "red") +
+  geom_hline(yintercept = -9, linetype = "dotted") +
+  annotate("text", x = 70, y = -9, label = "RDD Estimate", hjust = 0) +
+  annotate("segment", x = cutoff, xend = cutoff, y = -15, yend = -9, 
+           arrow = arrow(length = unit(0.3, "cm")), color = "red") +
+  annotate("text", x = cutoff + 0.5, y = -12, label = "Local Effect", hjust = 0) +
+  labs(title = "Treatment Effects May Vary with efficiency Index",
+       x = "efficiency Index",
+       y = "Treatment Effect on Health Expenditures") +
+  ylim(-15, -5) +
+  theme_minimal()
+```
+:::
+
+::::
+
+## RDD vs. Other Methods
+
+:::: {.columns}
+
+::: {.column width="33%"}
+**RDD**:
+
+- Effect: -$9.03
+- Local to cutoff
+- Uses eligibility threshold
+- Sharp discontinuity
+
+**Recommendation**: Do not scale up
+:::
+
+::: {.column width="33%"}
+**IV**:
+
+- Effect: -$9.74
+- Effect on compliers
+- Uses randomized promotion
+- Fuzzy take-up
+
+**Recommendation**: Do not scale up
+:::
+
+::: {.column width="33%"}
+**Randomized**:
+
+- Effect: -$10.14
+- Average effect
+- Uses random assignment
+- Full experimental control
+
+**Recommendation**:  Scale up nationally
+:::
+
+::::
+
+**Why the differences?**
+
+- Different populations (local vs. compliers vs. average)
+- Different estimation methods
+- Different precision levels
+
+## When to Use RDD
+
+**Use when**:
+
+- Clear eligibility threshold exists
+- Running variable is continuous and measured precisely
+- Units cannot precisely manipulate their position around threshold
+- Interest in effects for marginal participants
+
+**Common applications**:
+
+- Test score cutoffs for educational programs
+- Income thresholds for social programs
+- Age eligibility for services
+- Geographic boundaries for policies
+
+## Implementing RDD in R
+
+```{r, eval=FALSE, echo=TRUE}
+# Basic steps for RDD analysis
+
+# Step 1: Check for manipulation
+library(rddensity)
+rdd_test <- rddensity(data$running_var, c = cutoff)
+rdplotdensity(rdd_test, data$running_var)
+
+# Step 2: Center the running variable
+data$centered_var <- data$running_var - cutoff
+
+# Step 3: Estimate RDD effect (parametric)
+model <- lm_robust(
+  outcome ~ centered_var * treatment + controls,
+  data = data
+)
+
+# Step 4: Non-parametric approach
+library(rdrobust)
+rd_robust <- rdrobust(
+  y = data$outcome,
+  x = data$running_var,
+  c = cutoff
+)
+```
+
+## Common Pitfalls in RDD Analysis
+
+1. **Manipulation of the running variable**
+   - Units strategically position themselves around threshold
+   - Check density for unusual bunching
+
+2. **Inappropriate bandwidth**
+   - Too wide: Bias from including dissimilar units
+   - Too narrow: Imprecision from small sample
+   - Use data-driven bandwidth selection methods
+
+3. **Misspecification of functional form**
+   - Linear may not capture true relationship
+   - Check robustness to different specifications
+
+4. **Multiple cutoffs or treatments**
+   - Other policies may use the same threshold
+   - Separate effects of different treatments
+
+## From Analysis to Policy Decision
+
+**Policy question**: Should the Program be scaled up nationally?
+
+**Decision criterion**: Program must reduce health expenditures by at least $10,000.
+
+**Results from RDD estimation**:
+
+- Effect: $`{r} round(out_rdd$coefficients[3],0)` (95% CI: [ $`{r} round(out_rdd$coefficients[3] + 1.96*out_rdd$std.error[3],0)`, $`{r} round(out_rdd$coefficients[3] - 1.96*out_rdd$std.error[3],0)`])
+- Point estimate below the $10,000 threshold
+- Effect applies to industries near the efficiency threshold
+
+**Recommendation**: Based on the RDD estimate, the Program should not be scaled up nationally.
+
+## Key Takeaways
+
+1. RDD exploits discontinuities at eligibility thresholds to estimate causal effects
+2. Units just above and below the threshold are comparable except for treatment
+3. RDD estimates are local to the cutoff and may not generalize to units far from threshold
+4. Multiple specifications yield consistent estimates of approximately $90,00 reduction
+5. RDD estimate is slightly below the $10,000 threshold for scaling up HISP
+
+## Next Session
+
+**Difference-in-Differences**: Comparing changes over time between treatment and comparison groups

@@ -1,0 +1,193 @@
+---
+title: "Introduction to Impact Evaluation"
+subtitle: "Econometrics with R"
+author: "Dr. Lucas Sempé"
+format: 
+  revealjs:
+    theme: [clean.scss]
+    slide-number: true
+    code-fold: false
+    highlight-style: github
+---
+
+## What is Impact Evaluation?
+
+:::: {.columns}
+
+::: {.column width="60%"}
+- **Objective**: Measure causal effects of programs or policies
+- **Challenge**: Identifying what would have happened without the intervention
+- **Counterfactual**: The state of the world that would have occurred in absence of the intervention
+- **Impact**: The difference between the actual outcome and the counterfactual
+:::
+
+::: {.column width="40%"}
+```{r, echo=FALSE, fig.cap="Impact = Actual - Counterfactual", fig.height= 12}
+library(broom)
+library(estimatr)
+library(fishmethods)
+library(haven)
+library(kableExtra)
+library(modelsummary)
+library(tidyverse)
+
+# Create example data
+
+data <- data.frame(
+  Time = c(0, 1, 0, 1),
+  Outcome = c(14.5, 7.8, 14.5, 18),
+  Group = c("Treatment", "Treatment", "Counterfactual", "Counterfactual")
+)
+
+# Create plot
+ggplot(data, aes(x = Time, y = Outcome, color = Group, group = Group)) +
+  geom_line(size = 1.2) +
+  geom_point(size = 3) +
+  annotate("segment", x = 1, xend = 1, y = 7.8, yend = 18, 
+           arrow = arrow(length = unit(0.3, "cm")), linetype = "dashed") +
+  annotate("text", x = 1.05, y = 13, label = "Impact", hjust = 0) +
+  scale_x_continuous(breaks = c(0, 1), labels = c("Before", "After")) +
+  labs(title = "Visualizing Impact", y = "Outcome", x = "") +
+  theme_minimal()
+```
+:::
+
+::::
+
+## The Fundamental Problem of Causal Inference
+
+> We cannot observe the same unit in both treatment and control states simultaneously.
+
+- For each unit, we observe either:
+  - The outcome with the intervention
+  - The outcome without the intervention
+- The challenge: How do we estimate the counterfactual?
+
+## Example: Waste maanagement system
+
+- Government program subsidizing waste management new technologies 
+- Goal: Reduce waste management costs
+- Policy question: Should the program be scaled up nationally?
+- Decision criterion: Program must reduce waste management at least $10,000
+
+## Key Variables in Our Example Dataset
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**Outcome Variable**:
+
+- `waste_management_costs`: Waste managament incurred monthly per industry (USD)
+
+**Treatment Variables**:
+
+- `treatment_zone`: Area selected for program (0/1)
+- `enrolled`: Industry enrolled in program (0/1)
+- `eligible`: Industry eligible for program (0/1)
+:::
+
+::: {.column width="50%"}
+**Other Variables**:
+
+- `round`: Survey round (0=baseline, 1=follow-up)
+- `efficiency_index`: Score based on industry characteristics
+- Leadership Demographics: Age, education, gender, etc.
+- `recycling_center_distance`: Distance to nearest recycling centre
+:::
+
+::::
+
+## Overview of Impact Evaluation Methods
+
+**Experimental Methods**:
+
+- Randomized assignment (gold standard)
+
+**Quasi-Experimental Methods**:
+
+- Instrumental Variables
+- Regression Discontinuity
+- Difference-in-Differences
+- Matching Methods
+
+## Naive Approaches to Estimating Impact
+
+1. **Before-After Comparison**
+   - Compare outcomes of beneficiaries before and after the program
+   - Problem: Cannot distinguish program effects from other changes over time
+
+2. **With-Without Comparison**
+   - Compare beneficiaries to non-beneficiaries
+   - Problem: Selection bias if those who receive the program are systematically different
+
+## Before-After Comparison (Example)
+
+```{r}
+
+df <- read.csv("./evaluation_data.csv")
+df$waste_management_costs<-df$waste_management_costs*1000
+
+```
+
+```{r, eval=T, echo=TRUE}
+# Compare waste management costs before and after for enrolled industries
+m_ba1 <- lm_robust(waste_management_costs   ~ round, 
+                  clusters = zone_identifier,
+                  data = df %>% filter(treatment_zone ==1 & enrolled ==1))
+
+```
+
+**Problems**: 
+
+- External factors also change over time (e.g., economic conditions, other government programs)
+- Cannot attribute all changes to the program
+
+## With-Without Comparison (HISP Example)
+
+```{r, eval=T, echo=TRUE}
+# Compare enrolled vs. non-enrolled households after program implementation
+m_ba2 <- lm_robust(waste_management_costs ~ enrolled, 
+                  clusters = zone_identifier,
+                  data = df %>% filter(treatment_zone==1 & round ==1))
+
+```
+
+**Problems**:
+
+- Selection bias: Enrolled industries differ from non-enrolled
+- Cannot attribute all differences to the program
+
+## Compare results
+
+```{r}
+
+modelsummary(list(m_ba1, m_ba2), stars = TRUE,
+             gof_map = c("nobs", "r.squared","r2.adjusted"))
+
+
+```      
+
+## Course Outline
+
+1. **Introduction to Impact Evaluation** ← *You are here*
+2. **Randomized Assignment**
+3. **Instrumental Variables**
+4. **Regression Discontinuity Designs**
+5. **Difference-in-Differences** 
+6. **Matching Methods**
+
+## Key Takeaways
+
+- Impact evaluation measures the causal effect of programs or policies
+- The central challenge is estimating the counterfactual
+- Naive before-after or with-without comparisons are susceptible to bias
+- Various experimental and quasi-experimental methods address these challenges
+- The example will illustrate these methods throughout the course
+
+## Next Session
+
+**Randomized Assignment**: The gold standard for causal inference
+
+- How randomization creates comparable groups
+- Implementing and analyzing randomized evaluations
+- Interpreting results with confidence

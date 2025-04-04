@@ -1,9 +1,14 @@
 ---
 title: "Learning R"
 subtitle: "Session 3: Data Visualization and Basic Statistics in R"
+execute: 
+  echo: true
 format: 
+  pptx:
+    incremental: true 
   revealjs:
     theme: [clean.scss]
+    scrollable: true
     transition: slide
     highlight-style: github
     code-copy: true
@@ -23,17 +28,20 @@ Statistics help us summarize, interpret, and analyze data. In this session we wi
 
 -   Hypothesis testing
 
-## Descriptive Statistics
+## Dataset
 
 In this session, let's use a different dataset. We are going to use the gapminder data which is stored within the gapminder package in R.
 
 ```{r}
-install.packages("gapminder")
+#install.packages("gapminder")
 library(gapminder)
+library(tidyverse)
 
 # View data
 head(gapminder)
 ```
+
+## Descriptive Statistics (I)
 
 As we learned in the first session, we can use R's built-in functions to get key statistics.
 
@@ -46,11 +54,11 @@ mean(gapminder$pop)
 sd(gapminder$pop)
 ```
 
+## Descriptive Statistics (II)
+
 We can also use dplyr to view summary statistics of key variables in our dataset. Dplyr's functionality makes it easier to layer multiple commands and view stats by a particular variable or subgroup.
 
 ```{r}
-library(tidyverse)
-library(dplyr)
 
 # Compute mean, count, and std dev of pop - these will match our previous estimates
 gapminder %>% summarize(mean_pop = mean(pop), n=n(), sd=sd(pop))
@@ -58,74 +66,6 @@ gapminder %>% summarize(mean_pop = mean(pop), n=n(), sd=sd(pop))
 # Compute mean pop by country 
 gapminder %>% group_by(country) %>% summarize(mean_pop = mean(pop))
 ```
-
-## Basic Probability Distributions
-
-Probability distributions describe how values are distributed within a dataset. They are used to model different types of data in statistics. Some common probability distributions include:
-
--   **Normal Distribution**: A symmetric, bell-shaped distribution common in natural and social sciences.
-
--   **Uniform Distribution**: All values within a specified range occur with equal probability.
-
--   **Binomial Distribution**: Used for binary outcomes, such as success/failure.
-
-Below are examples of generating and visualizing random probability distributions in R. We will discuss the specific features of ggplot in a moment. For now, use the visualizations to understand how these distributions are different.
-
-```{r}
-# Normal distribution
-normal_data <- rnorm(1000, mean = 50, sd = 10)
-ggplot(data.frame(x = normal_data), aes(x = x)) +
-  geom_histogram() 
-
-# Uniform distribution
-uniform_data <- runif(1000, min = 0, max = 100)
-ggplot(data.frame(x = uniform_data), aes(x = x)) +
-  geom_histogram()
-
-# Binomial distribution
-binom_data <- rbinom(10, size = 10, prob = 0.5)
-ggplot(data.frame(x = binom_data), aes(x = x)) +
-  geom_histogram()
-```
-
-## Simple Hypothesis Testing
-
-Hypothesis testing is a statistical method used to make inferences about a population based on a sample. It helps determine if an observed effect is statistically significant or if it could have occurred by chance.
-
-### When and Why Do We Use Hypothesis Testing?
-
--   When we want to compare sample data against a known value or another dataset.
-
--   To test assumptions in scientific studies, such as "Is the average life expectancy significantly different from a specific value?"
-
-### Steps in Hypothesis Testing:
-
-1.  **Define Null and Alternative Hypotheses:**
-
-    -   Null Hypothesis (H₀): Assumes no effect or difference.
-
-    -   Alternative Hypothesis (H₁): Assumes a significant effect or difference.
-
-2.  **Choose a Significance Level (α):** Commonly set at 0.05.
-
-3.  **Select a Statistical Test:** T-tests, Chi-square tests, ANOVA, etc.
-
-4.  **Compute the Test Statistic:** Using R functions like `t.test()`.
-
-5.  **Compare with the Critical Value/P-value:** If p \< α, reject the null hypothesis.
-
-Example: Testing if the mean `lifeExp` differs significantly from 20. Is the life expectancy statistically significantly different from 20?
-
-```{r}
-# One-sample t-test
-t.test(gapminder$lifeExp, mu = 20)
-```
-
-In hypothesis testing, the result is considered statistically different from 20 if the **p-value** from the t-test is less than the chosen significance level (commonly 0.05).
-
--   If **p \< 0.05**, we **reject the null hypothesis** (H₀), meaning the mean `lifeExp` is significantly different from 20.
-
--   If **p ≥ 0.05**, we **fail to reject the null hypothesis**, meaning there is not enough evidence to conclude a significant difference.
 
 # Part B: Introduction to ggplot2 {.section}
 
@@ -135,7 +75,7 @@ In hypothesis testing, the result is considered statistically different from 20 
 
 ```{r}
 # Install and load ggplot2
-install.packages("ggplot2")
+#install.packages("ggplot2")
 library(ggplot2)
 ```
 
@@ -145,33 +85,32 @@ The **Grammar of Graphics** provides a structured way to create visualizations.
 
 Charts in R using ggplot have a basic structure that we can build on. We need data, which must be in a data frame format. We first need to tell ggplot where our data is stored. Then, we choose the type of graph, or geom, and we add it. From there, we can add more characteristics to the chart, such as adjusted scales, titles and labels.
 
-Let's say we want to plot a histogram of life expectancy and percapita GDP. We will create an object that contains the basic information and build our chart from there. First we tell the ggplot() function what the data is that we will use.
+Let's say we want to plot a histogram of life expectancy.
+ We will create an object that contains the basic information and build our chart from there.
 
-```{r}
-p <- ggplot(data = gapminder)
-```
+## The Grammar of Graphics
+ First we tell the ggplot() function what the data is that we will use.
 
 Now ggplot knows our data but we still need to specify which variables should be represented by which visual elements in the chart (this is known as mapping), and then we need to chose which type of chart we want. Mappings are specified by the `aes()` function and plot types (such as `geom_histogram()`) are added to that.
 
-For instance, we can visualize the distribution of the life expectancy across the globe using our gapminder data. What kind of distribution is this?
-
 ```{r}
-ggplot(data = gapminder, aes(x = lifeExp)) +
-  geom_histogram() 
+ggplot(data = gapminder)+
+  geom_histogram(aes(x = lifeExp)) 
 ```
 
 ## Basic Plot Types
 
-### Scatter Plot
+## Scatter Plot
 
 Let's say we want to plot life expectancy and GDP per-capita. We can do this with a scatter plot, specified by geom_point().
 
 ```{r}
-ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)) +
-  geom_point()
+ggplot(gapminder) +
+  geom_point(aes(x = gdpPercap, y = lifeExp))
+
 ```
 
-### Line Plot
+## Line Plot
 
 We can visualize the same information as a line plot.
 
@@ -179,6 +118,8 @@ We can visualize the same information as a line plot.
 ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)) +
   geom_line()
 ```
+
+## Line Plot
 
 We can also visualize the life expectancy of each continent over time.
 
@@ -206,7 +147,7 @@ ggplot(gapminder, aes(x = year, y = lifeExp, group = continent, color = continen
   stat_summary(fun = mean, geom = "line") 
 ```
 
-### Bar Plot
+## Bar Plot
 
 A bar plot is commonly used to display categorical information. For instance, we can visualize how often each continent appears in the data.
 
@@ -338,7 +279,7 @@ library(gapminder)
 
 ```
 
-### Example solution:
+## Example solution:
 
 ```{r}
 # Load necessary libraries
@@ -380,8 +321,82 @@ ggplot(gapminder_2007, aes(x = gdpPercap, y = lifeExp, color = continent)) +
 
 -   [Grammar of Graphics](https://ramnathv.github.io/pycon2014-r/visualize/ggplot2.html)
 
-## Exercise Solutions
+# Additional learning!
 
-Solutions will be posted after the session!
+## Basic Probability Distributions (I)
 
-::: callout-tip Practice makes perfect! Experiment with different datasets. :::
+Probability distributions describe how values are distributed within a dataset. They are used to model different types of data in statistics. Some common probability distributions include:
+
+-   **Normal Distribution**: A symmetric, bell-shaped distribution common in natural and social sciences.
+
+-   **Uniform Distribution**: All values within a specified range occur with equal probability.
+
+-   **Binomial Distribution**: Used for binary outcomes, such as success/failure.
+
+Below are examples of generating and visualizing random probability distributions in R. We will discuss the specific features of ggplot in a moment. For now, use the visualizations to understand how these distributions are different.
+
+```{r}
+# Normal distribution
+normal_data <- rnorm(1000, mean = 50, sd = 10)
+
+# Uniform distribution
+uniform_data <- runif(1000, min = 0, max = 100)
+
+# Binomial distribution
+binom_data <- rbinom(1000, size = 1, prob = 0.5)
+
+```
+
+## Basic Probability Distributions (II)
+
+```{r}
+
+ggplot(data.frame(x = normal_data), aes(x = x)) +
+  geom_histogram() 
+
+ggplot(data.frame(x = uniform_data), aes(x = x)) +
+  geom_histogram()
+
+ggplot(data.frame(x = binom_data), aes(x = x)) +
+  geom_histogram(bins = 2)
+```
+
+## Simple Hypothesis Testing
+
+Hypothesis testing is a statistical method used to make inferences about a population based on a sample. It helps determine if an observed effect is statistically significant or if it could have occurred by chance.
+
+### When and Why Do We Use Hypothesis Testing?
+
+-   When we want to compare sample data against a known value or another dataset.
+
+-   To test assumptions in scientific studies, such as "Is the average life expectancy significantly different from a specific value?"
+
+### Steps in Hypothesis Testing:
+
+1.  **Define Null and Alternative Hypotheses:**
+
+    -   Null Hypothesis (H₀): Assumes no effect or difference.
+
+    -   Alternative Hypothesis (H₁): Assumes a significant effect or difference.
+
+2.  **Choose a Significance Level (α):** Commonly set at 0.05.
+
+3.  **Select a Statistical Test:** T-tests, Chi-square tests, ANOVA, etc.
+
+4.  **Compute the Test Statistic:** Using R functions like `t.test()`.
+
+5.  **Compare with the Critical Value/P-value:** If p \< α, reject the null hypothesis.
+
+Example: Testing if the mean `lifeExp` differs significantly from 20. Is the life expectancy statistically significantly different from 20?
+
+```{r}
+# One-sample t-test
+t.test(gapminder$lifeExp, mu = 20)
+```
+
+In hypothesis testing, the result is considered statistically different from 20 if the **p-value** from the t-test is less than the chosen significance level (commonly 0.05).
+
+-   If **p \< 0.05**, we **reject the null hypothesis** (H₀), meaning the mean `lifeExp` is significantly different from 20.
+
+-   If **p ≥ 0.05**, we **fail to reject the null hypothesis**, meaning there is not enough evidence to conclude a significant difference.
+

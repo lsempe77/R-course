@@ -1,0 +1,6 @@
+- source: session_3.qmd
+  quarto-pub:
+    - id: 907e9cde-5742-4f5f-a520-ad2a8c09017d
+      url: 'https://lsempe.quarto.pub/learning-r'
+    - id: 804fb3dc-0366-4a20-8421-f7dcf01df32f
+      url: 'https://lsempe.quarto.pub/learning-r-s3'

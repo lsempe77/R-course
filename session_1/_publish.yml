@@ -1,0 +1,4 @@
+- source: index.qmd
+  quarto-pub:
+    - id: f4d3c620-ee25-4765-9788-25a16a42df8f
+      url: 'https://lsempe.quarto.pub/learning-r-s1'

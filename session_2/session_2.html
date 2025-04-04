@@ -8,7 +8,7 @@
 <link href="session_2_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="session_2_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="session_2_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.3.450">
+  <meta name="generator" content="quarto-1.4.555">
 
   <title>Learning R</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -28,6 +28,71 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+      }
+    pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+    div.sourceCode
+      { color: #24292e;  }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #24292e; } /* Normal */
+    code span.al { color: #ff5555; font-weight: bold; } /* Alert */
+    code span.an { color: #6a737d; } /* Annotation */
+    code span.at { color: #d73a49; } /* Attribute */
+    code span.bn { color: #005cc5; } /* BaseN */
+    code span.bu { color: #d73a49; } /* BuiltIn */
+    code span.cf { color: #d73a49; } /* ControlFlow */
+    code span.ch { color: #032f62; } /* Char */
+    code span.cn { color: #005cc5; } /* Constant */
+    code span.co { color: #6a737d; } /* Comment */
+    code span.cv { color: #6a737d; } /* CommentVar */
+    code span.do { color: #6a737d; } /* Documentation */
+    code span.dt { color: #d73a49; } /* DataType */
+    code span.dv { color: #005cc5; } /* DecVal */
+    code span.er { color: #ff5555; text-decoration: underline; } /* Error */
+    code span.ex { color: #d73a49; font-weight: bold; } /* Extension */
+    code span.fl { color: #005cc5; } /* Float */
+    code span.fu { color: #6f42c1; } /* Function */
+    code span.im { color: #032f62; } /* Import */
+    code span.in { color: #6a737d; } /* Information */
+    code span.kw { color: #d73a49; } /* Keyword */
+    code span.op { color: #24292e; } /* Operator */
+    code span.ot { color: #6f42c1; } /* Other */
+    code span.pp { color: #d73a49; } /* Preprocessor */
+    code span.re { color: #6a737d; } /* RegionMarker */
+    code span.sc { color: #005cc5; } /* SpecialChar */
+    code span.ss { color: #032f62; } /* SpecialString */
+    code span.st { color: #032f62; } /* String */
+    code span.va { color: #e36209; } /* Variable */
+    code span.vs { color: #032f62; } /* VerbatimString */
+    code span.wa { color: #ff5555; } /* Warning */
   </style>
   <link rel="stylesheet" href="session_2_files/libs/revealjs/dist/theme/quarto.css">
   <link href="session_2_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
@@ -155,7 +220,8 @@
   }
 
   .callout.callout-titled .callout-body > .callout-content > :last-child {
-    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0;
   }
 
   .callout.callout-titled .callout-icon::before {
@@ -331,26 +397,467 @@
 </div>
 
 </section>
-<section id="part-a-exploring-and-cleaning-data" class="slide level2">
-<h2>Part A: Exploring and Cleaning Data</h2>
-<p>Introduction to tidyverse</p>
-<p>When you click the <strong>Render</strong> button a document will be generated that includes both content and the output of embedded code. You can embed code like this:</p>
+<section>
+<section id="part-a-introduction-to-data-manipulation" class="title-slide slide level1 section center">
+<h1>Part A: Introduction to Data Manipulation</h1>
+
+</section>
+<section id="welcome-to-data-manipulation-in-r" class="slide level2">
+<h2>Welcome to Data Manipulation in R!</h2>
+<p>Data manipulation is a crucial part of data analysis and preparation.</p>
+<ul>
+<li><p>Cleaning and transforming data</p></li>
+<li><p>Filtering and selecting relevant information</p></li>
+<li><p>Summarizing and grouping data</p></li>
+<li><p>Handling missing values</p></li>
+</ul>
+<p>In this session we will learn how to examine and clean our data in R.</p>
+</section>
+<section id="introduction-to-tidyverse" class="slide level2">
+<h2>Introduction to Tidyverse</h2>
+<p>The Tidyverse is a collection of R packages designed for data science that can help you import, clean, and understand data.</p>
+<p>First, we need some packages to be loaded in. You can install the core packages from the&nbsp;<code>tidyverse</code>&nbsp;by simply typing <code>install.packages("tidyverse")</code> in the console.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a><span class="co"># Install packages - this only needs to be done once!</span></span>
+<span id="cb1-2"><a href=""></a><span class="co"># install.packages("tidyverse", repos = "https://cloud.r-project.org/")  </span></span>
+<span id="cb1-3"><a href=""></a></span>
+<span id="cb1-4"><a href=""></a><span class="co"># Load the packages</span></span>
+<span id="cb1-5"><a href=""></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>For more information on Tidyverse, explore the documentation here: <a href="https://www.tidyverse.org/" class="uri">https://www.tidyverse.org/</a></p>
+</section>
+<section id="tidyverse-tools" class="slide level2">
+<h2>Tidyverse tools</h2>
+<p>Tidyverse tools use pipes and tibbles to make R code more human</p>
+<p>The pipe, %&gt;%, allows the output of one command to be used as an input in the next command, which is cleaner than using nested functions.</p>
+<div style="font-size: 70%;">
+<p>*Note: a shortcut to write the pipe command is ctrl+SHIFT+M (Windows) or command+SHIFT+M (Mac).</p>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a><span class="do">## A single command </span></span>
+<span id="cb2-2"><a href=""></a><span class="fu">sqrt</span>(<span class="dv">65</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 8.062258</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a><span class="do">## Base R method of running more than one command </span></span>
+<span id="cb4-2"><a href=""></a><span class="fu">round</span>(<span class="fu">sqrt</span>(<span class="dv">65</span>), <span class="at">digit =</span> <span class="dv">2</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 8.06</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href=""></a><span class="do">## Running more than one command with piping </span></span>
+<span id="cb6-2"><a href=""></a><span class="fu">sqrt</span>(<span class="dv">65</span>) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="at">digit =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 8.06</code></pre>
+</div>
+</div>
+</section>
+<section id="filtering-and-selecting-data-with-dplyr" class="slide level2">
+<h2>Filtering and Selecting Data with dplyr</h2>
+<p>One of the most useful tools in the Tidyverse is <code>dplyr</code>. Dplyr has many handy functions that can help with data wrangling, including:</p>
+<ul>
+<li><p><code>select()</code> extracts columns of interest.</p></li>
+<li><p><code>arrange()</code> changes the ordering of the rows.</p></li>
+<li><p><code>filter()</code> filters cases based on their values.</p></li>
+<li><p><code>mutate()</code> creates/adds new variables based on conditions of existing variables.</p></li>
+<li><p><code>rename()</code> easily changes the name of a column(s)</p></li>
+<li><p><code>summarise()</code> reduces multiple values down to a single summary.</p></li>
+<li><p><code>_join()</code> group of functions that merge two data frames together, includes (<code>inner_join()</code>, <code>left_join()</code>, <code>right_join()</code>, and <code>full_join()</code>).</p></li>
+</ul>
+<p>Note: if you do not have the necessary libraries loaded and you try to use pipes or these functions, you will get an error. Remember to always first load in the packages you need with <code>library()</code>.</p>
+</section>
+<section id="filtering-rows-i" class="slide level2">
+<h2>Filtering Rows (I)</h2>
+<p>Use <code>filter()</code> to subset data based on conditions.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href=""></a><span class="co"># Load built-in R dataset </span></span>
+<span id="cb8-2"><a href=""></a><span class="fu">data</span>(mtcars)  </span>
+<span id="cb8-3"><a href=""></a></span>
+<span id="cb8-4"><a href=""></a><span class="co"># View mtcars</span></span>
+<span id="cb8-5"><a href=""></a><span class="fu">head</span>(mtcars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                   mpg cyl disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
+Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href=""></a><span class="co"># Filter for rows where mpg is greater than 20 </span></span>
+<span id="cb10-2"><a href=""></a>mtcars <span class="sc">%&gt;%</span> <span class="fu">filter</span>(mpg <span class="sc">&gt;</span> <span class="dv">20</span>) <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4      21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+Mazda RX4 Wag  21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
+Datsun 710     22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
+Hornet 4 Drive 21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
+Merc 240D      24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
+Merc 230       22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2</code></pre>
+</div>
+</div>
+</section>
+<section id="filtering-rows-ii" class="slide level2">
+<h2>Filtering Rows (II)</h2>
+<p>If we want to create a new dataset that is a filtered version of our mtcars dataset that we can build on that in later steps, we can assign (<code>&lt;-</code>) it a new name like this: <code>mtcars_filter &lt;-</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href=""></a><span class="co"># Create a new dataset that is filtered, rather than overriding mtcars</span></span>
+<span id="cb12-2"><a href=""></a>mtcars_filter <span class="ot">&lt;-</span> mtcars <span class="sc">%&gt;%</span> <span class="fu">filter</span>(mpg <span class="sc">&gt;</span> <span class="dv">20</span>)</span>
+<span id="cb12-3"><a href=""></a></span>
+<span id="cb12-4"><a href=""></a><span class="co"># View the new mtcars_filter dataset</span></span>
+<span id="cb12-5"><a href=""></a><span class="fu">head</span>(mtcars_filter)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4      21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+Mazda RX4 Wag  21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
+Datsun 710     22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
+Hornet 4 Drive 21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
+Merc 240D      24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
+Merc 230       22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2</code></pre>
+</div>
+</div>
+</section>
+<section id="selecting-columns" class="slide level2">
+<h2>Selecting Columns</h2>
+<p>We can perform other functions with dplyr such as subsetting our data to view only a few columns at a time. Use <code>select()</code> to choose specific columns.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href=""></a><span class="co"># Select only mpg and hp columns </span></span>
+<span id="cb14-2"><a href=""></a>mtcars <span class="sc">%&gt;%</span> <span class="fu">select</span>(mpg, hp) <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                   mpg  hp
+Mazda RX4         21.0 110
+Mazda RX4 Wag     21.0 110
+Datsun 710        22.8  93
+Hornet 4 Drive    21.4 110
+Hornet Sportabout 18.7 175
+Valiant           18.1 105</code></pre>
+</div>
+</div>
+</section>
+<section id="sorting-and-arranging-data" class="slide level2">
+<h2>Sorting and Arranging Data</h2>
+<p>Use <code>arrange()</code> to sort data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href=""></a><span class="co"># Arrange data in ascending order of mpg </span></span>
+<span id="cb16-2"><a href=""></a>mtcars <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(mpg) <span class="sc">%&gt;%</span> <span class="fu">head</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                     mpg cyl disp  hp drat    wt  qsec vs am gear carb
+Cadillac Fleetwood  10.4   8  472 205 2.93 5.250 17.98  0  0    3    4
+Lincoln Continental 10.4   8  460 215 3.00 5.424 17.82  0  0    3    4
+Camaro Z28          13.3   8  350 245 3.73 3.840 15.41  0  0    3    4
+Duster 360          14.3   8  360 245 3.21 3.570 15.84  0  0    3    4
+Chrysler Imperial   14.7   8  440 230 3.23 5.345 17.42  0  0    3    4
+Maserati Bora       15.0   8  301 335 3.54 3.570 14.60  0  1    5    8</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href=""></a><span class="co"># Arrange data in descending order of mpg </span></span>
+<span id="cb18-2"><a href=""></a>mtcars <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(mpg)) <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+Toyota Corolla 33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1
+Fiat 128       32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1
+Honda Civic    30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
+Lotus Europa   30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2
+Fiat X1-9      27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
+Porsche 914-2  26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2</code></pre>
+</div>
+</div>
+</section>
+<section id="creating-new-variables-with-mutate" class="slide level2">
+<h2>Creating New Variables with mutate()</h2>
+<p>Use <code>mutate()</code> to add new variables.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href=""></a><span class="co"># Create a new variable: power-to-weight ratio </span></span>
+<span id="cb20-2"><a href=""></a>mtcars <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">power_to_weight =</span> hp <span class="sc">/</span> wt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                     mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
+Datsun 710          22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
+Hornet 4 Drive      21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
+Hornet Sportabout   18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2
+Valiant             18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1
+Duster 360          14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4
+Merc 240D           24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
+Merc 230            22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2
+Merc 280            19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4
+Merc 280C           17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4
+Merc 450SE          16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3
+Merc 450SL          17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3
+Merc 450SLC         15.2   8 275.8 180 3.07 3.780 18.00  0  0    3    3
+Cadillac Fleetwood  10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4
+Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4
+Chrysler Imperial   14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4
+Fiat 128            32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1
+Honda Civic         30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
+Toyota Corolla      33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1
+Toyota Corona       21.5   4 120.1  97 3.70 2.465 20.01  1  0    3    1
+Dodge Challenger    15.5   8 318.0 150 2.76 3.520 16.87  0  0    3    2
+AMC Javelin         15.2   8 304.0 150 3.15 3.435 17.30  0  0    3    2
+Camaro Z28          13.3   8 350.0 245 3.73 3.840 15.41  0  0    3    4
+Pontiac Firebird    19.2   8 400.0 175 3.08 3.845 17.05  0  0    3    2
+Fiat X1-9           27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
+Porsche 914-2       26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
+Lotus Europa        30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2
+Ford Pantera L      15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4
+Ferrari Dino        19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
+Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8
+Volvo 142E          21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2
+                    power_to_weight
+Mazda RX4                  41.98473
+Mazda RX4 Wag              38.26087
+Datsun 710                 40.08621
+Hornet 4 Drive             34.21462
+Hornet Sportabout          50.87209
+Valiant                    30.34682
+Duster 360                 68.62745
+Merc 240D                  19.43574
+Merc 230                   30.15873
+Merc 280                   35.75581
+Merc 280C                  35.75581
+Merc 450SE                 44.22604
+Merc 450SL                 48.25737
+Merc 450SLC                47.61905
+Cadillac Fleetwood         39.04762
+Lincoln Continental        39.63864
+Chrysler Imperial          43.03087
+Fiat 128                   30.00000
+Honda Civic                32.19814
+Toyota Corolla             35.42234
+Toyota Corona              39.35091
+Dodge Challenger           42.61364
+AMC Javelin                43.66812
+Camaro Z28                 63.80208
+Pontiac Firebird           45.51365
+Fiat X1-9                  34.10853
+Porsche 914-2              42.52336
+Lotus Europa               74.68605
+Ford Pantera L             83.28076
+Ferrari Dino               63.17690
+Maserati Bora              93.83754
+Volvo 142E                 39.20863</code></pre>
+</div>
+</div>
+</section>
+<section id="practice-time" class="slide level2">
+<h2>🔨 Practice Time!</h2>
+<p>Try these exercises in your console:</p>
+<ol type="1">
+<li>View the mtcars data set to see the columns available.</li>
+<li><strong>Filter</strong> the data set for cars with less than 6 cylinders AND <strong>select</strong> only the mpg column in one operation.</li>
+<li>Create a <strong>new variable</strong> that is the mean of mpg.</li>
+<li>Now combine steps 2 and 3.</li>
+</ol>
+</section>
+<section id="results" class="slide level2">
+<h2>🔨 Results</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href=""></a><span class="co"># load in mtcars dataset</span></span>
+<span id="cb22-2"><a href=""></a><span class="fu">data</span>(mtcars)</span>
+<span id="cb22-3"><a href=""></a></span>
+<span id="cb22-4"><a href=""></a><span class="co"># view mtcars dataset</span></span>
+<span id="cb22-5"><a href=""></a><span class="fu">head</span>(mtcars)</span>
+<span id="cb22-6"><a href=""></a><span class="co"># or view just the column names</span></span>
+<span id="cb22-7"><a href=""></a><span class="fu">colnames</span>(mtcars)</span>
+<span id="cb22-8"><a href=""></a></span>
+<span id="cb22-9"><a href=""></a><span class="co"># Filter rows where cyl is less than 6 AND select only mpg</span></span>
+<span id="cb22-10"><a href=""></a>mtcars <span class="sc">%&gt;%</span> <span class="fu">filter</span>(cyl <span class="sc">&lt;</span> <span class="dv">6</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(mpg)</span>
+<span id="cb22-11"><a href=""></a></span>
+<span id="cb22-12"><a href=""></a><span class="co"># Create a new variable: mean of mpg</span></span>
+<span id="cb22-13"><a href=""></a>mtcars <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">mean_mpg =</span> <span class="fu">mean</span>(mpg))</span>
+<span id="cb22-14"><a href=""></a></span>
+<span id="cb22-15"><a href=""></a><span class="co"># Filter rows, select mpg, and create new column that is mean_mpg</span></span>
+<span id="cb22-16"><a href=""></a>mtcars <span class="sc">%&gt;%</span> <span class="fu">filter</span>(cyl <span class="sc">&lt;</span> <span class="dv">6</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(mpg) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">mean_mpg =</span> <span class="fu">mean</span>(mpg))</span>
+<span id="cb22-17"><a href=""></a></span>
+<span id="cb22-18"><a href=""></a><span class="co"># Note: The new column mean_mpg contains the same value for all rows.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section></section>
+<section>
+<section id="part-b-grouping-and-summarizing-data" class="title-slide slide level1 section center">
+<h1>Part B: Grouping and Summarizing Data</h1>
+
+</section>
+<section id="grouping-data-with-group_by" class="slide level2">
+<h2>Grouping Data with group_by()</h2>
+<p>Use <code>group_by()</code> to group data before summarization.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href=""></a><span class="co"># Group by number of cylinders </span></span>
+<span id="cb23-2"><a href=""></a>mtcars <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(cyl) <span class="co"># grouping doesn't change how the data looks (apart from listing how it's grouped)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 32 × 11
+# Groups:   cyl [3]
+     mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
+   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1  21       6  160    110  3.9   2.62  16.5     0     1     4     4
+ 2  21       6  160    110  3.9   2.88  17.0     0     1     4     4
+ 3  22.8     4  108     93  3.85  2.32  18.6     1     1     4     1
+ 4  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1
+ 5  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2
+ 6  18.1     6  225    105  2.76  3.46  20.2     1     0     3     1
+ 7  14.3     8  360    245  3.21  3.57  15.8     0     0     3     4
+ 8  24.4     4  147.    62  3.69  3.19  20       1     0     4     2
+ 9  22.8     4  141.    95  3.92  3.15  22.9     1     0     4     2
+10  19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4
+# ℹ 22 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="summarizing-data-with-summarize" class="slide level2">
+<h2>Summarizing Data with summarize()</h2>
+<p>Use <code>summarize()</code> to aggregate data. it creates a <strong><em>new dataframe</em></strong>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href=""></a><span class="co"># Compute mean mpg by cylinder </span></span>
+<span id="cb25-2"><a href=""></a>mtcars <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(cyl) <span class="sc">%&gt;%</span> <span class="fu">summarize</span>(<span class="at">mean_mpg =</span> <span class="fu">mean</span>(mpg))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+    cyl mean_mpg
+  &lt;dbl&gt;    &lt;dbl&gt;
+1     4     26.7
+2     6     19.7
+3     8     15.1</code></pre>
+</div>
+</div>
+</section>
+<section id="joining-datasets" class="slide level2">
+<h2>Joining Datasets</h2>
+<p>Use <code>left_join()</code> to combine datasets.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href=""></a><span class="co"># Create sample data frames </span></span>
+<span id="cb27-2"><a href=""></a>df1 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">ID =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), <span class="at">Score =</span> <span class="fu">c</span>(<span class="dv">90</span>, <span class="dv">85</span>, <span class="dv">88</span>)) </span>
+<span id="cb27-3"><a href=""></a>df2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">ID =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), <span class="at">Name =</span> <span class="fu">c</span>(<span class="st">"Alice"</span>, <span class="st">"Bob"</span>, <span class="st">"Charlie"</span>))  </span>
+<span id="cb27-4"><a href=""></a></span>
+<span id="cb27-5"><a href=""></a>df1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  ID Score
+1  1    90
+2  2    85
+3  3    88</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href=""></a>df2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  ID    Name
+1  1   Alice
+2  2     Bob
+3  3 Charlie</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href=""></a><span class="co"># Join data frames </span></span>
+<span id="cb31-2"><a href=""></a>merged_df <span class="ot">&lt;-</span> <span class="fu">left_join</span>(df1, df2, <span class="at">by =</span> <span class="st">"ID"</span>)</span>
+<span id="cb31-3"><a href=""></a></span>
+<span id="cb31-4"><a href=""></a>merged_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  ID Score    Name
+1  1    90   Alice
+2  2    85     Bob
+3  3    88 Charlie</code></pre>
+</div>
+</div>
+</section>
+<section id="handling-missing-values" class="slide level2">
+<h2>Handling Missing Values</h2>
+<p>To identify missing values we can use the <code>is.na()</code> function which will return TRUE in the observations that contain missing values. Let’s create a vector with some missing data and see if R can identify it.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href=""></a><span class="co"># Create a vector with missing data</span></span>
+<span id="cb33-2"><a href=""></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">500</span>, <span class="cn">NA</span>, <span class="dv">6</span>, <span class="dv">40</span>, <span class="cn">NA</span>, <span class="dv">13</span>)</span>
+<span id="cb33-3"><a href=""></a></span>
+<span id="cb33-4"><a href=""></a><span class="co"># Are there missings? Which ones?</span></span>
+<span id="cb33-5"><a href=""></a><span class="fu">is.na</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE  TRUE FALSE FALSE  TRUE FALSE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href=""></a><span class="co"># Check how many are missing</span></span>
+<span id="cb35-2"><a href=""></a><span class="fu">sum</span>(<span class="fu">is.na</span>(x))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2</code></pre>
 </div>
 </div>
-<p>You can add options to executable code like this</p>
+<p>To deal with missing we can use <code>na.omit()</code> to remove missing values.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href=""></a><span class="fu">na.omit</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 4</code></pre>
+<pre><code>[1] 500   6  40  13
+attr(,"na.action")
+[1] 2 5
+attr(,"class")
+[1] "omit"</code></pre>
 </div>
 </div>
-<p>The <code>echo: false</code> option disables the printing of code (only output is displayed).</p>
+</section>
+<section id="final-exercise" class="slide level2">
+<h2>🔨 Final Exercise</h2>
+<p>Create a new dataset that combines multiple steps you’ve learned:</p>
+<ol type="1">
+<li>Load the mtcars dataset</li>
+<li>Filter <code>mtcars</code> for cars with more than 4 cylinders and select <code>mpg</code>, <code>hp</code>, and <code>wt</code> columns.</li>
+<li>Create a new column in this dataset that calculates <code>hp</code> per unit weight.</li>
+<li>Merge this dataset back to the original <code>mtcars</code> dataset.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href=""></a><span class="co"># Add your code here!</span></span>
+<span id="cb39-2"><a href=""></a><span class="co"># Load the mtcars data</span></span>
+<span id="cb39-3"><a href=""></a><span class="fu">data</span>(mtcars)</span>
+<span id="cb39-4"><a href=""></a></span>
+<span id="cb39-5"><a href=""></a><span class="co"># View the mtcars data</span></span>
+<span id="cb39-6"><a href=""></a><span class="fu">head</span>(mtcars)</span>
+<span id="cb39-7"><a href=""></a></span>
+<span id="cb39-8"><a href=""></a><span class="co"># Create a new dataset filtered and with new column</span></span>
+<span id="cb39-9"><a href=""></a></span>
+<span id="cb39-10"><a href=""></a><span class="co"># Merge back to mtcars data</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="results-1" class="slide level2">
+<h2>🔨 Results</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href=""></a><span class="co"># Example solution</span></span>
+<span id="cb40-2"><a href=""></a></span>
+<span id="cb40-3"><a href=""></a><span class="co"># Filter data and create new column</span></span>
+<span id="cb40-4"><a href=""></a>new_data <span class="ot">&lt;-</span> mtcars <span class="sc">%&gt;%</span> </span>
+<span id="cb40-5"><a href=""></a>  <span class="fu">filter</span>(cyl <span class="sc">&gt;</span> <span class="dv">4</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb40-6"><a href=""></a>  <span class="fu">select</span>(mpg, hp, wt) <span class="sc">%&gt;%</span> </span>
+<span id="cb40-7"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">hp_per_wt =</span> hp <span class="sc">/</span> wt)</span>
+<span id="cb40-8"><a href=""></a></span>
+<span id="cb40-9"><a href=""></a><span class="co"># Merge with original mtcars dataset</span></span>
+<span id="cb40-10"><a href=""></a>mtcars_merged <span class="ot">&lt;-</span> <span class="fu">left_join</span>(mtcars, new_data, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"mpg"</span>, <span class="st">"hp"</span>, <span class="st">"wt"</span>))</span>
+<span id="cb40-11"><a href=""></a></span>
+<span id="cb40-12"><a href=""></a><span class="fu">head</span>(new_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                   mpg  hp    wt hp_per_wt
+Mazda RX4         21.0 110 2.620  41.98473
+Mazda RX4 Wag     21.0 110 2.875  38.26087
+Hornet 4 Drive    21.4 110 3.215  34.21462
+Hornet Sportabout 18.7 175 3.440  50.87209
+Valiant           18.1 105 3.460  30.34682
+Duster 360        14.3 245 3.570  68.62745</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href=""></a><span class="fu">head</span>(mtcars_merged)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   mpg cyl disp  hp drat    wt  qsec vs am gear carb hp_per_wt
+1 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4  41.98473
+2 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4  38.26087
+3 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1        NA
+4 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1  34.21462
+5 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2  50.87209
+6 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1  30.34682</code></pre>
+</div>
+</div>
+</section></section>
+<section>
+<section id="thank-you" class="title-slide slide level1 section center">
+<h1>Thank You!</h1>
+
+</section>
+<section id="additional-resources" class="slide level2">
+<h2>Additional Resources</h2>
+<ul>
+<li><p><a href="https://www.tidyverse.org/">Tidyverse Documentation</a></p></li>
+<li><p><a href="https://nyu-cdsc.github.io/learningr/assets/data-transformation.pdf">dplyr Cheatsheet</a></p></li>
+<li><p><a href="https://r4ds.had.co.nz/">Data Wrangling in R</a></p></li>
+</ul>
+<div class="quarto-auto-generated-content">
 <div class="footer footer-default">
 
 </div>
-</section>
+</div>
+</section></section>
     </div>
   </div>
 
@@ -377,7 +884,6 @@
       Reveal.initialize({
 'controlsAuto': true,
 'previewLinksAuto': false,
-'smaller': false,
 'pdfSeparateFragments': false,
 'autoAnimateEasing': "ease",
 'autoAnimateDuration': 1,
@@ -563,42 +1069,80 @@
       });
     </script>
     
+
     <script>
+
       // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+
       // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+
       // slide changes (different for each slide format).
+
       (function () {
+
         // dispatch for htmlwidgets
+
         function fireSlideEnter() {
+
           const event = window.document.createEvent("Event");
+
           event.initEvent("slideenter", true, true);
+
           window.document.dispatchEvent(event);
+
         }
+
+    
 
         function fireSlideChanged(previousSlide, currentSlide) {
+
           fireSlideEnter();
 
+    
+
           // dispatch for shiny
+
           if (window.jQuery) {
+
             if (previousSlide) {
+
               window.jQuery(previousSlide).trigger("hidden");
+
             }
+
             if (currentSlide) {
+
               window.jQuery(currentSlide).trigger("shown");
+
             }
+
           }
+
         }
+
+    
 
         // hookup for slidy
+
         if (window.w3c_slidy) {
+
           window.w3c_slidy.add_observer(function (slide_num) {
+
             // slide_num starts at position 1
+
             fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+
           });
+
         }
 
+    
+
       })();
+
     </script>
+
+    
 
     <script id="quarto-html-after-body" type="application/javascript">
     window.document.addEventListener("DOMContentLoaded", function (event) {
@@ -676,10 +1220,27 @@
         // clear code selection
         e.clearSelection();
       });
-      function tippyHover(el, contentFn) {
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp('/' + window.location.host + '/');
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
         const config = {
           allowHTML: true,
-          content: contentFn,
           maxWidth: 500,
           delay: 100,
           arrow: false,
@@ -689,8 +1250,17 @@
           interactive: true,
           interactiveBorder: 10,
           theme: 'light-border',
-          placement: 'bottom-start'
+          placement: 'bottom-start',
         };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
           config['offset'] = [0,0];
           config['maxWidth'] = 700;
         window.tippy(el, config); 
@@ -704,7 +1274,11 @@
           try { href = new URL(href).hash; } catch {}
           const id = href.replace(/^#\/?/, "");
           const note = window.document.getElementById(id);
-          return note.innerHTML;
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
         });
       }
       const findCites = (el) => {

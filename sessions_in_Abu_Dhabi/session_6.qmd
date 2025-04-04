@@ -1,0 +1,338 @@
+---
+title: "Randomized Assignment"
+subtitle: "Econometrics with R"
+author: "Dr. Lucas Sempé"
+format: 
+  revealjs:
+    theme: [clean.scss]
+    slide-number: true
+    code-fold: false
+    highlight-style: github
+editor_options: 
+  chunk_output_type: console
+---
+## Randomized Assignment: The Gold Standard
+
+:::: {.columns}
+
+::: {.column width="60%"}
+- **Core idea**: Randomly select who receives the treatment
+- **Result**: Treatment and control groups are statistically identical (in expectation)
+- **Advantage**: Differences in outcomes can be attributed to the program
+- **Why it works**: Randomization creates a valid counterfactual
+:::
+
+::: {.column width="40%"}
+```{r, echo=FALSE, fig.height=12}
+library(broom)
+library(estimatr)
+library(fishmethods)
+library(haven)
+library(kableExtra)
+library(modelsummary)
+library(tidyverse)
+
+set.seed(123)
+
+# Create data
+n <- 100
+data <- data.frame(
+  id = 1:n,
+  potential_outcome = rnorm(n, mean = 50, sd = 10)
+)
+
+# Randomly assign treatment
+data$treatment <- sample(c(0, 1), n, replace = TRUE)
+
+# Add some treatment effect
+data$actual_outcome <- data$potential_outcome + data$treatment * 10 + rnorm(n, 0, 2)
+
+# Plot
+ggplot(data, aes(x = treatment, y = actual_outcome, group = treatment)) +
+  geom_jitter(width = 0.1, alpha = 0.5) +
+  stat_summary(fun = mean, geom = "point", size = 4, color = "red") +
+  stat_summary(fun = mean, geom = "line", aes(group = 1), color = "red") +
+  labs(title = "Treatment Effect with Random Assignment",
+       x = "Treatment Status",
+       y = "Outcome") +
+  scale_x_continuous(breaks = c(0, 1), labels = c("Control", "Treatment")) +
+  theme_minimal()
+```
+:::
+
+::::
+
+## Implementing Randomized Assignment
+
+1. Define population of eligible units
+2. Decide on level of randomization (individuals, households, villages)
+3. Determine sample size (power calculations)
+4. Randomly select units to receive treatment
+5. Verify balance between treatment and control groups
+6. Implement program and collect data
+
+## Fictional Case Study: Randomized Industries
+
+- Program was implemented as a pilot in 100 industries randomly selected from all industries
+- 100 additional randomly selected industries serve as controls
+- This design ensures that treatment and control industries are statistically identical
+- Only industries below certain degree of efficiency in treatment industries were eligible
+
+## Verifying Balance at Baseline
+
+```{r, echo=F}
+df <- read.csv("./evaluation_data.csv")
+df$waste_management_costs<-df$waste_management_costs*1000
+```
+
+:::: {.columns}
+::: {.column width="60%"}
+- Results show most characteristics are balanced
+- Small differences in education of industry manager and distance to recycling centre
+- With many characteristics, some differences by chance are expected
+
+```{r, eval=T, echo=F}
+# Check if treatment and control industries are balanced at baseline
+
+m<-df %>%
+  filter(round == 0) %>%
+  select(treatment_zone, age_manager, age_deputy, educ_manager, educ_deputy, 
+         female_manager, foreign_owned, staff_size, advanced_filtration, water_treatment_system, 
+         facility_area, recycling_center_distance) %>%
+  pivot_longer(-c("treatment_zone")) %>%
+  group_by(name) %>%
+  do(tidy(lm_robust(value ~ treatment_zone, data = .))) %>%
+  filter(term == "treatment_zone") %>%
+  select(name, estimate, std.error, p.value) %>%
+  mutate(across(c(estimate, std.error, p.value), ~ round(.x,2)))  #
+
+```
+
+```{r}
+
+kable(m) %>% scroll_box(width = "600px", height = "400px")
+
+```
+
+:::
+
+::: {.column width="40%"}
+
+```{r, eval=F, echo=TRUE}
+#| class: small-code
+# Check if treatment and control industries are balanced at baseline
+
+df %>%
+  filter(round == 0) %>%
+  select(treatment_zone, age_manager, age_deputy,
+         educ_manager, educ_deputy, 
+         female_manager, foreign_owned, staff_size,
+         advanced_filtration, water_treatment_system, 
+         facility_area, recycling_center_distance) %>%
+  pivot_longer(-c("treatment_zone")) %>%
+  group_by(name) %>%
+  do(tidy(lm_robust(value ~ treatment_zone, data = .))) %>%
+  filter(term == "treatment_zone") %>%
+  select(name, estimate, std.error, p.value)
+```
+:::
+::::
+
+## Estimating Program Impact: Simple Comparison of Means
+:::: {.columns}
+
+::: {.column width="50%"}
+```{r, eval=T, echo=TRUE}
+#| class: small-code
+
+# Compare waste expenditures in treatment and control industries at follow-up
+out_round0 <- lm_robust(waste_management_costs ~ treatment_zone,
+                        data = df %>% filter(round == 0 & eligible ==1),
+                        clusters = zone_identifier)
+
+out_round1 <- lm_robust(waste_management_costs ~ treatment_zone,
+                        data = df %>% filter(round == 1 & eligible ==1),
+                        clusters = zone_identifier)
+```
+:::
+
+::: {.column width="50%"}
+
+```{r}
+
+modelsummary(list("Round 0"= out_round0, "Round 1"=out_round1), stars = TRUE,
+             gof_map = c("nobs", "r.squared","adj.r.squared"), output = 'kableExtra') 
+```
+
+:::
+::::
+
+## Using Regression Analysis
+
+:::: {.columns}
+
+::: {.column width=50%"}
+```{r, eval=T, echo=TRUE}
+#| class: small-code
+
+# Compare waste expenditures in T and C industries at follow-up
+out_round2 <- lm_robust(waste_management_costs ~ treatment_zone +
+                    age_manager + age_deputy +
+                    female_manager + foreign_owned + 
+                    staff_size +
+                    advanced_filtration + facility_area +
+                    recycling_center_distance,
+                    data = df %>% filter(round == 1 & eligible ==1),
+                    clusters = zone_identifier)
+```
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| class: small-code
+
+modelsummary(list("No covariate adj."= out_round1,
+                  "With covariate adj."=out_round2), stars = TRUE,
+             gof_map = c("nobs", "r.squared","adj.r.squared"),output = 'kableExtra') %>%
+  kable_styling (font_size = 13) %>% scroll_box(width = "600px", height = "300px")
+
+```
+
+
+
+- Treatment effect remains stable with addition of control variables
+- Controls improve precision (smaller standard errors)
+- Adding controls increases R² from 0.30 to 0.43
+
+:::
+::::
+
+## Why Covariates Don't Change the Estimate Much
+
+In randomized experiments:
+
+1. Treatment assignment is independent of observed and unobserved characteristics
+2. Control variables are uncorrelated with treatment status (in expectation)
+3. Including controls may:
+   - Increase precision (reduce standard errors)
+   - Account for any chance imbalances
+   - But should not substantially change the point estimate
+
+## Visualizing the Results
+
+:::: {.columns}
+
+::: {.column width=50%"}
+
+```{r, eval = F, echo=T}
+#| class: small-code
+
+df %>% group_by(enrolled, round) %>% 
+  mutate(enrolled = recode(as.factor(enrolled), `0` = "Control", `1` = "Treatment"),
+             round = recode(as.factor(round), `0` = "Before", `1` = "After")) %>%
+  summarise(waste_management_costs = mean(waste_management_costs)) %>%
+  ggplot(aes(x = round, y = waste_management_costs, group = enrolled, color = enrolled)) +
+  geom_line(size = 1.2) + geom_point(size = 3) +
+  labs(title = "Program Impact on Waste Expenditures", x = "Round",
+       y = "Waste Expenditures (USD)") +
+  theme_minimal() +  theme(legend.position = "bottom")
+
+```
+
+:::
+
+::: {.column width=50%"}
+
+```{r, echo=F, fig.height=7}
+#| class: small-code
+
+df %>% group_by(enrolled, round) %>% 
+  mutate(enrolled = recode(as.factor(enrolled), `0` = "Control", `1` = "Treatment"),
+             round = recode(as.factor(round), `0` = "Before", `1` = "After")) %>%
+  summarise(waste_management_costs = mean(waste_management_costs)) %>%
+  ggplot(aes(x = round, y = waste_management_costs, group = enrolled, color = enrolled)) +
+  geom_line(size = 1.2) + geom_point(size = 3) +
+  labs(title = "Program Impact on Waste Expenditures", x = "Round",
+       y = "Waste Expenditures (USD)") +
+  theme_minimal() +  theme(legend.position = "bottom")
+
+```
+
+- Closer baseline values confirm balance between groups
+- Clear divergence after the program
+- Treatment group shows significant reduction in expenditures
+- Control group shows slight increase over time
+
+:::
+
+::::
+## Strength of the Results
+
+- **Internal validity**: Strong - randomization ensures that the impact is attributable to the program
+- **External validity**: Limited to similar contexts
+- **Precision**: High - narrow confidence intervals
+- **Policy relevance**: Impact exceeds the $10,000 threshold
+
+## From Analysis to Policy Decision
+
+**Policy question**: Should the Programe be scaled up nationally?
+
+**Decision criterion**: Program must reduce health expenditures by at least $10,000.
+
+**Results from randomized evaluation**:
+
+- Impact: -$10,140 (95% CI: [-$10,930, -$9,350])
+- Exceeds threshold of $10,000 reduction
+
+**Recommendation**: The program should be scaled up nationally.
+
+## Limitations of Randomized Assignment
+
+:::: {.columns}
+
+::: {.column width="50%"}
+1. **Ethical concerns**
+   - Denying benefits to control group
+   - Informed consent issues
+
+2. **Practical challenges**
+   - Political constraints
+   - Implementation costs
+   - Scale vs. pilot differences
+:::
+
+::: {.column width="50%"}
+3. **Technical issues**
+   - Spillover effects
+   - Hawthorne effects
+   - Attrition and non-compliance
+   - External validity
+
+4. **Timing**
+   - Long-term outcomes
+   - Delay in results for urgent policies
+:::
+
+::::
+
+## When Randomization Isn't Possible
+
+When randomization is not feasible, we can use quasi-experimental methods:
+
+1. **Instrumental Variables**: Using random encouragement
+2. **Regression Discontinuity**: Exploiting eligibility thresholds
+3. **Difference-in-Differences**: Comparing changes over time
+4. **Matching Methods**: Creating comparable groups
+
+## Key Takeaways
+
+1. Randomization creates comparable treatment and control groups
+2. With randomization, differences in outcomes can be attributed to the program
+3. Including covariates doesn't substantially change estimates but can improve precision
+4. The Programm reduces waste expenditures by $10,140, exceeding the threshold
+5. Based on the randomized evaluation, HISP should be scaled up nationally
+
+## Next Session
+
+**Instrumental Variables**: Leveraging randomized promotion to evaluate programs with imperfect compliance

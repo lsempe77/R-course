@@ -2,6 +2,8 @@
 title: "Learning R"
 subtitle: "Session 2: Data Manipulation in R"
 format: 
+  pptx:
+    incremental: true 
   revealjs:
     theme: [clean.scss]
     transition: slide
@@ -9,6 +11,8 @@ format:
     code-copy: true
     auto-stretch: false
     fig-dpi: 300
+editor_options: 
+  chunk_output_type: console
 ---
 
 # Part A: Introduction to Data Manipulation {.section}
@@ -31,30 +35,36 @@ In this session we will learn how to examine and clean our data in R.
 
 The Tidyverse is a collection of R packages designed for data science that can help you import, clean, and understand data.
 
-First, we need some packages to be loaded in. You can install the core packages from the `tidyverse` by simply typing `install.packages("tidyverse")` in the console.
+First, we need some packages to be loaded in. You can install the core packages from the `tidyverse` by simply typing `install.packages("tidyverse")` in the console.
 
 ```{r}
 #| echo: true
-#| eval: false
+#| eval: true
 
-
-# Install the packages if needed
-# You only need to install a package once per device
-install.packages("tidyverse", "dplyr")
+# Install packages - this only needs to be done once!
+# install.packages("tidyverse", repos = "https://cloud.r-project.org/")  
 
 # Load the packages
 library(tidyverse)
-library(dplyr)
 
 ```
 
 For more information on Tidyverse, explore the documentation here: <https://www.tidyverse.org/>
 
-Tidyverse tools use pipes and tibbles to make R code more human readable. The pipe, %\>%, allows the output of one command to be used as an input in the next command, which is cleaner than using nested functions. There are multiple ways to get to the final solution in R, but using tidyverse is an easy and common way to write and decipher R code.
+## Tidyverse tools
+
+Tidyverse tools use pipes and tibbles to make R code more human 
+
+The pipe, %\>%, allows the output of one command to be used as an input in the next command, which is cleaner than using nested functions. 
+
+::: {style="font-size: 70%;"}
 
 \*Note: a shortcut to write the pipe command is ctrl+SHIFT+M (Windows) or command+SHIFT+M (Mac).
+::: 
 
 ```{r}
+#| echo: true
+#| eval: true
 ## A single command 
 sqrt(65)  
 
@@ -67,7 +77,7 @@ sqrt(65) %>% round(digit = 2)
 
 ## Filtering and Selecting Data with dplyr
 
-One of the most useful tools in the Tidyverse is dplyr. Dplyr has many handy functions that can help with data wrangling, including:
+One of the most useful tools in the Tidyverse is `dplyr`. Dplyr has many handy functions that can help with data wrangling, including:
 
 -   `select()` extracts columns of interest.
 
@@ -85,7 +95,7 @@ One of the most useful tools in the Tidyverse is dplyr. Dplyr has many handy fun
 
 Note: if you do not have the necessary libraries loaded and you try to use pipes or these functions, you will get an error. Remember to always first load in the packages you need with `library()`.
 
-### Filtering Rows
+## Filtering Rows (I)
 
 Use `filter()` to subset data based on conditions.
 
@@ -95,20 +105,24 @@ Use `filter()` to subset data based on conditions.
 # Load built-in R dataset 
 data(mtcars)  
 
-# Filter for rows where mpg is greater than 20 
-mtcars %>% filter(mpg > 20)
-```
-
-The above code allows us to view the mtcars dataset when it is filtered but does not change the underlying mtcars dataset so anytime we view mtcars it will be the original version.
-
-```{r}
-# View mtcars - note this is the original, non-filtered dataset
+# View mtcars
 head(mtcars)
 ```
+
+```{r}
+#| echo: true  
+
+# Filter for rows where mpg is greater than 20 
+mtcars %>% filter(mpg > 20) %>% head()
+```
+
+## Filtering Rows (II)
 
 If we want to create a new dataset that is a filtered version of our mtcars dataset that we can build on that in later steps, we can assign (`<-`) it a new name like this: `mtcars_filter <-`
 
 ```{r}
+#| echo: true  
+
 # Create a new dataset that is filtered, rather than overriding mtcars
 mtcars_filter <- mtcars %>% filter(mpg > 20)
 
@@ -116,7 +130,7 @@ mtcars_filter <- mtcars %>% filter(mpg > 20)
 head(mtcars_filter)
 ```
 
-### Selecting Columns
+## Selecting Columns
 
 We can perform other functions with dplyr such as subsetting our data to view only a few columns at a time. Use `select()` to choose specific columns.
 
@@ -124,7 +138,7 @@ We can perform other functions with dplyr such as subsetting our data to view on
 #| echo: true  
 
 # Select only mpg and hp columns 
-mtcars %>% select(mpg, hp)
+mtcars %>% select(mpg, hp) %>% head()
 ```
 
 ## Sorting and Arranging Data
@@ -135,10 +149,10 @@ Use `arrange()` to sort data.
 #| echo: true  
 
 # Arrange data in ascending order of mpg 
-mtcars %>% arrange(mpg)  
+mtcars %>% arrange(mpg) %>% head() 
 
 # Arrange data in descending order of mpg 
-mtcars %>% arrange(desc(mpg))
+mtcars %>% arrange(desc(mpg)) %>% head()
 ```
 
 ## Creating New Variables with mutate()
@@ -157,8 +171,8 @@ mtcars %>% mutate(power_to_weight = hp / wt)
 Try these exercises in your console:
 
 1.  View the mtcars data set to see the columns available.
-2.  Filter the data set for cars with less than 6 cylinders AND select only the mpg column in one operation.
-3.  Create a new variable that is the mean of mpg.
+2.  **Filter** the data set for cars with less than 6 cylinders AND **select** only the mpg column in one operation.
+3.  Create a **new variable** that is the mean of mpg.
 4.  Now combine steps 2 and 3.
 
 ## 🔨 Results
@@ -191,18 +205,18 @@ mtcars %>% filter(cyl < 6) %>% select(mpg) %>% mutate(mean_mpg = mean(mpg))
 
 ## Grouping Data with group_by()
 
-Use `group_by()` to categorize data before summarization.
+Use `group_by()` to group data before summarization.
 
 ```{r}
 #| echo: true  
 
 # Group by number of cylinders 
-mtcars %>% group_by(cyl)
+mtcars %>% group_by(cyl) # grouping doesn't change how the data looks (apart from listing how it's grouped)
 ```
 
 ## Summarizing Data with summarize()
 
-Use `summarize()` to aggregate data.
+Use `summarize()` to aggregate data. it creates a ***new dataframe***.
 
 ```{r}
 #| echo: true  
@@ -222,15 +236,22 @@ Use `left_join()` to combine datasets.
 df1 <- data.frame(ID = c(1, 2, 3), Score = c(90, 85, 88)) 
 df2 <- data.frame(ID = c(1, 2, 3), Name = c("Alice", "Bob", "Charlie"))  
 
+df1
+df2
 # Join data frames 
 merged_df <- left_join(df1, df2, by = "ID")
+
+merged_df
+
 ```
 
 ## Handling Missing Values
 
-R can help us check whether and how much missing data we have in our data. To identify missing values we can use the `is.na()` function which will return TRUE in the observations that contain missing values. Let's create a vector with some missing data and see if R can identify it.
+To identify missing values we can use the `is.na()` function which will return TRUE in the observations that contain missing values. Let's create a vector with some missing data and see if R can identify it.
 
 ```{r}
+#| echo: true  
+
 # Create a vector with missing data
 x <- c(500, NA, 6, 40, NA, 13)
 
@@ -245,57 +266,7 @@ To deal with missing we can use `na.omit()` to remove missing values.
 
 ```{r}
 #| echo: true 
-
-# Remove rows with missing values 
 na.omit(x)
-```
-
-## Replacing Missing Values
-
-However, if we don't want to remove missing values, we can also replace them with the mean. We can use `replace_na()` to fill in missing data.
-
-```{r}
-#| echo: true  
-
-# Recode NA with the mean
-x <- replace_na(x, mean(x, na.rm = TRUE))
-
-# Round all our values to two decimals
-round(x, 2)
-```
-
-In some cases we will have data where missing values have been coded as a number like 99. We should convert them to `NA` so we can clearly identify them as missing values.
-
-```{r}
-# Convert 999 to NAs
-y <- c(1, 999, 6, 3, 999, 9)
-y[y == 999] <- NA
-```
-
-Here is how this might look in our mtcars dataset. First, we check for missing data. For the purposes of this example, we can add some random missingness.
-
-```{r}
-#| echo: true  
-
-# Check for missings - there are none in this dataset
-sum(is.na(mtcars))
-
-# Add some missing values randomly in the mpg and hp columns
-set.seed(123)  # For reproducibility
-mtcars[sample(nrow(mtcars), 5), "mpg"] <- 999  # Introduce 5 999 values in mpg
-mtcars[sample(nrow(mtcars), 3), "hp"] <- NA   # Introduce 3 NA values in hp
-
-# Check for missing values again
-sum(is.na(mtcars))
-
-# First, we know the 999 values in this case are missing values so let's replace them with NA
-mtcars <- mtcars %>% mutate(mpg = na_if(mpg, 999))
-
-# Then we can use replace_na to replace missing values in mpg with 0, or some other value 
-mtcars %>% mutate(mpg = replace_na(mpg, 0))
-
-# Replace missing values in a column with the mean of the column
-mtcars %>% mutate(hp = replace_na(hp, mean(hp, na.rm = TRUE)))
 ```
 
 ## 🔨 Final Exercise
@@ -319,15 +290,15 @@ data(mtcars)
 head(mtcars)
 
 # Create a new dataset filtered and with new column
-# ...
 
 # Merge back to mtcars data
-# ...
 ```
 
+## 🔨 Results
+
 ```{r}
-#| eval: false
-#| echo: false
+#| eval: true
+#| echo: true
 
 # Example solution
 
@@ -339,6 +310,9 @@ new_data <- mtcars %>%
 
 # Merge with original mtcars dataset
 mtcars_merged <- left_join(mtcars, new_data, by = c("mpg", "hp", "wt"))
+
+head(new_data)
+head(mtcars_merged)
 ```
 
 # Thank You! {.section}
@@ -350,9 +324,3 @@ mtcars_merged <- left_join(mtcars, new_data, by = c("mpg", "hp", "wt"))
 -   [dplyr Cheatsheet](https://nyu-cdsc.github.io/learningr/assets/data-transformation.pdf)
 
 -   [Data Wrangling in R](https://r4ds.had.co.nz/)
-
-## Exercise Solutions
-
-Solutions will be posted after the session!
-
-::: callout-tip Keep practicing for better data manipulation skills! :::
