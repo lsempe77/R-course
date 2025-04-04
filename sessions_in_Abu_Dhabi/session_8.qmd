@@ -2,7 +2,10 @@
 title: "Regression Discontinuity Design"
 subtitle: "Econometrics with R"
 author: "Dr. Lucas Sempé"
+always_allow_html: yes
 format: 
+  pptx:
+    incremental: true  
   revealjs:
     theme: [clean.scss]
     slide-number: true

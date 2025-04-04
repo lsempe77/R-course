@@ -2,7 +2,10 @@
 title: "Matching Methods"
 subtitle: "Econometrics with R"
 author: "Dr. Lucas Sempé"
+always_allow_html: yes
 format: 
+  pptx:
+    incremental: true  
   revealjs:
     theme: [clean.scss]
     slide-number: true
@@ -95,11 +98,13 @@ kable(synthesis,
 
 ::: {.column width="50%"}
 **Estimation Differences**:
+
 - Different identification strategies
 - Different modeling approaches
 - Different standard errors
 
 **Population Differences**:
+
 - RDD: Households near poverty threshold
 - IV: Compliers who respond to promotion
 - DiD/Matching: Enrolled households
@@ -108,11 +113,13 @@ kable(synthesis,
 
 ::: {.column width="50%"}
 **Treatment Effect Heterogeneity**:
+
 - Impact may vary across different types of households
 - E.g., poorer households may benefit more
 - Methods capture effects for different subpopulations
 
 **Data and Implementation**:
+
 - Sample restrictions
 - Variable inclusion
 - Specification choices
@@ -156,11 +163,13 @@ kable(r_implementation,
 ## Common Analytical Steps Across Methods
 
 1. **Data Preparation**
+
    - Identifying treatment and outcome variables
    - Creating necessary indicators or transformations
    - Handling missing data and outliers
 
 2. **Model Specification**
+
    - Choosing appropriate functional form
    - Selecting control variables
    - Determining clustering level for standard errors
@@ -186,12 +195,14 @@ kable(r_implementation,
 
 ::: {.column width="50%"}
 **Beyond Impact Estimates**:
+
 - Implementation context
 - Participant experiences
 - Unexpected outcomes
 - Mechanisms of impact
 
 **Mixed Methods Approach**:
+
 - Impact evaluation: *If* it works
 - Process evaluation: *How* it works
 - Both needed for informed policy
@@ -331,6 +342,7 @@ ggplot(ce_data, aes(x = Cost_per_Household, y = Impact_on_Expenditures,
 
 ::: {.column width="50%"}
 **Policy Decision Making**:
+
 - Statistical significance vs. practical significance
 - Weighing uncertain evidence
 - Value judgments: What outcomes matter?
@@ -338,6 +350,7 @@ ggplot(ce_data, aes(x = Cost_per_Household, y = Impact_on_Expenditures,
 - Political feasibility
 
 **Implementation Considerations**:
+
 - Design features to maintain or improve
 - Necessary adaptations for scale-up
 - Capacity requirements
@@ -386,12 +399,14 @@ digraph policy_process {
 
 ::: {.column width="50%"}
 **Research Ethics**:
+
 - Informed consent
 - Confidentiality and privacy
 - Equitable subject selection
 - IRB approval and oversight
 
 **Program Ethics**:
+
 - Denying benefits to control group
 - Targeting most vulnerable
 - Balancing rigor with timely information
@@ -448,12 +463,14 @@ digraph policy_process {
 
 ::: {.column width="50%"}
 **Core Competencies**:
+
 - Data manipulation with `tidyverse`
 - Regression analysis with `estimatr`
 - Data visualization with `ggplot2`
 - Reproducible workflows with R Markdown/Quarto
 
 **Method-Specific Packages**:
+
 - `MatchIt` for matching
 - `rdrobust` for RDD
 - `AER` and `ivpack` for IV
@@ -462,6 +479,7 @@ digraph policy_process {
 
 ::: {.column width="50%"}
 **Advanced Skills**:
+
 - Power analysis with `pwr`
 - Robust standard errors with `sandwich`
 - Sensitivity analysis with `sensemakr`
@@ -480,12 +498,14 @@ digraph policy_process {
 
 ::: {.column width="50%"}
 **Books**:
+
 - Gertler et al. "Impact Evaluation in Practice"
 - Angrist & Pischke "Mostly Harmless Econometrics"
 - Cunningham "Causal Inference: The Mixtape"
 - Huntington-Klein "The Effect"
 
 **Online Courses**:
+
 - J-PAL's "Evaluating Social Programs"
 - World Bank's "Impact Evaluation Methods"
 - DataCamp's "Causal Inference with R"
@@ -493,6 +513,7 @@ digraph policy_process {
 
 ::: {.column width="50%"}
 **Websites & Communities**:
+
 - 3ie (International Initiative for Impact Evaluation)
 - J-PAL (Abdul Latif Jameel Poverty Action Lab)
 - World Bank DIME (Development Impact Evaluation)
@@ -500,6 +521,7 @@ digraph policy_process {
 - Stack Overflow for R questions
 
 **Journals**:
+
 - Journal of Development Effectiveness
 - Journal of Policy Analysis and Management
 - American Economic Journal: Applied Economics
@@ -526,28 +548,16 @@ digraph policy_process {
    - Results interpretation
    - Policy recommendations
 
-## Final Policy Recommendation on HISP
-
-Based on the comprehensive evaluation with multiple methods:
-
-- **Randomized evaluation (gold standard)** shows reduction of $10.14
-- Most quasi-experimental methods show effects close to $10
-- Consistent evidence of substantial positive impact
-- Effect appears to meet or be very close to the $10 threshold
-- Program targets poor households effectively
-
-**RECOMMENDATION**: Scale up HISP nationally, with monitoring systems to track ongoing performance and cost-effectiveness.
-
 ## Thank You!
 
 **Questions for discussion**:
 
-1. How would you design the national scale-up of HISP?
+1. How would you design the national scale-up of the Program?
 2. What additional data would you collect during scale-up?
 3. How would you evaluate the long-term impacts?
-4. What complementary interventions might enhance HISP's effects?
+4. What complementary interventions might enhance the Program's effects?
 
 **Contact information**:
-- Email: [your.email@institution.edu](mailto:your.email@institution.edu)
-- Website: [www.yourwebsite.com](https://www.yourwebsite.com)
-- GitHub: [github.com/yourusername](https://github.com/yourusername)
+- Email: [lsempe@3ieimpact.org](mailto:lsempe@3ieimpact.org)
+- Website: [www.3ieimpact.org](https://www.3ieimpact.org)
+- GitHub: [github.com/lsempe77](https://github.com/lsempe77)

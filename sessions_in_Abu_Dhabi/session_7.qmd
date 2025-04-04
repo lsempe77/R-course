@@ -2,7 +2,11 @@
 title: "Instrumental Variables"
 subtitle: "Econometrics with R"
 author: "Dr. Lucas Sempé"
+always_allow_html: yes
+keep-md: true
 format: 
+  pptx:
+    incremental: true  
   revealjs:
     theme: [clean.scss]
     slide-number: true
@@ -43,17 +47,17 @@ library(kableExtra)
 :::
 
 ::: {.column width="50%"}
-```{mermaid}
-%%| label: fig-mermaid
-%%| fig-width: 6
-%%| fig-cap: |
-%%|   A valid instrument affects the Treatment, and **only** affects the outcomes through the treatment.
-flowchart LR
-  A[Instrument] --> B(Treatment)
-  A -.-> |No| C(Outcome)
-  B --> C
-```
 
+<!-- ```{mermaid} -->
+<!-- %%| label: fig-mermaid -->
+<!-- %%| fig-width: 6 -->
+<!-- %%| fig-cap: | -->
+<!-- %%|   A valid instrument affects the Treatment, and **only** affects the outcomes through the treatment. -->
+<!-- flowchart LR -->
+<!--   A[Instrument] --> B(Treatment) -->
+<!--   A -.-> |No| C(Outcome) -->
+<!--   B --> C -->
+<!-- ``` -->
 
 :::
 
