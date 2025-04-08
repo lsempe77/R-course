@@ -441,8 +441,8 @@ Dr.&nbsp;Lucas Sempé
 <li>The challenge: How do we estimate the counterfactual?</li>
 </ul>
 </section>
-<section id="example-waste-maanagement-system" class="slide level2">
-<h2>Example: Waste maanagement system</h2>
+<section id="example-waste-management-system" class="slide level2">
+<h2>Example: Waste management system</h2>
 <ul>
 <li>Government program subsidizing waste management new technologies</li>
 <li>Goal: Reduce waste management costs</li>
@@ -507,10 +507,20 @@ Dr.&nbsp;Lucas Sempé
 <section id="before-after-comparison-example" class="slide level2">
 <h2>Before-After Comparison (Example)</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a><span class="co"># Compare waste management costs before and after for enrolled industries</span></span>
-<span id="cb1-2"><a href=""></a>m_ba1 <span class="ot">&lt;-</span> <span class="fu">lm_robust</span>(waste_management_costs   <span class="sc">~</span> round, </span>
-<span id="cb1-3"><a href=""></a>                  <span class="at">clusters =</span> zone_identifier,</span>
-<span id="cb1-4"><a href=""></a>                  <span class="at">data =</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(treatment_zone <span class="sc">==</span><span class="dv">1</span> <span class="sc">&amp;</span> enrolled <span class="sc">==</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a><span class="co"># Let's start by uploading our data.</span></span>
+<span id="cb1-2"><a href=""></a><span class="co"># It is important to know in which folder your dataset is so you can use the right path.</span></span>
+<span id="cb1-3"><a href=""></a></span>
+<span id="cb1-4"><a href=""></a>df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"./evaluation_data.csv"</span>)</span>
+<span id="cb1-5"><a href=""></a></span>
+<span id="cb1-6"><a href=""></a><span class="co"># We multiply the outcome variable by 1,000</span></span>
+<span id="cb1-7"><a href=""></a></span>
+<span id="cb1-8"><a href=""></a>df<span class="sc">$</span>waste_management_costs<span class="ot">&lt;-</span>df<span class="sc">$</span>waste_management_costs<span class="sc">*</span><span class="dv">1000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a><span class="co"># Compare waste management costs before and after for enrolled industries</span></span>
+<span id="cb2-2"><a href=""></a>m_ba1 <span class="ot">&lt;-</span> <span class="fu">lm_robust</span>(waste_management_costs   <span class="sc">~</span> round, </span>
+<span id="cb2-3"><a href=""></a>                  <span class="at">clusters =</span> zone_identifier,</span>
+<span id="cb2-4"><a href=""></a>                  <span class="at">data =</span> df <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(treatment_zone <span class="sc">==</span><span class="dv">1</span> <span class="sc">&amp;</span> enrolled <span class="sc">==</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><strong>Problems</strong>:</p>
 <ul>
@@ -521,10 +531,10 @@ Dr.&nbsp;Lucas Sempé
 <section id="with-without-comparison-hisp-example" class="slide level2">
 <h2>With-Without Comparison (HISP Example)</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a><span class="co"># Compare enrolled vs. non-enrolled households after program implementation</span></span>
-<span id="cb2-2"><a href=""></a>m_ba2 <span class="ot">&lt;-</span> <span class="fu">lm_robust</span>(waste_management_costs <span class="sc">~</span> enrolled, </span>
-<span id="cb2-3"><a href=""></a>                  <span class="at">clusters =</span> zone_identifier,</span>
-<span id="cb2-4"><a href=""></a>                  <span class="at">data =</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(treatment_zone<span class="sc">==</span><span class="dv">1</span> <span class="sc">&amp;</span> round <span class="sc">==</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a><span class="co"># Compare enrolled vs. non-enrolled households after program implementation</span></span>
+<span id="cb3-2"><a href=""></a>m_ba2 <span class="ot">&lt;-</span> <span class="fu">lm_robust</span>(waste_management_costs <span class="sc">~</span> enrolled, </span>
+<span id="cb3-3"><a href=""></a>                  <span class="at">clusters =</span> zone_identifier,</span>
+<span id="cb3-4"><a href=""></a>                  <span class="at">data =</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(treatment_zone<span class="sc">==</span><span class="dv">1</span> <span class="sc">&amp;</span> round <span class="sc">==</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><strong>Problems</strong>:</p>
 <ul>
@@ -539,12 +549,12 @@ Dr.&nbsp;Lucas Sempé
 <!-- preamble start -->
 
     <script>
-      function styleCell_bwsrzq5swoes4mulxj2o(i, j, css_id) {
-        var table = document.getElementById("tinytable_bwsrzq5swoes4mulxj2o");
+      function styleCell_30atrmdjc1vxmsxrbsot(i, j, css_id) {
+        var table = document.getElementById("tinytable_30atrmdjc1vxmsxrbsot");
         table.rows[i].cells[j].classList.add(css_id);
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_bwsrzq5swoes4mulxj2o');
+        var table = document.getElementById('tinytable_30atrmdjc1vxmsxrbsot');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -552,8 +562,8 @@ Dr.&nbsp;Lucas Sempé
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_bwsrzq5swoes4mulxj2o(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_bwsrzq5swoes4mulxj2o");
+      function spanCell_30atrmdjc1vxmsxrbsot(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_30atrmdjc1vxmsxrbsot");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -579,60 +589,48 @@ Dr.&nbsp;Lucas Sempé
         targetCell.rowSpan = rowspan;
         targetCell.colSpan = colspan;
       }
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(0, 0, 'tinytable_css_idfikqzo7o7cgmftj7qe3j') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(0, 1, 'tinytable_css_id804a4yt0fw8s6y57t38p') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(0, 2, 'tinytable_css_id804a4yt0fw8s6y57t38p') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(1, 0, 'tinytable_css_id1kis4y1noe2fingzp5mk') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(1, 1, 'tinytable_css_idq4im24e9xm9zfta9pto3') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(1, 2, 'tinytable_css_idq4im24e9xm9zfta9pto3') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(2, 0, 'tinytable_css_id1kis4y1noe2fingzp5mk') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(2, 1, 'tinytable_css_idq4im24e9xm9zfta9pto3') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(2, 2, 'tinytable_css_idq4im24e9xm9zfta9pto3') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(3, 0, 'tinytable_css_id1kis4y1noe2fingzp5mk') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(3, 1, 'tinytable_css_idq4im24e9xm9zfta9pto3') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(3, 2, 'tinytable_css_idq4im24e9xm9zfta9pto3') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(4, 0, 'tinytable_css_id1kis4y1noe2fingzp5mk') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(4, 1, 'tinytable_css_idq4im24e9xm9zfta9pto3') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(4, 2, 'tinytable_css_idq4im24e9xm9zfta9pto3') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(5, 0, 'tinytable_css_id1kis4y1noe2fingzp5mk') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(5, 1, 'tinytable_css_idq4im24e9xm9zfta9pto3') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(5, 2, 'tinytable_css_idq4im24e9xm9zfta9pto3') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(6, 0, 'tinytable_css_id2o8quy711e4i9s460i2a') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(6, 1, 'tinytable_css_idhou463fwu17yia1snycb') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(6, 2, 'tinytable_css_idhou463fwu17yia1snycb') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(7, 0, 'tinytable_css_id1kis4y1noe2fingzp5mk') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(7, 1, 'tinytable_css_idq4im24e9xm9zfta9pto3') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(7, 2, 'tinytable_css_idq4im24e9xm9zfta9pto3') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(8, 0, 'tinytable_css_id1kis4y1noe2fingzp5mk') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(8, 1, 'tinytable_css_idq4im24e9xm9zfta9pto3') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(8, 2, 'tinytable_css_idq4im24e9xm9zfta9pto3') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(9, 0, 'tinytable_css_id1kis4y1noe2fingzp5mk') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(9, 1, 'tinytable_css_idq4im24e9xm9zfta9pto3') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(9, 2, 'tinytable_css_idq4im24e9xm9zfta9pto3') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(10, 0, 'tinytable_css_id1kis4y1noe2fingzp5mk') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(10, 1, 'tinytable_css_idq4im24e9xm9zfta9pto3') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(10, 2, 'tinytable_css_idq4im24e9xm9zfta9pto3') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(11, 0, 'tinytable_css_id1kis4y1noe2fingzp5mk') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(11, 1, 'tinytable_css_idq4im24e9xm9zfta9pto3') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(11, 2, 'tinytable_css_idq4im24e9xm9zfta9pto3') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(12, 0, 'tinytable_css_id1kis4y1noe2fingzp5mk') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(12, 1, 'tinytable_css_idq4im24e9xm9zfta9pto3') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(12, 2, 'tinytable_css_idq4im24e9xm9zfta9pto3') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(13, 0, 'tinytable_css_id1kis4y1noe2fingzp5mk') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(13, 1, 'tinytable_css_idq4im24e9xm9zfta9pto3') })
-window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(13, 2, 'tinytable_css_idq4im24e9xm9zfta9pto3') })
+window.addEventListener('load', function () { styleCell_30atrmdjc1vxmsxrbsot(0, 0, 'tinytable_css_id76zw6t05j15pdaca6yah') })
+window.addEventListener('load', function () { styleCell_30atrmdjc1vxmsxrbsot(0, 1, 'tinytable_css_id4pivmefbtk3fhkn8xr2x') })
+window.addEventListener('load', function () { styleCell_30atrmdjc1vxmsxrbsot(0, 2, 'tinytable_css_id4pivmefbtk3fhkn8xr2x') })
+window.addEventListener('load', function () { styleCell_30atrmdjc1vxmsxrbsot(1, 0, 'tinytable_css_idzq4e62rtb5holc8cjsf8') })
+window.addEventListener('load', function () { styleCell_30atrmdjc1vxmsxrbsot(1, 1, 'tinytable_css_id80feny2zm6k2o1xip12r') })
+window.addEventListener('load', function () { styleCell_30atrmdjc1vxmsxrbsot(1, 2, 'tinytable_css_id80feny2zm6k2o1xip12r') })
+window.addEventListener('load', function () { styleCell_30atrmdjc1vxmsxrbsot(2, 0, 'tinytable_css_idzq4e62rtb5holc8cjsf8') })
+window.addEventListener('load', function () { styleCell_30atrmdjc1vxmsxrbsot(2, 1, 'tinytable_css_id80feny2zm6k2o1xip12r') })
+window.addEventListener('load', function () { styleCell_30atrmdjc1vxmsxrbsot(2, 2, 'tinytable_css_id80feny2zm6k2o1xip12r') })
+window.addEventListener('load', function () { styleCell_30atrmdjc1vxmsxrbsot(3, 0, 'tinytable_css_idzq4e62rtb5holc8cjsf8') })
+window.addEventListener('load', function () { styleCell_30atrmdjc1vxmsxrbsot(3, 1, 'tinytable_css_id80feny2zm6k2o1xip12r') })
+window.addEventListener('load', function () { styleCell_30atrmdjc1vxmsxrbsot(3, 2, 'tinytable_css_id80feny2zm6k2o1xip12r') })
+window.addEventListener('load', function () { styleCell_30atrmdjc1vxmsxrbsot(4, 0, 'tinytable_css_idzq4e62rtb5holc8cjsf8') })
+window.addEventListener('load', function () { styleCell_30atrmdjc1vxmsxrbsot(4, 1, 'tinytable_css_id80feny2zm6k2o1xip12r') })
+window.addEventListener('load', function () { styleCell_30atrmdjc1vxmsxrbsot(4, 2, 'tinytable_css_id80feny2zm6k2o1xip12r') })
+window.addEventListener('load', function () { styleCell_30atrmdjc1vxmsxrbsot(5, 0, 'tinytable_css_idzq4e62rtb5holc8cjsf8') })
+window.addEventListener('load', function () { styleCell_30atrmdjc1vxmsxrbsot(5, 1, 'tinytable_css_id80feny2zm6k2o1xip12r') })
+window.addEventListener('load', function () { styleCell_30atrmdjc1vxmsxrbsot(5, 2, 'tinytable_css_id80feny2zm6k2o1xip12r') })
+window.addEventListener('load', function () { styleCell_30atrmdjc1vxmsxrbsot(6, 0, 'tinytable_css_id6w351dewkab32ds0npza') })
+window.addEventListener('load', function () { styleCell_30atrmdjc1vxmsxrbsot(6, 1, 'tinytable_css_idr7l67dt13dx2pa01scx4') })
+window.addEventListener('load', function () { styleCell_30atrmdjc1vxmsxrbsot(6, 2, 'tinytable_css_idr7l67dt13dx2pa01scx4') })
+window.addEventListener('load', function () { styleCell_30atrmdjc1vxmsxrbsot(7, 0, 'tinytable_css_idzq4e62rtb5holc8cjsf8') })
+window.addEventListener('load', function () { styleCell_30atrmdjc1vxmsxrbsot(7, 1, 'tinytable_css_id80feny2zm6k2o1xip12r') })
+window.addEventListener('load', function () { styleCell_30atrmdjc1vxmsxrbsot(7, 2, 'tinytable_css_id80feny2zm6k2o1xip12r') })
+window.addEventListener('load', function () { styleCell_30atrmdjc1vxmsxrbsot(8, 0, 'tinytable_css_idzq4e62rtb5holc8cjsf8') })
+window.addEventListener('load', function () { styleCell_30atrmdjc1vxmsxrbsot(8, 1, 'tinytable_css_id80feny2zm6k2o1xip12r') })
+window.addEventListener('load', function () { styleCell_30atrmdjc1vxmsxrbsot(8, 2, 'tinytable_css_id80feny2zm6k2o1xip12r') })
+window.addEventListener('load', function () { styleCell_30atrmdjc1vxmsxrbsot(9, 0, 'tinytable_css_idzq4e62rtb5holc8cjsf8') })
+window.addEventListener('load', function () { styleCell_30atrmdjc1vxmsxrbsot(9, 1, 'tinytable_css_idzq4e62rtb5holc8cjsf8') })
+window.addEventListener('load', function () { styleCell_30atrmdjc1vxmsxrbsot(9, 2, 'tinytable_css_idzq4e62rtb5holc8cjsf8') })
     </script>
 
     <style>
-    .table td.tinytable_css_idfikqzo7o7cgmftj7qe3j, .table th.tinytable_css_idfikqzo7o7cgmftj7qe3j {  text-align: left;  border-bottom: solid 0.1em #d3d8dc; }
-    .table td.tinytable_css_id804a4yt0fw8s6y57t38p, .table th.tinytable_css_id804a4yt0fw8s6y57t38p {  text-align: center;  border-bottom: solid 0.1em #d3d8dc; }
-    .table td.tinytable_css_id1kis4y1noe2fingzp5mk, .table th.tinytable_css_id1kis4y1noe2fingzp5mk {  text-align: left; }
-    .table td.tinytable_css_idq4im24e9xm9zfta9pto3, .table th.tinytable_css_idq4im24e9xm9zfta9pto3 {  text-align: center; }
-    .table td.tinytable_css_id2o8quy711e4i9s460i2a, .table th.tinytable_css_id2o8quy711e4i9s460i2a {  border-bottom: solid 0.05em black;  text-align: left; }
-    .table td.tinytable_css_idhou463fwu17yia1snycb, .table th.tinytable_css_idhou463fwu17yia1snycb {  border-bottom: solid 0.05em black;  text-align: center; }
+    .table td.tinytable_css_id76zw6t05j15pdaca6yah, .table th.tinytable_css_id76zw6t05j15pdaca6yah {  text-align: left;  border-bottom: solid 0.1em #d3d8dc; }
+    .table td.tinytable_css_id4pivmefbtk3fhkn8xr2x, .table th.tinytable_css_id4pivmefbtk3fhkn8xr2x {  text-align: center;  border-bottom: solid 0.1em #d3d8dc; }
+    .table td.tinytable_css_idzq4e62rtb5holc8cjsf8, .table th.tinytable_css_idzq4e62rtb5holc8cjsf8 {  text-align: left; }
+    .table td.tinytable_css_id80feny2zm6k2o1xip12r, .table th.tinytable_css_id80feny2zm6k2o1xip12r {  text-align: center; }
+    .table td.tinytable_css_id6w351dewkab32ds0npza, .table th.tinytable_css_id6w351dewkab32ds0npza {  border-bottom: solid 0.05em black;  text-align: left; }
+    .table td.tinytable_css_idr7l67dt13dx2pa01scx4, .table th.tinytable_css_idr7l67dt13dx2pa01scx4 {  border-bottom: solid 0.05em black;  text-align: center; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_bwsrzq5swoes4mulxj2o" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_30atrmdjc1vxmsxrbsot" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -641,72 +639,47 @@ window.addEventListener('load', function () { styleCell_bwsrzq5swoes4mulxj2o(13,
                 <th scope="col">(2)</th>
               </tr>
         </thead>
-        
+        <tfoot><tr><td colspan="3">+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td></tr></tfoot>
         <tbody>
                 <tr>
                   <td>(Intercept)</td>
-                  <td>14489.694          </td>
-                  <td>22304.911          </td>
+                  <td>14489.694***</td>
+                  <td>22304.911*** </td>
                 </tr>
                 <tr>
                   <td>           </td>
-                  <td>(145.961)          </td>
-                  <td>(337.418)          </td>
+                  <td>(145.961)   </td>
+                  <td>(337.418)    </td>
                 </tr>
                 <tr>
                   <td>round      </td>
-                  <td>-6649.515          </td>
-                  <td>                   </td>
+                  <td>-6649.515***</td>
+                  <td>             </td>
                 </tr>
                 <tr>
                   <td>           </td>
-                  <td>(230.017)          </td>
-                  <td>                   </td>
+                  <td>(230.017)   </td>
+                  <td>             </td>
                 </tr>
                 <tr>
                   <td>enrolled   </td>
-                  <td>                   </td>
-                  <td>-14464.732         </td>
+                  <td>            </td>
+                  <td>-14464.732***</td>
                 </tr>
                 <tr>
                   <td>           </td>
-                  <td>                   </td>
-                  <td>(330.470)          </td>
+                  <td>            </td>
+                  <td>(330.470)    </td>
                 </tr>
                 <tr>
                   <td>Num.Obs.   </td>
-                  <td>5929               </td>
-                  <td>4960               </td>
+                  <td>5929        </td>
+                  <td>4960         </td>
                 </tr>
                 <tr>
                   <td>R2         </td>
-                  <td>0.211              </td>
-                  <td>0.327              </td>
-                </tr>
-                <tr>
-                  <td>R2 Adj.    </td>
-                  <td>0.210              </td>
-                  <td>0.327              </td>
-                </tr>
-                <tr>
-                  <td>AIC        </td>
-                  <td>120824.2           </td>
-                  <td>105620.4           </td>
-                </tr>
-                <tr>
-                  <td>BIC        </td>
-                  <td>120844.3           </td>
-                  <td>105640.0           </td>
-                </tr>
-                <tr>
-                  <td>RMSE       </td>
-                  <td>6436.97            </td>
-                  <td>10174.90           </td>
-                </tr>
-                <tr>
-                  <td>Std.Errors </td>
-                  <td>by: zone_identifier</td>
-                  <td>by: zone_identifier</td>
+                  <td>0.211       </td>
+                  <td>0.327        </td>
                 </tr>
         </tbody>
       </table>

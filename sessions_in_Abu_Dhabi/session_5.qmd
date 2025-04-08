@@ -66,7 +66,7 @@ ggplot(data, aes(x = Time, y = Outcome, color = Group, group = Group)) +
   - The outcome without the intervention
 - The challenge: How do we estimate the counterfactual?
 
-## Example: Waste maanagement system
+## Example: Waste management system
 
 - Government program subsidizing waste management new technologies 
 - Goal: Reduce waste management costs
@@ -125,9 +125,14 @@ ggplot(data, aes(x = Time, y = Outcome, color = Group, group = Group)) +
 
 ## Before-After Comparison (Example)
 
-```{r}
+```{r, echo=TRUE}
+# Let's start by uploading our data.
+# It is important to know in which folder your dataset is so you can use the right path.
 
 df <- read.csv("./evaluation_data.csv")
+
+# We multiply the outcome variable by 1,000
+
 df$waste_management_costs<-df$waste_management_costs*1000
 
 ```
@@ -136,7 +141,7 @@ df$waste_management_costs<-df$waste_management_costs*1000
 # Compare waste management costs before and after for enrolled industries
 m_ba1 <- lm_robust(waste_management_costs   ~ round, 
                   clusters = zone_identifier,
-                  data = df %>% filter(treatment_zone ==1 & enrolled ==1))
+                  data = df %>% dplyr::filter(treatment_zone ==1 & enrolled ==1))
 
 ```
 

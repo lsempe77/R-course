@@ -443,7 +443,7 @@ Create a complete analysis:
 1.  Create a new script file
 2.  Load the mtcars dataset
 3.  Calculate mean of the first 3 numeric columns
-4.  Create a new column for computing `mph` / `hp`
+4.  Create a new column for computing `mpg` / `hp`
 
 ```{r}
 #| eval: false

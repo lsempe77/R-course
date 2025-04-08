@@ -357,91 +357,90 @@ The interaction coefficient (Enrollment × Round) represents our estimate of the
 
 
 
-## Comparative Results Across Methods
+<!-- ## Comparative Results Across Methods -->
 
-```{r, echo=FALSE, fig.height=4}
-library(ggplot2)
+<!-- ```{r, echo=FALSE, fig.height=4} -->
+<!-- library(ggplot2) -->
 
-# Create data frame with results from all methods
-all_results <- data.frame(
-  Method = c("Randomized Assignment", "Instrumental Variables", 
-             "Regression Discontinuity", "Difference-in-Differences", 
-             "Matching (Full Set)"),
-  Estimate = c(-10.14, -9.74, -9.03, -8.16, -10.00),
-  SE = c(0.35, 0.96, 0.44, 0.33, 0.37),
-  CI_Lower = c(-10.83, -11.63, -9.90, -8.81, -10.73),
-  CI_Upper = c(-9.45, -7.86, -8.16, -7.52, -9.27)
-)
+<!-- # Create data frame with results from all methods -->
+<!-- all_results <- data.frame( -->
+<!--   Method = c("Randomized Assignment", "Instrumental Variables",  -->
+<!--              "Regression Discontinuity", "Difference-in-Differences",  -->
+<!--              "Matching (Full Set)"), -->
+<!--   Estimate = c(-10140, -9829, -9051, -8163, -10000), -->
+<!--   CI_Lower = c(-10922, -11684, -9921, -8792, -10723), -->
+<!--   CI_Upper = c(-9358, -7973, -8181, -7534, -9277) -->
+<!-- ) -->
 
-# Sort by effect size
-all_results <- all_results %>%
-  arrange(Estimate)
+<!-- # Sort by effect size -->
+<!-- all_results <- all_results %>% -->
+<!--   arrange(Estimate) -->
 
-# Plot forest plot of results
-ggplot(all_results, aes(y = reorder(Method, Estimate), x = Estimate)) +
-  geom_vline(xintercept = -10, linetype = "dashed", color = "red") +
-  geom_point(size = 3) +
-  geom_errorbarh(aes(xmin = CI_Lower, xmax = CI_Upper), height = 0.3) +
-  labs(title = "Impact of HISP on Health Expenditures",
-       subtitle = "Comparison Across Evaluation Methods",
-       x = "Effect on Health Expenditures (USD)",
-       y = "") +
-  theme_minimal() +
-  annotate("text", x = -10, y = 5.5, label = "Threshold", color = "red", hjust = 1.2)
-```
+<!-- # Plot forest plot of results -->
+<!-- ggplot(all_results, aes(y = reorder(Method, Estimate), x = Estimate)) + -->
+<!--   geom_vline(xintercept = -10000, linetype = "dashed", color = "red") + -->
+<!--   geom_point(size = 3) + -->
+<!--   geom_errorbarh(aes(xmin = CI_Lower, xmax = CI_Upper), height = 0.3) + -->
+<!--   labs(title = "Impact of HISP on Health Expenditures", -->
+<!--        subtitle = "Comparison Across Evaluation Methods", -->
+<!--        x = "Effect on Health Expenditures (USD)", -->
+<!--        y = "") + -->
+<!--   theme_minimal() + -->
+<!--   annotate("text", x = -10000, y = 5.5, label = "Threshold", color = "red", hjust = 1.2) -->
+<!-- ``` -->
 
-## Final Policy Recommendation
+<!-- ## Final Policy Recommendation -->
 
-- Methods produce consistent results in the range of -$8.16 to -$10.14
-- Randomized assignment (gold standard): -$10.14
-- Most quasi-experimental methods: Effect slightly below $10
-- Given uncertainty in estimates and consistency in direction, HISP shows promising results
+<!-- - Methods produce consistent results in the range of -$8.16 to -$10.14 -->
+<!-- - Randomized assignment (gold standard): -$10.14 -->
+<!-- - Most quasi-experimental methods: Effect slightly below $10 -->
+<!-- - Given uncertainty in estimates and consistency in direction, HISP shows promising results -->
 
-**RECOMMENDATION**: The preponderance of evidence suggests HISP reduces health expenditures by approximately $10, which meets the threshold criterion. Given the consistency across methods and the gold-standard randomized result, HISP should be scaled up nationally.
+<!-- **RECOMMENDATION**: The preponderance of evidence suggests HISP reduces health expenditures by approximately $10, which meets the threshold criterion. Given the consistency across methods and the gold-standard randomized result, HISP should be scaled up nationally. -->
 
-## Conclusion: Choosing the Right Method
+<!-- ## Conclusion: Choosing the Right Method -->
 
-| Method | When to Use | Key Assumption | Strengths | Limitations |
-|--------|-------------|----------------|-----------|-------------|
-| **Randomized** | Feasible to randomize | Random assignment | Gold standard; controls for all confounders | Implementation challenges; external validity |
-| **IV** | Imperfect compliance; valid instrument exists | Exclusion restriction | Addresses selection; natural experiments | Local effect; requires strong instrument |
-| **RDD** | Clear eligibility threshold | No manipulation of running variable | Credible quasi-experimental design | Local to threshold; requires threshold |
-| **DiD** | Panel data; non-random assignment | Parallel trends | Controls for fixed differences and time trends | Cannot address time-varying confounders |
-| **Matching** | Rich observational data | Selection on observables | Uses existing data; intuitive | Cannot address unobserved confounders |
+<!-- | Method | When to Use | Key Assumption | Strengths | Limitations | -->
+<!-- |--------|-------------|----------------|-----------|-------------| -->
+<!-- | **Randomized** | Feasible to randomize | Random assignment | Gold standard; controls for all confounders | Implementation challenges; external validity | -->
+<!-- | **IV** | Imperfect compliance; valid instrument exists | Exclusion restriction | Addresses selection; natural experiments | Local effect; requires strong instrument | -->
+<!-- | **RDD** | Clear eligibility threshold | No manipulation of running variable | Credible quasi-experimental design | Local to threshold; requires threshold | -->
+<!-- | **DiD** | Panel data; non-random assignment | Parallel trends | Controls for fixed differences and time trends | Cannot address time-varying confounders | -->
+<!-- | **Matching** | Rich observational data | Selection on observables | Uses existing data; intuitive | Cannot address unobserved confounders | -->
 
-## Next Steps in Impact Evaluation
+<!-- ## Next Steps in Impact Evaluation -->
 
-1. **Heterogeneity analysis**
-   - Does impact vary across subgroups?
-   - Who benefits most from HISP?
+<!-- 1. **Heterogeneity analysis** -->
+<!--    - Does impact vary across subgroups? -->
+<!--    - Who benefits most from HISP? -->
 
-2. **Cost-effectiveness analysis**
-   - Beyond impact, is HISP cost-effective?
-   - How does it compare to alternative programs?
+<!-- 2. **Cost-effectiveness analysis** -->
+<!--    - Beyond impact, is HISP cost-effective? -->
+<!--    - How does it compare to alternative programs? -->
 
-3. **Implementation research**
-   - What factors affect successful implementation?
-   - How to optimize national scale-up?
+<!-- 3. **Implementation research** -->
+<!--    - What factors affect successful implementation? -->
+<!--    - How to optimize national scale-up? -->
 
-4. **Long-term follow-up**
-   - Do impacts persist over time?
-   - Are there additional benefits or unintended consequences?
+<!-- 4. **Long-term follow-up** -->
+<!--    - Do impacts persist over time? -->
+<!--    - Are there additional benefits or unintended consequences? -->
 
-## Key Course Takeaways
+<!-- ## Key Course Takeaways -->
 
-1. Impact evaluation requires identifying a valid counterfactual
-2. Randomized experiments provide the most credible counterfactual
-3. Quasi-experimental methods can provide rigorous evidence when randomization isn't possible
-4. Multiple methods with consistent results strengthen the evidence base
-5. Statistical significance must be paired with policy significance
-6. The choice of method depends on context, data, and research question
-7. R provides powerful tools for implementing all these methods
+<!-- 1. Impact evaluation requires identifying a valid counterfactual -->
+<!-- 2. Randomized experiments provide the most credible counterfactual -->
+<!-- 3. Quasi-experimental methods can provide rigorous evidence when randomization isn't possible -->
+<!-- 4. Multiple methods with consistent results strengthen the evidence base -->
+<!-- 5. Statistical significance must be paired with policy significance -->
+<!-- 6. The choice of method depends on context, data, and research question -->
+<!-- 7. R provides powerful tools for implementing all these methods -->
 
-## Thank You!
+<!-- ## Thank You! -->
 
-**Additional Resources**:
+<!-- **Additional Resources**: -->
 
-- Gertler, P. J., et al. (2016). *Impact Evaluation in Practice*, Second Edition. World Bank.
-- Angrist, J. D., & Pischke, J. S. (2008). *Mostly Harmless Econometrics*. Princeton University Press.
-- Cunningham, S. (2021). *Causal Inference: The Mixtape*. Yale University Press.
-- R packages: `estimatr`, `MatchIt`, `rdrobust`, `did`, `fixest`, `AER`
+<!-- - Gertler, P. J., et al. (2016). *Impact Evaluation in Practice*, Second Edition. World Bank. -->
+<!-- - Angrist, J. D., & Pischke, J. S. (2008). *Mostly Harmless Econometrics*. Princeton University Press. -->
+<!-- - Cunningham, S. (2021). *Causal Inference: The Mixtape*. Yale University Press. -->
+<!-- - R packages: `estimatr`, `MatchIt`, `rdrobust`, `did`, `fixest`, `AER` -->
