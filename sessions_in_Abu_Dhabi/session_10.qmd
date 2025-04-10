@@ -24,7 +24,7 @@ editor_options:
 - **Setting**: When treatment assignment is related to observable factors
 - **Advantage**: Reduces selection bias from observable differences
 - **Assumption**: No unobserved differences affecting both treatment and outcomes
-- **Methods**: Exact matching, propensity score matching, nearest neighbor, etc.
+- **Types**: Exact matching, propensity score matching, nearest neighbor, etc.
 :::
 
 ::: {.column width="40%"}

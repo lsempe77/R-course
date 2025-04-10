@@ -80,7 +80,7 @@ ggplot(data, aes(x = Time, y = Outcome, color = Group, group = Group)) +
 ::: {.column width="50%"}
 **Outcome Variable**:
 
-- `waste_management_costs`: Waste managament incurred monthly per industry (USD)
+- `waste_management_costs`: Waste management costs incurred monthly per industry (USD)
 
 **Treatment Variables**:
 

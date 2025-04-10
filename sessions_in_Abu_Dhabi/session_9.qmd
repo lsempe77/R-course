@@ -23,7 +23,7 @@ editor_options:
 - **Core idea**: Compare changes over time between treated and untreated groups
 - **Setting**: Panel or repeated cross-sectional data with pre/post periods
 - **Advantage**: Controls for time-invariant differences between groups
-- **Identification**: Relies on "parallel trends" assumption
+- **Assumption**: Relies on "parallel trends" assumption
 - **Applications**: Widely used for policy evaluation
 :::
 

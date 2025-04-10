@@ -22,8 +22,8 @@ editor_options:
 ::: {.column width="60%"}
 - **Core idea**: Compare units just above and below an eligibility threshold
 - **Setting**: Assignment based on a continuous "running variable"
-- **Assumption**: Units close to threshold are similar except for treatment status
 - **Advantage**: Credible causal inference from non-experimental data
+- **Assumption**: Units close to threshold are similar across all characteristics (observable and un-observable) except for treatment status
 - **Types**: Sharp RDD (deterministic cutoff) vs. Fuzzy RDD (probabilistic cutoff)
 :::
 
@@ -478,7 +478,7 @@ rd_robust <- rdrobust(
 - Point estimate below the $10,000 threshold
 - Effect applies to industries near the efficiency threshold
 
-**Recommendation**: Based on the RDD estimate, the Program should not be scaled up nationally.
+**Recommendation**: Based on the RDD estimate, the program should not be scaled up nationally.
 
 ## Key Takeaways
 

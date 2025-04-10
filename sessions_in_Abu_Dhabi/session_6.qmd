@@ -333,7 +333,7 @@ When randomization is not feasible, we can use quasi-experimental methods:
 1. Randomization creates comparable treatment and control groups
 2. With randomization, differences in outcomes can be attributed to the program
 3. Including covariates doesn't substantially change estimates but can improve precision
-4. The Programm reduces waste expenditures by $10,140, exceeding the threshold
+4. The program reduces waste expenditures by $10,140, exceeding the threshold
 5. Based on the randomized evaluation, HISP should be scaled up nationally
 
 ## Next Session

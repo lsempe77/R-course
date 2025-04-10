@@ -19,10 +19,10 @@ editor_options:
 
 - Sometimes we can't randomly assign the treatment itself
 - But we can randomly assign encouragement to take up the treatment
-- Example: National scale-up of Program means we can't deny eligibility
+- Example: National scale-up of the Program means we can't deny eligibility
 - But we can randomly promote the program in some industries
 
-**Central question:** How to measure impact when actual participation is voluntary?
+**Central question:** How do we measure impact when actual participation is voluntary?
 
 ```{r, echo=FALSE}
 library(ggplot2)
@@ -38,7 +38,7 @@ library(kableExtra)
 :::: {.columns}
 
 ::: {.column width="50%"}
-**Instrumental variable (IV)** must:
+**Instrumental Variable (IV)** must:
 
 1. **Affect participation**: The instrument increases likelihood of enrollment
 2. **Exclusion restriction**: The instrument affects outcomes only through enrollment
@@ -65,7 +65,7 @@ library(kableExtra)
 
 ## Example Case: Randomized Promotion Design
 
-- The ministry wants to make the Programm available to all industries
+- The ministry wants to make the Program available to all industries
 - We design an evaluation with random promotion in some zones of the Emirate
 - Promotion includes communication and social marketing
 - This creates exogenous variation in enrollment
@@ -245,9 +245,9 @@ The IV estimate (LATE) applies to compliers only:
 ::: {.column width="50%"}
 **IV Estimate:**
 
-LATE = -$9,496
-Effect on compliers only
-Larger standard errors
+- LATE = -$9,496
+- Effect on compliers only
+- Larger standard errors
 
 **Policy recommendation:**
 Do not scale up (but close to threshold)
@@ -255,9 +255,9 @@ Do not scale up (but close to threshold)
 ::: {.column width="50%"}
 **Randomized Assignment:**
 
-ATE = -$10,140
-Effect on all eligible facilities
-More precise estimate
+- ATE = -$10,140
+- Effect on all eligible facilities
+- More precise estimate
 
 **Policy recommendation:**
 Scale up nationally
@@ -265,9 +265,9 @@ Scale up nationally
 ::::
 Why the difference?
 
-Different populations: LATE vs. ATE
-Different precision: IV is less efficient
-Different contexts: National scale-up vs. pilot program
+- Different populations: LATE vs. ATE
+- Different precision: IV is less efficient
+- Different contexts: National scale-up vs. pilot program
 
 ## When to Use Instrumental Variables
 Use when:
