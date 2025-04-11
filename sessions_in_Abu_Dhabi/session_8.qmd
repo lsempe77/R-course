@@ -485,7 +485,7 @@ rd_robust <- rdrobust(
 1. RDD exploits discontinuities at eligibility thresholds to estimate causal effects
 2. Units just above and below the threshold are comparable except for treatment
 3. RDD estimates are local to the cutoff and may not generalize to units far from threshold
-4. Multiple specifications yield consistent estimates of approximately $90,00 reduction
+4. Multiple specifications yield consistent estimates of approximately $9,000 reduction
 5. RDD estimate is slightly below the $10,000 threshold for scaling up HISP
 
 ## Next Session
