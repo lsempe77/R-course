@@ -25,6 +25,7 @@ editor_options:
 - **Advantage**: Controls for time-invariant differences between groups
 - **Assumption**: Relies on "parallel trends" assumption
 - **Applications**: Widely used for policy evaluation
+- **Types**: Two-way fixed effects, staggered adoption, triple differences, matched DID, etc. 
 :::
 
 ::: {.column width="40%"}
@@ -114,9 +115,9 @@ kable(did_table, align = "lccc", caption = "DiD Calculation Example")
 ## Program Case: DiD Setup
 
 - We compare changes in waste expenditures for enrolled vs. non-enrolled industries
-- Both groups are in treatment zones (where Program was offered)
-- We have data for two periods: before and after Program implementation
-- DiD can help address selection bias if trends would be parallel without Program
+- Both groups are in treatment zones (where the program was offered)
+- We have data for two periods: before and after the program implementation
+- DiD can help address selection bias if trends would be parallel without the program
 
 ## Implementing DiD with Regression
 
@@ -176,7 +177,7 @@ kable(coef_table,
 
 ::::
 
-## DiD Results for Program
+## DiD Results for the Program
 
 :::: {.columns}
 
@@ -509,7 +510,7 @@ staggered_did <- att_gt(
 
 ## From Analysis to Policy Decision
 
-**Policy question**: Should the Program be scaled up nationally?
+**Policy question**: Should the program be scaled up nationally?
 
 **Decision criterion**: Program must reduce industries expenditures by at least $10,000.
 
@@ -519,7 +520,7 @@ staggered_did <- att_gt(
 - Point estimate below the $10,000 threshold
 - Effect robust to inclusion of covariates
 
-**Recommendation**: Based on the DiD estimate, Program should not be scaled up nationally.
+**Recommendation**: Based on the DiD estimate, the program should not be scaled up nationally.
 
 ## Key Takeaways
 

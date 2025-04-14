@@ -23,7 +23,7 @@ editor_options:
 - **Core idea**: Compare units just above and below an eligibility threshold
 - **Setting**: Assignment based on a continuous "running variable"
 - **Advantage**: Credible causal inference from non-experimental data
-- **Assumption**: Units close to threshold are similar across all characteristics (observable and un-observable) except for treatment status
+- **Assumption**: Units close to threshold are similar across all characteristics (observable and un-observable) except for treatment status and this threshold cannot be manipulated by others and is not being used by other projects provided to the same group
 - **Types**: Sharp RDD (deterministic cutoff) vs. Fuzzy RDD (probabilistic cutoff)
 :::
 
@@ -218,6 +218,14 @@ modelsummary(list("Sharp RDD"= out_rdd), stars = TRUE,coef_omit = c(-3),
 ::::
 
 ## Quadratic and polinomial models
+
+In Regression Discontinuity Designs (RDD), the relationship between the running variable and the outcome might not be perfectly linear. To make sure the results are robust, we estimate:
+
+1. A **quadratic model** (2nd degree polynomial) — allowing for a curved relationship.
+2. A **cubic model** (3rd degree polynomial) — allowing for even more flexibility in curvature.
+
+This helps test whether the RDD results are sensitive to how we model the relationship near the cutoff.
+
 :::: {.columns}
 
 ::: {.column width="50%"}
@@ -225,6 +233,10 @@ modelsummary(list("Sharp RDD"= out_rdd), stars = TRUE,coef_omit = c(-3),
 ```{r, eval=T, echo=TRUE}
 #| class: small-code
 
+# Quadratic RDD model:
+# Include efficiency_index_c0 and its square (efficiency_index_c0^2)
+# Interact them with treatment (enrolled) to allow for different slopes
+# and curves on each side of the cutoff
 out_rdd_quadratic  <- lm_robust(waste_management_costs ~ 
                   efficiency_index_c0 * enrolled +
                     enrolled * I(efficiency_index_c0^2) +
@@ -235,6 +247,9 @@ out_rdd_quadratic  <- lm_robust(waste_management_costs ~
                   recycling_center_distance,
                   data = df_treat %>% filter(round == 1))
 
+# Cubic RDD model:
+# Same as above, but also add a cubic (efficiency_index_c0^3) term
+# for even more flexible modeling of the relationship
 out_rdd_cubic  <- lm_robust(waste_management_costs ~ 
                   efficiency_index_c0 * enrolled +
                     enrolled * I(efficiency_index_c0^2) + 
@@ -253,6 +268,8 @@ out_rdd_cubic  <- lm_robust(waste_management_costs ~
 
 ```{r}
 
+# Print results in a nice table
+# Omit some coefficients for readability and show goodness-of-fit metrics
 modelsummary(coef_omit = c(-3),
              list("Quadratic RDD"= out_rdd_quadratic,"Cubic RDD" = out_rdd_cubic), stars = TRUE,
              gof_map = c("nobs", "r.squared","adj.r.squared"), output = 'kableExtra') %>%
@@ -410,6 +427,7 @@ ggplot(effects, aes(x = efficiency_index, y = effect_size)) +
 - Clear eligibility threshold exists
 - Running variable is continuous and measured precisely
 - Units cannot precisely manipulate their position around threshold
+- We have sufficient participants/units within the bandwidth that we set
 - Interest in effects for marginal participants
 
 **Common applications**:

@@ -139,26 +139,43 @@ df$waste_management_costs<-df$waste_management_costs*1000
 
 ```{r, eval=T, echo=TRUE}
 # Compare waste management costs before and after for enrolled industries
+# Fit a linear regression model using 'lm_robust' from the 'estimatr' package
+# 'lm_robust' gives regression results with robust (heteroskedasticity-consistent) standard errors
+
+# Formula: outcome variable ~ explanatory variable
+# Clustered standard errors at the 'zone_identifier' level
+# Filter df to only run the regression on industries in treatment zones AND enrolled
 m_ba1 <- lm_robust(waste_management_costs   ~ round, 
                   clusters = zone_identifier,
                   data = df %>% dplyr::filter(treatment_zone ==1 & enrolled ==1))
 
 ```
 
+**Discussion**
+
+- Is this effect due to the progam? What are some other external factors that may cause a change in costs for waste management over time?
+
 **Problems**: 
 
-- External factors also change over time (e.g., economic conditions, other government programs)
+- External factors also change over time
 - Cannot attribute all changes to the program
 
 ## With-Without Comparison (HISP Example)
 
 ```{r, eval=T, echo=TRUE}
 # Compare enrolled vs. non-enrolled households after program implementation
+
+# Use lm_robust as before, with clustered std errors
+# This time, we filter df to run the regression on industries in treatment zones AND after the intervention, in the follow-up survey round
 m_ba2 <- lm_robust(waste_management_costs ~ enrolled, 
                   clusters = zone_identifier,
                   data = df %>% filter(treatment_zone==1 & round ==1))
 
 ```
+
+**Discussion**
+
+- Are the enrolled industries the same as those that were not enrolled in the program? How might they be different from one another?
 
 **Problems**:
 
@@ -174,6 +191,43 @@ modelsummary(list(m_ba1, m_ba2), stars = TRUE,
 
 
 ```      
+
+## Conditions for Impact Evaluation
+
+There are certain practical considerations and conditions that need to be met in order to conduct an impact evaluation. 
+
+```{r, echo=FALSE}
+library(knitr)
+
+conditions_table <- data.frame(
+  Condition = c(
+    "Intervention",
+    "Outcome(s)",
+    "Problem Diagnosis",
+    "Theory of Change",
+    "Sufficient dose and duration",
+    "Counterfactual",
+    "Data Quality",
+    "Data Sufficiency"
+  ),
+  Description = c(
+    "The project, program or policy which is the subject of the impact evaluation. Should be clearly defined, with a known start time and duration as well as clearly defined eligibility criteria.",
+    "One or more clearly defined, observable, and measurable outcomes of interest.",
+    "A proposed program or intervention should be developed based on a sound analysis of a particular social or development need and the binding constraints and root causes (i.e., to ensure the solution matches the problem).",
+    "A sound, well-constructed theory of change explaining expected causal pathways linking inputs, outputs, and outcomes, including a description and key assumptions associated with each causal step.",
+    "The intervention should be of a sufficient scope, scale, and duration to theoretically produce the intended effect within the time frame of observation.",
+    "A clearly defined hypothetical counterfactual, operationalized using a credible identification strategy.",
+    "Reasonably accurate, complete data, with minimal or no systematic bias.",
+    "Sufficient data to enable statistical comparison of outcomes between intervention and comparison groups."
+  )
+)
+
+kable(
+  conditions_table, 
+  col.names = c("Condition", "Description"),
+  caption = "Conditions for a Credible Impact Evaluation"
+)
+```
 
 ## Course Outline
 

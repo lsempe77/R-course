@@ -127,9 +127,9 @@ head(select(df_w, facility_identifier, enrolled,
            waste_management_costs_0, waste_management_costs_1))
 ```
 
-## Propensity Score Matching
+## Propensity Score Matching (PSM)
 
-Two scenarios for predicting enrollment:
+Propensity Score Matching (PSM) is when we predict the probability of each unit receiving treatment and then compare those with similar propensity scores. There are two scenarios for predicting enrollment:
 
 1. **Limited set of variables**:
    - Only age and education of facility manager
@@ -404,7 +404,7 @@ The interaction coefficient (Enrollment × Round) represents our estimate of the
 <!-- |--------|-------------|----------------|-----------|-------------| -->
 <!-- | **Randomized** | Feasible to randomize | Random assignment | Gold standard; controls for all confounders | Implementation challenges; external validity | -->
 <!-- | **IV** | Imperfect compliance; valid instrument exists | Exclusion restriction | Addresses selection; natural experiments | Local effect; requires strong instrument | -->
-<!-- | **RDD** | Clear eligibility threshold | No manipulation of running variable | Credible quasi-experimental design | Local to threshold; requires threshold | -->
+<!-- | **RDD** | Clear eligibility threshold | No manipulation of running variable | Addresses selection bias through psuedo-randomization | Local to threshold; requires threshold | -->
 <!-- | **DiD** | Panel data; non-random assignment | Parallel trends | Controls for fixed differences and time trends | Cannot address time-varying confounders | -->
 <!-- | **Matching** | Rich observational data | Selection on observables | Uses existing data; intuitive | Cannot address unobserved confounders | -->
 

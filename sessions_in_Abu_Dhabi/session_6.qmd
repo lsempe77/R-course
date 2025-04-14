@@ -23,6 +23,7 @@ editor_options:
 - **Result**: Treatment and control groups are statistically identical (in expectation)
 - **Advantage**: Differences in outcomes can be attributed to the program
 - **Why it works**: Randomization creates a valid counterfactual
+- **Types**: Encouragement, lottery, phase-in, etc.
 :::
 
 ::: {.column width="40%"}
@@ -64,6 +65,21 @@ ggplot(data, aes(x = treatment, y = actual_outcome, group = treatment)) +
 :::
 
 ::::
+
+## Why Does Randomization Work? How Does it Create a Valid Counterfactual?
+
+Let's think through an example. 
+
+- If we randomly choose two people from this room, they will likely have very different characteristics (observable ones such as age, sex, education, and unobservable ones such as innate abilities, motivation, ideas, etc.). **They may not have anything in common at all. They would not make good counterfactuals for each other.**
+
+- However, something different happens when we randomly choose large groups of people. If we were to randomly choose two groups of 1,000 people from across the country, with every person having an equal chance of being chosen, these groups will, *on average*, have statistically equivalent characteristics. If you remember from statistics class, **a random sample represents the population from which it is drawn.** Therefore, two large random samples will have statistically equivalent characteristics that represent the population from which they were drawn. We would expect these groups to have:
+  - Approximately the same average age, sex composition, average level of educational attainment, same average income
+  - And they will be approximately equal in characteristics we can’t directly observe or measure: approximately the same ability, the same motivation, etc. 
+
+- Any slight differences will be statistically insignificant
+
+**In short:**
+- **If groups are big enough and random assignment is used, the groups will be equivalent on average, even on characteristics we cannot observe.**
 
 ## Implementing Randomized Assignment
 
@@ -125,8 +141,15 @@ kable(m) %>% scroll_box(width = "600px", height = "400px")
 #| class: small-code
 # Check if treatment and control industries are balanced at baseline
 
+# Step 1: Filter to only keep baseline (pre-intervention) observations
+# Step 2: Select relevant baseline variables to test for balance
+# Step 3: Reshape data to long format using pivot_longer() so that we have one row per variable per industry, keeping treatment assignment
+# Step 4: Group by each baseline variable
+# Step 5: For each variable, run a simple regression of the baseline variable on treat assignment
+# Step 6: Only keep the coefficient for 'treatment_zone' since we are interested in differences between treatment and control
+# Step 7: Select key results to display (variable name, estimated difference, standard error, and p-value)
 df %>%
-  filter(round == 0) %>%
+  filter(round == 0) %>% 
   select(treatment_zone, age_manager, age_deputy,
          educ_manager, educ_deputy, 
          female_manager, foreign_owned, staff_size,
@@ -149,10 +172,12 @@ df %>%
 #| class: small-code
 
 # Compare waste expenditures in treatment and control industries at follow-up
+# Regression at baseline: are waste expenditures different between treatment and control groups before intervention?
 out_round0 <- lm_robust(waste_management_costs ~ treatment_zone,
                         data = df %>% filter(round == 0 & eligible ==1),
                         clusters = zone_identifier)
 
+# Regression at follow-up: are waste expenditures different between treatment and control groups after intervention?
 out_round1 <- lm_robust(waste_management_costs ~ treatment_zone,
                         data = df %>% filter(round == 1 & eligible ==1),
                         clusters = zone_identifier)
@@ -162,6 +187,8 @@ out_round1 <- lm_robust(waste_management_costs ~ treatment_zone,
 ::: {.column width="50%"}
 
 ```{r}
+
+# Display the results side-by-side in a nice kable table: Compare estimates for Round 0 (baseline) and Round 1 (follow-up)
 
 modelsummary(list("Round 0"= out_round0, "Round 1"=out_round1), stars = TRUE,
              gof_map = c("nobs", "r.squared","adj.r.squared"), output = 'kableExtra') 
@@ -178,7 +205,7 @@ modelsummary(list("Round 0"= out_round0, "Round 1"=out_round1), stars = TRUE,
 ```{r, eval=T, echo=TRUE}
 #| class: small-code
 
-# Compare waste expenditures in T and C industries at follow-up
+# Compare waste expenditures in T and C industries at follow-up with additional covariates
 out_round2 <- lm_robust(waste_management_costs ~ treatment_zone +
                     age_manager + age_deputy +
                     female_manager + foreign_owned + 
@@ -194,6 +221,8 @@ out_round2 <- lm_robust(waste_management_costs ~ treatment_zone +
 
 ```{r}
 #| class: small-code
+
+# Display results in a table 
 
 modelsummary(list("No covariate adj."= out_round1,
                   "With covariate adj."=out_round2), stars = TRUE,
@@ -230,6 +259,12 @@ In randomized experiments:
 
 ```{r, eval = F, echo=T}
 #| class: small-code
+
+# Step 1: Group the data by enrollment status (treatment vs. control) and round (before vs. after)
+# Step 2: Relabel variables to make the plot labels easier to understand ("0" becomes "Control" or "Before", "1" becomes "Treatment" or "After")
+# Step 3: Summarize the data by calculating the average waste management cost for each group and time period
+# Step 4: Plot the average costs over time, drawing separate lines for treatment and control groups
+#Step 5: Customize the plot with titles, axis labels, colors, and a clean minimal theme
 
 df %>% group_by(enrolled, round) %>% 
   mutate(enrolled = recode(as.factor(enrolled), `0` = "Control", `1` = "Treatment"),
@@ -319,6 +354,33 @@ df %>% group_by(enrolled, round) %>%
 
 ::::
 
+
+## Types of Randomization
+
+Different types of randomization can help address some of the ethical and practical challenges. 
+
+1. **Lottery**
+   - Use random number generator to select eligible units to receive treatment.
+   - Useful when there are insufficient resources to meet demand and is logistically simple.
+   - Some eligible units do not receive treatment (control).
+
+2. **Multiple Treatments**
+   - Randomly assign units to different treatment arms.
+   - Useful when we are interested in the comparative effectiveness of different intervention approaches or methods of service delivery. 
+   - Complex to implement and requires even larger sample.
+
+3. **Phase-in**
+   - Randomly assign units to receive treatment at different times. 
+   - Useful when we want all eligible units to receive treatment eventually, and can help us understand impact of program over time.
+   - Susceptible to anticipation bias.
+   
+4. **Encouragement**
+   - Treatment is randomly encouraged rather than assigned.
+   - Useful when we want all units to have the option to receive treatment, and can help us understand if encouragement mechanisms improve outcomes.
+   - Requires larger sample and assesses impact only for those that respond to encouragement. 
+   - Instrumental variables, covered in the next session, is an example of this
+   
+   
 ## When Randomization Isn't Possible
 
 When randomization is not feasible, we can use quasi-experimental methods:

@@ -65,7 +65,7 @@ library(kableExtra)
 
 ## Example Case: Randomized Promotion Design
 
-- The ministry wants to make the Program available to all industries
+- The ministry wants to make the program available to all industries
 - We design an evaluation with random promotion in some zones of the Emirate
 - Promotion includes communication and social marketing
 - This creates exogenous variation in enrollment
@@ -75,10 +75,19 @@ df <- read.csv("./evaluation_data.csv")
 df$waste_management_costs<-df$waste_management_costs*1000
 ```
 
+If the promotion is effective, then we should have a higher likelihood of participation in the intervention for those who received it. If we are just interested in the question of whether encouraging enrollment in the project using messages improved our outcomes compared to providing the program without messaging, then we can run the regression for those that randomly received messaging versus those that did not. This is what we learned about randomization so far. 
+
+However, we ideally want an estimate of the program not the messaging, and there also may be some individuals that received the promotion but still didn’t take up the program. This creates selection bias since those that actually take up the program may have higher outcomes to begin with. We want to run our analyses to see if receiving the promotion encouraged participants to take part in the project AND if that participation impacted their crop yields.
+
+How do we do this? In two stages.
+
 ## 1. First Stage: Effect of Promotion on Enrollment
 :::: {.columns}
 
 ::: {.column width="50%"}
+
+In the first stage, we measure the effect of encouragement on participation in program (e.g., how much more likely someone is to participate due to the encouragement).
+
 
 ```{r, eval=T, echo=TRUE}
 # Estimate effect of promotion on enrollment (First Stage)
@@ -94,6 +103,11 @@ m_first_stage <- lm_robust(enrolled_rp ~ promotion_zone,
 - Without promotion, only `r round(m_first_stage$coefficients[1]*100, 1)`% enroll
 - With promotion, `r round((m_first_stage$coefficients[1] + m_first_stage$coefficients[2])*100, 1)`% enroll
 - Strong first stage (F-statistic > 10): `r round(m_first_stage[["fstatistic"]][["value"]],1)`
+
+> **What is the F-statistic?**  
+> The F-statistic tests whether the instrument (promotion) is a **strong predictor** of the endogenous variable (enrollment).  
+> - A **high F-statistic** (greater than 10) suggests the instrument is strong and relevant.  
+> - A **low F-statistic** (below 10) would indicate a **weak instrument**, which could bias IV estimates and make them unreliable.
 :::
 
 ::: {.column width="50%"}
@@ -106,6 +120,10 @@ modelsummary(list("Enrollment"= m_first_stage), stars = TRUE,
 ::::
 
 ## 2. Intention-to-Treat (ITT) Effect
+
+The second stage is the link between participation on our outcomes of interest. This second stage is the effect of the *encouragement* on the outcome (referred to as the “reduced form”). This is also known as the Intention-to-Treat (ITT) Effect or the effect on outcomes based on the original randomization, regardless of the actual treatment or compliance with the program.
+
+
 :::: {.columns}
 
 ::: {.column width="40%"}
@@ -148,6 +166,9 @@ modelsummary(list("No covariate adj."= m_itt, "With covariate adj." = m_itt_wcov
 ::::
 
 ## 3. Local Average Treatment Effect (LATE)
+
+We still don’t know the effect of the participation on outcomes, which is what we want. To get the estimate of interest (effect of participation on outcomes), we need to divide the “reduced form” (the effect of encouragement on outcomes) by the first stage (effect of encouragement on participation).
+
 :::: {.columns}
 
 ::: {.column width="50%"}
@@ -187,6 +208,7 @@ modelsummary(list("No covariate adj."= m_late, "With covariate adj." = m_late_wc
 **LATE Explanation**:
 
 - Another way of calculating is: LATE = ITT / First Stage = `r round(m_itt$coefficients[2], 0)` / `r round(m_first_stage$coefficients[2], 3)` = `r round(m_itt$coefficients[2]/m_first_stage$coefficients[2], 0)`
+- Ultimately, we are able to isolate the effect of the program, by using the instrument. What we have now is called the LATE (local average treatment effect) – we have an estimate of an impact that is attributable to the program for those who complied with the promotion.
 - This estimates the effect for "compliers": industries that enrolled because of the promotion but would not have enrolled otherwise
 
 :::
