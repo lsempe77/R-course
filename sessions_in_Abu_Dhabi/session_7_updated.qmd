@@ -65,47 +65,47 @@ library(kableExtra)
 
 ## Example Case: Randomized Promotion Design
 
-- The ministry wants to make the program available to all industries
-- We design an evaluation with random promotion in some zones of the Emirate
-- Promotion includes communication and social marketing
-- This creates exogenous variation in enrollment
+- Businesses select whether to enroll in the program
+- In this case, the effect from our RCT, was the ITT, or intent-to-treat of the program 
+- We have a new variable that tells us whether businesses that were randomly assigned the program actually enrolled (enrolled_rp)
+- Using this variable, we can estimate the ToT, or treatment-on-treated of the program.
 
 ```{r, echo=F}
-df <- read.csv("./evaluation_data.csv")
-df$waste_management_costs<-df$waste_management_costs*100
+df <- read.csv("./evaluation_data_GreenWaste.csv")
+# df$waste_management_costs<-df$waste_management_costs*100
 ```
 
-If the promotion is effective, then we should have a higher likelihood of participation in the intervention for those who received it. If we are just interested in the question of whether encouraging enrollment in the project using messages improved our outcomes compared to providing the program without messaging, then we can run the regression for those that randomly received messaging versus those that did not. This is what we learned about randomization so far. 
+If the randomization is effective, then we should have a higher likelihood of participation in the intervention for those who were provided access to it. If we are just interested in the question of whether randomizing access to enrollment in the project improved our outcomes compared to providing the program to everyone, then we can run the regression for those that randomly received access to the program versus those that did not. This is what we learned about randomization so far. 
 
-However, we ideally want an estimate of the program not the messaging, and there also may be some individuals that received the promotion but still didn’t take up the program. This creates selection bias since those that actually take up the program may have higher outcomes to begin with. We want to run our analyses to see if receiving the promotion encouraged participants to take part in the project AND if that participation impacted their crop yields.
+However, we ideally want an estimate of the program not the random assignment or access to the program, and there also may be some businesses that received access but still didn’t take up the program. This creates selection bias since those that actually take up the program may have higher outcomes to begin with. We want to run our analyses to see if receiving access to the program encouraged participants to take part in the project AND if that participation impacted their waste management costs.
 
 How do we do this? In two stages.
 
-## 1. First Stage: Effect of Promotion on Enrollment
+## 1. First Stage: Effect of Randomization on Enrollment
 :::: {.columns}
 
 ::: {.column width="50%"}
 
-In the first stage, we measure the effect of encouragement on participation in program (e.g., how much more likely someone is to participate due to the encouragement).
+In the first stage, we measure the effect of offering the program on participation in the program (e.g., how much more likely someone is to participate when provided the program).
 
 
 ```{r, eval=T, echo=TRUE}
-# Estimate effect of promotion on enrollment (First Stage)
-m_first_stage <- lm_robust(enrolled_rp ~ promotion_zone,
-                      clusters = facility_identifier,
-                      data = df %>% filter(round == 1))
+# Estimate effect of providing access on enrollment (First Stage)
+m_first_stage <- lm_robust(enrolled_rp ~ treatment_neighborhood,
+                      clusters = business_identifier,
+                      data = df %>% filter(round == 1 & eligible ==1))
 ```
 
 
 **First Stage Results**:
 
-- Promotion increases enrollment by `r round(m_first_stage$coefficients[2]*100, 1)` percentage points
-- Without promotion, only `r round(m_first_stage$coefficients[1]*100, 1)`% enroll
-- With promotion, `r round((m_first_stage$coefficients[1] + m_first_stage$coefficients[2])*100, 1)`% enroll
+- Providing access to the program increases enrollment by `r round(m_first_stage$coefficients[2]*100, 1)` percentage points
+- As expected, without access, only `r round(m_first_stage$coefficients[1]*100, 1)`% enroll
+- With access, `r round((m_first_stage$coefficients[1] + m_first_stage$coefficients[2])*100, 1)`% enroll
 - Strong first stage (F-statistic > 10): `r round(m_first_stage[["fstatistic"]][["value"]],1)`
 
 > **What is the F-statistic?**  
-> The F-statistic tests whether the instrument (promotion) is a **strong predictor** of the endogenous variable (enrollment).  
+> The F-statistic tests whether the instrument (access to program) is a **strong predictor** of the endogenous variable (enrollment).  
 > - A **high F-statistic** (greater than 10) suggests the instrument is strong and relevant.  
 > - A **low F-statistic** (below 10) would indicate a **weak instrument**, which could bias IV estimates and make them unreliable.
 :::
@@ -119,9 +119,32 @@ modelsummary(list("Enrollment"= m_first_stage), stars = TRUE,
 
 ::::
 
+```{r}
+
+# Simplified version
+
+library(tinytable)
+
+modelsummary(
+  list("Enrollment"= m_first_stage),
+  stars = TRUE,
+  gof_map = c("nobs"),
+  title = "First Stage Regression Results",
+  coef_map = c(
+    "treatment_neighborhood" = "Random Access Effect",
+    "(Intercept)" = "(Intercept)"
+  ),
+  coef_omit = NULL, 
+  notes = "Standard errors are in parenthesis",
+  output = "tinytable"
+) |>
+  style_tt(bootstrap_class = "table caption-top")
+
+```  
+
 ## 2. Intention-to-Treat (ITT) Effect
 
-The second stage is the link between participation on our outcomes of interest. This second stage is the effect of the *encouragement* on the outcome (referred to as the “reduced form”). This is also known as the Intention-to-Treat (ITT) Effect or the effect on outcomes based on the original randomization, regardless of the actual treatment or compliance with the program.
+The second stage is the link between participation on our outcomes of interest. This second stage is the effect of the *access to the program* on the outcome (referred to as the “reduced form”). This is also known as the Intention-to-Treat (ITT) Effect or the effect on outcomes based on the original randomization, regardless of the actual treatment or compliance with the program.
 
 
 :::: {.columns}
@@ -131,21 +154,22 @@ The second stage is the link between participation on our outcomes of interest. 
 #| class: small-code
 
 # Estimate ITT effect (reduced form)
-m_itt <- lm_robust(waste_management_costs ~ promotion_zone,
-                   clusters = zone_identifier,
-                   data = df %>% filter(round == 1))
+m_itt <- lm_robust(waste_management_costs ~ treatment_neighborhood,
+                   clusters = neighborhood_identifier,
+                   data = df %>% filter(round == 1 & eligible ==1))
 
 # With covariate adjustment
-m_itt_wcov <- lm_robust(waste_management_costs ~ promotion_zone + 
+m_itt_wcov <- lm_robust(waste_management_costs ~ treatment_neighborhood + 
                         age_manager + age_deputy +
                         female_manager + foreign_owned + 
                         staff_size +
                         advanced_filtration + 
-                        facility_area +
+                        business_area +
                         recycling_center_distance,
-                        clusters = zone_identifier,
-                        data = df %>% filter(round == 1))
+                        clusters = neighborhood_identifier,
+                        data = df %>% filter(round == 1 & eligible ==1))
 ```
+
 
 **ITT Results**:
 
@@ -163,6 +187,29 @@ modelsummary(list("No covariate adj."= m_itt, "With covariate adj." = m_itt_wcov
 ```
 :::
 
+```{r}
+
+# Simplified version
+
+library(tinytable)
+
+modelsummary(
+  list("ITT"= m_itt),
+  stars = TRUE,
+  gof_map = c("nobs"),
+  title = "ITT Regression Results",
+  coef_map = c(
+    "treatment_neighborhood" = "RCT ITT Effect",
+    "(Intercept)" = "(Intercept)"
+  ),
+  coef_omit = NULL, 
+  notes = "Standard errors are in parenthesis",
+  output = "tinytable"
+) |>
+  style_tt(bootstrap_class = "table caption-top")
+
+``` 
+
 ::::
 
 ## 3. Local Average Treatment Effect (LATE)
@@ -175,9 +222,9 @@ We still don’t know the effect of the participation on outcomes, which is what
 ```{r, eval=T, echo=TRUE}
 # Estimate LATE using IV regression (2SLS)
 m_late <- iv_robust(waste_management_costs ~ enrolled_rp |
-                     promotion_zone,
-                   clusters = zone_identifier,
-                   data = df %>% filter(round == 1))
+                     treatment_neighborhood,
+                   clusters = neighborhood_identifier,
+                   data = df %>% filter(round == 1 & eligible ==1))
 
 # With covariate adjustment
 m_late_wcov <- iv_robust(waste_management_costs ~ enrolled_rp + 
@@ -185,16 +232,16 @@ m_late_wcov <- iv_robust(waste_management_costs ~ enrolled_rp +
                          female_manager + foreign_owned + 
                          staff_size +
                          advanced_filtration + 
-                         facility_area +
+                         business_area +
                          recycling_center_distance | 
-                         promotion_zone + 
+                         treatment_neighborhood + 
                          age_manager + age_deputy +
                          female_manager + foreign_owned + 
                          staff_size +
-                         advanced_filtration + facility_area +
+                         advanced_filtration + business_area +
                          recycling_center_distance,
-                         clusters = zone_identifier,
-                         data = df %>% filter(round == 1))
+                         clusters = neighborhood_identifier,
+                         data = df %>% filter(round == 1 & eligible ==1))
 ```
 :::
 
@@ -204,6 +251,29 @@ modelsummary(list("No covariate adj."= m_late, "With covariate adj." = m_late_wc
              gof_map = c("nobs", "r.squared","adj.r.squared"), output = 'kableExtra') %>%
   kable_styling(font_size = 15) %>% scroll_box(width = "600px", height = "300px")
 ```
+
+```{r}
+
+# Simplified version
+
+library(tinytable)
+
+modelsummary(
+  list("LATE"= m_late),
+  stars = TRUE,
+  gof_map = c("nobs"),
+  title = "LATE Regression Results",
+  coef_map = c(
+    "enrolled_rp" = "RCT LATE Effect",
+    "(Intercept)" = "(Intercept)"
+  ),
+  coef_omit = NULL, 
+  notes = "Standard errors are in parenthesis",
+  output = "tinytable"
+) |>
+  style_tt(bootstrap_class = "table caption-top")
+
+``` 
 
 **LATE Explanation**:
 

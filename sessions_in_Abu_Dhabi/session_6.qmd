@@ -101,7 +101,7 @@ Let's think through an example.
 
 ```{r, echo=F}
 df <- read.csv("./evaluation_data.csv")
-df$waste_management_costs<-df$waste_management_costs*1000
+df$waste_management_costs<-df$waste_management_costs*100
 ```
 
 :::: {.columns}
@@ -111,25 +111,76 @@ df$waste_management_costs<-df$waste_management_costs*1000
 - With many characteristics, some differences by chance are expected
 
 ```{r, eval=T, echo=F}
-# Check if treatment and control industries are balanced at baseline
+# Check if treatment and control businesses are balanced at baseline
 
-m<-df %>%
-  filter(round == 0) %>%
-  select(treatment_zone, age_manager, age_deputy, educ_manager, educ_deputy, 
-         female_manager, foreign_owned, staff_size, advanced_filtration, water_treatment_system, 
+# m<-df %>%
+#   filter(round == 0) %>%
+#   select(treatment_zone, age_manager, age_deputy, educ_manager, educ_deputy,
+#          female_manager, foreign_owned, staff_size, advanced_filtration, water_treatment_system,
+#          facility_area, recycling_center_distance) %>%
+#   pivot_longer(-c("treatment_zone")) %>%
+#   group_by(name) %>%
+#   do(tidy(lm_robust(value ~ treatment_zone, data = .))) %>%
+#   filter(term == "treatment_zone") %>%
+#   select(name, estimate, std.error, p.value) %>%
+#   mutate(across(c(estimate, std.error, p.value), ~ round(.x,2)))  #
+
+m <- df %>%
+  filter(round == 0, eligible == 1) %>%
+  select(treatment_zone, age_manager, age_deputy,
+         educ_manager, educ_deputy,
+         female_manager, foreign_owned, staff_size,
+         advanced_filtration, water_treatment_system,
          facility_area, recycling_center_distance) %>%
   pivot_longer(-c("treatment_zone")) %>%
   group_by(name) %>%
   do(tidy(lm_robust(value ~ treatment_zone, data = .))) %>%
   filter(term == "treatment_zone") %>%
+  mutate(name = recode(name,
+                       "age_manager" = "Manager Age",
+                       "age_deputy" = "Deputy Age",
+                       "educ_manager" = "Manager Education",
+                       "educ_deputy" = "Deputy Education",
+                       "female_manager" = "Female Manager",
+                       "foreign_owned" = "Foreign Owned",
+                       "staff_size" = "Staff Size",
+                       "advanced_filtration" = "Advanced Filtration",
+                       "water_treatment_system" = "Water Treatment System",
+                       "facility_area" = "Business Area",
+                       "recycling_center_distance" = "Distance from Nearest Recycling Center"
+  )) %>%
   select(name, estimate, std.error, p.value) %>%
-  mutate(across(c(estimate, std.error, p.value), ~ round(.x,2)))  #
+  mutate(across(c(estimate, std.error, p.value), ~ round(.x,2))) %>%
+  rename(Variable = name,
+         Estimate = estimate,
+         `SE` = std.error,
+         `P-val` = p.value)
 
 ```
 
 ```{r}
 
-kable(m) %>% scroll_box(width = "600px", height = "400px")
+# kable(m) %>% scroll_box(width = "600px", height = "400px")
+
+m %>% kable(
+    format = "html",
+    booktabs = TRUE,
+    caption = "<center><span style='font-size:20px; color: black; font-weight: bold;'>Diff in Treat and Control Baseline Characteristics</span></center>",
+    col.names = c(
+      "Variable",
+      "Diff Treat/Control",
+      "Std. Error",
+      "P-value"
+    ),
+    align = c("l", "c", "c", "c"),
+    escape = FALSE
+  ) %>%
+  kable_styling(
+    full_width = FALSE,
+    bootstrap_options = c("striped", "hover", "condensed"),
+    position = "left"
+  ) 
+
 
 ```
 
@@ -231,7 +282,28 @@ modelsummary(list("No covariate adj."= out_round1,
 
 ```
 
+```{r}
 
+# # Simplified version
+# 
+# library(tinytable)
+# 
+# modelsummary(
+#   list("RCT" = out_round1),
+#   stars = TRUE,
+#   gof_map = c("nobs"),
+#   title = "RCT Regression Results",
+#   coef_map = c(
+#     "treatment_zone" = "RCT Effect",
+#     "(Intercept)" = "(Intercept)"
+#   ),
+#   coef_omit = NULL, 
+#   notes = "Standard errors are in parenthesis",
+#   output = "tinytable"
+# ) |>
+#   style_tt(bootstrap_class = "table caption-top")
+
+```  
 
 - Treatment effect remains stable with addition of control variables
 - Controls improve precision (smaller standard errors)

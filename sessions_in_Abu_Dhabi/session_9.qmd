@@ -38,7 +38,7 @@ library(modelsummary)
 set.seed(123)
 
 df <- read.csv("./evaluation_data.csv")
-df$waste_management_costs<-df$waste_management_costs*1000
+df$waste_management_costs<-df$waste_management_costs*100
 
 # Create data for DiD visualization
 set.seed(123)
@@ -170,7 +170,7 @@ coef_table <- data.frame(
 )
 
 kable(coef_table, 
-      col.names = c("Period", "Not Enrolled", "Enrolled", "Difference"),
+      col.names = c("Period", "Not Offered", "Offered", "Difference"),
       caption = "Interpretation of DiD Coefficients")
 ```
 :::
@@ -190,6 +190,31 @@ modelsummary(list("No covariate adj."= out_did, "With covariate adj." = out_did_
   kable_styling(font_size = 13) 
 ```
 ::: 
+
+```{r}
+
+# # Simplified version
+# 
+# library(tinytable)
+# 
+# modelsummary(
+#   list("DID"= out_did),
+#   stars = TRUE,
+#   gof_map = c("nobs"),
+#   title = "DID Regression Results",
+#   coef_map = c(
+#     "round:enrolled" = "DID Effect",
+#     "round" = "Before vs. After",
+#     "enrolled" = "Offered vs. Not",
+#     "(Intercept)" = "(Intercept)"
+#   ),
+#   coef_omit = NULL, 
+#   notes = "Standard errors are in parenthesis",
+#   output = "tinytable"
+# ) |>
+#   style_tt(bootstrap_class = "table caption-top")
+
+``` 
 
 ::: {.column width="50%"}
 
@@ -255,7 +280,7 @@ ggplot(did_viz_data, aes(x = Time, y = Expenditure, color = Group, group = Group
                           diff_after, diff_before, diff_in_diff), 
            fontface = "bold") +
   labs(title = "", x = "",
-       y = "Waste Expenditures (thousands USD)") +
+       y = "Waste Expenditures (thousands of AED)") +
   theme_minimal() +
   theme(legend.position = "bottom")
 ```

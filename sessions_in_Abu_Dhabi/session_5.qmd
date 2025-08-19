@@ -131,9 +131,11 @@ ggplot(data, aes(x = Time, y = Outcome, color = Group, group = Group)) +
 
 df <- read.csv("./evaluation_data.csv")
 
-# We multiply the outcome variable by 1,000
+# We multiply the outcome variable by 100
+df$waste_management_costs<-df$waste_management_costs*100
 
-df$waste_management_costs<-df$waste_management_costs*1000
+# New data, with new variable names
+# df <- read.csv("./evaluation_data_GreenWaste.csv")
 
 ```
 
@@ -153,7 +155,7 @@ m_ba1 <- lm_robust(waste_management_costs   ~ round,
 
 **Discussion**
 
-- Is this effect due to the progam? What are some other external factors that may cause a change in costs for waste management over time?
+- Is this effect due to the program? What are some other external factors that may cause a change in costs for waste management over time?
 
 **Problems**: 
 
@@ -186,9 +188,58 @@ m_ba2 <- lm_robust(waste_management_costs ~ enrolled,
 
 ```{r}
 
-modelsummary(list(m_ba1, m_ba2), stars = TRUE,
-             gof_map = c("nobs", "r.squared","r2.adjusted"))
+# Just Before-After 
 
+# modelsummary(list("Before-After" = m_ba1),
+#              stars = TRUE,
+#              gof_map = c("nobs"))
+# 
+# library(tinytable)
+# 
+# modelsummary(
+#   list("Before-After" = m_ba1),
+#   stars = TRUE,
+#   gof_map = c("nobs"),
+#   title = "Before-After Regression Results",
+#   coef_map = c(
+#     "round" = "Before vs. After Effect",
+#     "(Intercept)" = "(Intercept)"
+#   ),
+#   coef_omit = NULL, 
+#   notes = "Standard errors are in parenthesis",
+#   output = "tinytable"
+# ) |>
+#   style_tt(bootstrap_class = "table caption-top")
+
+
+
+```   
+
+```{r}
+
+# # Just With-Without Results
+# modelsummary(
+#   list("With-Without" = m_ba2),
+#   stars = TRUE,
+#   gof_map = c("nobs"),
+#   title = "With-Without Regression Results",
+#   coef_map = c(
+#     "enrolled" = "With vs. Without Program Effect",
+#     "(Intercept)" = "(Intercept)"
+#   ),
+#   coef_omit = NULL, 
+#   notes = "Standard errors are in parenthesis",
+#   output = "tinytable"
+# ) |>
+#   style_tt(bootstrap_class = "table caption-top")
+
+```     
+
+```{r}
+
+modelsummary(list("Before-After" = m_ba1, "With-Without" = m_ba2),
+             stars = TRUE,
+             gof_map = c("nobs", "r.squared", "r2.adjusted"))
 
 ```      
 

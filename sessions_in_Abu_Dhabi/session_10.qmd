@@ -49,7 +49,7 @@ knitr::opts_chunk$set(
 set.seed(123)
 
 df <- read.csv("./evaluation_data.csv")
-df$waste_management_costs<-df$waste_management_costs*1000
+df$waste_management_costs<-df$waste_management_costs*100
 
 # Create simulated data for matching visualization
 set.seed(123)
@@ -262,6 +262,29 @@ modelsummary(list("Limited Set" = out_lm_r,
                   "Full Set" = out_lm_ur),
              title = "Impact on Waste Management Costs: Matching Approach")
 ```
+
+```{r}
+
+# # Simplified version
+# 
+# library(tinytable)
+# 
+# modelsummary(
+#   list("Limited Covs PSM" = out_lm_r, "All Covs PSM"= out_lm_ur),
+#   stars = TRUE,
+#   gof_map = c("nobs"),
+#   title = "Matching Regression Results",
+#   coef_map = c(
+#     "enrolled" = "Matching Effect",
+#     "(Intercept)" = "(Intercept)"
+#   ),
+#   coef_omit = NULL, 
+#   notes = "Standard errors are in parenthesis",
+#   output = "tinytable"
+# ) |>
+#   style_tt(bootstrap_class = "table caption-top")
+
+``` 
 
 ## Matched Difference-in-Differences
 
