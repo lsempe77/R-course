@@ -36,11 +36,11 @@ library(modelsummary)
 
 set.seed(123)
 
-df <- read.csv("./evaluation_data.csv")
-df$waste_management_costs<-df$waste_management_costs*100
+df <- read.csv("./evaluation_data_GreenWaste.csv")
+
 # Create data subset with only treatment localities
 df_treat <- df %>%
-  filter(treatment_zone == 1)
+  filter(treatment_neighborhood == 1)
 
 # Create simulated RDD data
 n <- 200
@@ -76,11 +76,11 @@ ggplot(data, aes(x = running_var, y = outcome)) +
 
 ## Case: Efficiency Index Threshold
 
-- Program targets industries using a national efficiency index
-- Index assigns scores from 20 to 100 based on industry characteristics
+- Program targets businesses using a national efficiency index
+- Index assigns scores from 20 to 100 based on business characteristics
 - Official efficiency line set at 58
-- Industries with score ≤ 58 are eligible for HISP
-- Only eligible industries in treatment zones enrolled
+- Businesses with score ≤ 58 are eligible for GreenWaste Program
+- Only eligible businesses in treatment neighborhoods were offered the program and could enroll
 
 ## Checking for Manipulation
 
@@ -100,7 +100,7 @@ ggplot(df_treat, aes(x = efficiency_index )) +
 ::: {.column width="50%"}
 - No evidence of "bunching" just below cutoff
 - Formal McCrary density test confirms
-- Households do not appear to manipulate their scores
+- Businesses do not appear to manipulate their scores
 :::
 
 ::: {.column width="50%"}
@@ -125,15 +125,15 @@ test_density <- rdplotdensity(rdd = rddensity(df_treat$efficiency_index, c = 58)
 
 ::: {.column width="50%"}
 - Perfect compliance with eligibility rules
-- All Industries with score ≤ 58 enrolled
-- No Industries with score > 58 enrolled
+- All businesses with score ≤ 58 enrolled
+- No businesses with score > 58 enrolled
 - This is a "sharp" RDD with deterministic assignment
 :::
 
 ::: {.column width="50%"}
 ```{r, eval=T, echo=TRUE}
 # Check if eligibility rules were followed
-ggplot(df_treat, aes(y = enrolled, x = efficiency_index)) +
+ggplot(df_treat, aes(y = intent_to_treat, x = efficiency_index)) +
   geom_vline(xintercept = 58) +
   geom_point() +
   labs(title = "Enrollment by Efficiency Index (Sharp RDD)",
@@ -163,7 +163,7 @@ ggplot(df_treat, aes(y = enrolled, x = efficiency_index)) +
 # Plot relationship between efficiency index and waste expenditures
 df_treat %>%
   filter(round == 1) %>%
-  mutate(enrolled_lab = ifelse(enrolled == 1, "Enrolled", "Not Enrolled")) %>%
+  mutate(enrolled_lab = ifelse(intent_to_treat == 1, "Offered", "Not Offered")) %>%
   ggplot(aes(x = efficiency_index, y = waste_management_costs,
              group = enrolled_lab, colour = enrolled_lab)) +
   geom_point(alpha = 0.03) +
@@ -191,11 +191,11 @@ df_treat <- df_treat %>%
 
 # Basic RDD regression with covariates
 out_rdd <- lm_robust(waste_management_costs ~ 
-                  efficiency_index_c0 * enrolled +
+                  efficiency_index_c0 * intent_to_treat +
                   age_manager + age_deputy +
                   female_manager + foreign_owned + 
                   staff_size +
-                  advanced_filtration + facility_area +
+                  advanced_filtration + business_area +
                   recycling_center_distance,
                   data = df_treat %>% filter(round == 1))
 ```
@@ -229,7 +229,7 @@ modelsummary(list("Sharp RDD"= out_rdd), stars = TRUE,coef_omit = c(-3),
 #   gof_map = c("nobs"),
 #   title = "RDD Regression Results",
 #   coef_map = c(
-#     "enrolled" = "RDD Effect",
+#     "intent_to_treat" = "RDD Effect",
 #     "(Intercept)" = "(Intercept)"
 #   ),
 #   notes = "Standard errors are in parentheses",
@@ -270,15 +270,15 @@ This helps test whether the RDD results are sensitive to how we model the relati
 
 # Quadratic RDD model:
 # Include efficiency_index_c0 and its square (efficiency_index_c0^2)
-# Interact them with treatment (enrolled) to allow for different slopes
+# Interact them with treatment (intent_to_treat) to allow for different slopes
 # and curves on each side of the cutoff
 out_rdd_quadratic  <- lm_robust(waste_management_costs ~ 
-                  efficiency_index_c0 * enrolled +
-                    enrolled * I(efficiency_index_c0^2) +
+                  efficiency_index_c0 * intent_to_treat +
+                    intent_to_treat * I(efficiency_index_c0^2) +
                   age_manager + age_deputy +
                   female_manager + foreign_owned + 
                   staff_size +
-                  advanced_filtration + facility_area +
+                  advanced_filtration + business_area +
                   recycling_center_distance,
                   data = df_treat %>% filter(round == 1))
 
@@ -286,13 +286,13 @@ out_rdd_quadratic  <- lm_robust(waste_management_costs ~
 # Same as above, but also add a cubic (efficiency_index_c0^3) term
 # for even more flexible modeling of the relationship
 out_rdd_cubic  <- lm_robust(waste_management_costs ~ 
-                  efficiency_index_c0 * enrolled +
-                    enrolled * I(efficiency_index_c0^2) + 
-                        enrolled * I(efficiency_index_c0^3) +
+                  efficiency_index_c0 * intent_to_treat +
+                    intent_to_treat * I(efficiency_index_c0^2) + 
+                        intent_to_treat * I(efficiency_index_c0^3) +
                   age_manager + age_deputy +
                   female_manager + foreign_owned + 
                   staff_size +
-                  advanced_filtration + facility_area +
+                  advanced_filtration + business_area +
                   recycling_center_distance,
                   data = df_treat %>% filter(round == 1))
 ```
@@ -310,7 +310,7 @@ modelsummary(coef_omit = c(-3),
              gof_map = c("nobs", "r.squared","adj.r.squared"), output = 'kableExtra') %>%
   kable_styling (font_size = 15)
 
-# modelsummary(coef_omit = c(-1), coef_map = c("enrolled" = "RDD Effect"),
+# modelsummary(coef_omit = c(-1), coef_map = c("intent_to_treat" = "RDD Effect"),
 #              list("Quadratic RDD"= out_rdd_quadratic,"Cubic RDD" = out_rdd_cubic), stars = TRUE,
 #              gof_map = c("nobs"), output = 'kableExtra') %>%
 #   kable_styling (font_size = 15)
@@ -335,11 +335,11 @@ modelsummary(coef_omit = c(-3),
 # Restrict to observations near cutoff
 out_rdd5 <- lm_robust(
   waste_management_costs ~ 
-    enrolled * efficiency_index_c0 +
+    intent_to_treat * efficiency_index_c0 +
           age_manager + age_deputy +
            female_manager + foreign_owned + 
            staff_size +
-                  advanced_filtration + facility_area +
+                  advanced_filtration + business_area +
                   recycling_center_distance,
   data = df_treat %>% 
     filter(round == 1 & 
@@ -376,8 +376,8 @@ modelsummary(coef_omit = c(-2), list("Restricted RDD"= out_rdd5),
 
 ::: {.column width="50%"}
 - RDD estimates are **local** to the threshold
-- They represent the effect for industries with scores near 58
-- Industries at the margin of eligibility
+- They represent the effect for businesses with scores near 58
+- Businesses at the margin of eligibility
 - Less representative of very low efficiency (low scores)
 - External validity depends on whether effects vary with efficiency level
 :::
@@ -407,7 +407,7 @@ ggplot(effects, aes(x = efficiency_index, y = effect_size)) +
   annotate("text", x = cutoff + 0.5, y = -12, label = "Local Effect", hjust = 0) +
   labs(title = "Treatment Effects May Vary with efficiency Index",
        x = "efficiency Index",
-       y = "Treatment Effect on Health Expenditures") +
+       y = "Treatment Effect on Waste Expenditures") +
   ylim(-15, -5) +
   theme_minimal()
 ```
@@ -422,7 +422,7 @@ ggplot(effects, aes(x = efficiency_index, y = effect_size)) +
 ::: {.column width="33%"}
 **RDD**:
 
-- Effect: -$9.03
+- Effect: -905 AED
 - Local to cutoff
 - Uses eligibility threshold
 - Sharp discontinuity
@@ -433,18 +433,17 @@ ggplot(effects, aes(x = efficiency_index, y = effect_size)) +
 ::: {.column width="33%"}
 **IV**:
 
-- Effect: -$9.74
+- Effect: -1033 AED
 - Effect on compliers
-- Uses randomized promotion
-- Fuzzy take-up
+- Uses randomized offering of program to get ToT effect
 
-**Recommendation**: Do not scale up
+**Recommendation**: Scale up nationally
 :::
 
 ::: {.column width="33%"}
 **Randomized**:
 
-- Effect: -$10.14
+- Effect: -1,014 AED
 - Average effect
 - Uses random assignment
 - Full experimental control
@@ -528,13 +527,13 @@ rd_robust <- rdrobust(
 
 **Policy question**: Should the Program be scaled up nationally?
 
-**Decision criterion**: Program must reduce health expenditures by at least $10,000.
+**Decision criterion**: Program must reduce waste expenditures by at least 1,000 Dirham.
 
 **Results from RDD estimation**:
 
 - Effect: $`{r} round(out_rdd$coefficients[3],0)` (95% CI: [ $`{r} round(out_rdd$coefficients[3] + 1.96*out_rdd$std.error[3],0)`, $`{r} round(out_rdd$coefficients[3] - 1.96*out_rdd$std.error[3],0)`])
-- Point estimate below the $10,000 threshold
-- Effect applies to industries near the efficiency threshold
+- Point estimate below the 1,000 AED threshold
+- Effect applies to businesses near the efficiency threshold
 
 **Recommendation**: Based on the RDD estimate, the program should not be scaled up nationally.
 
@@ -543,8 +542,8 @@ rd_robust <- rdrobust(
 1. RDD exploits discontinuities at eligibility thresholds to estimate causal effects
 2. Units just above and below the threshold are comparable except for treatment
 3. RDD estimates are local to the cutoff and may not generalize to units far from threshold
-4. Multiple specifications yield consistent estimates of approximately $9,000 reduction
-5. RDD estimate is slightly below the $10,000 threshold for scaling up HISP
+4. Multiple specifications yield consistent estimates of approximately 1,000 AED reduction
+5. RDD estimate is slightly below the 1,000 AED threshold for scaling up GreenWaste
 
 ## Next Session
 

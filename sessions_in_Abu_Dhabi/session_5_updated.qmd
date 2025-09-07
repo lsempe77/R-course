@@ -68,10 +68,10 @@ ggplot(data, aes(x = Time, y = Outcome, color = Group, group = Group)) +
 
 ## Example: Waste management system
 
-- Government program subsidizing waste management new technologies 
+- Government program subsidizing innovative waste management technologies 
 - Goal: Reduce waste management costs
 - Policy question: Should the program be scaled up nationally?
-- Decision criterion: Program must reduce waste management at least $10,000
+- Decision criterion: Program must reduce waste management costs by at least 1,000 Dirham per year
 
 ## Key Variables in Our Example Dataset
 
@@ -80,22 +80,21 @@ ggplot(data, aes(x = Time, y = Outcome, color = Group, group = Group)) +
 ::: {.column width="50%"}
 **Outcome Variable**:
 
-- `waste_management_costs`: Waste management costs incurred monthly per industry (USD)
+- `waste_management_costs`: Waste management costs incurred yearly per business (AED)
 
 **Treatment Variables**:
 
-- `treatment_zone`: Area selected for program (0/1)
-- `enrolled`: Industry enrolled in program (0/1)
-- `eligible`: Industry eligible for program (0/1)
+- `treatment_neighborhood`: Neighborhood selected for program (0/1)
+- `intent_to_treat`: Business offered the program (0/1)
+- `eligible`: Business eligible for the program (0/1)
 :::
 
 ::: {.column width="50%"}
 **Other Variables**:
 
 - `round`: Survey round (0=baseline, 1=follow-up)
-- `efficiency_index`: Score based on industry characteristics
+- `efficiency_index`: Score based on various business characteristics
 - Leadership Demographics: Age, education, gender, etc.
-- `recycling_center_distance`: Distance to nearest recycling centre
 :::
 
 ::::
@@ -129,27 +128,22 @@ ggplot(data, aes(x = Time, y = Outcome, color = Group, group = Group)) +
 # Let's start by uploading our data.
 # It is important to know in which folder your dataset is so you can use the right path.
 
-df <- read.csv("./evaluation_data.csv")
-
-# We multiply the outcome variable by 100
-df$waste_management_costs<-df$waste_management_costs*100
-
-# New data, with new variable names
-# df <- read.csv("./evaluation_data_GreenWaste.csv")
+# Load in data
+df <- read.csv("./evaluation_data_GreenWaste.csv")
 
 ```
 
 ```{r, eval=T, echo=TRUE}
-# Compare waste management costs before and after for enrolled industries
+# Compare waste management costs before and after for intent_to_treat (offered) businesses
 # Fit a linear regression model using 'lm_robust' from the 'estimatr' package
 # 'lm_robust' gives regression results with robust (heteroskedasticity-consistent) standard errors
 
 # Formula: outcome variable ~ explanatory variable
-# Clustered standard errors at the 'zone_identifier' level
-# Filter df to only run the regression on industries in treatment zones AND enrolled
+# Clustered standard errors at the 'neighborhood_identifier' level
+# Filter df to only run the regression on businesses in treatment neighborhoods AND intent_to_treat
 m_ba1 <- lm_robust(waste_management_costs   ~ round, 
-                  clusters = zone_identifier,
-                  data = df %>% dplyr::filter(treatment_zone ==1 & enrolled ==1))
+                  clusters = neighborhood_identifier,
+                  data = df %>% dplyr::filter(treatment_neighborhood ==1 & intent_to_treat ==1))
 
 ```
 
@@ -162,26 +156,26 @@ m_ba1 <- lm_robust(waste_management_costs   ~ round,
 - External factors also change over time
 - Cannot attribute all changes to the program
 
-## With-Without Comparison (HISP Example)
+## With-Without Comparison (GreenWaste Example)
 
 ```{r, eval=T, echo=TRUE}
-# Compare enrolled vs. non-enrolled households after program implementation
+# Compare offered (intent_to_treat) vs. non-offered businesses after program implementation
 
 # Use lm_robust as before, with clustered std errors
-# This time, we filter df to run the regression on industries in treatment zones AND after the intervention, in the follow-up survey round
-m_ba2 <- lm_robust(waste_management_costs ~ enrolled, 
-                  clusters = zone_identifier,
-                  data = df %>% filter(treatment_zone==1 & round ==1))
+# This time, we filter df to run the regression on businesses in treatment neighborhoods AND after the intervention, in the follow-up survey round
+m_ba2 <- lm_robust(waste_management_costs ~ intent_to_treat, 
+                  clusters = neighborhood_identifier,
+                  data = df %>% filter(treatment_neighborhood==1 & round ==1))
 
 ```
 
 **Discussion**
 
-- Are the enrolled industries the same as those that were not enrolled in the program? How might they be different from one another?
+- Are the enrolled businesses the same as those that were not enrolled in the program? How might they be different from one another?
 
 **Problems**:
 
-- Selection bias: Enrolled industries differ from non-enrolled
+- Selection bias: Enrolled businesses differ from non-enrolled
 - Cannot attribute all differences to the program
 
 ## Compare results
@@ -235,7 +229,7 @@ m_ba2 <- lm_robust(waste_management_costs ~ enrolled,
 #   gof_map = c("nobs"),
 #   title = "With-Without Regression Results",
 #   coef_map = c(
-#     "enrolled" = "With vs. Without Program Effect",
+#     "intent_to_treat" = "With vs. Without Program Effect",
 #     "(Intercept)" = "(Intercept)"
 #   ),
 #   notes = "Standard errors are in parentheses",

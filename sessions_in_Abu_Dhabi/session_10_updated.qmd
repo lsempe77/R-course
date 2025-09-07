@@ -48,8 +48,7 @@ knitr::opts_chunk$set(
 
 set.seed(123)
 
-df <- read.csv("./evaluation_data.csv")
-df$waste_management_costs<-df$waste_management_costs*100
+df <- read.csv("./evaluation_data_GreenWaste.csv")
 
 # Create simulated data for matching visualization
 set.seed(123)
@@ -108,22 +107,22 @@ Converting from long to wide format:
 df_w <- df %>%
   # Then create wide format
   pivot_wider(
-    id_cols = c(zone_identifier, facility_identifier, treatment_zone, 
-                promotion_zone, eligible, enrolled, enrolled_rp),
+    id_cols = c(neighborhood_identifier, business_identifier, treatment_neighborhood, 
+                eligible, intent_to_treat, enrolled_rp),
     names_from = round, # variable that determines new columns
     # variables that should be made "wide"
     values_from = c(waste_management_costs, 
                     efficiency_index, age_manager, age_deputy,
                     educ_manager, educ_deputy, female_manager,
                     foreign_owned, staff_size, advanced_filtration,
-                    water_treatment_system, facility_area,
+                    water_treatment_system, business_area,
                     recycling_center_distance, recycling_compliance)) %>%
-  # remove the industries that has missing values
+  # remove the business that has missing values
   # as missing values are not allowed when using matchit
   filter(!is.na(waste_management_costs_0)) 
 
 # Also check the first few rows to confirm format
-head(select(df_w, facility_identifier, enrolled, 
+head(select(df_w, business_identifier, intent_to_treat, 
            waste_management_costs_0, waste_management_costs_1))
 ```
 
@@ -132,7 +131,7 @@ head(select(df_w, facility_identifier, enrolled,
 Propensity Score Matching (PSM) is when we predict the probability of each unit receiving treatment and then compare those with similar propensity scores. There are two scenarios for predicting enrollment:
 
 1. **Limited set of variables**:
-   - Only age and education of facility manager
+   - Only age and education of business manager
 
 2. **Full set of variables**:
    - All available baseline characteristics
@@ -141,18 +140,18 @@ Propensity Score Matching (PSM) is when we predict the probability of each unit 
 
 ```{r}
 # Limited set of variables
-psm_r <- matchit(enrolled ~ age_manager_0 + educ_manager_0,
+psm_r <- matchit(intent_to_treat ~ age_manager_0 + educ_manager_0,
                  data = df_w %>% dplyr::select(-recycling_compliance_0,
                                                -recycling_compliance_1), 
                     distance = "glm",
                   link = "probit")
 
 # Full set of variables
-psm_ur <- matchit(enrolled ~ age_manager_0 + educ_manager_0 + 
+psm_ur <- matchit(intent_to_treat ~ age_manager_0 + educ_manager_0 + 
                    age_deputy_0 + educ_deputy_0 +
                    female_manager_0 + foreign_owned_0 + staff_size_0 + 
                    advanced_filtration_0 + water_treatment_system_0 + 
-                   facility_area_0 + recycling_center_distance_0,
+                   business_area_0 + recycling_center_distance_0,
    data = df_w %>% dplyr::select(-recycling_compliance_0,
                                                -recycling_compliance_1), 
    distance = "glm",link = "probit")
@@ -173,7 +172,7 @@ modelsummary(list("Limited Set" = psm_r$model,
                           'staff_size_0' = "Number of Staff at Baseline",
                           'advanced_filtration_0' = "Advanced Filtration at Baseline",
                           'water_treatment_system_0' = "Water Treatment System at Baseline",
-                          'facility_area_0' = "Facility Area at Baseline",
+                          'business_area_0' = "business Area at Baseline",
                           'recycling_center_distance_0' = "Distance From Recycling Center"),
              title = "Estimating the Propensity Score Based on Baseline Characteristics")
 ```
@@ -195,9 +194,9 @@ df_w <- df_w %>%
 
 # Plot the distribution
 df_w %>%
-  mutate(enrolled_lab = ifelse(enrolled == 1, "Enrolled", "Not Enrolled")) %>%
+  mutate(intent_to_treat_lab = ifelse(intent_to_treat == 1, "Offered", "Not Offered")) %>%
   ggplot(aes(x = ps_ur,
-             group = enrolled_lab, colour = enrolled_lab, fill = enrolled_lab)) +
+             group = intent_to_treat_lab, colour = intent_to_treat_lab, fill = intent_to_treat_lab)) +
   geom_density(alpha = 0.2) +
   xlab("Propensity Score") +
   labs(title = "Distribution of Propensity Score by Enrollment Status") +
@@ -249,13 +248,13 @@ match_df_ur <- match.data(psm_ur) # Full set
 
 ```{r}
 # Regression with matched data
-out_lm_r <- lm_robust(waste_management_costs_1 ~ enrolled,
+out_lm_r <- lm_robust(waste_management_costs_1 ~ intent_to_treat,
                       data = match_df_r,  weights = weights,
-                      clusters = zone_identifier)
+                      clusters = neighborhood_identifier)
 
-out_lm_ur <- lm_robust(waste_management_costs_1 ~ enrolled,
+out_lm_ur <- lm_robust(waste_management_costs_1 ~ intent_to_treat,
                       data = match_df_ur, weights = weights,
-                      clusters = zone_identifier)
+                      clusters = neighborhood_identifier)
 
 # Show results
 modelsummary(list("Limited Set" = out_lm_r, 
@@ -275,7 +274,7 @@ modelsummary(list("Limited Set" = out_lm_r,
 #   gof_map = c("nobs"),
 #   title = "Matching Regression Results",
 #   coef_map = c(
-#     "enrolled" = "Matching Effect",
+#     "intent_to_treat" = "Matching Effect",
 #     "(Intercept)" = "(Intercept)"
 #   ),
 #   coef_omit = NULL, 
@@ -295,7 +294,7 @@ modelsummary(list("Limited Set" = out_lm_r,
 #   gof_map = c("nobs"),
 #   title = "Matching Regression Results",
 #   coef_map = c(
-#     "enrolled" = "Matching Effect",
+#     "intent_to_treat" = "Matching Effect",
 #     "(Intercept)" = "(Intercept)"
 #   ),
 #   notes = "Standard errors are in parentheses",
@@ -322,11 +321,11 @@ Combine matching with difference-in-differences:
 ```{r}
 # Merge matching weights back into long format
 df_long_match_r <- df %>%
-  left_join(match_df_r %>% dplyr::select(facility_identifier, weights)) %>%
+  left_join(match_df_r %>% dplyr::select(business_identifier, weights)) %>%
   filter(!is.na(weights))
 
 df_long_match_ur <- df %>%
-  left_join(match_df_ur %>% dplyr::select(facility_identifier, weights)) %>%
+  left_join(match_df_ur %>% dplyr::select(business_identifier, weights)) %>%
   filter(!is.na(weights))
 ```
 
@@ -334,31 +333,31 @@ df_long_match_ur <- df %>%
 
 ```{r}
 # Run DiD regression
-did_reg_r <- lm_robust(waste_management_costs ~ enrolled * round,
+did_reg_r <- lm_robust(waste_management_costs ~ intent_to_treat * round,
                         data = df_long_match_r, weights = weights,
-                        clusters = zone_identifier)
+                        clusters = neighborhood_identifier)
 
-did_reg_ur <- lm_robust(waste_management_costs ~ enrolled * round,
+did_reg_ur <- lm_robust(waste_management_costs ~ intent_to_treat * round,
                         data = df_long_match_ur, weights = weights,
-                        clusters = zone_identifier)
+                        clusters = neighborhood_identifier)
 
 # Show results
 modelsummary(list("Limited Set" = did_reg_r, 
                   "Full Set" = did_reg_ur),
-             coef_map = c('enrolled' = "Enrollment",
+             coef_map = c('intent_to_treat' = "Offered",
                           'round' = "Round",
-                          'enrolled:round' = "Enrollment × Round"),
+                          'intent_to_treat:round' = "Offered × Round"),
              title = "Impact on Waste Management Costs: Matched DiD Approach")
 ```
 
 ## Interpretation of Results
 
-- **Enrolled** coefficient: Baseline difference between groups
+- **Offered** coefficient: Baseline difference between groups offered program vs those not offered program
 - **Round** coefficient: Time trend for all facilities
-- **Enrollment × Round**: The program's causal effect
+- **Offered × Round**: The program's causal effect
 
 ::: {.callout-note}
-The interaction coefficient (Enrollment × Round) represents our estimate of the causal impact of the program on waste management costs.
+The interaction coefficient (Offered × Round) represents our estimate of the causal impact of the program on waste management costs.
 :::
 
 ## Advantages of Matching
@@ -419,9 +418,9 @@ The interaction coefficient (Enrollment × Round) represents our estimate of the
 <!--   Method = c("Randomized Assignment", "Instrumental Variables",  -->
 <!--              "Regression Discontinuity", "Difference-in-Differences",  -->
 <!--              "Matching (Full Set)"), -->
-<!--   Estimate = c(-10140, -9829, -9051, -8163, -10000), -->
-<!--   CI_Lower = c(-10922, -11684, -9921, -8792, -10723), -->
-<!--   CI_Upper = c(-9358, -7973, -8181, -7534, -9277) -->
+<!--   Estimate = c(-1014, -982, -905, -816, -1000), -->
+<!--   CI_Lower = c(-1092, -1168, -992, -879, -1072), -->
+<!--   CI_Upper = c(-935, -797, -818, -753, -927) -->
 <!-- ) -->
 
 <!-- # Sort by effect size -->
@@ -430,25 +429,25 @@ The interaction coefficient (Enrollment × Round) represents our estimate of the
 
 <!-- # Plot forest plot of results -->
 <!-- ggplot(all_results, aes(y = reorder(Method, Estimate), x = Estimate)) + -->
-<!--   geom_vline(xintercept = -10000, linetype = "dashed", color = "red") + -->
+<!--   geom_vline(xintercept = -1000, linetype = "dashed", color = "red") + -->
 <!--   geom_point(size = 3) + -->
 <!--   geom_errorbarh(aes(xmin = CI_Lower, xmax = CI_Upper), height = 0.3) + -->
-<!--   labs(title = "Impact of HISP on Health Expenditures", -->
+<!--   labs(title = "Impact of GreenWaste on Waste Expenditures", -->
 <!--        subtitle = "Comparison Across Evaluation Methods", -->
-<!--        x = "Effect on Health Expenditures (USD)", -->
+<!--        x = "Effect on Waste Expenditures (AED)", -->
 <!--        y = "") + -->
 <!--   theme_minimal() + -->
-<!--   annotate("text", x = -10000, y = 5.5, label = "Threshold", color = "red", hjust = 1.2) -->
+<!--   annotate("text", x = -1000, y = 5.5, label = "Threshold", color = "red", hjust = 1.2) -->
 <!-- ``` -->
 
 <!-- ## Final Policy Recommendation -->
 
-<!-- - Methods produce consistent results in the range of -$8.16 to -$10.14 -->
-<!-- - Randomized assignment (gold standard): -$10.14 -->
+<!-- - Methods produce consistent results in the range of -816 to -1033 AED -->
+<!-- - Randomized assignment (gold standard): -1,014 AED -->
 <!-- - Most quasi-experimental methods: Effect slightly below $10 -->
-<!-- - Given uncertainty in estimates and consistency in direction, HISP shows promising results -->
+<!-- - Given uncertainty in estimates and consistency in direction, GreenWaste shows promising results -->
 
-<!-- **RECOMMENDATION**: The preponderance of evidence suggests HISP reduces health expenditures by approximately $10, which meets the threshold criterion. Given the consistency across methods and the gold-standard randomized result, HISP should be scaled up nationally. -->
+<!-- **RECOMMENDATION**: The preponderance of evidence suggests GreenWaste reduces waste expenditures by approximately $10, which meets the threshold criterion. Given the consistency across methods and the gold-standard randomized result, GreenWaste should be scaled up nationally. -->
 
 <!-- ## Conclusion: Choosing the Right Method -->
 
@@ -464,10 +463,10 @@ The interaction coefficient (Enrollment × Round) represents our estimate of the
 
 <!-- 1. **Heterogeneity analysis** -->
 <!--    - Does impact vary across subgroups? -->
-<!--    - Who benefits most from HISP? -->
+<!--    - Who benefits most from GreenWaste? -->
 
 <!-- 2. **Cost-effectiveness analysis** -->
-<!--    - Beyond impact, is HISP cost-effective? -->
+<!--    - Beyond impact, is GreenWaste cost-effective? -->
 <!--    - How does it compare to alternative programs? -->
 
 <!-- 3. **Implementation research** -->

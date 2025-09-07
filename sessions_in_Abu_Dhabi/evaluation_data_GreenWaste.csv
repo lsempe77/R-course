@@ -1,4 +1,4 @@
-"","X","neighborhood_identifier","business_identifier","treatment_neighborhood","eligible","enrolled","enrolled_rp","efficiency_index","round","waste_management_costs","age_manager","age_deputy","educ_manager","educ_deputy","female_manager","foreign_owned","staff_size","advanced_filtration","water_treatment_system","business_area","recycling_center_distance","recycling_compliance"
+"","X","neighborhood_identifier","business_identifier","treatment_neighborhood","eligible","intent_to_treat","enrolled_rp","efficiency_index","round","waste_management_costs","age_manager","age_deputy","educ_manager","educ_deputy","female_manager","foreign_owned","staff_size","advanced_filtration","water_treatment_system","business_area","recycling_center_distance","recycling_compliance"
 "1",1,26,5,1,1,1,1,55.9505424499512,0,1518.54553222656,24,23,0,6,0,0,4,1,0,1,124.819966250118,0
 "2",2,26,5,1,1,1,1,55.9505424499512,1,1958.09020996094,25,24,0,6,0,0,4,1,0,1,124.819966250118,0
 "3",3,26,11,1,1,1,0,46.0587310791016,0,1307.62567520142,30,26,4,0,0,0,6,1,0,2,124.819966250118,0

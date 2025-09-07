@@ -17,12 +17,10 @@ editor_options:
 ---
 ## The Challenge of Imperfect Compliance
 
-- Sometimes we can't randomly assign the treatment itself
-- But we can randomly assign encouragement to take up the treatment
-- Example: National scale-up of the Program means we can't deny eligibility
-- But we can randomly promote the program in some industries
+- Sometimes we can't randomly assign the treatment itself (e.g., can't force uptake of the program after we offer it)
+- But we can randomly assign our offering of the treatment (we can randomly offer the program to some businesses)
 
-**Central question:** How do we measure impact when actual participation is voluntary?
+**Central question:** How do we measure impact when actual participation of those offered the program is voluntary?
 
 ```{r, echo=FALSE}
 library(ggplot2)
@@ -30,6 +28,7 @@ library(dplyr)
 library(modelsummary)
 library(estimatr)
 library(kableExtra)
+library(tinytable)
 ```
 
 
@@ -63,16 +62,15 @@ library(kableExtra)
 
 ::::
 
-## Example Case: Randomized Promotion Design
+## Example Case: Randomized Design with Impartial Takeup
 
-- Businesses select whether to enroll in the program
+- Businesses offered the program, select whether to enroll in the program
 - In this case, the effect from our RCT, was the ITT, or intent-to-treat of the program 
 - We have a new variable that tells us whether businesses that were randomly assigned the program actually enrolled (enrolled_rp)
-- Using this variable, we can estimate the ToT, or treatment-on-treated of the program.
+- Using this variable, we can estimate the ToT, or actual treatment-on-treated of the program.
 
 ```{r, echo=F}
 df <- read.csv("./evaluation_data_GreenWaste.csv")
-# df$waste_management_costs<-df$waste_management_costs*100
 ```
 
 If the randomization is effective, then we should have a higher likelihood of participation in the intervention for those who were provided access to it. If we are just interested in the question of whether randomizing access to enrollment in the project improved our outcomes compared to providing the program to everyone, then we can run the regression for those that randomly received access to the program versus those that did not. This is what we learned about randomization so far. 
@@ -112,8 +110,22 @@ m_first_stage <- lm_robust(enrolled_rp ~ treatment_neighborhood,
 
 ::: {.column width="50%"}
 ```{r, echo=FALSE}
-modelsummary(list("Enrollment"= m_first_stage), stars = TRUE,
-             gof_map = c("nobs", "r.squared","adj.r.squared"), output = 'kableExtra') 
+
+modelsummary(
+  list("Enrollment"= m_first_stage),
+  stars = TRUE,
+  gof_map = c("nobs", "r.squared", "adj.r.squared"),
+  title = "First Stage Regression Results",
+  coef_map = c(
+    "treatment_neighborhood" = "Random Access Effect",
+    "(Intercept)" = "(Intercept)"
+  ),
+  coef_omit = NULL,
+  notes = "Standard errors are in parenthesis",
+  output = "tinytable"
+) |>
+  style_tt(bootstrap_class = "table caption-top")
+
 ```
 :::
 
@@ -123,22 +135,55 @@ modelsummary(list("Enrollment"= m_first_stage), stars = TRUE,
 
 # Simplified version
 
-library(tinytable)
+# library(tinytable)
+# 
+# modelsummary(
+#   list("Enrollment"= m_first_stage),
+#   stars = TRUE,
+#   gof_map = c("nobs"),
+#   title = "First Stage Regression Results",
+#   coef_map = c(
+#     "treatment_neighborhood" = "Random Access Effect",
+#     "(Intercept)" = "(Intercept)"
+#   ),
+#   coef_omit = NULL, 
+#   notes = "Standard errors are in parenthesis",
+#   output = "tinytable"
+# ) |>
+#   style_tt(bootstrap_class = "table caption-top")
 
-modelsummary(
-  list("Enrollment"= m_first_stage),
-  stars = TRUE,
-  gof_map = c("nobs"),
-  title = "First Stage Regression Results",
-  coef_map = c(
-    "treatment_neighborhood" = "Random Access Effect",
-    "(Intercept)" = "(Intercept)"
-  ),
-  coef_omit = NULL, 
-  notes = "Standard errors are in parenthesis",
-  output = "tinytable"
-) |>
-  style_tt(bootstrap_class = "table caption-top")
+# ## Output for case study
+# library(flextable)
+# library(officer)
+# library(openxlsx)
+# 
+# # Build the table as a flextable (editable in Word/PowerPoint)
+# ft <- modelsummary(
+#   list("Enrollment" = m_first_stage),
+#   stars = TRUE,
+#   gof_map = c("nobs"),
+#   title = "First Stage Regression Results",
+#   coef_map = c(
+#     "treatment_neighborhood" = "Random Access Effect",
+#     "(Intercept)" = "(Intercept)"
+#   ),
+#   notes = "Standard errors are in parentheses",
+#   fmt = 2,
+#   output = "flextable"
+# )
+# 
+# # let flextable size to content, then stretch to a target width
+# ft <- autofit(ft)
+# ft <- fit_to_width(ft, max_width = 9)  # inches; ~content area on a PPT slide
+# ft <- width(ft, j = 1, width = 2.5)    # widen the left/stub column (adjust as needed)
+# # optional: a bit of breathing room
+# # ft <- padding(ft, padding = 2)
+# 
+# ## 1) Save to Word (.docx)
+# doc <- read_docx()
+# doc <- body_add_flextable(doc, ft)
+# print(doc, target = "C:/Users/FionaKastel/OneDrive - 3ie/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/case_study_outputs/session7_IV_first_stage.docx")
+
 
 ```  
 
@@ -181,9 +226,25 @@ m_itt_wcov <- lm_robust(waste_management_costs ~ treatment_neighborhood +
 
 ::: {.column width="60%"}
 ```{r, echo=FALSE}
-modelsummary(list("No covariate adj."= m_itt, "With covariate adj." = m_itt_wcov), stars = TRUE,
-             gof_map = c("nobs", "r.squared","adj.r.squared"), output = 'kableExtra') %>%
-  kable_styling(font_size = 13) %>% scroll_box(width = "700px", height = "400px")
+
+modelsummary(
+  list("No covariate adj."= m_itt, "With covariate adj." = m_itt_wcov),
+  stars = TRUE,
+  gof_map = c("nobs", "r.squared", "adj.r.squared"),
+  title = "First Stage Regression Results",
+  coef_map = c(
+    "treatment_neighborhood" = "Random Access Effect",
+    "(Intercept)" = "(Intercept)"
+  ),
+  coef_omit = NULL,
+  notes = "Standard errors are in parenthesis",
+  output = "tinytable"
+) |>
+  style_tt(bootstrap_class = "table caption-top")
+
+# modelsummary(list("No covariate adj."= m_itt, "With covariate adj." = m_itt_wcov), stars = TRUE,
+#              gof_map = c("nobs", "r.squared","adj.r.squared"), output = 'kableExtra') %>%
+#   kable_styling(font_size = 13) %>% scroll_box(width = "700px", height = "400px")
 ```
 :::
 
@@ -191,22 +252,55 @@ modelsummary(list("No covariate adj."= m_itt, "With covariate adj." = m_itt_wcov
 
 # Simplified version
 
-library(tinytable)
+# library(tinytable)
+# 
+# modelsummary(
+#   list("ITT"= m_itt),
+#   stars = TRUE,
+#   gof_map = c("nobs"),
+#   title = "ITT Regression Results",
+#   coef_map = c(
+#     "treatment_neighborhood" = "RCT ITT Effect",
+#     "(Intercept)" = "(Intercept)"
+#   ),
+#   coef_omit = NULL, 
+#   notes = "Standard errors are in parenthesis",
+#   output = "tinytable"
+# ) |>
+#   style_tt(bootstrap_class = "table caption-top")
 
-modelsummary(
-  list("ITT"= m_itt),
-  stars = TRUE,
-  gof_map = c("nobs"),
-  title = "ITT Regression Results",
-  coef_map = c(
-    "treatment_neighborhood" = "RCT ITT Effect",
-    "(Intercept)" = "(Intercept)"
-  ),
-  coef_omit = NULL, 
-  notes = "Standard errors are in parenthesis",
-  output = "tinytable"
-) |>
-  style_tt(bootstrap_class = "table caption-top")
+# ## Output for case study
+# library(flextable)
+# library(officer)
+# library(openxlsx)
+# 
+# # Build the table as a flextable (editable in Word/PowerPoint)
+# ft <- modelsummary(
+#   list("ITT" = m_itt),
+#   stars = TRUE,
+#   gof_map = c("nobs"),
+#   title = "ITT Regression Results",
+#   coef_map = c(
+#     "treatment_neighborhood" = "RCT ITT Effect",
+#     "(Intercept)" = "(Intercept)"
+#   ),
+#   notes = "Standard errors are in parentheses",
+#   fmt = 2,
+#   output = "flextable"
+# )
+# 
+# # let flextable size to content, then stretch to a target width
+# ft <- autofit(ft)
+# ft <- fit_to_width(ft, max_width = 9)  # inches; ~content area on a PPT slide
+# ft <- width(ft, j = 1, width = 2.5)    # widen the left/stub column (adjust as needed)
+# # optional: a bit of breathing room
+# # ft <- padding(ft, padding = 2)
+# 
+# ## 1) Save to Word (.docx)
+# doc <- read_docx()
+# doc <- body_add_flextable(doc, ft)
+# print(doc, target = "C:/Users/FionaKastel/OneDrive - 3ie/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/case_study_outputs/session7_IV_ITT.docx")
+
 
 ``` 
 
@@ -214,7 +308,7 @@ modelsummary(
 
 ## 3. Local Average Treatment Effect (LATE)
 
-We still don’t know the effect of the participation on outcomes, which is what we want. To get the estimate of interest (effect of participation on outcomes), we need to divide the “reduced form” (the effect of encouragement on outcomes) by the first stage (effect of encouragement on participation).
+We still don’t know the effect of the participation on outcomes, which is what we want. To get the estimate of interest (effect of participation on outcomes), we need to divide the “reduced form” (the effect of offering the program on outcomes) by the first stage (effect of offering the program on participation).
 
 :::: {.columns}
 
@@ -247,39 +341,53 @@ m_late_wcov <- iv_robust(waste_management_costs ~ enrolled_rp +
 
 ::: {.column width="50%"}
 ```{r, echo=FALSE}
+
 modelsummary(list("No covariate adj."= m_late, "With covariate adj." = m_late_wcov), stars = TRUE,
              gof_map = c("nobs", "r.squared","adj.r.squared"), output = 'kableExtra') %>%
   kable_styling(font_size = 15) %>% scroll_box(width = "600px", height = "300px")
+
 ```
 
 ```{r}
 
 # Simplified version
 
-library(tinytable)
-
-modelsummary(
-  list("LATE"= m_late),
-  stars = TRUE,
-  gof_map = c("nobs"),
-  title = "LATE Regression Results",
-  coef_map = c(
-    "enrolled_rp" = "RCT LATE Effect",
-    "(Intercept)" = "(Intercept)"
-  ),
-  coef_omit = NULL, 
-  notes = "Standard errors are in parenthesis",
-  output = "tinytable"
-) |>
-  style_tt(bootstrap_class = "table caption-top")
+# ## Output for case study
+# library(flextable)
+# library(officer)
+# 
+# # Build the table as a flextable (editable in Word/PowerPoint)
+# ft <- modelsummary(
+#   list("LATE" = m_late),
+#   stars = TRUE,
+#   gof_map = c("nobs"),
+#   title = "LATE Regression Results",
+#   coef_map = c(
+#     "enrolled_rp" = "RCT LATE Effect",
+#     "(Intercept)" = "(Intercept)"
+#   ),
+#   notes = "Standard errors are in parentheses",
+#   fmt = 2,
+#   output = "flextable"
+# )
+# 
+# # let flextable size to content, then stretch to a target width
+# ft <- autofit(ft)
+# ft <- fit_to_width(ft, max_width = 9)  # inches; ~content area on a PPT slide
+# ft <- width(ft, j = 1, width = 2.5)    # widen the left/stub column (adjust as needed)
+# 
+# ## 1) Save to Word (.docx)
+# doc <- read_docx()
+# doc <- body_add_flextable(doc, ft)
+# print(doc, target = "C:/Users/FionaKastel/OneDrive - 3ie/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/case_study_outputs/session7_IV_LATE.docx")
 
 ``` 
 
 **LATE Explanation**:
 
 - Another way of calculating is: LATE = ITT / First Stage = `r round(m_itt$coefficients[2], 0)` / `r round(m_first_stage$coefficients[2], 3)` = `r round(m_itt$coefficients[2]/m_first_stage$coefficients[2], 0)`
-- Ultimately, we are able to isolate the effect of the program, by using the instrument. What we have now is called the LATE (local average treatment effect) – we have an estimate of an impact that is attributable to the program for those who complied with the promotion.
-- This estimates the effect for "compliers": industries that enrolled because of the promotion but would not have enrolled otherwise
+- Ultimately, we are able to isolate the effect of the program, by using the instrument. What we have now is called the LATE (local average treatment effect) – we have an estimate of an impact that is attributable to the program for those who complied with the offering.
+- This estimates the effect for "compliers": businesses that enrolled because they were offered the program
 
 :::
 
@@ -289,12 +397,12 @@ The IV estimate (LATE) applies to compliers only:
 
 :::: {.columns}
 ::: {.column width="50%"}
-**Types of industries:**
+**Types of businesses:**
 
-- Always-takers: Enroll regardless of promotion (8%)
-- Compliers: Enroll only with promotion (41%)
-- Never-takers: Don't enroll regardless of promotion (51%)
-- Defiers: Enroll only without promotion (0% by assumption)
+- Always-takers: Willing to enroll regardless of being offered the program
+- Compliers: Enroll only if offered the program
+- Never-takers: Don't enroll regardless of whether they are offered the program 
+- Defiers: Enroll only without being offered the program (0% by assumption)
 :::
 
 ::: {.column width="50%"}
@@ -302,52 +410,52 @@ The IV estimate (LATE) applies to compliers only:
 
 - If treatment effects vary, LATE may not generalize
 - External validity depends on how representative compliers are
-- Policy relevant if we care about those influenced by promotion
+- Policy relevant if we care about those influenced by being offered the program
 :::
 ::::
 
 ## Key Assumptions of IV
 
-- Relevance: Promotion effectively increases enrollment (✓ Strong first stage)
+- Relevance: Offering the program effectively increases enrollment (✓ Strong first stage)
 
-- Exclusion restriction: Promotion affects outcomes only through enrollment
-  - Promotion must not directly affect waste management costs
+- Exclusion restriction: Offer affects outcomes only through enrollment
+  - Offer must not directly affect waste management costs
   - Careful design focused only on awareness, not waste management behaviors
 
-- Independence: Promotion randomly assigned (✓ Baseline balance)
+- Independence: Offer randomly assigned (✓ Baseline balance)
 
-- Monotonicity: Promotion doesn't discourage anyone from enrolling
-  - No "defiers" who would enroll only without promotion
+- Monotonicity: Offer doesn't discourage anyone from enrolling
+  - No "defiers" who would enroll only without being offered the program
 
 ## From Analysis to Policy Decision
 **Policy question:** Should the program be scaled up nationally?
 
-**Decision criterion:** Program must reduce waste management costs by at least $10,000.
+**Decision criterion:** Program must reduce waste management costs by at least 1,000 AED.
 
 **Results from IV estimation:**
 
-- LATE: -$9,496 (from our calculation above)
-- Point estimate is below the $10,000 threshold
+- LATE: -1,033 AED (from our calculation above)
+- Point estimate is above the 1,000 AED threshold
 - The IV estimate represents the effect on compliers only
 
-**Recommendation:** Based strictly on the estimate, the program should not be scaled up nationally. However, the estimate is very close to the threshold.
+**Recommendation:** Based strictly on the estimate, the program should be scaled up nationally. 
 
 ## IV vs. Randomized Assignment
 :::: {.columns}
 ::: {.column width="50%"}
 **IV Estimate:**
 
-- LATE = -$9,496
+- LATE = -1,033 AED
 - Effect on compliers only
 - Larger standard errors
 
 **Policy recommendation:**
-Do not scale up (but close to threshold)
+Scale up since above threshold
 :::
 ::: {.column width="50%"}
 **Randomized Assignment:**
 
-- ATE = -$10,140
+- ATE = -1,014 AED
 - Effect on all eligible facilities
 - More precise estimate
 
@@ -402,7 +510,7 @@ Improper standard errors:
 - IV addresses selection bias when randomization of treatment isn't possible
 - LATE estimates the effect for compliers only
 - IV requires strong assumptions, especially exclusion restriction
-- The program reduced waste management costs by $9,496 for compliers, slightly below the threshold
+- The program reduced waste management costs by 1,033 AED for compliers, above the threshold
 - IV estimates are less precise than randomized assignment estimates
 
 ## Next Session

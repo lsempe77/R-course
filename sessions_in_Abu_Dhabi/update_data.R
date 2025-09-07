@@ -18,13 +18,14 @@ df <- df %>%
   rename(neighborhood_identifier = zone_identifier,
          business_identifier = facility_identifier,
          business_area = facility_area,
-         treatment_neighborhood = treatment_zone)
+         treatment_neighborhood = treatment_zone, 
+         intent_to_treat = enrolled)
 
 # Drop variables we no longer need
 df <- subset(df, select = -c(promotion_zone))
 
 # Save new data
-write.csv(df, "./evaluation_data_GreenWaste.csv")
+write.csv(df, "C:/Users/FionaKastel/OneDrive - 3ie/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/evaluation_data_GreenWaste.csv")
 
 
 
@@ -318,48 +319,48 @@ N_row <- df %>%
 final_table_with_N <- final_table %>%
   bind_rows(N_row) # Add the N_row to the end of the final_table
 
-# Now, format the final_table_with_N using kable and kableExtra
-final_table_with_N %>%
-  kable(
-    format = "html",
-    booktabs = TRUE,
-    caption = "<center><span style='font-size:20px; color: black; font-weight: bold;'>Mean Baseline Characteristics</span></center>",
-    col.names = c(
-      "Variable", 
-      "Control",
-      "Treatment",
-      "Enrolled\nBefore",
-      "Enrolled\nAfter",
-      "Eligible\nControl",
-      "Eligible\nTreatment", 
-      "Not Enrolled\nTreatment", 
-      "Enrolled\nTreatment",
-      "Not Enrolled (Treat and Control)", 
-      "Enrolled\nTreatment"
-    ),
-    align = c("l", "c", "c", "c", "c", "c", "c", "c", "c", "c", "c"),
-    escape = FALSE
-  ) %>%
-  kable_styling(
-    full_width = FALSE,
-    bootstrap_options = c("striped", "hover", "condensed"),
-    position = "left"
-  ) %>%
-  add_header_above(
-    header = c(
-      " " = 1,
-      "Overall Means" = 2,
-      "Before-After Means" = 2,
-      "Eligible Units Means (RCT)" = 2,
-      "Treatment Units Means (With-Without, RDD, DID)" = 2,
-      "Overall Enrolled Means (PSM)" = 2
-    ),
-    bold = TRUE,
-    font_size = 12,
-    escape = FALSE
-  ) %>%
-  row_spec(nrow(final_table_with_N), bold = TRUE, background = "#F0F0F0") %>% # Bold and lightly shade the N row
-  scroll_box(width = "100%", height = "400px")
+# # Now, format the final_table_with_N using kable and kableExtra
+# final_table_with_N %>%
+#   kable(
+#     format = "html",
+#     booktabs = TRUE,
+#     caption = "<center><span style='font-size:20px; color: black; font-weight: bold;'>Mean Baseline Characteristics</span></center>",
+#     col.names = c(
+#       "Variable", 
+#       "Control",
+#       "Treatment",
+#       "Enrolled\nBefore",
+#       "Enrolled\nAfter",
+#       "Eligible\nControl",
+#       "Eligible\nTreatment", 
+#       "Not Enrolled\nTreatment", 
+#       "Enrolled\nTreatment",
+#       "Not Enrolled (Treat and Control)", 
+#       "Enrolled\nTreatment"
+#     ),
+#     align = c("l", "c", "c", "c", "c", "c", "c", "c", "c", "c", "c"),
+#     escape = FALSE
+#   ) %>%
+#   kable_styling(
+#     full_width = FALSE,
+#     bootstrap_options = c("striped", "hover", "condensed"),
+#     position = "left"
+#   ) %>%
+#   add_header_above(
+#     header = c(
+#       " " = 1,
+#       "Overall Means" = 2,
+#       "Before-After Means" = 2,
+#       "Eligible Units Means (RCT)" = 2,
+#       "Treatment Units Means (With-Without, RDD, DID)" = 2,
+#       "Overall Enrolled Means (PSM)" = 2
+#     ),
+#     bold = TRUE,
+#     font_size = 12,
+#     escape = FALSE
+#   ) %>%
+#   row_spec(nrow(final_table_with_N), bold = TRUE, background = "#F0F0F0") %>% # Bold and lightly shade the N row
+#   scroll_box(width = "100%", height = "400px")
 
 
 # Without Overall Means
@@ -432,3 +433,61 @@ save_kable(means_table, file = "./means_table.png")
 # # Use webshot2 to convert the HTML file to PNG (or PDF)
 # save_kable(means_table, file = "./means_table.html")
 # webshot2::webshot("./means_table.html", "./means_table.png")
+
+
+## Create a version for word
+# install.packages(c("flextable","officer"))
+library(flextable)
+library(officer)
+
+df <- final_table_IV_with_N
+
+# bottom header row (column labels)
+labels <- c(
+  "Variable",
+  "Offered Treat\nBefore", "Offered Treat\nAfter",
+  "Eligible\nControl", "Eligible\nTreatment",
+  "Eligible\nNot Enrolled", "Eligible\nEnrolled",
+  "Not Offered\nTreatment", "Offered\nTreatment",
+  "Not Offered (Treat and Control)", "Offered\nTreatment"
+)
+
+# top header row (spanners)
+groups <- c(
+  "",                                   # over the first column only
+  "Before-After Means", "Before-After Means",
+  "Eligible Units Means (RCT)", "Eligible Units Means (RCT)",
+  "Eligible Enrollment Units Means (IV)", "Eligible Enrollment Units Means (IV)",
+  "Treatment Offered Units Means (With-Without, RDD, DID)", "Treatment Offered Units Means (With-Without, RDD, DID)",
+  "Overall Offered Means (PSM)", "Overall Offered Means (PSM)"
+)
+
+head_map <- data.frame(
+  col_keys = names(df),
+  group    = groups,
+  label    = labels,
+  stringsAsFactors = FALSE
+)
+
+ft <- flextable(df)
+ft <- set_header_df(ft, mapping = head_map, key = "col_keys")  # builds BOTH rows
+ft <- merge_h(ft, part = "header")
+ft <- align(ft, part = "header", j = 1:ncol(df), align = "center")
+ft <- align(ft, part = "header", j = 1, align = "left")        # "Variable" left
+
+# styling (like your kable)
+ft <- theme_booktabs(ft)
+ft <- bg(ft, i = seq_len(nrow(df)) %% 2 == 0, bg = "#F7F7F7", part = "body")
+ft <- align(ft, j = 1, align = "left", part = "body")
+ft <- align(ft, j = 2:ncol(df), align = "center", part = "body")
+ft <- fontsize(ft, part = "all", size = 10)
+ft <- padding(ft, part = "all", padding = 1)
+ft <- autofit(ft); ft <- fit_to_width(ft, max_width = 6.8)
+ft <- width(ft, j = 1, width = 2.7)
+ft <- bold(ft, i = nrow(df), part = "body"); ft <- bg(ft, i = nrow(df), bg = "#F0F0F0")
+
+# Write to Word
+doc <- read_docx()
+doc <- body_add_flextable(doc, ft)
+print(doc, target = "C:/Users/FionaKastel/OneDrive - 3ie/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/case_study_outputs/mean_baseline_stats.docx")
+
