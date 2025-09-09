@@ -35,7 +35,7 @@ library(haven)
 library(kableExtra)
 library(modelsummary)
 library(tidyverse)
-library(tinytable)
+library(flextable)
 
 set.seed(123)
 
@@ -114,18 +114,6 @@ df <- read.csv("./evaluation_data_GreenWaste.csv")
 ```{r, eval=T, echo=F}
 # Check if treatment and control are balanced at baseline
 
-# m<-df %>%
-#   filter(round == 0) %>%
-#   select(treatment_neighborhood, age_manager, age_deputy, educ_manager, educ_deputy,
-#          female_manager, foreign_owned, staff_size, advanced_filtration, water_treatment_system,
-#          business_area, recycling_center_distance) %>%
-#   pivot_longer(-c("treatment_neighborhood")) %>%
-#   group_by(name) %>%
-#   do(tidy(lm_robust(value ~ treatment_neighborhood, data = .))) %>%
-#   filter(term == "treatment_neighborhood") %>%
-#   select(name, estimate, std.error, p.value) %>%
-#   mutate(across(c(estimate, std.error, p.value), ~ round(.x,2)))  #
-
 m <- df %>%
   filter(round == 0, eligible == 1) %>%
   select(treatment_neighborhood, age_manager, age_deputy,
@@ -184,8 +172,6 @@ m %>% kable(
 
 
 ## Output for case study
-# # install.packages(c("flextable","officer"))
-# library(flextable)
 # library(officer)
 # 
 # # m is your data.frame with 4 columns:
@@ -208,7 +194,7 @@ m %>% kable(
 # # optional: a bit of breathing room
 # # ft <- padding(ft, padding = 2)
 # 
-# ## 1) Save to Word (.docx)
+# ## Optional: Save to Word (.docx)
 # doc <- read_docx()
 # doc <- body_add_flextable(doc, ft)
 # print(doc, target = "C:/Users/FionaKastel/OneDrive - 3ie/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/case_study_outputs/session6_RCT_baseline.docx")
@@ -231,7 +217,7 @@ m %>% kable(
 # Step 6: Only keep the coefficient for 'treatment_neighborhood' since we are interested in differences between treatment and control
 # Step 7: Select key results to display (variable name, estimated difference, standard error, and p-value)
 df %>%
-  filter(round == 0) %>% 
+  filter(round == 0, eligible == 1) %>% 
   select(treatment_neighborhood, age_manager, age_deputy,
          educ_manager, educ_deputy, 
          female_manager, foreign_owned, staff_size,
@@ -272,7 +258,9 @@ out_round1 <- lm_robust(waste_management_costs ~ treatment_neighborhood,
 
 # Display the results side-by-side in a nice kable table: Compare estimates for Round 0 (baseline) and Round 1 (follow-up)
 
-modelsummary(list("Round 0"= out_round0, "Round 1"=out_round1), stars = TRUE, coef_map = cm,
+modelsummary(list("Round 0: Baseline"= out_round0, "Round 1: After"=out_round1), stars = TRUE, coef_map = c(
+               "treatment_neighborhood" = "Treatment vs. Control",
+               "(Intercept)" = "(Intercept)"),
              gof_map = c("nobs", "r.squared","adj.r.squared"), output = 'kableExtra') 
 ```
 
@@ -306,36 +294,27 @@ out_round2 <- lm_robust(waste_management_costs ~ treatment_neighborhood +
 
 # Display results in a table 
 
-# Grab the union of terms from both models, in their original order
-terms <- unique(unlist(lapply(list(out_round1, out_round2),
-                              function(m) modelsummary::get_estimates(m)$term)))
-
-others <- terms[terms != "(Intercept)"]
-order  <- append(others, "(Intercept)", after = 1L)  # <- intercept is now 2nd
-cm     <- setNames(order, order)
-
 modelsummary(
-  list("No covariate adj." = out_round1,
-       "With covariate adj." = out_round2),
-  coef_map = cm,
+  list("Model 1: No covariate adj." = out_round1,
+       "Model 2: With covariate adj." = out_round2),
+  coef_rename = c("treatment_neighborhood" = "Treat vs. Control Effect"), # rename only
   stars = TRUE,
   gof_map = c("nobs", "r.squared", "adj.r.squared"),
+  title = "RCT Regression Results",
   output = "kableExtra"
 ) |>
   kable_styling(font_size = 13) |>
   scroll_box(width = "600px", height = "300px")
 
+
+
 ```
 
 ```{r}
 
-# # Simplified version of table
+# Simplified version with just no cov adjustment
 
-# library(flextable)
-# library(officer)
-# library(openxlsx)
-# 
-# # Build the table as a flextable (editable in Word/PowerPoint)
+# Build the table as a flextable (editable in Word/PowerPoint)
 # ft <- modelsummary(
 #   list("RCT" = out_round1),
 #   stars = TRUE,
@@ -349,7 +328,9 @@ modelsummary(
 #   fmt = 2,
 #   output = "flextable"
 # )
-# 
+#
+# # Optional: Save to word doc
+# library(officer)
 # # let flextable size to content, then stretch to a target width
 # ft <- autofit(ft)
 # ft <- fit_to_width(ft, max_width = 9)  # inches; ~content area on a PPT slide

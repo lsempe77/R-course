@@ -33,6 +33,7 @@ library(haven)
 library(kableExtra)
 library(modelsummary)
 library(tidyverse)
+library(flextable)
 
 # Create example data
 
@@ -127,6 +128,8 @@ ggplot(data, aes(x = Time, y = Outcome, color = Group, group = Group)) +
 ```{r, echo=TRUE}
 # Let's start by uploading our data.
 # It is important to know in which folder your dataset is so you can use the right path.
+# Set the working directory, if needed:
+# setwd("path/to/your/directory")  # Uncomment and replace with your path
 
 # Load in data
 df <- read.csv("./evaluation_data_GreenWaste.csv")
@@ -146,6 +149,46 @@ m_ba1 <- lm_robust(waste_management_costs   ~ round,
                   data = df %>% dplyr::filter(treatment_neighborhood ==1 & intent_to_treat ==1))
 
 ```
+
+```{r}
+
+# Just Before-After 
+# library(officer)
+# 
+# # Build the table as a flextable (editable in Word/PowerPoint)
+# ft <- modelsummary(
+#   list("Before-After" = m_ba1),
+#   stars = TRUE,
+#   gof_map = c("nobs"),
+#   title = "Before-After Regression Results",
+#   coef_map = c(
+#     "round" = "Before vs. After Effect",
+#     "(Intercept)" = "(Intercept)"
+#   ),
+#   notes = "Standard errors are in parentheses",
+#   fmt = 2,
+#   output = "flextable"
+# )
+# 
+# ft
+# 
+# Optional: Save to word
+# library(officer)
+# # let flextable size to content, then stretch to a target width
+# ft <- autofit(ft)
+# ft <- fit_to_width(ft, max_width = 9)  # inches; ~content area on a PPT slide
+# ft <- width(ft, j = 1, width = 2.5)    # widen the left/stub column (adjust as needed)
+# # optional: a bit of breathing room
+# # ft <- padding(ft, padding = 2)
+# 
+# # Save to Word (.docx)
+# doc <- read_docx()
+# # doc <- body_add_par(doc, "Before-After Regression Results", style = "heading 1")
+# doc <- body_add_flextable(doc, ft)
+# print(doc, target = "C:/Users/FionaKastel/OneDrive - 3ie/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/case_study_outputs/session5_before_after.docx")
+
+
+```  
 
 **Discussion**
 
@@ -169,56 +212,6 @@ m_ba2 <- lm_robust(waste_management_costs ~ intent_to_treat,
 
 ```
 
-**Discussion**
-
-- Are the enrolled businesses the same as those that were not enrolled in the program? How might they be different from one another?
-
-**Problems**:
-
-- Selection bias: Enrolled businesses differ from non-enrolled
-- Cannot attribute all differences to the program
-
-## Compare results
-
-```{r}
-
-# Just Before-After 
-# install.packages(c("flextable","officer","openxlsx"))
-# library(flextable)
-# library(officer)
-# library(openxlsx)
-# 
-# # Build the table as a flextable (editable in Word/PowerPoint)
-# ft <- modelsummary(
-#   list("Before-After" = m_ba1),
-#   stars = TRUE,
-#   gof_map = c("nobs"),
-#   title = "Before-After Regression Results",
-#   coef_map = c(
-#     "round" = "Before vs. After Effect",
-#     "(Intercept)" = "(Intercept)"
-#   ),
-#   notes = "Standard errors are in parentheses",
-#   fmt = 2,
-#   output = "flextable"
-# )
-# 
-# # let flextable size to content, then stretch to a target width
-# ft <- autofit(ft)
-# ft <- fit_to_width(ft, max_width = 9)  # inches; ~content area on a PPT slide
-# ft <- width(ft, j = 1, width = 2.5)    # widen the left/stub column (adjust as needed)
-# # optional: a bit of breathing room
-# # ft <- padding(ft, padding = 2)
-# 
-# ## 1) Save to Word (.docx)
-# doc <- read_docx()
-# # doc <- body_add_par(doc, "Before-After Regression Results", style = "heading 1")
-# doc <- body_add_flextable(doc, ft)
-# print(doc, target = "C:/Users/FionaKastel/OneDrive - 3ie/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/case_study_outputs/session5_before_after.docx")
-
-
-```   
-
 ```{r}
 
 # # Just With-Without Results
@@ -236,7 +229,11 @@ m_ba2 <- lm_robust(waste_management_costs ~ intent_to_treat,
 #   fmt = 2,
 #   output = "flextable"
 # )
+#
+# ft
 # 
+# Optional: Save to word
+# library(officer)
 # # let flextable size to content, then stretch to a target width
 # ft <- autofit(ft)
 # ft <- fit_to_width(ft, max_width = 9)  # inches; ~content area on a PPT slide
@@ -244,19 +241,55 @@ m_ba2 <- lm_robust(waste_management_costs ~ intent_to_treat,
 # # optional: a bit of breathing room
 # # ft <- padding(ft, padding = 2)
 # 
-# ## 1) Save to Word (.docx)
+# # Save to Word (.docx)
 # doc <- read_docx()
 # # doc <- body_add_par(doc, "Before-After Regression Results", style = "heading 1")
 # doc <- body_add_flextable(doc, ft)
 # print(doc, target = "C:/Users/FionaKastel/OneDrive - 3ie/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/case_study_outputs/session5_with_without.docx")
 
-```     
+```    
+
+**Discussion**
+
+- Are the enrolled businesses the same as those that were not enrolled in the program? How might they be different from one another?
+
+**Problems**:
+
+- Selection bias: Enrolled businesses differ from non-enrolled
+- Cannot attribute all differences to the program
+
+## Compare results
 
 ```{r}
-
-modelsummary(list("Before-After" = m_ba1, "With-Without" = m_ba2),
+  
+ft <- modelsummary(list("Model 1: Before-After" = m_ba1, "Model 2: With-Without" = m_ba2),
              stars = TRUE,
-             gof_map = c("nobs", "r.squared", "r2.adjusted"))
+             gof_map = c("nobs", "r.squared", "r2.adjusted"), 
+             title = "Before-After vs. With-Without Regression Results",
+             coef_map = c(
+               "round" = "Before vs. After Effect",
+               "intent_to_treat" = "With vs. Without Program Effect",
+               "(Intercept)" = "(Intercept)")
+             ,
+             notes = "Standard errors are in parentheses",
+             fmt = 2,
+             output = "flextable"
+             )
+
+ft
+
+# # Optional: Save to word
+# library(officer)
+# # let flextable size to content, then stretch to a target width
+# ft <- autofit(ft)
+# ft <- fit_to_width(ft, max_width = 9)  # inches; ~content area on a PPT slide
+# ft <- width(ft, j = 1, width = 2.5)    # widen the left/stub column (adjust as needed)
+# 
+# # Save to Word (.docx)
+# doc <- read_docx()
+# # doc <- body_add_par(doc, "Before-After Regression Results", style = "heading 1")
+# doc <- body_add_flextable(doc, ft)
+# print(doc, target = "C:/Users/FionaKastel/OneDrive - 3ie/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/case_study_outputs/session5_comparison.docx")
 
 ```      
 

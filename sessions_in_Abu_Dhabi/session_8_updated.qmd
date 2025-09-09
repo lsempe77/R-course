@@ -206,7 +206,7 @@ out_rdd <- lm_robust(waste_management_costs ~
 
 ```{r}
 
-modelsummary(list("Sharp RDD"= out_rdd), stars = TRUE,coef_omit = c(-3),
+modelsummary(list("Sharp RDD"= out_rdd), stars = TRUE,
              gof_map = c("nobs", "r.squared","adj.r.squared"),output = 'kableExtra') %>%
   kable_styling (font_size = 15) 
 
@@ -310,10 +310,6 @@ modelsummary(coef_omit = c(-3),
              gof_map = c("nobs", "r.squared","adj.r.squared"), output = 'kableExtra') %>%
   kable_styling (font_size = 15)
 
-# modelsummary(coef_omit = c(-1), coef_map = c("intent_to_treat" = "RDD Effect"),
-#              list("Quadratic RDD"= out_rdd_quadratic,"Cubic RDD" = out_rdd_cubic), stars = TRUE,
-#              gof_map = c("nobs"), output = 'kableExtra') %>%
-#   kable_styling (font_size = 15)
 
 ```
 

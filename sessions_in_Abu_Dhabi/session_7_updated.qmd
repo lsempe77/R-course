@@ -28,7 +28,7 @@ library(dplyr)
 library(modelsummary)
 library(estimatr)
 library(kableExtra)
-library(tinytable)
+library(flextable)
 ```
 
 
@@ -92,6 +92,7 @@ In the first stage, we measure the effect of offering the program on participati
 m_first_stage <- lm_robust(enrolled_rp ~ treatment_neighborhood,
                       clusters = business_identifier,
                       data = df %>% filter(round == 1 & eligible ==1))
+
 ```
 
 
@@ -153,9 +154,7 @@ modelsummary(
 #   style_tt(bootstrap_class = "table caption-top")
 
 # ## Output for case study
-# library(flextable)
 # library(officer)
-# library(openxlsx)
 # 
 # # Build the table as a flextable (editable in Word/PowerPoint)
 # ft <- modelsummary(
@@ -228,14 +227,11 @@ m_itt_wcov <- lm_robust(waste_management_costs ~ treatment_neighborhood +
 ```{r, echo=FALSE}
 
 modelsummary(
-  list("No covariate adj."= m_itt, "With covariate adj." = m_itt_wcov),
+  list("Model 1: No covariate adj."= m_itt, "Model 2: With covariate adj." = m_itt_wcov),
   stars = TRUE,
   gof_map = c("nobs", "r.squared", "adj.r.squared"),
   title = "First Stage Regression Results",
-  coef_map = c(
-    "treatment_neighborhood" = "Random Access Effect",
-    "(Intercept)" = "(Intercept)"
-  ),
+  coef_rename = c("treatment_neighborhood" = "ITT Effect"),
   coef_omit = NULL,
   notes = "Standard errors are in parenthesis",
   output = "tinytable"

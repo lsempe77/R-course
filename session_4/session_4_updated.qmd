@@ -1,0 +1,314 @@
+---
+title: "Learning R"
+subtitle: "Session 4: Regression & Randomized Experiments"
+format: 
+  pptx:
+    incremental: true   
+  revealjs:
+    theme: [clean.scss]
+    transition: slide
+    highlight-style: github
+    code-copy: true
+    auto-stretch: false
+    fig-dpi: 300
+editor_options: 
+  chunk_output_type: console
+---
+
+## Introduction & Data Setup
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, cache = FALSE)
+library(tidyverse)
+library(ggplot2)
+library(broom)
+library(estimatr)
+library(usethis)
+```
+
+```{r load-data}
+
+# Load the dataset (in actual presentation, use your real data)
+environmental_eval <- read.csv("./evaluation_data_GreenWaste.csv")
+
+glimpse(environmental_eval)
+
+```
+
+## Understanding Treatment & Control
+
+```{r explore-basic, fig.height=5}
+# Simple visualization of treatment and control groups
+environmental_eval %>%
+  filter(round == 1) %>%  # Focus on follow-up data
+  mutate(group = ifelse(treatment_neighborhood == 1, "Treatment", "Control")) %>%
+  ggplot(aes(x = waste_management_costs, fill = group)) +
+  #geom_jitter(width = 0.2, alpha = 0.3) +
+  geom_density(alpha = 0.7) +
+  labs(title = "Waste Management Costs by Treatment Status", fill = "",
+       y = "Waste Management Costs (AED)", x = "") +
+  theme_minimal() 
+```
+
+## Naive Difference Calculation
+
+```{r naive-diff}
+# Calculate naive difference in waste management costs
+environmental_eval %>%
+  filter(round == 1) %>%  # Follow-up data
+  group_by(treatment_neighborhood) %>%
+  summarize(
+    n = n(),
+    avg_waste_cost = mean(waste_management_costs),
+    sd_waste_cost = sd(waste_management_costs)
+  ) %>%
+  mutate(group = ifelse(treatment_neighborhood == 1, "Treatment", "Control")) %>%
+  select(group, n, avg_waste_cost, sd_waste_cost) %>%
+  knitr::kable(digits = 1)
+```
+
+
+```{r}
+# Calculate the difference
+treat_mean <- mean(environmental_eval$waste_management_costs[
+  environmental_eval$treatment_neighborhood == 1 & environmental_eval$round == 1])
+control_mean <- mean(environmental_eval$waste_management_costs[
+  environmental_eval$treatment_neighborhood == 0 & environmental_eval$round == 1])
+diff <- treat_mean - control_mean
+```
+
+Treatment effect: **`r round(diff, 1)` AED** reduction in waste management costs
+
+## Potential Outcomes Framework
+
+::: {.columns}
+::: {.column width="50%"}
+* Each business has two potential outcomes:
+  * Y(1): Cost with treatment
+  * Y(0): Cost without treatment
+* Individual treatment effect: Y(1) - Y(0)
+* Problem: We only observe one outcome per business
+* Solution: Randomization balances unobservable factors
+:::
+
+::: {.column width="50%"}
+```{r po-diagram, echo=FALSE, fig.height=8}
+# Create a simple diagram of potential outcomes
+tibble(
+  Business = 1:2,
+  Y0 = c(4500, 4900),  # Control outcome
+  Y1 = c(5200, 5900),  # Treatment outcome
+  Treatment = c(1, 0),
+  Observed = ifelse(Treatment == 1, Y1, Y0)
+) %>%
+  mutate(Business = paste("Business", Business)) %>%
+  ggplot() +
+  geom_segment(aes(x = "Y(0)", xend = "Y(1)", y = Y0, yend = Y1,
+                  group = Business), arrow = arrow(length = unit(0.3, "cm")),
+               color = "gray70") +
+  geom_point(aes(x = "Y(0)", y = Y0), color = "blue", size = 3) +
+  geom_point(aes(x = "Y(1)", y = Y1), color = "red", size = 3) +
+  labs(y = "", x= "") +
+  theme_minimal()
+```
+:::
+:::
+
+## Simple Regression Implementation
+
+```{r simple-reg}
+# Run a simple regression
+model1 <- lm(waste_management_costs ~ treatment_neighborhood, 
+            data = environmental_eval %>% filter(round == 1))
+
+# Display the results
+summary(model1)$coefficients %>%
+  knitr::kable(digits = 2)
+```
+
+```{r}
+# Interpretation:
+# - Intercept (20.06): Average cost for control group
+# - Treatment (-6.41): Average effect of the program
+```
+
+## Building a Robust Model: Adding Controls
+
+```{r controls}
+# Check balance on baseline characteristics
+balance_vars <- c("efficiency_index", "foreign_owned", "staff_size")
+
+# Compare means at baseline
+environmental_eval %>%
+  filter(round == 0) %>%  # Baseline data
+  group_by(treatment_neighborhood) %>%
+  summarize(
+    avg_efficiency = mean(efficiency_index),
+    pct_foreign = mean(foreign_owned) * 100,
+    avg_staff = mean(staff_size)
+  ) %>%
+  mutate(group = ifelse(treatment_neighborhood == 1, "Treatment", "Control")) %>%
+  select(group, avg_efficiency, pct_foreign, avg_staff) %>%
+  knitr::kable(digits = 1)
+
+```
+
+## Regression with Control Variables
+
+```{r controls-reg}
+# Add control variables to the regression
+model2 <- lm(waste_management_costs ~ treatment_neighborhood + efficiency_index + 
+             foreign_owned + staff_size,
+             data = environmental_eval %>% filter(round == 1))
+
+# Compare models
+models_comparison <- bind_rows(
+  tidy(model1) %>% mutate(model = "Without Controls"),
+  tidy(model2) %>% mutate(model = "With Controls")
+) %>%
+  filter(term == "treatment_neighborhood") %>%
+  select(model, estimate, std.error, p.value)
+
+models_comparison %>%
+  knitr::kable(digits = 1)
+```
+
+## Clustered Standard Errors
+
+```{r clustered}
+# Run regression with clustered standard errors
+model_clustered <- lm_robust(
+  waste_management_costs ~ treatment_neighborhood + efficiency_index + 
+  foreign_owned + staff_size,
+  data = environmental_eval %>% filter(round == 1),
+  clusters = neighborhood_identifier
+)
+
+# Show results for treatment effect
+summary(model_clustered)$coefficients%>% knitr::kable(digits = 1)
+```
+
+::: {.callout-note}
+Clustering accounts for correlation within neighborhoods
+:::
+
+## Treatment Effect Heterogeneity
+::: {.columns}
+::: {.column width="50%"}
+```{r heterogeneity0, fig.height=4, eval=FALSE, echo=TRUE}
+environmental_eval <- environmental_eval %>%
+  mutate(
+    size_group = ifelse(staff_size < median(staff_size), "Small", "Large"),
+    efficiency_group = ifelse(efficiency_index < median(efficiency_index), 
+                             "Low Efficiency", "High Efficiency"),
+    treatment = ifelse(treatment_neighborhood == 1, "Treatment", "Control")
+  )
+
+# Run separate regressions for each subgroup
+small_effect <- lm(waste_management_costs ~ treatment_neighborhood, 
+                  data = filter(environmental_eval, round == 1, size_group == "Small"))
+large_effect <- lm(waste_management_costs ~ treatment_neighborhood, 
+                  data = filter(environmental_eval, round == 1, size_group == "Large"))
+low_eff_effect <- lm(waste_management_costs ~ treatment_neighborhood, 
+                    data = filter(environmental_eval, round == 1, efficiency_group == "Low Efficiency"))
+high_eff_effect <- lm(waste_management_costs ~ treatment_neighborhood, 
+                     data = filter(environmental_eval, round == 1, efficiency_group == "High Efficiency"))
+
+# Create data frame of effects
+heterogeneity_data <- data.frame(
+  Subgroup = c("Small Facilities", "Large Facilities", 
+               "Low Efficiency", "High Efficiency"),
+  Category = c("Business Size", "Business Size", 
+               "Efficiency Level", "Efficiency Level"),
+  Effect = c(coef(small_effect)["treatment_neighborhood"],
+             coef(large_effect)["treatment_neighborhood"],
+             coef(low_eff_effect)["treatment_neighborhood"],
+             coef(high_eff_effect)["treatment_neighborhood"]),
+  SE = c(summary(small_effect)$coefficients["treatment_neighborhood", "Std. Error"],
+         summary(large_effect)$coefficients["treatment_neighborhood", "Std. Error"],
+         summary(low_eff_effect)$coefficients["treatment_neighborhood", "Std. Error"],
+         summary(high_eff_effect)$coefficients["treatment_neighborhood", "Std. Error"])
+)
+
+# Plot heterogeneous effects
+ggplot(heterogeneity_data, aes(x = Effect, y = Subgroup, color = Category)) +
+  geom_point(size = 3) +
+  geom_errorbarh(aes(xmin = Effect - 1.96*SE, xmax = Effect + 1.96*SE), height = 0.2) +
+  labs(title = "Treatment Effects by Business Characteristics",
+       x = "Effect on Waste Management Costs (AED)",
+       y = "") +
+  theme_minimal()
+```
+:::
+::: {.column width="50%"}
+
+```{r heterogeneity, echo=F, fig.height= 12}
+# Define business groups
+environmental_eval <- environmental_eval %>%
+  mutate(
+    size_group = ifelse(staff_size < median(staff_size), "Small", "Large"),
+    efficiency_group = ifelse(efficiency_index < median(efficiency_index), 
+                             "Low Efficiency", "High Efficiency"),
+    treatment = ifelse(treatment_neighborhood == 1, "Treatment", "Control")
+  )
+
+# Run separate regressions for each subgroup
+small_effect <- lm(waste_management_costs ~ treatment_neighborhood, 
+                  data = filter(environmental_eval, round == 1, size_group == "Small"))
+large_effect <- lm(waste_management_costs ~ treatment_neighborhood, 
+                  data = filter(environmental_eval, round == 1, size_group == "Large"))
+low_eff_effect <- lm(waste_management_costs ~ treatment_neighborhood, 
+                    data = filter(environmental_eval, round == 1, efficiency_group == "Low Efficiency"))
+high_eff_effect <- lm(waste_management_costs ~ treatment_neighborhood, 
+                     data = filter(environmental_eval, round == 1, efficiency_group == "High Efficiency"))
+
+# Create data frame of effects
+heterogeneity_data <- data.frame(
+  Subgroup = c("Small Facilities", "Large Facilities", 
+               "Low Efficiency", "High Efficiency"),
+  Category = c("Business Size", "Business Size", 
+               "Efficiency Level", "Efficiency Level"),
+  Effect = c(coef(small_effect)["treatment_neighborhood"],
+             coef(large_effect)["treatment_neighborhood"],
+             coef(low_eff_effect)["treatment_neighborhood"],
+             coef(high_eff_effect)["treatment_neighborhood"]),
+  SE = c(summary(small_effect)$coefficients["treatment_neighborhood", "Std. Error"],
+         summary(large_effect)$coefficients["treatment_neighborhood", "Std. Error"],
+         summary(low_eff_effect)$coefficients["treatment_neighborhood", "Std. Error"],
+         summary(high_eff_effect)$coefficients["treatment_neighborhood", "Std. Error"])
+)
+
+# Plot heterogeneous effects
+ggplot(heterogeneity_data, aes(x = Effect, y = Subgroup, color = Category)) +
+  geom_point(size = 3) +
+  geom_errorbarh(aes(xmin = Effect - 1.96*SE, xmax = Effect + 1.96*SE), height = 0.2) +
+  labs(title = "Treatment Effects by Business Characteristics",
+       x = "Effect on Waste Management Costs",
+       y = "") +
+  theme_minimal()
+```
+:::
+:::
+## Key Takeaways & Next Steps
+
+::: {.columns}
+::: {.column width="50%"}
+**Key Findings:**
+
+- Program reduces waste management costs
+
+- Effect remains significant with controls
+
+- Larger effects for smaller facilities
+
+- Proper statistical methods strengthen our confidence
+
+:::
+
+::: {.column width="50%"}
+**Next Steps:**
+- Is this causal analysis?
+:::
+:::
+
+---

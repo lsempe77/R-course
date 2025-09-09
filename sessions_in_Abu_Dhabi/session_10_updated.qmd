@@ -172,7 +172,7 @@ modelsummary(list("Limited Set" = psm_r$model,
                           'staff_size_0' = "Number of Staff at Baseline",
                           'advanced_filtration_0' = "Advanced Filtration at Baseline",
                           'water_treatment_system_0' = "Water Treatment System at Baseline",
-                          'business_area_0' = "business Area at Baseline",
+                          'business_area_0' = "Business Area at Baseline",
                           'recycling_center_distance_0' = "Distance From Recycling Center"),
              title = "Estimating the Propensity Score Based on Baseline Characteristics")
 ```
@@ -199,7 +199,7 @@ df_w %>%
              group = intent_to_treat_lab, colour = intent_to_treat_lab, fill = intent_to_treat_lab)) +
   geom_density(alpha = 0.2) +
   xlab("Propensity Score") +
-  labs(title = "Distribution of Propensity Score by Enrollment Status") +
+  labs(title = "Distribution of Propensity Score by Offer Status") +
   scale_fill_viridis_d("Status:", end = 0.7) +
   scale_colour_viridis_d("Status:", end = 0.7) +
   theme_minimal() +
@@ -277,7 +277,7 @@ modelsummary(list("Limited Set" = out_lm_r,
 #     "intent_to_treat" = "Matching Effect",
 #     "(Intercept)" = "(Intercept)"
 #   ),
-#   coef_omit = NULL, 
+#   coef_omit = NULL,
 #   notes = "Standard errors are in parenthesis",
 #   output = "tinytable"
 # ) |>
