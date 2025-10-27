@@ -114,36 +114,75 @@ df <- read.csv("./evaluation_data_GreenWaste.csv")
 ```{r, eval=T, echo=F}
 # Check if treatment and control are balanced at baseline
 
+# m <- df %>%
+#   filter(round == 0, eligible == 1) %>%
+#   select(treatment_neighborhood, age_manager, age_deputy,
+#          educ_manager, educ_deputy,
+#          female_manager, foreign_owned, staff_size,
+#          advanced_filtration, water_treatment_system,
+#          business_area, recycling_center_distance) %>%
+#   pivot_longer(-c("treatment_neighborhood")) %>%
+#   group_by(name) %>%
+#   do(tidy(lm_robust(value ~ treatment_neighborhood, data = .))) %>%
+#   filter(term == "treatment_neighborhood") %>%
+#   mutate(name = recode(name,
+#                        "age_manager" = "Manager Age",
+#                        "age_deputy" = "Deputy Age",
+#                        "educ_manager" = "Manager Education",
+#                        "educ_deputy" = "Deputy Education",
+#                        "female_manager" = "Female Manager",
+#                        "foreign_owned" = "Foreign Owned",
+#                        "staff_size" = "Staff Size",
+#                        "advanced_filtration" = "Advanced Filtration",
+#                        "water_treatment_system" = "Water Treatment System",
+#                        "business_area" = "Business Area",
+#                        "recycling_center_distance" = "Distance from Nearest Recycling Center"
+#   )) %>%
+#   select(name, estimate, std.error, p.value) %>%
+#   mutate(across(c(estimate, std.error, p.value), ~ round(.x,2))) %>%
+#   rename(Variable = name,
+#          Estimate = estimate,
+#          `SE` = std.error,
+#          `P-val` = p.value)
+
+
 m <- df %>%
   filter(round == 0, eligible == 1) %>%
   select(treatment_neighborhood, age_manager, age_deputy,
-         educ_manager, educ_deputy,
-         female_manager, foreign_owned, staff_size,
-         advanced_filtration, water_treatment_system,
+         educ_manager, educ_deputy, female_manager, foreign_owned,
+         staff_size, advanced_filtration, water_treatment_system,
          business_area, recycling_center_distance) %>%
-  pivot_longer(-c("treatment_neighborhood")) %>%
+  pivot_longer(-treatment_neighborhood, names_to = "name", values_to = "value") %>%
   group_by(name) %>%
-  do(tidy(lm_robust(value ~ treatment_neighborhood, data = .))) %>%
-  filter(term == "treatment_neighborhood") %>%
-  mutate(name = recode(name,
-                       "age_manager" = "Manager Age",
-                       "age_deputy" = "Deputy Age",
-                       "educ_manager" = "Manager Education",
-                       "educ_deputy" = "Deputy Education",
-                       "female_manager" = "Female Manager",
-                       "foreign_owned" = "Foreign Owned",
-                       "staff_size" = "Staff Size",
-                       "advanced_filtration" = "Advanced Filtration",
-                       "water_treatment_system" = "Water Treatment System",
-                       "business_area" = "Business Area",
-                       "recycling_center_distance" = "Distance from Nearest Recycling Center"
+  reframe({
+    mod <- estimatr::lm_robust(value ~ treatment_neighborhood)
+    tt  <- broom::tidy(mod)
+    idx <- tt$term == "treatment_neighborhood"
+    tibble::tibble(
+      Estimate      = tt$estimate[idx],
+      SE            = tt$std.error[idx],
+      `P-val`       = tt$p.value[idx],
+      `Treat Mean`  = mean(value[treatment_neighborhood == 1], na.rm = TRUE),
+      `Control Mean`= mean(value[treatment_neighborhood == 0], na.rm = TRUE)
+    )
+  }) %>%
+  ungroup() %>%
+  mutate(name = dplyr::recode(name,
+    "age_manager" = "Manager Age",
+    "age_deputy" = "Deputy Age",
+    "educ_manager" = "Manager Education",
+    "educ_deputy" = "Deputy Education",
+    "female_manager" = "Female Manager",
+    "foreign_owned" = "Foreign Owned",
+    "staff_size" = "Staff Size",
+    "advanced_filtration" = "Advanced Filtration",
+    "water_treatment_system" = "Water Treatment System",
+    "business_area" = "Business Area",
+    "recycling_center_distance" = "Distance from Nearest Recycling Center"
   )) %>%
-  select(name, estimate, std.error, p.value) %>%
-  mutate(across(c(estimate, std.error, p.value), ~ round(.x,2))) %>%
-  rename(Variable = name,
-         Estimate = estimate,
-         `SE` = std.error,
-         `P-val` = p.value)
+  mutate(across(where(is.numeric), ~ round(.x, 2))) %>%
+  rename(Variable = name)
+
 
 ```
 
@@ -151,17 +190,19 @@ m <- df %>%
 
 # kable(m) %>% scroll_box(width = "600px", height = "400px")
 
-m %>% kable(
+m %>%
+  select(Variable, `Treat Mean`, `Control Mean`, Estimate, SE, `P-val`) %>%
+  kable(
     format = "html",
     booktabs = TRUE,
     caption = "<center><span style='font-size:20px; color: black; font-weight: bold;'>Diff in Treat and Control Baseline Characteristics</span></center>",
-    col.names = c(
-      "Variable",
-      "Diff Treat/Control",
-      "Std. Error",
-      "P-value"
-    ),
-    align = c("l", "c", "c", "c"),
+    col.names = c("Variable",
+                  "Treat Mean",
+                  "Control Mean",
+                  "Diff Treat/Control",
+                  "Std. Error",
+                  "P-value"),
+    align = c("l","c","c","c","c","c"),
     escape = FALSE
   ) %>%
   kable_styling(
@@ -169,6 +210,25 @@ m %>% kable(
     bootstrap_options = c("striped", "hover", "condensed"),
     position = "left"
   )
+
+# m %>% kable(
+#     format = "html",
+#     booktabs = TRUE,
+#     caption = "<center><span style='font-size:20px; color: black; font-weight: bold;'>Diff in Treat and Control Baseline Characteristics</span></center>",
+#     col.names = c(
+#       "Variable",
+#       "Diff Treat/Control",
+#       "Std. Error",
+#       "P-value"
+#     ),
+#     align = c("l", "c", "c", "c"),
+#     escape = FALSE
+#   ) %>%
+#   kable_styling(
+#     full_width = FALSE,
+#     bootstrap_options = c("striped", "hover", "condensed"),
+#     position = "left"
+#   )
 
 
 ## Output for case study

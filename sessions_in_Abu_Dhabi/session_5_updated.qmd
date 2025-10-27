@@ -152,7 +152,7 @@ m_ba1 <- lm_robust(waste_management_costs   ~ round,
 
 ```{r}
 
-# Just Before-After 
+# # Just Before-After 
 # library(officer)
 # 
 # # Build the table as a flextable (editable in Word/PowerPoint)
@@ -171,9 +171,8 @@ m_ba1 <- lm_robust(waste_management_costs   ~ round,
 # )
 # 
 # ft
-# 
-# Optional: Save to word
-# library(officer)
+#  
+# # Optional: Save to word
 # # let flextable size to content, then stretch to a target width
 # ft <- autofit(ft)
 # ft <- fit_to_width(ft, max_width = 9)  # inches; ~content area on a PPT slide
@@ -229,7 +228,7 @@ m_ba2 <- lm_robust(waste_management_costs ~ intent_to_treat,
 #   fmt = 2,
 #   output = "flextable"
 # )
-#
+# 
 # ft
 # 
 # Optional: Save to word

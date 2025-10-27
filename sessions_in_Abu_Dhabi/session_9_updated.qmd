@@ -176,7 +176,89 @@ kable(coef_table,
 
 ::::
 
-## DiD Results for the Program
+## Manually Calculating the Difference-in-Differences (DiD) Estimator
+
+To build intuition for the regression-based approach, let’s compute the DiD estimator manually.  
+The key idea: measure how outcomes changed over time for the treated group and for the control group,  
+then take the **difference of those changes**.
+
+# Step 1: Compute Mean Outcomes by Group and Period
+
+```{r, eval=TRUE, echo=TRUE}
+
+means <- df %>%
+  filter(treatment_neighborhood == 1) %>%
+  group_by(intent_to_treat, round) %>%
+  summarise(mean_cost = mean(waste_management_costs, na.rm = TRUE)) %>%
+  ungroup()
+
+# means
+
+# Mutate/reformat for table
+mean_table <- means %>%
+  mutate(intent_to_treat = ifelse(intent_to_treat == 1, "Offered", "Not Offered")) %>%
+  pivot_wider(
+  names_from = round,
+  values_from = mean_cost,
+  names_prefix = "round_"
+  )
+
+# Display neatly formatted table
+kable(
+  mean_table,
+  col.names = c("Group", "Before (Round 0)", "After (Round 1)"),
+  digits = 2,
+  caption = "Mean Waste Management Costs Before and After Program by Group"
+)
+
+
+```
+
+# Step 2: Compute Difference Across Periods for Each Group
+
+```{r, eval=TRUE, echo=TRUE}
+
+# Reshape means into a table and calculate change over time
+mean_table <- mean_table %>%
+  mutate(change = round_1 - round_0) # change over time for each group
+
+# Compute differences in Offered − Not Offered
+off_row <- mean_table %>% filter(intent_to_treat == "Offered")
+ctrl_row <- mean_table %>% filter(intent_to_treat == "Not Offered")
+
+before_diff <- off_row$round_0 - ctrl_row$round_0
+after_diff  <- off_row$round_1 - ctrl_row$round_1
+
+# Add rows underneath with the differences
+final_table <- mean_table %>%
+  add_row(
+    intent_to_treat = "Change",
+    round_0 = before_diff,
+    round_1 = after_diff,
+    change = as.numeric(NA)  
+  )
+
+# Display neatly formatted table
+kable(
+  final_table,
+  col.names = c("Group", "Before (Round 0)", "After (Round 1)", "Change"),
+  digits = 2,
+  caption = "Mean Waste Management Costs and Differences (Before, After, and DiD)"
+)
+
+```
+
+# Step 3: Compute Difference-in-Difference 
+
+```{r, eval=TRUE, echo=TRUE}
+
+did_manual <- diff(mean_table$change)
+did_manual
+
+```
+
+
+## DiD Regression Results for the Program
 
 :::: {.columns}
 
@@ -190,7 +272,7 @@ modelsummary(list("No covariate adj."= out_did, "With covariate adj." = out_did_
 ```
 ::: 
 
-```{r}
+```{r, echo=FALSE}
 
 # ## Output for case study
 # library(flextable)
@@ -293,6 +375,7 @@ ggplot(did_viz_data, aes(x = Time, y = Expenditure, color = Group, group = Group
   theme_minimal() +
   theme(legend.position = "bottom")
 ```
+
 
 ## The Parallel Trends Assumption
 

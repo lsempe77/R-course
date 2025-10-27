@@ -139,23 +139,61 @@ Propensity Score Matching (PSM) is when we predict the probability of each unit 
 ## Estimating Propensity Scores
 
 ```{r}
-# Limited set of variables
-psm_r <- matchit(intent_to_treat ~ age_manager_0 + educ_manager_0,
-                 data = df_w %>% dplyr::select(-recycling_compliance_0,
-                                               -recycling_compliance_1), 
-                    distance = "glm",
-                  link = "probit")
+## Manually trim to 5–95% common range 
+# discard = "both" trims data to area of common support
+# then we manually trim it to the 5-95% range and re-run matchit
 
-# Full set of variables
-psm_ur <- matchit(intent_to_treat ~ age_manager_0 + educ_manager_0 + 
-                   age_deputy_0 + educ_deputy_0 +
-                   female_manager_0 + foreign_owned_0 + staff_size_0 + 
-                   advanced_filtration_0 + water_treatment_system_0 + 
-                   business_area_0 + recycling_center_distance_0,
-   data = df_w %>% dplyr::select(-recycling_compliance_0,
-                                               -recycling_compliance_1), 
-   distance = "glm",link = "probit")
+
+## ----- LIMITED SET -----
+# Fit PS & discard non-overlap
+psm_r0 <- matchit(
+  intent_to_treat ~ age_manager_0 + educ_manager_0,
+  data = df_w %>% dplyr::select(-recycling_compliance_0, -recycling_compliance_1),
+  distance = "glm", link = "probit", discard = "both", method = "nearest", estimand = "ATT"
+)
+
+# 5–95% common-range trimming
+df_tmp_r <- df_w %>% mutate(ps = psm_r0$distance, treat = intent_to_treat == 1)
+lower_r <- max(quantile(df_tmp_r$ps[df_tmp_r$treat], 0.05, na.rm = TRUE),
+               quantile(df_tmp_r$ps[!df_tmp_r$treat], 0.05, na.rm = TRUE))
+upper_r <- min(quantile(df_tmp_r$ps[df_tmp_r$treat], 0.95, na.rm = TRUE),
+               quantile(df_tmp_r$ps[!df_tmp_r$treat], 0.95, na.rm = TRUE))
+df_trim_r <- dplyr::filter(df_tmp_r, ps >= lower_r & ps <= upper_r)
+
+# Re-run matchit on the trimmed data
+psm_r <- matchit(
+  intent_to_treat ~ age_manager_0 + educ_manager_0,
+  data = df_trim_r %>% dplyr::select(-recycling_compliance_0, -recycling_compliance_1, -ps, -treat),
+  distance = "glm", link = "probit", discard = "both", method = "nearest", estimand = "ATT"
+)
+
+## ----- FULL SET -----
+psm_ur0 <- matchit(
+  intent_to_treat ~ age_manager_0 + educ_manager_0 +
+    age_deputy_0 + educ_deputy_0 + female_manager_0 + foreign_owned_0 +
+    staff_size_0 + advanced_filtration_0 + water_treatment_system_0 +
+    business_area_0 + recycling_center_distance_0,
+  data = df_w %>% dplyr::select(-recycling_compliance_0, -recycling_compliance_1),
+  distance = "glm", link = "probit", discard = "both", method = "nearest", estimand = "ATT"
+)
+
+df_tmp <- df_w %>% mutate(ps = psm_ur0$distance, treat = intent_to_treat == 1)
+lower <- max(quantile(df_tmp$ps[df_tmp$treat], 0.05, na.rm = TRUE),
+             quantile(df_tmp$ps[!df_tmp$treat], 0.05, na.rm = TRUE))
+upper <- min(quantile(df_tmp$ps[df_tmp$treat], 0.95, na.rm = TRUE),
+             quantile(df_tmp$ps[!df_tmp$treat], 0.95, na.rm = TRUE))
+df_trim <- dplyr::filter(df_tmp, ps >= lower & ps <= upper)
+
+psm_ur <- matchit(
+  intent_to_treat ~ age_manager_0 + educ_manager_0 +
+    age_deputy_0 + educ_deputy_0 + female_manager_0 + foreign_owned_0 +
+    staff_size_0 + advanced_filtration_0 + water_treatment_system_0 +
+    business_area_0 + recycling_center_distance_0,
+  data = df_trim %>% dplyr::select(-recycling_compliance_0, -recycling_compliance_1, -ps, -treat),
+  distance = "glm", link = "probit", discard = "both", method = "nearest", estimand = "ATT"
+)
 ```
+
 
 ## Propensity Score Models
 
@@ -190,12 +228,12 @@ Let's plot the distribution of propensity scores by enrollment status:
 ```{r}
 # Add propensity scores to our dataset
 df_w <- df_w %>%
-  mutate(ps_ur = psm_ur$model$fitted.values)
+  mutate(ps_ur0 = psm_ur0$model$fitted.values)
 
 # Plot the distribution
 df_w %>%
   mutate(intent_to_treat_lab = ifelse(intent_to_treat == 1, "Offered", "Not Offered")) %>%
-  ggplot(aes(x = ps_ur,
+  ggplot(aes(x = ps_ur0,
              group = intent_to_treat_lab, colour = intent_to_treat_lab, fill = intent_to_treat_lab)) +
   geom_density(alpha = 0.2) +
   xlab("Propensity Score") +
@@ -240,8 +278,8 @@ First, extract the matched dataset:
 
 ```{r}
 # Extract matched datasets
-match_df_r <- match.data(psm_r)   # Limited set
-match_df_ur <- match.data(psm_ur) # Full set
+match_df_r <- match.data(psm_r, drop.unmatched = TRUE)   # Limited set
+match_df_ur <- match.data(psm_ur, drop.unmatched = TRUE) # Full set
 ```
 
 ## Regression with Matched Data
@@ -249,22 +287,23 @@ match_df_ur <- match.data(psm_ur) # Full set
 ```{r}
 # Regression with matched data
 out_lm_r <- lm_robust(waste_management_costs_1 ~ intent_to_treat,
-                      data = match_df_r,  weights = weights,
+                      data = match_df_r,  
                       clusters = neighborhood_identifier)
 
 out_lm_ur <- lm_robust(waste_management_costs_1 ~ intent_to_treat,
-                      data = match_df_ur, weights = weights,
+                      data = match_df_ur, 
                       clusters = neighborhood_identifier)
 
 # Show results
 modelsummary(list("Limited Set" = out_lm_r, 
                   "Full Set" = out_lm_ur),
              title = "Impact on Waste Management Costs: Matching Approach")
+
 ```
 
 ```{r}
 
-# # Simplified version
+# # # Simplified version
 # 
 # library(tinytable)
 # 
@@ -282,7 +321,7 @@ modelsummary(list("Limited Set" = out_lm_r,
 #   output = "tinytable"
 # ) |>
 #   style_tt(bootstrap_class = "table caption-top")
-
+# 
 # ## Output for case study
 # library(flextable)
 # library(officer)

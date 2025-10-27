@@ -9,6 +9,7 @@ library(estimatr)
 library(kableExtra)
 
 df <- read.csv("./evaluation_data.csv")
+# df <- read.csv("C:/Users/FionaKastel/OneDrive - 3ie/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/evaluation_data.csv")
 
 # Change waste management cost to reasonable about in Dirham (AED)
 df$waste_management_costs<-df$waste_management_costs*100
@@ -24,14 +25,28 @@ df <- df %>%
 # Drop variables we no longer need
 df <- subset(df, select = -c(promotion_zone))
 
+## Drop observations that appear in one round but not another 
+# Identify IDs that appear in both rounds (balanced panel)
+ids_in_both <- intersect(
+  df$business_identifier[df$round == 0],
+  df$business_identifier[df$round == 1]
+)
+
+# Keep only observations for those IDs
+df_balanced <- subset(df, business_identifier %in% ids_in_both)
+
+# Optional: check difference
+cat("Dropped", nrow(df) - nrow(df_balanced), "rows that were only in one period\n")
+
 # Save new data
-write.csv(df, "C:/Users/FionaKastel/OneDrive - 3ie/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/evaluation_data_GreenWaste.csv")
+# write.csv(df, "C:/Users/FionaKastel/OneDrive - 3ie/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/evaluation_data_GreenWaste.csv")
+write.csv(df_balanced, "C:/Users/FionaKastel/OneDrive - 3ie/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/evaluation_data_GreenWaste.csv")
 
 
 
 
 ######### Create Table of Means
-# df <- read.csv("C:/Users/FionaKastel/OneDrive - 3ie/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/update_data.R/evaluation_data_GreenWaste.csv")
+# df <- read.csv("C:/Users/FionaKastel/OneDrive - 3ie/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/evaluation_data_GreenWaste.csv")
 df <- read.csv("./evaluation_data_GreenWaste.csv")
 ## Table of means
 m <- df %>%
@@ -136,21 +151,21 @@ eligible_means <- df %>%
 # Calculate means for enrolled treatment units
 enrolled_means <- df %>%
   filter(round == 0, treatment_neighborhood == 1) %>% # Filter for round 0 and treat == 1
-  select(enrolled, age_manager, age_deputy,
+  select(intent_to_treat, age_manager, age_deputy,
          educ_manager, educ_deputy, 
          female_manager, foreign_owned, staff_size,
          advanced_filtration, water_treatment_system, 
          business_area, recycling_center_distance) %>%
-  pivot_longer(-c("enrolled")) %>%
-  group_by(name, enrolled) %>%
+  pivot_longer(-c("intent_to_treat")) %>%
+  group_by(name, intent_to_treat) %>%
   summarise(
     Treatment_Mean = mean(value, na.rm = TRUE), # Calculate mean for eligible units
     .groups = 'drop'
   ) %>%
   pivot_wider(
-    names_from = enrolled,
+    names_from = intent_to_treat,
     values_from = Treatment_Mean,
-    names_glue = "Treatment_{.value}_{enrolled}"
+    names_glue = "Treatment_{.value}_{intent_to_treat}"
   ) %>%
   mutate(name = recode(name,
                        "age_manager" = "Manager Age",
@@ -170,7 +185,7 @@ enrolled_means <- df %>%
 
 # Calculate means for enrolled treatment units before vs after (Before-After)
 before_after_means <- df %>%
-  filter(enrolled == 1) %>% # Filter for round 0 and treat == 1
+  filter(intent_to_treat == 1) %>% # Filter for round 0 and treat == 1
   select(round, age_manager, age_deputy,
          educ_manager, educ_deputy, 
          female_manager, foreign_owned, staff_size,
@@ -206,21 +221,21 @@ before_after_means <- df %>%
 # Table of means filtered for treatment neighborhood enrolled vs ALL un-enrolled units (PSM)
 enrolled_all_means <- df %>%
   filter(round == 0) %>% # Filter for round 0
-  select(enrolled, age_manager, age_deputy,
+  select(intent_to_treat, age_manager, age_deputy,
          educ_manager, educ_deputy, 
          female_manager, foreign_owned, staff_size,
          advanced_filtration, water_treatment_system, 
          business_area, recycling_center_distance) %>%
-  pivot_longer(-c("enrolled")) %>%
-  group_by(name, enrolled) %>%
+  pivot_longer(-c("intent_to_treat")) %>%
+  group_by(name, intent_to_treat) %>%
   summarise(
     Enrolled_Mean = mean(value, na.rm = TRUE), # Calculate mean for enrolled units
     .groups = 'drop'
   ) %>%
   pivot_wider(
-    names_from = enrolled,
+    names_from = intent_to_treat,
     values_from = Enrolled_Mean,
-    names_glue = "Enrolled_{.value}_{enrolled}"
+    names_glue = "Enrolled_{.value}_{intent_to_treat}"
   ) %>%
   mutate(name = recode(name,
                        "age_manager" = "Manager Age",
@@ -293,8 +308,8 @@ N_row <- df %>%
     `Mean_1` = sum(round == 0 & treatment_neighborhood == 1, na.rm = TRUE),
     
     # Before-After
-    `Before_After_Mean_0` = sum(round == 0 & enrolled == 1, na.rm = TRUE),
-    `Before_After_Mean_1` = sum(round == 1 & enrolled == 1, na.rm = TRUE),
+    `Before_After_Mean_0` = sum(round == 0 & intent_to_treat == 1, na.rm = TRUE),
+    `Before_After_Mean_1` = sum(round == 1 & intent_to_treat == 1, na.rm = TRUE),
     
     # Eligible Ns
     `Eligible_Eligible_Mean_0` = sum(round == 0 & treatment_neighborhood == 0 & eligible == 1, na.rm = TRUE),
@@ -306,12 +321,12 @@ N_row <- df %>%
     
     # Treatment Enrolled Ns (based on 'enrolled' variable)
     # Assuming 'enrolled' is 0 for Not Enrolled, 1 for Enrolled
-    `Treatment_Treatment_Mean_0` = sum(round == 0 & treatment_neighborhood == 1 & enrolled == 0, na.rm = TRUE), # Treatment Not Enrolled
-    `Treatment_Treatment_Mean_1` = sum(round == 0 & treatment_neighborhood == 1 & enrolled == 1, na.rm = TRUE), # Enrolled Treatment
+    `Treatment_Treatment_Mean_0` = sum(round == 0 & treatment_neighborhood == 1 & intent_to_treat == 0, na.rm = TRUE), # Treatment Not Enrolled
+    `Treatment_Treatment_Mean_1` = sum(round == 0 & treatment_neighborhood == 1 & intent_to_treat == 1, na.rm = TRUE), # Enrolled Treatment
     
     # Overall Enrolled Ns (based on your 'enrolled_all_means' logic)
-    `Enrolled_Enrolled_Mean_0` = sum(round == 0 & enrolled == 0, na.rm = TRUE), # Not Enrolled (Treat and Control)
-    `Enrolled_Enrolled_Mean_1` = sum(round == 0 & enrolled == 1 & treatment_neighborhood == 1, na.rm = TRUE) # Enrolled Treatment
+    `Enrolled_Enrolled_Mean_0` = sum(round == 0 & intent_to_treat == 0, na.rm = TRUE), # Not Enrolled (Treat and Control)
+    `Enrolled_Enrolled_Mean_1` = sum(round == 0 & intent_to_treat == 1 & treatment_neighborhood == 1, na.rm = TRUE) # Enrolled Treatment
   ) %>%
   mutate(across(where(is.numeric), ~ round(.x, 0)))
 

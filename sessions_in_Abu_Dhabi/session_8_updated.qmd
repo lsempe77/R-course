@@ -212,7 +212,7 @@ modelsummary(list("Sharp RDD"= out_rdd), stars = TRUE,
 
 ```
 
-- Treatment reduces waste expenditures by approximately $9051
+- Treatment reduces waste expenditures by approximately 905 Dirham
 
 ```{r}
 

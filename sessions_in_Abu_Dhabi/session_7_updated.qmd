@@ -147,7 +147,7 @@ modelsummary(
 #     "treatment_neighborhood" = "Random Access Effect",
 #     "(Intercept)" = "(Intercept)"
 #   ),
-#   coef_omit = NULL, 
+#   coef_omit = NULL,
 #   notes = "Standard errors are in parenthesis",
 #   output = "tinytable"
 # ) |>
