@@ -201,12 +201,16 @@ mean_table <- means %>%
   names_from = round,
   values_from = mean_cost,
   names_prefix = "round_"
-  )
+  ) %>%
+  # Reorder columns (after first column)
+  select(intent_to_treat, round_1, round_0) %>%
+  # Reorder rows so "Offered" comes first
+  arrange(factor(intent_to_treat, levels = c("Offered", "Not offered")))
 
 # Display neatly formatted table
 kable(
   mean_table,
-  col.names = c("Group", "Before (Round 0)", "After (Round 1)"),
+  col.names = c("Group", "After (Round 1)", "Before (Round 0)"),
   digits = 2,
   caption = "Mean Waste Management Costs Before and After Program by Group"
 )
@@ -236,12 +240,12 @@ final_table <- mean_table %>%
     round_0 = before_diff,
     round_1 = after_diff,
     change = as.numeric(NA)  
-  )
+  ) 
 
 # Display neatly formatted table
 kable(
   final_table,
-  col.names = c("Group", "Before (Round 0)", "After (Round 1)", "Change"),
+  col.names = c("Group", "After (Round 1)", "Before (Round 0)", "Change"),
   digits = 2,
   caption = "Mean Waste Management Costs and Differences (Before, After, and DiD)"
 )
