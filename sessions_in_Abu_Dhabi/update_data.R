@@ -8,8 +8,8 @@ library(modelsummary)
 library(estimatr)
 library(kableExtra)
 
-df <- read.csv("./evaluation_data.csv")
-# df <- read.csv("C:/Users/FionaKastel/OneDrive - 3ie/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/evaluation_data.csv")
+# df <- read.csv("./evaluation_data.csv")
+df <- read.csv("C:/Users/FionaKastel/OneDrive - 3ie/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/evaluation_data.csv")
 
 # Change waste management cost to reasonable about in Dirham (AED)
 df$waste_management_costs<-df$waste_management_costs*100
@@ -20,10 +20,10 @@ df <- df %>%
          business_identifier = facility_identifier,
          business_area = facility_area,
          treatment_neighborhood = treatment_zone, 
-         intent_to_treat = enrolled)
+         treated = enrolled)
 
 # Drop variables we no longer need
-df <- subset(df, select = -c(promotion_zone))
+df <- subset(df, select = -c(promotion_zone, enrolled_rp))
 
 ## Drop observations that appear in one round but not another 
 # Identify IDs that appear in both rounds (balanced panel)
