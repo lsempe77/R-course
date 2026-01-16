@@ -370,6 +370,76 @@ modelsummary(
 
 ```
 
+## Visualizing the RCT Results
+```{r, echo=FALSE, fig.height=6.5}
+# No covariates
+
+b0 <- coef(out_round1)["(Intercept)"]
+b1 <- coef(out_round1)["treatment_neighborhood"]
+
+control <- b0
+treated <- b0 + b1
+diff_rct <- treated - control
+
+viz_data <- data.frame(
+  Time = "Follow-Up",
+  Group = c("Control", "Treatment"),
+  Expenditure = c(control, treated)
+)
+
+# label positions (avoid clipping)
+dy <- 0.03 * diff(range(viz_data$Expenditure))
+viz_data$label_y <- viz_data$Expenditure + ifelse(
+  viz_data$Expenditure == max(viz_data$Expenditure), dy, -dy
+)
+
+ggplot(viz_data, aes(x = Time, y = Expenditure, color = Group)) +
+  geom_point(size = 3) +
+  geom_text(
+    aes(y = label_y, label = sprintf("%.2f", Expenditure)),
+    show.legend = FALSE
+  ) +
+  annotate(
+    "segment",
+    x = 1, xend = 1,
+    y = min(viz_data$Expenditure),
+    yend = max(viz_data$Expenditure),
+    arrow = arrow(ends = "both", length = unit(0.1, "inches")),
+    linetype = "dashed"
+  ) +
+  annotate(
+    "text",
+    x = 1.08,
+    y = mean(viz_data$Expenditure),
+    label = sprintf("%.2f", diff_rct),
+    fontface = "bold"
+  ) +
+  labs(
+    x = "",
+    y = "Waste Expenditures (AED)",
+    color = "",
+    caption = sprintf(
+      "RCT difference (Treatment - Control): %.2f - %.2f = %.2f",
+      treated, control, diff_rct
+    )
+  ) +
+  scale_y_continuous(expand = expansion(mult = c(0.05, 0.10))) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    plot.caption = element_text(
+      hjust = 0.5, face = "bold", size = 12,
+      margin = margin(t = 4, b = 0)
+    ),
+    legend.margin = margin(t = 0, b = 0),
+    legend.box.margin = margin(t = -4),
+    plot.margin = margin(t = 8, r = 5.5, b = 5.5, l = 5.5)
+  )
+
+# Save
+# ggsave("C:/Users/FionaKastel/OneDrive - 3ie/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/case_study_outputs/rct_plot.svg", width = 7, height = 6.5)
+```
+
 ```{r}
 
 # Simplified version with just no cov adjustment

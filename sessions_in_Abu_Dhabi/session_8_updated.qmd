@@ -133,7 +133,7 @@ test_density <- rdplotdensity(rdd = rddensity(df_treat$efficiency_index, c = 58)
 ::: {.column width="50%"}
 ```{r, eval=T, echo=TRUE}
 # Check if eligibility rules were followed
-ggplot(df_treat, aes(y = intent_to_treat, x = efficiency_index)) +
+ggplot(df_treat, aes(y = enrolled, x = efficiency_index)) +
   geom_vline(xintercept = 58) +
   geom_point() +
   labs(title = "Enrollment by Efficiency Index (Sharp RDD)",
@@ -163,7 +163,7 @@ ggplot(df_treat, aes(y = intent_to_treat, x = efficiency_index)) +
 # Plot relationship between efficiency index and waste expenditures
 df_treat %>%
   filter(round == 1) %>%
-  mutate(enrolled_lab = ifelse(intent_to_treat == 1, "Offered", "Not Offered")) %>%
+  mutate(enrolled_lab = ifelse(enrolled == 1, "Offered", "Not Offered")) %>%
   ggplot(aes(x = efficiency_index, y = waste_management_costs,
              group = enrolled_lab, colour = enrolled_lab)) +
   geom_point(alpha = 0.03) +
@@ -189,9 +189,14 @@ df_treat %>%
 df_treat <- df_treat %>%
   mutate(efficiency_index_c0 = efficiency_index - 58)
 
+# Basic RDD regression without covariates
+out_rdd_no_covs <- lm_robust(waste_management_costs ~ 
+                  efficiency_index_c0 * enrolled,
+                  data = df_treat %>% filter(round == 1))
+
 # Basic RDD regression with covariates
 out_rdd <- lm_robust(waste_management_costs ~ 
-                  efficiency_index_c0 * intent_to_treat +
+                  efficiency_index_c0 * enrolled +
                   age_manager + age_deputy +
                   female_manager + foreign_owned + 
                   staff_size +
@@ -200,13 +205,20 @@ out_rdd <- lm_robust(waste_management_costs ~
                   data = df_treat %>% filter(round == 1))
 ```
 
+
 :::
 
 ::: {.column width="50%"}
 
 ```{r}
 
-modelsummary(list("Sharp RDD"= out_rdd), stars = TRUE,
+# # Just with covs
+# modelsummary(list("Sharp RDD"= out_rdd), stars = TRUE,
+#              gof_map = c("nobs", "r.squared","adj.r.squared"),output = 'kableExtra') %>%
+#   kable_styling (font_size = 15) 
+
+# With and without covs
+modelsummary(list("Sharp RDD"= out_rdd_no_covs, "Sharp RDD w Covs"= out_rdd), stars = TRUE,
              gof_map = c("nobs", "r.squared","adj.r.squared"),output = 'kableExtra') %>%
   kable_styling (font_size = 15) 
 
@@ -229,7 +241,7 @@ modelsummary(list("Sharp RDD"= out_rdd), stars = TRUE,
 #   gof_map = c("nobs"),
 #   title = "RDD Regression Results",
 #   coef_map = c(
-#     "intent_to_treat" = "RDD Effect",
+#     "enrolled" = "RDD Effect",
 #     "(Intercept)" = "(Intercept)"
 #   ),
 #   notes = "Standard errors are in parentheses",
@@ -270,11 +282,11 @@ This helps test whether the RDD results are sensitive to how we model the relati
 
 # Quadratic RDD model:
 # Include efficiency_index_c0 and its square (efficiency_index_c0^2)
-# Interact them with treatment (intent_to_treat) to allow for different slopes
+# Interact them with treatment (enrolled) to allow for different slopes
 # and curves on each side of the cutoff
 out_rdd_quadratic  <- lm_robust(waste_management_costs ~ 
-                  efficiency_index_c0 * intent_to_treat +
-                    intent_to_treat * I(efficiency_index_c0^2) +
+                  efficiency_index_c0 * enrolled +
+                    enrolled * I(efficiency_index_c0^2) +
                   age_manager + age_deputy +
                   female_manager + foreign_owned + 
                   staff_size +
@@ -286,9 +298,9 @@ out_rdd_quadratic  <- lm_robust(waste_management_costs ~
 # Same as above, but also add a cubic (efficiency_index_c0^3) term
 # for even more flexible modeling of the relationship
 out_rdd_cubic  <- lm_robust(waste_management_costs ~ 
-                  efficiency_index_c0 * intent_to_treat +
-                    intent_to_treat * I(efficiency_index_c0^2) + 
-                        intent_to_treat * I(efficiency_index_c0^3) +
+                  efficiency_index_c0 * enrolled +
+                    enrolled * I(efficiency_index_c0^2) + 
+                        enrolled * I(efficiency_index_c0^3) +
                   age_manager + age_deputy +
                   female_manager + foreign_owned + 
                   staff_size +
@@ -331,7 +343,7 @@ modelsummary(coef_omit = c(-3),
 # Restrict to observations near cutoff
 out_rdd5 <- lm_robust(
   waste_management_costs ~ 
-    intent_to_treat * efficiency_index_c0 +
+    enrolled * efficiency_index_c0 +
           age_manager + age_deputy +
            female_manager + foreign_owned + 
            staff_size +

@@ -1,0 +1,612 @@
+---
+title: "Matching Methods"
+subtitle: "Econometrics with R"
+author: "Dr. Lucas Sempé"
+always_allow_html: yes
+format:
+  pptx:
+    incremental: true  
+  revealjs:
+    theme: [clean.scss]
+    slide-number: true
+    code-fold: false
+    highlight-style: github
+editor_options: 
+  chunk_output_type: console
+---
+
+## Matching Methods: Overview
+
+:::: {.columns}
+
+::: {.column width="60%"}
+- **Core idea**: Create comparable treatment and control groups based on observable characteristics
+- **Setting**: When treatment assignment is related to observable factors
+- **Advantage**: Reduces selection bias from observable differences
+- **Assumption**: No unobserved differences affecting both treatment and outcomes
+- **Types**: Exact matching, coarsened exact matching, nearest neighbor, etc.
+:::
+
+::: {.column width="40%"}
+```{r, echo=FALSE, fig.height=4}
+
+# Load required packages
+library(tidyverse)
+library(MatchIt)
+library(estimatr)
+library(kableExtra)
+library(modelsummary)
+
+# Set rendering options
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  echo = TRUE,
+  fig.width = 10, 
+  fig.height = 6
+)
+
+set.seed(123)
+
+df <- read.csv("./evaluation_data_GreenWaste.csv")
+
+# Create simulated data for matching visualization
+set.seed(123)
+n <- 200
+
+# Create two variables that predict both treatment and outcome
+x1 <- runif(n, -2, 2)
+x2 <- runif(n, -2, 2)
+
+# Generate treatment with higher probability for larger x1, x2
+p_treat <- plogis(0.5 + 0.7*x1 + 0.7*x2)
+treatment <- rbinom(n, 1, p_treat)
+
+# Create data frame
+matching_data <- data.frame(
+  x1 = x1,
+  x2 = x2,
+  treatment = factor(treatment, labels = c("Control", "Treatment"))
+)
+
+# Plot
+ggplot(matching_data, aes(x = x1, y = x2, color = treatment, shape = treatment)) +
+  geom_point(size = 2) +
+  labs(title = "Before Matching: Imbalanced Groups",
+       x = "Variable X1",
+       y = "Variable X2",
+       color = "Group",
+       shape = "Group") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+:::
+
+::::
+
+## Why Matching?
+
+
+**Problem**: Selection bias
+
+- Treatment group systematically differs from control group
+- Direct comparison leads to biased impact estimates
+
+**Solution**: Matching
+
+- Select control units similar to treated units
+- Create balance on observable characteristics
+- Approximates an experimental setting
+
+## Preparing the Data
+
+Converting from long to wide format:
+
+```{r}
+# Create a wide-format dataset
+df_w <- df %>%
+  # Then create wide format
+  pivot_wider(
+    id_cols = c(neighborhood_identifier, business_identifier, treatment_neighborhood, 
+                eligible, enrolled),
+    names_from = round, # variable that determines new columns
+    # variables that should be made "wide"
+    values_from = c(waste_management_costs, 
+                    efficiency_index, age_manager, age_deputy,
+                    educ_manager, educ_deputy, female_manager,
+                    foreign_owned, staff_size, advanced_filtration,
+                    water_treatment_system, business_area,
+                    recycling_center_distance, recycling_compliance)) %>%
+  # remove the business that has missing values
+  # as missing values are not allowed when using matchit
+  filter(!is.na(waste_management_costs_0)) 
+
+# Also check the first few rows to confirm format
+head(select(df_w, business_identifier, enrolled, 
+           waste_management_costs_0, waste_management_costs_1))
+```
+
+## Coarsened Exact Matching (CEM)
+
+**Coarsened Exact Matching (CEM)** temporarily coarsens variables into bins, then performs exact matching on those bins:
+
+1. **Coarsen**: Divide each variable into discrete categories (bins)
+2. **Match**: Find exact matches within each combination of bins (strata)
+3. **Prune**: Drop unmatched units
+4. **Analyze**: Use original (uncoarsened) data for analysis
+
+**Advantage over PSM**: CEM guarantees balance improvement—no need to iterate
+
+## CEM: Two Scenarios
+
+We examine two scenarios for matching enrolled vs non-enrolled businesses:
+
+1. **Limited set of variables**:
+   - Only using eligibility, based on efficiency_index
+
+2. **Extended set of variables**:
+   - Efficiency of business, distance from nearest recycling center, and characteristics of business (education of manager, staff size)
+
+## CEM Intuition: Before Matching
+
+```{r, echo=FALSE, fig.height=5}
+# Create simulated data to illustrate CEM concept
+set.seed(42)
+n_sim <- 400
+
+# Efficiency index
+eff_idx <- runif(n_sim, 0, 100)
+
+# Distance from recycling center
+distance <- runif(n_sim, 0, 50)
+
+# Treatment probability: only eligible if efficiency <= 58
+# Among eligible, higher efficiency = more likely to enroll
+p_enroll <- ifelse(eff_idx > 58, 0, plogis(-1.5 + 0.03 * eff_idx))
+enrolled_sim <- rbinom(n_sim, 1, p_enroll)
+
+cem_demo <- data.frame(
+  efficiency = eff_idx,
+  distance = distance,
+  enrolled = factor(enrolled_sim, labels = c("Control", "Enrolled"))
+)
+
+# Define bin boundaries for 10x10 grid
+eff_breaks <- seq(0, 100, by = 10)
+dist_breaks <- seq(0, 50, by = 5)
+
+# Plot before matching with grid
+ggplot(cem_demo, aes(x = efficiency, y = distance, color = enrolled, shape = enrolled)) +
+  geom_point(size = 2, alpha = 0.7) +
+  geom_vline(xintercept = eff_breaks, linetype = "dashed", alpha = 0.3) +
+  geom_hline(yintercept = dist_breaks, linetype = "dashed", alpha = 0.3) +
+  geom_vline(xintercept = 58, linetype = "solid", color = "red", alpha = 0.5) +
+  scale_color_manual(values = c("Control" = "#440154", "Enrolled" = "#21918c")) +
+  labs(title = "Before CEM: All Units with Coarsened Bins",
+       subtitle = "Red line = eligibility threshold (efficiency <= 58)",
+       x = "Efficiency Index",
+       y = "Distance from Recycling Center",
+       color = "Group", shape = "Group") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+## CEM Intuition: After Matching
+
+```{r, echo=FALSE, fig.height=5}
+# Assign bins
+cem_demo$eff_bin <- cut(cem_demo$efficiency, breaks = eff_breaks, include.lowest = TRUE)
+cem_demo$dist_bin <- cut(cem_demo$distance, breaks = dist_breaks, include.lowest = TRUE)
+cem_demo$stratum <- paste(cem_demo$eff_bin, cem_demo$dist_bin)
+
+# Keep only strata with both treated and control
+strata_counts <- cem_demo %>%
+  group_by(stratum) %>%
+  summarise(
+    n_enrolled = sum(enrolled == "Enrolled"),
+    n_control = sum(enrolled == "Control")
+  ) %>%
+  filter(n_enrolled > 0 & n_control > 0)
+
+cem_matched <- cem_demo %>%
+  filter(stratum %in% strata_counts$stratum)
+
+# Plot after matching
+ggplot(cem_matched, aes(x = efficiency, y = distance, color = enrolled, shape = enrolled)) +
+  geom_point(size = 2, alpha = 0.7) +
+  geom_vline(xintercept = eff_breaks, linetype = "dashed", alpha = 0.3) +
+  geom_hline(yintercept = dist_breaks, linetype = "dashed", alpha = 0.3) +
+  geom_vline(xintercept = 58, linetype = "solid", color = "red", alpha = 0.5) +
+  scale_color_manual(values = c("Control" = "#440154", "Enrolled" = "#21918c")) +
+  labs(title = "After CEM: Only Matched Strata Retained (Bins with Both Groups)",
+       subtitle = "Ineligible units (efficiency > 58) pruned - no enrolled to match",
+       x = "Efficiency Index",
+       y = "Distance from Recycling Center",
+       color = "Group", shape = "Group") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+## Performing CEM
+
+```{r}
+## ----- LIMITED SET -----
+# CEM with efficiency index only
+cem_r <- matchit(
+  enrolled ~ efficiency_index_0,
+  data = df_w %>% dplyr::select(-recycling_compliance_0, -recycling_compliance_1),
+  method = "cem",
+  estimand = "ATT"
+)
+
+## ----- FULL SET -----
+# CEM with extended set of variables
+cem_ur <- matchit(
+  enrolled ~ efficiency_index_0 + recycling_center_distance_0 +
+    educ_manager_0 + staff_size_0,
+  data = df_w %>% dplyr::select(-recycling_compliance_0, -recycling_compliance_1),
+  method = "cem",
+  estimand = "ATT"
+)
+```
+
+
+## CEM Matching Summary
+
+```{r}
+# View summary of matching results
+summary(cem_r)
+```
+
+## CEM Matching Summary (Full Set)
+
+```{r}
+# View summary of matching results for full set
+summary(cem_ur)
+```
+
+## Understanding CEM Output
+
+- **Matched** shows number of units retained after matching
+- **Unmatched** shows units pruned (no match in opposite group)
+- CEM creates **strata** based on coarsened variable combinations
+- Each stratum contains both treated and control units
+
+## Visualizing CEM: Before Matching (Real Data)
+
+```{r, echo=FALSE, fig.height=5}
+# Prepare data for visualization - use same data as CEM
+cem_viz <- df_w %>%
+  dplyr::select(-recycling_compliance_0, -recycling_compliance_1) %>%
+  mutate(enrolled_lab = factor(enrolled, labels = c("Control", "Enrolled")))
+
+# Get the cutpoints that CEM actually used from the matchit object
+cem_cuts <- cem_ur$info$cuts
+eff_breaks <- c(0, cem_cuts$efficiency_index_0, 100)
+dist_breaks <- c(0, cem_cuts$recycling_center_distance_0, max(cem_viz$recycling_center_distance_0) + 1)
+
+# Plot before matching with grid
+ggplot(cem_viz, aes(x = efficiency_index_0, y = recycling_center_distance_0,
+                    color = enrolled_lab, shape = enrolled_lab)) +
+  geom_point(size = 2, alpha = 0.7) +
+  geom_vline(xintercept = eff_breaks, linetype = "dashed", alpha = 0.3) +
+  geom_hline(yintercept = dist_breaks, linetype = "dashed", alpha = 0.3) +
+  geom_vline(xintercept = 58, linetype = "solid", color = "red", alpha = 0.5) +
+  scale_color_manual(values = c("Control" = "#440154", "Enrolled" = "#21918c")) +
+  labs(title = "Before CEM: All Units with Coarsened Bins",
+       subtitle = "Red line = eligibility threshold (efficiency <= 58)",
+       x = "Efficiency Index (Baseline)",
+       y = "Distance from Recycling Center (Baseline)",
+       color = "Group", shape = "Group") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+## Visualizing CEM: After Matching (Real Data)
+
+```{r, echo=FALSE, fig.height=5}
+# Get matched data - only units with valid subclass (matched strata)
+cem_matched_viz <- match.data(cem_ur, drop.unmatched = TRUE) %>%
+  mutate(enrolled_lab = factor(enrolled, labels = c("Control", "Enrolled")))
+
+# Plot after matching - only matched units remain
+ggplot(cem_matched_viz, aes(x = efficiency_index_0, y = recycling_center_distance_0,
+                            color = enrolled_lab, shape = enrolled_lab)) +
+  geom_point(size = 2, alpha = 0.7) +
+  geom_vline(xintercept = eff_breaks, linetype = "dashed", alpha = 0.3) +
+  geom_hline(yintercept = dist_breaks, linetype = "dashed", alpha = 0.3) +
+  geom_vline(xintercept = 58, linetype = "solid", color = "red", alpha = 0.5) +
+  scale_color_manual(values = c("Control" = "#440154", "Enrolled" = "#21918c")) +
+  labs(title = "After CEM: Only Matched Strata Retained",
+       subtitle = "Ineligible units (efficiency > 58) pruned - no enrolled to match",
+       x = "Efficiency Index (Baseline)",
+       y = "Distance from Recycling Center (Baseline)",
+       color = "Group", shape = "Group") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+## Checking Balance Before Matching
+
+```{r}
+kableExtra::kable(summary(cem_ur)$sum.all,
+      caption = "Balance Before Matching") %>%
+  kable_styling(font_size = 10)
+```
+
+## Checking Balance After Matching
+
+```{r}
+kableExtra::kable(summary(cem_ur)$sum.matched,
+      caption = "Balance After Matching") %>%
+  kable_styling(font_size = 10)
+```
+
+## Understanding Balance
+
+- **Mean Diff** should be closer to zero after matching
+- Standardized mean differences (not shown) should be < 0.25
+- Good balance ensures we're comparing similar facilities
+
+## Estimating Program Impact
+
+First, extract the matched dataset:
+
+```{r}
+# Extract matched datasets
+match_df_r <- match.data(cem_r, drop.unmatched = TRUE)   # Limited set
+match_df_ur <- match.data(cem_ur, drop.unmatched = TRUE) # Full set
+```
+
+## Regression with Matched Data
+
+```{r}
+# Regression with matched data
+out_lm_r <- lm_robust(waste_management_costs_1 ~ enrolled,
+                      data = match_df_r,  
+                      clusters = neighborhood_identifier)
+
+out_lm_ur <- lm_robust(waste_management_costs_1 ~ enrolled,
+                      data = match_df_ur, 
+                      clusters = neighborhood_identifier)
+
+# Show results
+modelsummary(list("Limited Set" = out_lm_r, 
+                  "Full Set" = out_lm_ur),
+             title = "Impact on Waste Management Costs: Matching Approach")
+
+```
+
+```{r}
+
+# # # Simplified version
+#
+# library(tinytable)
+#
+# modelsummary(
+#   list("Limited Covs CEM" = out_lm_r, "All Covs CEM"= out_lm_ur),
+#   stars = TRUE,
+#   gof_map = c("nobs"),
+#   title = "Matching Regression Results",
+#   coef_map = c(
+#     "enrolled" = "Matching Effect",
+#     "(Intercept)" = "(Intercept)"
+#   ),
+#   coef_omit = NULL,
+#   notes = "Standard errors are in parenthesis",
+#   output = "tinytable"
+# ) |>
+#   style_tt(bootstrap_class = "table caption-top")
+#
+# ## Output for case study
+# library(flextable)
+# library(officer)
+#
+# # Build the table as a flextable (editable in Word/PowerPoint)
+# ft <- modelsummary(
+#   list("Limited Covs CEM" = out_lm_r, "All Covs CEM"= out_lm_ur),
+#   stars = TRUE,
+#   gof_map = c("nobs"),
+#   title = "Matching Regression Results",
+#   coef_map = c(
+#     "enrolled" = "Matching Effect",
+#     "(Intercept)" = "(Intercept)"
+#   ),
+#   notes = "Standard errors are in parentheses",
+#   fmt = 2,
+#   output = "flextable"
+# )
+#
+# # let flextable size to content, then stretch to a target width
+# ft <- autofit(ft)
+# ft <- fit_to_width(ft, max_width = 9)  # inches; ~content area on a PPT slide
+# ft <- width(ft, j = 1, width = 2.5)    # widen the left/stub column (adjust as needed)
+#
+# ## 1) Save to Word (.docx)
+# doc <- read_docx()
+# doc <- body_add_flextable(doc, ft)
+# print(doc, target = "C:/Users/FionaKastel/OneDrive - 3ie/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/case_study_outputs/session10_CEM.docx")
+
+``` 
+
+## Matched Difference-in-Differences
+
+Combine matching with difference-in-differences:
+
+```{r}
+# Merge matching weights back into long format
+df_long_match_r <- df %>%
+  left_join(match_df_r %>% dplyr::select(business_identifier, weights)) %>%
+  filter(!is.na(weights))
+
+df_long_match_ur <- df %>%
+  left_join(match_df_ur %>% dplyr::select(business_identifier, weights)) %>%
+  filter(!is.na(weights))
+```
+
+## Difference-in-Differences Results
+
+```{r}
+# Run DiD regression
+did_reg_r <- lm_robust(waste_management_costs ~ enrolled * round,
+                        data = df_long_match_r, weights = weights,
+                        clusters = neighborhood_identifier)
+
+did_reg_ur <- lm_robust(waste_management_costs ~ enrolled * round,
+                        data = df_long_match_ur, weights = weights,
+                        clusters = neighborhood_identifier)
+
+# Show results
+modelsummary(list("Limited Set" = did_reg_r, 
+                  "Full Set" = did_reg_ur),
+             coef_map = c('enrolled' = "Offered",
+                          'round' = "Round",
+                          'enrolled:round' = "Offered × Round"),
+             title = "Impact on Waste Management Costs: Matched DiD Approach")
+```
+
+## Interpretation of Results
+
+- **Offered** coefficient: Baseline difference between groups offered program vs those not offered program
+- **Round** coefficient: Time trend for all facilities
+- **Offered × Round**: The program's causal effect
+
+::: {.callout-note}
+The interaction coefficient (Offered × Round) represents our estimate of the causal impact of the program on waste management costs.
+:::
+
+## Advantages of Matching
+
+- Reduces selection bias
+- Makes treatment and control groups comparable
+- Can combine with difference-in-differences for robust estimation
+- Works even without baseline randomization
+
+## Limitations of Matching
+
+- Only controls for **observed** variables
+- Cannot account for unobserved confounders
+- Requires good data on pre-treatment characteristics
+- Common support may be limited in some contexts
+
+## Summary
+
+1. **Coarsened Exact Matching (CEM)** helps create comparable groups
+2. CEM **coarsens variables into bins** and performs exact matching on strata
+3. Check for **balance** before and after matching
+4. Combine with **regression** or **difference-in-differences** to estimate impacts
+5. Interpret results with appropriate caution about unobserved confounders
+
+## Resources for Further Learning
+
+- **Iacus, King, and Porro (2012)**: "Causal Inference without Balance Checking: Coarsened Exact Matching"
+- **Ho, Imai, King, and Stuart (2007)**: "Matching as Nonparametric Preprocessing for Reducing Model Dependence in Parametric Causal Inference"
+- **Stuart (2010)**: "Matching Methods for Causal Inference: A Review and a Look Forward"
+- The **MatchIt** package documentation: [https://kosukeimai.github.io/MatchIt/](https://kosukeimai.github.io/MatchIt/)
+
+## Thank You!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ## Comparative Results Across Methods -->
+
+<!-- ```{r, echo=FALSE, fig.height=4} -->
+<!-- library(ggplot2) -->
+
+<!-- # Create data frame with results from all methods -->
+<!-- all_results <- data.frame( -->
+<!--   Method = c("Randomized Assignment", "Instrumental Variables",  -->
+<!--              "Regression Discontinuity", "Difference-in-Differences",  -->
+<!--              "Matching (Full Set)"), -->
+<!--   Estimate = c(-1014, -982, -905, -816, -1000), -->
+<!--   CI_Lower = c(-1092, -1168, -992, -879, -1072), -->
+<!--   CI_Upper = c(-935, -797, -818, -753, -927) -->
+<!-- ) -->
+
+<!-- # Sort by effect size -->
+<!-- all_results <- all_results %>% -->
+<!--   arrange(Estimate) -->
+
+<!-- # Plot forest plot of results -->
+<!-- ggplot(all_results, aes(y = reorder(Method, Estimate), x = Estimate)) + -->
+<!--   geom_vline(xintercept = -1000, linetype = "dashed", color = "red") + -->
+<!--   geom_point(size = 3) + -->
+<!--   geom_errorbarh(aes(xmin = CI_Lower, xmax = CI_Upper), height = 0.3) + -->
+<!--   labs(title = "Impact of GreenWaste on Waste Expenditures", -->
+<!--        subtitle = "Comparison Across Evaluation Methods", -->
+<!--        x = "Effect on Waste Expenditures (AED)", -->
+<!--        y = "") + -->
+<!--   theme_minimal() + -->
+<!--   annotate("text", x = -1000, y = 5.5, label = "Threshold", color = "red", hjust = 1.2) -->
+<!-- ``` -->
+
+<!-- ## Final Policy Recommendation -->
+
+<!-- - Methods produce consistent results in the range of -816 to -1033 AED -->
+<!-- - Randomized assignment (gold standard): -1,014 AED -->
+<!-- - Most quasi-experimental methods: Effect slightly below $10 -->
+<!-- - Given uncertainty in estimates and consistency in direction, GreenWaste shows promising results -->
+
+<!-- **RECOMMENDATION**: The preponderance of evidence suggests GreenWaste reduces waste expenditures by approximately $10, which meets the threshold criterion. Given the consistency across methods and the gold-standard randomized result, GreenWaste should be scaled up nationally. -->
+
+<!-- ## Conclusion: Choosing the Right Method -->
+
+<!-- | Method | When to Use | Key Assumption | Strengths | Limitations | -->
+<!-- |--------|-------------|----------------|-----------|-------------| -->
+<!-- | **Randomized** | Feasible to randomize | Random assignment | Gold standard; controls for all confounders | Implementation challenges; external validity | -->
+<!-- | **IV** | Imperfect compliance; valid instrument exists | Exclusion restriction | Addresses selection; natural experiments | Local effect; requires strong instrument | -->
+<!-- | **RDD** | Clear eligibility threshold | No manipulation of running variable | Addresses selection bias through psuedo-randomization | Local to threshold; requires threshold | -->
+<!-- | **DiD** | Panel data; non-random assignment | Parallel trends | Controls for fixed differences and time trends | Cannot address time-varying confounders | -->
+<!-- | **Matching** | Rich observational data | Selection on observables | Uses existing data; intuitive | Cannot address unobserved confounders | -->
+
+<!-- ## Next Steps in Impact Evaluation -->
+
+<!-- 1. **Heterogeneity analysis** -->
+<!--    - Does impact vary across subgroups? -->
+<!--    - Who benefits most from GreenWaste? -->
+
+<!-- 2. **Cost-effectiveness analysis** -->
+<!--    - Beyond impact, is GreenWaste cost-effective? -->
+<!--    - How does it compare to alternative programs? -->
+
+<!-- 3. **Implementation research** -->
+<!--    - What factors affect successful implementation? -->
+<!--    - How to optimize national scale-up? -->
+
+<!-- 4. **Long-term follow-up** -->
+<!--    - Do impacts persist over time? -->
+<!--    - Are there additional benefits or unintended consequences? -->
+
+<!-- ## Key Course Takeaways -->
+
+<!-- 1. Impact evaluation requires identifying a valid counterfactual -->
+<!-- 2. Randomized experiments provide the most credible counterfactual -->
+<!-- 3. Quasi-experimental methods can provide rigorous evidence when randomization isn't possible -->
+<!-- 4. Multiple methods with consistent results strengthen the evidence base -->
+<!-- 5. Statistical significance must be paired with policy significance -->
+<!-- 6. The choice of method depends on context, data, and research question -->
+<!-- 7. R provides powerful tools for implementing all these methods -->
+
+<!-- ## Thank You! -->
+
+<!-- **Additional Resources**: -->
+
+<!-- - Gertler, P. J., et al. (2016). *Impact Evaluation in Practice*, Second Edition. World Bank. -->
+<!-- - Angrist, J. D., & Pischke, J. S. (2008). *Mostly Harmless Econometrics*. Princeton University Press. -->
+<!-- - Cunningham, S. (2021). *Causal Inference: The Mixtape*. Yale University Press. -->
+<!-- - R packages: `estimatr`, `MatchIt`, `rdrobust`, `did`, `fixest`, `AER` -->

@@ -86,7 +86,7 @@ ggplot(data, aes(x = Time, y = Outcome, color = Group, group = Group)) +
 **Treatment Variables**:
 
 - `treatment_neighborhood`: Neighborhood selected for program (0/1)
-- `intent_to_treat`: Business offered the program (0/1)
+- `enrolled`: Business offered the program (0/1)
 - `eligible`: Business eligible for the program (0/1)
 :::
 
@@ -137,16 +137,16 @@ df <- read.csv("./evaluation_data_GreenWaste.csv")
 ```
 
 ```{r, eval=T, echo=TRUE}
-# Compare waste management costs before and after for intent_to_treat (offered) businesses
+# Compare waste management costs before and after for enrolled (offered) businesses
 # Fit a linear regression model using 'lm_robust' from the 'estimatr' package
 # 'lm_robust' gives regression results with robust (heteroskedasticity-consistent) standard errors
 
 # Formula: outcome variable ~ explanatory variable
 # Clustered standard errors at the 'neighborhood_identifier' level
-# Filter df to only run the regression on businesses in treatment neighborhoods AND intent_to_treat
+# Filter df to only run the regression on businesses in treatment neighborhoods AND enrolled
 m_ba1 <- lm_robust(waste_management_costs   ~ round, 
                   clusters = neighborhood_identifier,
-                  data = df %>% dplyr::filter(treatment_neighborhood ==1 & intent_to_treat ==1))
+                  data = df %>% dplyr::filter(treatment_neighborhood ==1 & enrolled ==1))
 
 ```
 
@@ -189,6 +189,67 @@ m_ba1 <- lm_robust(waste_management_costs   ~ round,
 
 ```  
 
+## Visualizing the Before vs. After Results 
+
+```{r, echo=FALSE, fig.height=6.5}
+# Extract coefficients
+b0 <- coef(m_ba1)["(Intercept)"]
+b1 <- coef(m_ba1)["round"]
+
+# Predicted means at each time (assuming round is 0/1)
+before <- b0
+after  <- b0 + b1
+change <- after - before
+
+ba_viz_data <- data.frame(
+  Time = factor(c("Baseline", "Follow-up"), levels = c("Baseline", "Follow-up")),
+  Group = "Treated & enrolled",
+  Expenditure = c(before, after)
+)
+
+ggplot(ba_viz_data, aes(x = Time, y = Expenditure, group = Group)) +
+  geom_line(linewidth = 1.2, color = "#00BFC4") +
+  geom_point(size = 3, color = "#00BFC4") +
+  # vertical difference arrow
+  annotate(
+  "segment",
+  x = 2, xend = 2,
+  y = before, yend = after,
+  arrow = arrow(ends = "both", length = unit(0.1, "inches")),
+  linetype = "dashed"
+  ) +
+  annotate(
+  "text",
+  x = 2.08,
+  y = (before + after) / 2,
+  label = sprintf("%.2f", change),
+  fontface = "bold"
+  ) +
+  annotate(
+    "text",
+    x = 1.5,
+    y = min(before, after) - 0.2 * diff(range(c(before, after))),
+    label = sprintf("Before–after change:\n%.2f - %.2f = %.2f", after, before, change),
+    fontface = "bold"
+  ) +
+  geom_text(
+  aes(x = "Baseline", y = before,
+      label = sprintf("%.2f", before)),
+  nudge_y = 40
+  ) +
+  geom_text(
+  aes(x = "Follow-up", y = after,
+      label = sprintf("%.2f", after)),
+  nudge_y = -40
+  ) +
+  labs(x = "", y = "Waste Expenditures (AED)") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+# Save
+# ggsave("C:/Users/FionaKastel/OneDrive - 3ie/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/case_study_outputs/before_after_plot.svg", width = 7, height = 6.5)
+```
+
 **Discussion**
 
 - Is this effect due to the program? What are some other external factors that may cause a change in costs for waste management over time?
@@ -201,11 +262,11 @@ m_ba1 <- lm_robust(waste_management_costs   ~ round,
 ## With-Without Comparison (GreenWaste Example)
 
 ```{r, eval=T, echo=TRUE}
-# Compare offered (intent_to_treat) vs. non-offered businesses after program implementation
+# Compare offered (enrolled) vs. non-offered businesses after program implementation
 
 # Use lm_robust as before, with clustered std errors
 # This time, we filter df to run the regression on businesses in treatment neighborhoods AND after the intervention, in the follow-up survey round
-m_ba2 <- lm_robust(waste_management_costs ~ intent_to_treat, 
+m_ba2 <- lm_robust(waste_management_costs ~ enrolled, 
                   clusters = neighborhood_identifier,
                   data = df %>% filter(treatment_neighborhood==1 & round ==1))
 
@@ -221,7 +282,7 @@ m_ba2 <- lm_robust(waste_management_costs ~ intent_to_treat,
 #   gof_map = c("nobs"),
 #   title = "With-Without Regression Results",
 #   coef_map = c(
-#     "intent_to_treat" = "With vs. Without Program Effect",
+#     "enrolled" = "With vs. Without Program Effect",
 #     "(Intercept)" = "(Intercept)"
 #   ),
 #   notes = "Standard errors are in parentheses",
@@ -248,6 +309,95 @@ m_ba2 <- lm_robust(waste_management_costs ~ intent_to_treat,
 
 ```    
 
+## Visualizing the Enrolled vs. Not Enrolled Results 
+
+```{r, echo=FALSE, fig.height=6.5}
+# Post-period, treated neighborhoods only
+# Extract coefficients
+b0 <- coef(m_ba2)["(Intercept)"]
+b1 <- coef(m_ba2)["enrolled"]
+
+# Predicted means
+not_enrolled <- b0
+enrolled_val <- b0 + b1
+diff_post <- enrolled_val - not_enrolled
+
+viz_data <- data.frame(
+  Time = "Follow-up",
+  Group = c("Not enrolled", "Enrolled"),
+  Expenditure = c(not_enrolled, enrolled_val)
+)
+
+# A small vertical offset that scales with the data range
+dy <- 0.03 * diff(range(viz_data$Expenditure))
+
+# Put labels above the higher point and below the lower point
+viz_data$label_y <- viz_data$Expenditure + ifelse(
+  viz_data$Expenditure == max(viz_data$Expenditure), dy, -dy
+)
+
+ggplot(viz_data, aes(x = Time, y = Expenditure, color = Group)) +
+  geom_point(size = 3) +
+
+  # numeric labels (computed y position so they never clip)
+  geom_text(
+    aes(y = label_y, label = sprintf("%.2f", Expenditure)),
+    show.legend = FALSE
+  ) +
+
+  # vertical difference arrow
+  annotate(
+    "segment",
+    x = 1, xend = 1,
+    y = min(viz_data$Expenditure),
+    yend = max(viz_data$Expenditure),
+    arrow = arrow(ends = "both", length = unit(0.1, "inches")),
+    linetype = "dashed"
+  ) +
+  annotate(
+    "text",
+    x = 1.08,
+    y = mean(viz_data$Expenditure),
+    label = sprintf("%.2f", diff_post),
+    fontface = "bold"
+  ) +
+
+  labs(
+    x = "",
+    y = "Waste Expenditures (AED)",
+    color = "",
+    caption = sprintf(
+      "Post-period difference: %.2f - %.2f = %.2f",
+      enrolled_val, not_enrolled, diff_post
+    )
+  ) +
+
+  # Add *top* padding so the top label never gets cut off
+  scale_y_continuous(expand = expansion(mult = c(0.05, 0.10))) +
+
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+
+    # keep caption close to plot + bigger
+    plot.caption = element_text(
+      hjust = 0.5, face = "bold", size = 12,
+      margin = margin(t = 4, b = 0)
+    ),
+
+    # reduce extra whitespace around legend
+    legend.margin = margin(t = 0, b = 0),
+    legend.box.margin = margin(t = -4),
+
+    # slightly tighten overall plot margins
+    plot.margin = margin(t = 8, r = 5.5, b = 5.5, l = 5.5)
+  )
+
+
+# Save
+# ggsave("C:/Users/FionaKastel/OneDrive - 3ie/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/case_study_outputs/enrolled_v_not_plot.svg", width = 7, height = 6.5)
+```
+
 **Discussion**
 
 - Are the enrolled businesses the same as those that were not enrolled in the program? How might they be different from one another?
@@ -267,7 +417,7 @@ ft <- modelsummary(list("Model 1: Before-After" = m_ba1, "Model 2: With-Without"
              title = "Before-After vs. With-Without Regression Results",
              coef_map = c(
                "round" = "Before vs. After Effect",
-               "intent_to_treat" = "With vs. Without Program Effect",
+               "enrolled" = "With vs. Without Program Effect",
                "(Intercept)" = "(Intercept)")
              ,
              notes = "Standard errors are in parentheses",

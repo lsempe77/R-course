@@ -15,12 +15,12 @@ df <- read.csv("C:/Users/FionaKastel/OneDrive - 3ie/Documents/GitHub/R-course/se
 df$waste_management_costs<-df$waste_management_costs*100
 
 # Change variable names
+# treat = enrolled?
 df <- df %>%
   rename(neighborhood_identifier = zone_identifier,
          business_identifier = facility_identifier,
          business_area = facility_area,
-         treatment_neighborhood = treatment_zone, 
-         treated = enrolled)
+         treatment_neighborhood = treatment_zone)
 
 # Drop variables we no longer need
 df <- subset(df, select = -c(promotion_zone, enrolled_rp))

@@ -122,12 +122,12 @@ kable(did_table, align = "lccc", caption = "DiD Calculation Example")
 
 ```{r, eval=T, echo=TRUE}
 # DiD regression without covariates
-out_did <- lm_robust(waste_management_costs ~ round * intent_to_treat, 
+out_did <- lm_robust(waste_management_costs ~ round * enrolled, 
                     data = df %>% filter(treatment_neighborhood == 1),
                     clusters = neighborhood_identifier)
 
 # DiD regression with covariates
-out_did_wcov <- lm_robust(waste_management_costs ~ round * intent_to_treat +
+out_did_wcov <- lm_robust(waste_management_costs ~ round * enrolled +
                          age_manager + age_deputy +
                   female_manager + foreign_owned + 
                   staff_size +
@@ -140,8 +140,8 @@ out_did_wcov <- lm_robust(waste_management_costs ~ round * intent_to_treat +
 Where:
 
 - `round`: Time indicator (0=before, 1=after)
-- `intent_to_treat`: Treatment indicator (1=offered, 0=not offered)
-- `round:intent_to_treat`: Interaction term capturing the DiD effect
+- `enrolled`: Treatment indicator (1=offered, 0=not offered)
+- `round:enrolled`: Interaction term capturing the DiD effect
 
 ## Interpreting DiD Regression Coefficients
 
@@ -188,7 +188,7 @@ then take the **difference of those changes**.
 
 means <- df %>%
   filter(treatment_neighborhood == 1) %>%
-  group_by(intent_to_treat, round) %>%
+  group_by(enrolled, round) %>%
   summarise(mean_cost = mean(waste_management_costs, na.rm = TRUE)) %>%
   ungroup()
 
@@ -196,16 +196,16 @@ means <- df %>%
 
 # Mutate/reformat for table
 mean_table <- means %>%
-  mutate(intent_to_treat = ifelse(intent_to_treat == 1, "Offered", "Not Offered")) %>%
+  mutate(enrolled = ifelse(enrolled == 1, "Offered", "Not Offered")) %>%
   pivot_wider(
   names_from = round,
   values_from = mean_cost,
   names_prefix = "round_"
   ) %>%
   # Reorder columns (after first column)
-  select(intent_to_treat, round_1, round_0) %>%
+  select(enrolled, round_1, round_0) %>%
   # Reorder rows so "Offered" comes first
-  arrange(factor(intent_to_treat, levels = c("Offered", "Not offered")))
+  arrange(factor(enrolled, levels = c("Offered", "Not offered")))
 
 # Display neatly formatted table
 kable(
@@ -227,8 +227,8 @@ mean_table <- mean_table %>%
   mutate(change = round_1 - round_0) # change over time for each group
 
 # Compute differences in Offered − Not Offered
-off_row <- mean_table %>% filter(intent_to_treat == "Offered")
-ctrl_row <- mean_table %>% filter(intent_to_treat == "Not Offered")
+off_row <- mean_table %>% filter(enrolled == "Offered")
+ctrl_row <- mean_table %>% filter(enrolled == "Not Offered")
 
 before_diff <- off_row$round_0 - ctrl_row$round_0
 after_diff  <- off_row$round_1 - ctrl_row$round_1
@@ -236,7 +236,7 @@ after_diff  <- off_row$round_1 - ctrl_row$round_1
 # Add rows underneath with the differences
 final_table <- mean_table %>%
   add_row(
-    intent_to_treat = "Change",
+    enrolled = "Change",
     round_0 = before_diff,
     round_1 = after_diff,
     change = as.numeric(NA)  
@@ -289,9 +289,9 @@ modelsummary(list("No covariate adj."= out_did, "With covariate adj." = out_did_
 #   gof_map = c("nobs"),
 #   title = "DID Regression Results",
 #   coef_map = c(
-#     "round:intent_to_treat" = "DID Effect",
+#     "round:enrolled" = "DID Effect",
 #     "round" = "Before vs. After",
-#     "intent_to_treat" = "Offered vs. Not",
+#     "enrolled" = "Offered vs. Not",
 #     "(Intercept)" = "(Intercept)"
 #   ),
 #   notes = "Standard errors are in parentheses",
@@ -330,8 +330,8 @@ modelsummary(list("No covariate adj."= out_did, "With covariate adj." = out_did_
 # Extract values from model coefficients
 beta0 <- out_did$coefficients["(Intercept)"]
 beta1 <- out_did$coefficients["round"]
-beta2 <- out_did$coefficients["intent_to_treat"]
-beta3 <- out_did$coefficients["round:intent_to_treat"]
+beta2 <- out_did$coefficients["enrolled"]
+beta3 <- out_did$coefficients["round:enrolled"]
 
 # Calculate cell values based on DiD model
 not_offered_before <- beta0
@@ -341,8 +341,8 @@ offered_after <- beta0 + beta1 + beta2 + beta3
 
 # Create data for DiD visualization
 time_points <- c("Baseline", "Follow-up")
-offered <- c(offered_before/1000, offered_after/1000)  # Converting to thousands
-not_offered <- c(not_offered_before/1000, not_offered_after/1000)  # Converting to thousands
+offered <- c(offered_before, offered_after) 
+not_offered <- c(not_offered_before, not_offered_after) 
 
 # Create data frame
 did_viz_data <- data.frame(
@@ -352,30 +352,30 @@ did_viz_data <- data.frame(
 )
 
 # Calculate differences for annotations
-diff_after <- not_offered_after/1000 - offered_after/1000
-diff_before <- not_offered_before/1000 - offered_before/1000
+diff_after <- not_offered_after - offered_after
+diff_before <- not_offered_before - offered_before
 diff_in_diff <- diff_after - diff_before
 
 # Plot DiD
 ggplot(did_viz_data, aes(x = Time, y = Expenditure, color = Group, group = Group)) +
   geom_line(size = 1.2) +
   geom_point(size = 3) +
-  annotate("segment", x = 2, xend = 2, y = offered_after/1000, yend = not_offered_after/1000, 
+  annotate("segment", x = 2, xend = 2, y = offered_after, yend = not_offered_after, 
            arrow = arrow(ends = "both", length = unit(0.1, "inches")), 
            linetype = "dashed") +
-  annotate("text", x = 2.1, y = (offered_after/1000 + not_offered_after/1000)/2, 
+  annotate("text", x = 2.1, y = (offered_after + not_offered_after)/2, 
            label = sprintf("%.2f", diff_after)) +
-  annotate("segment", x = 1, xend = 1, y = offered_before/1000, yend = not_offered_before/1000, 
+  annotate("segment", x = 1, xend = 1, y = offered_before, yend = not_offered_before, 
            arrow = arrow(ends = "both", length = unit(0.1, "inches")), 
            linetype = "dashed") +
-  annotate("text", x = 1.1, y = (offered_before/1000 + not_offered_before/1000)/2, 
+  annotate("text", x = 1.1, y = (offered_before + not_offered_before)/2, 
            label = sprintf("%.2f", diff_before)) +
   annotate("text", x = 1.5, y = min(offered, not_offered) - .2, 
            label = sprintf("Difference-in-Differences:\n%.2f - %.2f = %.2f", 
                           diff_after, diff_before, diff_in_diff), 
            fontface = "bold") +
   labs(title = "", x = "",
-       y = "Waste Expenditures (thousands of AED)") +
+       y = "Waste Expenditures (AED)") +
   theme_minimal() +
   theme(legend.position = "bottom")
 ```
