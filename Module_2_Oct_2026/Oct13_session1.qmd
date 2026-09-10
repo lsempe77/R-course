@@ -1,0 +1,986 @@
+---
+title: "Reading DiD Results"
+subtitle: "Module 2 · Day 2, Session 1 — Demystifying the Impact Analysis"
+author: "3ie"
+always_allow_html: yes
+format:
+  revealjs:
+    theme: [clean.scss, module2.scss]
+    slide-number: true
+    width: 1280
+    height: 720
+    fig-align: center
+    slide-level: 2
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+    dev: "png"
+    dpi: 200
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup}
+library(tidyverse)
+library(estimatr)
+library(knitr)
+library(kableExtra)
+
+df <- read.csv("./evaluation_data_GreenWaste.csv")
+tn <- df %>% filter(treatment_neighborhood == 1)
+
+# ---- The four means -------------------------------------------------------
+m <- tn %>% group_by(enrolled, round) %>%
+  summarise(mc = mean(waste_management_costs, na.rm = TRUE), .groups = "drop")
+gv <- function(e, r) m$mc[m$enrolled == e & m$round == r]
+off_b <- gv(1, 0); off_a <- gv(1, 1)
+ctl_b <- gv(0, 0); ctl_a <- gv(0, 1)
+off_chg <- off_a - off_b
+ctl_chg <- ctl_a - ctl_b
+did_hand <- off_chg - ctl_chg
+
+# ---- The regression an evaluator would report -----------------------------
+out_did <- lm_robust(waste_management_costs ~ round * enrolled,
+                     data = tn, clusters = neighborhood_identifier)
+b_did  <- unname(out_did$coefficients["round:enrolled"])
+se_did <- unname(out_did$std.error["round:enrolled"])
+ci_lo  <- b_did - 1.96 * se_did
+ci_hi  <- b_did + 1.96 * se_did
+b_gap  <- unname(out_did$coefficients["enrolled"])
+b_time <- unname(out_did$coefficients["round"])
+b_int  <- unname(out_did$coefficients["(Intercept)"])
+
+THRESHOLD <- 1000
+CUTOFF    <- 58
+
+# ---- Validated palette (CVD-safe; see CLAUDE.md > Design System) -----------
+ACCENT  <- "#00789E"   # programme / offered
+ACCENT2 <- "#B45309"   # comparison / not offered
+ALERT   <- "#9A2515"   # annotations and decision rules — never a data series
+INK     <- "#131516"; MUTED <- "#5C6467"; RULE <- "#DCE1E3"
+
+# ---- One chart theme for the whole module ---------------------------------
+theme_m2 <- function(base = 15) {
+  theme_minimal(base_size = base) +
+    theme(
+      text             = element_text(colour = INK),
+      axis.title       = element_text(colour = MUTED, size = rel(0.85)),
+      axis.text        = element_text(colour = MUTED),
+      panel.grid.minor = element_blank(),
+      panel.grid.major = element_line(colour = RULE, linewidth = 0.4),
+      legend.position  = "bottom",
+      legend.title     = element_blank(),
+      legend.text      = element_text(size = rel(0.95)),
+      strip.text       = element_text(colour = INK, face = "plain", size = rel(0.95)),
+      plot.margin      = margin(4, 10, 4, 4)
+    )
+}
+
+grp_cols <- c("Offered" = ACCENT, "Not offered" = ACCENT2)
+tlev <- function(x) factor(x, levels = c("Before", "After"))
+```
+
+## What this session gives you
+
+By the end of 90 minutes you will be able to:
+
+::: {.panel}
+- Explain, without equations, what a difference-in-differences result means
+- Find the one number in an evaluation table that answers **your** question — and recognise the two that are routinely mistaken for it
+- Ask the single question that decides whether the result can be trusted
+- Spot four specific mistakes AI makes when interpreting an evaluation table
+:::
+
+There is no code in this session. You will never be asked to run anything.
+
+::: {.notes}
+0:00–0:03 · Set expectations. They are commissioners, not analysts. Their job
+is to interrogate evidence, not produce it. Say plainly: "you will not see a
+line of code today, and you will not need one."
+:::
+
+# 1 · The case [10 min]{.mins}
+
+## The GreenWaste Program
+
+:::::: {.columns}
+
+::::: {.column width="54%"}
+Small businesses across the emirate were spending heavily on waste
+management, and rising volumes were making it worse. Waste costs had
+become one of the larger controllable expenses for a small firm.
+
+The programme offered three things: subsidised recycling collection,
+an on-site efficiency audit, and staff training.
+
+::: {.panel}
+**The decision on the table:** should this be scaled up nationally?
+:::
+:::::
+
+::::: {.column width="46%"}
+```{=html}
+<div class="facts">
+  <div class="k">Ran</div>        <div class="v">Two years, 100 neighbourhoods</div>
+  <div class="k">Offered to</div> <div class="v">Businesses scoring ≤ 58 on the national efficiency index</div>
+  <div class="k">Outcome</div>    <div class="v">Annual waste-management costs, in AED</div>
+  <div class="k">Data</div>       <div class="v">4,959 businesses, measured before and after</div>
+  <div class="k">The bar</div>    <div class="v">Must save at least 1,000 AED per business</div>
+</div>
+```
+:::::
+
+::::::
+
+::: {.notes}
+0:03 · Introduce the case properly before any number appears. Participants need
+to know what the programme did, who it reached, and what decision hangs on the
+answer — otherwise the statistics are abstract.
+
+Point at "The bar" and say it out loud. Everything in the next 90 minutes is
+measured against that number, and the session ends by testing the result
+against it. Ask: "who sets a number like this in your organisation?"
+:::
+
+## The decision rule matters more than the statistics
+
+```{=html}
+<div class="hero">
+  <div class="value">1,000 AED</div>
+  <div class="label">Minimum saving per business to justify national scale-up</div>
+</div>
+```
+
+::: {.panel}
+This number was set **before** anyone saw the results. It reflects what the
+programme costs to run and what else the money could buy.
+
+A result can be real, statistically solid, and still not clear this bar.
+:::
+
+::: {.notes}
+0:06 · Labour this. The single most common failure in evidence use — by people
+and by AI — is treating "statistically significant" as "worth doing". Setting
+the bar in advance is what protects you from that.
+:::
+
+## Who is actually in this evaluation?
+
+```{r fig.height=3.0, fig.width=10}
+tibble(
+  g = factor(c("Offered the programme", "Not offered"),
+             levels = c("Not offered", "Offered the programme")),
+  n = c(sum(tn$enrolled == 1 & tn$round == 0), sum(tn$enrolled == 0 & tn$round == 0))
+) %>%
+  ggplot(aes(n, g, fill = g)) +
+  geom_col(width = 0.5) +
+  geom_text(aes(label = format(n, big.mark = ",")), hjust = -0.15, size = 5.4, colour = INK) +
+  scale_fill_manual(values = c("Offered the programme" = ACCENT, "Not offered" = ACCENT2)) +
+  scale_x_continuous(limits = c(0, 3600), expand = expansion(mult = c(0, 0.02))) +
+  labs(x = "Businesses", y = NULL) +
+  theme_m2() +
+  theme(legend.position = "none", panel.grid.major.y = element_blank())
+```
+
+::: {.warn}
+Keep an eye on the comparison group. We will come back to exactly who these
+businesses are — and it turns out to matter a great deal.
+:::
+
+::: {.notes}
+0:08 · Plant the seed here; do not explain it yet. The reveal lands in Section 5
+and is much stronger if they have been mildly curious about it for an hour.
+:::
+
+# 2 · Compared to what? [12 min]{.mins}
+
+## What happened to the businesses that got it
+
+```{r fig.height=3.6, fig.width=8}
+tibble(Time = tlev(c("Before", "After")), Cost = c(off_b, off_a)) %>%
+  ggplot(aes(Time, Cost, group = 1)) +
+  geom_line(linewidth = 1.6, colour = ACCENT) +
+  geom_point(size = 4.5, colour = ACCENT) +
+  geom_text(aes(label = sprintf("%s AED", format(round(Cost), big.mark = ","))),
+            vjust = -1.3, size = 5, colour = INK) +
+  scale_y_continuous(limits = c(0, 2750), labels = scales::comma) +
+  labs(x = NULL, y = "Waste costs (AED)") +
+  theme_m2()
+```
+
+Costs fell by **`r sprintf("%.0f", abs(off_chg))` AED** — a drop of
+**`r sprintf("%.0f", 100*abs(off_chg)/off_b)`%**.
+
+::: {.notes}
+0:10 · Do not editorialise. Present it as an evaluator might present a headline
+finding, and let it look good.
+:::
+
+## Show of hands
+
+::: {.ask}
+On this evidence — did the programme work?
+:::
+
+::: {.notes}
+0:12 · Count the hands and write the number on the flipchart. Ask two people
+why. Do NOT move on until the room has committed; the next slide only works
+if they have.
+
+If someone says "we can't tell without a comparison" — excellent, name them
+and say you will prove them right in thirty seconds.
+:::
+
+## Now add the businesses that did not
+
+```{r fig.height=3.7, fig.width=8.5}
+viz <- tibble(
+  Time  = tlev(rep(c("Before", "After"), 2)),
+  Group = rep(c("Offered", "Not offered"), each = 2),
+  Cost  = c(off_b, off_a, ctl_b, ctl_a))
+
+ggplot(viz, aes(Time, Cost, colour = Group, group = Group)) +
+  geom_line(linewidth = 1.6) +
+  geom_point(size = 4.5) +
+  geom_text(aes(label = format(round(Cost), big.mark = ",")), vjust = -1.3,
+            size = 4.8, show.legend = FALSE) +
+  scale_colour_manual(values = grp_cols) +
+  scale_y_continuous(limits = c(0, 2750), labels = scales::comma) +
+  labs(x = NULL, y = "Waste costs (AED)") +
+  theme_m2()
+```
+
+::: {.notes}
+0:14 · Silence for a beat. Let them see the comparison line rising. Then ask
+the same question again and watch the hands change.
+:::
+
+## Costs were rising for everyone
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**What we thought we saw**
+
+Costs fell by `r sprintf("%.0f", abs(off_chg))` AED.
+
+Effect = **`r sprintf("%.0f", off_chg)`**
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.ask}
+**What actually happened**
+
+Costs fell `r sprintf("%.0f", abs(off_chg))` AED *while comparable costs rose
+`r sprintf("%.0f", ctl_chg)` AED.*
+
+Effect = **`r sprintf("%.0f", did_hand)`**
+:::
+:::::
+
+::::::
+
+::: {.warn}
+Note the direction: the honest estimate is **larger**, not smaller. The
+programme had to overcome a rising tide, so correcting for the comparison
+group *increases* the credited effect.
+:::
+
+::: {.notes}
+0:17 · This surprises people who assume that "adjusting" always deflates a
+result. Worth saying explicitly: a comparison group is not a haircut, it is a
+correction — and it can go either way.
+:::
+
+# 3 · The idea, in four numbers [15 min]{.mins}
+
+## Difference-in-differences in one sentence
+
+::: {.ask}
+Compare **the change over time** in the group that got the programme with
+**the change over time** in a group that did not.
+:::
+
+The difference between those two changes is the estimated effect.
+
+That is the entire method. Everything else is detail.
+
+::: {.notes}
+0:22 · Say the sentence, then say it again slowly. This is the sentence they
+should be able to repeat to a minister.
+:::
+
+## Your turn — fill in the blanks
+
+```{r}
+tibble(
+  Group  = c("Offered", "Not offered", "Difference of the changes"),
+  Before = c(format(round(off_b), big.mark = ","), format(round(ctl_b), big.mark = ","), ""),
+  After  = c(format(round(off_a), big.mark = ","), format(round(ctl_a), big.mark = ","), ""),
+  Change = c("?", "?", "?")
+) %>%
+  kable(align = "lrrr", col.names = c("", "Before", "After", "Change")) %>%
+  kable_styling(full_width = FALSE, font_size = 26)
+```
+
+::: {.ask}
+Two subtractions. Ninety seconds.
+:::
+
+::: {.notes}
+0:24 · Hand out the four-numbers card. Ninety seconds of silence — genuinely
+silent, do not fill it. Walk the room. Most people get it, and that is the
+point: they own the method rather than receiving it.
+:::
+
+## The answer
+
+```{r}
+tibble(
+  Group  = c("Offered", "Not offered", "Difference of the changes"),
+  Before = c(format(round(off_b), big.mark = ","), format(round(ctl_b), big.mark = ","), ""),
+  After  = c(format(round(off_a), big.mark = ","), format(round(ctl_a), big.mark = ","), ""),
+  Change = c(sprintf("%+.0f", off_chg), sprintf("%+.0f", ctl_chg), sprintf("%.0f", did_hand))
+) %>%
+  kable(align = "lrrr", col.names = c("", "Before", "After", "Change")) %>%
+  kable_styling(full_width = FALSE, font_size = 26) %>%
+  row_spec(3, bold = TRUE, background = "#E6F1F5")
+```
+
+::: {.ask}
+`r sprintf("%+.0f", off_chg)` − (`r sprintf("%+.0f", ctl_chg)`) =
+**`r sprintf("%.0f", did_hand)` AED**
+:::
+
+::: {.notes}
+0:27 · "You have just estimated a causal effect with two subtractions." When
+an evaluator shows you a difference-in-differences table, this is what is
+underneath it — no more than this.
+:::
+
+## The estimate
+
+```{r results='asis'}
+cat(sprintf('
+<div class="hero">
+  <div class="value">%.0f AED</div>
+  <div class="label">Difference-in-differences estimate</div>
+</div>
+<div class="stat-row">
+  <div><span class="n">%+.0f</span><span class="k">Change, offered</span></div>
+  <div><span class="n">%+.0f</span><span class="k">Change, not offered</span></div>
+  <div><span class="n">%.0f</span><span class="k">The difference</span></div>
+</div>', did_hand, off_chg, ctl_chg, did_hand))
+```
+
+::: {.notes}
+0:29 · Hold here a moment. Ask: "does this clear the bar?" Most will spot that
+it does not. Do not resolve it yet — Section 4 does that properly.
+:::
+
+## What the picture shows
+
+```{r fig.height=4.0, fig.width=9}
+cf <- off_b + ctl_chg
+
+ggplot(viz, aes(Time, Cost, colour = Group, group = Group)) +
+  geom_line(linewidth = 1.6) +
+  geom_point(size = 4) +
+  geom_line(data = tibble(Time = tlev(c("Before", "After")),
+                          Cost = c(off_b, cf), Group = "Offered"),
+            linetype = "22", linewidth = 1.1, colour = ACCENT) +
+  annotate("segment", x = 2, xend = 2, y = off_a, yend = cf,
+           arrow = arrow(ends = "both", length = unit(0.1, "inches")),
+           colour = ALERT, linewidth = 1) +
+  annotate("label", x = 1.76, y = (off_a + cf) / 2,
+           label = sprintf("%.0f AED", did_hand), colour = ALERT,
+           fontface = "bold", size = 5, label.size = 0, fill = "white") +
+  annotate("text", x = 1.52, y = cf + 100, size = 3.9, colour = ACCENT,
+           label = "what would have happened\nwithout the programme") +
+  scale_colour_manual(values = grp_cols) +
+  scale_y_continuous(labels = scales::comma) +
+  labs(x = NULL, y = "Waste costs (AED)") +
+  theme_m2()
+```
+
+::: {.notes}
+0:31 · The dotted line is the counterfactual — the invented number at the heart
+of every impact evaluation. It is never observed. Everything rests on how
+believable it is, which is exactly what Section 5 interrogates.
+:::
+
+# 4 · Reading the table [20 min]{.mins}
+
+## The output, as an evaluator reports it
+
+```{r}
+tibble(
+  Term = c("(Intercept)", "round", "enrolled", "round:enrolled", "Observations"),
+  Estimate = c(sprintf("%.1f", b_int), sprintf("%.1f", b_time),
+               sprintf("%.1f", b_gap), sprintf("%.1f ***", b_did),
+               format(nobs(out_did), big.mark = ","))
+) %>%
+  kable(align = "lr", col.names = c("", "Estimate")) %>%
+  kable_styling(full_width = FALSE, font_size = 24)
+```
+
+::: {.ask}
+Three numbers. Only one is the programme's effect. Which one?
+:::
+
+::: {.notes}
+0:37 · Take a vote across the three. Many will pick `enrolled` because it is
+large and has the word "enrolled" in it. That is the trap, and it is worth
+letting them fall into it.
+:::
+
+## Trap 1 — the baseline gap
+
+```{=html}
+<div class="hero">
+  <div class="value alert">`r sprintf("%.0f", b_gap)`</div>
+  <div class="label"><code>enrolled</code> — how far apart the groups were BEFORE the programme</div>
+</div>
+```
+
+::: {.warn}
+Businesses offered the programme already spent `r sprintf("%.0f", abs(b_gap))`
+AED less than those not offered. Nothing the programme did caused this — it
+predates the programme entirely.
+
+Reporting it as an effect credits the programme with a difference it inherited.
+:::
+
+::: {.notes}
+0:40 · This is not hypothetical. Ask whether anyone has seen a summary quote a
+baseline difference as an impact. Usually at least one person has.
+:::
+
+## Trap 2 — the time trend
+
+```{=html}
+<div class="hero">
+  <div class="value alert">`r sprintf("%+.0f", b_time)`</div>
+  <div class="label"><code>round</code> — what happened to the comparison group anyway</div>
+</div>
+```
+
+::: {.panel}
+Costs rose `r sprintf("%.0f", b_time)` AED for businesses that received
+nothing. This is the rising tide — volumes, prices, regulation.
+
+It is the thing difference-in-differences exists to strip out. It is not the
+effect.
+:::
+
+## The number that answers your question
+
+```{=html}
+<div class="hero">
+  <div class="value">`r sprintf("%.0f", b_did)` AED</div>
+  <div class="label"><code>round:enrolled</code> — the extra change in the programme group</div>
+</div>
+```
+
+::: {.ask}
+Ask for it by name: *"which row is the difference-in-differences estimate?"*
+:::
+
+It is the same number you calculated by hand.
+
+::: {.notes}
+0:44 · Close the loop back to the four numbers. The regression is not a black
+box producing a mystery figure — it is their two subtractions, with a
+precision estimate attached.
+:::
+
+## How sure are we?
+
+```{r fig.height=2.4, fig.width=9}
+# NB: ASCII "-" inside ggplot labels; the Unicode minus does not render here
+ggplot(tibble(x = 1), aes(x, 0)) +
+  annotate("segment", x = -THRESHOLD, xend = -THRESHOLD, y = -1, yend = 1,
+           linetype = "dashed", colour = ALERT, linewidth = 1.1) +
+  annotate("segment", x = ci_lo, xend = ci_hi, y = 0, yend = 0,
+           linewidth = 3, colour = ACCENT) +
+  annotate("point", x = b_did, y = 0, size = 6, colour = ACCENT) +
+  annotate("text", x = -THRESHOLD - 25, y = 0.74, colour = ALERT, size = 4.4,
+           lineheight = 0.9, hjust = 1,
+           label = sprintf("the bar\n-%s AED", format(THRESHOLD, big.mark = ","))) +
+  annotate("text", x = b_did, y = -0.62, size = 4.4, colour = INK,
+           label = sprintf("%.0f   (%.0f to %.0f)", b_did, ci_lo, ci_hi)) +
+  scale_x_continuous(limits = c(-1300, -400)) +
+  scale_y_continuous(limits = c(-1, 1)) +
+  labs(x = "Change in waste costs (AED)", y = NULL) +
+  theme_m2() +
+  theme(axis.text.y = element_blank(), panel.grid.major.y = element_blank())
+```
+
+::: {.panel}
+The data are consistent with an effect anywhere in that range. For a decision,
+the useful question is not *"is it narrow?"* but:
+
+**Does my decision change depending on where in this range the truth sits?**
+:::
+
+::: {.notes}
+0:47 · The reframing that matters for commissioners. Statisticians ask about
+precision; decision-makers should ask about decision-relevance. Here the whole
+interval sits below the bar, so the imprecision does not change the call.
+:::
+
+## Significant is not the same as sufficient
+
+::: {.warn}
+The estimate is **statistically significant** — we are confident it is not zero.
+
+It is also **below the bar you set** — it is not big enough to act on.
+
+These are two different questions, and the table only answers the first.
+:::
+
+::: {.notes}
+0:50 · The most transferable idea in the session. Flag that it returns in the
+AI exercise, because AI conflates the two almost every time.
+:::
+
+# 5 · The one question [15 min]{.mins}
+
+## Were the two groups heading the same way?
+
+Everything so far rests on one assumption:
+
+::: {.ask}
+Without the programme, the two groups' costs would have moved in parallel.
+:::
+
+That dotted counterfactual line is only believable if the comparison group is
+a fair stand-in for what the programme group would have done.
+
+::: {.panel}
+It cannot be proved. It can only be made more or less plausible.
+:::
+
+## Which of these would you trust?
+
+```{r fig.height=3.4, fig.width=10}
+mk <- function(lab, tr, ct) {
+  tibble(panel = lab, t = rep(1:4, 2),
+         grp = rep(c("Offered", "Not offered"), each = 4), y = c(tr, ct))
+}
+bind_rows(
+  mk("A. Moving in parallel", c(40, 42, 44, 46), c(50, 52, 54, 56)),
+  mk("B. Already diverging",  c(40, 41, 42, 43), c(50, 53, 56, 59)),
+  mk("C. Already converging", c(40, 44, 48, 52), c(50, 52, 54, 56))
+) %>%
+  ggplot(aes(t, y, colour = grp, group = grp)) +
+  geom_line(linewidth = 1.3) +
+  geom_point(size = 2.4) +
+  facet_wrap(~panel) +
+  scale_colour_manual(values = grp_cols) +
+  labs(x = "Periods before the programme started", y = "Outcome") +
+  theme_m2(14)
+```
+
+::: {.warn}
+Only **A** supports the assumption. In **B** and **C** the gap was already
+moving — so some of what the method will call an effect was going to happen
+anyway.
+:::
+
+::: {.notes}
+0:55 · Vote on each panel before explaining. Make them articulate why B and C
+are a problem. Someone usually spots that C would *understate* the effect
+while B would overstate it — draw that out if it comes.
+:::
+
+## So — were they?
+
+::: {.warn}
+We measured costs at **two points in time**. Once before, once after.
+
+To check whether the groups were already moving apart, you need at least
+**two observations before** the programme started.
+
+We have one.
+:::
+
+::: {.ask}
+The parallel trends assumption cannot be tested with this data. Not "was not
+tested" — **cannot be**.
+:::
+
+This is not unusual. It is the normal situation for most evaluations you
+will commission.
+
+::: {.notes}
+0:58 · Do not soften this. The honest position is far more useful to them than
+the textbook one, and it sets up the AI failure in the next section directly.
+:::
+
+## And look at who the comparison group is
+
+```{r fig.height=3.2, fig.width=9.5}
+tn %>%
+  filter(round == 0) %>%
+  mutate(g = ifelse(enrolled == 1, "Offered", "Not offered")) %>%
+  ggplot(aes(efficiency_index, fill = g)) +
+  geom_histogram(bins = 46, alpha = 0.92, colour = "white", linewidth = 0.15) +
+  geom_vline(xintercept = CUTOFF, linetype = "dashed", colour = ALERT, linewidth = 1) +
+  annotate("text", x = CUTOFF, y = Inf, vjust = 1.6, hjust = -0.08,
+           label = "eligibility cut-off: 58", colour = ALERT, size = 4.2) +
+  scale_fill_manual(values = grp_cols) +
+  labs(x = "National efficiency index score", y = "Businesses") +
+  theme_m2()
+```
+
+::: {.warn}
+The two groups do not overlap **at all**. The comparison group is not "similar
+firms that happened to miss out" — it is, by construction, the better-scoring
+half of the market.
+:::
+
+::: {.notes}
+1:01 · This is the payoff for the seed planted in Section 1. Let the picture do
+the work — two blocks of colour that never touch.
+
+Then ask the killer question: "would you expect these two groups to move in
+parallel on their own?" The honest answer is that we have no particular reason
+to think so, and no way to check.
+:::
+
+## What to ask when it cannot be tested
+
+You will rarely get a clean pre-trend check. Ask for the next best things:
+
+::: {.panel}
+1. **How was the comparison group chosen, and how are they different?**
+2. **What else changed for one group and not the other?** — other programmes, regulations, shocks
+3. **Did anyone change behaviour in anticipation of the programme?**
+4. **Could the programme have affected the comparison group too?** — spillovers make effects look smaller
+5. **What is the result with a different comparison group?**
+:::
+
+An evaluator with good answers to these has earned some trust. One who has not
+considered them has not.
+
+::: {.notes}
+1:04 · These five are on the take-away card. Say that question 1 is the one
+that would have caught the problem on the previous slide — and it requires no
+statistics at all.
+:::
+
+# 6 · AI Snapshot [20 min]{.mins}
+
+## We gave AI the table and asked it to explain
+
+**Prompt:** *"Explain these results."*
+
+::: {.ai-output}
+The analysis uses a difference-in-differences design to evaluate the GreenWaste
+Program. The results show a statistically significant treatment effect of
+−816.3 AED ([p < 0.001]{.flag}), indicating that the programme
+[increased savings]{.flag} by 816 AED per business.
+
+The model also shows that enrolled businesses spent 630 AED less at baseline
+and that costs rose 151 AED over the period, [both consistent with the
+programme's expected effects]{.flag}.
+
+[The parallel trends assumption was tested and holds]{.flag}, confirming that
+the groups followed similar trajectories before the programme began. The
+estimate is therefore robust.
+
+**Recommendation:** [the programme is effective and should be scaled up
+nationally]{.flag}.
+:::
+
+::: {.ask}
+Four things here are wrong. Three minutes — find them.
+:::
+
+::: {.notes}
+1:06 · Hand out the printed copy. Three minutes in pairs, marking up the text.
+Take answers from the room before revealing. Someone almost always finds the
+scale-up recommendation first; the fabricated test is the one they miss.
+:::
+
+## What it got wrong
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.warn}
+**1 · It invented a test that is impossible**
+
+With two rounds of data there is nothing to test. The model produced a
+confident sentence about a check that was never run and could not be run.
+:::
+
+::: {.warn}
+**2 · It ignored your decision rule**
+
+−816 is below the 1,000 AED bar. It saw asterisks, read "significant", and
+recommended national scale-up.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn}
+**3 · It called a pre-existing gap an effect**
+
+The 630 AED baseline difference existed before the programme. Calling it
+"consistent with expected effects" credits the programme with it.
+:::
+
+::: {.warn}
+**4 · It invented precision**
+
+`p < 0.001` appears nowhere in the table it was given. It was inferred from
+the asterisks and stated as fact.
+:::
+:::::
+
+::::::
+
+::: {.notes}
+1:09 · Take them in order. Error 1 is the one groups almost never find on their
+own — flag that, because it is the most dangerous.
+:::
+
+## Notice what they have in common
+
+::: {.ask}
+The answer was fluent, confident and correctly formatted.
+:::
+
+::: {.warn}
+Nothing in its tone distinguishes the true sentences from the invented ones.
+There is no surface cue — no hedge, no hesitation, no change of register
+around the four things it made up.
+:::
+
+::: {.panel}
+This is what makes the failures dangerous in a briefing note: they read
+exactly like the parts that are right.
+:::
+
+::: {.notes}
+1:11 · Land the meta-point hard. If they take one thing from the session about
+AI, it is this: fluency is not accuracy, and confidence is not a signal.
+:::
+
+## The same table, a better prompt
+
+:::::: {.columns}
+
+::::: {.column width="42%"}
+### What people type
+
+::: {.panel}
+*"Explain these results."*
+:::
+
+- No decision rule
+- No context about the data
+- No invitation to flag uncertainty
+- Every gap filled with a confident guess
+:::::
+
+::::: {.column width="58%"}
+### What to type instead
+
+::: {.ask}
+*I am a commissioner, not an analyst. Below is a difference-in-differences
+table from a waste-management programme evaluation. Our decision rule: the
+programme must cut costs by at least 1,000 AED per business to justify
+scale-up. The data has two rounds only.*
+
+*Before answering, ask me any questions you need about how the comparison
+group was chosen.*
+
+*Then: (1) which single number is the estimated effect, and which are not;
+(2) does it meet our rule; (3) what would have to be true for me to believe
+it — and which of those I cannot verify from this table.*
+:::
+:::::
+
+::::::
+
+::: {.notes}
+1:13 · Walk through what each element does. The highest-leverage single
+sentence is "ask me any questions you need before answering" — it converts the
+model from a guesser into an interviewer.
+:::
+
+## Your turn
+
+::: {.panel}
+In your groups, using the table on your handout:
+
+1. Run the **short prompt**. Read what you get.
+2. Run the **full prompt card**. Answer the questions it asks you.
+3. Compare: what did the second answer add, remove, or hedge?
+4. Paste the second answer into a **fresh chat** and ask:
+   *"Review this interpretation for errors and overstatement."*
+:::
+
+::: {.ask}
+Step 4 matters. A second, clean conversation catches what the first one is
+already committed to.
+:::
+
+::: {.notes}
+1:15–1:25 · Ten minutes of group work. Circulate and collect one good example
+and one bad one for the debrief. If a group gets a genuinely new failure mode,
+screenshot it — it goes into the failures library for later sessions.
+:::
+
+## Debrief
+
+- What did AI **overstate**?
+- What did it **soften** or leave out?
+- Did it **invent** anything — a test, a number, a caveat?
+- Did the second chat catch what the first missed?
+
+::: {.ask}
+Two habits: tell the AI your decision rule, and make it ask you questions
+before it answers.
+:::
+
+# 7 · Abu Dhabi DOH [15 min]{.mins}
+
+<!-- PLACEHOLDER — Abu Dhabi DOH health evaluation findings not yet received.
+     Replace the three slides below with the real case. Keep the structure:
+     (1) the case and the decision at stake
+     (2) the table, read using the four steps from Section 4
+     (3) the credibility question, using the five questions from Section 5   -->
+
+## `[PLACEHOLDER]` The DOH evaluation
+
+::: {.warn}
+**Awaiting real findings.** Structure is final; only the numbers and labels change.
+:::
+
+```{=html}
+<div class="facts">
+  <div class="k">Programme</div>      <div class="v">[to be inserted]</div>
+  <div class="k">Outcome</div>        <div class="v">[to be inserted]</div>
+  <div class="k">Comparison</div>     <div class="v">[to be inserted]</div>
+  <div class="k">Decision</div>       <div class="v">[to be inserted]</div>
+  <div class="k">Periods of data</div><div class="v">[note whether pre-trends can be checked]</div>
+</div>
+```
+
+::: {.notes}
+Ask Fiona specifically whether the DOH evaluation has more than one pre-period.
+If it does, this is the chance to show a real pre-trend check and complete the
+contrast with GreenWaste — which would make this section the strongest in the
+session rather than a repeat.
+:::
+
+## `[PLACEHOLDER]` Reading the DOH result
+
+Apply the four steps, in order:
+
+::: {.panel}
+1. Which row is the difference-in-differences estimate?
+2. What are the other coefficients telling you — which is the baseline gap?
+3. What does the interval mean for **this** decision?
+4. Does it clear the threshold that matters here?
+:::
+
+::: {.notes}
+Group exercise on the handout, not a lecture. Eight minutes.
+:::
+
+## `[PLACEHOLDER]` Would you act on it?
+
+::: {.panel}
+- How was the comparison group chosen, and how are they different?
+- What else changed for one group and not the other?
+- Any anticipation effects?
+- Any spillovers onto the comparison group?
+- What happens with a different comparison group?
+:::
+
+::: {.ask}
+Verdict round: act on it, act with caveats, or send it back?
+:::
+
+::: {.notes}
+1:38 · Hands, not discussion — keeps time. Note who says "send it back" and ask
+them for the one question that decided it.
+:::
+
+# 8 · Closing [5 min]{.mins}
+
+## Three questions to ask any evaluator presenting DiD
+
+::: {.panel}
+**1 · "Which number is the difference-in-differences estimate?"**
+
+Not the baseline gap, not the time trend. Make them point at the row.
+:::
+
+::: {.panel}
+**2 · "Were the two groups already moving apart — and how do you know?"**
+
+If they cannot test it, ask what they offer instead.
+:::
+
+::: {.panel}
+**3 · "Does this clear the bar we set — and what is the range?"**
+
+Significant is not the same as sufficient.
+:::
+
+::: {.notes}
+1:40 · The take-away card. Deliberately short enough to remember in a meeting
+without notes.
+:::
+
+## Key takeaways
+
+1. DiD compares **changes**, not levels — the change in one group against the change in another
+2. It is two subtractions; the regression adds precision, not mystery
+3. An evaluation table hands you three plausible numbers and only one is the effect
+4. It rests on **parallel trends**, which usually cannot be tested — so interrogate the comparison group instead
+5. GreenWaste: **`r sprintf("%.0f", b_did)` AED**, significant, and **below** the bar → on this evidence, do not scale up
+6. AI will confirm a test that never happened, and recommend scaling against a rule it was never told
+
+## Where this sits — Day 2 scoreboard
+
+```{r}
+tibble(
+  Method = c("Difference-in-differences", "Regression discontinuity", "Matching", "Randomised trial"),
+  Estimate = c(sprintf("%.0f AED", b_did), "—", "—", "—"),
+  Verdict = c("Below the bar → do not scale", "(this afternoon)", "(this afternoon)", "(seen on Day 1)")
+) %>%
+  kable(align = "lcc") %>%
+  kable_styling(full_width = FALSE, font_size = 22) %>%
+  row_spec(1, bold = TRUE, background = "#E6F1F5")
+```
+
+::: {.ask}
+Same programme. Same data. The methods will not all agree.
+:::
+
+::: {.notes}
+1:43 · Tee up the tension deliberately. The disagreement between methods is
+Day 2's real lesson, and it is what makes the afternoon worth attending.
+:::
+
+## Next session
+
+**Reading RDD Results** — what happens when eligibility is decided by a
+cut-off, and why that gives you a different kind of evidence about a
+different group of businesses.
+
+::: {.panel}
+You have already seen the cut-off that matters: the efficiency index at 58.
+This morning it was a problem. This afternoon it becomes the tool.
+:::

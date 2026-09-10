@@ -1,0 +1,204 @@
+/*-- scss:defaults --*/
+
+// ============================================================
+// Module 2 theme — Abu Dhabi Impact Evaluation Training
+// Extends the "clean" revealjs theme with a stronger type scale,
+// callout components, and a validated chart palette.
+// ============================================================
+
+$ink:        #131516;   // primary text
+$ink-muted:  #5c6467;   // secondary text
+$accent:     #00789E;   // primary accent / series 1 (validated)
+$accent-2:   #B45309;   // series 2 (validated pair with $accent)
+$alert:      #9A2515;   // emphasis, decision rules, warnings — never a series
+$surface:    #FFFFFF;
+$surface-2:  #F4F6F7;   // panel background
+$rule:       #DCE1E3;
+
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700&display=swap');
+
+$font-family-sans-serif:      "Roboto", sans-serif !default;
+$presentation-heading-font:   "Roboto", sans-serif !default;
+$presentation-heading-color:  $ink !default;
+$presentation-heading-font-weight: 500;
+$presentation-font-size-root: 30px;   // up from 25px — these rooms are big
+
+$body-color: $ink !default;
+$body-bg:    $surface !default;
+$link-color: $accent !default;
+
+/*-- scss:rules --*/
+
+// ---------- Type scale ----------------------------------------------------
+// One scale, applied consistently. Prevents the "text of different sizes"
+// problem that comes from ad-hoc {.smaller} usage.
+
+.reveal h1 { font-size: 2.1em; font-weight: 300; letter-spacing: -0.01em; }
+.reveal h2 {
+  font-size: 1.35em;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.7em;
+  padding-bottom: 0.28em;
+  border-bottom: 3px solid $accent;
+  // block + fit-content keeps the rule tight to the text without letting the
+  // next block float up alongside the heading (inline-block does exactly that)
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+}
+.reveal h3 { font-size: 1.0em; font-weight: 500; color: $ink-muted; }
+
+.reveal p, .reveal li { line-height: 1.45; }
+.reveal ul, .reveal ol { margin-bottom: 0.5em; }
+.reveal li { margin-bottom: 0.35em; }
+.reveal strong { font-weight: 700; color: $ink; }
+.reveal em { font-style: italic; }
+
+// Slides are for headlines, not paragraphs. Cap the body block width so
+// long lines break where a reader expects.
+.reveal .slides section > p { max-width: 26em; }
+
+// ---------- Section dividers ---------------------------------------------
+
+.reveal section.divider,
+.reveal section:has(> h1) {
+  h1 {
+    color: $accent;
+    border: none;
+    font-weight: 300;
+  }
+}
+
+// ---------- Callout components -------------------------------------------
+// Use these instead of bold paragraphs. Consistent, scannable, and they
+// survive the pptx export as visually distinct blocks.
+
+.reveal .panel {
+  background: $surface-2;
+  border-left: 5px solid $accent;
+  padding: 0.7em 0.9em;
+  margin: 0.5em 0;
+  border-radius: 3px;
+}
+
+.reveal .warn {
+  background: rgba(154, 37, 21, 0.06);
+  border-left: 5px solid $alert;
+  padding: 0.7em 0.9em;
+  margin: 0.5em 0;
+  border-radius: 3px;
+}
+
+.reveal .ask {
+  background: rgba(0, 120, 158, 0.07);
+  border-left: 5px solid $accent;
+  padding: 0.7em 0.9em;
+  margin: 0.5em 0;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+// AI output, shown verbatim so participants can mark it up
+.reveal .ai-output {
+  background: $surface-2;
+  border: 1px solid $rule;
+  border-radius: 4px;
+  padding: 0.6em 0.9em;
+  font-size: 0.72em;
+  line-height: 1.4;
+  color: #2b3134;
+  p { max-width: none; margin: 0 0 0.5em 0; }
+  p:last-child { margin-bottom: 0; }
+}
+.reveal .ai-output .flag { color: $alert; font-weight: 700; }
+
+// ---------- Hero number ---------------------------------------------------
+// For the single figure a slide exists to deliver.
+
+.reveal .hero {
+  text-align: center;
+  margin: 0.2em 0;
+  .value {
+    font-size: 3.1em;
+    font-weight: 300;
+    color: $accent;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .value.alert { color: $alert; }
+  .label {
+    font-size: 0.72em;
+    color: $ink-muted;
+    margin-top: 0.35em;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+  }
+}
+
+// Three-across stat row
+.reveal .stat-row {
+  display: flex;
+  gap: 0.8em;
+  margin: 0.6em 0;
+  > div {
+    flex: 1;
+    background: $surface-2;
+    border-radius: 4px;
+    padding: 0.7em 0.6em;
+    text-align: center;
+  }
+  .n { font-size: 1.5em; font-weight: 500; color: $accent; display: block; }
+  .k { font-size: 0.62em; color: $ink-muted; display: block; margin-top: 0.25em; }
+}
+
+// ---------- Fact strip (case-study "at a glance") -------------------------
+
+.reveal .facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.35em 1em;
+  font-size: 0.82em;
+  margin: 0.4em 0;
+  .k { color: $ink-muted; font-weight: 500; white-space: nowrap; }
+  .v { color: $ink; }
+}
+
+// ---------- Tables --------------------------------------------------------
+
+.reveal table {
+  border-collapse: collapse;
+  margin: 0.4em auto;
+  font-size: 0.85em;
+  th {
+    background: $surface-2;
+    border-bottom: 2px solid $accent;
+    font-weight: 500;
+    padding: 0.4em 0.7em;
+    text-align: right;
+  }
+  th:first-child { text-align: left; }
+  td { padding: 0.35em 0.7em; border-bottom: 1px solid $rule; text-align: right; }
+  td:first-child { text-align: left; }
+  tr.highlight td { background: rgba(0, 120, 158, 0.09); font-weight: 700; }
+}
+
+// ---------- Misc ----------------------------------------------------------
+
+.reveal .columns { align-items: flex-start; }
+.reveal figure figcaption { font-size: 0.62em; color: $ink-muted; }
+.reveal .footer { color: $ink-muted; font-size: 0.55em; }
+
+// Timing badge for facilitator-visible section headers
+.reveal .mins {
+  display: inline-block;
+  background: $accent;
+  color: #fff;
+  font-size: 0.5em;
+  font-weight: 500;
+  padding: 0.22em 0.7em;
+  border-radius: 999px;
+  vertical-align: middle;
+  margin-left: 0.6em;
+  letter-spacing: 0.04em;
+}
