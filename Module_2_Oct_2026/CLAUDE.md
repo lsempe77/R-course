@@ -6,7 +6,7 @@ The goal of this project is to develop material for the second module of an impa
 
 In close consultation with me, develop sessions based on the outline. We will develop one at a time based on whichever I ask you to work on. Wait for my input on your ideas before developing or editing any files in this folder.
 
-Output format: quarto files and powerpoint versions of the quarto files.
+Output format: quarto (.qmd) files only. For each session Claude's deliverable is a correct, well-structured .qmd and nothing else: Fiona renders the HTML herself (and any PowerPoint), so Claude does not render, screenshot, or self-check the rendered deck, does not add speaker notes, and does not produce a facilitator guide.
 
 A few ideas I had on critical questions they should learn to ask AI throughout the sessions/for each method (not necessarily in this format or way but whatever way will help the AI not make mistakes or help us catch its mistakes):
     - Ask about data needed for DID
@@ -62,12 +62,14 @@ Filenames follow `[Monthday]_session[#].qmd`. "Legacy source" is the file in `se
 - **Formats:** `revealjs` (primary, for delivery) and `pptx` (secondary, lossy — see the pptx section below). Both declared in the YAML header of every session file.
 - **Theme:** `[clean.scss, module2.scss]` — `clean.scss` is the base (Grant McDermott's quarto-revealjs-clean); `module2.scss` is ours and carries the type scale, callout components and palette. Both must live in `Module_2_Oct_2026/`.
 - **Slide size:** `width: 1280`, `height: 720` in the revealjs block.
+- **`embed-resources: true` — mandatory.** Without it, Quarto writes the deck as a small `.html` plus a `<name>_files/` folder holding every chart image *and* the entire reveal.js engine and compiled theme. Move or send the `.html` alone and it opens as an unstyled wall of text with no images. With it, everything is inlined into one portable file (~4.5 MB) that works on any machine with a browser and nothing else. Always deliver the embedded version.
 - **Data path:** relative — `./evaluation_data_GreenWaste.csv`. Keep all session files and data in the same folder so paths stay simple.
 - **All chunks `echo=FALSE`.** Set it once in the YAML (`knitr: opts_chunk: echo: false`) rather than per chunk, so a stray chunk cannot leak code onto a slide.
 - **Author field:** 3ie (the legacy decks are authored "Dr. Lucas Sempé" — do not carry that over without asking).
 - **Slide budget:** roughly 22-28 slides for a 1.5h session, 30-36 for a 2h session. These sessions are discussion-heavy; slide count is low relative to a lecture.
-- **Speaker notes carry the timing.** Every section break has a `::: {.notes}` block giving elapsed minutes and the facilitation instruction. The trainer should be able to run the session from the notes alone.
+- **No speaker notes.** Do not add `::: {.notes}` blocks to session decks; Fiona does not use them. Section-level timing stays visible through the `.mins` badge on each section divider (e.g. `# 2 · The result [15 min]{.mins}`), and facilitation prompts live on the slides themselves as `.ask` / `.warn` callouts. Fiona runs the session from the slides, and there is no separate facilitator guide.
 - **Versioning:** `_v1`, `_v2` suffixes. Never overwrite a session file that has been reviewed.
+- **No em dashes.** Fiona's style preference for the training materials: do not use em dashes (—) in slides or in any prose meant for participants. Use a colon where the dash introduces an explanation, definition, or list; otherwise rephrase with a comma or split into two sentences. En dashes in numeric or time ranges (e.g. 0:00–0:03) are fine.
 
 ### Known formatting traps (found the hard way — do not repeat)
 
@@ -78,6 +80,27 @@ Filenames follow `[Monthday]_session[#].qmd`. "Legacy source" is the file in `se
 | **`display: inline-block` on `h2`** | The next block floats up alongside the heading | `display: block; width: fit-content;` |
 | **Unicode minus in ggplot labels** | Renders as literal `<U+2212>` | Use ASCII `-` inside any `annotate()` / `label =` string. Unicode is fine in markdown text. |
 | **Ad-hoc `{.smaller}`** | "Text of different sizes" across the deck | Use the type scale and the callout components; do not hand-tune sizes per slide. |
+
+### R packages
+
+Run `setup_packages.R` once in RStudio (`source("setup_packages.R")`) before rendering anything. It installs what's missing and then **loads** each package, which is the part that matters: a package can be "installed" yet broken because one of its own dependencies is absent — that is the `gtable`/`ggplot2` failure, and a simple installed-or-not check does not catch it.
+
+### Delivery check — verify the file actually landed
+
+`device_commit_files` can report success while writing **stale content**. It appears to cache by staged path: committing from a staged path that was used earlier in the session re-sends the older content, even with `force: true`. Seen twice — a 4.5 MB deck silently staying at its previous 68 KB, and a CLAUDE.md update losing its two newest sections.
+
+- **After every commit, list the folder and check the byte size matches the source.** Size is the cheap check; for text, stage the file back and `diff` it.
+- **The fix is a fresh staged path.** Copy the file to a new name under the outputs folder and commit *that* to the destination. Re-committing the same staged path, force or not, does not reliably update.
+
+### Presenting — no R needed on the day
+
+The rendered `.html` **is** the presentation. R and Quarto are only needed to *build* it.
+
+- **To present:** double-click the `.html`. It opens in any browser, on any machine, online or offline. Arrow keys move between slides.
+- **Speaker notes:** press **S** for presenter view — notes, timer, and next-slide preview on your laptop while the projector shows the slides.
+- **Overview of all slides:** press **Esc** or **O**.
+- **To send it to someone:** send the single `.html` file. Nothing else. (This only works because of `embed-resources: true` above.)
+- **For a PDF:** append `?print-pdf` to the URL in Chrome, then Print → Save as PDF.
 
 ### The pptx export is lossy — design around it
 
@@ -225,14 +248,14 @@ the next session is not started until the current one has been through at least
 stage 3.
 
 1. **Draft** — Claude builds the `.qmd` against the outline and the session architecture.
-2. **Render and self-check** — Claude renders revealjs + pptx, screenshots every slide, and checks for overflow, broken layouts, wrong numbers and stray code before handing over. Never hand over a deck that has not been looked at slide by slide.
+2. **Fiona renders and checks:** Fiona renders the HTML and reviews it slide by slide for overflow, layout, numbers and timing. Claude does not render or screenshot. Because Claude no longer sees the rendered output, keep slides light: a 1280×720 slide holds roughly one panel plus one short callout, or two side-by-side callouts. When a slide would be denser than that, split it across two slides rather than crowd one.
 3. **Fiona reviews and runs it** — read it through, test each section, and actually run the AI tasks as a participant would.
 4. **Capture failures** — Fiona saves screenshots of any real AI mistakes into `AI_failure_exs/` and notes them in the AI Failure Library.
 5. **Iterate** — Claude revises into a `_v2` (never in place), folding in the review notes and any newly captured AI failures.
 
 **Standing tasks, repeated for every session:**
 
-- [ ] After creating each session: review and iterate on it (stages 2–5 above) before moving to the next
+- [ ] After creating each session: hand the .qmd to Fiona to render and review (stages 2–5 above) before moving to the next
 - [ ] Fiona: run each session's AI tasks yourself and add real failure screenshots to `AI_failure_exs/`, then flag them for inclusion
 
 ---

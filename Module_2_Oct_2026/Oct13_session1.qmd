@@ -1,6 +1,6 @@
 ---
 title: "Reading DiD Results"
-subtitle: "Module 2 · Day 2, Session 1 — Demystifying the Impact Analysis"
+subtitle: "Module 2 · Day 2, Session 1: Demystifying the Impact Analysis"
 author: "3ie"
 always_allow_html: yes
 format:
@@ -11,6 +11,7 @@ format:
     height: 720
     fig-align: center
     slide-level: 2
+    embed-resources: true
 knitr:
   opts_chunk:
     echo: false
@@ -58,7 +59,7 @@ CUTOFF    <- 58
 # ---- Validated palette (CVD-safe; see CLAUDE.md > Design System) -----------
 ACCENT  <- "#00789E"   # programme / offered
 ACCENT2 <- "#B45309"   # comparison / not offered
-ALERT   <- "#9A2515"   # annotations and decision rules — never a data series
+ALERT   <- "#9A2515"   # annotations and decision rules: never a data series
 INK     <- "#131516"; MUTED <- "#5C6467"; RULE <- "#DCE1E3"
 
 # ---- One chart theme for the whole module ---------------------------------
@@ -87,18 +88,16 @@ tlev <- function(x) factor(x, levels = c("Before", "After"))
 By the end of 90 minutes you will be able to:
 
 ::: {.panel}
-- Explain, without equations, what a difference-in-differences result means
-- Find the one number in an evaluation table that answers **your** question — and recognise the two that are routinely mistaken for it
-- Ask the single question that decides whether the result can be trusted
-- Spot four specific mistakes AI makes when interpreting an evaluation table
+- Explain what a difference-in-differences result means
+- Find the one number in an evaluation table that answers **your** question, and recognise the others which may be mistaken for it
+- Ask the critical question that decides whether the result can be trusted
+- Spot mistakes AI may make when interpreting an evaluation table
 :::
 
 There is no code in this session. You will never be asked to run anything.
 
 ::: {.notes}
-0:00–0:03 · Set expectations. They are commissioners, not analysts. Their job
-is to interrogate evidence, not produce it. Say plainly: "you will not see a
-line of code today, and you will not need one."
+0:00–0:03 · Set expectations. They are commissioners, not analysts. Their job is to interrogate evidence, not produce it. Say plainly: "you will not see a line of code today, and you will not need to code."
 :::
 
 # 1 · The case [10 min]{.mins}
@@ -110,13 +109,12 @@ line of code today, and you will not need one."
 ::::: {.column width="54%"}
 Small businesses across the emirate were spending heavily on waste
 management, and rising volumes were making it worse. Waste costs had
-become one of the larger controllable expenses for a small firm.
+become large expenses for a small firm.
 
-The programme offered three things: subsidised recycling collection,
-an on-site efficiency audit, and staff training.
+The GreenWaste programme offered three things: subsidised recycling collection, an on-site efficiency audit, and staff training.
 
 ::: {.panel}
-**The decision on the table:** should this be scaled up nationally?
+**The decision on the table:** should this programme be scaled up nationally?
 :::
 :::::
 
@@ -135,13 +133,9 @@ an on-site efficiency audit, and staff training.
 ::::::
 
 ::: {.notes}
-0:03 · Introduce the case properly before any number appears. Participants need
-to know what the programme did, who it reached, and what decision hangs on the
-answer — otherwise the statistics are abstract.
+0:03 · Introduce the case properly before any number appears. Participants need to know what the programme did, who it reached, and what decision hangs on the answer. Otherwise the statistics are abstract.
 
-Point at "The bar" and say it out loud. Everything in the next 90 minutes is
-measured against that number, and the session ends by testing the result
-against it. Ask: "who sets a number like this in your organisation?"
+Point at "The bar" and say it out loud. Everything in the next 90 minutes is measured against that number, and the session ends by testing the result against it. Ask: "who sets a number like this in your organisation?"
 :::
 
 ## The decision rule matters more than the statistics
@@ -154,19 +148,16 @@ against it. Ask: "who sets a number like this in your organisation?"
 ```
 
 ::: {.panel}
-This number was set **before** anyone saw the results. It reflects what the
-programme costs to run and what else the money could buy.
+This number was set **before** anyone saw the results. It reflects what the programme costs to run and what else the money could buy.
 
 A result can be real, statistically solid, and still not clear this bar.
 :::
 
 ::: {.notes}
-0:06 · Labour this. The single most common failure in evidence use — by people
-and by AI — is treating "statistically significant" as "worth doing". Setting
-the bar in advance is what protects you from that.
+0:06 · Labour this. The single most common failure in evidence use, by people and by AI, is treating "statistically significant" as "worth doing". Setting the bar in advance is what protects you from that.
 :::
 
-## Who is actually in this evaluation?
+## Who is part of this evaluation?
 
 ```{r fig.height=3.0, fig.width=10}
 tibble(
@@ -185,13 +176,11 @@ tibble(
 ```
 
 ::: {.warn}
-Keep an eye on the comparison group. We will come back to exactly who these
-businesses are — and it turns out to matter a great deal.
+Keep an eye on the comparison group. We will come back to who these businesses are, as it turns out to matter a great deal.
 :::
 
 ::: {.notes}
-0:08 · Plant the seed here; do not explain it yet. The reveal lands in Section 5
-and is much stronger if they have been mildly curious about it for an hour.
+0:08 · Plant the seed here; do not explain it yet. The reveal lands in Section 5 and is much stronger if they have been mildly curious about it for an hour.
 :::
 
 # 2 · Compared to what? [12 min]{.mins}
@@ -210,30 +199,26 @@ tibble(Time = tlev(c("Before", "After")), Cost = c(off_b, off_a)) %>%
   theme_m2()
 ```
 
-Costs fell by **`r sprintf("%.0f", abs(off_chg))` AED** — a drop of
+Costs fell by **`r sprintf("%.0f", abs(off_chg))` AED**, a drop of
 **`r sprintf("%.0f", 100*abs(off_chg)/off_b)`%**.
 
 ::: {.notes}
-0:10 · Do not editorialise. Present it as an evaluator might present a headline
-finding, and let it look good.
+0:10 · Do not editorialise. Present it as an evaluator might present a headline finding, and let it look good.
 :::
 
 ## Show of hands
 
 ::: {.ask}
-On this evidence — did the programme work?
+Based on this evidence, did the programme work?
 :::
 
 ::: {.notes}
-0:12 · Count the hands and write the number on the flipchart. Ask two people
-why. Do NOT move on until the room has committed; the next slide only works
-if they have.
+0:12 · Count the hands and write the number on the flipchart. Ask two people why. Do NOT move on until the room has committed; the next slide only works if they have.
 
-If someone says "we can't tell without a comparison" — excellent, name them
-and say you will prove them right in thirty seconds.
+If someone says "we can't tell without a comparison": excellent, name them and say you will prove them right in thirty seconds.
 :::
 
-## Now add the businesses that did not
+## Now we add the businesses that did not receive the program
 
 ```{r fig.height=3.7, fig.width=8.5}
 viz <- tibble(
@@ -253,8 +238,7 @@ ggplot(viz, aes(Time, Cost, colour = Group, group = Group)) +
 ```
 
 ::: {.notes}
-0:14 · Silence for a beat. Let them see the comparison line rising. Then ask
-the same question again and watch the hands change.
+0:14 · Silence for a beat. Let them see the comparison line rising. Then ask the same question again and watch the hands change.
 :::
 
 ## Costs were rising for everyone
@@ -287,13 +271,11 @@ Effect = **`r sprintf("%.0f", did_hand)`**
 ::: {.warn}
 Note the direction: the honest estimate is **larger**, not smaller. The
 programme had to overcome a rising tide, so correcting for the comparison
-group *increases* the credited effect.
+group *increases* the credited effect even more than we originally assumed.
 :::
 
 ::: {.notes}
-0:17 · This surprises people who assume that "adjusting" always deflates a
-result. Worth saying explicitly: a comparison group is not a haircut, it is a
-correction — and it can go either way.
+0:17 · This surprises people who assume that "adjusting" always deflates a result. Worth saying explicitly: a comparison group is not a haircut, it is a correction, and it can go either way.
 :::
 
 # 3 · The idea, in four numbers [15 min]{.mins}
@@ -307,14 +289,61 @@ Compare **the change over time** in the group that got the programme with
 
 The difference between those two changes is the estimated effect.
 
-That is the entire method. Everything else is detail.
+That is the central idea of this method.
 
 ::: {.notes}
-0:22 · Say the sentence, then say it again slowly. This is the sentence they
-should be able to repeat to a minister.
+0:22 · Say the sentence, then say it again slowly. This is the sentence they should be able to repeat to a minister.
 :::
 
-## Your turn — fill in the blanks
+## When is difference-in-differences the right tool?
+
+::: {.panel}
+**Use it when you have:** a group that received the programme and a group that did not, and an outcome measured **before and after** for both.
+:::
+
+You reach for it when you could not randomise (the programme was already rolled out, or eligibility decided who got it), but you do have before-and-after data and a plausible comparison group.
+
+::: {.notes}
+0:22 · Situate the method before the mechanics. DiD is the tool when you could
+not randomise but you do have before-and-after data on a treated group and a
+comparison group. Its power is not free: it buys causal leverage by assuming
+parallel trends, which Section 5 interrogates.
+:::
+
+## Why DiD and not something simpler?
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.warn}
+**Why not just before vs. after?**
+
+Comparing the programme group with itself credits the programme with the *time trend*: the rising tide that would have moved costs anyway.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn}
+**Why not just compare the two groups afterwards?**
+
+A one-time snapshot credits the programme with the *baseline gap*: differences that were there before it started.
+:::
+:::::
+
+::::::
+
+::: {.ask}
+Difference-in-differences removes both. That is its whole job, which is why the two numbers it strips out are exactly the ones people may mistake for the effect.
+:::
+
+::: {.notes}
+0:23 · This answers the closing question "why this method rather than another?".
+Name the two things the simpler comparisons get wrong: they are exactly Trap 1
+(the baseline gap) and Trap 2 (the time trend) in Section 4, so foreshadow them
+here.
+:::
+
+## Your turn: fill in the blanks
 
 ```{r}
 tibble(
@@ -328,11 +357,11 @@ tibble(
 ```
 
 ::: {.ask}
-Two subtractions. Ninety seconds.
+Two subtractions, done in less than 2 minutes.
 :::
 
 ::: {.notes}
-0:24 · Hand out the four-numbers card. Ninety seconds of silence — genuinely
+0:24 · Hand out the four-numbers card. Ninety seconds of silence, genuinely
 silent, do not fill it. Walk the room. Most people get it, and that is the
 point: they own the method rather than receiving it.
 :::
@@ -359,7 +388,7 @@ tibble(
 ::: {.notes}
 0:27 · "You have just estimated a causal effect with two subtractions." When
 an evaluator shows you a difference-in-differences table, this is what is
-underneath it — no more than this.
+underneath it: no more than this.
 :::
 
 ## The estimate
@@ -379,7 +408,7 @@ cat(sprintf('
 
 ::: {.notes}
 0:29 · Hold here a moment. Ask: "does this clear the bar?" Most will spot that
-it does not. Do not resolve it yet — Section 4 does that properly.
+it does not. Do not resolve it yet. Section 4 does that properly.
 :::
 
 ## What the picture shows
@@ -408,7 +437,7 @@ ggplot(viz, aes(Time, Cost, colour = Group, group = Group)) +
 ```
 
 ::: {.notes}
-0:31 · The dotted line is the counterfactual — the invented number at the heart
+0:31 · The dotted line is the counterfactual, the invented number at the heart
 of every impact evaluation. It is never observed. Everything rests on how
 believable it is, which is exactly what Section 5 interrogates.
 :::
@@ -438,18 +467,18 @@ large and has the word "enrolled" in it. That is the trap, and it is worth
 letting them fall into it.
 :::
 
-## Trap 1 — the baseline gap
+## Trap 1: the baseline gap
 
 ```{=html}
 <div class="hero">
   <div class="value alert">`r sprintf("%.0f", b_gap)`</div>
-  <div class="label"><code>enrolled</code> — how far apart the groups were BEFORE the programme</div>
+  <div class="label"><code>enrolled</code>: how far apart the groups were BEFORE the programme</div>
 </div>
 ```
 
 ::: {.warn}
 Businesses offered the programme already spent `r sprintf("%.0f", abs(b_gap))`
-AED less than those not offered. Nothing the programme did caused this — it
+AED less than those not offered. Nothing the programme did caused this. It
 predates the programme entirely.
 
 Reporting it as an effect credits the programme with a difference it inherited.
@@ -460,18 +489,18 @@ Reporting it as an effect credits the programme with a difference it inherited.
 baseline difference as an impact. Usually at least one person has.
 :::
 
-## Trap 2 — the time trend
+## Trap 2: the time trend
 
 ```{=html}
 <div class="hero">
   <div class="value alert">`r sprintf("%+.0f", b_time)`</div>
-  <div class="label"><code>round</code> — what happened to the comparison group anyway</div>
+  <div class="label"><code>round</code>: what happened to the comparison group anyway</div>
 </div>
 ```
 
 ::: {.panel}
 Costs rose `r sprintf("%.0f", b_time)` AED for businesses that received
-nothing. This is the rising tide — volumes, prices, regulation.
+nothing. This is the rising tide: volumes, prices, regulation.
 
 It is the thing difference-in-differences exists to strip out. It is not the
 effect.
@@ -482,19 +511,20 @@ effect.
 ```{=html}
 <div class="hero">
   <div class="value">`r sprintf("%.0f", b_did)` AED</div>
-  <div class="label"><code>round:enrolled</code> — the extra change in the programme group</div>
+  <div class="label"><code>round:enrolled</code>: the extra change in the programme group</div>
 </div>
 ```
 
 ::: {.ask}
-Ask for it by name: *"which row is the difference-in-differences estimate?"*
+You should be able to point to this row yourself: that is the skill this
+session builds.
 :::
 
 It is the same number you calculated by hand.
 
 ::: {.notes}
 0:44 · Close the loop back to the four numbers. The regression is not a black
-box producing a mystery figure — it is their two subtractions, with a
+box producing a mystery figure. It is their two subtractions, with a
 precision estimate attached.
 :::
 
@@ -536,9 +566,9 @@ interval sits below the bar, so the imprecision does not change the call.
 ## Significant is not the same as sufficient
 
 ::: {.warn}
-The estimate is **statistically significant** — we are confident it is not zero.
+The estimate is **statistically significant**: we are confident it is not zero.
 
-It is also **below the bar you set** — it is not big enough to act on.
+It is also **below the bar you set**: it is not big enough to act on.
 
 These are two different questions, and the table only answers the first.
 :::
@@ -562,7 +592,7 @@ That dotted counterfactual line is only believable if the comparison group is
 a fair stand-in for what the programme group would have done.
 
 ::: {.panel}
-It cannot be proved. It can only be made more or less plausible.
+It cannot be proven. It can only be made more or less plausible.
 :::
 
 ## Which of these would you trust?
@@ -588,17 +618,17 @@ bind_rows(
 
 ::: {.warn}
 Only **A** supports the assumption. In **B** and **C** the gap was already
-moving — so some of what the method will call an effect was going to happen
+moving, so some of what the method will call an effect was going to happen
 anyway.
 :::
 
 ::: {.notes}
 0:55 · Vote on each panel before explaining. Make them articulate why B and C
 are a problem. Someone usually spots that C would *understate* the effect
-while B would overstate it — draw that out if it comes.
+while B would overstate it. Draw that out if it comes.
 :::
 
-## So — were they?
+## So, were they?
 
 ::: {.warn}
 We measured costs at **two points in time**. Once before, once after.
@@ -611,7 +641,7 @@ We have one.
 
 ::: {.ask}
 The parallel trends assumption cannot be tested with this data. Not "was not
-tested" — **cannot be**.
+tested": **cannot be**.
 :::
 
 This is not unusual. It is the normal situation for most evaluations you
@@ -640,13 +670,13 @@ tn %>%
 
 ::: {.warn}
 The two groups do not overlap **at all**. The comparison group is not "similar
-firms that happened to miss out" — it is, by construction, the better-scoring
+firms that happened to miss out": it is, by construction, the better-scoring
 half of the market.
 :::
 
 ::: {.notes}
 1:01 · This is the payoff for the seed planted in Section 1. Let the picture do
-the work — two blocks of colour that never touch.
+the work: two blocks of colour that never touch.
 
 Then ask the killer question: "would you expect these two groups to move in
 parallel on their own?" The honest answer is that we have no particular reason
@@ -659,9 +689,9 @@ You will rarely get a clean pre-trend check. Ask for the next best things:
 
 ::: {.panel}
 1. **How was the comparison group chosen, and how are they different?**
-2. **What else changed for one group and not the other?** — other programmes, regulations, shocks
+2. **What else changed for one group and not the other?** (other programmes, regulations, shocks)
 3. **Did anyone change behaviour in anticipation of the programme?**
-4. **Could the programme have affected the comparison group too?** — spillovers make effects look smaller
+4. **Could the programme have affected the comparison group too?** (spillovers make effects look smaller)
 5. **What is the result with a different comparison group?**
 :::
 
@@ -670,7 +700,7 @@ considered them has not.
 
 ::: {.notes}
 1:04 · These five are on the take-away card. Say that question 1 is the one
-that would have caught the problem on the previous slide — and it requires no
+that would have caught the problem on the previous slide, and it requires no
 statistics at all.
 :::
 
@@ -699,7 +729,7 @@ nationally]{.flag}.
 :::
 
 ::: {.ask}
-Four things here are wrong. Three minutes — find them.
+Four things here are wrong. Three minutes: find them.
 :::
 
 ::: {.notes}
@@ -748,7 +778,7 @@ the asterisks and stated as fact.
 
 ::: {.notes}
 1:09 · Take them in order. Error 1 is the one groups almost never find on their
-own — flag that, because it is the most dangerous.
+own. Flag that, because it is the most dangerous.
 :::
 
 ## Notice what they have in common
@@ -759,7 +789,7 @@ The answer was fluent, confident and correctly formatted.
 
 ::: {.warn}
 Nothing in its tone distinguishes the true sentences from the invented ones.
-There is no surface cue — no hedge, no hesitation, no change of register
+There is no surface cue: no hedge, no hesitation, no change of register
 around the four things it made up.
 :::
 
@@ -804,7 +834,7 @@ group was chosen.*
 
 *Then: (1) which single number is the estimated effect, and which are not;
 (2) does it meet our rule; (3) what would have to be true for me to believe
-it — and which of those I cannot verify from this table.*
+it, and which of those I cannot verify from this table.*
 :::
 :::::
 
@@ -812,7 +842,7 @@ it — and which of those I cannot verify from this table.*
 
 ::: {.notes}
 1:13 · Walk through what each element does. The highest-leverage single
-sentence is "ask me any questions you need before answering" — it converts the
+sentence is "ask me any questions you need before answering": it converts the
 model from a guesser into an interviewer.
 :::
 
@@ -836,14 +866,14 @@ already committed to.
 ::: {.notes}
 1:15–1:25 · Ten minutes of group work. Circulate and collect one good example
 and one bad one for the debrief. If a group gets a genuinely new failure mode,
-screenshot it — it goes into the failures library for later sessions.
+screenshot it. It goes into the failures library for later sessions.
 :::
 
 ## Debrief
 
 - What did AI **overstate**?
 - What did it **soften** or leave out?
-- Did it **invent** anything — a test, a number, a caveat?
+- Did it **invent** anything: a test, a number, a caveat?
 - Did the second chat catch what the first missed?
 
 ::: {.ask}
@@ -853,7 +883,7 @@ before it answers.
 
 # 7 · Abu Dhabi DOH [15 min]{.mins}
 
-<!-- PLACEHOLDER — Abu Dhabi DOH health evaluation findings not yet received.
+<!-- PLACEHOLDER: Abu Dhabi DOH health evaluation findings not yet received.
      Replace the three slides below with the real case. Keep the structure:
      (1) the case and the decision at stake
      (2) the table, read using the four steps from Section 4
@@ -878,7 +908,7 @@ before it answers.
 ::: {.notes}
 Ask Fiona specifically whether the DOH evaluation has more than one pre-period.
 If it does, this is the chance to show a real pre-trend check and complete the
-contrast with GreenWaste — which would make this section the strongest in the
+contrast with GreenWaste, which would make this section the strongest in the
 session rather than a repeat.
 :::
 
@@ -888,7 +918,7 @@ Apply the four steps, in order:
 
 ::: {.panel}
 1. Which row is the difference-in-differences estimate?
-2. What are the other coefficients telling you — which is the baseline gap?
+2. What are the other coefficients telling you, which is the baseline gap?
 3. What does the interval mean for **this** decision?
 4. Does it clear the threshold that matters here?
 :::
@@ -912,7 +942,7 @@ Verdict round: act on it, act with caveats, or send it back?
 :::
 
 ::: {.notes}
-1:38 · Hands, not discussion — keeps time. Note who says "send it back" and ask
+1:38 · Hands, not discussion. Keeps time. Note who says "send it back" and ask
 them for the one question that decided it.
 :::
 
@@ -921,19 +951,20 @@ them for the one question that decided it.
 ## Three questions to ask any evaluator presenting DiD
 
 ::: {.panel}
-**1 · "Which number is the difference-in-differences estimate?"**
+**1 · "Why difference-in-differences here rather than another method like a randomised trial?"**
 
-Not the baseline gap, not the time trend. Make them point at the row.
+A strong answer names what they could not do and what this design buys them.
+A weak one treats the method as the only option.
 :::
 
 ::: {.panel}
-**2 · "Were the two groups already moving apart — and how do you know?"**
+**2 · "Were the two groups already moving apart, and how do you know?"**
 
 If they cannot test it, ask what they offer instead.
 :::
 
 ::: {.panel}
-**3 · "Does this clear the bar we set — and what is the range?"**
+**3 · "Does this clear the bar we set, and what is the range?"**
 
 Significant is not the same as sufficient.
 :::
@@ -945,14 +976,14 @@ without notes.
 
 ## Key takeaways
 
-1. DiD compares **changes**, not levels — the change in one group against the change in another
+1. DiD compares **changes**, not levels: the change in one group against the change in another
 2. It is two subtractions; the regression adds precision, not mystery
 3. An evaluation table hands you three plausible numbers and only one is the effect
-4. It rests on **parallel trends**, which usually cannot be tested — so interrogate the comparison group instead
+4. It rests on **parallel trends**, which usually cannot be tested, so interrogate the comparison group instead
 5. GreenWaste: **`r sprintf("%.0f", b_did)` AED**, significant, and **below** the bar → on this evidence, do not scale up
 6. AI will confirm a test that never happened, and recommend scaling against a rule it was never told
 
-## Where this sits — Day 2 scoreboard
+## Where this sits: Day 2 scoreboard
 
 ```{r}
 tibble(
@@ -976,7 +1007,7 @@ Day 2's real lesson, and it is what makes the afternoon worth attending.
 
 ## Next session
 
-**Reading RDD Results** — what happens when eligibility is decided by a
+**Reading RDD Results**: what happens when eligibility is decided by a
 cut-off, and why that gives you a different kind of evidence about a
 different group of businesses.
 
