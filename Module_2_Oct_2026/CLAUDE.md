@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-The goal of this project is to develop material for the second module of an impact evaluation training we are delivering in Abu Dhabi from Oct 12-15. Focus on the Module_2_Oct_2026 folder which contains the outline for each day and session and within which we will be developing materials. Reference the other folders mentioned in the section below (outside of Module_2_Oct_2026) only for some previous material that we can reuse - but brainstorm with me some ways to adapt to the outline for the particular module we are working on. We will develop quarto files for each session, which should be labelled [monthday_session#] - e.g., Oct12_session1. Some sessions will use evaluation_data_GreenWaste data in this folder, while others or parts of sessions (especially case studies) require me to upload data that we do not yet have in the folder. Compared to the previous training sessions we had, which were more focused on training students to use R, these modules and materials need to focus more on interpreting the results and include AI in every aspect. They should not include code or running code directly within the sessions and instead focus on interpretation, as well as AI best practices for us in evaluation (as and when useful to mention).
+The goal of this project is to develop material for the second module of an impact evaluation training we are delivering in Abu Dhabi from Oct 12-15. Focus on the Module_2_Oct_2026 folder which contains the outline for each day and session and within which we will be developing materials. Reference the other folders mentioned in the section below (outside of Module_2_Oct_2026) only for some previous material that we can reuse - but brainstorm with me some ways to adapt to the outline for the particular module we are working on. We will develop quarto files for each session, which should be labelled [monthday_session#] - e.g., Oct12_session1. Some sessions will use evaluation_data_GreenWaste data in this folder, while others or parts of sessions (especially case studies) require me to upload data that we do not yet have in the folder. Compared to the previous training sessions we had, which were more focused on teaching students to use R, these modules and materials focus more on interpreting the results and include AI in every aspect. They still show the technical detail and the code behind the analysis, and the trainer produces output live to give a feel for what happens behind the scenes, but participants never have to write or run any code themselves. Alongside interpretation, weave in AI best practices for evaluation (as and when useful to mention).
 
 In close consultation with me, develop sessions based on the outline. We will develop one at a time based on whichever I ask you to work on. Wait for my input on your ideas before developing or editing any files in this folder.
 
@@ -22,15 +22,16 @@ In general, we should try to include some real examples of AI making mistakes wh
 
 **Audience:** consumers and commissioners of evaluation — people who receive evaluation reports and must decide what to do about them. They are not analysts. They will not write R, and they will not read R.
 
-**The resolution of an apparent conflict in the outline.** The outline says the trainer "runs the analysis in R and projects the output." CLAUDE.md says sessions should not include code. Both hold, as follows:
+**What the outline asks for.** The trainer "runs the analysis in R and projects the output." We embrace this: the sessions **show** the technical detail and the code that produces the tables and graphs, and the trainer produces that output live, so participants get a feel for what happens behind the scenes. What we do **not** do is make participants write, run, or debug anything themselves.
 
-- The trainer *may* run R live as a demonstration of where numbers come from.
-- **No slide ever displays syntax.** Every chunk is `echo=FALSE`. Slides show tables, figures and plain-language labels only.
+- **Show code on the slides that teach the mechanics** (computing the estimator, running the regression, visualising the result, testing an assumption): set `echo: true` on those chunks so the code is visible, and let the chunk produce its table or figure. Keep those code chunks short and readable, and use a two-column layout (code beside the output) so a code slide still fits within 1280x720.
+- **Keep the rest of the deck clean.** Framing, hero numbers, questions, the AI snapshot and closing slides carry no code (leave the YAML default `echo: false` and opt in per chunk).
+- **Running code live is optional for now.** Showing the code on the slide is enough. A real "press play" (via the `quarto-live` / webr extension, which runs R in the browser) is a possible future add-on, not required; running chunks from RStudio is not a clean presentation view.
 - Participants are never asked to write, run, or debug anything.
 
-**The test for any slide:** would a director-general who has never opened R get value from this slide? If not, cut it or rewrite it.
+**The test for any slide:** would a director-general who has never opened R get value from this slide? Seeing the code run and being walked through what it does counts as value; being expected to write or fix it does not.
 
-**What this means when adapting the legacy decks.** The `sessions_in_Abu_Dhabi` material was built to teach R to analysts. Expect to cut roughly half of any legacy deck: implementation chunks, "Implementing X in R", package names, estimator variants (TWFE, staggered adoption, Callaway & Sant'Anna, polynomial specifications), and robustness machinery that a commissioner would never run. Expand instead the few slides that teach *reading*: what each number means, which number answers the decision question, what has to be true for it to be believed, and what to ask the evaluator.
+**What this means when adapting the legacy decks.** The `sessions_in_Abu_Dhabi` material was built to teach R to analysts, and it is the source to pull the mechanics back from: the implementing-with-regression, interpreting-coefficients, visualising-DiD and testing-pre-trends slides all come from there. Reuse that code (adapted to the session's data and the module palette), but still cut the analyst-only material a commissioner would never need: estimator variants (TWFE, staggered adoption, Callaway & Sant'Anna), heavy robustness machinery, and "here is every package" slides. Keep expanding the slides that teach *reading*: what each number means, which number answers the decision question, what has to be true for it to be believed, and what to ask the evaluator.
 
 ---
 
@@ -64,7 +65,7 @@ Filenames follow `[Monthday]_session[#].qmd`. "Legacy source" is the file in `se
 - **Slide size:** `width: 1280`, `height: 720` in the revealjs block.
 - **`embed-resources: true` — mandatory.** Without it, Quarto writes the deck as a small `.html` plus a `<name>_files/` folder holding every chart image *and* the entire reveal.js engine and compiled theme. Move or send the `.html` alone and it opens as an unstyled wall of text with no images. With it, everything is inlined into one portable file (~4.5 MB) that works on any machine with a browser and nothing else. Always deliver the embedded version.
 - **Data path:** relative — `./evaluation_data_GreenWaste.csv`. Keep all session files and data in the same folder so paths stay simple.
-- **All chunks `echo=FALSE`.** Set it once in the YAML (`knitr: opts_chunk: echo: false`) rather than per chunk, so a stray chunk cannot leak code onto a slide.
+- **Default `echo: false`; opt in to `echo: true` on the mechanics slides.** Keep the YAML default `echo: false` so framing and result slides never leak code, and set `echo: true` per chunk on the analysis slides meant to show the code (see the Code Question above). On a code-plus-output slide keep the code short and put it in a two-column layout beside the figure or table so the slide fits 1280x720.
 - **Author field:** 3ie (the legacy decks are authored "Dr. Lucas Sempé" — do not carry that over without asking).
 - **Slide budget:** roughly 22-28 slides for a 1.5h session, 30-36 for a 2h session. These sessions are discussion-heavy; slide count is low relative to a lecture.
 - **No speaker notes.** Do not add `::: {.notes}` blocks to session decks; Fiona does not use them. Section-level timing stays visible through the `.mins` badge on each section divider (e.g. `# 2 · The result [15 min]{.mins}`), and facilitation prompts live on the slides themselves as `.ask` / `.warn` callouts. Fiona runs the session from the slides, and there is no separate facilitator guide.
@@ -241,6 +242,14 @@ A variant `evaluation_data_GreenWaste_IV.csv` exists in `sessions_in_Abu_Dhabi` 
 
 ---
 
+## Exercises and partner materials
+
+A partner helps us build the exercises and their materials (printed handouts and cards, Menti quizzes, worksheets). To brief them, we keep one running Word document, **`Module2_exercise_plan.docx`** in this folder, that lists every exercise across all sessions: the exercise, roughly when in the session it appears, its type (vote, hands-on, group work, handout, Menti quiz), the materials needed, and a description of what the partner should build.
+
+**Standing task for every session:** when a session is drafted or revised, add or update its exercises in `Module2_exercise_plan.docx`. Where an exercise is not fully built into the slides, leave a clear placeholder on the slide (a short Menti quiz, or the exercise instructions) and describe in the doc what the partner needs to create for it. The slides carry the in-room instructions; the doc is the build brief for the partner.
+
+---
+
 ## Working Rhythm — every session goes through this loop
 
 A session is not done when it renders. Each one goes through these stages, and
@@ -257,11 +266,13 @@ stage 3.
 
 - [ ] After creating each session: hand the .qmd to Fiona to render and review (stages 2–5 above) before moving to the next
 - [ ] Fiona: run each session's AI tasks yourself and add real failure screenshots to `AI_failure_exs/`, then flag them for inclusion
+- [ ] For each session: add or update its exercises in `Module2_exercise_plan.docx` (the partner's build brief), and leave a placeholder on any slide whose exercise is not built in
 
 ---
 
 ## Checklist / Next Steps
 
+- [ ] Keep `Module2_exercise_plan.docx` current as sessions are built (Oct13 S1 seeded)
 - [x] Set up folder and draft Claude md
 - [x] Help me improve the Claude md and fill in any missing details
 - [x] Copy `clean.scss` into `Module_2_Oct_2026/`
