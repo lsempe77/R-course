@@ -628,10 +628,9 @@ is fair.
 
 # 5 · AI Snapshot [18 min]{.mins}
 
-## We asked AI why before-and-after can mislead
+## Asking AI to explain the pitfall
 
-**Prompt:** *"Explain in plain language why a before-and-after comparison can be
-misleading."*
+Suppose we ask AI: *"Explain in plain language why a before-and-after comparison can be misleading."* Here is the kind of answer it might give. Some of what it says may be wrong.
 
 ::: {.ai-output}
 A before-and-after comparison looks at the outcome before a programme and after
@@ -648,7 +647,7 @@ of 665 AED]{.flag}.
 :::
 
 ::: {.ask}
-Four things here are wrong. Three minutes, in pairs: mark them up.
+In your groups, mark anything that looks wrong. Three minutes.
 :::
 
 ::: {.notes}
@@ -657,7 +656,7 @@ Standing task: when Fiona runs this prompt herself and the model slips, screensh
 it into AI_failure_exs/ and swap the real capture in. Real captures beat invented ones.
 :::
 
-## What it got wrong
+## What might be wrong here
 
 :::::: {.columns}
 

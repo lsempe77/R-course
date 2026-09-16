@@ -94,15 +94,15 @@ By the end of 90 minutes you will be able to:
 - Spot mistakes AI may make when interpreting an evaluation table
 :::
 
-You will see the analysis run, and we will talk through what each step is doing, to give a feel for what happens behind the scenes. You will not have to write or run any code yourself.
+We will show and walk through some code to give you a feel for what happens behind the scenes. You will not have to write or run any code yourself.
 
 ::: {.notes}
 0:00–0:02 · Set expectations. They are commissioners, not analysts. Their job is to interrogate evidence, not to produce it. We show the code and run it so they see where the numbers come from. Say plainly: "you will see how the analysis is done, but you will never have to write or run code yourself."
 :::
 
-# 1 · Compared to what? [10 min]{.mins}
+# 1 · GreenWaste Program: Compared to what? [10 min]{.mins}
 
-## What happened to the businesses that got it
+## What happened to the businesses that received the program
 
 ```{r fig.height=3.6, fig.width=8}
 tibble(Time = tlev(c("Before", "After")), Cost = c(off_b, off_a)) %>%
@@ -494,7 +494,7 @@ These are two different questions, and the table only answers the first.
 
 ::: {.notes}
 0:38 · The most transferable idea in the session. Flag that it returns in the
-AI exercise, because AI conflates the two almost every time.
+AI exercise, because conflating the two is a mistake AI can make when reading a table.
 :::
 
 # 4 · The one question [14 min]{.mins}
@@ -697,9 +697,9 @@ statistics at all.
 
 # 5 · AI Snapshot [18 min]{.mins}
 
-## We gave AI the table and asked it to explain
+## Feeding the table to AI
 
-**Prompt:** *"Explain these results."*
+Suppose we paste the results table into AI and say: *"Explain these results."* Here is the kind of answer it might give. Some of what it says may be wrong.
 
 ::: {.ai-output}
 The analysis uses a difference-in-differences design to evaluate the GreenWaste
@@ -720,16 +720,18 @@ nationally]{.flag}.
 :::
 
 ::: {.ask}
-Four things here are wrong. Three minutes: find them.
+In your groups, mark anything that looks wrong. Three minutes.
 :::
 
 ::: {.notes}
 0:53 · Hand out the printed copy. Three minutes in pairs, marking up the text.
-Take answers from the room before revealing. Someone almost always finds the
-scale-up recommendation first; the fabricated test is the one they miss.
+Take answers from the room before discussing. Someone often finds the
+scale-up recommendation first; the fabricated test is the one they tend to miss.
+There are four planted issues, but do not tell the room the number: let them
+find what they can.
 :::
 
-## What it got wrong
+## What might be wrong here
 
 :::::: {.columns}
 

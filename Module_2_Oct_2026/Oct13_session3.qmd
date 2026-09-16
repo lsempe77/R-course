@@ -1,0 +1,950 @@
+---
+title: "Reading Matching Results"
+subtitle: "Module 2 · Day 2, Session 3: Two Case Studies"
+author: "3ie"
+always_allow_html: yes
+format:
+  revealjs:
+    theme: [clean.scss, module2.scss]
+    slide-number: true
+    width: 1280
+    height: 720
+    fig-align: center
+    slide-level: 2
+    embed-resources: true
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+    dev: "png"
+    dpi: 200
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup}
+library(tidyverse)
+library(estimatr)
+library(knitr)
+library(kableExtra)
+library(MatchIt)
+
+df <- read.csv("./evaluation_data_GreenWaste.csv")
+
+CUTOFF    <- 58
+THRESHOLD <- 1000
+
+# ---- Wide format: one row per business, baseline covariates and both outcomes
+df_w <- df %>%
+  pivot_wider(
+    id_cols = c(neighborhood_identifier, business_identifier,
+                treatment_neighborhood, eligible, enrolled),
+    names_from  = round,
+    values_from = c(waste_management_costs, efficiency_index, age_manager,
+                    age_deputy, educ_manager, educ_deputy, female_manager,
+                    foreign_owned, staff_size, advanced_filtration,
+                    water_treatment_system, business_area,
+                    recycling_center_distance, recycling_compliance)) %>%
+  filter(!is.na(waste_management_costs_0))
+
+# ---- Raw after-programme means (the trap) ---------------------------------
+raw_off <- mean(df_w$waste_management_costs_1[df_w$enrolled == 1])
+raw_not <- mean(df_w$waste_management_costs_1[df_w$enrolled == 0])
+
+# ---- Full covariate set (all observed baseline characteristics) -----------
+f_full <- enrolled ~ age_manager_0 + educ_manager_0 + age_deputy_0 +
+  educ_deputy_0 + female_manager_0 + foreign_owned_0 + staff_size_0 +
+  advanced_filtration_0 + water_treatment_system_0 + business_area_0 +
+  recycling_center_distance_0
+
+# Fit propensity model + discard non-overlap
+psm_ur0 <- matchit(f_full,
+  data = df_w %>% dplyr::select(-recycling_compliance_0, -recycling_compliance_1),
+  distance = "glm", link = "probit", discard = "both",
+  method = "nearest", estimand = "ATT")
+
+# 5 to 95 per cent common-range trim, then re-match
+df_tmp <- df_w %>% mutate(ps = psm_ur0$distance, treat = enrolled == 1)
+lower  <- max(quantile(df_tmp$ps[df_tmp$treat], 0.05),
+              quantile(df_tmp$ps[!df_tmp$treat], 0.05))
+upper  <- min(quantile(df_tmp$ps[df_tmp$treat], 0.95),
+              quantile(df_tmp$ps[!df_tmp$treat], 0.95))
+df_trim <- filter(df_tmp, ps >= lower & ps <= upper)
+
+psm_ur <- matchit(f_full,
+  data = df_trim %>% dplyr::select(-recycling_compliance_0, -recycling_compliance_1, -ps, -treat),
+  distance = "glm", link = "probit", discard = "both",
+  method = "nearest", estimand = "ATT")
+
+match_ur <- match.data(psm_ur)
+
+# Headline estimate: matched groups compared after the programme
+out_post <- lm_robust(waste_management_costs_1 ~ enrolled,
+                      data = match_ur, clusters = neighborhood_identifier)
+b_match  <- unname(coef(out_post)["enrolled"])
+se_match <- unname(out_post$std.error["enrolled"])
+ci_lo    <- b_match - 1.96 * se_match
+ci_hi    <- b_match + 1.96 * se_match
+
+# ---- Thin covariate set (age + education only): the fragility contrast -----
+f_lim <- enrolled ~ age_manager_0 + educ_manager_0
+psm_r0 <- matchit(f_lim,
+  data = df_w %>% dplyr::select(-recycling_compliance_0, -recycling_compliance_1),
+  distance = "glm", link = "probit", discard = "both",
+  method = "nearest", estimand = "ATT")
+df_tmpr <- df_w %>% mutate(ps = psm_r0$distance, treat = enrolled == 1)
+lor <- max(quantile(df_tmpr$ps[df_tmpr$treat], 0.05), quantile(df_tmpr$ps[!df_tmpr$treat], 0.05))
+upr <- min(quantile(df_tmpr$ps[df_tmpr$treat], 0.95), quantile(df_tmpr$ps[!df_tmpr$treat], 0.95))
+df_trimr <- filter(df_tmpr, ps >= lor & ps <= upr)
+psm_r <- matchit(f_lim,
+  data = df_trimr %>% dplyr::select(-recycling_compliance_0, -recycling_compliance_1, -ps, -treat),
+  distance = "glm", link = "probit", discard = "both",
+  method = "nearest", estimand = "ATT")
+match_r  <- match.data(psm_r)
+out_lim  <- lm_robust(waste_management_costs_1 ~ enrolled,
+                      data = match_r, clusters = neighborhood_identifier)
+b_lim    <- unname(coef(out_lim)["enrolled"])
+
+# ---- Propensity-score overlap for the common-support plot ------------------
+df_w <- df_w %>% mutate(ps_full = psm_ur0$distance)
+
+# ---- Standardised balance, before and after -------------------------------
+sb  <- summary(psm_ur, standardize = TRUE)
+bal <- tibble(
+  var    = rownames(sb$sum.all),
+  Before = abs(sb$sum.all[, "Std. Mean Diff."]),
+  After  = abs(sb$sum.matched[, "Std. Mean Diff."])) %>%
+  filter(var != "distance")
+
+# ---- CEM objects, for the two intuition plots only ------------------------
+cem_ur <- matchit(
+  enrolled ~ efficiency_index_0 + recycling_center_distance_0 +
+    educ_manager_0 + staff_size_0,
+  data = df_w %>% dplyr::select(-recycling_compliance_0, -recycling_compliance_1),
+  method = "cem", estimand = "ATT")
+cem_matched <- match.data(cem_ur, drop.unmatched = TRUE)
+
+# ---- Validated palette (CVD-safe; see CLAUDE.md > Design System) -----------
+ACCENT  <- "#00789E"   # programme / offered / enrolled
+ACCENT2 <- "#B45309"   # comparison / not offered
+ALERT   <- "#9A2515"   # annotations and decision rules: never a data series
+INK     <- "#131516"; MUTED <- "#5C6467"; RULE <- "#DCE1E3"
+
+# ---- One chart theme for the whole module ---------------------------------
+theme_m2 <- function(base = 15) {
+  theme_minimal(base_size = base) +
+    theme(
+      text             = element_text(colour = INK),
+      axis.title       = element_text(colour = MUTED, size = rel(0.85)),
+      axis.text        = element_text(colour = MUTED),
+      panel.grid.minor = element_blank(),
+      panel.grid.major = element_line(colour = RULE, linewidth = 0.4),
+      legend.position  = "bottom",
+      legend.title     = element_blank(),
+      legend.text      = element_text(size = rel(0.95)),
+      strip.text       = element_text(colour = INK, face = "plain", size = rel(0.95)),
+      plot.margin      = margin(4, 10, 4, 4)
+    )
+}
+
+grp_cols <- c("Enrolled" = ACCENT, "Not enrolled" = ACCENT2)
+```
+
+## What this session gives you
+
+By the end of the next two hours you will be able to:
+
+::: {.panel}
+- Explain what a matching result means, in plain terms
+- Find the one number in the table that is the programme's effect
+- Ask the single question that decides whether a matching result can be trusted
+- Judge two real matching studies and say which one you believe more, and why
+- Spot the mistakes AI makes when it reads a matching table
+:::
+
+We will show and walk through some code so you get a feel for what happens behind the scenes. You will not have to write or run any code yourself.
+
+::: {.notes}
+0:00 to 0:02 · Same footing as the two morning sessions. They are commissioners, not analysts. We show the code and run it so they see where the numbers come from, but they never write or run it. Flag the fourth objective: this is the "two case studies" session, and the comparison between a clean study and a messy one is the point.
+:::
+
+## Where matching sits in the day
+
+This morning gave you two tools, and each one needed a special ingredient.
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**Difference-in-differences** needed a before and an after, and a comparison group already **moving in parallel**.
+
+**Regression discontinuity** needed a **cut-off**, with businesses lined up on either side of it.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.ask}
+**Matching** needs neither.
+
+No parallel trends, no threshold. Just rich data on **who each business is**.
+
+That freedom is its appeal. It is also where the catch lives.
+:::
+:::::
+
+::::::
+
+::: {.notes}
+0:02 · Position matching as the method you reach for when the other two are not available. No clean cut-off, no credible parallel trend, but you do know a lot about each unit. Plant the catch now and pay it off in Section 5: matching can only use what was measured.
+:::
+
+## The case at a glance
+
+```{=html}
+<div class="facts">
+  <div class="k">Programme</div>       <div class="v">GreenWaste, offered to eligible businesses</div>
+  <div class="k">Who enrolled</div>    <div class="v">Eligible businesses in programme neighbourhoods</div>
+  <div class="k">Comparison pool</div> <div class="v">Businesses that did not enrol, matched on their characteristics</div>
+  <div class="k">Outcome</div>         <div class="v">Waste management costs (AED)</div>
+  <div class="k">What we know</div>    <div class="v">Manager and deputy age and education, staff size, filtration, water treatment, area, distance to recycling</div>
+  <div class="k">Decision rule</div>   <div class="v">Scale up only if costs fall by at least 1,000 AED</div>
+</div>
+```
+
+::: {.notes}
+0:04 · The decision rule is the same 1,000 AED bar as all week. Hold it fixed. Read out the "what we know" row slowly: it is the exact list matching gets to work with, and Section 5 turns on what is not on that list.
+:::
+
+# 1 · The trap [10 min]{.mins}
+
+## A convincing comparison
+
+```{r fig.height=3.6, fig.width=9}
+tibble(Group = c("Enrolled", "Not enrolled"), Cost = c(raw_off, raw_not)) %>%
+  ggplot(aes(Group, Cost, fill = Group)) +
+  geom_col(width = 0.55, show.legend = FALSE) +
+  geom_text(aes(label = sprintf("%s AED", format(round(Cost), big.mark = ","))),
+            vjust = -0.5, size = 5, colour = INK) +
+  scale_fill_manual(values = grp_cols) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
+  labs(x = NULL, y = "Average waste costs after the programme (AED)") +
+  theme_m2()
+```
+
+::: {.ask}
+Businesses that enrolled spend far less than those that did not. Did the programme cause that whole gap?
+:::
+
+::: {.notes}
+0:08 · Show of hands, and make them commit to a number for the gap. Write it on the flipchart. Do not move on until the room has answered. The next slide only lands if they have signed up to the naive reading first.
+:::
+
+## Why that gap is not the effect
+
+::: {.warn}
+The businesses that enrolled were **different from the start**. They were eligible for a reason: they already scored differently on the efficiency index, and they differ on size, ownership and management too.
+
+Most of that raw gap is **who these businesses already were**, not what the programme did.
+:::
+
+::: {.ask}
+This is the same selection problem from this morning. Matching is one way to try to fix it: instead of comparing the two whole groups, compare each enrolled business with one that looks just like it.
+:::
+
+::: {.notes}
+0:11 · Callback to the DiD non-overlap picture and the RDD "different animals" line. The instinct we are building: a raw difference between self-selected groups is a description, not an effect. Then pose matching as the repair and move into the idea.
+:::
+
+# 2 · The idea, in plain terms [15 min]{.mins}
+
+## Matching in one sentence
+
+::: {.ask}
+For each business that received the programme, find a business as **similar as possible** that did not, then compare the two.
+:::
+
+Do that for every enrolled business, and you have built a comparison group that looks like the programme group in every way you measured.
+
+The difference in costs between the matched groups is the estimated effect.
+
+::: {.notes}
+0:13 · Say the sentence, then say it again slowly. The intuition to land: we are not comparing everyone to everyone. We are building a stand-in twin for each treated business out of the untreated ones. Hold the word "measured", it is the whole of Section 5.
+:::
+
+## When is matching the right tool?
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**Use it when:**
+
+- Assignment was **not** random
+- There is **no** clean eligibility cut-off to exploit
+- But you have **rich data** on the characteristics that drove who took part
+- And there are enough similar untreated units to draw twins from
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.panel}
+**You see this shape often:**
+
+- A voluntary programme people opt into
+- A service take-up you could not randomise
+- Comparing adopters with similar non-adopters
+- Any "we have good baseline data" evaluation
+:::
+:::::
+
+::::::
+
+::: {.ask}
+Matching is the workhorse for observational data: no experiment, no threshold, but a lot known about each unit.
+:::
+
+::: {.notes}
+0:15 · Situate the method the way DiD and RDD were situated. Ask the room for a voluntary programme from their own portfolio where nobody was randomised and there was no cut-off. Most commissioners have one. That is where an evaluator would reach for matching.
+:::
+
+## Your turn: find the twins
+
+Match each enrolled business to the not-enrolled business it most resembles, then read off the cost difference.
+
+:::::: {.columns}
+
+::::: {.column width="52%"}
+```{r}
+tibble(
+  Enrolled  = c("A: manager 45, small, 12,000 cost",
+                "B: manager 38, large, 9,000 cost",
+                "C: manager 52, small, 14,000 cost"),
+  Candidate = c("1: manager 39, large",
+                "2: manager 46, small",
+                "3: manager 51, small")
+) %>%
+  kable(align = "ll", col.names = c("Enrolled business", "Not-enrolled candidates")) %>%
+  kable_styling(full_width = FALSE, font_size = 20)
+```
+:::::
+
+::::: {.column width="48%"}
+::: {.panel}
+Which candidate is the right twin for each enrolled business?
+
+Match on **who they are**, not on their cost. Then the cost gap between the pairs is your rough estimate.
+:::
+:::::
+
+::::::
+
+::: {.ask}
+Ninety seconds. Notice what you are doing: you are throwing away the candidates that do not resemble anyone.
+:::
+
+::: {.notes}
+0:18 · Hand out the twins card. Genuine silence for ninety seconds. The point they should feel: matching is intuitive, they already know how to do it, and it quietly discards units with no good match. That discard is Case 2 later. Circulate and listen for anyone asking "but what if none of them really match?", that instinct is exactly Section 5.
+:::
+
+## Before matching: two different crowds
+
+```{r fig.height=3.7, fig.width=8.5}
+set.seed(123)
+n <- 220
+x1 <- runif(n, -2, 2); x2 <- runif(n, -2, 2)
+g  <- rbinom(n, 1, plogis(0.4 + 0.8*x1 + 0.8*x2))
+tibble(x1, x2, Group = factor(g, labels = c("Not enrolled", "Enrolled"))) %>%
+  ggplot(aes(x1, x2, colour = Group, shape = Group)) +
+  geom_point(size = 2.4, alpha = 0.9) +
+  scale_colour_manual(values = grp_cols) +
+  labs(x = "A characteristic (illustrative)", y = "Another characteristic") +
+  theme_m2()
+```
+
+::: {.warn}
+The two groups sit in different parts of the picture. Matching keeps only the region where they **overlap**, and pairs like with like inside it.
+:::
+
+::: {.notes}
+0:21 · Illustrative data, not GreenWaste, chosen so the imbalance is visible. Point at the top-right, mostly one colour, and the bottom-left, mostly the other. Only the middle band has both. That middle band is where matching can work, and everything else gets set aside. This teed up "common support" on the next slide.
+:::
+
+# Break [5 min]{.mins}
+
+## Five minutes
+
+::: {.panel}
+We have the idea: pair each enrolled business with a similar one that did not enrol, and compare.
+
+After the break we open the actual output an evaluator would hand you, and find the one number that is the effect.
+:::
+
+::: {.notes}
+0:21 to 0:26 · Real break. Do not run over. Come back with energy on the output reading, which is the heart of the session.
+:::
+
+# 3 · Reading the output [20 min]{.mins}
+
+## Three steps behind the table
+
+:::::: {.columns}
+
+::::: {.column width="54%"}
+```{r}
+#| echo: true
+#| eval: false
+# Step 1. Estimate how likely each business
+#   was to enrol, from what we know about it.
+# Step 2. Keep only businesses that have a
+#   genuine match on the other side, and pair
+#   each enrolled one with its closest twin.
+psm <- matchit(
+  enrolled ~ age_manager_0 + educ_manager_0 +
+    staff_size_0 + foreign_owned_0 +
+    business_area_0,          # and a few more
+  method = "nearest", estimand = "ATT")
+
+# Step 3. Compare the matched groups' costs.
+out <- lm_robust(
+  waste_management_costs_1 ~ enrolled,
+  data = match.data(psm),
+  clusters = neighborhood_identifier)
+```
+:::::
+
+::::: {.column width="46%"}
+::: {.panel}
+- **Step 1** turns many characteristics into a single "likelihood of enrolling" score.
+- **Step 2** throws out businesses with no counterpart, then pairs the rest.
+- **Step 3** is the comparison you would have wanted all along, now between look-alike groups.
+:::
+:::::
+
+::::::
+
+::: {.notes}
+0:26 · Do not dwell on syntax. The one idea that matters: matching is preprocessing. It cleans and pairs the data first, and only then do we compare. Run the chunk live if you like. The comparison in Step 3 is deliberately simple: enrolled versus not, on the matched sample.
+:::
+
+## Did we find real twins? Common support
+
+```{r fig.height=3.5, fig.width=9}
+df_w %>%
+  mutate(g = ifelse(enrolled == 1, "Enrolled", "Not enrolled")) %>%
+  ggplot(aes(ps_full, colour = g, fill = g)) +
+  geom_density(alpha = 0.2, linewidth = 1) +
+  scale_colour_manual(values = grp_cols) +
+  scale_fill_manual(values = grp_cols) +
+  labs(x = "Estimated likelihood of enrolling", y = "Density of businesses") +
+  theme_m2()
+```
+
+::: {.warn}
+Matching can only work where the two curves **overlap**. Where one group has no counterpart, those businesses are set aside, and the result stops applying to them.
+:::
+
+::: {.notes}
+0:30 · This is the picture that decides whether matching is even possible. Where only one colour is present, there are no twins to be had. Ask: if we drop those businesses, who is the result still about? Answer: only the ones who had a match. That is the reach question again, and it returns in Case 2.
+:::
+
+## Did matching work? Balance
+
+```{r fig.height=3.6, fig.width=9}
+bal %>%
+  pivot_longer(c(Before, After), names_to = "stage", values_to = "smd") %>%
+  mutate(stage = factor(stage, levels = c("Before", "After"))) %>%
+  ggplot(aes(smd, reorder(var, smd), colour = stage)) +
+  geom_vline(xintercept = 0.1, linetype = "dashed", colour = MUTED) +
+  geom_point(size = 3) +
+  scale_colour_manual(values = c("Before" = ACCENT2, "After" = ACCENT)) +
+  labs(x = "How far apart the groups are on each characteristic", y = NULL) +
+  theme_m2(13)
+```
+
+::: {.ask}
+Each dot is one characteristic. Matching pulls the gaps toward zero: after matching, the two groups look alike on everything we fed in.
+:::
+
+::: {.notes}
+0:34 · This is the slide evaluators use to say "the groups are balanced". Read it honestly: balance means alike on the measured characteristics, the ones on the "what we know" list. It says nothing about the characteristics we did not measure. Hold that thought, hard, for Section 5.
+:::
+
+## The number that answers your question
+
+```{=html}
+<div class="hero">
+  <div class="value">`r sprintf("%.0f", b_match)` AED</div>
+  <div class="label"><code>enrolled</code>: the cost difference between the matched groups</div>
+</div>
+```
+
+::: {.ask}
+This is the comparison you wanted: like against like, on everything measured. It is your rough twin exercise, done for every enrolled business at once.
+:::
+
+::: {.notes}
+0:37 · Close the loop back to the twins card. The regression is not a black box: it is their pairing exercise, scaled up, with a precision estimate attached. Note this is the covariate-full estimate, the one carried to the decision.
+:::
+
+## How sure are we?
+
+```{r fig.height=2.4, fig.width=9}
+# NB: ASCII "-" inside ggplot labels; the Unicode minus does not render here
+ggplot(tibble(x = 1), aes(x, 0)) +
+  annotate("segment", x = -THRESHOLD, xend = -THRESHOLD, y = -1, yend = 1,
+           linetype = "dashed", colour = ALERT, linewidth = 1.1) +
+  annotate("segment", x = ci_lo, xend = ci_hi, y = 0, yend = 0,
+           linewidth = 3, colour = ACCENT) +
+  annotate("point", x = b_match, y = 0, size = 6, colour = ACCENT) +
+  annotate("text", x = -THRESHOLD - 25, y = 0.74, colour = ALERT, size = 4.4,
+           lineheight = 0.9, hjust = 1,
+           label = sprintf("the bar\n-%s AED", format(THRESHOLD, big.mark = ","))) +
+  annotate("text", x = b_match, y = -0.62, size = 4.4, colour = INK,
+           label = sprintf("%.0f   (%.0f to %.0f)", b_match, ci_lo, ci_hi)) +
+  scale_x_continuous(limits = c(-1300, -600)) +
+  scale_y_continuous(limits = c(-1, 1)) +
+  labs(x = "Difference in waste costs (AED)", y = NULL) +
+  theme_m2() +
+  theme(axis.text.y = element_blank(), panel.grid.major.y = element_blank())
+```
+
+::: {.warn}
+The estimate is **statistically significant**: we are confident it is not zero. Its best estimate sits **just short of the 1,000 AED bar** you set. Significant is not the same as sufficient.
+:::
+
+::: {.notes}
+0:40 · Same reframing as the morning. The useful question for a decision is not "is the interval narrow?" but "does my decision change across this range?". Note honestly that part of the interval crosses the bar, so this is a closer call than DiD or RDD, and that closeness is exactly why the next section matters.
+:::
+
+# 4 · A second way: matching in bins [8 min]{.mins}
+
+## Coarsened exact matching: the idea
+
+Propensity matching scores each business, then pairs on the score. There is a second common approach that is even easier to picture:
+
+::: {.ask}
+Sort businesses into **bins** (a range of ages, a range of sizes), then compare enrolled and not-enrolled businesses **inside the same bin**.
+:::
+
+```{r fig.height=3.1, fig.width=9}
+cuts <- cem_ur$info$cuts
+eb <- c(0, cuts$efficiency_index_0, 100)
+db <- c(0, cuts$recycling_center_distance_0, max(df_w$recycling_center_distance_0) + 1)
+df_w %>%
+  mutate(g = factor(ifelse(enrolled == 1, "Enrolled", "Not enrolled"))) %>%
+  ggplot(aes(efficiency_index_0, recycling_center_distance_0, colour = g)) +
+  geom_point(size = 1.6, alpha = 0.5) +
+  geom_vline(xintercept = eb, linetype = "dashed", colour = RULE) +
+  geom_hline(yintercept = db, linetype = "dashed", colour = RULE) +
+  scale_colour_manual(values = grp_cols) +
+  labs(x = "Efficiency index at baseline", y = "Distance to recycling centre") +
+  theme_m2(13)
+```
+
+::: {.notes}
+0:42 · Do not teach the mechanics. The picture does the work: the grid is the set of bins. A bin is a small box on this plot. The idea is simply to compare businesses that fall in the same box, so they are alike by construction.
+:::
+
+## What it keeps, and what it drops
+
+```{r fig.height=3.3, fig.width=9}
+cem_matched %>%
+  mutate(g = factor(ifelse(enrolled == 1, "Enrolled", "Not enrolled"))) %>%
+  ggplot(aes(efficiency_index_0, recycling_center_distance_0, colour = g)) +
+  geom_point(size = 1.6, alpha = 0.5) +
+  geom_vline(xintercept = eb, linetype = "dashed", colour = RULE) +
+  geom_hline(yintercept = db, linetype = "dashed", colour = RULE) +
+  scale_colour_manual(values = grp_cols) +
+  labs(x = "Efficiency index at baseline", y = "Distance to recycling centre") +
+  theme_m2(13)
+```
+
+::: {.ask}
+Only the boxes that held **both** kinds of business survive. The rest are dropped. Different recipe, same discipline, and it lands at a similar answer to the score-based method.
+:::
+
+::: {.notes}
+0:44 · Contrast with the previous slide: whole regions have vanished because they held only one group. Same lesson as common support, shown a second way. Reassure them the two methods agree here, so the choice of recipe is not what is driving the answer. What could drive it is coming next.
+:::
+
+# 5 · The one question [12 min]{.mins}
+
+## What matching rests on
+
+Difference-in-differences rested on parallel trends. Regression discontinuity rested on a clean cut-off. Matching rests on something plainer, and harder:
+
+::: {.ask}
+Everything that made a business likely to enrol, **and** likely to have different costs anyway, was **measured** and matched on.
+:::
+
+::: {.warn}
+Balance proves the groups are alike on what we measured. It can say nothing about what we did not.
+:::
+
+::: {.notes}
+0:44 · State the assumption in their language: no important hidden difference between the matched groups. Contrast it with the morning. Parallel trends and continuity could at least be argued from a picture. This one is about things that are, by definition, not in the data.
+:::
+
+## The question to put to any matching study
+
+::: {.ask}
+"What else might be different about these two groups that you could not measure?"
+:::
+
+::: {.panel}
+For GreenWaste, think about what is **not** on the "what we know" list: the drive of the owner, the quality of management, an expansion already planned, a supplier relationship. Any of these could make a business both more likely to enrol **and** lower its costs on its own.
+
+Matching cannot touch them. Balance will still look perfect.
+:::
+
+::: {.notes}
+0:48 · This is the whole session in one question. Get them to generate the hidden differences themselves, do not supply them. Owner motivation is the one that always comes up and it is the perfect example: unmeasured, plausible, and it would bias the result in exactly the direction that flatters the programme.
+:::
+
+## The same firms, a different answer
+
+```{r fig.height=3.2, fig.width=9}
+tibble(
+  spec = c("Matched on age and\neducation only",
+           "Matched on all measured\ncharacteristics"),
+  est  = c(b_lim, b_match)) %>%
+  ggplot(aes(est, spec)) +
+  geom_vline(xintercept = -THRESHOLD, linetype = "dashed", colour = ALERT, linewidth = 1) +
+  geom_point(size = 5, colour = ACCENT) +
+  geom_text(aes(label = sprintf("%.0f AED", est)), vjust = -1.1, size = 4.6, colour = INK) +
+  annotate("text", x = -THRESHOLD, y = 2.5, label = "the bar", colour = ALERT, size = 4, hjust = 1.1) +
+  scale_x_continuous(limits = c(-1300, -700)) +
+  scale_y_discrete(expand = expansion(add = c(0.6, 0.9))) +
+  labs(x = "Estimated effect on waste costs (AED)", y = NULL) +
+  theme_m2(13)
+```
+
+::: {.warn}
+Same businesses, same method. Match on a thin set of characteristics and the estimate lands on **one side** of the bar; match on the full set and it lands on the **other**. The answer depends on what you chose to feed in.
+:::
+
+::: {.notes}
+0:52 · This is the fragility point and it is specific to matching among the three methods. The takeaway for a commissioner: with matching, always ask what was matched on, and whether the answer holds up when that list changes. If a single choice of variables flips the recommendation, the result is not settled. This flows straight into the AI failure.
+:::
+
+# 6 · AI Snapshot [20 min]{.mins}
+
+## We gave AI the matching table and asked it to explain
+
+**Prompt:** *"Explain these results."*
+
+::: {.ai-output}
+The analysis uses propensity score matching to evaluate the GreenWaste Program.
+After matching, the treated and comparison businesses are well balanced on all
+characteristics, so [the estimate is free of selection bias and can be read as
+the causal effect]{.flag}.
+
+The programme reduced waste management costs by about 974 AED per business, a
+statistically significant result ([p < 0.001]{.flag}). [A sensitivity analysis
+confirms the finding is robust to unobserved confounders]{.flag}.
+
+Because the effect is statistically significant, [the programme should be scaled
+up nationally]{.flag}.
+:::
+
+::: {.ask}
+Four things here are wrong. Three minutes: find them.
+:::
+
+::: {.notes}
+0:54 · Hand out the printed copy. Three minutes in pairs, marking up the text. Take answers from the room before revealing. The scale-up line is found first. The balance-equals-no-bias claim is the one that matters most and is missed most, because it sounds like exactly what a careful analyst would say.
+:::
+
+## What it got wrong
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.warn}
+**1 · It treated balance as proof of no bias**
+
+Balance is on the **measured** characteristics only. Matching cannot remove differences it could not see, and this sentence quietly claims it did.
+:::
+
+::: {.warn}
+**2 · It invented a robustness check**
+
+No sensitivity analysis was run, and matching cannot test for unobserved confounders in the first place. A confident sentence about a check that does not exist.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn}
+**3 · It ignored your decision rule**
+
+About 974 AED is short of the 1,000 AED bar. Significant is not the same as sufficient, and it recommended scale-up anyway.
+:::
+
+::: {.warn}
+**4 · It invented precision**
+
+`p < 0.001` appears nowhere in the table it was given. It was inferred from the asterisks and stated as fact.
+:::
+:::::
+
+::::::
+
+::: {.ask}
+Notice: the answer was fluent, confident and correctly formatted. Nothing in its tone marks the true sentences apart from the invented ones.
+:::
+
+::: {.notes}
+0:57 · Take them in order. Errors 1 and 2 are the matching-specific pair and the most dangerous: they dress up the method's single biggest limitation as a strength. Land the meta-point again: fluency is not accuracy, and confidence is not a signal.
+:::
+
+## The same table, a better prompt
+
+:::::: {.columns}
+
+::::: {.column width="42%"}
+### What people type
+
+::: {.panel}
+*"Explain these results."*
+:::
+
+- No decision rule
+- No hint that this is observational
+- No invitation to flag what matching cannot fix
+- Every gap filled with a confident guess
+:::::
+
+::::: {.column width="58%"}
+### What to type instead
+
+::: {.ask}
+*I am a commissioner, not an analyst. Below is a propensity-score matching table
+from a waste programme evaluation. This is observational: businesses chose to
+enrol. Our decision rule: costs must fall by at least 1,000 AED to justify
+national scale-up.*
+
+*Before answering, ask me what characteristics were matched on and what was not
+measured.*
+
+*Then: (1) which single number is the effect; (2) does it meet our rule; (3)
+what selection could matching NOT have fixed here; (4) do not claim robustness
+to unobserved factors.*
+:::
+:::::
+
+::::::
+
+::: {.notes}
+1:00 · Walk through what each element does. The highest-leverage sentence is "ask me what was not measured": it forces the model to confront the unobservables instead of papering over them. As always, making it ask you questions first turns the model from a guesser into an interviewer.
+:::
+
+## Your turn
+
+::: {.panel}
+In your groups, using the table on your handout:
+
+1. Run the **short prompt**. Read what you get.
+2. Run the **full prompt card**. Answer the questions it asks you.
+3. Compare: what did the second answer add, remove, or hedge, especially about **what was not measured**?
+4. Paste the second answer into a **fresh chat** and ask: *"Review this interpretation for errors and overstatement."*
+:::
+
+::: {.ask}
+Step 4 matters. A second, clean conversation catches what the first one is already committed to.
+:::
+
+::: {.notes}
+1:02 to 1:12 · Group work. Circulate and collect one good and one bad example for the debrief. If a group produces a genuinely new failure, screenshot it for the failures library. This is a placeholder for the live exercise: the partner builds the handout and the two prompt cards.
+:::
+
+## Debrief
+
+- Did AI treat **balance** as proof that bias was gone?
+- Did it **invent** a robustness check, a p-value, or a sample size?
+- Did it check the result against **your 1,000 AED rule**?
+- Did the second chat catch what the first missed?
+
+::: {.ask}
+Two habits, every time: tell the AI your decision rule and that the data is observational, and make it ask you questions before it answers.
+:::
+
+::: {.notes}
+1:14 · Keep this tight. Pull two contributions from the room, name the habits, move on. Do not let the debrief eat the case-study time, which is the centrepiece of this session.
+:::
+
+# 7 · Two case studies, side by side [16 min]{.mins}
+
+## Case 1: GreenWaste, a clean match
+
+:::::: {.columns}
+
+::::: {.column width="52%"}
+```{=html}
+<div class="facts">
+  <div class="k">Data</div>        <div class="v">Rich baseline on every business</div>
+  <div class="k">Overlap</div>     <div class="v">Good: most enrolled firms had real twins</div>
+  <div class="k">Balance</div>     <div class="v">Achieved on all measured characteristics</div>
+  <div class="k">Estimate</div>    <div class="v">About 974 AED, just short of the bar</div>
+</div>
+```
+:::::
+
+::::: {.column width="48%"}
+::: {.panel}
+A well-executed matching study. The mechanics all check out.
+
+The one caveat is the one that never goes away: it holds **only** if nothing important was left unmeasured.
+:::
+:::::
+
+::::::
+
+::: {.notes}
+1:14 · Set Case 1 as the benchmark: this is what a good matching study looks like. Everything an evaluator controls was done well. Keep it brief, they have just spent thirty minutes inside this case. The work is the contrast on the next slides.
+:::
+
+## `[PLACEHOLDER]` Case 2: Abu Dhabi DCD, imperfect matches
+
+::: {.warn}
+**Awaiting real findings.** Structure is final; only the numbers and labels change.
+:::
+
+<!-- PLACEHOLDER: Abu Dhabi DCD matching case not yet received.
+     Keep the structure: a case where common support is poor and many treated
+     units had no good match. Confirm with Fiona the programme, the outcome,
+     what was matched on, and roughly what share of treated units were dropped. -->
+
+```{=html}
+<div class="facts">
+  <div class="k">Programme</div>   <div class="v">[to be inserted: a DCD social programme]</div>
+  <div class="k">Outcome</div>     <div class="v">[to be inserted]</div>
+  <div class="k">Matched on</div>  <div class="v">[to be inserted: the measured characteristics]</div>
+  <div class="k">The problem</div> <div class="v">Many treated units had no good match [share to be inserted]</div>
+  <div class="k">Estimate</div>    <div class="v">[to be inserted, with wider uncertainty]</div>
+</div>
+```
+
+::: {.notes}
+Ask Fiona what went wrong in the DCD case specifically: poor overlap, a small comparison pool, or thin baseline data. Whichever it is becomes the teaching contrast with Case 1. A high share of unmatched treated units is the strongest version, because it makes the reach problem concrete.
+:::
+
+## `[PLACEHOLDER]` When the twins run out
+
+```{r fig.height=3.3, fig.width=9}
+# PLACEHOLDER illustration: poor overlap. Replace with real DCD support plot.
+set.seed(7)
+tibble(
+  ps = c(rbeta(500, 2, 6), rbeta(500, 6, 2)),
+  g  = rep(c("Enrolled", "Not enrolled"), each = 500)) %>%
+  ggplot(aes(ps, colour = g, fill = g)) +
+  geom_density(alpha = 0.2, linewidth = 1) +
+  scale_colour_manual(values = grp_cols) +
+  scale_fill_manual(values = grp_cols) +
+  labs(x = "Estimated likelihood of enrolling (illustrative)", y = "Density") +
+  theme_m2(13)
+```
+
+::: {.warn}
+When the curves barely overlap, most enrolled units have **no real twin**. They get dropped, and the result quietly narrows to the few who happened to have a match. Who is the finding still about?
+:::
+
+::: {.notes}
+Placeholder chart, clearly illustrative. Replace with the real DCD overlap picture when the data arrives. The point to draw out: a matching study can be done correctly and still answer a question about only a sliver of the programme, and the report often does not say so.
+:::
+
+## `[PLACEHOLDER]` Which one do you believe?
+
+::: {.panel}
+In your groups:
+
+1. Which case gives you **more confidence**, and why?
+2. What would you ask **Case 2's** evaluator that Case 1 does not raise?
+3. Would you act on Case 2, act with caveats, or send it back?
+:::
+
+::: {.ask}
+Verdict round: hands, not discussion. Name the one question that decided it for you.
+:::
+
+::: {.notes}
+1:26 · This is the exercise the whole session builds to. Push them past "Case 1 is cleaner" to why: overlap, share matched, and above all who the result applies to. Note who says "send it back" and ask for the single question behind it. That question is what they take back to their desk.
+:::
+
+# 8 · Closing [6 min]{.mins}
+
+## Three questions to ask any evaluator presenting matching
+
+::: {.panel}
+**1 · "What did you match on, and what could you not measure?"**
+
+The honest answer names the characteristics left out and why they might matter.
+:::
+
+::: {.panel}
+**2 · "How many treated units had a good match, and who got dropped?"**
+
+Poor overlap narrows who the result is about, often without saying so.
+:::
+
+::: {.panel}
+**3 · "Does this clear the bar we set, and does the answer hold if you change what you matched on?"**
+
+Significant is not sufficient, and a result that flips with the variable list is not settled.
+:::
+
+::: {.notes}
+1:32 · The take-away card. Short enough to remember in a meeting without notes. Question 1 is the one that does the most work and needs no statistics at all.
+:::
+
+## Where this sits: Day 2 scoreboard
+
+```{r}
+tibble(
+  Method   = c("Difference-in-differences", "Regression discontinuity", "Matching", "Randomised trial"),
+  Estimate = c("-816 AED", "-905 AED", sprintf("%.0f AED", b_match), "-1,014 AED (Module 1)"),
+  Verdict  = c("Below the bar: do not scale", "Below the bar: do not scale",
+               "Below the bar: do not scale", "Above the bar: scale up")
+) %>%
+  kable(align = "lcc") %>%
+  kable_styling(full_width = FALSE, font_size = 20) %>%
+  row_spec(3, bold = TRUE, background = "#E6F1F5")
+```
+
+::: {.ask}
+Three methods now say do not scale. The randomised trial said scale up. Same programme, same data, different answers.
+:::
+
+::: {.notes}
+1:34 · The scoreboard is complete. Let the disagreement sit for a moment before explaining it. This is Day 2's real lesson, and the next slide resolves it.
+:::
+
+## Same programme, four numbers, two answers
+
+::: {.warn}
+The methods do not disagree because one is wrong. They answer **slightly different questions about slightly different businesses**:
+
+- Matching and DiD compare enrolled firms with non-enrolled ones who differ in ways we may not see
+- RDD speaks only to firms near the cut-off
+- The randomised trial removed selection entirely, and measured a genuine average
+:::
+
+::: {.ask}
+The lesson is not "pick the method you like". It is: know which question each number answers before you let it decide anything.
+:::
+
+::: {.notes}
+1:36 · The payoff for the whole day. Do not rush it. The commissioner's skill is not choosing a favourite estimate, it is reading what each one is an estimate of. That is what the week has been building toward.
+:::
+
+## Next: was it worth it?
+
+**Cost analysis**: an effect is only half the decision. Tomorrow we put the programme's impact next to what it cost, and ask whether the money was well spent.
+
+::: {.panel}
+You now have four ways to read an impact. The next question is what any impact is worth against its price.
+:::
+
+::: {.notes}
+1:38 · Bridge to Day 3. Keep it short, they are at the end of a long day. Land the through-line: reading the effect is step one, weighing it against cost is step two.
+:::
