@@ -1,0 +1,896 @@
+---
+title: "Spot the Problem"
+subtitle: "Module 2 · Day 1, Session 3: Naive Comparisons and Reading an RCT"
+author: "3ie"
+always_allow_html: yes
+format:
+  revealjs:
+    theme: [clean.scss, module2.scss]
+    slide-number: true
+    width: 1280
+    height: 720
+    fig-align: center
+    slide-level: 2
+    embed-resources: true
+  pptx:
+    slide-level: 2
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+    dev: "png"
+    dpi: 200
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library(estimatr)
+library(broom)
+library(modelsummary)
+
+# ---- Validated palette (CVD-safe; see CLAUDE.md > Design System) -----------
+ACCENT  <- "#00789E"   # the programme / treated group
+ACCENT2 <- "#B45309"   # comparison / not-treated group
+ALERT   <- "#9A2515"   # decision rules, annotations: never a data series
+INK     <- "#131516"; MUTED <- "#5C6467"; RULE <- "#DCE1E3"
+
+# ---- One chart theme for the whole module ---------------------------------
+theme_m2 <- function(base = 15) {
+  theme_minimal(base_size = base) +
+    theme(
+      text             = element_text(colour = INK),
+      axis.title       = element_text(colour = MUTED, size = rel(0.85)),
+      axis.text        = element_text(colour = MUTED),
+      panel.grid.minor = element_blank(),
+      panel.grid.major = element_line(colour = RULE, linewidth = 0.4),
+      legend.position  = "bottom",
+      legend.title     = element_blank(),
+      legend.text      = element_text(size = rel(0.95)),
+      strip.text       = element_text(colour = INK, face = "plain", size = rel(0.95)),
+      plot.margin      = margin(4, 10, 4, 4)
+    )
+}
+
+tlev <- function(x) factor(x, levels = c("Before", "After"))
+
+# ---- Data and the numbers this session turns on ---------------------------
+df <- read.csv("./evaluation_data_GreenWaste.csv")
+
+# Before-and-after: businesses that took part (enrolled), over time
+ba_before <- round(mean(df$waste_management_costs[df$enrolled == 1 & df$round == 0]))
+ba_after  <- round(mean(df$waste_management_costs[df$enrolled == 1 & df$round == 1]))
+ba_change <- ba_after - ba_before
+
+# The comparison group's own drift over the same period (not-offered, treated nbhds)
+comp_before <- round(mean(df$waste_management_costs[df$treatment_neighborhood == 1 &
+                          df$eligible == 0 & df$round == 0]))
+comp_after  <- round(mean(df$waste_management_costs[df$treatment_neighborhood == 1 &
+                          df$eligible == 0 & df$round == 1]))
+
+# With-and-without at follow-up: took part vs did not, same neighbourhoods
+ww_prog <- ba_after
+ww_comp <- comp_after
+ww_gap  <- ww_prog - ww_comp
+
+# The RCT: eligible businesses, treatment vs control neighbourhoods, follow-up
+rct <- lm_robust(waste_management_costs ~ treatment_neighborhood,
+                 data = df %>% filter(round == 1, eligible == 1),
+                 clusters = neighborhood_identifier)
+rct_est    <- round(coef(rct)["treatment_neighborhood"])
+rct_ci_lo  <- round(rct$conf.low["treatment_neighborhood"])
+rct_ci_hi  <- round(rct$conf.high["treatment_neighborhood"])
+rct_control <- round(coef(rct)["(Intercept)"])
+rct_treat   <- rct_control + rct_est
+
+RULEBAR <- 1000L   # the decision rule used all week: cut costs by >= 1,000 AED
+```
+
+## What this session gives you
+
+By the end of this session you will be able to:
+
+::: {.panel}
+- Put Session 1's question, **compared to what?**, to work on two comparisons that both look convincing
+- Name the hidden problem in a **before-and-after** claim and in a **with-and-without** claim
+- Explain, in plain terms, how **randomisation** removes the difference between the groups
+- Read a randomised result: which number is the impact, and does it clear the decision rule
+:::
+
+You will not run any analysis. Your job is to spot the problem before you act on the number.
+
+::: {.notes}
+0:00 · One minute. This is the last session of Day 1 and the pay-off for Session 1.
+Today they learn to distrust two comparisons they will see constantly, then meet
+the one design that fixes them.
+:::
+
+# 1 · Two comparisons, both convincing [18 min]{.mins}
+
+## The programme on the table
+
+:::::: {.columns}
+
+::::: {.column width="54%"}
+The **GreenWaste Program** helped businesses cut waste-management costs.
+A pilot ran, data was collected before and after, and now someone has to
+decide whether to take it national.
+
+The bar it has to clear is fixed for the whole week.
+:::::
+
+::::: {.column width="46%"}
+```{=html}
+<div class="facts">
+  <div class="k">Programme</div>    <div class="v">GreenWaste, waste-cost reduction</div>
+  <div class="k">Outcome</div>      <div class="v">Waste-management costs (AED)</div>
+  <div class="k">The decision</div> <div class="v">Scale up nationally, or not</div>
+  <div class="k">The rule</div>     <div class="v">Must cut costs by at least 1,000 AED</div>
+</div>
+```
+:::::
+
+::::::
+
+::: {.notes}
+0:01 · Land the decision rule now and repeat it all afternoon. Every number today
+gets judged against 1,000 AED, not against zero.
+:::
+
+## Comparison A: before and after
+
+:::::: {.columns}
+
+::::: {.column width="52%"}
+```{r fig.height=3.8, fig.width=6}
+tibble(Time = tlev(c("Before", "After")),
+       Cost = c(ba_before, ba_after)) %>%
+  ggplot(aes(Time, Cost, group = 1)) +
+  geom_line(linewidth = 1.6, colour = ACCENT) +
+  geom_point(size = 4.5, colour = ACCENT) +
+  geom_text(aes(label = format(Cost, big.mark = ",")),
+            vjust = -1.2, size = 5, colour = INK) +
+  scale_y_continuous(limits = c(0, 1700)) +
+  labs(x = NULL, y = "Waste costs (AED)",
+       title = "Businesses that took part") +
+  theme_m2(13) + theme(plot.title = element_text(size = rel(0.9), colour = MUTED))
+```
+:::::
+
+::::: {.column width="48%"}
+::: {.panel}
+Businesses that took part paid **`r format(ba_before, big.mark=",")` AED**
+before and **`r format(ba_after, big.mark=",")` AED** after.
+:::
+
+::: {.hero}
+::: {.value style="font-size:1.4em;"}
+`r format(ba_change, big.mark=",")` AED
+:::
+::: {.label}
+Fall in costs, before to after
+:::
+:::
+
+The programme looks like it cut costs by `r format(-ba_change, big.mark=",")` AED.
+:::::
+
+::::::
+
+::: {.notes}
+0:03 · Say the story the way an evaluator might: "costs fell by 665 after we ran
+the programme." Do not challenge it yet.
+:::
+
+## Comparison B: with and without
+
+:::::: {.columns}
+
+::::: {.column width="52%"}
+```{r fig.height=3.8, fig.width=6}
+tibble(Group = factor(c("Took part", "Did not"),
+                       levels = c("Took part", "Did not")),
+       Cost  = c(ww_prog, ww_comp)) %>%
+  ggplot(aes(Group, Cost, fill = Group)) +
+  geom_col(width = 0.55) +
+  geom_text(aes(label = format(Cost, big.mark = ",")),
+            vjust = -0.6, size = 5, colour = INK) +
+  scale_fill_manual(values = c("Took part" = ACCENT, "Did not" = ACCENT2)) +
+  scale_y_continuous(limits = c(0, 2600)) +
+  labs(x = NULL, y = "Waste costs (AED)", title = "At follow-up, same neighbourhoods") +
+  theme_m2(13) +
+  theme(legend.position = "none",
+        plot.title = element_text(size = rel(0.9), colour = MUTED))
+```
+:::::
+
+::::: {.column width="48%"}
+::: {.panel}
+At the end, businesses that took part paid **`r format(ww_prog, big.mark=",")` AED**;
+those that did not paid **`r format(ww_comp, big.mark=",")` AED**.
+:::
+
+::: {.hero}
+::: {.value style="font-size:1.4em;"}
+`r format(ww_gap, big.mark=",")` AED
+:::
+::: {.label}
+Gap between the two groups
+:::
+:::
+
+This comparison makes the programme look more than twice as good.
+:::::
+
+::::::
+
+::: {.notes}
+0:05 · Same programme, a much bigger number. Note the two numbers out loud: minus
+665 from A, minus 1,446 from B. Hold the tension.
+:::
+
+## `[MENTI PLACEHOLDER]` Which would you trust?
+
+::: {.ask}
+Both comparisons say GreenWaste worked. **Which would you trust more, and why?**
+
+Before-and-after &nbsp;·&nbsp; With-and-without &nbsp;·&nbsp; Neither on its own
+:::
+
+::: {.panel}
+Live poll. Let the room commit before anything is revealed. Take two or three
+"why" answers out loud, do not correct them yet.
+:::
+
+::: {.notes}
+0:07 · Resist explaining. The whole point is that they pick one, then discover in
+Section 2 that both are biased. A split room is the ideal starting point.
+:::
+
+## `[MENTI PLACEHOLDER]` What might be wrong?
+
+::: {.ask}
+Open text, shown as a live word cloud: **in one phrase, what might be wrong with
+each of these comparisons?**
+:::
+
+::: {.notes}
+0:09 · Collect the words. If "other things changed" and "different groups" surface,
+you have the two answers already; use their words in the next section.
+:::
+
+# 2 · The hidden problem in each [15 min]{.mins}
+
+## Before-and-after compares to the past
+
+:::::: {.columns}
+
+::::: {.column width="54%"}
+::: {.panel}
+A before-and-after number compares the programme to **what came before**, not
+to what would have happened anyway. Anything else that changed over the same
+period is folded into the number.
+:::
+
+::: {.warn}
+Over these same two rounds, similar businesses that did **not** take part saw
+costs move from `r format(comp_before, big.mark=",")` to
+`r format(comp_after, big.mark=",")` AED on their own. Time was not standing
+still, so a plain before-and-after does not tell you what the programme alone did.
+:::
+:::::
+
+::::: {.column width="46%"}
+```{r fig.height=3.9, fig.width=5.4}
+tibble(
+  Time  = tlev(rep(c("Before", "After"), 2)),
+  Group = rep(c("Took part", "Did not"), each = 2),
+  Cost  = c(ba_before, ba_after, comp_before, comp_after)) %>%
+  ggplot(aes(Time, Cost, colour = Group, group = Group)) +
+  geom_line(linewidth = 1.5) + geom_point(size = 4) +
+  scale_colour_manual(values = c("Took part" = ACCENT, "Did not" = ACCENT2)) +
+  scale_y_continuous(limits = c(0, 2600)) +
+  labs(x = NULL, y = "Waste costs (AED)") +
+  theme_m2(12)
+```
+:::::
+
+::::::
+
+::: {.notes}
+0:10 · The comparison group's costs drifted up. So the eligible group's own costs
+would probably not have stayed flat either. A raw before-and-after therefore
+understates the true reduction. Keep it intuitive, no DiD arithmetic yet.
+:::
+
+## With-and-without compares different groups
+
+::: {.panel}
+A with-and-without number compares people who took part to people who did not.
+But the two groups were **already different before the programme started**. The
+businesses that did not take part were not eligible: they were larger, less
+efficient, more costly to begin with.
+:::
+
+::: {.warn}
+So the `r format(ww_gap, big.mark=",")` AED gap mixes two things together: any
+real effect of the programme, **and** the head start the eligible group already
+had. It flatters the programme.
+:::
+
+::: {.notes}
+0:13 · This is selection. The "without" group is not a stand-in for what the
+"with" group would have looked like, because they were never comparable. Overstates.
+:::
+
+## Two biases, opposite directions
+
+::: {.panel}
+The truth is not halfway by coincidence. Each naive comparison is wrong for a
+different reason, and they miss in **opposite directions**.
+:::
+
+```{=html}
+<div class="facts">
+  <div class="k">Before-and-after</div> <div class="v">Folds in other changes over time. Here it understates.</div>
+  <div class="k">With-and-without</div> <div class="v">Compares groups that already differed. Here it overstates.</div>
+  <div class="k">So</div>               <div class="v">The honest answer sits between them, and neither comparison can find it.</div>
+</div>
+```
+
+::: {.notes}
+0:15 · Foreshadow: minus 665 and minus 1,446 bracket something. In a few minutes
+a fair comparison lands between them, near minus 1,000.
+:::
+
+## `.ask` On your desk
+
+::: {.ask}
+Think of an evaluation you have received. Was its headline a before-and-after
+number, or a with-and-without one? Which of these two problems could it have had?
+:::
+
+::: {.panel}
+Ninety seconds with your neighbour. Two or three examples to the room.
+:::
+
+::: {.notes}
+0:16 · Short and personal. Makes the trap concrete before the break.
+:::
+
+# Comfort break [5 min]{.mins}
+
+## Five-minute break
+
+::: {.panel}
+Back in five minutes. When we return: the one design that removes the difference
+between the groups.
+:::
+
+::: {.notes}
+0:18 · Hard stop at 5 minutes. Resume promptly.
+:::
+
+# 3 · How randomisation fixes it [15 min]{.mins}
+
+## Draw lots
+
+::: {.panel}
+Both problems come from the same root: the group that took part and the group
+that did not were **not comparable**. Randomisation fixes it at the source.
+Decide who is offered the programme by **drawing lots**, not by who is eligible,
+keen, or easy to reach.
+:::
+
+::: {.hero}
+::: {.value style="font-size:1.3em;"}
+Same on average, even on what we cannot measure
+:::
+:::
+
+::: {.notes}
+0:19 · The one sentence to remember. Random assignment balances the things we can
+see and the things we cannot: motivation, management quality, luck.
+:::
+
+## Why it works: two people versus two crowds
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+Pick **two people** at random from this room. They could differ in almost every
+way. Neither is a fair stand-in for the other.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.panel}
+Pick **two large groups** at random. On average they look alike: same mix of
+ages, sizes, experience, and the same mix of things you never measured. Any
+leftover difference is small and down to chance.
+:::
+:::::
+
+::::::
+
+::: {.ask}
+So when we compare two large randomly-formed groups, any real gap in the outcome
+is the programme, not a head start.
+:::
+
+::: {.notes}
+0:21 · This is the whole intuition for an RCT. Numbers are not needed here; the
+crowd-versus-pair contrast does the work.
+:::
+
+## `[MENTI PLACEHOLDER]` True or false?
+
+::: {.panel}
+1. Randomisation makes the two groups similar only on things we can measure.
+2. With enough units, random assignment balances unmeasured things too.
+3. A randomised comparison still needs the groups to have started out alike.
+:::
+
+::: {.ask}
+Live quiz, revealed one at a time. (1) False (2) True (3) It creates that, which
+is the point.
+:::
+
+::: {.notes}
+0:24 · Item 1 is the common misconception; spend the most time there.
+:::
+
+# 4 · Reading the randomised result [18 min]{.mins}
+
+## First check: did the random draw work?
+
+::: {.panel}
+Check the two groups really did start out alike. A **balance table** compares
+them on their starting characteristics: read for whether the differences are
+small, with p-values that are **not** tiny.
+:::
+
+```{r echo=TRUE, eval=FALSE}
+# Compare treated vs control neighbourhoods on each starting characteristic
+df %>%
+  filter(round == 0, eligible == 1) %>%
+  select(treatment_neighborhood, age_manager, educ_manager,
+         staff_size, foreign_owned, recycling_center_distance) %>%
+  pivot_longer(-treatment_neighborhood) %>%
+  group_by(name) %>%
+  reframe(tidy(lm_robust(value ~ treatment_neighborhood))) %>%
+  filter(term == "treatment_neighborhood")
+```
+
+```{r}
+vars <- c("age_manager", "educ_manager", "staff_size",
+          "foreign_owned", "recycling_center_distance")
+var_labs <- c(age_manager = "Manager age", educ_manager = "Manager education",
+              staff_size = "Staff size", foreign_owned = "Foreign owned",
+              recycling_center_distance = "Distance to recycling centre")
+
+balance <- df %>%
+  filter(round == 0, eligible == 1) %>%
+  select(treatment_neighborhood, all_of(vars)) %>%
+  pivot_longer(-treatment_neighborhood, names_to = "name") %>%
+  group_by(name) %>%
+  reframe({
+    m <- lm_robust(value ~ treatment_neighborhood)
+    tibble(
+      `Treated` = round(mean(value[treatment_neighborhood == 1]), 1),
+      `Control` = round(mean(value[treatment_neighborhood == 0]), 1),
+      `Difference` = round(coef(m)["treatment_neighborhood"], 2),
+      `p-value` = round(tidy(m)$p.value[tidy(m)$term == "treatment_neighborhood"], 2))
+  }) %>%
+  mutate(Characteristic = var_labs[name]) %>%
+  select(Characteristic, Treated, Control, Difference, `p-value`)
+
+balance %>%
+  kable(align = "lrrrr") %>%
+  kable_styling(full_width = FALSE, font_size = 18)
+```
+
+::: {.notes}
+0:25 · Walk one row aloud, e.g. manager age. Treated and control almost identical,
+p-value not small. Say what a small p-value here would have meant: a failed draw.
+The code above is the same short, checkable calculation that produced the table.
+:::
+
+## The estimate
+
+:::::: {.columns}
+
+::::: {.column width="46%"}
+```{r echo=TRUE, eval=FALSE}
+# Compare costs in treated vs control
+# neighbourhoods at follow-up, among
+# eligible businesses
+lm_robust(
+  waste_management_costs ~
+    treatment_neighborhood,
+  data = filter(df, round == 1,
+                eligible == 1),
+  clusters = neighborhood_identifier)
+```
+:::::
+
+::::: {.column width="54%"}
+```{r}
+modelsummary(
+  list("Follow-up" = rct),
+  stars = TRUE,
+  coef_map = c("treatment_neighborhood" = "Treated vs. control",
+               "(Intercept)" = "Control group average"),
+  gof_map = c("nobs", "r.squared"),
+  output = "kableExtra") %>%
+  kable_styling(font_size = 19)
+```
+:::::
+
+::::::
+
+::: {.notes}
+0:31 · One estimate, no covariate model, no robustness zoo. Point to the "Treated
+vs. control" row: that number is the impact. Next slide names the mis-reads.
+:::
+
+## Which number is the impact?
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**The impact** is the "Treated vs. control" row: about
+**`r format(rct_est, big.mark=",")` AED**. That is the whole result. Everything
+else is supporting detail.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn}
+**Not** the "control group average" (`r format(rct_control, big.mark=",")`): that
+is just where the comparison group sat, not an effect.
+
+**Not** the stars on their own: they say the effect is unlikely to be zero, not
+that it is big enough to matter.
+:::
+:::::
+
+::::::
+
+::: {.notes}
+0:33 · The two classic mis-reads: quoting the intercept as if it were the effect,
+and treating significance as sufficiency. Both come back on Day 2.
+:::
+
+## Does it clear the rule?
+
+```{r results='asis'}
+cat(sprintf('
+<div class="hero">
+  <div class="value">%s AED</div>
+  <div class="label">Estimated cut in costs (95%% CI: %s to %s)</div>
+</div>
+<div class="stat-row">
+  <div><span class="n">%s</span><span class="k">The rule: cut by at least</span></div>
+  <div><span class="n">%s</span><span class="k">Estimated cut</span></div>
+  <div><span class="n">Yes</span><span class="k">Clears the bar</span></div>
+</div>',
+  format(rct_est, big.mark=","),
+  format(rct_ci_lo, big.mark=","), format(rct_ci_hi, big.mark=","),
+  format(RULEBAR, big.mark=","), format(-rct_est, big.mark=",")))
+```
+
+::: {.panel}
+The randomised estimate is about `r format(-rct_est, big.mark=",")` AED, and the
+confidence interval stays beyond the 1,000 AED bar. On this evidence, GreenWaste
+clears the rule.
+:::
+
+::: {.notes}
+0:35 · Say it plainly: this design says scale up. Do not mention that other
+methods will disagree; that is Day 2's reveal. Just note the interval sits past
+the bar, so it is not a borderline call.
+:::
+
+## The picture
+
+```{r fig.height=4.0, fig.width=8.5}
+tibble(Group = factor(c("Control", "Treated"), levels = c("Control", "Treated")),
+       Cost  = c(rct_control, rct_treat)) %>%
+  ggplot(aes(Group, Cost, colour = Group)) +
+  geom_point(size = 5) +
+  geom_text(aes(label = format(Cost, big.mark = ",")),
+            vjust = -1.1, size = 5, colour = INK, show.legend = FALSE) +
+  annotate("segment", x = 2, xend = 2, y = rct_treat, yend = rct_control,
+           colour = ALERT, linewidth = 0.7,
+           arrow = arrow(ends = "both", length = unit(0.09, "inches"))) +
+  annotate("text", x = 2.12, y = mean(c(rct_control, rct_treat)),
+           label = paste0(format(rct_est, big.mark = ","), " AED"),
+           colour = ALERT, fontface = "bold", hjust = 0) +
+  scale_colour_manual(values = c("Control" = ACCENT2, "Treated" = ACCENT)) +
+  scale_y_continuous(limits = c(0, 2100),
+                     expand = expansion(mult = c(0.02, 0.10))) +
+  labs(x = NULL, y = "Waste costs at follow-up (AED)") +
+  theme_m2() + theme(legend.position = "none")
+```
+
+::: {.notes}
+0:37 · The gap between two comparable groups is the effect. Contrast in one line
+with the two naive charts from Section 1: same programme, but now the comparison
+is fair.
+:::
+
+# 5 · AI Snapshot [18 min]{.mins}
+
+## We asked AI why before-and-after can mislead
+
+**Prompt:** *"Explain in plain language why a before-and-after comparison can be
+misleading."*
+
+::: {.ai-output}
+A before-and-after comparison looks at the outcome before a programme and after
+it, and treats the difference as the programme's effect. It can mislead because
+[if the numbers changed, the programme is what changed them]{.flag}.
+
+The fix is simple: [as long as you measure the same group before and after, a
+before-and-after comparison gives you the true effect]{.flag}. To be safe, you
+can also [run a statistical test, and if the change is significant then the
+programme worked]{.flag}.
+
+In this case costs fell, so [we can conclude the programme caused the full fall
+of 665 AED]{.flag}.
+:::
+
+::: {.ask}
+Four things here are wrong. Three minutes, in pairs: mark them up.
+:::
+
+::: {.notes}
+0:38 · Hand out the printed copy. This is a placeholder example, invented for now.
+Standing task: when Fiona runs this prompt herself and the model slips, screenshot
+it into AI_failure_exs/ and swap the real capture in. Real captures beat invented ones.
+:::
+
+## What it got wrong
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.warn}
+**1 · It assumed away the whole problem.** "If the numbers changed, the programme
+changed them" ignores everything else that moved over the same period.
+:::
+
+::: {.warn}
+**2 · It called before-and-after a true-effect method.** It is exactly the
+comparison we just showed is biased. There is no comparison group in it.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn}
+**3 · It confused significant with correct.** A significant before-and-after
+change is still a biased number. Significance does not repair the design.
+:::
+
+::: {.warn}
+**4 · It quoted the 665 as the causal effect.** That is the naive figure. The
+fair estimate is about `r format(-rct_est, big.mark=",")` AED, and the model had
+no way to know that.
+:::
+:::::
+
+::::::
+
+::: {.notes}
+0:43 · Take them in order. Error 2 is the dangerous one: the model recommended the
+exact design the session exists to warn against, in fluent, confident prose.
+:::
+
+## Fluent, confident, and wrong
+
+::: {.ask}
+Notice: nothing in the tone flags the invented parts. No hedge, no hesitation.
+:::
+
+::: {.warn}
+The wrong sentences read exactly like the right ones. In a briefing note you would
+not be able to tell them apart. Fluency is not accuracy, and confidence is not a
+signal.
+:::
+
+::: {.notes}
+0:45 · The meta-point. If they remember one thing about AI this week, this is it.
+:::
+
+## The same question, a better prompt
+
+:::::: {.columns}
+
+::::: {.column width="42%"}
+### What people type
+
+::: {.panel}
+*"Explain why a before-and-after comparison can be misleading."*
+:::
+
+- No context about the case
+- No decision rule
+- No invitation to say what it is unsure of
+:::::
+
+::::: {.column width="58%"}
+### What to type instead
+
+::: {.ask}
+*I am a commissioner, not an analyst. A programme's costs fell from 1,449 to 784
+AED after it ran, before-and-after, with no comparison group. Our decision rule:
+it must cut costs by at least 1,000 AED to justify scale-up.*
+
+*Before you answer, ask me any questions you need about what else changed over the
+same period and who was in each group.*
+
+*Then explain, in plain language: what this before-and-after number can and cannot
+tell me, and what comparison I would need to trust it.*
+:::
+:::::
+
+::::::
+
+::: {.notes}
+0:47 · The highest-leverage line is "ask me any questions before you answer." It
+turns the model from a guesser into an interviewer. Walk through each element.
+:::
+
+## Your turn
+
+::: {.panel}
+In your groups:
+
+1. Run the **short prompt**. Read what you get.
+2. Run the **full prompt card**. Answer the questions it asks you.
+3. Compare: what did the second answer add, remove, or hedge?
+4. Paste the second answer into a **fresh chat** and ask: *"Review this for errors
+   and overstatement."*
+:::
+
+::: {.ask}
+Step 4 matters: a clean second conversation catches what the first is already
+committed to.
+:::
+
+::: {.notes}
+0:49 to 0:55 · Six minutes of group work. Circulate, collect one good and one bad
+example for the debrief. Screenshot any genuinely new failure for the library.
+:::
+
+## Debrief
+
+- What did AI **overstate**?
+- What did it **soften** or leave out?
+- Did it **invent** anything: a test, a number, a caveat?
+
+::: {.ask}
+Two habits, every time: tell the AI your decision rule, and make it ask you
+questions before it answers.
+:::
+
+::: {.notes}
+0:56 · Keep it to two minutes. Land the two habits; they recur every session.
+:::
+
+# 6 · The real case: Abu Dhabi Police [15 min]{.mins}
+
+## `[PLACEHOLDER]` The Abu Dhabi Police evaluation
+
+<!-- PLACEHOLDER: awaiting Abu Dhabi Police RCT data and findings. Structure is
+fixed; real figures drop into the .facts panel and the reading exercise below. -->
+
+:::::: {.columns}
+
+::::: {.column width="54%"}
+The same reading skills, now on a real Abu Dhabi case. The Police ran a
+randomised evaluation of `[programme name]`. You saw its descriptive results in
+Session 2; here you read its randomised estimate.
+
+::: {.warn}
+`[PLACEHOLDER]` Figures below are dummy values, marked, until the real findings
+are loaded. Nothing here is a real result yet.
+:::
+:::::
+
+::::: {.column width="46%"}
+```{=html}
+<div class="facts">
+  <div class="k">Programme</div>    <div class="v">[PLACEHOLDER]</div>
+  <div class="k">Design</div>       <div class="v">Randomised (drew lots)</div>
+  <div class="k">Outcome</div>      <div class="v">[PLACEHOLDER]</div>
+  <div class="k">Decision rule</div><div class="v">[PLACEHOLDER]</div>
+</div>
+```
+:::::
+
+::::::
+
+::: {.notes}
+0:58 · Bridge from Session 2: same programme, now the causal question. Flag that
+the numbers are placeholders so nothing fake is ever read as real.
+:::
+
+## `[PLACEHOLDER]` Read it in three steps
+
+::: {.panel}
+Using the printed output, in your groups:
+
+1. **Balance:** did the two groups start out alike? Where do you look?
+2. **The estimate:** which single number is the impact? Which numbers are not?
+3. **The rule:** does the estimate, and its confidence interval, clear the bar?
+:::
+
+::: {.ask}
+`[PLACEHOLDER]` Then: what is the one thing you would ask the evaluator before
+acting on this number?
+:::
+
+::: {.notes}
+1:00 · Same three-step reading they just used on GreenWaste. When the real data
+lands, replace this with the actual table and a short worked read.
+:::
+
+## `.ask` Group interpretation
+
+::: {.ask}
+Each group reports back: does this evaluation clear the bar, and how confident are
+you? What would change your mind?
+:::
+
+::: {.panel}
+Two minutes per group. Look for groups that quote the intercept, or that read the
+stars as the whole answer: those are today's traps in the wild.
+:::
+
+::: {.notes}
+1:03 · Keep report-backs tight. This is where you see whether the reading skills
+landed.
+:::
+
+# 7 · Close [6 min]{.mins}
+
+## Three questions to ask the evaluator
+
+::: {.panel}
+Take these back to your desk. For any headline number:
+:::
+
+```{=html}
+<div class="facts">
+  <div class="k">1</div> <div class="v">Compared to what? Is this before-and-after, with-and-without, or a fair comparison?</div>
+  <div class="k">2</div> <div class="v">If the groups were not randomised, how do you know they started out alike?</div>
+  <div class="k">3</div> <div class="v">Does the effect, and its confidence interval, clear our decision rule, not just zero?</div>
+</div>
+```
+
+::: {.notes}
+1:04 · The standing closing slide, tuned to today. These three questions carry
+straight into Day 2.
+:::
+
+## Key takeaways
+
+::: {.panel}
+- Before-and-after folds in everything else that changed. It can understate.
+- With-and-without compares groups that already differed. It can overstate.
+- Randomisation makes the groups alike on average, even on what we cannot measure.
+- Read for the one number that is the impact, and judge it against the rule, not zero.
+:::
+
+::: {.notes}
+1:06 · Close Day 1 here. Tomorrow: what to do when you cannot draw lots. Same
+programme, methods that try to rebuild a fair comparison.
+:::

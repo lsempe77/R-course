@@ -6,7 +6,7 @@ The goal of this project is to develop material for the second module of an impa
 
 In close consultation with me, develop sessions based on the outline. We will develop one at a time based on whichever I ask you to work on. Wait for my input on your ideas before developing or editing any files in this folder.
 
-Output format: quarto (.qmd) files only. For each session Claude's deliverable is a correct, well-structured .qmd and nothing else: Fiona renders the HTML herself (and any PowerPoint), so Claude does not render, screenshot, or self-check the rendered deck, does not add speaker notes, and does not produce a facilitator guide.
+Output format: quarto (.qmd) files only. For each session Claude's deliverable is a correct, well-structured .qmd and nothing else: Fiona renders the HTML herself (and any PowerPoint), so Claude does not render, screenshot, or self-check the rendered deck, and does not produce a separate facilitator guide. Speaker notes in `::: {.notes}` blocks are fine to include.
 
 A few ideas I had on critical questions they should learn to ask AI throughout the sessions/for each method (not necessarily in this format or way but whatever way will help the AI not make mistakes or help us catch its mistakes):
     - Ask about data needed for DID
@@ -68,7 +68,7 @@ Filenames follow `[Monthday]_session[#].qmd`. "Legacy source" is the file in `se
 - **Default `echo: false`; opt in to `echo: true` on the mechanics slides.** Keep the YAML default `echo: false` so framing and result slides never leak code, and set `echo: true` per chunk on the analysis slides meant to show the code (see the Code Question above). On a code-plus-output slide keep the code short and put it in a two-column layout beside the figure or table so the slide fits 1280x720.
 - **Author field:** 3ie (the legacy decks are authored "Dr. Lucas Sempé" — do not carry that over without asking).
 - **Slide budget:** roughly 22-28 slides for a 1.5h session, 30-36 for a 2h session. These sessions are discussion-heavy; slide count is low relative to a lecture.
-- **No speaker notes.** Do not add `::: {.notes}` blocks to session decks; Fiona does not use them. Section-level timing stays visible through the `.mins` badge on each section divider (e.g. `# 2 · The result [15 min]{.mins}`), and facilitation prompts live on the slides themselves as `.ask` / `.warn` callouts. Fiona runs the session from the slides, and there is no separate facilitator guide.
+- **Speaker notes are fine; no separate facilitator guide.** `::: {.notes}` blocks may be used for presenter notes (they appear in revealjs presenter view, press S on the day). What Claude does not produce is a separate facilitator-guide document; facilitation prompts also live on the slides themselves as `.ask` / `.warn` callouts, and section-level timing stays visible through the `.mins` badge on each section divider (e.g. `# 2 · The result [15 min]{.mins}`).
 - **Versioning:** `_v1`, `_v2` suffixes. Never overwrite a session file that has been reviewed.
 - **No em dashes.** Fiona's style preference for the training materials: do not use em dashes (—) in slides or in any prose meant for participants. Use a colon where the dash introduces an explanation, definition, or list; otherwise rephrase with a comma or split into two sentences. En dashes in numeric or time ranges (e.g. 0:00–0:03) are fine.
 
