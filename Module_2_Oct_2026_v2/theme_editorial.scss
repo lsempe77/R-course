@@ -260,6 +260,13 @@ $link-color: $accent;
 // ---------- Charts --------------------------------------------------------
 // Charts sit directly on the page. No card, no border, no shadow.
 
+// Quarto's default gives .cell-output-display `overflow: auto`. Every chart
+// here is sized in explicit pixels (pl_m2 sets width), so a rounding
+// difference of a pixel or two between the widget and its wrapper is enough
+// to make the wrapper scrollable, and a stray scrollbar then appears beside
+// every chart. Nothing on a slide is ever meant to scroll, so it is off.
+.reveal .cell-output-display { overflow: visible; }
+
 .reveal .cell-output-display .html-widget {
   background: none;
   border: none;
