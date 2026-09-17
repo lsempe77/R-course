@@ -90,11 +90,10 @@ By the end of 90 minutes you will be able to:
 ::: {.panel}
 - Explain what a difference-in-differences result means
 - Find the one number in an evaluation table that answers **your** question, and recognise the others which may be mistaken for it
-- Ask the critical question that decides whether the result can be trusted
+- Ask one of the most critical questions that can help you decide whether the result can be trusted
 - Spot mistakes AI may make when interpreting an evaluation table
 :::
 
-We will show and walk through some code to give you a feel for what happens behind the scenes. You will not have to write or run any code yourself.
 
 ::: {.notes}
 0:00–0:02 · Set expectations. They are commissioners, not analysts. Their job is to interrogate evidence, not to produce it. We show the code and run it so they see where the numbers come from. Say plainly: "you will see how the analysis is done, but you will never have to write or run code yourself."
@@ -181,7 +180,7 @@ That is the central idea of this method.
 **Use it when you have:** a group that received the programme and a group that did not, and an outcome measured **before and after** for both.
 :::
 
-You reach for it when you could not randomise (the programme was already rolled out, or eligibility decided who got it), but you do have before-and-after data and a plausible comparison group.
+Reach for it when you could not randomise (the programme was already rolled out, or eligibility decided who got it), but you do have before-and-after data and a plausible comparison group.
 
 ::: {.notes}
 0:13 · Situate the method before the mechanics. DiD is the tool when you could

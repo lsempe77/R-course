@@ -145,7 +145,7 @@ Where:
 
 ## Interpreting DiD Regression Coefficients
 
-In the model: $Y = \beta_0 + \beta_1 \text{Round} + \beta_2 \text{Offered} + \beta_3 (\text{Round} \times \text{Offered}) + \varepsilon$
+In the model: $Y = \beta_0 + \beta_1 \text{Round} + \beta_2 \text{Enrolled} + \beta_3 (\text{Round} \times \text{Enrolled}) + \varepsilon$
 
 :::: {.columns}
 
@@ -169,7 +169,7 @@ coef_table <- data.frame(
 )
 
 kable(coef_table, 
-      col.names = c("Period", "Not Offered", "Offered", "Difference"),
+      col.names = c("Period", "Not Enrolled", "Enrolled", "Difference"),
       caption = "Interpretation of DiD Coefficients")
 ```
 :::
@@ -196,7 +196,7 @@ means <- df %>%
 
 # Mutate/reformat for table
 mean_table <- means %>%
-  mutate(enrolled = ifelse(enrolled == 1, "Offered", "Not Offered")) %>%
+  mutate(enrolled = ifelse(enrolled == 1, "Enrolled", "Not Enrolled")) %>%
   pivot_wider(
   names_from = round,
   values_from = mean_cost,
@@ -205,7 +205,7 @@ mean_table <- means %>%
   # Reorder columns (after first column)
   select(enrolled, round_1, round_0) %>%
   # Reorder rows so "Offered" comes first
-  arrange(factor(enrolled, levels = c("Offered", "Not offered")))
+  arrange(factor(enrolled, levels = c("Enrolled", "Not enrolled")))
 
 # Display neatly formatted table
 kable(
@@ -227,8 +227,8 @@ mean_table <- mean_table %>%
   mutate(change = round_1 - round_0) # change over time for each group
 
 # Compute differences in Offered − Not Offered
-off_row <- mean_table %>% filter(enrolled == "Offered")
-ctrl_row <- mean_table %>% filter(enrolled == "Not Offered")
+off_row <- mean_table %>% filter(enrolled == "Enrolled")
+ctrl_row <- mean_table %>% filter(enrolled == "Not Enrolled")
 
 before_diff <- off_row$round_0 - ctrl_row$round_0
 after_diff  <- off_row$round_1 - ctrl_row$round_1
@@ -291,7 +291,7 @@ modelsummary(list("No covariate adj."= out_did, "With covariate adj." = out_did_
 #   coef_map = c(
 #     "round:enrolled" = "DID Effect",
 #     "round" = "Before vs. After",
-#     "enrolled" = "Offered vs. Not",
+#     "enrolled" = "Enrolled vs. Not",
 #     "(Intercept)" = "(Intercept)"
 #   ),
 #   notes = "Standard errors are in parentheses",
@@ -307,7 +307,7 @@ modelsummary(list("No covariate adj."= out_did, "With covariate adj." = out_did_
 # ## 1) Save to Word (.docx)
 # doc <- read_docx()
 # doc <- body_add_flextable(doc, ft)
-# print(doc, target = "C:/Users/FionaKastel/OneDrive - 3ie/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/case_study_outputs/session9_DID.docx")
+# print(doc, target = "C:/Users/FionaKastel/OneDrive - International Initiative for Impact Evaluation/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/case_study_outputs/session9_DID.docx")
 
 ``` 
 
@@ -347,7 +347,7 @@ not_offered <- c(not_offered_before, not_offered_after)
 # Create data frame
 did_viz_data <- data.frame(
   Time = rep(time_points, 2),
-  Group = rep(c("Offered", "Not Offered"), each = 2),
+  Group = rep(c("Enrolled", "Not Enrolled"), each = 2),
   Expenditure = c(offered, not_offered)
 )
 

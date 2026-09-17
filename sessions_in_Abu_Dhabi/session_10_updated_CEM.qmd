@@ -189,6 +189,7 @@ ggplot(cem_demo, aes(x = efficiency, y = distance, color = enrolled, shape = enr
        color = "Group", shape = "Group") +
   theme_minimal() +
   theme(legend.position = "bottom")
+ggsave("case_study_outputs/cem_before.png", width=8, height=5)
 ```
 
 ## CEM Intuition: After Matching
@@ -225,6 +226,7 @@ ggplot(cem_matched, aes(x = efficiency, y = distance, color = enrolled, shape = 
        color = "Group", shape = "Group") +
   theme_minimal() +
   theme(legend.position = "bottom")
+ggsave("case_study_outputs/cem_after.png", width=8, height=5)
 ```
 
 ## Performing CEM
@@ -300,6 +302,7 @@ ggplot(cem_viz, aes(x = efficiency_index_0, y = recycling_center_distance_0,
        color = "Group", shape = "Group") +
   theme_minimal() +
   theme(legend.position = "bottom")
+ggsave("case_study_outputs/cem_before_real_data.png", width=8, height=5)
 ```
 
 ## Visualizing CEM: After Matching (Real Data)
@@ -324,6 +327,7 @@ ggplot(cem_matched_viz, aes(x = efficiency_index_0, y = recycling_center_distanc
        color = "Group", shape = "Group") +
   theme_minimal() +
   theme(legend.position = "bottom")
+ggsave("case_study_outputs/cem_after_real_data.png", width=8, height=5)
 ```
 
 ## Checking Balance Before Matching

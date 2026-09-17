@@ -7,9 +7,10 @@ library(dplyr)
 library(modelsummary)
 library(estimatr)
 library(kableExtra)
+library(tidyverse)
 
 # df <- read.csv("./evaluation_data.csv")
-df <- read.csv("C:/Users/FionaKastel/OneDrive - 3ie/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/evaluation_data.csv")
+df <- read.csv("C:/Users/FionaKastel/OneDrive - International Initiative for Impact Evaluation/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/evaluation_data.csv")
 
 # Change waste management cost to reasonable about in Dirham (AED)
 df$waste_management_costs<-df$waste_management_costs*100
@@ -40,13 +41,13 @@ cat("Dropped", nrow(df) - nrow(df_balanced), "rows that were only in one period\
 
 # Save new data
 # write.csv(df, "C:/Users/FionaKastel/OneDrive - 3ie/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/evaluation_data_GreenWaste.csv")
-write.csv(df_balanced, "C:/Users/FionaKastel/OneDrive - 3ie/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/evaluation_data_GreenWaste.csv")
+write.csv(df_balanced, "C:/Users/FionaKastel/OneDrive - International Initiative for Impact Evaluation/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/evaluation_data_GreenWaste.csv")
 
 
 
 
 ######### Create Table of Means
-# df <- read.csv("C:/Users/FionaKastel/OneDrive - 3ie/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/evaluation_data_GreenWaste.csv")
+# df <- read.csv("C:/Users/FionaKastel/OneDrive - International Initiative for Impact Evaluation/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/evaluation_data_GreenWaste.csv")
 df <- read.csv("./evaluation_data_GreenWaste.csv")
 ## Table of means
 m <- df %>%
@@ -505,4 +506,3 @@ ft <- bold(ft, i = nrow(df), part = "body"); ft <- bg(ft, i = nrow(df), bg = "#F
 doc <- read_docx()
 doc <- body_add_flextable(doc, ft)
 print(doc, target = "C:/Users/FionaKastel/OneDrive - 3ie/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/case_study_outputs/mean_baseline_stats.docx")
-

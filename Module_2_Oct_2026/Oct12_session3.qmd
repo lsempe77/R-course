@@ -101,7 +101,6 @@ By the end of this session you will be able to:
 - Read a randomised result: which number is the impact, and does it clear the decision rule
 :::
 
-You will not run any analysis. Your job is to spot the problem before you act on the number.
 
 ::: {.notes}
 0:00 · One minute. This is the last session of Day 1 and the pay-off for Session 1.
@@ -111,7 +110,7 @@ the one design that fixes them.
 
 # 1 · Two comparisons, both convincing [18 min]{.mins}
 
-## The programme on the table
+## The GreenWaste programme
 
 :::::: {.columns}
 
@@ -120,7 +119,7 @@ The **GreenWaste Program** helped businesses cut waste-management costs.
 A pilot ran, data was collected before and after, and now someone has to
 decide whether to take it national.
 
-The bar it has to clear is fixed for the whole week.
+The bar it has to clear is fixed for the whole week at 1,000 AED.
 :::::
 
 ::::: {.column width="46%"}
@@ -273,7 +272,7 @@ you have the two answers already; use their words in the next section.
 ::: {.panel}
 A before-and-after number compares the programme to **what came before**, not
 to what would have happened anyway. Anything else that changed over the same
-period is folded into the number.
+period is included in that number.
 :::
 
 ::: {.warn}
@@ -319,7 +318,7 @@ efficient, more costly to begin with.
 ::: {.warn}
 So the `r format(ww_gap, big.mark=",")` AED gap mixes two things together: any
 real effect of the programme, **and** the head start the eligible group already
-had. It flatters the programme.
+had. It overestimates the effect of the programme.
 :::
 
 ::: {.notes}
@@ -331,7 +330,7 @@ had. It flatters the programme.
 
 ::: {.panel}
 The truth is not halfway by coincidence. Each naive comparison is wrong for a
-different reason, and they miss in **opposite directions**.
+different reason, and they are incorrect in **opposite directions**.
 :::
 
 ```{=html}
@@ -362,7 +361,7 @@ Ninety seconds with your neighbour. Two or three examples to the room.
 0:16 · Short and personal. Makes the trap concrete before the break.
 :::
 
-# Comfort break [5 min]{.mins}
+# Break [5 min]{.mins}
 
 ## Five-minute break
 
@@ -377,12 +376,12 @@ between the groups.
 
 # 3 · How randomisation fixes it [15 min]{.mins}
 
-## Draw lots
+## Random draw
 
 ::: {.panel}
 Both problems come from the same root: the group that took part and the group
 that did not were **not comparable**. Randomisation fixes it at the source.
-Decide who is offered the programme by **drawing lots**, not by who is eligible,
+Decide who is offered the programme by **random draw**, not by who is eligible,
 keen, or easy to reach.
 :::
 
@@ -420,7 +419,7 @@ leftover difference is small and down to chance.
 
 ::: {.ask}
 So when we compare two large randomly-formed groups, any real gap in the outcome
-is the programme, not a head start.
+is the programme, not some other factor that could give one group a head start over the other.
 :::
 
 ::: {.notes}

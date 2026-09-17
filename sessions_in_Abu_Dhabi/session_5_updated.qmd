@@ -184,7 +184,7 @@ m_ba1 <- lm_robust(waste_management_costs   ~ round,
 # doc <- read_docx()
 # # doc <- body_add_par(doc, "Before-After Regression Results", style = "heading 1")
 # doc <- body_add_flextable(doc, ft)
-# print(doc, target = "C:/Users/FionaKastel/OneDrive - 3ie/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/case_study_outputs/session5_before_after.docx")
+# print(doc, target = "C:/Users/FionaKastel/OneDrive - International Initiative for Impact Evaluation/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/case_study_outputs/session5_before_after.docx")
 
 
 ```  
@@ -282,7 +282,7 @@ m_ba2 <- lm_robust(waste_management_costs ~ enrolled,
 #   gof_map = c("nobs"),
 #   title = "With-Without Regression Results",
 #   coef_map = c(
-#     "enrolled" = "With vs. Without Program Effect",
+#     "enrolled" = "Enrolled vs. Not-Enrolled Effect",
 #     "(Intercept)" = "(Intercept)"
 #   ),
 #   notes = "Standard errors are in parentheses",
@@ -292,7 +292,7 @@ m_ba2 <- lm_robust(waste_management_costs ~ enrolled,
 # 
 # ft
 # 
-# Optional: Save to word
+# # Optional: Save to word
 # library(officer)
 # # let flextable size to content, then stretch to a target width
 # ft <- autofit(ft)
@@ -305,7 +305,7 @@ m_ba2 <- lm_robust(waste_management_costs ~ enrolled,
 # doc <- read_docx()
 # # doc <- body_add_par(doc, "Before-After Regression Results", style = "heading 1")
 # doc <- body_add_flextable(doc, ft)
-# print(doc, target = "C:/Users/FionaKastel/OneDrive - 3ie/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/case_study_outputs/session5_with_without.docx")
+# print(doc, target = "C:/Users/FionaKastel/OneDrive - International Initiative for Impact Evaluation/Documents/GitHub/R-course/sessions_in_Abu_Dhabi/case_study_outputs/session5_with_without.docx")
 
 ```    
 
@@ -411,13 +411,13 @@ ggplot(viz_data, aes(x = Time, y = Expenditure, color = Group)) +
 
 ```{r}
   
-ft <- modelsummary(list("Model 1: Before-After" = m_ba1, "Model 2: With-Without" = m_ba2),
+ft <- modelsummary(list("Model 1: Before-After" = m_ba1, "Model 2: Enrolled vs. Not Enrolled" = m_ba2),
              stars = TRUE,
              gof_map = c("nobs", "r.squared", "r2.adjusted"), 
-             title = "Before-After vs. With-Without Regression Results",
+             title = "Before-After vs. Enrolled-vs-Not-Enrolled Regression Results",
              coef_map = c(
                "round" = "Before vs. After Effect",
-               "enrolled" = "With vs. Without Program Effect",
+               "enrolled" = "Enrolled vs. Not-Enrolled Effect",
                "(Intercept)" = "(Intercept)")
              ,
              notes = "Standard errors are in parentheses",

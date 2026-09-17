@@ -86,13 +86,13 @@ reg_n <- 240
 By the end of this session you will be able to:
 
 ::: {.panel}
-- Ask the one question every evaluation result has to answer: **compared to what?**
+- Ask the one question every impact evaluation result has to answer: **compared to what?**
 - Explain, in plain language, the terms you will hear all week: mean, comparison group, treatment effect, coefficient, p-value, confidence interval
 - Recognise when "statistically significant" is being used to mean something it does not
 - Use AI to explain an unfamiliar term, and know what to check when it does
 :::
 
-You will not run any analysis this week. Your job is to read results with confidence and know what to ask.
+The goal of these sessions is to provide you with insight on how we get to impact evaluation results, to read and interpret those results with confidence, and to know what critical questions to ask.
 
 # 1 · Compared to what? [15 min]{.mins}
 
@@ -108,7 +108,7 @@ At the end of the year, someone has to decide: did it work, and should it
 run again?
 
 ::: {.panel}
-*Illustrative example, not one of this week's Abu Dhabi case studies.*
+*Illustrative example, not a real Abu Dhabi case study.*
 :::
 :::::
 
@@ -235,7 +235,7 @@ Grade 6 maths pass rates in those schools are compared to where they
 started.
 
 ::: {.panel}
-*Illustrative example, not one of this week's Abu Dhabi case studies.*
+*Illustrative example, not a real Abu Dhabi case study.*
 :::
 :::::
 
