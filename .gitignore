@@ -3,3 +3,15 @@
 .RData
 .Ruserdata
 desktop.ini
+
+# Quarto / knitr build output
+*_files/
+session_files.*
+*_cache/
+
+# R generated output
+Rplot*.png
+Rplots.pdf
+
+# Local tooling
+.kilo/
