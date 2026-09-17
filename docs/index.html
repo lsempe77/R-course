@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 2 · Reading Impact Evaluation Results</title>
+<style>
+  :root {
+    --ink: #16181A;
+    --muted: #61686D;
+    --accent: #0E6E80;
+    --rule: #E3E6E8;
+    --serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
+    --sans: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 4rem 1.5rem 6rem;
+    background: #fff;
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  main { max-width: 46rem; margin: 0 auto; }
+  .eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 0.9rem;
+  }
+  h1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 2.5rem;
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+  .lede {
+    margin: 1.1rem 0 0;
+    color: var(--muted);
+    max-width: 34rem;
+  }
+  h2 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 1.15rem;
+    margin: 3.2rem 0 0.2rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  h2 .day { color: var(--muted); font-size: 0.85em; margin-left: 0.5em; }
+  ul { list-style: none; margin: 0; padding: 0; }
+  li { border-bottom: 1px solid var(--rule); }
+  li:last-child { border-bottom: none; }
+  a {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1.5rem;
+    padding: 0.95rem 0 0.95rem 0;
+    color: var(--ink);
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    padding-left: 0.9rem;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  a:hover, a:focus-visible { border-left-color: var(--accent); color: var(--accent); }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .title { font-weight: 600; }
+  .title small { display: block; font-weight: 400; color: var(--muted); font-size: 0.92rem; margin-top: 0.15rem; }
+  .len { color: var(--muted); font-size: 0.85rem; white-space: nowrap; }
+  footer {
+    margin-top: 3.5rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--rule);
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  @media (max-width: 30rem) {
+    body { padding: 2.5rem 1.1rem 4rem; font-size: 16px; }
+    h1 { font-size: 1.95rem; }
+    a { flex-direction: column; gap: 0.15rem; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">Abu Dhabi · October 2026</p>
+  <h1>Reading Impact Evaluation Results</h1>
+  <p class="lede">
+    Module 2 slides. Use the arrow keys to move between slides, press
+    <strong>Esc</strong> for an overview, and press <strong>S</strong> for the
+    presenter view with speaker notes. Each deck is a single self-contained file
+    and works offline.
+  </p>
+
+  <h2>Day 1 <span class="day">Monday 12 October</span></h2>
+  <ul>
+    <li>
+      <a href="Oct12_session1.html">
+        <span class="title">Compared to What? Know the Language First
+          <small>Comparison groups, the five core terms, and the three questions to ask of any number</small>
+        </span>
+        <span class="len">1.5 h</span>
+      </a>
+    </li>
+    <li>
+      <a href="Oct12_session3.html">
+        <span class="title">Spot the Problem: Naive Comparisons and RCT Reading
+          <small>What breaks a comparison, and how to read a randomised trial</small>
+        </span>
+        <span class="len">2 h</span>
+      </a>
+    </li>
+  </ul>
+
+  <h2>Day 2 <span class="day">Tuesday 13 October</span></h2>
+  <ul>
+    <li>
+      <a href="Oct13_session1.html">
+        <span class="title">Reading DiD Results
+          <small>Difference-in-differences, the parallel trends assumption, and the Abu Dhabi DOH case</small>
+        </span>
+        <span class="len">1.5 h</span>
+      </a>
+    </li>
+    <li>
+      <a href="Oct13_session2.html">
+        <span class="title">Reading RDD Results
+          <small>Regression discontinuity, the bandwidth question, and the Abu Dhabi DCD case</small>
+        </span>
+        <span class="len">1.5 h</span>
+      </a>
+    </li>
+    <li>
+      <a href="Oct13_session3.html">
+        <span class="title">Reading Matching Results
+          <small>Two case studies, and what matching on observables can and cannot fix</small>
+        </span>
+        <span class="len">2 h</span>
+      </a>
+    </li>
+  </ul>
+
+  <footer>
+    International Initiative for Impact Evaluation (3ie) · Module 2 training materials.
+    For a printable copy of any deck, append <code>?print-pdf</code> to its address
+    and print to PDF from Chrome.
+  </footer>
+</main>
+</body>
+</html>
