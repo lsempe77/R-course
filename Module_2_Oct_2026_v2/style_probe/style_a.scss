@@ -1,0 +1,148 @@
+/*-- scss:defaults --*/
+
+// ============================================================
+// STYLE PROBE A — Editorial
+//
+// Intent: reads like a well-set report page. Decoration is
+// removed entirely; hierarchy comes from type, weight and
+// hairline rules. Nothing is filled, nothing is rounded,
+// nothing has a shadow. Type is smaller and lines are set
+// tighter, so a slide holds more before it overflows.
+// ============================================================
+
+$ink:     #16181A;
+$muted:   #61686D;
+$accent:  #0E6E80;
+$accent2: #A9561F;
+$alert:   #8E2413;
+$rule:    #E3E6E8;
+
+$serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
+$sans:  "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+
+$font-family-sans-serif:           $sans;
+$presentation-heading-font:        $serif;
+$presentation-heading-color:       $ink;
+$presentation-heading-font-weight: 400;
+$presentation-font-size-root:      24px;
+
+$body-color: $ink;
+$body-bg:    #FFFFFF;
+$link-color: $accent;
+
+/*-- scss:rules --*/
+
+.reveal { font-family: $sans; }
+
+// Headings: serif, regular weight, one hairline. No colour, no rule on h1.
+.reveal h1, .reveal h2, .reveal h3 { font-family: $serif; font-weight: 400; letter-spacing: 0; }
+.reveal h1 { font-size: 1.9em; color: $ink; }
+.reveal h2 {
+  display: block;
+  width: 100%;
+  max-width: none;
+  font-size: 1.5em;
+  margin: 0 0 0.5em 0;
+  padding-bottom: 0.28em;
+  border: none;
+  border-bottom: 1px solid $rule;
+  color: $ink;
+}
+.reveal h3 { font-size: 1.05em; color: $muted; font-style: italic; }
+
+.reveal p, .reveal li { line-height: 1.45; font-weight: 400; }
+.reveal ul, .reveal ol { font-size: 1em; }
+.reveal strong { font-weight: 700; }
+.reveal .slides section > p { max-width: 34em; }
+
+// Callouts: a rule and an indent. No fill, no radius, no shadow.
+.reveal .panel,
+.reveal .ask,
+.reveal .warn,
+.reveal .ai-output,
+.reveal .excerpt {
+  background: none;
+  border: none;
+  border-left: 3px solid $accent;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0 0 0 0.9em;
+  margin: 0.75em 0;
+  font-size: 0.92em;
+}
+.reveal .warn      { border-left-color: $alert; }
+.reveal .excerpt   { border-left-color: $accent2; }
+.reveal .ai-output { border-left-color: $muted; }
+.reveal .ai-output .flag { color: $alert; font-weight: 700; background: none; }
+
+// Hero: two hairlines and a light numeral. No box.
+.reveal .hero {
+  background: none;
+  border: none;
+  border-top: 1px solid $rule;
+  border-bottom: 1px solid $rule;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0.5em 0;
+  margin: 0.7em 0;
+  text-align: left;
+
+  .value { font-size: 3.2em; font-weight: 300; color: $ink; letter-spacing: -0.02em; line-height: 1; }
+  .value.alert { color: $alert; }
+  .label { margin-top: 0.3em; font-size: 0.6em; color: $muted; letter-spacing: 0.14em; }
+}
+
+// Stat row: top hairlines only.
+.reveal .stat-row {
+  gap: 1.2em;
+  margin: 0.6em 0;
+  > div {
+    background: none;
+    border: none;
+    border-top: 2px solid $ink;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0.5em 0 0.2em 0;
+    text-align: left;
+  }
+  .n { font-size: 1.7em; font-weight: 400; color: $ink; }
+  .k { font-size: 0.58em; color: $muted; letter-spacing: 0.1em; }
+}
+
+// Facts: a rule and an indent, like a margin note.
+.reveal .facts {
+  background: none;
+  border: none;
+  border-left: 3px solid $ink;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0 0 0 0.9em;
+  font-size: 0.92em;
+  gap: 0.4em 1.1em;
+  .k { color: $ink; font-weight: 600; text-transform: none; letter-spacing: 0; font-size: 1em; }
+}
+
+.reveal table { font-size: 0.9em; box-shadow: none; border-radius: 0; }
+.reveal table th { background: none; color: $ink; border-bottom: 2px solid $ink; font-weight: 600; }
+.reveal table td { background: none; border-bottom: 1px solid $rule; }
+.reveal table tbody tr:nth-child(even) td { background: none; }
+
+// Charts sit directly on the page. No card.
+.reveal .cell-output-display .html-widget {
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+}
+.reveal .cell { margin-bottom: 0.4em; }
+.reveal .cell-output { margin-top: 0.3em; margin-bottom: 0.1em; }
+
+.reveal .mins {
+  background: none;
+  border: 1px solid $rule;
+  color: $muted;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+}
+.reveal .slide-number { color: $muted !important; background: none !important; }

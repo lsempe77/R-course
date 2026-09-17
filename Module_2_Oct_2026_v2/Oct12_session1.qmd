@@ -1,0 +1,996 @@
+---
+title: "Introduction to Impact Evaluation: Key Concepts and Terminology"
+subtitle: "Module 2 · Day 1, Session 1: Building a Common Language for Causal Analysis"
+author: "Dr. Lucas Sempé"
+always_allow_html: yes
+# revealjs only in this folder: the charts are interactive (plotly/htmlwidgets),
+# and pandoc cannot carry an htmlwidget into pptx. Export to PDF for a portable copy.
+format:
+  revealjs:
+    theme: [theme_editorial.scss]
+    slide-number: true
+    width: 1280
+    height: 720
+    fig-align: center
+    slide-level: 2
+    embed-resources: true
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+    dev: "png"
+    # dpi 96 is deliberate. knitr sizes every htmlwidget container as
+    # fig.width * dpi, so an inherited dpi: 200 silently inflated each chart
+    # tenfold (11.5in became 2300px) and pushed slide content off the bottom.
+    # At 96, fig.width in inches maps 1:1 onto CSS pixels. If a raster
+    # ggplot chunk is ever added, set its dpi per chunk.
+    dpi: 96
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup}
+library(tidyverse)
+library(plotly)
+library(knitr)
+library(kableExtra)
+library(qrcode)      # live poll QR, generated below so it cannot drift
+
+# ---- Palette (editorial theme; see theme_editorial.scss) -------------------
+ACCENT  <- "#0E6E80"   # series 1: programme / offered
+ACCENT2 <- "#A9561F"   # series 2: comparison / not offered
+ALERT   <- "#8E2413"   # decision rules and flagged errors, never a series
+INK     <- "#16181A"; MUTED <- "#61686D"; RULE <- "#E3E6E8"
+CHART_FONT <- "Segoe UI, Helvetica, Arial, sans-serif"
+
+# ---- Chart sizing ----------------------------------------------------------
+# Every chart carries an explicit pixel size. Relying on plotly's autosize
+# inside revealjs produces half-drawn charts: a widget initialised while its
+# slide is hidden measures a narrow container and never corrects itself.
+# These must stay in step with the chunk's fig.width / fig.height, which size
+# the htmlwidgets wrapper (at dpi 96, one inch is 96 px).
+
+PL_W  <- 1100   # full-width chart
+PL_WC <- 520    # chart sitting in a half-width column
+PL_WT <- 340    # chart sitting in a third-width column
+
+pl_m2 <- function(p, width = PL_W, height = 290, t = 30, b = 54,
+                  title = NULL, legend_y = 1.02) {
+  p <- p %>%
+    layout(
+      width  = width,
+      height = height,
+      font = list(family = CHART_FONT, size = 13, color = INK),
+      paper_bgcolor = "rgba(0,0,0,0)",
+      plot_bgcolor  = "rgba(0,0,0,0)",
+      margin = list(l = 70, r = 24, t = t, b = b),
+      legend = list(orientation = "h", x = 0.5, xanchor = "center",
+                    y = legend_y, yanchor = "bottom", title = list(text = "")),
+      hoverlabel = list(bgcolor = "white", bordercolor = RULE,
+                        font = list(color = INK, size = 12))
+    )
+  if (!is.null(title)) {
+    p <- p %>% layout(title = list(text = title, x = 0, xanchor = "left",
+                                   font = list(size = 12, color = MUTED)))
+  }
+  p %>% config(displayModeBar = FALSE)
+}
+
+ax <- function(title = "", ...) {
+  modifyList(list(
+    title = list(text = title, font = list(size = 12, color = MUTED)),
+    gridcolor = RULE, zerolinecolor = RULE, linecolor = RULE,
+    tickfont = list(size = 12, color = MUTED)
+  ), list(...))
+}
+
+tlev <- function(x) factor(x, levels = c("Before", "After"))
+
+# ---- Live Menti poll -------------------------------------------------------
+# ONE place to set the join code. Everything below reads from here: the QR on
+# the opening slide, the printed link, and the results iframe on the reveal
+# slide. Change MENTI_CODE only, and all three move together.
+#
+# This is the short JOIN code participants type at menti.com (usually 8 digits),
+# NOT the long alphanumeric ID in the editor URL. Confirm it while the Menti is
+# live: a code that is not currently running sends the room to a "no longer
+# active" page.
+MENTI_CODE <- "1234 5678"
+MENTI_JOIN <- paste0("https://www.menti.com/", gsub(" ", "", MENTI_CODE))
+
+# The results embed. This is the SLIDES view for a webpage, not the participant
+# voting view: Mentimeter does not expose voting to embeds, so the room still
+# votes on their own phones. Set this to the long ID from the editor URL.
+MENTI_EMBED <- "https://www.mentimeter.com/app/presentation/al68xcnp6hm6zmc9k94rhbxwimzq6m29/embed"
+
+menti_qr <- function(path = "menti_qr.png", url = MENTI_JOIN) {
+  png(path, width = 900, height = 900, res = 300, bg = "white")
+  on.exit(dev.off(), add = TRUE)
+  par(mar = c(0, 0, 0, 0))
+  plot(qr_code(url, ecl = "H"))   # ecl H = highest error correction
+  path
+}
+MENTI_QR <- menti_qr()
+
+# ---- Section 1: the Al Falah campaign, in two worlds ------------------------
+# One headline, two sets of driving data, opposite verdicts. The death rate is
+# what breaks the tie, and the headline alone cannot tell you which world you
+# are in.
+af_fatal_before <- 420
+af_fatal_after  <- 294
+af_vkm_before   <- 8.0
+af_vkm_world_a  <- 5.6      # fuel prices spike, people drive less
+af_vkm_world_b  <- 8.0      # driving unchanged
+
+af_rate_before   <- af_fatal_before / af_vkm_before
+af_rate_world_a  <- af_fatal_after  / af_vkm_world_a
+af_rate_world_b  <- af_fatal_after  / af_vkm_world_b
+
+af_headline_fall  <- 100 * (af_fatal_before - af_fatal_after) / af_fatal_before
+af_drive_fall     <- 100 * (af_vkm_before - af_vkm_world_a) / af_vkm_before
+af_rate_fall_a    <- 100 * (af_rate_before - af_rate_world_a) / af_rate_before
+af_rate_fall_b    <- 100 * (af_rate_before - af_rate_world_b) / af_rate_before
+
+# ---- Section 1 coda: the trap runs the other way too ------------------------
+mc_prog <- c(62, 60)        # youth employment rate, programme areas
+mc_comp <- c(61, 55)        # youth employment rate, comparison areas
+mc_naive  <- mc_prog[2] - mc_prog[1]
+mc_change <- mc_comp[2] - mc_comp[1]
+mc_effect <- mc_naive - mc_change
+
+# ---- Word 1: mean hides spread. Two programmes, same average ---------------
+set.seed(7)
+mean_dat <- bind_rows(
+  tibble(Programme = "Programme A", cost = rgamma(120, shape = 40, rate = 40 / 1400)),
+  tibble(Programme = "Programme B", cost = rgamma(120, shape = 2, rate = 2 / 1400))
+) %>%
+  group_by(Programme) %>%
+  # Scale each programme so both averages are exactly 1,400 AED. Sampling
+  # alone left them 1,462 and 1,53x, which would make the single average line
+  # on the chart a small lie and the caption imprecise. Scaling, not shifting,
+  # so no cost can go negative.
+  mutate(cost = cost * (1400 / mean(cost))) %>%
+  ungroup() %>%
+  mutate(Programme = factor(Programme, levels = c("Programme A", "Programme B")),
+         id  = row_number(),
+         row = as.integer(Programme),
+         x   = row + runif(n(), -0.34, 0.34))
+
+mean_summary <- mean_dat %>%
+  group_by(Programme) %>%
+  summarise(avg  = mean(cost),
+            near = 100 * mean(abs(cost - 1400) <= 140),
+            .groups = "drop")
+
+# ---- Word 2: the 2x2 the room does by hand ---------------------------------
+te_prog_before <- 54; te_prog_after <- 71
+te_comp_before <- 50; te_comp_after <- 65
+
+te_change      <- te_prog_after - te_prog_before
+te_end_gap     <- te_prog_after - te_comp_after
+te_base_gap    <- te_prog_before - te_comp_before
+te_effect      <- te_change - (te_comp_after - te_comp_before)
+
+# ---- Word 3: a coefficient is a gap between groups -------------------------
+set.seed(11)
+reg_n <- 240
+coef_dat <- tibble(
+  id    = 1:reg_n,
+  group = factor(rep(c("Comparison", "Programme"), each = reg_n / 2),
+                 levels = c("Comparison", "Programme"))
+) %>%
+  mutate(outcome = 40.5 + 2.1 * (group == "Programme") + rnorm(n(), 0, 6),
+         x       = as.integer(group) + runif(n(), -0.30, 0.30))
+
+coef_means <- coef_dat %>%
+  group_by(group) %>%
+  summarise(m = mean(outcome), .groups = "drop")
+
+coef_gap <- coef_means$m[coef_means$group == "Programme"] -
+            coef_means$m[coef_means$group == "Comparison"]
+
+reg_tbl <- tribble(
+  ~Variable,                     ~Coef,  ~SE,   ~p,      ~CI_lo, ~CI_hi,
+  "(Intercept)",                  40.5,  3.2,   "<0.001", 34.2,   46.8,
+  "Programme (enrolled = 1)",      2.1,  0.9,   "0.021",   0.3,    3.9,
+  "Baseline pass rate",            0.58,  0.04,  "<0.001",  0.50,   0.66,
+  "Class size (students)",        -0.32,  0.14,  "0.024",  -0.59,  -0.05,
+  "Teacher experience (years)",    0.15,  0.08,  "0.06",   -0.01,   0.31
+)
+te_threshold <- 3   # the effect must reach 3 points to justify scale-up
+
+# ---- Words 4 and 5: the same effect of 2.1 points, seen two ways -----------
+# perm_null() builds a study that measures exactly `effect`, then breaks the
+# link between the label and the outcome 1,000 times. What survives is the
+# distribution of differences a world with no effect produces.
+perm_null <- function(n_total, effect = 2.1, sd_y = 7, n_perm = 1000, seed = 2026) {
+  set.seed(seed)
+  half <- n_total %/% 2
+  g    <- rep(c("Comparison", "Programme"), each = half)
+  y    <- 60 + rnorm(2 * half, 0, sd_y)
+  y    <- y + (effect - (mean(y[g == "Programme"]) - mean(y[g == "Comparison"]))) *
+         (g == "Programme")
+  replicate(n_perm, {
+    i <- sample(2 * half)
+    mean(y[i][1:half]) - mean(y[i][(half + 1):(2 * half)])
+  })
+}
+
+perm_240 <- perm_null(240)
+p_240    <- mean(abs(perm_240) >= 2.1)
+
+pval_bins <- seq(floor(min(perm_240) * 4) / 4, ceiling(max(perm_240) * 4) / 4,
+                 by = 0.25)
+pval_h0   <- hist(perm_240, breaks = pval_bins, plot = FALSE)
+
+pval_hist <- tibble(mid = pval_h0$mids, n = pval_h0$counts)
+pval_lo   <- min(perm_240)
+pval_hi   <- max(perm_240)
+pval_ymax <- max(pval_h0$counts) * 1.18
+
+# The sample-size slider: identical effect, seven studies of growing size.
+n_grid     <- c(40, 80, 160, 240, 480, 960, 2400)
+n_perms    <- map(n_grid, perm_null)
+names(n_perms) <- as.character(n_grid)
+
+slider_bins <- seq(-9, 9, by = 0.25)
+slider_mids <- slider_bins[-length(slider_bins)] + 0.125
+
+null_frames <- map_dfr(n_grid, function(nn) {
+  h <- hist(n_perms[[as.character(nn)]], breaks = slider_bins, plot = FALSE)$counts
+  tibble(n = nn, mid = slider_mids, share = h / sum(h))
+})
+slider_ymax <- max(null_frames$share) * 1.15
+
+null_p <- tibble(
+  n = n_grid,
+  p = map_dbl(n_grid, function(nn) mean(abs(n_perms[[as.character(nn)]]) >= 2.1))
+)
+
+# The interval, 100 repeat studies of the same programme
+set.seed(4)
+mu_ci <- 2.1; se_ci <- 0.45
+ci_dat <- tibble(run = 1:100, est = rnorm(100, mu_ci, se_ci)) %>%
+  mutate(lo     = est - 1.96 * se_ci,
+         hi     = est + 1.96 * se_ci,
+         covers = lo <= mu_ci & hi >= mu_ci,
+         txt    = sprintf("Study %d: %.1f points [%.1f, %.1f]", run, est, lo, hi)) %>%
+  arrange(est) %>%
+  mutate(y = row_number())
+
+ci_cov <- sum(ci_dat$covers)
+```
+
+# 1 · What are we comparing?
+
+## The Al Falah Road Safety Campaign
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+A national government runs a one-year awareness campaign: billboards, TV
+spots, and school talks promoting seatbelt use and safe speeds.
+
+At the end of the year, someone has to decide: did it work, and should it
+run again?
+
+::: {.warn}
+*This is an illustrative example, not a real Abu Dhabi case study.*
+:::
+:::::
+
+::::: {.column width="50%"}
+```{=html}
+<div class="facts">
+  <div class="k">Ran</div>        <div class="v">One year, nationwide</div>
+  <div class="k">Delivered</div>  <div class="v">Billboards, TV spots, school talks</div>
+  <div class="k">Outcome</div>    <div class="v">Traffic fatalities</div>
+  <div class="k">The question</div> <div class="v">Did the campaign save lives?</div>
+</div>
+```
+:::::
+
+::::::
+
+## The headline number
+
+```{r results='asis'}
+cat(sprintf('
+<div class="hero">
+  <div class="value">-%.0f%%</div>
+  <div class="label">Traffic fatalities, year on year</div>
+</div>
+<div class="stat-row">
+  <div><span class="n">%d</span><span class="k">Deaths, year before</span></div>
+  <div><span class="n">%d</span><span class="k">Deaths, year after</span></div>
+  <div><span class="n">%d</span><span class="k">Fewer deaths</span></div>
+</div>', af_headline_fall, af_fatal_before, af_fatal_after,
+   af_fatal_before - af_fatal_after))
+```
+
+## Many times we make decisions based on numbers
+
+:::::: {.columns}
+
+::::: {.column width="62%"}
+::: {.ask style="font-size: 120%;"}
+*Your first decision.* The programme reported that traffic fatalities fell by
+30% in one year.
+
+**Would you fund a second year?**
+:::
+
+Go to **menti.com** and enter code **`r MENTI_CODE`**, or scan the code on the
+right. Please, give an answer.
+:::::
+
+::::: {.column width="38%"}
+```{r out.width='330px', out.extra='style="display:block; margin:0 auto;"'}
+knitr::include_graphics(MENTI_QR)
+```
+:::::
+
+::::::
+
+::: {.warn .fragment}
+Every number you will be shown this week is **correct**. Almost none of them will
+be *wrong*.
+
+BUT... sometimes an accurate
+number answers a question you did not ask, so we might still be wrong.
+:::
+
+## What else happened that year
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+```{r fig.height=2.6, fig.width=5.4}
+tibble(Time = tlev(c("Before", "After")),
+       Deaths = c(af_fatal_before, af_fatal_after)) %>%
+  plot_ly(x = ~Time, y = ~Deaths, type = "bar",
+          marker = list(color = ACCENT, line = list(width = 0)),
+          text = ~Deaths, textposition = "outside",
+          textfont = list(size = 15, color = INK),
+          showlegend = FALSE,
+          hovertemplate = "%{y} deaths<extra></extra>") %>%
+  layout(xaxis = ax("", zeroline = FALSE),
+         yaxis = ax("Traffic fatalities", range = c(0, 520))) %>%
+  pl_m2(width = PL_WC, height = 250, title = "Fatalities, nationwide")
+```
+:::::
+
+::::: {.column width="50%"}
+```{r fig.height=2.6, fig.width=5.4}
+tibble(Time = tlev(c("Before", "After")),
+       VKM = c(af_vkm_before, af_vkm_world_a)) %>%
+  plot_ly(x = ~Time, y = ~VKM, type = "bar",
+          marker = list(color = ACCENT2, line = list(width = 0)),
+          text = ~VKM, textposition = "outside",
+          textfont = list(size = 15, color = INK),
+          showlegend = FALSE,
+          hovertemplate = "%{y} billion km<extra></extra>") %>%
+  layout(xaxis = ax("", zeroline = FALSE),
+         yaxis = ax("Billion km driven", range = c(0, 9.5))) %>%
+  pl_m2(width = PL_WC, height = 250, title = "Distance driven, nationwide")
+```
+:::::
+
+::::::
+
+::: {.panel}
+Fuel prices rose sharply that year, and drivers cut back: distance driven fell
+by `r sprintf("%.0f", af_drive_fall)`%, almost exactly as much as fatalities
+did.
+:::
+
+## Did it work?
+
+```{r results='asis'}
+# data-external="1" is required. Without it, embed-resources: true inlines the
+# page as a base64 data: URI with role="img", and the embed becomes a frozen
+# picture instead of a live results view.
+cat(sprintf('
+<iframe data-external="1" allowfullscreen="true" allowtransparency="true"
+        frameborder="0" src="%s"
+        style="width:100%%; height:74%%; border:none;"></iframe>', MENTI_EMBED))
+```
+
+::: {.note}
+Leave the results on screen but do not interpret them yet. The point of the
+poll is that the room has now committed to a judgement on a single number.
+:::
+
+## World A · the death rate did not move
+
+```{r results='asis'}
+cat(sprintf('
+<div class="hero">
+  <div class="value">%.0f%%</div>
+  <div class="label">Deaths per billion km driven</div>
+</div>
+<div class="stat-row">
+  <div><span class="n">%.0f</span><span class="k">Rate before</span></div>
+  <div><span class="n">%.0f</span><span class="k">Rate after</span></div>
+  <div><span class="n">%d</span><span class="k">Lives saved by the campaign</span></div>
+</div>', af_rate_fall_a, af_rate_before, af_rate_world_a,
+   round(af_rate_before - af_rate_world_a)))
+```
+
+::: {.warn}
+If the roads emptied by 30% and deaths fell by 30%, the risk of dying on them
+did not change. The campaign saved nobody. The headline was the fuel price.
+:::
+
+## World B · the same headline, a real effect
+
+```{r results='asis'}
+cat(sprintf('
+<div class="hero">
+  <div class="value">-%.0f%%</div>
+  <div class="label">Deaths per billion km driven</div>
+</div>
+<div class="stat-row">
+  <div><span class="n">%.0f</span><span class="k">Rate before</span></div>
+  <div><span class="n">%.0f</span><span class="k">Rate after</span></div>
+  <div><span class="n">-%d%%</span><span class="k">The campaign worked</span></div>
+</div>', af_rate_fall_b, af_rate_before, af_rate_world_b, af_rate_fall_b))
+```
+
+::: {.warn .fragment}
+World B is not what happened. It is what the **same headline** would have meant
+if driving had not changed at all: every one of those 126 fewer deaths would be
+the campaign's doing, and the death rate would have fallen by 30%.
+:::
+
+::: {.panel .fragment}
+Two worlds, one headline, opposite verdicts. Nothing in the headline, or in the
+number 30%, tells you which world you are in.
+:::
+
+## The trap also runs the other way
+
+```{r fig.height=3, fig.width=11.5}
+tibble(
+  Time  = tlev(rep(c("Before", "After"), 2)),
+  Group = rep(c("Programme districts", "Comparison districts"), each = 2),
+  Rate  = c(mc_prog[1], mc_prog[2], mc_comp[1], mc_comp[2])) %>%
+  plot_ly(x = ~Time, y = ~Rate, color = ~Group,
+          type = "scatter", mode = "lines+markers",
+          colors = c("Programme districts" = ACCENT,
+                     "Comparison districts" = ACCENT2),
+          line = list(width = 3), marker = list(size = 11),
+          hovertemplate = "%{fullData.name}: %{y}%<extra></extra>") %>%
+  layout(xaxis = ax("", zeroline = FALSE),
+         yaxis = ax("Youth employment rate (%)", range = c(50, 66))) %>%
+  pl_m2(height = 290)
+```
+
+::: {.warn}
+A youth employment programme: employment fell `r abs(mc_naive)` points in the
+districts it ran in. On a before-and-after reading, it failed. But employment
+fell `r abs(mc_change)` points in the comparison districts, so the programme
+held up `r mc_effect` points that would otherwise have been lost.
+:::
+
+## Compared to what?
+
+::: {.hero}
+::: {.value style="font-size:2.4em;"}
+"Compared to what?"
+:::
+:::
+
+::: {.panel}
+Every evaluation result is a comparison. A before-and-after number compares the
+programme to *the past*, not to what would have happened anyway. The comparison
+can move the answer down, as in World A, or up, as in the mirror case. The
+direction is not knowable in advance. If you do not know what a number is being
+compared to, you do not yet know what it means.
+:::
+
+# 2 · Three questions for any number
+
+## One idea, three questions
+
+::: {.panel}
+Five words follow. They are easier to hold if you attach them to the three
+questions you are entitled to ask of any number you are handed.
+:::
+
+```{=html}
+<div class="facts">
+  <div class="k">Compared to what?</div>          <div class="v">Comparison group · the question nobody puts in the summary</div>
+  <div class="k">How big, in units that matter?</div><div class="v">Mean · treatment effect · coefficient</div>
+  <div class="k">How sure are we?</div>           <div class="v">p-value · confidence interval</div>
+</div>
+```
+
+::: {.ask}
+Keep these three. You will use them on every slide for the rest of the week,
+and on the next evaluation report that lands on your desk.
+:::
+
+# 3 · The five words
+
+## Word 1 · Mean
+
+```{r fig.height=3, fig.width=11.5}
+plot_ly() %>%
+  add_trace(data = filter(mean_dat, Programme == "Programme A"),
+            x = ~x, y = ~cost, type = "scatter", mode = "markers",
+            marker = list(size = 7, color = ACCENT, opacity = 0.5),
+            customdata = ~id, name = "Programme A",
+            hovertemplate = "Programme A: %{y:,.0f} AED<extra></extra>") %>%
+  add_trace(data = filter(mean_dat, Programme == "Programme B"),
+            x = ~x, y = ~cost, type = "scatter", mode = "markers",
+            marker = list(size = 7, color = ACCENT2, opacity = 0.5),
+            customdata = ~id, name = "Programme B",
+            hovertemplate = "Programme B: %{y:,.0f} AED<extra></extra>") %>%
+  add_trace(x = c(0.4, 2.6), y = c(1400, 1400), type = "scatter", mode = "lines",
+            line = list(color = INK, width = 3, dash = "dot"),
+            name = "Average of each programme", hoverinfo = "name") %>%
+  layout(xaxis = ax("", tickvals = c(1, 2),
+                    ticktext = c("Programme A", "Programme B"),
+                    range = c(0.4, 2.6), zeroline = FALSE),
+         yaxis = ax("Waste management cost (AED)", range = c(0, 6200))) %>%
+  pl_m2(height = 290)
+```
+
+::: {.ask}
+Each dot is one business. Both programmes average exactly 1,400 AED: hover the
+dotted line. Click a legend entry to hide a programme. In Programme A,
+`r sprintf("%.0f", mean_summary$near[mean_summary$Programme == "Programme A"])`%
+of businesses are within 10% of the average. In Programme B, only
+`r sprintf("%.0f", mean_summary$near[mean_summary$Programme == "Programme B"])`%.
+Which would you fund, and what else do you need to know?
+:::
+
+## Word 2 · Treatment effect
+
+:::::: {.columns}
+
+::::: {.column width="46%"}
+```{=html}
+<div class="facts">
+  <div class="k">Programme schools</div>   <div class="v">54% &rarr; 71%</div>
+  <div class="k">Comparison schools</div>  <div class="v">50% &rarr; 65%</div>
+  <div class="k">Decision rule</div>       <div class="v">Must add 3 points to justify scale-up</div>
+</div>
+```
+
+::: {.ask}
+Grade 6 maths pass rates. **Three numbers describe this result: 17, 6 and 2.**
+Work out what each one is, then decide which is the treatment effect.
+:::
+:::::
+
+::::: {.column width="54%"}
+::: {.panel}
+**17** is what the programme schools gained. It is also what they would have
+gained if the national reform had done the work.
+
+**`r te_end_gap`** is the gap between the groups at the end. It looks like the
+answer, and it is the one most reports lead with. It contains the
+`r te_base_gap`-point head start the programme schools already had.
+
+**`r te_effect`** is the difference in the two changes: `r te_change` points
+minus the `r te_comp_after - te_comp_before` the comparison schools gained
+anyway.
+:::
+:::::
+
+::::::
+
+## Word 2 · The effect depends on the comparison
+
+::: {.panel}
+The programme schools are fixed at 54% then 71%. Only the comparison schools
+move. The red bar is the treatment effect, and it is the only thing on the
+chart that responds.
+:::
+
+```{r fig.height=3.35, fig.width=11.5}
+cf_seq <- seq(48, 72, by = 2)
+
+te_lines <- expand_grid(cf = cf_seq, Time = tlev(c("Before", "After"))) %>%
+  mutate(Programme  = ifelse(Time == "After", te_prog_after, te_prog_before),
+         Comparison = ifelse(Time == "After", cf, te_comp_before)) %>%
+  pivot_longer(c(Programme, Comparison), names_to = "Group", values_to = "Rate")
+
+te_gap <- expand_grid(cf = cf_seq, pt = 1:2) %>%
+  mutate(Time  = tlev("After"),
+         Group = "Effect",
+         Rate  = ifelse(pt == 1, cf, te_prog_after)) %>%
+  select(cf, Time, Group, Rate)
+
+bind_rows(te_lines, te_gap) %>%
+  plot_ly(x = ~Time, y = ~Rate, color = ~Group, frame = ~cf,
+          type = "scatter", mode = "lines+markers",
+          colors = c(Programme = ACCENT, Comparison = ACCENT2, Effect = ALERT),
+          line = list(width = 3), marker = list(size = 9),
+          hovertemplate = "%{fullData.name}: %{y}%<extra></extra>") %>%
+  animation_opts(frame = 700, transition = 0) %>%
+  animation_slider(currentvalue = list(prefix = "Comparison schools end on "),
+                   font = list(size = 11)) %>%
+  layout(xaxis = ax("", zeroline = FALSE,
+                    type = "category", categoryorder = "array",
+                    categoryarray = c("Before", "After")),
+         yaxis = ax("Grade 6 maths pass rate (%)", range = c(40, 80))) %>%
+  pl_m2(height = 320, t = 34, b = 92)
+```
+
+::: {.ask}
+Press play, or drag the slider. Programme schools never move. Which comparison
+value makes the effect zero, and what does that value mean in plain words?
+:::
+
+## Word 3 · Coefficient
+
+::: {.panel}
+A coefficient reports the size of a relationship as a **rate**: how much the
+outcome moves per one unit of whatever sits on the row. On an evaluation table,
+the coefficient on the programme row is often the treatment effect itself.
+:::
+
+```{r fig.height=3, fig.width=11.5}
+plot_ly() %>%
+  add_trace(data = coef_dat, x = ~x, y = ~outcome, type = "scatter", mode = "markers",
+            marker = list(size = 7, color = ACCENT, opacity = 0.45),
+            showlegend = FALSE, customdata = ~id,
+            hovertemplate = "School %{customdata}: %{y:.1f}%<extra></extra>") %>%
+  add_trace(data = coef_means, x = ~as.integer(group), y = ~m,
+            type = "scatter", mode = "markers",
+            marker = list(size = 17, color = INK, symbol = "diamond"),
+            name = "Group mean", hovertemplate = "Mean: %{y:.1f}%<extra></extra>") %>%
+  add_segments(x = 2.38, xend = 2.38,
+               y = coef_means$m[coef_means$group == "Comparison"],
+               yend = coef_means$m[coef_means$group == "Programme"],
+               line = list(color = ALERT, width = 4),
+               name = sprintf("Coefficient = %.1f points", coef_gap),
+               hoverinfo = "name") %>%
+  layout(xaxis = ax("", tickvals = c(1, 2),
+                    ticktext = c("Comparison", "Programme"),
+                    range = c(0.5, 2.75), zeroline = FALSE),
+         yaxis = ax("Grade 6 maths pass rate (%)", range = c(30, 55))) %>%
+  pl_m2(height = 290)
+```
+
+::: {.panel}
+Hover the diamonds, then the red bar. Here the coefficient is the vertical gap
+between the two group means, `r sprintf("%.1f", coef_gap)` points. That gap is
+what the model reports on the programme row of the next slide.
+:::
+
+## Reading the table column by column
+
+```{r}
+reg_tbl %>%
+  mutate(CI = sprintf("[%.2f, %.2f]", CI_lo, CI_hi)) %>%
+  select(Variable, Coef, SE, p, CI) %>%
+  kable(align = "lrrrr", digits = 2,
+        col.names = c("Variable", "Coefficient", "Std. error", "p-value", "95% CI")) %>%
+  kable_styling(full_width = FALSE, font_size = 22) %>%
+  row_spec(2, bold = TRUE, background = "#E6F1F5") %>%
+  footnote(general = paste("N =", reg_n, "schools. Outcome: Grade 6 maths pass rate."),
+           general_title = "", footnote_as_chunk = TRUE)
+```
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**Programme row:** the one number that answers the decision. `2.1` points,
+interval `[0.3, 3.9]`. The rule needs 3 points. The interval contains 3, so we
+cannot say whether the programme clears the bar.
+
+**Intercept:** the value when everything on the table is zero. Nobody is a
+school with zero students and zero teachers. Ignore it.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.panel}
+**Covariate rows:** class size, teacher experience, baseline pass rate. These
+adjust the comparison. They are not recommendations: the coefficient on teacher
+experience is `0.15`, and its interval `[-0.01, 0.31]` crosses zero, so it
+cannot rule out no effect at all.
+
+**Std. error:** the wobble. Divide the coefficient by it to see how steady the
+estimate is.
+:::
+:::::
+
+::::::
+
+## Word 4 · p-value
+
+::: {.panel}
+**Plain language:** roughly, how surprising this result would be if the
+programme had truly done nothing at all. A small p-value means "this would be a
+strange coincidence if there were no effect."
+:::
+
+```{r fig.height=3, fig.width=11.5}
+plot_ly(pval_hist, x = ~mid, y = ~n, type = "bar",
+        marker = list(color = ACCENT, line = list(width = 0)),
+        showlegend = FALSE,
+        hovertemplate = paste0("A shuffled difference of %{x:.1f} points<br>",
+                               "happened in %{y} of 1,000 shuffles<extra></extra>")) %>%
+  layout(bargap = 0.15,
+         xaxis = ax("Difference between the two groups (points)"),
+         yaxis = ax("Number of shuffles", range = c(0, pval_ymax)),
+         shapes = list(
+           list(type = "rect", x0 = pval_lo, x1 = -abs(2.1),
+                y0 = 0, y1 = 1, yref = "paper",
+                fillcolor = "rgba(142, 36, 19, 0.10)", line = list(width = 0)),
+           list(type = "rect", x0 = abs(2.1), x1 = pval_hi,
+                y0 = 0, y1 = 1, yref = "paper",
+                fillcolor = "rgba(142, 36, 19, 0.10)", line = list(width = 0)),
+           list(type = "line", x0 = 2.1, x1 = 2.1,
+                y0 = 0, y1 = 1, yref = "paper",
+                line = list(color = ALERT, width = 3))),
+         annotations = list(list(x = 2.1, y = 1, yref = "paper",
+                                 yanchor = "bottom", showarrow = FALSE,
+                                 text = "what we measured (2.1 points)",
+                                 font = list(size = 12, color = ALERT)))) %>%
+  pl_m2(height = 290)
+```
+
+::: {.ask}
+We took the 240 schools, broke the link between the programme and the outcome,
+and did it 1,000 times. The red tails are the shuffles that beat what we
+measured: `r sprintf("%.3f", p_240)`, or about `r round(p_240 * 1000)` of 1,000.
+That fraction is the p-value.
+:::
+
+## Word 4 · Why significance is not importance
+
+::: {.panel}
+Same programme. Same effect of 2.1 points. Three studies of different sizes.
+Press play, or drag the slider, and watch the shuffled distribution tighten
+around zero. The effect never changes.
+:::
+
+```{r fig.height=3.35, fig.width=11.5}
+plot_ly(null_frames, x = ~mid, y = ~share, frame = ~n, type = "bar",
+        marker = list(color = ACCENT, line = list(width = 0)),
+        showlegend = FALSE,
+        hovertemplate = paste0("A shuffled difference of %{x:.2f} points<br>",
+                               "in %{y:.1%} of the shuffles<extra></extra>")) %>%
+  animation_opts(frame = 800, transition = 0, redraw = FALSE) %>%
+  animation_slider(currentvalue = list(prefix = "Schools in the study: "),
+                   font = list(size = 11)) %>%
+  layout(bargap = 0.05,
+         xaxis = ax("Difference between the two groups (points)",
+                    range = c(-9, 9)),
+         yaxis = ax("Share of the 1,000 shuffles", range = c(0, slider_ymax)),
+         shapes = list(list(type = "line", x0 = 2.1, x1 = 2.1,
+                            y0 = 0, y1 = 1, yref = "paper",
+                            line = list(color = ALERT, width = 3))),
+         annotations = list(list(x = 2.1, y = 1, yref = "paper",
+                                 yanchor = "bottom", showarrow = FALSE,
+                                 text = "the effect we measured (2.1 points)",
+                                 font = list(size = 12, color = ALERT)))) %>%
+  pl_m2(height = 320, t = 34, b = 92)
+```
+
+::: {.warn}
+At 40 schools the same effect gives p = `r sprintf("%.2f", null_p$p[null_p$n == 40])`.
+At 240 schools, p = `r sprintf("%.2f", null_p$p[null_p$n == 240])`. At 2,400
+schools it is below 0.001. The programme did not improve by a single point.
+**Statistically significant does not mean big, and it does not mean worth
+funding.**
+:::
+
+## Word 4 · The warning cuts both ways
+
+```{r fig.height=2.5, fig.width=11.5}
+p_small <- perm_null(40)
+sm_bins <- seq(-9, 9, by = 0.25)
+sm_h0   <- hist(p_small, breaks = sm_bins, plot = FALSE)
+
+plot_ly(tibble(mid = sm_h0$mids, n = sm_h0$counts),
+        x = ~mid, y = ~n, type = "bar",
+        marker = list(color = ACCENT, line = list(width = 0)),
+        showlegend = FALSE,
+        hovertemplate = "A shuffled difference of %{x:.2f} points<br>in %{y} of 1,000 shuffles<extra></extra>") %>%
+  layout(bargap = 0.1,
+         xaxis = ax("Difference between the two groups (points)", range = c(-9, 9)),
+         yaxis = ax("Number of shuffles"),
+         shapes = list(list(type = "line", x0 = 2.1, x1 = 2.1,
+                            y0 = 0, y1 = 1, yref = "paper",
+                            line = list(color = ALERT, width = 3))),
+         annotations = list(list(x = 2.1, y = 1, yref = "paper",
+                                 yanchor = "bottom", showarrow = FALSE,
+                                 text = "the effect we measured (2.1 points)",
+                                 font = list(size = 12, color = ALERT)))) %>%
+  pl_m2(height = 240, t = 34, b = 56)
+```
+
+::: {.warn}
+At 40 schools the same study would have found nothing, and nothing is exactly
+what it would have reported. **Absence of evidence is not evidence of
+absence.**
+:::
+
+::: {.ask}
+An evaluator reports "no significant effect". Before you accept it, ask two
+things. How many businesses were in the study? And what is the smallest effect
+the study could have detected?
+:::
+
+## Word 5 · Confidence interval
+
+::: {.panel}
+**Plain language:** a range of plausible values for the true effect, not one
+precise number. A wider range means less certainty, not a bigger effect.
+:::
+
+```{r fig.height=3, fig.width=11.5}
+plot_ly() %>%
+  add_segments(data = filter(ci_dat, covers),
+               x = ~lo, xend = ~hi, y = ~y, yend = ~y,
+               line = list(color = ACCENT, width = 2.5),
+               text = ~txt, hovertemplate = "%{text}<extra></extra>",
+               name = sprintf("Covers the true effect (%d of 100)", ci_cov)) %>%
+  add_segments(data = filter(ci_dat, !covers),
+               x = ~lo, xend = ~hi, y = ~y, yend = ~y,
+               line = list(color = ALERT, width = 3),
+               text = ~txt, hovertemplate = "%{text}<extra></extra>",
+               name = sprintf("Misses the true effect (%d of 100)", 100 - ci_cov)) %>%
+  add_segments(x = mu_ci, xend = mu_ci, y = 0, yend = 101,
+               line = list(color = INK, width = 2, dash = "dot"),
+               name = sprintf("The true effect (%.1f points)", mu_ci),
+               hoverinfo = "name") %>%
+  layout(xaxis = ax("Programme effect (points), with its 95% confidence interval"),
+         yaxis = ax("100 repeat studies of the same programme",
+                    showticklabels = FALSE, zeroline = FALSE)) %>%
+  pl_m2(height = 290)
+```
+
+::: {.ask}
+Hover any bar for one study's estimate. Click a legend entry to isolate the
+misses. Now the decision. All three programmes report an effect of 2.1 points,
+and the bar to clear is 3 points.
+
+**A** `[0.3, 3.9]` &nbsp; **B** `[1.9, 2.3]` &nbsp; **C** `[-0.6, 4.8]`
+
+Which one would you act on, and what is your answer for each?
+:::
+
+::: {.panel}
+B is precise and below the bar: confidently not enough. A is too uncertain to
+call. C is worse still. **The interval decides, not the point estimate.** An
+interval that spans the decision threshold means the honest answer is that we
+do not yet know.
+:::
+
+# 4 · Put AI to work
+
+## AI prompt cards
+
+::: {.panel}
+Each group takes one card. Paste its prompt into your AI tool, read the answer
+together, and mark anything you think it gets wrong or overstates. Then compare
+with the answer on the next slide.
+:::
+
+::: {.ai-output}
+**Prompt:** "Explain what a 95% confidence interval means, in one paragraph, for
+someone who is not a statistician."
+
+**AI:** "A 95% confidence interval is the range in which the true value is
+likely to fall. [There is a 95% probability that the true effect lies inside
+this interval]{.flag}, so if the interval is [0.3, 3.9] the true effect is
+probably between 0.3 and 3.9. A narrower interval means the estimate is more
+precise."
+:::
+
+```{=html}
+<div class="facts">
+  <div class="k">Card 2</div> <div class="v">"Explain what a p-value means."</div>
+  <div class="k">Card 3</div> <div class="v">"School pass rates rose 5 percentage points after our programme. Is that a good result?"</div>
+  <div class="k">Card 4</div> <div class="v">"The coefficient on class size is -0.32. What should I do about it?"</div>
+</div>
+```
+
+## Debrief
+
+::: {.warn}
+**Card 1.** The flagged sentence is the classic error. A 95% interval does not
+carry a 95% probability for *this* interval. It means that if you ran the study
+100 times, 95 of the intervals would catch the true value, as the previous
+chart shows. The AI stated a probability the method does not deliver.
+:::
+
+::: {.warn}
+**Card 3.** The AI almost certainly answered without asking what the pass rate
+was compared to, and without asking what bar the programme has to clear. Both
+are missing from the prompt, and a fluent answer hides that.
+:::
+
+::: {.panel}
+**Card 4.** Look for a recommendation with no interval. If the AI tells you to
+reduce class sizes without noting that the interval decides whether the
+relationship is real, it has answered a different question.
+
+Two habits, every time. Ask the AI to **ask you questions before it answers**.
+Then put its answer through a second chat, or a second model, and compare.
+:::
+
+# 5 · Terms bingo
+
+## Terms bingo
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.excerpt}
+**1.** "Waste costs in participating businesses fell 30% over the programme period."
+:::
+
+::: {.excerpt}
+**2.** "The programme effect is 1,240 AED, with a 95% confidence interval of 210 to 2,270."
+:::
+
+::: {.excerpt}
+**3.** "The improvement is statistically significant (p = 0.008), so the programme should be scaled nationally."
+:::
+
+::: {.excerpt}
+**4.** "Costs fell 420 AED in the programme group while rising 90 AED in the comparison group."
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.excerpt}
+**5.** "Across the sample, the average business saved 1,449 AED."
+:::
+
+::: {.excerpt}
+**6.** "With 40 businesses in the study, no effect was detected."
+:::
+
+::: {.excerpt}
+**7.** "The coefficient on class size is -0.32, so reducing class size raises pass rates."
+:::
+
+::: {.excerpt}
+**8.** "Costs fell 420 AED against a rise of 90 AED in the comparison group. The programme must cut costs by at least 300 AED to justify scale-up."
+:::
+:::::
+
+::::::
+
+::: {.ask}
+Mark every term you hear used. Then make two calls, using the three questions.
+**Excerpt 3**: would you act on it? **Excerpt 8**: would you act on it? They do
+not have the same answer.
+:::
+
+# 6 · Take this back to your desk
+
+## The three questions
+
+::: {.panel}
+From memory, before you look: what are the three questions you can ask of any
+number?
+:::
+
+```{=html}
+<div class="facts">
+  <div class="k">1</div> <div class="v">Compared to what?</div>
+  <div class="k">2</div> <div class="v">How big is it, in units that matter to the decision?</div>
+  <div class="k">3</div> <div class="v">How sure are we?</div>
+</div>
+```
+
+::: {.panel}
+On Day 2 a fourth joins them, and it is the one that decides whether a result
+travels: **who does this apply to?**
+
+Next session, at 11:00: the Abu Dhabi Police evaluation data, and the first real
+numbers of the week. Bring the three questions.
+:::

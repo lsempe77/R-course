@@ -1,0 +1,326 @@
+/*-- scss:defaults --*/
+
+// ============================================================
+// Module 2 · Editorial theme
+//
+// Chosen from the three style probes: variant A, with two
+// corrections.
+//
+//   1. No horizontal rules around numbers. The hero and the stat
+//      strip carry no borders. Hierarchy comes from size, weight
+//      and colour only.
+//   2. The stat strip reads horizontally: label, then value, on
+//      one baseline. The earlier stacked number-over-label was a
+//      deck convention that had to be learned, and a reader had
+//      to work out which number belonged to which label.
+//
+// Hierarchy comes from type, weight and hairlines. Nothing is
+// filled, nothing is rounded, nothing has a shadow. System fonts
+// only, so the deck is identical in a venue with no internet.
+// ============================================================
+
+$ink:     #16181A;
+$muted:   #61686D;
+$accent:  #0E6E80;   // series 1: programme / offered
+$accent2: #A9561F;   // series 2: comparison / not offered
+$alert:   #8E2413;   // decision rules and flagged errors, never a series
+$rule:    #E3E6E8;
+
+$serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
+$sans:  "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+
+$font-family-sans-serif:           $sans;
+$presentation-heading-font:        $serif;
+$presentation-heading-color:       $ink;
+$presentation-heading-font-weight: 400;
+$presentation-font-size-root:      24px;
+
+$body-color: $ink;
+$body-bg:    #FFFFFF;
+$link-color: $accent;
+
+/*-- scss:rules --*/
+
+.reveal { font-family: $sans; }
+
+// ---------- Title slide ---------------------------------------------------
+
+#title-slide {
+  text-align: left;
+
+  .title {
+    font-family: $serif;
+    font-size: 2.7em;
+    font-weight: 400;
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    color: $ink;
+  }
+  .subtitle {
+    margin-top: 0.6em;
+    font-size: 1.5em;
+    font-style: normal;
+    color: $muted;
+  }
+  .author, .quarto-title-author-name, .date, .institute {
+    margin-top: 0.8em;
+    font-size: 1.2em;
+    font-style: normal;
+    color: $muted;
+  }
+  .quarto-title-authors { display: block; }
+}
+
+// ---------- Headings ------------------------------------------------------
+// The rule under a heading stops at the end of the heading, so it reads as
+// punctuation rather than as a divider across the slide.
+
+.reveal h1, .reveal h2, .reveal h3 { font-family: $serif; font-weight: 400; letter-spacing: 0; }
+
+.reveal section.level1 > h1 {
+  font-size: 2em;
+  color: $ink;
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.reveal h2 {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  font-size: 1.5em;
+  line-height: 1.15;
+  margin: 0 0 0.55em 0;
+  padding-bottom: 0.24em;
+  border: none;
+  border-bottom: 1px solid $rule;
+  color: $ink;
+}
+
+.reveal h3 {
+  font-size: 1.02em;
+  font-style: italic;
+  color: $muted;
+}
+
+// ---------- Body ----------------------------------------------------------
+
+.reveal p, .reveal li { line-height: 1.45; font-weight: 400; }
+.reveal ul, .reveal ol { font-size: 1em; padding-left: 1.05em; }
+.reveal li { margin-bottom: 0.25em; }
+.reveal ul > li::marker { color: $accent; }
+.reveal strong { font-weight: 700; }
+.reveal .slides section > p { max-width: 36em; }
+
+// ---------- Callouts ------------------------------------------------------
+// A rule and an indent. No fill, no radius, no shadow.
+
+.reveal .panel,
+.reveal .ask,
+.reveal .warn,
+.reveal .ai-output,
+.reveal .excerpt {
+  background: none;
+  border: none;
+  border-left: 3px solid $accent;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0 0 0 0.9em;
+  margin: 0.9em 0;
+  font-size: 1.25em;
+}
+
+.reveal .warn      { border-left-color: $alert; }
+.reveal .excerpt   { border-left-color: $accent2; }
+.reveal .ai-output { border-left-color: $muted; }
+
+.reveal .ai-output .flag { color: $alert; font-weight: 700; background: none; }
+
+// ---------- Hero number ---------------------------------------------------
+// No rules, no box. Size, weight and colour do the work.
+
+.reveal .hero {
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  margin: 0.35em 0 0.7em 0;
+  text-align: left;
+
+  .value {
+    font-size: 3.4em;
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: -0.025em;
+    color: $ink;
+  }
+  .value.alert { color: $alert; }
+  .label {
+    margin-top: 0.35em;
+    font-size: 0.6em;
+    color: $muted;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+}
+
+// ---------- Stat strip ----------------------------------------------------
+// Horizontal, one line: LABEL value · LABEL value · LABEL value.
+// The markup puts the value first, so the labels are reordered in front.
+
+.reveal .stat-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5em 2em;
+  margin: 0.6em 0 0.4em 0;
+
+  > div {
+    display: flex;
+    align-items: baseline;
+    gap: 0.55em;
+    background: none;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+    text-align: left;
+  }
+  .k {
+    order: 1;
+    font-size: 1em;
+    color: $muted;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .n {
+    order: 2;
+    font-size: 1.45em;
+    font-weight: 600;
+    color: $ink;
+    line-height: 1;
+  }
+}
+
+// ---------- Fact list -----------------------------------------------------
+
+.reveal .facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.4em 1.1em;
+  background: none;
+  border: none;
+  border-left: 3px solid $ink;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0 0 0 0.9em;
+  margin: 0.6em 0;
+  font-size: 0.94em;
+
+  .k { color: $ink; font-weight: 600; white-space: nowrap; }
+  .v { color: $ink; }
+}
+
+// ---------- Tables --------------------------------------------------------
+
+.reveal table {
+  margin: 0.5em 0;
+  font-size: 0.88em;
+  border-collapse: collapse;
+  border-radius: 0;
+  box-shadow: none;
+
+  th {
+    padding: 0.35em 0.7em;
+    text-align: right;
+    background: none;
+    color: $ink;
+    font-weight: 600;
+    border: none;
+    border-bottom: 2px solid $ink;
+  }
+  th:first-child { text-align: left; }
+
+  td {
+    padding: 0.3em 0.7em;
+    text-align: right;
+    background: none;
+    border: none;
+    border-bottom: 1px solid $rule;
+  }
+  td:first-child { text-align: left; }
+
+  tbody tr:nth-child(even) td { background: none; }
+  tbody tr:last-child td { border-bottom: none; }
+}
+
+// ---------- Charts --------------------------------------------------------
+// Charts sit directly on the page. No card, no border, no shadow.
+
+.reveal .cell-output-display .html-widget {
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+}
+.reveal .cell { margin-bottom: 0.4em; }
+.reveal .cell-output { margin-top: 0.3em; margin-bottom: 0.1em; }
+
+// ---------- Vertical rhythm ----------------------------------------------
+// Content slides are centred vertically. Reveal already does this for the
+// chapter dividers, but not for the content slides, so a sparse slide such as
+// a hero or a poll left its content stranded at the top with a band of white
+// beneath it.
+//
+// Text stays LEFT aligned. Centred paragraphs are harder to read, and this
+// deck is meant to read as a report page rather than as a poster.
+//
+// `safe center` falls back to top alignment when a slide's content is taller
+// than the slide, so nothing can be clipped at the top edge.
+
+.reveal .slides section.present:not(.stack) {
+  display: flex !important;   // overrides the inline display:block reveal sets
+  flex-direction: column;
+  justify-content: center;
+  justify-content: safe center;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+// ---------- Chrome --------------------------------------------------------
+
+.reveal .progress {
+  height: 4px;
+  background: rgba(14, 110, 128, 0.12);
+  span { background: $accent; }
+}
+
+.reveal .slide-number {
+  color: $muted !important;
+  background: none !important;
+  font-weight: 400 !important;
+  font-size: 0.5em !important;
+}
+
+.reveal .mins {
+  display: inline-block;
+  margin-left: 0.7em;
+  padding: 0.28em 0.7em;
+  font-family: $sans;
+  font-size: 0.42em;
+  font-weight: 400;
+  color: $muted;
+  background: none;
+  border: 1px solid $rule;
+  border-radius: 0;
+  vertical-align: middle;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.reveal .columns { align-items: flex-start; }
+.reveal figure figcaption { font-size: 0.62em; color: $muted; }

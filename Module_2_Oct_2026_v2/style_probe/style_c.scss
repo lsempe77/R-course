@@ -1,0 +1,138 @@
+/*-- scss:defaults --*/
+
+// ============================================================
+// STYLE PROBE C — Module house style, decoration removed
+//
+// Intent: keep the structure the module already uses and that
+// Fiona has reviewed (teal underline heading, tinted callout
+// with a left rule, validated palette), but strip the shadows,
+// gradients, hatching and chart cards, and tighten the type
+// from 30px to 26px so slides stop overflowing into whitespace.
+// ============================================================
+
+$ink:      #131516;
+$muted:    #5C6467;
+$accent:   #00789E;
+$accent2:  #B45309;
+$alert:    #9A2515;
+$rule:     #DCE1E3;
+$surface2: #F4F6F7;
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+$font-family-sans-serif:           "Roboto", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+$presentation-heading-font:        "Roboto", "Segoe UI", system-ui, sans-serif;
+$presentation-heading-color:       $ink;
+$presentation-heading-font-weight: 500;
+$presentation-font-size-root:      26px;
+
+$body-color: $ink;
+$body-bg:    #FFFFFF;
+$link-color: $accent;
+
+/*-- scss:rules --*/
+
+.reveal h1 { font-size: 2em; font-weight: 500; }
+.reveal h2 {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  font-size: 1.3em;
+  font-weight: 600;
+  margin: 0 0 0.5em 0;
+  padding-bottom: 0.22em;
+  border: none;
+  border-bottom: 3px solid $accent;
+  color: $ink;
+}
+.reveal h3 { font-size: 1em; font-weight: 600; color: $accent; font-style: normal; }
+
+.reveal p, .reveal li { line-height: 1.45; font-weight: 400; }
+.reveal ul, .reveal ol { font-size: 0.95em; }
+.reveal .slides section > p { max-width: 34em; }
+
+// Callouts: the house look, flat. No shadow, no gradient, no hatch.
+.reveal .panel,
+.reveal .ask,
+.reveal .warn,
+.reveal .ai-output,
+.reveal .excerpt {
+  border: none;
+  border-left: 4px solid $accent;
+  border-radius: 3px;
+  box-shadow: none;
+  padding: 0.5em 0.8em;
+  margin: 0.45em 0;
+  background: $surface2;
+  font-size: 0.95em;
+}
+.reveal .ask    { border-left-color: $accent; background: rgba(0, 120, 158, 0.06); }
+.reveal .warn   { border-left-color: $alert;  background: rgba(154, 37, 21, 0.05); }
+.reveal .excerpt{ border-left-color: $accent2; }
+.reveal .ai-output .flag { color: $alert; font-weight: 700; background: none; }
+
+// Hero: no box at all now. The number carries the slide.
+.reveal .hero {
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0.15em 0;
+  margin: 0.5em 0;
+
+  .value { font-size: 3.1em; font-weight: 500; color: $accent; letter-spacing: -0.02em; line-height: 1; }
+  .value.alert { color: $alert; }
+  .label { margin-top: 0.3em; font-size: 0.6em; color: $muted; letter-spacing: 0.12em; }
+}
+
+// Stat row: flat panels, no top bar, no shadow.
+.reveal .stat-row {
+  gap: 0.7em;
+  margin: 0.6em 0;
+  > div {
+    background: $surface2;
+    border: none;
+    border-radius: 3px;
+    box-shadow: none;
+    padding: 0.5em 0.4em;
+  }
+  .n { font-size: 1.7em; font-weight: 600; color: $accent; }
+  .k { font-size: 0.56em; color: $muted; letter-spacing: 0.06em; }
+}
+
+.reveal .facts {
+  background: $surface2;
+  border: none;
+  border-left: 4px solid $accent2;
+  border-radius: 3px;
+  box-shadow: none;
+  padding: 0.65em 0.9em;
+  font-size: 0.92em;
+  gap: 0.4em 1em;
+  .k { color: $accent; font-weight: 600; text-transform: none; letter-spacing: 0; font-size: 1em; }
+}
+
+.reveal table { font-size: 0.86em; box-shadow: none; border-radius: 3px; border-collapse: collapse; }
+.reveal table th { background: $surface2; color: $ink; border-bottom: 2px solid $accent; font-weight: 500; }
+.reveal table td { border-bottom: 1px solid $rule; }
+.reveal table tbody tr:nth-child(even) td { background: none; }
+
+// Charts on the page. No card.
+.reveal .cell-output-display .html-widget {
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+}
+.reveal .cell { margin-bottom: 0.4em; }
+.reveal .cell-output { margin-top: 0.3em; margin-bottom: 0.1em; }
+
+.reveal .mins {
+  background: rgba(0, 120, 158, 0.12);
+  color: $accent;
+  border: none;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+.reveal .slide-number { color: $muted !important; background: none !important; }

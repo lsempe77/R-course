@@ -1,0 +1,149 @@
+/*-- scss:defaults --*/
+
+// ============================================================
+// STYLE PROBE B — Deep header band, chart first
+//
+// Intent: a presentation-native deck. Each slide opens with a
+// solid dark band, so the slide is anchored without any boxes
+// below it. Body content is plain text and full-width charts.
+// Type is small and set tight, which gives the chart the room.
+// ============================================================
+
+$deep:    #0B4A57;
+$accent:  #0E7C8C;
+$accent2: #B45309;
+$alert:   #9A2515;
+$ink:     #101418;
+$muted:   #5C6467;
+$rule:    #DCE1E3;
+
+$sans: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+
+$font-family-sans-serif:           $sans;
+$presentation-heading-font:        $sans;
+$presentation-heading-color:       #FFFFFF;
+$presentation-heading-font-weight: 600;
+$presentation-font-size-root:      24px;
+
+$body-color: $ink;
+$body-bg:    #FFFFFF;
+$link-color: $accent;
+
+/*-- scss:rules --*/
+
+// The h2 is the band. It spans the content width, sits flush, no radius.
+.reveal h2 {
+  display: block;
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+  background: $deep;
+  color: #FFFFFF;
+  font-size: 1.22em;
+  font-weight: 600;
+  letter-spacing: 0;
+  padding: 0.5em 0.75em;
+  margin: 0 0 0.8em 0;
+  border: none;
+  border-radius: 0;
+}
+.reveal h1 { font-size: 2.1em; color: $deep; font-weight: 600; }
+.reveal h3 { font-size: 1em; color: $deep; font-weight: 600; }
+
+.reveal p, .reveal li { line-height: 1.4; font-weight: 400; }
+.reveal ul, .reveal ol { font-size: 1em; }
+.reveal .slides section > p { max-width: 40em; }
+
+// Callouts: a heavy rule and a coloured lead-in. No fill, no box.
+.reveal .panel,
+.reveal .ask,
+.reveal .warn,
+.reveal .ai-output,
+.reveal .excerpt {
+  background: none;
+  border: none;
+  border-left: 5px solid $accent;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0.1em 0 0.1em 0.8em;
+  margin: 0.6em 0;
+  font-size: 0.94em;
+}
+.reveal .warn      { border-left-color: $alert; }
+.reveal .excerpt   { border-left-color: $accent2; }
+.reveal .ai-output { border-left-color: $muted; }
+.reveal .panel strong:first-child,
+.reveal .ask strong:first-child,
+.reveal .warn strong:first-child { color: $deep; }
+.reveal .warn strong { color: $alert; }
+.reveal .ai-output .flag { color: $alert; font-weight: 700; background: none; }
+
+// Hero: a big numeral in the band colour, left aligned, nothing around it.
+.reveal .hero {
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  margin: 0.5em 0;
+  text-align: left;
+
+  .value { font-size: 3.6em; font-weight: 600; color: $deep; letter-spacing: -0.03em; line-height: 1; }
+  .value.alert { color: $alert; }
+  .label { margin-top: 0.25em; font-size: 0.58em; color: $muted; letter-spacing: 0.14em; }
+}
+
+// Stat row: numbers on one line, divided by hairlines.
+.reveal .stat-row {
+  gap: 0;
+  margin: 0.7em 0;
+  > div {
+    background: none;
+    border: none;
+    border-left: 1px solid $rule;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0.15em 1em;
+    text-align: left;
+  }
+  > div:first-child { border-left: none; padding-left: 0; }
+  .n { font-size: 1.9em; font-weight: 600; color: $deep; display: block; line-height: 1.1; }
+  .k { font-size: 0.56em; color: $muted; letter-spacing: 0.08em; }
+}
+
+.reveal .facts {
+  background: none;
+  border: none;
+  border-left: 5px solid $accent2;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0.1em 0 0.1em 0.8em;
+  font-size: 0.94em;
+  gap: 0.35em 1em;
+  .k { color: $deep; font-weight: 600; text-transform: none; letter-spacing: 0; font-size: 1em; }
+}
+
+// Table: banded header in the deep colour, no outer box.
+.reveal table { font-size: 0.88em; box-shadow: none; border-radius: 0; }
+.reveal table th { background: $deep; color: #FFFFFF; border: none; font-weight: 500; }
+.reveal table td { background: none; border: none; border-bottom: 1px solid $rule; }
+.reveal table tbody tr:nth-child(even) td { background: #F7F9FA; }
+
+// Charts sit on the page at full width. No card.
+.reveal .cell-output-display .html-widget {
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+}
+.reveal .cell { margin-bottom: 0.35em; }
+.reveal .cell-output { margin-top: 0.25em; margin-bottom: 0.1em; }
+
+.reveal .mins {
+  background: #FFFFFF;
+  color: $deep;
+  border: none;
+  font-weight: 600;
+}
+.reveal .slide-number { color: $muted !important; background: none !important; }
