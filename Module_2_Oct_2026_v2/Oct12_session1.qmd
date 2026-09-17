@@ -167,10 +167,16 @@ mean_summary <- mean_dat %>%
 te_prog_before <- 54; te_prog_after <- 71
 te_comp_before <- 50; te_comp_after <- 65
 
-te_change      <- te_prog_after - te_prog_before
-te_end_gap     <- te_prog_after - te_comp_after
-te_base_gap    <- te_prog_before - te_comp_before
-te_effect      <- te_change - (te_comp_after - te_comp_before)
+# Named individually so the reveal table can show all four in a row, rather
+# than making the reader hold two of them in their head while a third is
+# explained. The two "change" columns are what line up to give the effect.
+te_prog_change <- te_prog_after - te_prog_before      # 17
+te_comp_change <- te_comp_after - te_comp_before      # 15
+
+te_change      <- te_prog_after - te_prog_before      # 17 (kept: used by the chart)
+te_end_gap     <- te_prog_after - te_comp_after       # 6
+te_base_gap    <- te_prog_before - te_comp_before     # 4
+te_effect      <- te_prog_change - te_comp_change     # 2
 
 # ---- Word 3: a coefficient is a gap between groups -------------------------
 set.seed(11)
@@ -385,45 +391,7 @@ by `r sprintf("%.0f", af_drive_fall)`%, almost exactly as much as fatalities
 did.
 :::
 
-## Did it work?
-
-```{r results='asis'}
-# data-external="1" is required. Without it, embed-resources: true inlines the
-# page as a base64 data: URI with role="img", and the embed becomes a frozen
-# picture instead of a live results view.
-cat(sprintf('
-<iframe data-external="1" allowfullscreen="true" allowtransparency="true"
-        frameborder="0" src="%s"
-        style="width:100%%; height:74%%; border:none;"></iframe>', MENTI_EMBED))
-```
-
-::: {.note}
-Leave the results on screen but do not interpret them yet. The point of the
-poll is that the room has now committed to a judgement on a single number.
-:::
-
-## World A · the death rate did not move
-
-```{r results='asis'}
-cat(sprintf('
-<div class="hero">
-  <div class="value">%.0f%%</div>
-  <div class="label">Deaths per billion km driven</div>
-</div>
-<div class="stat-row">
-  <div><span class="n">%.0f</span><span class="k">Rate before</span></div>
-  <div><span class="n">%.0f</span><span class="k">Rate after</span></div>
-  <div><span class="n">%d</span><span class="k">Lives saved by the campaign</span></div>
-</div>', af_rate_fall_a, af_rate_before, af_rate_world_a,
-   round(af_rate_before - af_rate_world_a)))
-```
-
-::: {.warn}
-If the roads emptied by 30% and deaths fell by 30%, the risk of dying on them
-did not change. The campaign saved nobody. The headline was the fuel price.
-:::
-
-## World B · the same headline, a real effect
+## World A · the same headline, a real effect
 
 ```{r results='asis'}
 cat(sprintf('
@@ -439,15 +407,50 @@ cat(sprintf('
 ```
 
 ::: {.warn .fragment}
-World B is not what happened. It is what the **same headline** would have meant
+World A is not what happened. It is what the **same headline** would have meant
 if driving had not changed at all: every one of those 126 fewer deaths would be
 the campaign's doing, and the death rate would have fallen by 30%.
+:::
+
+
+
+## World B · the death rate did not move
+
+```{r results='asis'}
+cat(sprintf('
+<div class="hero">
+  <div class="value">%.0f%%</div>
+  <div class="label">Deaths per billion km driven</div>
+</div>
+<div class="stat-row">
+  <div><span class="n">%.0f</span><span class="k">Rate before</span></div>
+  <div><span class="n">%.0f</span><span class="k">Rate after</span></div>
+  <div><span class="n">%d</span><span class="k">Lives saved by the campaign</span></div>
+</div>', af_rate_fall_a, af_rate_before, af_rate_world_a,
+   round(af_rate_before - af_rate_world_a)))
+```
+
+::: {.warn .fragment}
+If the roads emptied by 30% and deaths fell by 30%, the risk of dying on them
+did not change. The campaign saved nobody. The headline was the fuel price.
 :::
 
 ::: {.panel .fragment}
 Two worlds, one headline, opposite verdicts. Nothing in the headline, or in the
 number 30%, tells you which world you are in.
 :::
+
+## Did it work?
+
+```{r results='asis'}
+# data-external="1" is required. Without it, embed-resources: true inlines the
+# page as a base64 data: URI with role="img", and the embed becomes a frozen
+# picture instead of a live results view.
+cat(sprintf('
+<iframe data-external="1" allowfullscreen="true" allowtransparency="true"
+        frameborder="0" src="%s"
+        style="width:100%%; height:74%%; border:none;"></iframe>', MENTI_EMBED))
+```
 
 ## The trap also runs the other way
 
@@ -474,7 +477,7 @@ fell `r abs(mc_change)` points in the comparison districts, so the programme
 held up `r mc_effect` points that would otherwise have been lost.
 :::
 
-## Compared to what?
+###
 
 ::: {.hero}
 ::: {.value style="font-size:2.4em;"}
@@ -485,7 +488,7 @@ held up `r mc_effect` points that would otherwise have been lost.
 ::: {.panel}
 Every evaluation result is a comparison. A before-and-after number compares the
 programme to *the past*, not to what would have happened anyway. The comparison
-can move the answer down, as in World A, or up, as in the mirror case. The
+can move the answer down, as in World B, or up, as in the mirror case. The
 direction is not knowable in advance. If you do not know what a number is being
 compared to, you do not yet know what it means.
 :::
@@ -508,7 +511,7 @@ questions you are entitled to ask of any number you are handed.
 ```
 
 ::: {.ask}
-Keep these three. You will use them on every slide for the rest of the week,
+Keep these three questions. You will use them on every slide for the rest of the week,
 and on the next evaluation report that lands on your desk.
 :::
 
@@ -539,19 +542,21 @@ plot_ly() %>%
 ```
 
 ::: {.ask}
-Each dot is one business. Both programmes average exactly 1,400 AED: hover the
-dotted line. Click a legend entry to hide a programme. In Programme A,
+Each dot is one business. Both programmes average exactly 1,400 AED
+
+In Programme A,
 `r sprintf("%.0f", mean_summary$near[mean_summary$Programme == "Programme A"])`%
 of businesses are within 10% of the average. In Programme B, only
 `r sprintf("%.0f", mean_summary$near[mean_summary$Programme == "Programme B"])`%.
-Which would you fund, and what else do you need to know?
+
+**Which would you fund, and what else do you need to know?**
 :::
 
 ## Word 2 · Treatment effect
 
 :::::: {.columns}
 
-::::: {.column width="46%"}
+::::: {.column width="44%"}
 ```{=html}
 <div class="facts">
   <div class="k">Programme schools</div>   <div class="v">54% &rarr; 71%</div>
@@ -561,23 +566,45 @@ Which would you fund, and what else do you need to know?
 ```
 
 ::: {.ask}
-Grade 6 maths pass rates. **Three numbers describe this result: 17, 6 and 2.**
+Grade 6 maths pass rates.
+
+**Three numbers describe this result: 17, 6 and 2.**
+
 Work out what each one is, then decide which is the treatment effect.
 :::
 :::::
 
-::::: {.column width="54%"}
+::::: {.column width="56%"}
+::: {.fragment}
+```{r results='asis'}
+# The reveal. Every number the reader needs sits in the grid, and the bottom
+# row is simply the two above it subtracted, so the effect can be read off
+# the Change column (17 - 15) or the After column (71 - 65) and checked
+# against the Before column (54 - 50). No number is ever held in the head.
+te_tbl <- tribble(
+  ~Group,               ~Before,          ~After,          ~Change,
+  "Programme schools",  te_prog_before,   te_prog_after,   te_prog_change,
+  "Comparison schools", te_comp_before,   te_comp_after,   te_comp_change,
+  "Difference",         te_base_gap,      te_end_gap,      te_effect
+)
+
+te_tbl %>%
+  kable(align = "lrrr", col.names = c("", "Before", "After", "Change")) %>%
+  kable_styling(full_width = FALSE, font_size = 19) %>%
+  row_spec(2, hline_after = TRUE) %>%
+  row_spec(3, bold = TRUE)
+```
+
 ::: {.panel}
-**17** is what the programme schools gained. It is also what they would have
-gained if the national reform had done the work.
+The bottom row is the two above it subtracted.
 
-**`r te_end_gap`** is the gap between the groups at the end. It looks like the
-answer, and it is the one most reports lead with. It contains the
-`r te_base_gap`-point head start the programme schools already had.
+**17** is not the answer. The national reform was lifting both groups.
 
-**`r te_effect`** is the difference in the two changes: `r te_change` points
-minus the `r te_comp_after - te_comp_before` the comparison schools gained
-anyway.
+**6** is not the answer either. It carries the 4-point head start the
+programme schools already had.
+
+**2** is the treatment effect: 17 minus 15, and equally 6 minus 4.
+:::
 :::
 :::::
 
@@ -916,6 +943,7 @@ are missing from the prompt, and a fluent answer hides that.
 reduce class sizes without noting that the interval decides whether the
 relationship is real, it has answered a different question.
 
+
 Two habits, every time. Ask the AI to **ask you questions before it answers**.
 Then put its answer through a second chat, or a second model, and compare.
 :::
@@ -966,7 +994,10 @@ Then put its answer through a second chat, or a second model, and compare.
 
 ::: {.ask}
 Mark every term you hear used. Then make two calls, using the three questions.
-**Excerpt 3**: would you act on it? **Excerpt 8**: would you act on it? They do
+
+**Excerpt 3**: would you act on it? 
+
+**Excerpt 8**: would you act on it? They do
 not have the same answer.
 :::
 
@@ -987,10 +1018,3 @@ number?
 </div>
 ```
 
-::: {.panel}
-On Day 2 a fourth joins them, and it is the one that decides whether a result
-travels: **who does this apply to?**
-
-Next session, at 11:00: the Abu Dhabi Police evaluation data, and the first real
-numbers of the week. Bring the three questions.
-:::
