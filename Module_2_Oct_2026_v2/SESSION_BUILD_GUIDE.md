@@ -595,6 +595,49 @@ Detect it by comparing each slide's content height against 720:
 // scale = slideWidth / 1280.  > 2 means trouble.
 ```
 
+**Use print mode, not navigation.** Stepping slides with `Reveal.next()` advances
+through *fragments*, so a deck with several `.fragment` blocks takes dozens of
+steps and most slides never get laid out — the scan then reports a clean result
+that is simply missing data. This produced a false all-clear on Day 2 Session 1,
+and two real overflows (6 px and 88 px) were only found afterwards.
+
+The reliable method is to load the deck with `?print-pdf`, wait for reveal to lay
+every slide out at once, then measure all `section.slide` elements in a single
+pass. No navigation, no fragments, no gaps:
+
+```js
+await page.goto(deckUrl + '?print-pdf');
+await page.setViewportSize({ width: 1410, height: 800 });
+await page.waitForTimeout(6000);      // reveal needs time to lay out 30+ slides
+const out = await page.evaluate(() => {
+  const secs = [...document.querySelectorAll('section.slide')];
+  const over = [], scroll = [];
+  for (const s of secs) {
+    const r = s.getBoundingClientRect();
+    if (r.width === 0) continue;
+    const scale = r.width / 1280;
+    let maxB = 0;
+    for (const n of s.querySelectorAll('*')) {
+      const b = n.getBoundingClientRect();
+      if (b.height > 0) maxB = Math.max(maxB, b.bottom);
+    }
+    const o = Math.round((maxB - r.bottom) / scale);
+    const h2 = s.querySelector('h2')?.innerText.replace(/\s+/g,' ').slice(0,44) || '(divider)';
+    if (o > 2) over.push({ h2, over: o });
+    s.querySelectorAll('.cell-output-display').forEach(el => {
+      const w = el.offsetWidth - el.clientWidth;
+      const h = el.offsetHeight - el.clientHeight;
+      if (w > 0 || h > 0) scroll.push({ h2, w, h });
+    });
+  }
+  return { laidOut: secs.filter(s => s.getBoundingClientRect().width > 0).length,
+           overflow: over, scrollbars: scroll };
+});
+```
+
+`laidOut` should equal the number of `section.slide` elements. If it does not,
+the measurement is incomplete — do not read the result as a pass.
+
 Fix by removing content, not by shrinking type: drop a panel, move a panel to a
 neighbouring slide, or shorten prose. Session 2's fix was merging three panels
 into two and moving the takeaway sentence inside an existing panel.
