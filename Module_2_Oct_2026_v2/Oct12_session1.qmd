@@ -391,7 +391,7 @@ by `r sprintf("%.0f", af_drive_fall)`%, almost exactly as much as fatalities
 did.
 :::
 
-## World A · the same headline, a real effect
+## World B · the same headline, a real effect
 
 ```{r results='asis'}
 cat(sprintf('
@@ -407,14 +407,14 @@ cat(sprintf('
 ```
 
 ::: {.warn .fragment}
-World A is not what happened. It is what the **same headline** would have meant
+World B is not what happened. It is what the **same headline** would have meant
 if driving had not changed at all: every one of those 126 fewer deaths would be
 the campaign's doing, and the death rate would have fallen by 30%.
 :::
 
 
 
-## World B · the death rate did not move
+## World A · the death rate did not move
 
 ```{r results='asis'}
 cat(sprintf('
@@ -477,18 +477,12 @@ fell `r abs(mc_change)` points in the comparison districts, so the programme
 held up `r mc_effect` points that would otherwise have been lost.
 :::
 
-###
-
-::: {.hero}
-::: {.value style="font-size:2.4em;"}
-"Compared to what?"
-:::
-:::
+## "Compared to what?"
 
 ::: {.panel}
 Every evaluation result is a comparison. A before-and-after number compares the
 programme to *the past*, not to what would have happened anyway. The comparison
-can move the answer down, as in World B, or up, as in the mirror case. The
+can move the answer down, as in World A, or up, as in the mirror case. The
 direction is not knowable in advance. If you do not know what a number is being
 compared to, you do not yet know what it means.
 :::
