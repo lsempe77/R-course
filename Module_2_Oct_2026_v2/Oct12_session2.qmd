@@ -149,7 +149,7 @@ pol_sect <- n_distinct(pol$sector_id)
 pol_t_seg <- n_distinct(pol$segment_id[pol$treated == 1])
 ```
 
-# 1 · The case [18 min]{.mins}
+# 1 · The case
 
 ## Abu Dhabi Police: cameras on the fastest roads
 
@@ -229,7 +229,7 @@ Two of them are wrong answers to the question being asked. Work out which is the
 real one, and whether it clears the rule.
 :::
 
-# 2 · What the numbers say [20 min]{.mins}
+# 2 · What the numbers say
 
 ## The headline
 
@@ -391,7 +391,7 @@ so fatalities fell. This time traffic **rose**, so part of the collision fall is
 simply less exposure. Same trap, opposite direction.
 :::
 
-# 3 · Reading the output [20 min]{.mins}
+# 3 · Reading the output
 
 ## The table you would actually be handed
 
@@ -509,7 +509,7 @@ the result to be wrong. Here, the answer is that the two groups were already
 diverging before 2020. Nobody has shown you a pre-trend.
 :::
 
-# 4 · Put AI to work [12 min]{.mins}
+# 4 · Put AI to work
 
 ## AI Snapshot: three sentences for a decision-maker
 
@@ -562,7 +562,7 @@ the bar?" Ask it to **state the decision rule and compare against it** before it
 recommends anything.
 :::
 
-# 5 · Annotate this output [10 min]{.mins}
+# 5 · Annotate this output
 
 ## Your turn
 
@@ -606,7 +606,7 @@ is the one Session 1 prepared you for.
 
 ::::::
 
-# 6 · Take this back to your desk [5 min]{.mins}
+# 6 · Take this back to your desk
 
 ## Three questions to ask the evaluator
 

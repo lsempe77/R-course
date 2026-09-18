@@ -327,6 +327,25 @@ Not `::: {.warn}` followed by a nested fragment. Both classes belong on one div,
 because the stylesheet targets `.warn`, not `.warn.something`, so the
 combination picks up the styling with no CSS change.
 
+### No timing badges on dividers
+
+**Do not put `[18 min]{.mins}` on a section divider.** Session 1 has none, so its
+sections read `# 1 · What are we comparing?` and nothing else. Sessions 2 and 3
+briefly carried badges and looked different from the deck they follow on the day;
+both were stripped. Timing belongs in the facilitator's plan and the speaker
+notes, not on the slide the room is reading.
+
+The `.mins` style is still defined in `theme_editorial.scss` if a badge is ever
+wanted, but nothing currently uses it.
+
+### Watch `color` inheritance inside a divider
+
+Reveal writes a section's colour onto the divider's `h1` as an inline `color:`,
+and children inherit it. Anything added inside a divider must set `color`
+explicitly or it will inherit whatever the section colour happens to be. That is
+why the `.mins` block sets its own colour. Relevant when adding any new element
+to a section divider.
+
 ### Two components are built in raw HTML
 
 `.hero` and `.stat-row` are emitted from an R chunk with `results='asis'`, so the

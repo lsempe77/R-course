@@ -300,6 +300,13 @@ $link-color: $accent;
 
 // ---------- Chrome --------------------------------------------------------
 
+// NOTE ON COLOUR. Reveal writes the section colour to `color:` on the
+// divider's h1, and a child inherits it unless it is set explicitly. The
+// timing badge below therefore must NOT inherit, or it renders in the accent
+// teal in the wrong place. Reveal only writes that colour when a section is
+// given one, and Session 1's dividers are plain, which is why this never
+// showed up there. Setting colour explicitly covers both cases.
+
 .reveal .progress {
   height: 4px;
   background: rgba(14, 110, 128, 0.12);
