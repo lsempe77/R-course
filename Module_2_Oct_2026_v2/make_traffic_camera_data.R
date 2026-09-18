@@ -1,18 +1,24 @@
 # ---------------------------------------------------------------------------
-# Abu Dhabi Police — Automated Speed Enforcement Programme
-# Synthetic evaluation dataset for Module 2 (Session 2 onward).
+# The traffic camera programme
+# FICTIONAL dataset for Module 2 (Session 2 onward).
 #
-#   source("make_police_data.R")
+#   source("make_traffic_camera_data.R")
 #
-# Writes evaluation_data_Police.csv into this folder.
+# Writes evaluation_data_TrafficCameras.csv into this folder.
 #
 # ---------------------------------------------------------------------------
-# WHY THIS FILE IS SHAPED THE WAY IT IS
+# THIS CASE IS INVENTED, AND MUST ALWAYS BE LABELLED AS SUCH
 #
-# There is no real Abu Dhabi Police evaluation dataset in this workspace. The
-# outline for Session 2 calls for one, so this generates a plausible stand-in.
-# It is FICTIONAL and every deck must say so on the slide (Session 1 sets the
-# precedent with "Illustrative example, not a real Abu Dhabi case study").
+# It is not an Abu Dhabi Police evaluation, and it is not any real programme.
+# It was originally drafted as a stand-in for Abu Dhabi Police findings that do
+# not exist in this workspace, and it named the force. That was wrong: it put
+# fabricated numbers on a public site attributed to a real organisation. The
+# case now names no real body at all.
+#
+# Every deck using it must carry a visible disclaimer on any slide that shows a
+# number, following Session 1's "Illustrative example, not a real Abu Dhabi case
+# study". CLAUDE.md's placeholder convention says the same thing: nothing fake
+# is ever presented by accident.
 #
 # The columns are chosen so that ONE dataset carries four later sessions:
 #
@@ -67,7 +73,7 @@ CAMERA_EFF   <- 0.865    # additional -13.5% where cameras were installed.
 # the teaching point needs daylight between the estimate and the rule, plus
 # an interval that still spans it (Session 1, Word 5).
 
-# The bar the force has to clear before a national roll-out.
+# The bar the authority has to clear before a national roll-out.
 DECISION_RULE <- 2.0     # injury collisions avoided per segment per round
 
 sectors <- tibble(
@@ -143,7 +149,7 @@ exposure <- tidyr::expand_grid(segment_id = segments$segment_id, round = ROUNDS)
 
 # ---- Assignment -----------------------------------------------------------
 # Two real mechanisms, both common in enforcement rollouts:
-#   (a) the force rolled out sector by sector  -> DiD
+#   (a) the authority rolled out sector by sector  -> DiD
 #   (b) within the rollout, cameras went first to the fastest roads, chosen by
 #       a transparent speed rule              -> RDD
 # This is why `treated` (sector level) and `eligible_speed` (segment level) are
@@ -216,11 +222,11 @@ out <- dat %>%
   ) %>%
   arrange(sector_id, segment_id, round)
 
-write.csv(out, "evaluation_data_Police.csv", row.names = FALSE)
+write.csv(out, "evaluation_data_TrafficCameras.csv", row.names = FALSE)
 
 # ---- Report the teaching targets, so the deck can be built against facts ----
 cat("rows:", nrow(out), " segments:", n_distinct(out$segment_id), "\n")
-cat("file written: evaluation_data_Police.csv\n\n")
+cat("file written: evaluation_data_TrafficCameras.csv\n\n")
 
 naive <- out %>% filter(treated == 1L) %>%
   group_by(round) %>% summarise(m = mean(injury_collisions), .groups = "drop")

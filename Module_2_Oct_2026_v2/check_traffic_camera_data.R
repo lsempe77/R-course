@@ -1,8 +1,8 @@
 # ---------------------------------------------------------------------------
-# Verification: does evaluation_data_Police.csv actually support the four
-# sessions it is meant to? Run after make_police_data.R.
+# Verification: does evaluation_data_TrafficCameras.csv actually support the four
+# sessions it is meant to? Run after make_traffic_camera_data.R.
 #
-#   source("check_police_data.R")
+#   source("check_traffic_camera_data.R")
 #
 # This is a check, not a deliverable. It exists because the dataset was built
 # for Session 2 but is claimed to serve DiD, RDD and matching later; that claim
@@ -11,7 +11,7 @@
 
 suppressPackageStartupMessages(library(tidyverse))
 
-d <- read.csv("evaluation_data_Police.csv")
+d <- read.csv("evaluation_data_TrafficCameras.csv")
 ok <- function(label, cond) cat(sprintf("  [%s] %s\n", if (cond) "ok" else "FAIL", label))
 
 cat("=== shape ===\n")

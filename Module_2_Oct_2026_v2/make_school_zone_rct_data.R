@@ -1,47 +1,55 @@
 # ---------------------------------------------------------------------------
-# Abu Dhabi Police — School-Zone Road Safety Package
-# A RANDOMISED trial dataset, for Module 2 Session 3 (reading an RCT).
+# The school-zone safety package
+# FICTIONAL randomised trial dataset, for Module 2 Session 3 (reading an RCT).
 #
-#   source("make_police_rct_data.R")
+#   source("make_school_zone_rct_data.R")
 #
-# Writes evaluation_data_PoliceRCT.csv into this folder.
+# Writes evaluation_data_SchoolZoneRCT.csv into this folder.
 #
 # ---------------------------------------------------------------------------
-# WHY THIS EXISTS SEPARATELY FROM evaluation_data_Police.csv
+# THIS CASE IS INVENTED, AND MUST ALWAYS BE LABELLED AS SUCH
 #
-# The main Police dataset (make_police_data.R) is a rollout: sectors got cameras
+# It is not an Abu Dhabi Police trial, and it is not any real programme. It was
+# originally drafted as a stand-in for Police findings that do not exist in this
+# workspace, and it named the force. That was wrong: it put fabricated numbers on
+# a public site attributed to a real organisation. The case now names no real
+# body. Every slide showing a number must carry a visible disclaimer.
+#
+# ---------------------------------------------------------------------------
+# WHY THIS EXISTS SEPARATELY FROM evaluation_data_TrafficCameras.csv
+#
+# The main dataset (make_traffic_camera_data.R) is a rollout: sectors got cameras
 # in two phases, chosen by need, with a speed rule deciding which segments were
 # eligible. That design supports DiD, RDD and matching. It is NOT an RCT, so it
 # cannot teach Session 3's "how drawing lots removes the difference".
 #
 # Session 3 needs a genuinely randomised arm, so this is a second, smaller
-# trial: the same force, a different programme, allocated by lottery.
+# trial: the same authority, a different programme, allocated by lottery.
 #
-#   Session 2  Police cameras, rollout + speed rule   descriptive reading
-#   Session 3  Police school-zone package, RANDOMISED reading an RCT
-#   Day 2      Police cameras, DiD / RDD / matching
+#   Session 2  Traffic cameras, rollout + speed rule   descriptive reading
+#   Session 3  School-zone package, RANDOMISED         reading an RCT
+#   Day 2      Traffic cameras, DiD / RDD / matching
 #
 # Same outcome and same rule as the main dataset, so the two sit side by side
 # without the room having to relearn the units.
 #
 # ---------------------------------------------------------------------------
-# THE TEACHING TARGETS (verified, not aspirational - see the report at the end)
+# THE TEACHING TARGETS (verified by the report at the end of this script)
 #
 #   baseline, both arms             11.1 vs 10.7 injuries per segment
-#   control at follow-up             9.43   (-15%, the national trend)
-#   treated at follow-up             6.84   (a further -28%)
+#   control at follow-up             9.43   (the national trend)
+#   treated at follow-up             6.84   (a further fall)
 #   the randomised estimate         -2.59, 95% CI [-3.43, -1.75], p < 0.0001
-#   decision rule                   -2.0   ->  CLEARS
+#   decision rule                   -2.0
 #
-# The least generous end of the interval avoids 1.75, which is BELOW the 2.0
-# bar, and the most generous avoids 3.43. So the interval does not clear the
-# rule outright - it spans it. That is deliberate, and it is the same lesson
-# Session 1 taught with its A/B/C intervals and Session 2 met again: the point
-# estimate clears the bar, the interval says "not by enough to be sure".
+# In "collisions avoided" terms the interval runs from 1.75 (pessimistic) to
+# 3.43 (optimistic). The point estimate clears the 2.0 rule; the interval
+# SPANS it, because 1.75 is below the bar. That is deliberate and it is the
+# same shape Session 1 taught with its A/B/C intervals and Session 2 met again:
+# "the interval decides, not the point estimate".
 #
-# Day 2 will look at an overlapping question with methods that cannot control
-# for what was never measured. The answers will not agree, and that
-# disagreement is the arc of the week.
+# Beware the sign trap when reading this: conf.low is -3.43 and conf.high is
+# -1.75, so conf.low is the LARGER effect. abs(conf.low) is the OPTIMISTIC end.
 # ---------------------------------------------------------------------------
 
 suppressPackageStartupMessages(library(tidyverse))
@@ -122,12 +130,12 @@ out <- dat %>%
             injuries_per_million_vkm) %>%
   arrange(segment_id, round)
 
-write.csv(out, "evaluation_data_PoliceRCT.csv", row.names = FALSE)
+write.csv(out, "evaluation_data_SchoolZoneRCT.csv", row.names = FALSE)
 
 # ---- Report the teaching targets ------------------------------------------
 cat("rows:", nrow(out), " segments:", n_distinct(out$segment_id), "\n")
 cat("arms:", paste(sort(unique(out$arm)), collapse = " / "), "\n")
-cat("file written: evaluation_data_PoliceRCT.csv\n\n")
+cat("file written: evaluation_data_SchoolZoneRCT.csv\n\n")
 
 cat("=== baseline balance (round 0), by arm ===\n")
 print(out %>% filter(round == 0) %>%
@@ -148,11 +156,23 @@ if (requireNamespace("estimatr", quietly = TRUE)) {
                              subset = round == 1, clusters = segment_id)
   b  <- coef(fit)[["armPackage"]]
   ci <- confint(fit)["armPackage", ]
+
+  # CAREFUL. The interval is negative because fewer collisions is the good
+  # outcome, so conf.low (-3.43) is the LARGER effect and conf.high (-1.75) the
+  # smaller one. Taking abs() of conf.low gives the OPTIMISTIC end, not the
+  # pessimistic one. Sorting the absolute values removes the ambiguity: the
+  # first element is always the end closest to zero.
+  avoided <- sort(abs(ci))
+  least   <- avoided[1]   # pessimistic end, closest to zero
+  most    <- avoided[2]   # optimistic end
+
   cat(sprintf("\nRCT estimate: %+.2f per segment per round   95%% CI [%+.2f, %+.2f]  p = %.5f\n",
               b, ci[1], ci[2], fit$p.value[["armPackage"]]))
-  cat(sprintf("clears the %.1f rule? %s\n", DECISION_RULE,
-              if (abs(ci[1]) >= DECISION_RULE)
-                "YES - even the least generous end clears it"
-              else "NO - the interval reaches back across the bar"))
-  cat(sprintf("avoided per round: %.2f (interval's least generous end)\n", abs(ci[1])))
+  cat(sprintf("avoids %.2f to %.2f per round across the interval\n", least, most))
+  cat(sprintf("least it could avoid: %.2f   (rule is %.1f)\n", least, DECISION_RULE))
+  cat(sprintf("clears the rule? %s\n",
+              if (least >= DECISION_RULE)
+                "YES - even the pessimistic end clears it"
+              else
+                "NO - the interval spans the rule (estimate clears, interval straddles)"))
 }

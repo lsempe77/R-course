@@ -50,6 +50,43 @@ present is two copies of the GreenWaste data, and they are not interchangeable:
 
 Same records, but the cost column differs by **exactly 100×**. Never mix them.
 
+### NEVER attribute invented numbers to a real organisation
+
+**This mistake was made, and it is the worst one in this folder's history.**
+Sessions 2 and 3 were first built with a "Abu Dhabi Police" case: the deck title
+said "The Abu Dhabi Police Data", the slide said "Abu Dhabi Police: cameras on
+the fastest roads", and entirely fabricated findings were presented as results.
+The deck was published to `sempe.dev`. That attributes invented numbers to a
+named real organisation, in public.
+
+The fix, applied to both decks:
+
+- The case now names **no real body**. It is "a roads authority", and the data
+  files are `evaluation_data_TrafficCameras.csv` and
+  `evaluation_data_SchoolZoneRCT.csv`.
+- Titles and headings assert nothing about provenance: "Reading an Evaluation
+  Output", "Illustrative Case Data", "5 · The randomised case".
+- A visible disclaimer sits on **every slide carrying a number**:
+  *"Illustrative case, with invented figures. This is not a real programme and
+  the numbers are generated for this training."*
+
+`CLAUDE.md` line 241 already required this and was not followed:
+
+> **Placeholder convention.** … Mark every placeholder with `<!-- PLACEHOLDER -->`
+> and a visible `[PLACEHOLDER]` label on the slide itself, **so nothing fake is
+> ever presented by accident.**
+
+**Checklist item before publishing any deck with generated data:**
+
+1. Does any title, subtitle or heading assert the data is real, or name a
+   real organisation? Grep for the organisation's name.
+2. Does every slide showing a number carry a visible disclaimer?
+3. Is the honesty marker *on the slide*, not only in the speaker notes or an R
+   comment? Participants never see those.
+
+Verify with a grep over the rendered `.html`, not the `.qmd` — only the HTML
+shows what the room will actually see.
+
 For Session 2 the outline needs a Police case, so one was invented:
 `make_police_data.R` generates `evaluation_data_Police.csv` (1,200 road segments
 × 2 rounds). Read the header comment of that script before changing it - it
@@ -455,6 +492,28 @@ sectors when the cut-off only applies within phase 1, and it tested
 `ave_speed_kmh` — the *mechanism*, which moves by construction — instead of
 `injury_collisions`, the outcome. A failing check is a hypothesis about the
 data, not a verdict on it.
+
+### The sign trap: `abs(conf.low)` is the OPTIMISTIC end
+
+When a coefficient is negative (fewer collisions is the good outcome), an
+interval of `[-3.43, -1.75]` reads as: `conf.low` (-3.43) is the **larger**
+effect, `conf.high` (-1.75) the smaller one. So `abs(conf.low)` is the *most*
+the programme could be achieving, not the least. Taking `abs(conf.low)` and
+labelling it "least it could be" prints the most flattering figure under a
+pessimistic label — which is exactly what Session 3 did on its Police slide,
+and it was caught by comparing the printed number against the rule.
+
+Safe pattern:
+
+```r
+avoided <- sort(abs(ci))     # [1] is always the end closest to zero
+least   <- avoided[1]        # pessimistic end
+most    <- avoided[2]        # optimistic end
+```
+
+Session 2's interval is `[-1.76, -0.51]`, which lies entirely short of the 2.0
+rule; Session 3's is `[-3.43, -1.75]`, which straddles it. Those are genuinely
+different findings, so the two decks say different things on purpose.
 
 ### Simulating a design, to check it is identifiable
 

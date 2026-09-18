@@ -138,9 +138,16 @@ rct_treated <- rct_control + rct_est
 # least RULEBAR. It clears the bar only if even the interval's LEAST generous
 # end reaches RULEBAR. Here it does not: the -935 end falls short, so the honest
 # answer is that the estimate clears the bar and the interval spans it.
-rct_avoided_lo <- abs(rct_ci[1])   # least the interval will allow
-rct_avoided_hi <- abs(rct_ci[2])   # most the interval will allow
-rct_clears     <- rct_avoided_lo >= RULEBAR
+#
+# SIGN TRAP. In an interval on a negative coefficient, conf.low is the LARGER
+# effect. abs(conf.low) is therefore the OPTIMISTIC end, not the pessimistic one.
+# Sorting the absolute values removes the ambiguity: the first element is always
+# the end closest to zero. (Session 3 originally took abs(ci[1]) and labelled it
+# "least it could be", which printed the most generous figure instead.)
+rct_avoided       <- sort(abs(rct_ci))
+rct_avoided_least <- rct_avoided[1]   # pessimistic end, closest to zero
+rct_avoided_most  <- rct_avoided[2]   # optimistic end
+rct_clears        <- rct_avoided_least >= RULEBAR
 
 # ---- Balance table values --------------------------------------------------
 # Built from the data so the slide cannot drift from the numbers.
@@ -168,8 +175,11 @@ rct_tbl <- rct %>% tidy() %>%
          CI = sprintf("[%s, %s]", gfmt(conf.low), gfmt(conf.high))) %>%
   select(` `, estimate, std.error, p.value, CI)
 
-# ---- Police school-zone trial (the randomised Abu Dhabi case) --------------
-pr <- read.csv("./evaluation_data_PoliceRCT.csv") %>%
+# ---- School-zone trial (the randomised case) ------------------------------
+# FICTIONAL data from make_school_zone_rct_data.R. Not an Abu Dhabi Police
+# trial and not any real programme. See that script's header for why the case
+# names no real body.
+pr <- read.csv("./evaluation_data_SchoolZoneRCT.csv") %>%
   mutate(arm = factor(arm, levels = c("No package", "Package")))
 
 pr0 <- pr %>% filter(round == 0)
@@ -184,10 +194,13 @@ pr_fit <- lm_robust(injury_collisions ~ arm, data = pr1, clusters = segment_id)
 pr_est <- coef(pr_fit)[["armPackage"]]
 pr_ci  <- confint(pr_fit)["armPackage", ]
 pr_p   <- pr_fit$p.value[["armPackage"]]
-pr_avoided_lo <- abs(pr_ci[1])
-pr_avoided_hi <- abs(pr_ci[2])
+# Same sign trap as above: sort the absolute values so [1] is the pessimistic
+# end rather than whichever bound happens to be conf.low.
+pr_avoided       <- sort(abs(pr_ci))
+pr_avoided_least <- pr_avoided[1]
+pr_avoided_most  <- pr_avoided[2]
 
-# Police balance, as a check that the draw worked.
+# Balance check, to confirm the draw worked.
 pr_bal <- map_dfr(c("lanes", "road_length_km", "prior_collisions_3yr"),
                   function(v) {
   a <- pr0[[v]][pr0$arm == "Package"]; b <- pr0[[v]][pr0$arm == "No package"]
@@ -658,8 +671,8 @@ enough.** Here it is again, on a clean randomised result.
 tibble(
   what = factor(c("The estimate", "95% interval", "Decision rule"),
                 levels = c("Decision rule", "95% interval", "The estimate")),
-  lo = c(abs(rct_est), rct_avoided_lo, RULEBAR),
-  hi = c(abs(rct_est), rct_avoided_hi, RULEBAR),
+  lo = c(abs(rct_est), rct_avoided_least, RULEBAR),
+  hi = c(abs(rct_est), rct_avoided_most, RULEBAR),
   col = c(ACCENT, ACCENT, ALERT)
 ) %>%
   plot_ly() %>%
@@ -685,12 +698,12 @@ cat(sprintf('
 <div class="stat-row">
   <div><span class="n">%s</span><span class="k">The rule</span></div>
   <div><span class="n">%s</span><span class="k">Least it could be</span></div>
-</div>', gfmt(abs(rct_est)), gfmt(RULEBAR), gfmt(rct_avoided_lo)))
+</div>', gfmt(abs(rct_est)), gfmt(RULEBAR), gfmt(rct_avoided_least)))
 ```
 
 ::: {.warn}
 The estimate clears the bar. The interval **spans** it: at its least generous,
-the programme avoids `r gfmt(rct_avoided_lo)` AED, short of
+the programme avoids `r gfmt(rct_avoided_least)` AED, short of
 `r gfmt(RULEBAR)`.
 :::
 :::::
@@ -701,7 +714,7 @@ the programme avoids `r gfmt(rct_avoided_lo)` AED, short of
 Session 1's Word 5: **the interval decides, not the point estimate.**
 
 Compare the two ends. Would you sign a national roll-out on this? Commit, then
-we look at the same question on a real Abu Dhabi programme.
+we look at the same question on a randomised programme.
 :::
 
 ## The picture
@@ -731,19 +744,19 @@ Same programme as Section 1, but now the comparison is fair. The gap between two
 groups formed by a draw, and nothing else, is the effect.
 :::
 
-# 5 · The real case: Abu Dhabi Police
+# 5 · The randomised case
 
 ## The school-zone package, decided by lottery
 
 :::::: {.columns}
 
 ::::: {.column width="54%"}
-Abu Dhabi Police had a road-safety package for school zones: raised crossings,
-lower limits, crossing patrols. Four hundred zones needed it and only half could
-be done in the first year.
+Abu Dhabi's roads authority had a road-safety package for school zones: raised
+crossings, lower limits, crossing patrols. Four hundred zones needed it and only
+half could be done in the first year.
 
-Rather than pick the worst, the force **drew lots**: 200 zones chosen at random
-for the first year, 200 held back.
+Rather than pick the worst, it **drew lots**: 200 zones chosen at random for the
+first year, 200 held back.
 :::::
 
 ::::: {.column width="46%"}
@@ -760,15 +773,15 @@ for the first year, 200 held back.
 ::::::
 
 ::: {.warn}
-*Illustrative case. The findings shown are synthetic, generated for this
-training, not the evaluation's actual results.*
+**Illustrative case, with invented figures.** This is not a real trial and the
+numbers are generated for this training.
 :::
 
 ::: {.ask}
 Before the numbers: **why is this a stronger design than GreenWaste's?**
 :::
 
-## Did the draw work? Police zones
+## Did the draw work? The randomised zones
 
 :::::: {.columns}
 
@@ -784,7 +797,7 @@ pr_bal %>%
 
 ::::: {.column width="46%"}
 ::: {.panel}
-Same check as before, on the real case.
+Same check as before, on the randomised zones.
 
 Differences are small, p-values are not tiny. The draw did its job: whatever you
 can see here, and whatever you cannot, the two sets of zones are alike on
@@ -819,7 +832,8 @@ Both arms fell: the national trend reached the school zones too. The package
 zones fell further.
 
 The difference is `r sprintf("%.2f", abs(pr_est))` per zone per round, interval
-[`r sprintf("%.2f", abs(pr_ci[1]))`, `r sprintf("%.2f", abs(pr_ci[2]))`].
+[`r sprintf("%.2f", pr_avoided_least)`, `r sprintf("%.2f", pr_avoided_most)`]
+in collisions avoided.
 :::
 
 ## Does it clear the rule?
@@ -831,8 +845,8 @@ The difference is `r sprintf("%.2f", abs(pr_est))` per zone per round, interval
 tibble(
   what = factor(c("The estimate", "95% interval", "Decision rule"),
                 levels = c("Decision rule", "95% interval", "The estimate")),
-  lo = c(abs(pr_est), pr_avoided_lo, 2.0),
-  hi = c(abs(pr_est), pr_avoided_hi, 2.0),
+  lo = c(abs(pr_est), pr_avoided_least, 2.0),
+  hi = c(abs(pr_est), pr_avoided_most, 2.0),
   col = c(ACCENT, ACCENT, ALERT)
 ) %>%
   plot_ly() %>%
@@ -858,12 +872,12 @@ cat(sprintf('
 <div class="stat-row">
   <div><span class="n">%.2f</span><span class="k">The rule</span></div>
   <div><span class="n">%.2f</span><span class="k">Least it could be</span></div>
-</div>', abs(pr_est), 2.0, pr_avoided_lo))
+</div>', abs(pr_est), 2.0, pr_avoided_least))
 ```
 
 ::: {.warn}
 Same shape as GreenWaste: the estimate clears the bar, the interval straddles
-it. The least it could be is `r sprintf("%.2f", pr_avoided_lo)`, under the
+it. The least it could be is `r sprintf("%.2f", pr_avoided_least)`, under the
 `r sprintf("%.1f", 2.0)` required.
 :::
 :::::
