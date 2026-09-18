@@ -1,12 +1,75 @@
 # Module 2 · Session Build Guide
 
-Reference for building the remaining Module 2 decks (Day 1 Session 2 onward) so
+Reference for building the remaining Module 2 decks (Day 1 Session 3 onward) so
 they match the Session 1 deck we built. Everything here was verified against a
 rendering deck, not assumed. Where a fact was checked, the check is named.
 
 **The reference deck:** `Module_2_Oct_2026_v2/Oct12_session1.qmd`
+**Second reference:** `Module_2_Oct_2026_v2/Oct12_session2.qmd` (the Police case)
 **Companion file:** `CLAUDE.md` in the same folder holds the project overview,
 palette and session map. This guide adds the accumulated, hard-won detail.
+
+---
+
+## 0 · Read `Module2_outline.xlsx` first
+
+**This is the source of truth for what each session must cover.** It is laid out
+as a grid: rows are time slots, columns are days.
+
+```
+         Day 1 (Oct 12)          Day 2 (Oct 13)      Day 3          Day 4
+9:00     Session 1               Reading DiD         Cost analysis  QA deep dive
+11:00    Session 2  <- Police    Reading RDD         Data viz       Evidence trans.
+13:30    Session 3               Reading Matching    QA clinic      Plan your eval
+```
+
+Reading it shows things `CLAUDE.md` does not, for example that the **Police case
+opens Day 1 at 11:00** as the first real Abu Dhabi case, that Session 2 is
+*descriptive* reading (not a new method), and that participants **annotate a
+printed output** - identify the treatment effect, circle the interval, flag what
+is unclear.
+
+```powershell
+# rows are the slots, columns the days; each cell holds that session's brief
+Rscript -e "library(readxl); d <- read_excel('Module2_outline.xlsx', col_names=FALSE); print(as.data.frame(d))"
+```
+
+Also in the folder: `Module2_exercise_plan.docx` and
+`Module2_task_checklist.docx`. Check them for a session before drafting, in case
+they already specify the exercise.
+
+## 0b · There is no Abu Dhabi case data in this workspace
+
+**Searched the whole workspace. No Police, DOH or DCD dataset exists.** What is
+present is two copies of the GreenWaste data, and they are not interchangeable:
+
+| File | Rows | Units named | `waste_management_costs` |
+|---|---|---|---|
+| `evaluation_data.csv` | 19,827 | zone / facility | `15.19` |
+| `evaluation_data_GreenWaste.csv` | 19,826 | neighborhood / business | `1518.55` |
+
+Same records, but the cost column differs by **exactly 100×**. Never mix them.
+
+For Session 2 the outline needs a Police case, so one was invented:
+`make_police_data.R` generates `evaluation_data_Police.csv` (1,200 road segments
+× 2 rounds). Read the header comment of that script before changing it - it
+records why each column exists.
+
+**Design the columns for every session that will use the data, not just the next
+one.** This dataset is shaped so one file serves four sessions:
+
+| Session | What it uses |
+|---|---|
+| Session 2 | base table, counts, rates, exposure |
+| Oct13 S1 DiD | sector rollout in two phases × before/after rounds |
+| Oct13 S2 RDD | `baseline_speed_85th` with a cut-off at 70 km/h, **sharp** within phase 1 |
+| Oct13 S3 matching | covariates that predict both selection and the outcome |
+
+`check_police_data.R` tests all four uses plus plausibility, and prints the
+result. Run it after any change to the generator. A `FAIL` there is real - but
+check the test itself before "fixing" the data (see section 7).
+
+Every deck using invented numbers must say so on the slide. Both built decks do.
 
 ---
 
@@ -367,6 +430,26 @@ and a figure sit together.
 `offsetHeight - clientHeight`. That is the line-height, not a scrollbar. Ignore
 `h1`/`h2` in gutter scans.
 
+**Check the check before changing the data.** In Session 2 the RDD verification
+reported `FAIL`. The data was fine; the test was wrong twice over. It pooled all
+sectors when the cut-off only applies within phase 1, and it tested
+`ave_speed_kmh` — the *mechanism*, which moves by construction — instead of
+`injury_collisions`, the outcome. A failing check is a hypothesis about the
+data, not a verdict on it.
+
+### Simulating a design, to check it is identifiable
+
+Before building an RDD or DiD slide, confirm the structure can support it:
+
+- **DiD** — is there a clean treated × before/after grid with controls?
+- **RDD** — is the assignment rule *sharp* (deterministic at the cut-off)? Is
+  there mass on both sides? Does the jump beat the same comparison where no
+  treatment exists (a placebo at the same nominal cut-off)?
+- **Matching** — do covariates predict selection, so matching has work to do?
+
+Package versions in use, verified: R 4.4.1, tidyverse 2.0.0, plotly 4.12.1,
+knitr 1.50, kableExtra 1.4.0, qrcode 0.3.0, estimatr (for `lm_robust`).
+
 ---
 
 ## 8 · The Menti block, and one thing to fix
@@ -414,9 +497,46 @@ it while the Menti is live — the participant URL only resolves while running.
 | Two-slide-looking PDF pages | Long slides split across pages | Accept it, or trim the slide |
 | Word/phrase appears twice in a deck | The same number typed into a slide and into the setup chunk | Emit it from R with `r …` or `results='asis'` |
 | A label contradicts its numbers | Heading and content edited separately | Check every label against its figure (section 7) |
+| Columns container squashes, contents overflow | Slide content exceeds 720 px | Trim the slide — see below |
 
-Package versions in use, verified: R 4.4.1, tidyverse 2.0.0, plotly 4.12.1,
-knitr 1.50, kableExtra 1.4.0, qrcode 0.3.0.
+### A slide that is too tall squashes its columns
+
+This one produces a confusing symptom. The theme makes each slide a flex column
+with `justify-content: safe center` and `height: 100%`. When content exceeds
+720 px, a `.columns` child gets **squashed** (31 px instead of its natural 300),
+and the overflow is the column contents spilling out, not the container growing.
+
+Measured on the Session 2 "table you would actually be handed" slide: content
+was 966 px against a 720 px slide, and the columns block collapsed to 31 px.
+
+Detect it by comparing each slide's content height against 720:
+
+```js
+// for each section.slide.level2: max bottom of any visible child,
+// minus the slide's own bottom, converted to logical px using
+// scale = slideWidth / 1280.  > 2 means trouble.
+```
+
+Fix by removing content, not by shrinking type: drop a panel, move a panel to a
+neighbouring slide, or shorten prose. Session 2's fix was merging three panels
+into two and moving the takeaway sentence inside an existing panel.
+
+**Budget per slide:** roughly 720 px. A `.facts` grid is ~200, a `.panel` of
+three lines ~90, an `h2` ~50, a half-width plotly chart at
+`fig.height=2.7` ~270.
+
+### Verify a render is self-contained
+
+`embed-resources: true` should inline everything. Confirm rather than assume:
+
+```powershell
+$h = Get-Content Oct12_session2.html -Raw
+([regex]::Matches($h,'Oct12_session2_files')).Count   # must be 0
+```
+
+A browser may log `ERR_UNEXPECTED` for a stale `<name>_files/...` path from an
+earlier render. That is browser cache, not the deck — check the count above
+before chasing it.
 
 ---
 
@@ -470,14 +590,29 @@ normal and acceptable for a print copy.
 
 ---
 
-## 11 · Starting Session 2 — checklist
+## 11 · Starting a new session — checklist
 
-1. **Settle the theme fork** (section 1) before writing a slide.
-2. Copy the YAML block (section 2) and the setup chunk skeleton (section 3),
+1. **Read `Module2_outline.xlsx`** for that session's brief (section 0). Also
+   check `Module2_exercise_plan.docx` and `Module2_task_checklist.docx`.
+2. **Check whether the data exists.** If not, design a generated dataset whose
+   columns serve every session that will use it (section 0b), and write a
+   `check_*.R` that proves each intended use.
+3. **Settle the theme fork** (section 1) before writing a slide. Both built decks
+   now use `theme_editorial.scss`.
+4. Copy the YAML block (section 2) and the setup chunk skeleton (section 3),
    including `pl_m2()` and `ax()` unchanged.
-3. Copy the Menti block (section 8) and **set a real `MENTI_CODE`**.
-4. Draft to Session 1's six-movement shape (section 4).
-5. For each reveal: if it needs a number, put that number on the slide.
-6. Use the components (section 5); put `.fragment` on the same div.
-7. Run the verification loop (section 7) after every editing round.
-8. Publish (section 10) only after checking for placeholders.
+5. Copy the Menti block (section 8) and **set a real `MENTI_CODE`**.
+6. Draft to the six-movement shape (section 4), with `::: {.warn}` marking any
+   invented data on the slide where it appears.
+7. For each reveal: if it needs a number, put that number on the slide.
+8. Use the components (section 5); put `.fragment` on the same div.
+9. Run the verification loop (section 7) after every editing round, including
+   the 720 px height check.
+10. Publish (section 10) only after checking for placeholders.
+
+### Reference implementations
+
+| Deck | Slides | What it demonstrates |
+|---|---|---|
+| `Oct12_session1.qmd` | 29 | the pattern; five-words structure; a reveal rebuilt as a table |
+| `Oct12_session2.qmd` | 25 | a real-output sitting; planted AI errors; both leak types |
