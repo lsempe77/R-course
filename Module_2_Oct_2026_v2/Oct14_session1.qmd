@@ -101,11 +101,20 @@ MENTI_QR <- menti_qr()
 #   the number of businesses, which is the enrolled count from Day 2 S3
 # The one input that is a pure programme fact:
 #   the cost per business of delivering it
+#
+# The saving is 816 AED, which is the estimate the room computed by hand in the
+# Day 2 S1 session and which missed that session's 1,000 AED rule. It is not the
+# rule. Using the rule as though it were the finding would have inflated the
+# ratio from 1.87 to 2.29 and invented a programme that performed better than
+# the one that was measured.
 
 COST_PER_BUSINESS <- 1800      # AED, one-off cost of putting a business through
-BENEFIT_PER_YEAR  <- 1000      # AED per year, from the difference-in-differences
+BENEFIT_PER_YEAR  <- 816       # AED per year, the Day 2 S1 difference-in-differences
+BENEFIT_LO        <- 752       # the interval end closest to zero: least saving
+BENEFIT_HI        <- 881       # the other end: most saving
 BENEFIT_LAG       <- 1         # no saving in year 1: rollout and adoption take time
 ENROLLED          <- 2964      # businesses enrolled, from the matching session
+RULEBAR           <- 1000      # the Day 1-2 decision rule, for the contrast below
 
 DISCOUNT_BASE <- 0.05          # the rate the authority uses by default
 HORIZON_BASE  <- 5             # years of benefit assumed by default
@@ -151,16 +160,20 @@ grid_wide <- grid_tbl %>%
 # Where the ratio crosses 1 for each horizon. This is the number that makes the
 # session's point: the flip is not exotic, it happens inside normal practice.
 flip_rate <- function(yrs) {
+  # If it is already below 1 with no discounting at all, no rate rescues it and
+  # the honest answer is that there is no flip point to report.
+  if (bcr(0, yrs) < 1) return(NA_real_)
   r <- 0
-  while (bcr(r, yrs) >= 1 && r < 2) r <- r + 0.001
+  while (bcr(r, yrs) >= 1 && r < 3) r <- r + 0.001
   if (bcr(r, yrs) < 1) r * 100 else NA_real_
 }
 years_for_flip <- c(2, 3, 4, 5)
 flip_tbl <- tibble(years = years_for_flip, flip = map_dbl(years_for_flip, flip_rate))
 
 # The rate alone, over the base horizon. This shows the rate is NOT enough on its
-# own: even at 30% the ratio is still above 1. That negative result is worth a
-# slide, because a commissioner's instinct is to blame the discount rate.
+# own across the range agencies actually use: 3% to 8% leaves the ratio between
+# 2.02 and 1.68. That negative result is worth a slide, because a commissioner's
+# instinct is to blame the discount rate.
 rate_only <- tibble(
   r = c(0, 0.03, 0.05, 0.08, 0.10, 0.15, 0.20, 0.30, 0.40),
   bcr = map_dbl(c(0, 0.03, 0.05, 0.08, 0.10, 0.15, 0.20, 0.30, 0.40),
@@ -171,10 +184,27 @@ rate_only <- tibble(
 # The Day 2 S1 interval ran from 962 to 1,038 AED. Carrying that forward shows
 # the cost-benefit ratio inherits the uncertainty, rather than adding new.
 benefit_range <- tibble(
-  benefit = c(962, 1000, 1038),
-  bcr = map_dbl(c(962, 1000, 1038), ~ bcr(DISCOUNT_BASE, HORIZON_BASE,
-                                          benefit = .x))
+  benefit = c(BENEFIT_LO, BENEFIT_PER_YEAR, BENEFIT_HI),
+  bcr = map_dbl(c(BENEFIT_LO, BENEFIT_PER_YEAR, BENEFIT_HI),
+                ~ bcr(DISCOUNT_BASE, HORIZON_BASE, benefit = .x))
 )
+
+# ---- The horizon at which the ratio is exactly 1 ---------------------------
+# Solved rather than eyeballed, so the slide can state it precisely. This is the
+# session's single most useful number.
+breakeven_horizon <- function(r = DISCOUNT_BASE) {
+  lo <- 1; hi <- 20
+  for (i in 1:60) {
+    mid <- (lo + hi) / 2
+    if (bcr(r, mid) < 1) lo <- mid else hi <- mid
+  }
+  (lo + hi) / 2
+}
+
+# ---- Why a programme that missed the rule still clears a ratio of 1 --------
+# The rule asks for 1,000 AED in a single period. The ratio compares a one-off
+# cost against several periods of saving. Different questions, different answers.
+ratio_if_rule_met <- bcr(benefit = RULEBAR)
 
 # ---- The three-question framework, scored on this programme ---------------
 framework <- tribble(
@@ -220,7 +250,8 @@ Today the bar is a ratio instead of a threshold.
 ::::: {.column width="54%"}
 GreenWaste cost the authority **`r gfmt(COST_PER_BUSINESS)` AED per business** to
 deliver, and saved each participating business about **`r gfmt(BENEFIT_PER_YEAR)`
-AED a year**.
+AED a year** — the estimate the room computed by hand on Day 2, and the one that
+missed that session's 1,000 AED rule.
 
 The standard way to compare those is a **benefit-cost ratio**: what you get,
 divided by what you spend, with future money counted as worth less than money
@@ -231,9 +262,9 @@ today.
 ```{=html}
 <div class="facts">
   <div class="k">Cost</div>     <div class="v">1,800 AED per business, one-off</div>
-  <div class="k">Benefit</div>  <div class="v">1,000 AED per business per year</div>
+  <div class="k">Benefit</div>  <div class="v">816 AED per business per year</div>
   <div class="k">Decision rule</div> <div class="v">A ratio above 1 means it pays for itself</div>
-  <div class="k">Ratio found</div> <div class="v">2.29</div>
+  <div class="k">Ratio found</div> <div class="v">`r sprintf("%.2f", bcr_headline)`</div>
 </div>
 ```
 :::::
@@ -256,14 +287,23 @@ cat(sprintf('
 ```
 
 ::: {.panel}
-**2.29 means: for every AED spent, about 2.29 AED comes back.** On that reading
-this is not a borderline decision. It is clearly worth doing.
+**`r sprintf("%.2f", bcr_headline)` means: for every AED spent, about
+`r sprintf("%.2f", bcr_headline)` AED comes back.** On that reading this is not
+a borderline decision. It is clearly worth doing.
+
+**And that is the puzzle.** This is the same programme that failed the Day 2
+rule. It cut costs by `r gfmt(BENEFIT_PER_YEAR)` AED against a `r gfmt(RULEBAR)`
+AED bar, and here it returns nearly twice what it cost. Both statements are
+right.
 :::
 
 ::: {.warn}
-The ratio is the answer to a question you did not choose. Somebody decided the
-benefit lasts a certain number of years, and decided how much future money is
-worth. Those two choices built this number.
+A ratio and a rule are not the same test. The rule asks what happens **in one
+period**. The ratio asks what happens **over the whole life of the investment**.
+A programme can be too small to scale on the first test and comfortably worth
+funding on the second.
+
+Keep that gap in view. It is the reason this session exists.
 :::
 
 ## `[MENTI PLACEHOLDER]` Would you approve it?
@@ -272,7 +312,7 @@ worth. Those two choices built this number.
 
 ::::: {.column width="62%"}
 ::: {.ask style="font-size: 120%;"}
-On a ratio of **2.29**, what would you do?
+On a ratio of **`r sprintf("%.2f", bcr_headline)`**, what would you do?
 
 Approve &nbsp;·&nbsp; Reject &nbsp;·&nbsp; I need to know something else first
 :::
@@ -293,6 +333,10 @@ knitr::include_graphics(MENTI_QR)
 Commit before we go further. If most of the room picks "I need to know
 something else first", ask two people **what** — write the answers up, and
 compare them with the three questions at the end of the session.
+
+If anyone notices that this is the same programme that missed the 1,000 AED
+rule on Day 2, stop and let them make the point to the room. That observation is
+the session's hinge.
 :::
 
 ## What went into that number
@@ -308,11 +352,11 @@ tibble(
            "Value of the savings, today's money",
            "Benefit-cost ratio"),
   Working = c("one-off delivery cost",
-              "from the difference-in-differences estimate",
+              "the Day 2 difference-in-differences estimate",
               "5, beginning one year after rollout",
               "5% a year",
-              sprintf("1,000 x %.3f = %s AED", pv_annuity(DISCOUNT_BASE, HORIZON_BASE),
-                      gfmt(pv_per_biz)),
+              sprintf("%s x %.3f = %s AED", gfmt(BENEFIT_PER_YEAR),
+                      pv_annuity(DISCOUNT_BASE, HORIZON_BASE), gfmt(pv_per_biz)),
               sprintf("%s / %s", gfmt(pv_per_biz), gfmt(COST_PER_BUSINESS))),
   Value = c(sprintf("%s AED", gfmt(COST_PER_BUSINESS)),
             sprintf("%s AED", gfmt(BENEFIT_PER_YEAR)),
@@ -381,9 +425,11 @@ rate_only %>%
 ::: {.warn}
 **The discount rate on its own does not flip this decision.**
 
-Even at a 30% rate — far higher than any agency uses — the ratio is
-`r sprintf("%.2f", rate_only$bcr[rate_only$r == 0.30])`. You have to reach
-**40%** to push it below 1, and by then the assumption is not defensible.
+Across the whole range an agency might actually use — 3% to 8% — the ratio moves
+only from `r sprintf("%.2f", bcr(0.03, HORIZON_BASE))` to
+`r sprintf("%.2f", bcr(0.08, HORIZON_BASE))`. You have to reach
+**`r sprintf("%.0f%%", 100 * min(rate_only$r[rate_only$bcr < 1]))`** to push it
+below 1, and by then the assumption is not defensible.
 :::
 
 ::: {.panel}
@@ -428,9 +474,43 @@ If it lasts **two years**, the ratio is
 :::
 
 ::: {.warn}
-Five years is a reasonable assumption. So is two. Both are guesses about a
-future nobody has observed, and they produce opposite recommendations from the
-same evidence.
+**This is the one that decides it.**
+
+Below about **`r sprintf("%.1f", breakeven_horizon())` years** the programme does
+not pay for itself. At two years the ratio is
+`r sprintf("%.2f", bcr(DISCOUNT_BASE, 2))`; at three it is
+`r sprintf("%.2f", bcr(DISCOUNT_BASE, 3))`.
+
+Nothing in this evaluation measured how long the saving lasts.
+:::
+:::::
+
+::::::
+
+## The horizon decides it, not the rate
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+```{=html}
+<div class="facts">
+  <div class="k">The rate, 3% to 8%</div>      <div class="v">moves the ratio from 2.02 to 1.68 &middot; never close to 1</div>
+  <div class="k">The horizon, 2 to 5 years</div> <div class="v">moves it from 0.80 to 1.87 &middot; crosses 1</div>
+  <div class="k">Break-even horizon</div>      <div class="v">2.5 years at a 5% rate &middot; 2.2 years with no discounting at all</div>
+  <div class="k">So the question is</div>    <div class="v">how long does a saving of this kind actually last?</div>
+</div>
+```
+:::::
+
+::::: {.column width="50%"}
+::: {.ask}
+The break-even horizon barely moves when you change the discount rate. At 5% it
+is 2.5 years; at 3% it is 2.5 years as well. Even with no discounting at all the
+programme needs 2.2 years of saving.
+
+**That is what a dominant assumption looks like.** One choice can be argued about
+indefinitely and hardly matters. The other is barely discussed and decides the
+answer.
 :::
 :::::
 
@@ -444,7 +524,7 @@ grid_wide %>%
   kable_styling(full_width = FALSE, font_size = 16) %>%
   row_spec(1, bold = TRUE, background = "#F7E9E6") %>%
   row_spec(3, bold = TRUE, background = "#E6F1F5") %>%
-  footnote(general = "Shaded: the two cells the session turns on. Red = below break-even. Every cell uses the same cost and the same measured annual saving; only the two analyst choices differ.",
+  footnote(general = "Shaded: the two rows the session turns on. Every cell uses the same cost and the same measured annual saving; only the two analyst choices differ. Values below 1.00 mean the programme does not pay for itself.",
            general_title = "", footnote_as_chunk = TRUE)
 ```
 
@@ -460,25 +540,36 @@ evidence never changed. Only the horizon assumption did.
 ```{r}
 flip_tbl %>%
   mutate(`Discount rate at which it flips` =
-           sprintf("%.1f%%", flip)) %>%
+           ifelse(is.na(flip), "already below 1", sprintf("%.1f%%", flip))) %>%
   select(`Years of saving` = years, `Discount rate at which it flips`) %>%
   kable(align = "rr") %>%
   kable_styling(full_width = FALSE, font_size = 16) %>%
-  footnote(general = "Below this rate the ratio exceeds 1; above it, the programme does not pay for itself.",
+  footnote(general = "Below this rate the ratio exceeds 1; above it, the programme does not pay for itself. Read the top rows: at a two-year horizon there is no discount rate that rescues it.",
            general_title = "", footnote_as_chunk = TRUE)
 ```
 
 ::: {.warn}
-Read the first row. **If you assume the saving lasts two years, a discount rate
-of 4.4% flips the conclusion.** A 3% rate is normal practice in some agencies; a
-5% rate is normal in others. Both are defensible. They give opposite answers.
+Read the top two rows. **If you assume the saving lasts only two years, no
+discount rate at all makes this worth doing.** The programme is already below
+break-even before the discount rate is applied.
+
+At three years, a rate of
+`r sprintf("%.1f%%", flip_tbl$flip[flip_tbl$years == 3])` flips it, which is at
+the edge of normal practice. At the five-year base case you would need
+`r sprintf("%.1f%%", flip_tbl$flip[flip_tbl$years == 5])`, which nobody uses.
+
+**Read down the column, not across the row.** The rate only matters once you
+have already assumed the saving persists for years.
 :::
 
 ::: {.ask}
-So the honest statement is not "the ratio is 2.29". It is:
+So the honest statement is not "the ratio is `r sprintf("%.2f", bcr_headline)`".
+It is:
 
-**"The ratio is 2.29 under assumptions that the evidence does not determine, and
-plausible alternatives put it anywhere between 0.71 and 4.60."**
+**"The ratio is `r sprintf("%.2f", bcr_headline)` under assumptions the evidence
+does not determine, and plausible alternatives put it anywhere between
+`r sprintf("%.2f", min(grid_tbl$bcr))` and
+`r sprintf("%.2f", max(grid_tbl$bcr))`."**
 :::
 
 ## What the ratio is actually telling you
@@ -490,9 +581,9 @@ grid_tbl %>%
          r_lab = factor(r_lab, levels = sprintf("%.0f%%", 100 * rate_grid)),
          y_lab = factor(y_lab, levels = sprintf("%d years", rev(years_grid)))) %>%
   plot_ly(x = ~r_lab, y = ~y_lab, z = ~bcr, type = "heatmap",
-          colorscale = list(c(0, "#8E2413"), c(0.34, "#E3C9A8"),
-                            c(0.36, "#CFE4E9"), c(1, "#0E6E80")),
-          zmin = 0.6, zmax = 4.6,
+          colorscale = list(c(0, "#8E2413"), c(0.19, "#C98F72"),
+                            c(0.21, "#CFE4E9"), c(1, "#0E6E80")),
+          zmin = 0.55, zmax = 3.8,
           text = ~sprintf("%.2f", bcr), texttemplate = "%{text}",
           textfont = list(size = 15, color = INK),
           hovertemplate = "%{y}, discount %{x}: ratio %{z:.2f}<extra></extra>",
@@ -505,9 +596,8 @@ grid_tbl %>%
 ::: {.ask}
 Every cell is the same programme, the same cost, and the same measured saving.
 
-**Only two judgement calls differ.** Find the cells below 1.0. Now ask yourself
-which cell the authority would put in the press release, and whether anyone
-would mention the others.
+**Only two judgement calls differ.** The whole grid is one decision, drawn nine
+ways. Find the cells below 1.0, then find the row that is below 1 everywhere.
 :::
 
 # 3 · The three questions
@@ -551,20 +641,51 @@ benefit_range %>%
 ::::: {.column width="48%"}
 ::: {.panel}
 The saving here is **not** assumed. It is the difference-in-differences estimate
-from Day 2, and the three rows show its confidence interval carried forward.
+from Day 2, and the three rows carry its confidence interval forward.
 
 The ratio moves from `r sprintf("%.2f", min(benefit_range$bcr))` to
-`r sprintf("%.2f", max(benefit_range$bcr))` across the interval. So the cost-benefit
-result inherits the uncertainty already measured.
+`r sprintf("%.2f", max(benefit_range$bcr))` across the interval.
 :::
 
 ::: {.warn}
-That is the **good** news about this number. The bad news is the horizon, which
-has no interval because nobody measured it.
+**Look at how small that is.** The measured uncertainty in the saving barely
+moves the ratio, because the interval is tight: the Day 2 estimate was
+`r gfmt(BENEFIT_PER_YEAR)` with bounds of `r gfmt(BENEFIT_LO)` and
+`r gfmt(BENEFIT_HI)`.
+
+The horizon, which moves the ratio from `r sprintf("%.2f", bcr(DISCOUNT_BASE, 2))`
+to `r sprintf("%.2f", bcr_headline)`, has no interval at all, because nobody
+measured it.
 :::
 :::::
 
 ::::::
+
+## The measured part and the assumed part
+
+```{r results='asis'}
+cat(sprintf('
+<div class="facts">
+  <div class="k">Measured</div>  <div class="v">the annual saving &middot; %s AED &middot; interval %s to %s &middot; moves the ratio by %.2f</div>
+  <div class="k">Measured</div>  <div class="v">the cost &middot; %s AED &middot; a programme fact</div>
+  <div class="k">Assumed</div>   <div class="v">how many years the saving lasts &middot; moves the ratio by %.2f</div>
+  <div class="k">Assumed</div>   <div class="v">the discount rate &middot; at 3%% to 8%% it moves the ratio by only %.2f</div>
+</div>',
+  gfmt(BENEFIT_PER_YEAR), gfmt(BENEFIT_LO), gfmt(BENEFIT_HI),
+  max(benefit_range$bcr) - min(benefit_range$bcr),
+  gfmt(COST_PER_BUSINESS),
+  bcr_headline - bcr(DISCOUNT_BASE, 2),
+  abs(bcr(0.03, HORIZON_BASE) - bcr(0.08, HORIZON_BASE))))
+```
+
+::: {.ask}
+Two lines are measured and two are assumed. **The assumed lines move the answer
+more than the measured ones do.**
+
+That is the whole session in one table. A confident-looking ratio can rest almost
+entirely on choices nobody has evidence for, and the numbers that were carefully
+estimated are not the ones deciding it.
+:::
 
 ## Question 2: are all the costs included?
 
@@ -595,8 +716,6 @@ You already know the answer for this programme, and it is not the discount rate.
 
 **Assume the saving lasts two years instead of five, and the ratio falls from
 `r sprintf("%.2f", bcr_headline)` to `r sprintf("%.2f", bcr(DISCOUNT_BASE, 2))`.**
-
-The programme goes from clearly worth doing to not paying for itself.
 :::
 
 ::: {.ask}
@@ -651,7 +770,7 @@ Check each claim against the table. Which is right, which is wrong, and which is
 true but useless? Four minutes.
 :::
 
-## Debrief: right arithmetic, wrong lever
+## Debrief: right arithmetic, right lever, no numbers
 
 :::::: {.columns}
 
@@ -662,18 +781,25 @@ The model checks out.
 :::
 
 ::: {.warn}
-**1 · Wrong lever.** 40% is not a rate any agency uses. It answered the question
-it was asked — *name a scenario* — rather than the useful one: *name a plausible
-one*. **Arithmetically true and practically irrelevant.**
+**1 · Wrong lever, and it took the easy one.** The rate does flip the ratio, but
+only at
+`r sprintf("%.0f%%", 100 * min(rate_only$r[rate_only$bcr < 1]))`, which no
+agency uses. It answered *name a scenario* rather than *name the one that
+matters*. **Arithmetically true and practically irrelevant.**
 :::
 :::::
 
 ::::: {.column width="50%"}
-::: {.warn}
-**2 · The second scenario is vague where it needed to be specific.** "Delayed by
-a few years" is not the same as a longer lag. The lever that actually works here
-is the **horizon**, and the model never named it.
+::: {.panel}
+**2 · It pointed at the right lever and then did not use it.** "Benefits delayed
+by a few years" is the horizon, which is the assumption that actually decides
+this programme. But the model never says how many years, never gives a ratio,
+and never mentions that the saving is measured for one period only.
 
+**Right area, no number.** A direction without a magnitude cannot be acted on.
+:::
+
+::: {.warn}
 **3 · "Commonly observed in infrastructure appraisal."** Confident, unsourced,
 and about a different kind of programme. It reads as authority it does not have.
 :::
@@ -682,12 +808,14 @@ and about a different kind of programme. It reads as authority it does not have.
 ::::::
 
 ::: {.panel}
-**This is a new failure shape.** The model did not invent a number or misread a
-table. It answered the literal question competently and missed the point.
+**This is a new failure shape, and a harder one to catch than the errors you
+found on Days 1 and 2.** The model invented no number and misread no table. It
+reached for the lever that is easiest to compute, and when it stumbled onto the
+right one it stopped at a direction and never produced a figure.
 
-**The lesson: ask for the plausible, not the possible.** A model will find the
-scenario you asked for, and it will be technically true, and it may tell you
-nothing.
+**The lesson: ask for the assumption that matters, and ask for the number.**
+A model will find the scenario you asked for, and it may even name the true
+cause, and it can still leave you with nothing you can act on.
 :::
 
 ## The same question, a better prompt
@@ -769,21 +897,62 @@ your verdict in two minutes.
 
 # 6 · Close
 
+## Two tests, one programme
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+```{=html}
+<div class="facts">
+  <div class="k">Day 2 rule</div>      <div class="v">cut costs by 1,000 AED in one period</div>
+  <div class="k">What was found</div>  <div class="v">816 AED &middot; real, significant, and short of the bar</div>
+  <div class="k">Verdict</div>         <div class="v">do not scale it on that evidence</div>
+</div>
+```
+:::::
+
+::::: {.column width="50%"}
+```{=html}
+<div class="facts">
+  <div class="k">Today's ratio</div>   <div class="v">1.87 AED returned per AED spent</div>
+  <div class="k">What it assumes</div> <div class="v">the saving persists for five years</div>
+  <div class="k">Verdict</div>         <div class="v">clearly worth funding</div>
+</div>
+```
+:::::
+
+::::::
+
+::: {.ask}
+These are the same programme, the same estimate and the same cost.
+
+**One test says no and the other says yes.** That is not a contradiction. The
+rule asks whether the effect is big enough to be worth scaling; the ratio asks
+whether the investment pays for itself over its life. An evaluator who reports
+only one of them has answered half the question the commissioner asked.
+:::
+
+::: {.warn}
+Notice which test is doing the work. The rule is measured. The ratio is mostly
+assumed.
+:::
+
 ## What today gives you
 
 ```{=html}
 <div class="facts">
   <div class="k">A ratio is a model</div>  <div class="v">not a measurement &middot; it contains choices as well as evidence</div>
-  <div class="k">The rate alone</div>       <div class="v">rarely flips anything &middot; do not be satisfied with that answer</div>
-  <div class="k">The horizon</div>          <div class="v">often decides it &middot; and nobody measures it</div>
-  <div class="k">Always ask</div>           <div class="v">what is excluded from the cost, and what would change the answer</div>
+  <div class="k">The rate</div>            <div class="v">3% to 8% barely moves it &middot; do not be satisfied with that answer</div>
+  <div class="k">The horizon</div>         <div class="v">decides it &middot; and nothing in the evaluation measured it</div>
+  <div class="k">Always ask</div>          <div class="v">what is excluded from the cost, and what would change the answer</div>
 </div>
 ```
 
 ::: {.ask}
 The single sentence to take to a meeting:
 
-**"What assumption would have to change for this ratio to fall below 1?"**
+**"What assumption would have to change for this ratio to fall below 1, and what
+is your evidence for that assumption?"**
 
 An evaluator who can answer that has thought about their model. One who cannot
 has run it.
@@ -796,12 +965,12 @@ has run it.
   <div class="k">Day 1</div>  <div class="v">is the number answering your question, and is it big enough?</div>
   <div class="k">Day 2</div>  <div class="v">which method produced it, and what does that method assume?</div>
   <div class="k">Today</div>  <div class="v">what is it worth, and which assumption decides that?</div>
-  <div class="k">This afternoon</div> <div class="v">reading the figures that carry these claims into a room</div>
+  <div class="k">Next session</div> <div class="v">reading the figures that carry these claims into a room</div>
 </div>
 ```
 
 ::: {.panel}
-Tomorrow morning you use all of it: a full credibility review of an evaluation
-report, then a clinic where you put the questions to an analyst who has to answer
-them.
+Next: the same claims, in the form they actually reach a decision-maker — a
+chart. Every assumption you have interrogated this morning is invisible in the
+picture, and the picture is what gets remembered.
 :::
