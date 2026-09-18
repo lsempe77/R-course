@@ -82,12 +82,13 @@ gh api repos/lsempe77/R-course/pages/builds/latest | ConvertFrom-Json | Select-O
 
 ### Data
 
-The decks do not use real programme data. Three synthetic datasets sit alongside the decks, and the
+The decks do not use real programme data. The synthetic datasets sit alongside the decks, and the
 generators that produce them are checked in so the numbers can be rebuilt from scratch:
 
 | File | Built by | Used by |
 |------|----------|---------|
 | `evaluation_data_GreenWaste.csv` | (original corpus) | Days 1–3 |
+| `evaluation_data_GreenWaste_IV.csv` | (adds `intent_to_treat`, `enrolled_rp`) | Module 1 IV/matching decks |
 | `evaluation_data_TrafficCameras.csv` | `make_traffic_camera_data.R` | Day 1 S2, Day 2 S1, Day 2 S2 |
 | `evaluation_data_SchoolZoneRCT.csv` | `make_school_zone_rct_data.R` | Day 1 S3 |
 
@@ -97,6 +98,26 @@ teaching uses, and should be run after any change to the generator.
 > **Note.** `evaluation_data.csv` at the repository root holds the *same records* as
 > `evaluation_data_GreenWaste.csv` but with the cost column multiplied by 100. Never mix the two.
 > See `Module_2_Oct_2026_v2/SESSION_BUILD_GUIDE.md`, section 0b.
+
+### GreenWaste: one scale, 1,000 AED
+
+GreenWaste is a fictitious waste-management programme used as the running case study. It must always
+be quoted at the **AED** scale, against a **1,000 AED per year** decision threshold. The estimates,
+all recomputed from the data rather than copied between decks:
+
+| Method | Estimate |
+|--------|----------|
+| Randomized ATE | −1,014 AED |
+| IV / LATE | −1,033 AED |
+| RDD | −905 AED |
+| DiD | −816 AED |
+| Matching | −1,000 AED |
+
+Older Module 1 material quoted the same programme at ten times this scale, against a `$10,000`
+rule. That was a legacy convention, not a different programme; it has been retired. If you find a
+`$10,000` or an `$8,000`-to-`$10,000` estimate anywhere, it is stale. Two decks also mislabelled the
+case as *health* expenditures or as *HISP*; GreenWaste is a waste-management programme throughout.
+
 
 ---
 
@@ -116,6 +137,11 @@ in-session teaching pattern, and the verification loop. The points that most oft
   either drawn from the synthetic data in this repository or visibly marked `[PLACEHOLDER]`.
 - **The Menti code is still a placeholder.** `MENTI_CODE <- "1234 5678"` in every deck, so the QR
   codes currently point at a Menti that does not exist. Replace it before the training.
+- **Two Module 1 decks do not currently render.** `sessions_in_Abu_Dhabi/session_6_updated.qmd`
+  and `session_7_updated.qmd` fail on a clean checkout. The first passes raw HTML to a `kable`
+  caption, which crashes Quarto 1.7's Lua filter (`main.lua:16935`); the second fails inside
+  `style_tt()`. Both pre-date the GreenWaste harmonisation and are unrelated to it. The
+  `.html` files beside them are from an earlier build.
 
 ---
 
