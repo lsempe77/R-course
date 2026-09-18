@@ -375,6 +375,15 @@ notes, not on the slide the room is reading.
 The `.mins` style is still defined in `theme_editorial.scss` if a badge is ever
 wanted, but nothing currently uses it.
 
+**This has now been reintroduced three times** while drafting a new deck, because
+it is natural to reach for a timing marker on a divider when writing to a
+90-minute outline. Treat it as a build step, not a preference:
+
+```powershell
+# must print nothing. Run it after every render.
+Select-String -Path Module_2_Oct_2026_v2\*.qmd -Pattern '\{\.mins\}'
+```
+
 ### Watch `color` inheritance inside a divider
 
 Reveal writes a section's colour onto the divider's `h1` as an inline `color:`,

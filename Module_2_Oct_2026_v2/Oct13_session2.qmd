@@ -1,11 +1,13 @@
 ---
-title: "Reading RDD Results"
-subtitle: "Module 2 · Day 2, Session 2: Demystifying the Impact Analysis"
+title: "Reading a Regression Discontinuity Result"
+subtitle: "Module 2 · Day 2, Session 2: What Happens at the Cut-off"
 author: "3ie"
 always_allow_html: yes
+# revealjs only in this folder: the charts are interactive (plotly/htmlwidgets),
+# and pandoc cannot carry an htmlwidget into pptx. Export to PDF for a portable copy.
 format:
   revealjs:
-    theme: [clean.scss, module2.scss]
+    theme: [theme_editorial.scss]
     slide-number: true
     width: 1280
     height: 720
@@ -18,860 +20,901 @@ knitr:
     warning: false
     message: false
     dev: "png"
-    dpi: 200
+    # dpi 96 is deliberate. knitr sizes every htmlwidget container as
+    # fig.width * dpi, so an inherited dpi: 200 silently inflated each chart
+    # tenfold (11.5in became 2300px) and pushed slide content off the bottom.
+    # At 96, fig.width in inches maps 1:1 onto CSS pixels. If a raster
+    # ggplot chunk is ever added, set its dpi per chunk.
+    dpi: 96
 editor_options:
   chunk_output_type: console
 ---
 
 ```{r setup}
 library(tidyverse)
-library(estimatr)
+library(plotly)
 library(knitr)
 library(kableExtra)
+library(estimatr)
+library(qrcode)
 
-df <- read.csv("./evaluation_data_GreenWaste.csv")
-tn <- df %>% filter(treatment_neighborhood == 1)
+# ---- Palette (editorial theme; see theme_editorial.scss) -------------------
+ACCENT  <- "#0E6E80"   # series 1: programme / eligible side
+ACCENT2 <- "#A9561F"   # series 2: comparison / other side
+ALERT   <- "#8E2413"   # decision rules and flagged errors, never a series
+INK     <- "#16181A"; MUTED <- "#61686D"; RULE <- "#E3E6E8"
+CHART_FONT <- "Segoe UI, Helvetica, Arial, sans-serif"
 
-CUTOFF    <- 58
-THRESHOLD <- 1000
+PL_W  <- 1100
+PL_WC <- 520
+PL_WT <- 340
 
-# ---- RDD works on the cross-section AFTER the programme --------------------
-r1 <- tn %>%
-  filter(round == 1) %>%
-  mutate(c0  = efficiency_index - CUTOFF,
-         grp = ifelse(enrolled == 1, "Offered", "Not offered"))
-
-# ---- The regression an evaluator would report -----------------------------
-# Covariate-adjusted sharp-RDD model on the post-programme cross-section.
-# The 'enrolled' coefficient is the jump at the cut-off: the reported effect.
-m_cov <- lm_robust(
-  waste_management_costs ~ c0 * enrolled +
-    age_manager + age_deputy + female_manager + foreign_owned +
-    staff_size + advanced_filtration + business_area + recycling_center_distance,
-  data = r1)
-
-b_jump  <- unname(coef(m_cov)["enrolled"])          # jump at the cut-off = RDD effect (~ -905)
-se_jump <- unname(m_cov$std.error["enrolled"])
-ci_lo   <- b_jump - 1.96 * se_jump
-ci_hi   <- b_jump + 1.96 * se_jump
-b_slope <- unname(coef(m_cov)["c0"])                # slope in the running variable (a trap)
-
-# ---- Narrow-band hand exercise (two averages, one subtraction) ------------
-below <- r1 %>% filter(efficiency_index >= 55, efficiency_index <= 58)
-above <- r1 %>% filter(efficiency_index >= 59, efficiency_index <= 62)
-m_below <- mean(below$waste_management_costs)
-m_above <- mean(above$waste_management_costs)
-band_gap <- m_below - m_above
-
-# ---- Validated palette (CVD-safe; see CLAUDE.md > Design System) -----------
-ACCENT  <- "#00789E"   # programme / offered / eligible side
-ACCENT2 <- "#B45309"   # comparison / not offered side
-ALERT   <- "#9A2515"   # annotations and decision rules: never a data series
-INK     <- "#131516"; MUTED <- "#5C6467"; RULE <- "#DCE1E3"
-
-# ---- One chart theme for the whole module ---------------------------------
-theme_m2 <- function(base = 15) {
-  theme_minimal(base_size = base) +
-    theme(
-      text             = element_text(colour = INK),
-      axis.title       = element_text(colour = MUTED, size = rel(0.85)),
-      axis.text        = element_text(colour = MUTED),
-      panel.grid.minor = element_blank(),
-      panel.grid.major = element_line(colour = RULE, linewidth = 0.4),
-      legend.position  = "bottom",
-      legend.title     = element_blank(),
-      legend.text      = element_text(size = rel(0.95)),
-      strip.text       = element_text(colour = INK, face = "plain", size = rel(0.95)),
-      plot.margin      = margin(4, 10, 4, 4)
+pl_m2 <- function(p, width = PL_W, height = 290, t = 30, b = 54,
+                  title = NULL, legend_y = 1.02) {
+  p <- p %>%
+    layout(
+      width = width, height = height,
+      font = list(family = CHART_FONT, size = 13, color = INK),
+      paper_bgcolor = "rgba(0,0,0,0)",
+      plot_bgcolor  = "rgba(0,0,0,0)",
+      margin = list(l = 70, r = 24, t = t, b = b),
+      legend = list(orientation = "h", x = 0.5, xanchor = "center",
+                    y = legend_y, yanchor = "bottom", title = list(text = "")),
+      hoverlabel = list(bgcolor = "white", bordercolor = RULE,
+                        font = list(color = INK, size = 12))
     )
+  if (!is.null(title)) {
+    p <- p %>% layout(title = list(text = title, x = 0, xanchor = "left",
+                                   font = list(size = 12, color = MUTED)))
+  }
+  p %>% config(displayModeBar = FALSE)
 }
 
-grp_cols <- c("Offered" = ACCENT, "Not offered" = ACCENT2)
+ax <- function(title = "", ...) {
+  modifyList(list(
+    title = list(text = title, font = list(size = 12, color = MUTED)),
+    gridcolor = RULE, zerolinecolor = RULE, linecolor = RULE,
+    tickfont = list(size = 12, color = MUTED)
+  ), list(...))
+}
+
+gfmt <- function(x) format(round(x), big.mark = ",")
+
+# ---- Live Menti poll -------------------------------------------------------
+MENTI_CODE <- "1234 5678"
+MENTI_JOIN <- paste0("https://www.menti.com/", gsub(" ", "", MENTI_CODE))
+
+menti_qr <- function(path = "menti_qr.png", url = MENTI_JOIN) {
+  png(path, width = 900, height = 900, res = 300, bg = "white")
+  on.exit(dev.off(), add = TRUE)
+  par(mar = c(0, 0, 0, 0))
+  plot(qr_code(url, ecl = "H"))
+  path
+}
+MENTI_QR <- menti_qr()
+
+RULEBAR <- 1000     # must cut costs by at least this many AED
+
+# ---- The GreenWaste eligibility rule ---------------------------------------
+# The programme was offered only to businesses whose efficiency index was at or
+# BELOW 58. Read that again: the LESS efficient businesses qualified. This is
+# the opposite direction to a "higher score wins" rule, and it is the first
+# thing to get right when reading the chart.
+#
+# MEASURED, not assumed: the maximum index among eligible businesses is 57.9598
+# and the minimum among ineligible is 58.0371, so the rule is genuinely sharp
+# and the cut-off sits in between. Verified agreement: 1.000000.
+gw <- read.csv("./evaluation_data_GreenWaste.csv")
+CUT <- 58
+
+# ---- Is the rule sharp, and is take-up full? -------------------------------
+# The OFFER is a clean function of the index. TAKE-UP is not: only about half of
+# the eligible businesses enrolled. That makes this a FUZZY design, and it is
+# the distinction that decides whether the headline number is the effect on
+# those offered or the effect on those who took it.
+gw1 <- gw %>% filter(round == 1)
+
+rule_sharp <- mean(as.integer(gw$efficiency_index <= CUT) == gw$eligible,
+                   na.rm = TRUE)
+
+# ---- The local comparison, at a chosen bandwidth ---------------------------
+# Everything below is done at +/-2 index points. That is a teaching choice: wide
+# enough to have power, narrow enough that the two sides are genuinely alike.
+# The deck shows what happens when the bandwidth changes, because that choice
+# is the one a commissioner can most easily be misled by.
+BAND <- 2
+
+win <- gw1 %>%
+  filter(abs(efficiency_index - CUT) <= BAND) %>%
+  mutate(below   = as.integer(efficiency_index <= CUT),   # the eligible side
+         x       = efficiency_index - CUT)
+
+rdd_fit <- lm_robust(waste_management_costs ~ below * x, data = win)
+itt     <- coef(rdd_fit)[["below"]]
+itt_ci  <- confint(rdd_fit)["below", ]
+itt_p   <- rdd_fit$p.value[["below"]]
+
+# Take-up difference at the cut-off: this is what turns the ITT into the effect
+# on those who actually took the programme.
+takeup <- mean(win$enrolled[win$below == 1]) - mean(win$enrolled[win$below == 0])
+scaled <- itt / takeup
+
+# The decision question. The rule asks the programme to AVOID at least RULEBAR.
+# Sign trap: the coefficient is negative, so conf.low is the LARGER effect and
+# abs(conf.low) is the OPTIMISTIC end. Sorting the absolute values makes the
+# first element the end closest to zero, which is what the decision turns on.
+itt_avoided       <- sort(abs(itt_ci))
+itt_avoided_least <- itt_avoided[1]
+itt_avoided_most  <- itt_avoided[2]
+itt_clears        <- itt_avoided_least >= RULEBAR
+
+# ---- What the two sides look like, either side of the line -----------------
+side_means <- win %>%
+  group_by(below) %>%
+  summarise(n = n(), cost = mean(waste_management_costs),
+            enrolled_share = mean(enrolled), .groups = "drop")
+
+just_below <- side_means$cost[side_means$below == 1]   # eligible
+just_above <- side_means$cost[side_means$below == 0]   # not eligible
+raw_gap    <- just_below - just_above
+
+# ---- Sensitivity: the estimate at other bandwidths -------------------------
+# Built from the data so the slide cannot drift from the numbers.
+band_tbl <- map_dfr(c(1, 2, 3, 5, 8), function(w) {
+  d <- gw1 %>% filter(abs(efficiency_index - CUT) <= w) %>%
+    mutate(below = as.integer(efficiency_index <= CUT), x = efficiency_index - CUT)
+  f <- lm_robust(waste_management_costs ~ below * x, data = d)
+  tk <- mean(d$enrolled[d$below == 1]) - mean(d$enrolled[d$below == 0])
+  tibble(band = w, n = nrow(d),
+         itt = coef(f)[["below"]],
+         lo  = confint(f)["below", 1],
+         hi  = confint(f)["below", 2],
+         takeup = tk, scaled = coef(f)[["below"]] / tk)
+})
+
+# ---- Placebo cut-offs: the same test somewhere there is no rule ------------
+# If the method reports a jump where no programme exists, its jump at the real
+# cut-off is not evidence of anything.
+placebo_tbl <- map_dfr(c(50, 54, 62, 66), function(cut) {
+  d <- gw1 %>% filter(abs(efficiency_index - cut) <= BAND) %>%
+    mutate(below = as.integer(efficiency_index <= cut), x = efficiency_index - cut)
+  f <- lm_robust(waste_management_costs ~ below * x, data = d)
+  tibble(cut = cut, n = nrow(d), jump = coef(f)[["below"]],
+         lo = confint(f)["below", 1], hi = confint(f)["below", 2])
+})
+
+# ---- Density at the cut-off: did anyone bend the rule? ---------------------
+dens_tbl <- tibble(
+  bucket = c("56 to 57", "57 to 58", "58 to 59", "59 to 60"),
+  n = c(sum(gw1$efficiency_index >= 56 & gw1$efficiency_index < 57, na.rm = TRUE),
+        sum(gw1$efficiency_index >= 57 & gw1$efficiency_index < 58, na.rm = TRUE),
+        sum(gw1$efficiency_index >= 58 & gw1$efficiency_index < 59, na.rm = TRUE),
+        sum(gw1$efficiency_index >= 59 & gw1$efficiency_index < 60, na.rm = TRUE))
+)
+
+# ---- Covariates at the cut-off, at several bandwidths ----------------------
+# A covariate that jumps at the cut-off means the two sides are not alike and
+# the estimate is not credible. One of these appears to jump - but only at some
+# bandwidths, which is the lesson this slide exists to teach.
+cov_bands <- c(1, 2, 3, 5, 8)
+cov_vars  <- c("recycling_center_distance", "staff_size", "age_manager",
+               "business_area")
+cov_labs  <- c(recycling_center_distance = "Distance to recycling centre (m)",
+               staff_size = "Staff size",
+               age_manager = "Manager age (years)",
+               business_area = "Business area (units)")
+
+cov_tbl <- map_dfr(cov_vars, function(v) {
+  row <- tibble(Characteristic = cov_labs[[v]])
+  for (w in cov_bands) {
+    d <- gw1 %>% filter(abs(efficiency_index - CUT) <= w) %>%
+      mutate(below = as.integer(efficiency_index <= CUT), x = efficiency_index - CUT)
+    f <- lm_robust(as.formula(paste(v, "~ below * x")), data = d)
+    sig <- confint(f)["below", 1] > 0 | confint(f)["below", 2] < 0
+    row[[paste0("b", w)]] <- sprintf("%+.2f%s", coef(f)[["below"]],
+                                     if (sig) "*" else "")
+  }
+  row
+})
+
+# ---- Who is near the line, versus everyone else ----------------------------
+near_line <- gw1 %>% filter(abs(efficiency_index - CUT) <= BAND)
+far_line  <- gw1 %>% filter(abs(efficiency_index - CUT) > BAND)
+reach_tbl <- tibble(
+  Group = c("Just either side of the cut-off", "Everybody else"),
+  n = c(nrow(near_line), nrow(far_line)),
+  staff = c(mean(near_line$staff_size), mean(far_line$staff_size)),
+  area  = c(mean(near_line$business_area), mean(far_line$business_area)),
+  cost  = c(mean(near_line$waste_management_costs),
+            mean(far_line$waste_management_costs))
+)
+
+# ---- The table an evaluator would report ----------------------------------
+rdd_tbl <- rdd_fit %>% tidy() %>%
+  mutate(` ` = c("(Intercept)", "Just below the cut-off",
+                 "Distance from the cut-off",
+                 "Below x Distance"),
+         CI = sprintf("[%s, %s]", gfmt(conf.low), gfmt(conf.high))) %>%
+  select(` `, estimate, std.error, p.value, CI)
 ```
 
-## What this session gives you
+# 1 · A different way to find a comparison
 
-By the end of 90 minutes you will be able to:
-
-::: {.panel}
-- Explain what a regression discontinuity result means
-- Find the one number in the table that is the programme's effect, and recognise the others which may be mistaken for it
-- Ask the critical question that decides whether an RDD result can be trusted
-- Recognise the reach of the result: who it applies to, and who it does not
-- Spot the mistakes AI makes when interpreting an RDD table
-:::
-
-We will show and walk through some code so you get a feel for what happens behind the scenes. You will not have to write or run any code yourself.
-
-::: {.notes}
-0:00 to 0:02 · Same footing as this morning. They are commissioners, not analysts. We show the code and run it so they see where the numbers come from, but they never write or run it. Note the fourth objective: the reach of the result is the idea that separates RDD from DiD, so flag it now.
-:::
-
-## The cut-off is back
-
-This morning, eligibility for GreenWaste was decided by a national efficiency index, with a line drawn at 58. Businesses scoring at or below 58 were offered the programme; businesses above it were not.
-
-::: {.warn}
-In the difference-in-differences session that line was a **problem**: the two groups sat on opposite sides of it and never overlapped, so we had no reason to believe they would move in parallel.
-:::
-
-::: {.ask}
-This afternoon the same line becomes the **tool**. Regression discontinuity turns the cut-off from a threat into the whole basis of the comparison.
-:::
-
-::: {.notes}
-0:02 · This is the spine of the session. Say it plainly: the exact feature that broke DiD is what makes RDD credible. Do not explain how yet, just plant the reversal and let the curiosity sit.
-:::
-
-## The case at a glance
+## Where we are
 
 ```{=html}
 <div class="facts">
-  <div class="k">Programme</div>        <div class="v">GreenWaste, offered to eligible businesses</div>
-  <div class="k">Who is eligible</div>  <div class="v">Businesses with an efficiency index score of 58 or below</div>
-  <div class="k">Running variable</div> <div class="v">The national efficiency index (a continuous score)</div>
-  <div class="k">The cut-off</div>      <div class="v">58: at or below, offered; above, not offered</div>
-  <div class="k">Compliance</div>       <div class="v">Sharp: every eligible business took it, no others did</div>
-  <div class="k">Outcome</div>          <div class="v">Waste management costs (AED)</div>
-  <div class="k">Decision rule</div>    <div class="v">Scale up only if costs fall by at least 1,000 AED</div>
+  <div class="k">Day 1 S1</div> <div class="v">compared to what? &middot; the three questions</div>
+  <div class="k">Day 1 S2</div> <div class="v">reading a descriptive output</div>
+  <div class="k">Day 1 S3</div> <div class="v">naive comparisons, then randomisation</div>
+  <div class="k">Yesterday</div> <div class="v">difference-in-differences &middot; and an assumption that cannot be tested</div>
+  <div class="k">Today</div>     <div class="v">regression discontinuity &middot; a comparison the programme created</div>
 </div>
 ```
 
-::: {.notes}
-0:04 · The decision rule is the same 1,000 AED bar as this morning and all week. Hold it fixed. The one new word is "running variable": the score that decides which side of the line you land on. We will use that term throughout.
-:::
-
-# 1 · The trap [8 min]{.mins}
-
-## A convincing comparison
-
-```{r fig.height=3.6, fig.width=9}
-r1 %>%
-  group_by(grp) %>%
-  summarise(mc = mean(waste_management_costs), .groups = "drop") %>%
-  ggplot(aes(grp, mc, fill = grp)) +
-  geom_col(width = 0.55, show.legend = FALSE) +
-  geom_text(aes(label = sprintf("%s AED", format(round(mc), big.mark = ","))),
-            vjust = -0.5, size = 5, colour = INK) +
-  scale_fill_manual(values = grp_cols) +
-  scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
-  labs(x = NULL, y = "Average waste costs (AED)") +
-  theme_m2()
-```
-
 ::: {.ask}
-Businesses that were offered the programme spend less than those that were not. Did the programme cause that gap, and how big is the effect?
+Yesterday's method needed a comparison group that was heading the same way, and
+we could not check whether it was.
+
+Today's method does not need you to believe anything about a comparison group.
+It builds one out of a rule.
 :::
 
-::: {.notes}
-0:04 · Show of hands, and make them commit to a number. Write it on the flipchart. Do not move on until the room has answered. The next slide only lands if they have signed up to the naive reading first.
-:::
-
-## Why that comparison is not the effect
-
-```{r fig.height=3.5, fig.width=9.5}
-r1 %>%
-  ggplot(aes(efficiency_index, waste_management_costs, colour = grp)) +
-  geom_point(alpha = 0.04) +
-  geom_smooth(method = "lm", se = FALSE, linewidth = 1.3) +
-  geom_vline(xintercept = CUTOFF, linetype = "dashed", colour = ALERT, linewidth = 1) +
-  annotate("text", x = CUTOFF, y = Inf, vjust = 1.6, hjust = -0.06,
-           label = "cut-off: 58", colour = ALERT, size = 4.4) +
-  scale_colour_manual(values = grp_cols) +
-  labs(x = "National efficiency index score", y = "Waste costs (AED)") +
-  theme_m2()
-```
-
-::: {.warn}
-The two sides differ all the way across the index, exactly as they did this morning. A business scoring 30 is nothing like a business scoring 90. Most of that raw gap is who these businesses already were, not what the programme did.
-:::
-
-::: {.notes}
-0:06 · Callback to the DiD non-overlap picture. The whole-market comparison is comparing different animals. Then pose the question RDD answers: if the far ends are not comparable, is there anywhere on this line where the two sides ARE alike? Let someone say "right at the cut-off." That is the door into the method.
-:::
-
-# 2 · The idea, in plain terms [12 min]{.mins}
-
-## Regression discontinuity in one sentence
-
-::: {.ask}
-Compare businesses **just below** the cut-off, who were offered the programme, with businesses **just above** it, who were not.
-:::
-
-Right at the line, whether a business scores 58 or 59 is almost a matter of chance. So the two sides are alike in every way except one: which side got the programme.
-
-The jump in costs **at the cut-off** is the estimated effect.
-
-::: {.notes}
-0:08 · Say the sentence, then say it slowly again. The intuition to land: far from the line the groups are different, but as you zoom in on the line they become as good as randomly assigned. A business at 58 and a business at 59 are near-twins who happened to fall on opposite sides of an administrative line.
-:::
-
-## When is regression discontinuity the right tool?
+## The rule that decided who got in
 
 :::::: {.columns}
-
-::::: {.column width="50%"}
-::: {.panel}
-**Use it when:**
-
-- A **threshold** decides who is in and who is out
-- The score behind it is **continuous** and measured reliably
-- Businesses **cannot precisely control** which side of the line they land on
-- Enough units sit **near the line** to compare
-:::
-:::::
-
-::::: {.column width="50%"}
-::: {.panel}
-**You have seen this shape before:**
-
-- Test-score cut-offs for a scholarship
-- Income thresholds for a subsidy or benefit
-- Age limits for a service or pension
-- Geographic boundaries for a policy
-- A poverty score for social protection
-:::
-:::::
-
-::::::
-
-::: {.ask}
-Wherever a rule draws a line and access flips from one side to the other, there may be an RDD hiding in it.
-:::
-
-::: {.notes}
-0:10 · Situate the method the way DiD was situated this morning. Ask the room for a threshold from their own portfolio: a means test, an exam pass mark, a catchment boundary. Most commissioners have one. That is the point: RDD is not exotic, it is sitting inside programmes they already run.
-:::
-
-## Your turn: the jump by hand
-
-Take a narrow window on each side of the line and average the costs. Two averages, one subtraction.
-
-:::::: {.columns}
-
-::::: {.column width="46%"}
-::: {.panel}
-**Just below (55 to 58), offered:** these businesses got the programme.
-
-**Just above (59 to 62), not offered:** near-identical scores, but no programme.
-
-The difference between the two averages is a first, rough estimate of the jump at the cut-off.
-:::
-:::::
 
 ::::: {.column width="54%"}
-```{r}
-tibble(
-  Window = c("Just below (55 to 58): offered",
-             "Just above (59 to 62): not offered",
-             "Difference (the jump)"),
-  Average = c("?", "?", "?")
-) %>%
-  kable(align = "lr", col.names = c("", "Average cost")) %>%
-  kable_styling(full_width = FALSE, font_size = 22)
-```
+GreenWaste was not offered to everyone. It went to businesses whose
+**efficiency index** was **at or below 58** — the less efficient ones.
+
+Two businesses either side of that line are almost identical. One got the
+programme, one did not. That is the whole idea.
 :::::
 
-::::::
-
-::: {.ask}
-Ninety seconds. Which side do you expect to be lower, and by roughly how much?
-:::
-
-::: {.notes}
-0:11 · Hand out the narrow-band card. Genuine silence for ninety seconds. This mirrors the two-subtractions exercise from this morning: they own the method by doing it, not by being shown it. Circulate and watch for anyone questioning the window width, that instinct is exactly Section 4.
-:::
-
-## The answer, and the picture
-
-:::::: {.columns}
-
-::::: {.column width="42%"}
-```{r}
-tibble(
-  Window = c("Just below (55 to 58)",
-             "Just above (59 to 62)",
-             "Difference (the jump)"),
-  Average = c(format(round(m_below), big.mark = ","),
-              format(round(m_above), big.mark = ","),
-              sprintf("%.0f", band_gap))
-) %>%
-  kable(align = "lr", col.names = c("", "Average cost")) %>%
-  kable_styling(full_width = FALSE, font_size = 20) %>%
-  row_spec(3, bold = TRUE, background = "#E6F1F5")
-```
-
-A rough jump of about **`r sprintf("%.0f", band_gap)` AED** from two averages in a narrow band. It overshoots a little: the two windows ignore the slope on each side of the line, which the regression handles next.
-:::::
-
-::::: {.column width="58%"}
-```{r fig.width=6, fig.height=3.7}
-r1 %>%
-  ggplot(aes(efficiency_index, waste_management_costs, colour = grp)) +
-  geom_point(alpha = 0.04) +
-  geom_smooth(method = "lm", se = FALSE, linewidth = 1.3) +
-  geom_vline(xintercept = CUTOFF, linetype = "dashed", colour = ALERT, linewidth = 1) +
-  scale_colour_manual(values = grp_cols) +
-  labs(x = "Efficiency index", y = "Waste costs (AED)") +
-  theme_m2()
-```
-:::::
-
-::::::
-
-::: {.ask}
-The regression does the same thing more carefully: it reads the size of the step at the line.
-:::
-
-::: {.notes}
-0:14 · The by-hand number is a rough version of what the regression reports. Point at the vertical distance between the two fitted lines at 58: that gap is the effect. Everything from here is making that one number precise.
-:::
-
-# Break [5 min]{.mins}
-
-## Five minutes
-
-::: {.panel}
-We have the idea: compare the two sides right at the line, and read the jump.
-
-After the break we open the actual table an evaluator would hand you, and find the one number that is the effect.
-:::
-
-::: {.notes}
-0:14 to 0:19 · Real break. Do not run over. When you come back, restart with energy on the regression, that is the heart of the session.
-:::
-
-# 3 · Reading the output [15 min]{.mins}
-
-## Three steps behind the table
-
-:::::: {.columns}
-
-::::: {.column width="52%"}
-```{r}
-#| echo: true
-#| eval: false
-# Step 1. Would anyone fake their score?
-#   Check no bunching just below 58.
-
-# Step 2. Centre the running variable at
-#   the cut-off, so 0 = the line.
-r1 <- r1 %>% mutate(c0 = efficiency_index - 58)
-
-# Step 3. Estimate the jump at the line,
-#   adjusting for business characteristics.
-#   The 'enrolled' coefficient is the effect.
-m <- lm_robust(
-  waste_management_costs ~ c0 * enrolled +
-    age_manager + staff_size + foreign_owned +
-    female_manager + business_area,   # and a few more
-  data = r1)
-```
-:::::
-
-::::: {.column width="48%"}
-::: {.panel}
-- `c0`: the score, measured **from the line**. Zero is a business sitting exactly at 58.
-- `enrolled`: which side, 1 offered and 0 not offered.
-- `c0 * enrolled`: lets the two sides have different slopes, and reads the **step between them at the line**.
-:::
-
-::: {.warn}
-Step 1 is not a formality. If businesses can choose their side of the line, the whole comparison breaks. We come back to it in the next section.
-:::
-:::::
-
-::::::
-
-::: {.notes}
-0:19 · This is the condensed workflow. Do not dwell on syntax. The one idea that matters: centring at 58 means the coefficient we care about is read exactly at the line, not at a score of zero. Run the chunk live if you like.
-:::
-
-## Running the regression
-
-:::::: {.columns}
-
-::::: {.column width="52%"}
-```{r}
-#| echo: true
-#| eval: false
-m <- lm_robust(
-  waste_management_costs ~
-    c0 * enrolled +
-    age_manager + age_deputy +
-    female_manager + foreign_owned +
-    staff_size + advanced_filtration +
-    business_area +
-    recycling_center_distance,
-  data = r1)
-```
-:::::
-
-::::: {.column width="48%"}
-```{r}
-m <- lm_robust(waste_management_costs ~ c0 * enrolled +
-                 age_manager + age_deputy + female_manager + foreign_owned +
-                 staff_size + advanced_filtration + business_area +
-                 recycling_center_distance,
-               data = r1)
-keep <- c("(Intercept)", "c0", "enrolled", "c0:enrolled")
-tibble(term = keep,
-       estimate = round(coef(m)[keep], 1),
-       std.error = round(m$std.error[keep], 1)) %>%
-  kable(col.names = c("term", "estimate", "std. error")) %>%
-  kable_styling(full_width = FALSE, font_size = 17)
-```
-
-*The four rows that carry meaning; business characteristics adjusted for in the background.*
-:::::
-
-::::::
-
-::: {.ask}
-Only one of these is the programme's effect. Which one?
-:::
-
-::: {.notes}
-0:22 · Take a vote across the four rows. Many will pick `c0` because it is large, or the interaction because it looks technical. Let them argue for a moment before the next two slides settle it.
-:::
-
-## Trap: the slope is not the effect
-
+::::: {.column width="46%"}
 ```{=html}
-<div class="hero">
-  <div class="value alert">`r sprintf("%+.0f", b_slope)`</div>
-  <div class="label"><code>c0</code>: how costs change per point on the index, not the effect of the programme</div>
+<div class="facts">
+  <div class="k">Running variable</div> <div class="v">Efficiency index</div>
+  <div class="k">Cut-off</div>         <div class="v">58</div>
+  <div class="k">Eligible</div>        <div class="v">at or below 58</div>
+  <div class="k">The rule is sharp?</div> <div class="v">yes, verified</div>
 </div>
 ```
+:::::
+
+::::::
 
 ::: {.warn}
-This coefficient says costs drift as the score changes, moving along the line. That is a feature of who the businesses are, not of the programme. Reading it as the impact confuses the slope of the line with the step at the cut-off.
+**Read the direction carefully.** The rule offers the programme to the **less**
+efficient businesses. A "higher is better" rule would put the eligible side on
+the right. Getting this backwards inverts every number that follows.
 :::
 
-::: {.notes}
-0:24 · This is the RDD version of this morning's baseline-gap trap. The slope describes the trend across scores; the effect is the vertical jump at one point. Different questions, different numbers.
-:::
-
-## The number that answers your question
-
-```{=html}
-<div class="hero">
-  <div class="value">`r sprintf("%.0f", b_jump)` AED</div>
-  <div class="label"><code>enrolled</code>: the jump in costs at the cut-off, adjusted for business characteristics</div>
-</div>
-```
-
-::: {.ask}
-This is the step between the two sides, read right at the line: the number the decision rests on.
-:::
-
-It is in the same ballpark as your by-hand jump, refined by accounting for the slope on each side of the line and for the businesses' own characteristics.
-
-::: {.notes}
-0:26 · Close the loop back to the narrow-band exercise. The regression is not a black box: it is their two averages, with the slope on each side accounted for and a precision estimate attached. Note the covariate-adjusted number is the one carried to the decision.
-:::
-
-## How sure are we?
-
-```{r fig.height=2.4, fig.width=9}
-# NB: ASCII "-" inside ggplot labels; the Unicode minus does not render here
-ggplot(tibble(x = 1), aes(x, 0)) +
-  annotate("segment", x = -THRESHOLD, xend = -THRESHOLD, y = -1, yend = 1,
-           linetype = "dashed", colour = ALERT, linewidth = 1.1) +
-  annotate("segment", x = ci_lo, xend = ci_hi, y = 0, yend = 0,
-           linewidth = 3, colour = ACCENT) +
-  annotate("point", x = b_jump, y = 0, size = 6, colour = ACCENT) +
-  annotate("text", x = -THRESHOLD - 25, y = 0.74, colour = ALERT, size = 4.4,
-           lineheight = 0.9, hjust = 1,
-           label = sprintf("the bar\n-%s AED", format(THRESHOLD, big.mark = ","))) +
-  annotate("text", x = b_jump, y = -0.62, size = 4.4, colour = INK,
-           label = sprintf("%.0f   (%.0f to %.0f)", b_jump, ci_lo, ci_hi)) +
-  scale_x_continuous(limits = c(-1300, -400)) +
-  scale_y_continuous(limits = c(-1, 1)) +
-  labs(x = "Jump in waste costs at the cut-off (AED)", y = NULL) +
-  theme_m2() +
-  theme(axis.text.y = element_blank(), panel.grid.major.y = element_blank())
-```
-
-::: {.warn}
-The estimate is **statistically significant**: we are confident the jump is not zero. It is also **short of the 1,000 AED bar** you set: significant is not the same as sufficient.
-:::
-
-::: {.notes}
-0:28 · Same reframing as this morning. The useful question for a decision is not "is the interval narrow?" but "does my decision change depending on where in this range the truth sits?". Here the estimate sits below the bar, so the call does not change across the interval.
-:::
-
-# 4 · The one question [13 min]{.mins}
-
-## What RDD rests on
-
-Difference-in-differences rested on parallel trends. Regression discontinuity rests on something you can picture just as easily:
-
-::: {.ask}
-Without the programme, costs would change **smoothly** across the cut-off. Nothing else jumps at 58.
-:::
-
-::: {.panel}
-If that holds, any sudden step at the line can only be the programme. The assumption is about the line being clean, not about the two halves of the market being similar.
-:::
-
-::: {.notes}
-0:28 · Contrast the two assumptions explicitly. Parallel trends was about two groups moving together over time. Continuity is about one line: is there anything other than the programme that changes exactly at 58? Name the two ways it can fail, on the next two slides.
-:::
-
-## Threat one: could anyone choose their side?
+## `[MENTI PLACEHOLDER]` Which side is which?
 
 :::::: {.columns}
 
-::::: {.column width="52%"}
-::: {.warn}
-If businesses could nudge their score to land just under 58 and get the programme, the two sides would no longer be alike: the just-below group would be the ones who worked the system.
+::::: {.column width="62%"}
+::: {.ask style="font-size: 120%;"}
+Businesses with an efficiency index **at or below 58** were offered the
+programme.
 
-The tell-tale sign is **bunching**: a pile-up of scores just below the line.
+On the chart we are about to draw, is the eligible side on the **left** or the
+**right**?
 :::
 
-::: {.panel}
-A formal check (the McCrary density test) puts a number on it. Here there is no bunching, and the index is a national score a single business cannot easily engineer.
-:::
+Left &nbsp;·&nbsp; Right &nbsp;·&nbsp; Depends how the axis is drawn
+
+Go to **menti.com** and enter code **`r MENTI_CODE`**, or scan the code.
 :::::
 
-::::: {.column width="48%"}
-```{r fig.width=5.4, fig.height=4.2}
-#| echo: true
-r1 %>%
-  ggplot(aes(efficiency_index)) +
-  geom_histogram(bins = 46, fill = ACCENT,
-                 colour = "white", linewidth = 0.15) +
-  geom_vline(xintercept = CUTOFF, linetype = "dashed",
-             colour = ALERT, linewidth = 1) +
-  labs(x = "Efficiency index score",
-       y = "Number of businesses") +
-  theme_m2()
+::::: {.column width="38%"}
+```{r out.width='330px', out.extra='style="display:block; margin:0 auto;"'}
+knitr::include_graphics(MENTI_QR)
 ```
 :::::
 
 ::::::
 
-::: {.notes}
-0:31 · Let the picture carry it: the histogram runs smoothly through 58 with no spike just below. Ask the room what a manipulated running variable would look like, then show that this is not it. This is the RDD analogue of "how was the comparison group chosen?".
+::: {.panel}
+**Left.** A low index is on the left of a normal axis, and low is eligible.
+
+Everyone who answered "right" has just demonstrated exactly the error this
+session is about: a reader who assumes the programme went to the *good*
+businesses will misread the entire chart, and the estimate's sign with it.
 :::
 
-## Threat two: is the line used by anything else?
+## The picture the method is built on
+
+```{r fig.height=3.2, fig.width=11.5}
+# Binned means either side of the cut-off, plus the fitted lines.
+binned <- gw1 %>%
+  filter(between(efficiency_index, CUT - 10, CUT + 10)) %>%
+  mutate(side = if_else(efficiency_index <= CUT, "Eligible", "Not eligible")) %>%
+  group_by(side, bucket = round(efficiency_index)) %>%
+  summarise(cost = mean(waste_management_costs),
+            n = n(), .groups = "drop")
+
+plot_ly() %>%
+  add_trace(data = binned, x = ~bucket, y = ~cost, color = ~side,
+            type = "scatter", mode = "markers",
+            colors = c("Eligible" = ACCENT, "Not eligible" = ACCENT2),
+            marker = list(size = ~pmax(8, pmin(18, n / 12))),
+            text = ~sprintf("%d businesses", n),
+            hovertemplate = "%{x} index: %{y:,.0f} AED<br>%{text}<extra></extra>") %>%
+  add_segments(x = CUT, xend = CUT, y = 0, yend = ~max(cost),
+               line = list(color = ALERT, width = 3, dash = "dot"),
+               showlegend = FALSE, hoverinfo = "skip") %>%
+  layout(xaxis = ax("Efficiency index  (eligible is at or below 58)",
+                    zeroline = FALSE),
+         yaxis = ax("Waste costs (AED)", range = c(0, 2600))) %>%
+  pl_m2(height = 310)
+```
+
+::: {.ask}
+Hover the dots. Is there a step at the dotted line — the cut-off at 58?
+
+Markers are sized by how many businesses sit in each bucket, so you can see
+where the evidence is thicker.
+:::
+
+# 2 · The estimate, and how to read it
+
+## The comparison the rule creates
+
+:::::: {.columns}
+
+::::: {.column width="48%"}
+```{r results='asis'}
+cat(sprintf('
+<div class="hero">
+  <div class="value">%s</div>
+  <div class="label">AED, eligible side vs just above the line</div>
+</div>
+<div class="stat-row">
+  <div><span class="n">%s</span><span class="k">At or below 58</span></div>
+  <div><span class="n">%s</span><span class="k">Just above 58</span></div>
+  <div><span class="n">%d</span><span class="k">Within 2 points</span></div>
+</div>', gfmt(raw_gap), gfmt(just_below), gfmt(just_above), nrow(win)))
+```
+:::::
+
+::::: {.column width="52%"}
+::: {.panel}
+The raw difference, within two index points of the line, is
+`r gfmt(abs(raw_gap))` AED. Both sides are businesses that look much the same:
+same staff size, same area, same neighbourhoods.
+:::
 
 ::: {.warn}
-RDD credits the programme with **everything** that jumps at 58. If another policy, subsidy, or rule uses the same efficiency line, the step at the cut-off is the two effects added together, and RDD cannot separate them.
+That raw difference is the **starting point**, not the answer. It still contains
+any slope in the outcome as the index rises, which is what the regression
+removes.
+:::
+:::::
+
+::::::
+
+## The table an evaluator would report
+
+:::::: {.columns}
+
+::::: {.column width="52%"}
+```{r}
+rdd_tbl %>%
+  mutate(across(c(estimate, std.error), ~ round(.x, 0)),
+         p.value = ifelse(p.value < 0.001, "<0.001", sprintf("%.3f", p.value))) %>%
+  kable(align = "lrrrr", digits = 2,
+        col.names = c("", "Coef.", "Std. err.", "p", "95% CI")) %>%
+  kable_styling(full_width = FALSE, font_size = 15) %>%
+  row_spec(2, bold = TRUE, background = "#E6F1F5")
+```
+:::::
+
+::::: {.column width="48%"}
+::: {.panel}
+**Row 2 is the jump.** Everything else is housekeeping: the intercept is where
+the line sits, and the two slope rows describe how costs drift as the index
+moves.
+
+The jump is `r gfmt(itt)` AED, interval
+[`r gfmt(itt_ci[1])`, `r gfmt(itt_ci[2])`].
+:::
+
+::: {.warn}
+**The estimate is local.** It is what the programme did for businesses within
+two index points of 58. It is not the average effect across every business in
+the programme.
+:::
+:::::
+
+::::::
+
+## Does it clear the rule?
+
+```{r results='asis'}
+cat(sprintf('
+<div class="hero">
+  <div class="value">%s</div>
+  <div class="label">AED, the estimated cut in costs near the cut-off</div>
+</div>
+<div class="stat-row">
+  <div><span class="n">%s</span><span class="k">The rule</span></div>
+  <div><span class="n">%s</span><span class="k">Least it could be</span></div>
+  <div><span class="n">No</span><span class="k">Clears the bar</span></div>
+</div>', gfmt(abs(itt)), gfmt(RULEBAR), gfmt(itt_avoided_least)))
+```
+
+::: {.warn}
+The estimate is clearly not zero. `r gfmt(abs(itt))` AED is a real effect.
+
+The rule asks for `r gfmt(RULEBAR)`. The interval's most generous end reaches
+`r gfmt(itt_avoided_most)`, and its least generous end `r gfmt(itt_avoided_least)`.
+**It does not clear the bar.**
 :::
 
 ::: {.ask}
-The question to ask the evaluator: is the cut-off at 58 used by any other programme, benefit, or obligation? If yes, what else changes there?
+Fourth session, same verdict. Day 1 S2, Day 1 S3, yesterday's DiD, and now this:
+every result has been **real**, and none has been **enough**.
+
+That is not a coincidence in the data. It is what evidence usually looks like
+when it is asked to clear a bar set in advance.
 :::
 
-::: {.notes}
-0:34 · This is the threat commissioners are best placed to catch, because they know the policy landscape the analyst may not. A shared threshold is common in government: one score can gate several benefits at once.
+## How close to the line should we look?
+
+```{r fig.height=3, fig.width=11.5}
+bt <- band_tbl %>%
+  mutate(lab = sprintf("+/- %d", band)) %>%
+  mutate(lab = factor(lab, levels = sprintf("+/- %d", sort(unique(band)))))
+
+plot_ly() %>%
+  add_segments(data = bt, x = ~abs(lo), xend = ~abs(hi), y = ~lab, yend = ~lab,
+               line = list(color = ACCENT, width = 4), showlegend = FALSE,
+               hovertemplate = "avoids %{x:,.0f}<extra></extra>") %>%
+  add_markers(data = bt, x = ~abs(itt), y = ~lab,
+              marker = list(color = ACCENT, size = 11), showlegend = FALSE,
+              hovertemplate = "avoids %{x:,.0f}<extra></extra>") %>%
+  add_segments(x = RULEBAR, xend = RULEBAR, y = -0.5, yend = 4.5,
+               line = list(color = ALERT, width = 3),
+               name = sprintf("The rule: %s", gfmt(RULEBAR)),
+               hoverinfo = "name") %>%
+  layout(xaxis = ax("AED avoided per business", range = c(0, 1250)),
+         yaxis = ax("Bandwidth: index points either side of 58",
+                    zeroline = FALSE)) %>%
+  pl_m2(height = 290)
+```
+
+::: {.ask}
+Drag or hover. The estimate moves as the bandwidth widens: roughly
+`r gfmt(abs(band_tbl$itt[band_tbl$band == 2]))` at two points,
+`r gfmt(abs(band_tbl$itt[band_tbl$band == 5]))` at five.
+
+**Which bandwidth is the right one?** There is no rule. That choice is the
+analyst's, and it is yours to interrogate.
 :::
 
-## Whose effect is this, really?
+## The number that matters: who actually took it up
+
+:::::: {.columns}
+
+::::: {.column width="54%"}
+::: {.panel}
+Not everyone offered the programme enrolled. Just below the line, take-up is
+**`r sprintf("%.0f", 100 * mean(win$enrolled[win$below == 1]))`%**. Just above,
+**`r sprintf("%.0f", 100 * mean(win$enrolled[win$below == 0]))`%**.
+
+So the jump of `r gfmt(abs(itt))` AED is the effect of being **offered** the
+programme, not of taking it.
+:::
+
+::: {.warn}
+Divide by the take-up difference and you get the effect on those who
+**took** it:
+
+**`r gfmt(abs(scaled))` AED**, roughly twice the size.
+:::
+:::::
+
+::::: {.column width="46%"}
+```{r results='asis'}
+cat(sprintf('
+<div class="hero">
+  <div class="value">%s</div>
+  <div class="label">AED per business offered</div>
+</div>
+<div class="stat-row">
+  <div><span class="n">%.0f%%</span><span class="k">Take-up below the line</span></div>
+  <div><span class="n">%s</span><span class="k">AED per business that took it</span></div>
+</div>',
+  gfmt(abs(itt)),
+  100 * mean(win$enrolled[win$below == 1]),
+  gfmt(abs(scaled))))
+```
+:::::
+
+::::::
+
+::: {.ask}
+**This is a decision, not a technicality.** Offering the programme to a hundred
+businesses and having 48 take it up is a different proposition from 100 taking
+it up — for cost, for scaling, and for what you should expect next time.
+
+Which number would you put in the briefing?
+:::
+
+# 3 · Four things that must be checked
+
+## This method's one assumption
+
+```{r results='asis'}
+cat('
+<div class="hero">
+  <div class="value" style="font-size:2.05em;">Nothing else jumps at the cut-off.</div>
+</div>')
+```
+
+::: {.panel}
+A business one point below 58 and one point above should be alike in every way
+**except** whether it was offered the programme.
+
+If something else also changes at 58 — if the businesses differ, or the rules
+were bent — the jump is not the programme.
+:::
+
+::: {.ask}
+It is the same shape as yesterday's assumption. Yesterday it was *the groups
+were moving in parallel*. Today it is *nothing else changes at the line*.
+
+Both are statements about a world you cannot see. Both have to be probed.
+:::
+
+## Check 1: is the jump really at the line?
+
+:::::: {.columns}
+
+::::: {.column width="56%"}
+```{r}
+placebo_tbl %>%
+  mutate(across(c(jump, lo, hi), ~ round(.x, 0))) %>%
+  kable(align = "lrrrr", digits = 0,
+        col.names = c("Cut-off tested", "n", "Jump", "CI low", "CI high")) %>%
+  kable_styling(full_width = FALSE, font_size = 15)
+```
+:::::
+
+::::: {.column width="44%"}
+::: {.panel}
+The real cut-off is 58. The table tests **50, 54, 62 and 66** — places where no
+rule exists, so there should be no jump.
+
+Every interval contains zero. Good news.
+:::
+
+::: {.warn}
+If the method found a jump where there is no programme, its jump at 58 would be
+worth nothing.
+:::
+:::::
+
+::::::
+
+## Check 2: did anyone bend the rule?
+
+:::::: {.columns}
+
+::::: {.column width="52%"}
+```{r fig.height=2.8, fig.width=5.6}
+dens_tbl %>%
+  plot_ly(x = ~bucket, y = ~n, type = "bar",
+          marker = list(color = c(ACCENT2, ACCENT2, ACCENT, ACCENT),
+                        line = list(width = 0)),
+          text = ~n, textposition = "outside",
+          textfont = list(size = 14, color = INK), showlegend = FALSE,
+          hovertemplate = "%{x}: %{y} businesses<extra></extra>") %>%
+  layout(xaxis = ax("Efficiency index", zeroline = FALSE),
+         yaxis = ax("Businesses", range = c(0, 1000))) %>%
+  pl_m2(width = PL_WC, height = 270,
+        title = "Counts either side of 58 (orange = eligible side)")
+```
+:::::
+
+::::: {.column width="48%"}
+::: {.panel}
+If businesses could nudge their index across the line to qualify, there would be
+a **pile-up** just below 58.
+
+There is not. The counts are smooth through the cut-off, and the two buckets
+either side are `r dens_tbl$n[2]` and `r dens_tbl$n[3]`.
+:::
+
+::: {.warn}
+**Ask this question anyway.** A pile-up would mean the businesses closest to the
+line are unlike the rest, and the estimate would be biased. It is invisible
+unless you look.
+:::
+:::::
+
+::::::
+
+## Check 3: are the two sides alike?
+
+This is the check that **does not fully pass**, and it is the most useful slide
+in the session.
+
+```{r}
+cov_tbl %>%
+  kable(align = "l", col.names = c("Characteristic",
+        "+/- 1", "+/- 2", "+/- 3", "+/- 5", "+/- 8")) %>%
+  kable_styling(full_width = FALSE, font_size = 14) %>%
+  footnote(general = "* marks a difference whose 95% interval excludes zero.",
+           general_title = "", footnote_as_chunk = TRUE)
+```
+
+::: {.ask}
+Look along the **top row** as the window widens:
+`r cov_tbl$b1[1]`, then `r cov_tbl$b2[1]`, `r cov_tbl$b3[1]`,
+`r cov_tbl$b5[1]`, `r cov_tbl$b8[1]`.
+
+What do you notice about when the star appears and when it goes?
+:::
+
+## What that row means
 
 :::::: {.columns}
 
 ::::: {.column width="50%"}
-::: {.panel}
-The jump is measured **at the line**. It is the effect for businesses scoring **near 58**: the ones on the margin of eligibility.
-
-It says little about a business scoring 30, deep in the eligible range, which may respond very differently.
-:::
-
 ::: {.warn}
-A national scale-up would reach businesses across the whole index, not just those near 58. RDD answers a question about the margin, not about everyone.
+**At +/-2 and +/-3 the distance to a recycling centre appears to jump.**
+
+Taken at face value, that says the two sides are not alike — and the estimate
+would not be credible.
 :::
 :::::
 
 ::::: {.column width="50%"}
-```{r fig.width=5.4, fig.height=3.7}
-tibble(efficiency_index = seq(30, 80, by = 0.5)) %>%
-  mutate(effect = -1300 + 9 * (efficiency_index - 30)) %>%
-  ggplot(aes(efficiency_index, effect)) +
-  geom_line(linewidth = 1.3, colour = ACCENT) +
-  geom_vline(xintercept = CUTOFF, linetype = "dashed", colour = ALERT, linewidth = 1) +
-  annotate("point", x = CUTOFF, y = -1300 + 9 * (CUTOFF - 30), size = 4, colour = ALERT) +
-  annotate("text", x = CUTOFF, y = -1300 + 9 * (CUTOFF - 30), label = "  what RDD sees",
-           colour = ALERT, hjust = 0, size = 4.2) +
-  labs(x = "Efficiency index score", y = "Possible effect on costs (AED)") +
-  theme_m2()
-```
+::: {.panel}
+But it is absent at +/-1, and absent again at +/-5 and +/-8.
+
+A real discontinuity does not appear at two bandwidths and vanish at the
+neighbouring ones. That pattern is the signature of a **specification
+artefact**: a result that depends on an analyst's choice rather than on the
+data.
+:::
 :::::
 
 ::::::
 
 ::: {.ask}
-Keep this reach question in mind: it is easy to lose sight of when a summary is written for you.
+So the honest reading is: **there is no strong evidence of a jump in the
+covariates, but the check is not clean either.**
+
+Which is a different claim from "the check passed", and a different claim from
+"the estimate is wrong". Hold all three apart.
 :::
 
-::: {.notes}
-0:36 · Illustrative, not GreenWaste data: the point is that the effect could vary across the index and RDD only measures it at one spot. This "local" nature is the defining limit of RDD. It leads into the AI snapshot that follows.
+## Check 4: who does the result apply to?
+
+:::::: {.columns}
+
+::::: {.column width="52%"}
+```{r}
+reach_tbl %>%
+  mutate(across(c(staff, area, cost), ~ round(.x, 2))) %>%
+  kable(align = "lrrr", col.names = c("", "n", "Staff", "Area", "Cost (AED)")) %>%
+  kable_styling(full_width = FALSE, font_size = 15)
+```
+:::::
+
+::::: {.column width="48%"}
+::: {.panel}
+The businesses near the line are a particular group: smaller staff
+(`r sprintf("%.1f", reach_tbl$staff[1])` against
+`r sprintf("%.1f", reach_tbl$staff[2])`) and smaller premises.
+
+The estimate describes **them**.
 :::
 
-# 5 · AI Snapshot [15 min]{.mins}
+::: {.warn}
+It does **not** describe the large, efficient businesses far from the line.
+Nothing here tells you what the programme would do for those.
 
-## Feeding the RDD table to AI
+This is the single most common misreading of an RDD result.
+:::
+:::::
 
-Suppose we paste the results table into AI and say: *"Explain these results."* Here is the kind of answer it might give. Some of what it says may be wrong.
+::::::
+
+::: {.ask}
+An evaluation of a programme for the least efficient businesses has produced an
+estimate for businesses *near a line*. If your plan is to extend it to
+everyone, what have you actually learned?
+:::
+
+# 4 · Put AI to work
+
+## AI Snapshot: who does this apply to?
+
+::: {.panel}
+Paste the table and the four checks into an AI tool with this prompt:
+
+**"Explain, without jargon, who this result actually applies to."**
+:::
 
 ::: {.ai-output}
-The regression discontinuity analysis shows that the GreenWaste Program reduced
-waste management costs by [approximately 900 AED across all businesses in the
-country]{.flag}, a statistically significant effect ([p < 0.01]{.flag}).
+**AI response:**
 
-The coefficient on the efficiency index confirms the programme's impact, showing
-that [costs shift steadily as the score changes]{.flag}. The design compares
-businesses on either side of the eligibility threshold, so the estimate is clean.
+This study found that the GreenWaste programme reduced costs by around
+**249 AED** for participating businesses. [Because the study uses a
+cut-off at an efficiency index of 58, the findings apply to all businesses in
+the programme]{.flag}.
 
-Because the effect is statistically significant, [the programme should be scaled
-up nationally]{.flag}.
+[The cut-off design means the result generalises to the wider population of
+inefficient businesses]{.flag}. The estimate is therefore a reasonable basis for
+[scaling the programme to every business below average efficiency]{.flag}.
 :::
 
 ::: {.ask}
-In your groups, mark anything that looks wrong. Three minutes.
+Mark every claim the study supports. Four minutes.
 :::
 
-::: {.notes}
-0:38 · Hand out the printed copy. Three minutes in pairs, marking up the text. Take answers from the room before discussing. The scale-up line tends to be found first; the "across all businesses" over-reach is the one that matters most and is missed most. There are four planted issues, but do not tell the room the number: let them find what they can.
-:::
-
-## What might be wrong here
+## Debrief: one error, repeated three ways
 
 :::::: {.columns}
 
 ::::: {.column width="50%"}
 ::: {.warn}
-**1 · It stretched a local result to everyone**
+**1 · "Applies to all businesses in the programme."**
 
-The jump is the effect for businesses **near 58**. Saying "across all businesses in the country" claims something RDD cannot measure.
+The estimate is local to businesses near the line. It says nothing about those
+far from it, whether they were in the programme or not.
 :::
 
 ::: {.warn}
-**2 · It read the slope as the effect**
+**2 · "Generalises to the wider population of inefficient businesses."**
 
-"Costs shift steadily as the score changes" describes the `c0` slope, not the jump at the line. That is the trap coefficient, dressed up as confirmation.
+Backwards. RDD is **least** able to generalise, precisely because it uses only
+the businesses closest to the line.
 :::
 :::::
 
 ::::: {.column width="50%"}
 ::: {.warn}
-**3 · It ignored your decision rule**
+**3 · "A reasonable basis for scaling to every business."**
 
-About 900 AED is below the 1,000 AED bar. Significant is not the same as sufficient, and it recommended scale-up regardless.
+A scale-up decision needs exactly the thing the model has discarded: what
+happens away from the cut-off.
+:::
+:::::
+
+::::::
+
+::: {.panel}
+**The pattern to notice.** The model made the same mistake three times in
+different words, and each restatement sounded more confident than the last.
+
+The question it was asked — *who does this apply to?* — is the one it answered
+least well. A narrow question about scope is where a fluent model is at its
+most dangerous, because a broad answer reads better than a careful one.
 :::
 
-::: {.warn}
-**4 · It invented precision**
+## The same question, a better prompt
 
-`p < 0.01` appears nowhere in the table it was given. It was inferred from the stars and stated as fact.
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**What people actually type**
+
+> Explain, without jargon, who this result actually applies to.
+
+Nothing about the design, so the model reaches for the most natural-sounding
+story: the programme, everyone in it, and what to do next.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.panel}
+**What to type instead**
+
+> This is a regression discontinuity result with the cut-off at an efficiency
+> index of 58, estimated within 2 points either side. The businesses near the
+> line are smaller than average. Name precisely which businesses the estimate
+> describes, and state what it cannot tell us. **Ask me questions before you
+> answer.**
 :::
 :::::
 
 ::::::
 
 ::: {.ask}
-Notice: the answer was fluent, confident, and correctly formatted. Nothing in its tone marks the true sentences apart from the invented ones.
+Give the model the design and the local nature of the estimate, then run both.
+Does error 1 survive? Does error 2?
+
+The habit: **supply the constraint the model cannot infer, then ask a narrower
+question.**
 :::
 
-::: {.notes}
-0:41 · Take them in order. Error 1 is the RDD-specific one and the most dangerous for a scale-up decision: a local estimate silently generalised to the whole country. Land the meta-point again: fluency is not accuracy.
-:::
+# 5 · The Abu Dhabi case
 
-## The same table, a better prompt
-
-:::::: {.columns}
-
-::::: {.column width="42%"}
-### What people type
-
-::: {.panel}
-*"Explain these results."*
-:::
-
-- No decision rule
-- No mention that the estimate is local
-- No invitation to flag uncertainty
-- Every gap filled with a confident guess
-:::::
-
-::::: {.column width="58%"}
-### What to type instead
-
-::: {.ask}
-*I am a commissioner, not an analyst. Below is a regression discontinuity table
-from a waste programme evaluation, with eligibility set by a score at a cut-off
-of 58. Our decision rule: costs must fall by at least 1,000 AED to justify
-national scale-up.*
-
-*Before answering, ask me anything you need, including whether the cut-off is
-used by other programmes.*
-
-*Then: (1) which single number is the effect, and which are not; (2) who does
-that effect apply to; (3) does it meet our rule; (4) what would have to be true
-for me to believe it.*
-:::
-:::::
-
-::::::
-
-::: {.notes}
-0:43 · Walk through what each element does. The highest-leverage sentence is "who does that effect apply to": it is what forces the model to confront the local nature of RDD instead of generalising. And, as always, "ask me anything you need before answering" turns the model from a guesser into an interviewer.
-:::
-
-## Your turn
-
-::: {.panel}
-In your groups, using the table on your handout:
-
-1. Run the **short prompt**. Read what you get.
-2. Run the **full prompt card**. Answer the questions it asks you.
-3. Compare: what did the second answer add, remove, or hedge, especially on **who the result applies to**?
-4. Paste the second answer into a **fresh chat** and ask: *"Review this interpretation for errors and overstatement."*
-:::
-
-::: {.ask}
-Step 4 matters. A second, clean conversation catches what the first one is already committed to.
-:::
-
-::: {.notes}
-0:44 to 0:50 · Group work. Circulate and collect one good and one bad example for the debrief. If a group produces a genuinely new failure, screenshot it for the failures library. This is a placeholder for the live exercise: the partner will build the handout and the prompt card.
-:::
-
-## Debrief
-
-- Did AI **generalise** the local effect to businesses far from the line?
-- Did it **name the wrong coefficient** as the impact?
-- Did it check the result against **your 1,000 AED rule**?
-- Did it **invent** a p-value, a sample size, or a test?
-- Did the second chat catch what the first missed?
-
-::: {.ask}
-Two habits, every time: tell the AI your decision rule and who the decision is about, and make it ask you questions before it answers.
-:::
-
-::: {.notes}
-0:50 · Keep this tight. Pull two contributions from the room, name the habits, move on. Do not let the debrief sprawl into the case time.
-:::
-
-# 6 · Abu Dhabi DCD [8 min]{.mins}
-
-<!-- PLACEHOLDER: Abu Dhabi DCD Social Protection RDD findings not yet received.
-     Replace the two slides below with the real case. Keep the structure:
-     (1) the case, the cut-off, and the decision at stake
-     (2) reading the result and the credibility questions (manipulation,
-         shared cut-off, and reach), then a verdict round.
-     Confirm with Fiona what the running variable and threshold are, and
-     whether the same score gates any other benefit (Threat two). -->
-
-## `[PLACEHOLDER]` The DCD Social Protection case
+## `[PLACEHOLDER]` The DCD social protection evaluation
 
 ::: {.warn}
-**Awaiting real findings.** Structure is final; only the numbers and labels change.
+**Awaiting the real findings.** The Abu Dhabi Department of Community
+Development social protection evaluation has not been shared with this workspace
+yet, so nothing here is presented as its result.
 :::
 
 ```{=html}
 <div class="facts">
-  <div class="k">Programme</div>        <div class="v">[to be inserted]</div>
-  <div class="k">Running variable</div> <div class="v">[to be inserted: the score that decides eligibility]</div>
-  <div class="k">The cut-off</div>      <div class="v">[to be inserted]</div>
-  <div class="k">Outcome</div>          <div class="v">[to be inserted]</div>
-  <div class="k">Decision</div>         <div class="v">[to be inserted]</div>
-  <div class="k">Shared cut-off?</div>  <div class="v">[does any other benefit use the same line?]</div>
+  <div class="k">Programme</div>      <div class="v">[PLACEHOLDER]</div>
+  <div class="k">Running variable</div><div class="v">[PLACEHOLDER]</div>
+  <div class="k">Cut-off</div>        <div class="v">[PLACEHOLDER]</div>
+  <div class="k">Outcome</div>        <div class="v">[PLACEHOLDER]</div>
 </div>
 ```
 
-::: {.notes}
-Ask Fiona whether the DCD cut-off is used by any other social protection benefit. A shared threshold is common in social protection and would be a strong, real instance of Threat two, which would make this case the highlight of the session rather than a repeat of GreenWaste.
-:::
-
-## `[PLACEHOLDER]` Read it, then decide
-
-Apply the same steps, in order:
-
 ::: {.panel}
-1. Which coefficient is the jump at the cut-off, and which is the slope?
-2. Does it clear the threshold that matters for this decision?
-3. Could anyone have chosen their side of the line?
-4. Is the cut-off used by anything else?
-5. Who does this effect apply to, and who would a scale-up reach?
+The structure is fixed. When the DCD findings arrive they drop into these four
+fields and the two slides that follow, without redesigning the session.
 :::
 
-::: {.ask}
-Verdict round: act on it, act with caveats, or send it back?
-:::
+## Four questions for the DCD result
 
-::: {.notes}
-1:22 · Group exercise on the handout, not a lecture. Then hands, not discussion, for the verdict. Note who says "send it back" and ask them for the one question that decided it.
-:::
-
-# 7 · Closing [4 min]{.mins}
-
-## Three questions to ask any evaluator presenting RDD
-
-::: {.panel}
-**1 · "Could anyone choose their side of the line?"**
-
-If scores can be nudged to gain eligibility, the two sides are no longer comparable. Ask what the density check showed.
-:::
-
-::: {.panel}
-**2 · "Is this cut-off used by any other programme?"**
-
-If so, the jump mixes two effects and cannot be read as this programme alone.
-:::
-
-::: {.panel}
-**3 · "Who does this effect apply to, and does a local result answer a national question?"**
-
-The estimate is for businesses near the line. Scale-up is about everyone.
-:::
-
-::: {.notes}
-1:26 · The take-away card. Short enough to remember in a meeting without notes. Question 3 is the one that ties RDD's strength to its limit.
-:::
-
-## Where this sits: Day 2 scoreboard
-
-```{r}
-tibble(
-  Method   = c("Difference-in-differences", "Regression discontinuity", "Matching", "Randomised trial"),
-  Estimate = c("-816 AED", sprintf("%.0f AED", b_jump), "pending", "-1,014 AED (Module 1)"),
-  Verdict  = c("Below the bar: do not scale", "Below the bar: do not scale", "(next session)", "Above the bar: scale up")
-) %>%
-  kable(align = "lcc") %>%
-  kable_styling(full_width = FALSE, font_size = 20) %>%
-  row_spec(2, bold = TRUE, background = "#E6F1F5")
+```{=html}
+<div class="facts">
+  <div class="k">1</div> <div class="v">Where is the cut-off, and which side is eligible?</div>
+  <div class="k">2</div> <div class="v">Is the rule sharp, and if not, what is take-up on the eligible side?</div>
+  <div class="k">3</div> <div class="v">Is the density smooth at the cut-off, or did people bend the rule?</div>
+  <div class="k">4</div> <div class="v">Who sits near the line, and is that who you want to help?</div>
+</div>
 ```
 
 ::: {.ask}
-Two methods now say do not scale. The randomised trial said scale up. Same programme, same data, different answers.
+The same four checks we just ran on GreenWaste, in the same order.
+
+The programme changes; the interrogation does not. That transferable habit is
+what you are here for.
 :::
 
-::: {.notes}
-1:28 · Build the tension deliberately. DiD and RDD agree with each other and disagree with the RCT, and that disagreement is Day 2's real lesson. Do not resolve it yet.
-:::
+# 6 · Close
 
-## Why might RDD differ from the randomised result?
+## Four questions to ask any evaluator presenting RDD
 
-::: {.warn}
-The randomised trial found a larger effect (-1,014 AED) and cleared the bar. RDD, on the same programme, did not. Why?
-
-- RDD measures the effect only **at the cut-off**, for marginal businesses
-- The randomised trial measures an **average** across the businesses in it
-- If the programme works better for some businesses than others, these two numbers should not be expected to match
-:::
-
-::: {.notes}
-1:29 · The bridge to the next session. RDD and the RCT answer different questions about different businesses, so they can disagree even on the same programme. Matching, next, is a fourth way to build a comparison group.
-:::
-
-## Next session
-
-**Reading Matching Results**: when there was no threshold and no randomisation, how an evaluator builds a comparison group by pairing similar units, and what has to be true for that comparison to be believed.
+```{=html}
+<div class="facts">
+  <div class="k">1</div> <div class="v">Where is the cut-off, which side is eligible, and is the rule sharp or fuzzy?</div>
+  <div class="k">2</div> <div class="v">Does the jump survive at other bandwidths, and are there placebo cut-offs that show nothing?</div>
+  <div class="k">3</div> <div class="v">Is the density smooth at the line, and are the covariates balanced either side?</div>
+  <div class="k">4</div> <div class="v">Who is near the line, and does the estimate clear our rule for them?</div>
+</div>
+```
 
 ::: {.panel}
-The reach question stays with us: matching, like RDD, answers a question about a particular set of units, and knowing which ones is half of reading the result.
+Question 4 has two halves, and both matter. **Who it applies to** is the RDD
+question. **Does it clear the rule** is the question every session this week has
+ended on.
+:::
+
+## Where this sits
+
+```{=html}
+<div class="facts">
+  <div class="k">Day 1 S2</div> <div class="v">descriptive reading &middot; -1.13 against a 2.0 rule</div>
+  <div class="k">Day 1 S3</div> <div class="v">naive comparisons and an RCT</div>
+  <div class="k">Day 2 S1</div> <div class="v">difference-in-differences &middot; -816 against a 1,000 rule</div>
+  <div class="k">Today</div>  <div class="v">regression discontinuity &middot; -249 against a 1,000 rule, and local</div>
+</div>
+```
+
+::: {.ask}
+Notice how each method buys its credibility, and what it pays:
+
+**DiD** buys a comparison group by assuming parallel trends.
+**RDD** buys credibility from the rule, and pays with **reach** — a tight
+estimate about a narrow group.
+
+Next session does the same trade a third time, with **matching**: a much wider
+reach, bought by assuming that everything that matters was measured.
 :::
