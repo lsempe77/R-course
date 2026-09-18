@@ -70,7 +70,8 @@ library(flextable)
 - Using this variable, we can estimate the ToT, or actual treatment-on-treated of the program.
 
 ```{r, echo=F}
-df <- read.csv("./evaluation_data_GreenWaste.csv")
+# This deck needs the instrument (enrolled_rp), which only exists in the IV build
+df <- read.csv("./evaluation_data_GreenWaste_IV.csv")
 ```
 
 If the randomization is effective, then we should have a higher likelihood of participation in the intervention for those who were provided access to it. If we are just interested in the question of whether randomizing access to enrollment in the project improved our outcomes compared to providing the program to everyone, then we can run the regression for those that randomly received access to the program versus those that did not. This is what we learned about randomization so far. 

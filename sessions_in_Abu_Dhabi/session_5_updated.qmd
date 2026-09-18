@@ -72,7 +72,7 @@ ggplot(data, aes(x = Time, y = Outcome, color = Group, group = Group)) +
 - Government program subsidizing innovative waste management technologies 
 - Goal: Reduce waste management costs
 - Policy question: Should the program be scaled up nationally?
-- Decision criterion: Program must reduce waste management costs by at least 1,000 Dirham per year
+- Decision criterion: Program must reduce waste management costs by at least 1,000 AED per year
 
 ## Key Variables in Our Example Dataset
 

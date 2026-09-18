@@ -22,7 +22,7 @@ editor_options:
 ::: {.column width="60%"}
 - **Waste recycling Program** subsidizes waste recycling plants for industries
 - **Program goal**: Reduce waste management costs 
-- **Decision criterion**: Reduce expenditures by at least $10,000
+- **Decision criterion**: Reduce expenditures by at least 1,000 AED
 - **Evaluation approaches**:
   - ✅ Randomized Assignment
   - ✅ Instrumental Variables
@@ -39,22 +39,22 @@ library(dplyr)
 # Create a summary data frame of all methods
 methods_df <- data.frame(
   Method = c("Randomized", "IV", "RDD", "DiD", "Matching"),
-  Estimate = c(-10140, -9829, -9051, -8163, -10000),
-  LowerCI = c(-10922, -11684, -9921, -8792, -10723),
-  UpperCI = c(-9358, -7973, -8181, -7534, -9277)
+  Estimate = c(-1014, -982, -905, -816, -1000),
+  LowerCI = c(-1092, -1168, -992, -879, -1072),
+  UpperCI = c(-935, -797, -818, -753, -927)
 )
 
 
 # Create a forest plot
 ggplot(methods_df, aes(y = reorder(Method, -abs(Estimate)), x = Estimate)) +
-  geom_vline(xintercept = -10000, linetype = "dashed", color = "red") +
+  geom_vline(xintercept = -1000, linetype = "dashed", color = "red") +
   geom_point(size = 3) +
   geom_errorbarh(aes(xmin = LowerCI, xmax = UpperCI), height = 0.2) +
   labs(title = "Impact of Program Across Methods",
-       x = "Impact on Waste Expenditures (Thousands USD)",
+       x = "Impact on Waste Expenditures (AED)",
        y = "") +
   theme_minimal() +
-  annotate("text", x = -10000, y = 5.5, label = "Threshold", 
+  annotate("text", x = -1000, y = 5.5, label = "Threshold", 
            vjust = -0.5, color = "red", hjust = 1.2)
 ```
 :::
@@ -72,9 +72,9 @@ synthesis <- data.frame(
   Method = c("Randomized Assignment", "Instrumental Variables", 
              "Regression Discontinuity", "Difference-in-Differences", 
              "Matching (Full)"),
-  Estimate = c("-10,140", "-9,829", "-9,051", "-8,163", "-10,000"),
-  CI = c("[-10,922, -9,358]", "[-11,684, -7,973]", "[-9,921, -8,181]", 
-         "[-8,792, -7,534]", "[-10,723, -9,277]"),
+  Estimate = c("-1,014", "-982", "-905", "-816", "-1,000"),
+  CI = c("[-1,092, -935]", "[-1,168, -797]", "[-992, -818]", 
+         "[-879, -753]", "[-1,072, -927]"),
   Key_Assumption = c("Random assignment", "Exclusion restriction", 
                     "No manipulation at threshold", "Parallel trends", 
                     "Selection on observables"),

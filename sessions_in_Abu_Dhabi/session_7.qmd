@@ -252,32 +252,32 @@ The IV estimate (LATE) applies to compliers only:
 ## From Analysis to Policy Decision
 **Policy question:** Should the program be scaled up nationally?
 
-**Decision criterion:** Program must reduce waste management costs by at least $10,000.
+**Decision criterion:** Program must reduce waste management costs by at least 1,000 AED.
 
 **Results from IV estimation:**
 
-- LATE: -$9,496 (from our calculation above)
-- Point estimate is below the $10,000 threshold
+- LATE: -1,033 AED (from our calculation above)
+- Point estimate is above the 1,000 AED threshold
 - The IV estimate represents the effect on compliers only
 
-**Recommendation:** Based strictly on the estimate, the program should not be scaled up nationally. However, the estimate is very close to the threshold.
+**Recommendation:** Based strictly on the estimate, the program should be scaled up nationally.
 
 ## IV vs. Randomized Assignment
 :::: {.columns}
 ::: {.column width="50%"}
 **IV Estimate:**
 
-- LATE = -$9,496
+- LATE = -1,033 AED
 - Effect on compliers only
 - Larger standard errors
 
 **Policy recommendation:**
-Do not scale up (but close to threshold)
+Scale up since above threshold
 :::
 ::: {.column width="50%"}
 **Randomized Assignment:**
 
-- ATE = -$10,140
+- ATE = -1,014 AED
 - Effect on all eligible facilities
 - More precise estimate
 
@@ -332,7 +332,7 @@ Improper standard errors:
 - IV addresses selection bias when randomization of treatment isn't possible
 - LATE estimates the effect for compliers only
 - IV requires strong assumptions, especially exclusion restriction
-- The program reduced waste management costs by $9,496 for compliers, slightly below the threshold
+- The program reduced waste management costs by 1,033 AED for compliers, above the threshold
 - IV estimates are less precise than randomized assignment estimates
 
 ## Next Session

@@ -1,0 +1,203 @@
+---
+title: "Step-by-Step Linear Regression Visualization with Dichotomous Predictor"
+format: html
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+library(ggplot2)
+library(dplyr)
+library(patchwork)
+library(ggrepel)
+set.seed(123) # For reproducibility
+```
+
+## Creating Sample Data
+
+Let's create a dataset with a dichotomous independent variable (0 or 1) and a continuous dependent variable.
+
+```{r data-creation}
+# Create dataset
+n <- 100  # Sample size
+x <- rep(c(0, 1), each = n/2)  # Dichotomous variable: 50 zeros and 50 ones
+# Create different means for the two groups
+mean_0 <- 10
+mean_1 <- 15
+sd <- 3  # Standard deviation for both groups
+
+# Generate y values
+y <- c(rnorm(n/2, mean = mean_0, sd = sd),  # Group 0
+       rnorm(n/2, mean = mean_1, sd = sd))  # Group 1
+
+# Create a data frame
+data <- data.frame(x = x, y = y)
+
+# Calculate group means
+group_means <- data %>%
+  group_by(x) %>%
+  summarize(mean_y = mean(y))
+
+# Fit linear regression
+model <- lm(y ~ x, data = data)
+```
+
+## Step 1: Basic Scatterplot (Points Aligned Vertically)
+
+First, let's plot the raw data points, which will be aligned vertically at x=0 and x=1.
+
+```{r step1}
+p1 <- ggplot(data, aes(x = factor(x), y = y)) +
+  geom_point(alpha = 0.7, color = "blue", size = 3) +
+  labs(title = "Step 1: Basic Scatterplot",
+       subtitle = "Points aligned vertically by group (0 or 1)",
+       x = "Independent Variable (X)",
+       y = "Dependent Variable (Y)") +
+  theme_minimal() +
+  scale_x_discrete(labels = c("Group 0", "Group 1"))
+
+p1
+```
+
+## Step 2: Add Jitter to Visualize Point Density
+
+Now, let's add jitter to see the distribution of points better.
+
+```{r step2}
+p2 <- ggplot(data, aes(x = factor(x), y = y)) +
+  geom_jitter(width = 0.2, alpha = 0.7, color = "blue", size = 3) +
+  labs(title = "Step 2: Scatterplot with Jitter",
+       subtitle = "Jittering added to visualize point density",
+       x = "Independent Variable (X)",
+       y = "Dependent Variable (Y)") +
+  theme_minimal() +
+  scale_x_discrete(labels = c("Group 0", "Group 1"))
+
+p2
+```
+
+## Step 3: Add Group Means
+
+Let's add the mean for each group.
+
+```{r step3}
+p3 <- ggplot(data, aes(x = factor(x), y = y)) +
+  geom_jitter(width = 0.2, alpha = 0.5, color = "blue", size = 3) +
+  geom_point(data = group_means, aes(x = factor(x), y = mean_y), 
+             color = "red", size = 5) +
+  geom_text_repel(data = group_means, 
+                 aes(x = factor(x), y = mean_y, 
+                     label = sprintf("Mean: %.2f", mean_y)),
+                 nudge_x = 0.3,
+                 size = 5) +
+  labs(title = "Step 3: Add Group Means",
+       subtitle = "Red points represent the mean value for each group",
+       x = "Independent Variable (X)",
+       y = "Dependent Variable (Y)") +
+  theme_minimal() +
+  scale_x_discrete(labels = c("Group 0", "Group 1"))
+
+p3
+```
+
+## Step 4: Add Regression Line
+
+Finally, let's add the regression line that fits the data.
+
+```{r step4}
+# Create a data frame with the regression line
+regression_line <- data.frame(
+  x = c(0, 1),
+  y = predict(model, newdata = data.frame(x = c(0, 1)))
+)
+
+# Extract the model coefficients for display
+intercept <- round(coef(model)[1], 2)
+slope <- round(coef(model)[2], 2)
+equation <- paste("y =", intercept, "+", slope, "* x")
+
+p4 <- ggplot() +
+  geom_jitter(data = data, aes(x = factor(x), y = y), 
+              width = 0.2, alpha = 0.5, color = "blue", size = 3) +
+  geom_point(data = group_means, aes(x = factor(x), y = mean_y), 
+             color = "red", size = 5) +
+  geom_line(data = regression_line, aes(x = c(1, 2), y = y), 
+            color = "darkgreen", size = 1.5) +
+  geom_text(aes(x = 1.5, y = mean(regression_line$y) + 2), 
+            label = equation, size = 5, color = "darkgreen") +
+  labs(title = "Step 4: Add Regression Line",
+       subtitle = "Green line represents linear regression",
+       x = "Independent Variable (X)",
+       y = "Dependent Variable (Y)") +
+  theme_minimal() +
+  scale_x_discrete(limits = c("0", "1"),
+                   labels = c("Group 0", "Group 1"))
+
+p4
+```
+
+## Combined Visualization
+
+Let's combine all four steps into a single visualization to see the progression.
+
+```{r combined}
+combined_plot <- (p1 + p2) / (p3 + p4) +
+  plot_annotation(
+    title = "Step-by-Step Linear Regression with Dichotomous Predictor",
+    theme = theme(plot.title = element_text(size = 16, face = "bold"))
+  )
+
+combined_plot
+```
+
+## Interactive Visualization (Optional)
+
+If you prefer an interactive visualization where you can toggle between steps, you can use the following code with Shiny:
+
+```{r eval=FALSE}
+# This code is not executed here, but can be used in a Shiny app
+library(shiny)
+
+ui <- fluidPage(
+  titlePanel("Step-by-Step Linear Regression"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      radioButtons("step", "Select Step:",
+                  choices = list(
+                    "Step 1: Basic Scatterplot" = 1,
+                    "Step 2: Add Jitter" = 2,
+                    "Step 3: Add Group Means" = 3,
+                    "Step 4: Add Regression Line" = 4
+                  ),
+                  selected = 1)
+    ),
+    
+    mainPanel(
+      plotOutput("regressionPlot")
+    )
+  )
+)
+
+server <- function(input, output) {
+  output$regressionPlot <- renderPlot({
+    switch(as.numeric(input$step),
+           "1" = p1,
+           "2" = p2,
+           "3" = p3,
+           "4" = p4)
+  })
+}
+
+shinyApp(ui = ui, server = server)
+```
+
+## Explanation
+
+This visualization demonstrates how linear regression works with a dichotomous independent variable:
+
+1.  **Step 1**: We start with a basic scatterplot showing the raw data points aligned vertically at x=0 and x=1.
+2.  **Step 2**: We add jitter (horizontal randomness) to the points to better visualize their distribution.
+3.  **Step 3**: We calculate and display the mean value for each group (0 and 1).
+4.  **Step 4**: We fit a regression line through the data, connecting the mean values of the two groups.
+
+When the independent variable is dichotomous (0/1), the linear regression essentially: - Uses the mean of each group - The slope of the line equals the difference between the means - The intercept is the mean of group 0 - The equation `y = intercept + slope * x` predicts the value of y for each group

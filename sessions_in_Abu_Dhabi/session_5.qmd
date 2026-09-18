@@ -68,10 +68,10 @@ ggplot(data, aes(x = Time, y = Outcome, color = Group, group = Group)) +
 
 ## Example: Waste management system
 
-- Government program subsidizing waste management new technologies 
+- Government program subsidizing innovative waste management technologies 
 - Goal: Reduce waste management costs
 - Policy question: Should the program be scaled up nationally?
-- Decision criterion: Program must reduce waste management at least $10,000
+- Decision criterion: Program must reduce waste management costs by at least 1,000 AED per year
 
 ## Key Variables in Our Example Dataset
 
@@ -80,13 +80,13 @@ ggplot(data, aes(x = Time, y = Outcome, color = Group, group = Group)) +
 ::: {.column width="50%"}
 **Outcome Variable**:
 
-- `waste_management_costs`: Waste management costs incurred monthly per industry (USD)
+- `waste_management_costs`: Waste management costs incurred yearly per business (AED)
 
 **Treatment Variables**:
 
 - `treatment_zone`: Area selected for program (0/1)
-- `enrolled`: Industry enrolled in program (0/1)
-- `eligible`: Industry eligible for program (0/1)
+- `enrolled`: Business offered the program (0/1)
+- `eligible`: Business eligible for the program (0/1)
 :::
 
 ::: {.column width="50%"}

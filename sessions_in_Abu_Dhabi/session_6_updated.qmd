@@ -101,7 +101,8 @@ Let's think through an example.
 ## Verifying Balance at Baseline
 
 ```{r, echo=F}
-df <- read.csv("./evaluation_data_GreenWaste.csv")
+# This deck uses the intent-to-treat indicator, which is in the IV build
+df <- read.csv("./evaluation_data_GreenWaste_IV.csv")
 
 ```
 
@@ -558,12 +559,12 @@ df %>% group_by(intent_to_treat, round) %>%
 
 **Policy question**: Should the Programe be scaled up nationally?
 
-**Decision criterion**: Program must reduce waste expenditures by at least 1,000 Dirham.
+**Decision criterion**: Program must reduce waste expenditures by at least 1,000 AED.
 
 **Results from randomized evaluation**:
 
-- Impact: -1,014 (95% CI: [-1,930, -935])
-- Exceeds threshold of 1,000 Dirham reduction
+- Impact: -1,014 (95% CI: [-1,093, -935])
+- Exceeds threshold of 1,000 AED reduction
 
 **Recommendation**: The program should be scaled up nationally.
 

@@ -212,7 +212,7 @@ modelsummary(list("Sharp RDD"= out_rdd), stars = TRUE,coef_omit = c(-3),
 
 ```
 
-- Treatment reduces waste expenditures by approximately $9051
+- Treatment reduces waste expenditures by approximately 905 AED
 
 ```{r}
 
@@ -318,7 +318,7 @@ modelsummary(coef_omit = c(-3),
 ```
 
 - RDD estimates are robust across different specifications
-- Effect is statistically significant but below the $10,000 threshold
+- Effect is statistically significant but below the 1,000 AED threshold
 - Results are similar to the IV estimates
 
 :::
@@ -422,7 +422,7 @@ ggplot(effects, aes(x = efficiency_index, y = effect_size)) +
 ::: {.column width="33%"}
 **RDD**:
 
-- Effect: -$9.03
+- Effect: -905 AED
 - Local to cutoff
 - Uses eligibility threshold
 - Sharp discontinuity
@@ -433,18 +433,18 @@ ggplot(effects, aes(x = efficiency_index, y = effect_size)) +
 ::: {.column width="33%"}
 **IV**:
 
-- Effect: -$9.74
+- Effect: -1,033 AED
 - Effect on compliers
 - Uses randomized promotion
 - Fuzzy take-up
 
-**Recommendation**: Do not scale up
+**Recommendation**: Scale up nationally
 :::
 
 ::: {.column width="33%"}
 **Randomized**:
 
-- Effect: -$10.14
+- Effect: -1,014 AED
 - Average effect
 - Uses random assignment
 - Full experimental control
@@ -528,12 +528,12 @@ rd_robust <- rdrobust(
 
 **Policy question**: Should the Program be scaled up nationally?
 
-**Decision criterion**: Program must reduce health expenditures by at least $10,000.
+**Decision criterion**: Program must reduce waste expenditures by at least 1,000 AED.
 
 **Results from RDD estimation**:
 
-- Effect: $`{r} round(out_rdd$coefficients[3],0)` (95% CI: [ $`{r} round(out_rdd$coefficients[3] + 1.96*out_rdd$std.error[3],0)`, $`{r} round(out_rdd$coefficients[3] - 1.96*out_rdd$std.error[3],0)`])
-- Point estimate below the $10,000 threshold
+- Effect: `r round(out_rdd$coefficients[3],0)` AED (95% CI: [`r round(out_rdd$coefficients[3] + 1.96*out_rdd$std.error[3],0)`, `r round(out_rdd$coefficients[3] - 1.96*out_rdd$std.error[3],0)`])
+- Point estimate below the 1,000 AED threshold
 - Effect applies to industries near the efficiency threshold
 
 **Recommendation**: Based on the RDD estimate, the program should not be scaled up nationally.
@@ -543,8 +543,8 @@ rd_robust <- rdrobust(
 1. RDD exploits discontinuities at eligibility thresholds to estimate causal effects
 2. Units just above and below the threshold are comparable except for treatment
 3. RDD estimates are local to the cutoff and may not generalize to units far from threshold
-4. Multiple specifications yield consistent estimates of approximately $9,000 reduction
-5. RDD estimate is slightly below the $10,000 threshold for scaling up HISP
+4. Multiple specifications yield consistent estimates of approximately 905 AED reduction
+5. RDD estimate is slightly below the 1,000 AED threshold for scaling up GreenWaste
 
 ## Next Session
 

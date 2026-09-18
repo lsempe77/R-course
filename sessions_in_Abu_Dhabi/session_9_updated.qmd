@@ -318,7 +318,7 @@ modelsummary(list("No covariate adj."= out_did, "With covariate adj." = out_did_
 - Initial difference: Businesses offered the program spent AED `r round  (abs(out_did$coefficients[3]),1)` less at baseline
 - Time trend: Non-offered businesses increased spending by AED `r round  (out_did$coefficients[2],1)`
 - **Treatment effect**: Program reduced expenditures by AED `r round  (abs(out_did$coefficients[4]),1)`
-- Result is statistically significant but below the 1,000 Dirham threshold
+- Result is statistically significant but below the 1,000 AED threshold
 
 :::
 

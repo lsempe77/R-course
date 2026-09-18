@@ -224,7 +224,7 @@ modelsummary(list("Sharp RDD"= out_rdd_no_covs, "Sharp RDD w Covs"= out_rdd), st
 
 ```
 
-- Treatment reduces waste expenditures by approximately 905 Dirham
+- Treatment reduces waste expenditures by approximately 905 AED
 
 ```{r}
 
@@ -326,7 +326,7 @@ modelsummary(coef_omit = c(-3),
 ```
 
 - RDD estimates are robust across different specifications
-- Effect is statistically significant but below the $10,000 threshold
+- Effect is statistically significant but below the 1,000 AED threshold
 - Results are similar to the IV estimates
 
 :::
@@ -535,7 +535,7 @@ rd_robust <- rdrobust(
 
 **Policy question**: Should the Program be scaled up nationally?
 
-**Decision criterion**: Program must reduce waste expenditures by at least 1,000 Dirham.
+**Decision criterion**: Program must reduce waste expenditures by at least 1,000 AED.
 
 **Results from RDD estimation**:
 

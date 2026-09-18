@@ -563,10 +563,10 @@ The interaction coefficient (Offered × Round) represents our estimate of the ca
 
 <!-- - Methods produce consistent results in the range of -816 to -1033 AED -->
 <!-- - Randomized assignment (gold standard): -1,014 AED -->
-<!-- - Most quasi-experimental methods: Effect slightly below $10 -->
+<!-- - Most quasi-experimental methods: Effect slightly below the threshold -->
 <!-- - Given uncertainty in estimates and consistency in direction, GreenWaste shows promising results -->
 
-<!-- **RECOMMENDATION**: The preponderance of evidence suggests GreenWaste reduces waste expenditures by approximately $10, which meets the threshold criterion. Given the consistency across methods and the gold-standard randomized result, GreenWaste should be scaled up nationally. -->
+<!-- **RECOMMENDATION**: The preponderance of evidence suggests GreenWaste reduces waste expenditures by approximately 1,000 AED, which meets the threshold criterion. Given the consistency across methods and the gold-standard randomized result, GreenWaste should be scaled up nationally. -->
 
 <!-- ## Conclusion: Choosing the Right Method -->
 

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-<script src="session_10_files/libs/clipboard/clipboard.min.js"></script>
-<script src="session_10_files/libs/quarto-html/tabby.min.js"></script>
-<script src="session_10_files/libs/quarto-html/popper.min.js"></script>
-<script src="session_10_files/libs/quarto-html/tippy.umd.min.js"></script>
-<link href="session_10_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="session_10_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="session_10_files/libs/quarto-html/quarto-syntax-highlighting-234273d1456647dabc34a594ac50e507.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+<script src="session_10_updated_files/libs/clipboard/clipboard.min.js"></script>
+<script src="session_10_updated_files/libs/quarto-html/tabby.min.js"></script>
+<script src="session_10_updated_files/libs/quarto-html/popper.min.js"></script>
+<script src="session_10_updated_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="session_10_updated_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="session_10_updated_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="session_10_updated_files/libs/quarto-html/quarto-syntax-highlighting-234273d1456647dabc34a594ac50e507.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.7.32">
 
   <meta name="author" content="Dr.&nbsp;Lucas Sempé">
@@ -14,8 +14,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-  <link rel="stylesheet" href="session_10_files/libs/revealjs/dist/reset.css">
-  <link rel="stylesheet" href="session_10_files/libs/revealjs/dist/reveal.css">
+  <link rel="stylesheet" href="session_10_updated_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="session_10_updated_files/libs/revealjs/dist/reveal.css">
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -95,11 +95,11 @@
     code span.vs { color: #032f62; } /* VerbatimString */
     code span.wa { color: #ff5555; } /* Warning */
   </style>
-  <link rel="stylesheet" href="session_10_files/libs/revealjs/dist/theme/quarto-bfb7ca1020dc945e32b86dd86dbb9bbd.css">
-  <link href="session_10_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
-  <link href="session_10_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
-  <link href="session_10_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
-  <link href="session_10_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <link rel="stylesheet" href="session_10_updated_files/libs/revealjs/dist/theme/quarto-bfb7ca1020dc945e32b86dd86dbb9bbd.css">
+  <link href="session_10_updated_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="session_10_updated_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="session_10_updated_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="session_10_updated_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
   <style type="text/css">
     .reveal div.sourceCode {
       margin: 0;
@@ -187,9 +187,9 @@
       margin-right: 0; 
     }
   </style>
-  <script src="session_10_files/libs/kePrint-0.0.1/kePrint.js"></script>
+  <script src="session_10_updated_files/libs/kePrint-0.0.1/kePrint.js"></script>
 
-  <link href="session_10_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+  <link href="session_10_updated_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
 
 </head>
 <body class="quarto-light">
@@ -225,7 +225,7 @@ Dr.&nbsp;Lucas Sempé
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="session_10_files/figure-revealjs/unnamed-chunk-1-1.png" width="960"></p>
+<p><img data-src="session_10_updated_files/figure-revealjs/unnamed-chunk-1-1.png" width="960"></p>
 </figure>
 </div>
 </div>
@@ -254,33 +254,34 @@ Dr.&nbsp;Lucas Sempé
 <span id="cb1-2"><a href=""></a>df_w <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
 <span id="cb1-3"><a href=""></a>  <span class="co"># Then create wide format</span></span>
 <span id="cb1-4"><a href=""></a>  <span class="fu">pivot_wider</span>(</span>
-<span id="cb1-5"><a href=""></a>    <span class="at">id_cols =</span> <span class="fu">c</span>(zone_identifier, facility_identifier, treatment_zone, </span>
-<span id="cb1-6"><a href=""></a>                promotion_zone, eligible, enrolled, enrolled_rp),</span>
+<span id="cb1-5"><a href=""></a>    <span class="at">id_cols =</span> <span class="fu">c</span>(neighborhood_identifier, business_identifier, treatment_neighborhood, </span>
+<span id="cb1-6"><a href=""></a>                eligible, intent_to_treat, enrolled_rp),</span>
 <span id="cb1-7"><a href=""></a>    <span class="at">names_from =</span> round, <span class="co"># variable that determines new columns</span></span>
 <span id="cb1-8"><a href=""></a>    <span class="co"># variables that should be made "wide"</span></span>
 <span id="cb1-9"><a href=""></a>    <span class="at">values_from =</span> <span class="fu">c</span>(waste_management_costs, </span>
 <span id="cb1-10"><a href=""></a>                    efficiency_index, age_manager, age_deputy,</span>
 <span id="cb1-11"><a href=""></a>                    educ_manager, educ_deputy, female_manager,</span>
 <span id="cb1-12"><a href=""></a>                    foreign_owned, staff_size, advanced_filtration,</span>
-<span id="cb1-13"><a href=""></a>                    water_treatment_system, facility_area,</span>
+<span id="cb1-13"><a href=""></a>                    water_treatment_system, business_area,</span>
 <span id="cb1-14"><a href=""></a>                    recycling_center_distance, recycling_compliance)) <span class="sc">%&gt;%</span></span>
-<span id="cb1-15"><a href=""></a>  <span class="co"># remove the industries that has missing values</span></span>
+<span id="cb1-15"><a href=""></a>  <span class="co"># remove the business that has missing values</span></span>
 <span id="cb1-16"><a href=""></a>  <span class="co"># as missing values are not allowed when using matchit</span></span>
 <span id="cb1-17"><a href=""></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(waste_management_costs_0)) </span>
 <span id="cb1-18"><a href=""></a></span>
 <span id="cb1-19"><a href=""></a><span class="co"># Also check the first few rows to confirm format</span></span>
-<span id="cb1-20"><a href=""></a><span class="fu">head</span>(<span class="fu">select</span>(df_w, facility_identifier, enrolled, </span>
+<span id="cb1-20"><a href=""></a><span class="fu">head</span>(<span class="fu">select</span>(df_w, business_identifier, intent_to_treat, </span>
 <span id="cb1-21"><a href=""></a>           waste_management_costs_0, waste_management_costs_1))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 4
-  facility_identifier enrolled waste_management_costs_0 waste_management_costs_1
-                &lt;int&gt;    &lt;int&gt;                    &lt;dbl&gt;                    &lt;dbl&gt;
-1                   5        1                    1519.                   1958. 
-2                  11        1                    1308.                    240. 
-3                  13        1                    1529.                      0  
-4                  16        1                    1131.                   2003. 
-5                  21        1                    1122.                   1666. 
-6                  22        1                     888.                     11.6</code></pre>
+  business_identifier intent_to_treat waste_management_costs_0
+                &lt;int&gt;           &lt;int&gt;                    &lt;dbl&gt;
+1                   5               1                    1519.
+2                  11               1                    1308.
+3                  13               1                    1529.
+4                  16               1                    1131.
+5                  21               1                    1122.
+6                  22               1                     888.
+# ℹ 1 more variable: waste_management_costs_1 &lt;dbl&gt;</code></pre>
 </div>
 </div>
 </section>
@@ -290,7 +291,7 @@ Dr.&nbsp;Lucas Sempé
 <ol type="1">
 <li><strong>Limited set of variables</strong>:
 <ul>
-<li>Only age and education of facility manager</li>
+<li>Only age and education of business manager</li>
 </ul></li>
 <li><strong>Full set of variables</strong>:
 <ul>
@@ -301,22 +302,59 @@ Dr.&nbsp;Lucas Sempé
 <section id="estimating-propensity-scores" class="slide level2">
 <h2>Estimating Propensity Scores</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a><span class="co"># Limited set of variables</span></span>
-<span id="cb3-2"><a href=""></a>psm_r <span class="ot">&lt;-</span> <span class="fu">matchit</span>(enrolled <span class="sc">~</span> age_manager_0 <span class="sc">+</span> educ_manager_0,</span>
-<span id="cb3-3"><a href=""></a>                 <span class="at">data =</span> df_w <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>recycling_compliance_0,</span>
-<span id="cb3-4"><a href=""></a>                                               <span class="sc">-</span>recycling_compliance_1), </span>
-<span id="cb3-5"><a href=""></a>                    <span class="at">distance =</span> <span class="st">"glm"</span>,</span>
-<span id="cb3-6"><a href=""></a>                  <span class="at">link =</span> <span class="st">"probit"</span>)</span>
-<span id="cb3-7"><a href=""></a></span>
-<span id="cb3-8"><a href=""></a><span class="co"># Full set of variables</span></span>
-<span id="cb3-9"><a href=""></a>psm_ur <span class="ot">&lt;-</span> <span class="fu">matchit</span>(enrolled <span class="sc">~</span> age_manager_0 <span class="sc">+</span> educ_manager_0 <span class="sc">+</span> </span>
-<span id="cb3-10"><a href=""></a>                   age_deputy_0 <span class="sc">+</span> educ_deputy_0 <span class="sc">+</span></span>
-<span id="cb3-11"><a href=""></a>                   female_manager_0 <span class="sc">+</span> foreign_owned_0 <span class="sc">+</span> staff_size_0 <span class="sc">+</span> </span>
-<span id="cb3-12"><a href=""></a>                   advanced_filtration_0 <span class="sc">+</span> water_treatment_system_0 <span class="sc">+</span> </span>
-<span id="cb3-13"><a href=""></a>                   facility_area_0 <span class="sc">+</span> recycling_center_distance_0,</span>
-<span id="cb3-14"><a href=""></a>   <span class="at">data =</span> df_w <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>recycling_compliance_0,</span>
-<span id="cb3-15"><a href=""></a>                                               <span class="sc">-</span>recycling_compliance_1), </span>
-<span id="cb3-16"><a href=""></a>   <span class="at">distance =</span> <span class="st">"glm"</span>,<span class="at">link =</span> <span class="st">"probit"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a><span class="do">## Manually trim to 5–95% common range </span></span>
+<span id="cb3-2"><a href=""></a><span class="co"># discard = "both" trims data to area of common support</span></span>
+<span id="cb3-3"><a href=""></a><span class="co"># then we manually trim it to the 5-95% range and re-run matchit</span></span>
+<span id="cb3-4"><a href=""></a></span>
+<span id="cb3-5"><a href=""></a></span>
+<span id="cb3-6"><a href=""></a><span class="do">## ----- LIMITED SET -----</span></span>
+<span id="cb3-7"><a href=""></a><span class="co"># Fit PS &amp; discard non-overlap</span></span>
+<span id="cb3-8"><a href=""></a>psm_r0 <span class="ot">&lt;-</span> <span class="fu">matchit</span>(</span>
+<span id="cb3-9"><a href=""></a>  intent_to_treat <span class="sc">~</span> age_manager_0 <span class="sc">+</span> educ_manager_0,</span>
+<span id="cb3-10"><a href=""></a>  <span class="at">data =</span> df_w <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>recycling_compliance_0, <span class="sc">-</span>recycling_compliance_1),</span>
+<span id="cb3-11"><a href=""></a>  <span class="at">distance =</span> <span class="st">"glm"</span>, <span class="at">link =</span> <span class="st">"probit"</span>, <span class="at">discard =</span> <span class="st">"both"</span>, <span class="at">method =</span> <span class="st">"nearest"</span>, <span class="at">estimand =</span> <span class="st">"ATT"</span></span>
+<span id="cb3-12"><a href=""></a>)</span>
+<span id="cb3-13"><a href=""></a></span>
+<span id="cb3-14"><a href=""></a><span class="co"># 5–95% common-range trimming</span></span>
+<span id="cb3-15"><a href=""></a>df_tmp_r <span class="ot">&lt;-</span> df_w <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">ps =</span> psm_r0<span class="sc">$</span>distance, <span class="at">treat =</span> intent_to_treat <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb3-16"><a href=""></a>lower_r <span class="ot">&lt;-</span> <span class="fu">max</span>(<span class="fu">quantile</span>(df_tmp_r<span class="sc">$</span>ps[df_tmp_r<span class="sc">$</span>treat], <span class="fl">0.05</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-17"><a href=""></a>               <span class="fu">quantile</span>(df_tmp_r<span class="sc">$</span>ps[<span class="sc">!</span>df_tmp_r<span class="sc">$</span>treat], <span class="fl">0.05</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb3-18"><a href=""></a>upper_r <span class="ot">&lt;-</span> <span class="fu">min</span>(<span class="fu">quantile</span>(df_tmp_r<span class="sc">$</span>ps[df_tmp_r<span class="sc">$</span>treat], <span class="fl">0.95</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-19"><a href=""></a>               <span class="fu">quantile</span>(df_tmp_r<span class="sc">$</span>ps[<span class="sc">!</span>df_tmp_r<span class="sc">$</span>treat], <span class="fl">0.95</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb3-20"><a href=""></a>df_trim_r <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(df_tmp_r, ps <span class="sc">&gt;=</span> lower_r <span class="sc">&amp;</span> ps <span class="sc">&lt;=</span> upper_r)</span>
+<span id="cb3-21"><a href=""></a></span>
+<span id="cb3-22"><a href=""></a><span class="co"># Re-run matchit on the trimmed data</span></span>
+<span id="cb3-23"><a href=""></a>psm_r <span class="ot">&lt;-</span> <span class="fu">matchit</span>(</span>
+<span id="cb3-24"><a href=""></a>  intent_to_treat <span class="sc">~</span> age_manager_0 <span class="sc">+</span> educ_manager_0,</span>
+<span id="cb3-25"><a href=""></a>  <span class="at">data =</span> df_trim_r <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>recycling_compliance_0, <span class="sc">-</span>recycling_compliance_1, <span class="sc">-</span>ps, <span class="sc">-</span>treat),</span>
+<span id="cb3-26"><a href=""></a>  <span class="at">distance =</span> <span class="st">"glm"</span>, <span class="at">link =</span> <span class="st">"probit"</span>, <span class="at">discard =</span> <span class="st">"both"</span>, <span class="at">method =</span> <span class="st">"nearest"</span>, <span class="at">estimand =</span> <span class="st">"ATT"</span></span>
+<span id="cb3-27"><a href=""></a>)</span>
+<span id="cb3-28"><a href=""></a></span>
+<span id="cb3-29"><a href=""></a><span class="do">## ----- FULL SET -----</span></span>
+<span id="cb3-30"><a href=""></a>psm_ur0 <span class="ot">&lt;-</span> <span class="fu">matchit</span>(</span>
+<span id="cb3-31"><a href=""></a>  intent_to_treat <span class="sc">~</span> age_manager_0 <span class="sc">+</span> educ_manager_0 <span class="sc">+</span></span>
+<span id="cb3-32"><a href=""></a>    age_deputy_0 <span class="sc">+</span> educ_deputy_0 <span class="sc">+</span> female_manager_0 <span class="sc">+</span> foreign_owned_0 <span class="sc">+</span></span>
+<span id="cb3-33"><a href=""></a>    staff_size_0 <span class="sc">+</span> advanced_filtration_0 <span class="sc">+</span> water_treatment_system_0 <span class="sc">+</span></span>
+<span id="cb3-34"><a href=""></a>    business_area_0 <span class="sc">+</span> recycling_center_distance_0,</span>
+<span id="cb3-35"><a href=""></a>  <span class="at">data =</span> df_w <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>recycling_compliance_0, <span class="sc">-</span>recycling_compliance_1),</span>
+<span id="cb3-36"><a href=""></a>  <span class="at">distance =</span> <span class="st">"glm"</span>, <span class="at">link =</span> <span class="st">"probit"</span>, <span class="at">discard =</span> <span class="st">"both"</span>, <span class="at">method =</span> <span class="st">"nearest"</span>, <span class="at">estimand =</span> <span class="st">"ATT"</span></span>
+<span id="cb3-37"><a href=""></a>)</span>
+<span id="cb3-38"><a href=""></a></span>
+<span id="cb3-39"><a href=""></a>df_tmp <span class="ot">&lt;-</span> df_w <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">ps =</span> psm_ur0<span class="sc">$</span>distance, <span class="at">treat =</span> intent_to_treat <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb3-40"><a href=""></a>lower <span class="ot">&lt;-</span> <span class="fu">max</span>(<span class="fu">quantile</span>(df_tmp<span class="sc">$</span>ps[df_tmp<span class="sc">$</span>treat], <span class="fl">0.05</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-41"><a href=""></a>             <span class="fu">quantile</span>(df_tmp<span class="sc">$</span>ps[<span class="sc">!</span>df_tmp<span class="sc">$</span>treat], <span class="fl">0.05</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb3-42"><a href=""></a>upper <span class="ot">&lt;-</span> <span class="fu">min</span>(<span class="fu">quantile</span>(df_tmp<span class="sc">$</span>ps[df_tmp<span class="sc">$</span>treat], <span class="fl">0.95</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-43"><a href=""></a>             <span class="fu">quantile</span>(df_tmp<span class="sc">$</span>ps[<span class="sc">!</span>df_tmp<span class="sc">$</span>treat], <span class="fl">0.95</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb3-44"><a href=""></a>df_trim <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(df_tmp, ps <span class="sc">&gt;=</span> lower <span class="sc">&amp;</span> ps <span class="sc">&lt;=</span> upper)</span>
+<span id="cb3-45"><a href=""></a></span>
+<span id="cb3-46"><a href=""></a>psm_ur <span class="ot">&lt;-</span> <span class="fu">matchit</span>(</span>
+<span id="cb3-47"><a href=""></a>  intent_to_treat <span class="sc">~</span> age_manager_0 <span class="sc">+</span> educ_manager_0 <span class="sc">+</span></span>
+<span id="cb3-48"><a href=""></a>    age_deputy_0 <span class="sc">+</span> educ_deputy_0 <span class="sc">+</span> female_manager_0 <span class="sc">+</span> foreign_owned_0 <span class="sc">+</span></span>
+<span id="cb3-49"><a href=""></a>    staff_size_0 <span class="sc">+</span> advanced_filtration_0 <span class="sc">+</span> water_treatment_system_0 <span class="sc">+</span></span>
+<span id="cb3-50"><a href=""></a>    business_area_0 <span class="sc">+</span> recycling_center_distance_0,</span>
+<span id="cb3-51"><a href=""></a>  <span class="at">data =</span> df_trim <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>recycling_compliance_0, <span class="sc">-</span>recycling_compliance_1, <span class="sc">-</span>ps, <span class="sc">-</span>treat),</span>
+<span id="cb3-52"><a href=""></a>  <span class="at">distance =</span> <span class="st">"glm"</span>, <span class="at">link =</span> <span class="st">"probit"</span>, <span class="at">discard =</span> <span class="st">"both"</span>, <span class="at">method =</span> <span class="st">"nearest"</span>, <span class="at">estimand =</span> <span class="st">"ATT"</span></span>
+<span id="cb3-53"><a href=""></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="propensity-score-models" class="slide level2">
@@ -334,7 +372,7 @@ Dr.&nbsp;Lucas Sempé
 <span id="cb4-10"><a href=""></a>                          <span class="st">'staff_size_0'</span> <span class="ot">=</span> <span class="st">"Number of Staff at Baseline"</span>,</span>
 <span id="cb4-11"><a href=""></a>                          <span class="st">'advanced_filtration_0'</span> <span class="ot">=</span> <span class="st">"Advanced Filtration at Baseline"</span>,</span>
 <span id="cb4-12"><a href=""></a>                          <span class="st">'water_treatment_system_0'</span> <span class="ot">=</span> <span class="st">"Water Treatment System at Baseline"</span>,</span>
-<span id="cb4-13"><a href=""></a>                          <span class="st">'facility_area_0'</span> <span class="ot">=</span> <span class="st">"Facility Area at Baseline"</span>,</span>
+<span id="cb4-13"><a href=""></a>                          <span class="st">'business_area_0'</span> <span class="ot">=</span> <span class="st">"Business Area at Baseline"</span>,</span>
 <span id="cb4-14"><a href=""></a>                          <span class="st">'recycling_center_distance_0'</span> <span class="ot">=</span> <span class="st">"Distance From Recycling Center"</span>),</span>
 <span id="cb4-15"><a href=""></a>             <span class="at">title =</span> <span class="st">"Estimating the Propensity Score Based on Baseline Characteristics"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -394,28 +432,28 @@ Dr.&nbsp;Lucas Sempé
         <tbody>
                 <tr>
                   <td data-row="1" data-col="1">Age (Manager) at Baseline</td>
-                  <td data-row="1" data-col="2">-0.021</td>
-                  <td data-row="1" data-col="3">-0.013</td>
+                  <td data-row="1" data-col="2">-0.026</td>
+                  <td data-row="1" data-col="3">-0.016</td>
                 </tr>
                 <tr>
                   <td data-row="2" data-col="1"></td>
-                  <td data-row="2" data-col="2">(0.001)</td>
+                  <td data-row="2" data-col="2">(0.002)</td>
                   <td data-row="2" data-col="3">(0.002)</td>
                 </tr>
                 <tr>
                   <td data-row="3" data-col="1">Education (Manager) at Baseline</td>
-                  <td data-row="3" data-col="2">-0.041</td>
-                  <td data-row="3" data-col="3">-0.022</td>
+                  <td data-row="3" data-col="2">-0.052</td>
+                  <td data-row="3" data-col="3">-0.027</td>
                 </tr>
                 <tr>
                   <td data-row="4" data-col="1"></td>
-                  <td data-row="4" data-col="2">(0.006)</td>
-                  <td data-row="4" data-col="3">(0.006)</td>
+                  <td data-row="4" data-col="2">(0.007)</td>
+                  <td data-row="4" data-col="3">(0.007)</td>
                 </tr>
                 <tr>
                   <td data-row="5" data-col="1">Age (Deputy) at Baseline</td>
                   <td data-row="5" data-col="2"></td>
-                  <td data-row="5" data-col="3">-0.008</td>
+                  <td data-row="5" data-col="3">-0.010</td>
                 </tr>
                 <tr>
                   <td data-row="6" data-col="1"></td>
@@ -425,7 +463,7 @@ Dr.&nbsp;Lucas Sempé
                 <tr>
                   <td data-row="7" data-col="1">Education (Deputy) at Baseline</td>
                   <td data-row="7" data-col="2"></td>
-                  <td data-row="7" data-col="3">-0.016</td>
+                  <td data-row="7" data-col="3">-0.024</td>
                 </tr>
                 <tr>
                   <td data-row="8" data-col="1"></td>
@@ -435,62 +473,62 @@ Dr.&nbsp;Lucas Sempé
                 <tr>
                   <td data-row="9" data-col="1">Female Manager at Baseline</td>
                   <td data-row="9" data-col="2"></td>
-                  <td data-row="9" data-col="3">-0.020</td>
+                  <td data-row="9" data-col="3">-0.015</td>
                 </tr>
                 <tr>
                   <td data-row="10" data-col="1"></td>
                   <td data-row="10" data-col="2"></td>
-                  <td data-row="10" data-col="3">(0.052)</td>
+                  <td data-row="10" data-col="3">(0.058)</td>
                 </tr>
                 <tr>
                   <td data-row="11" data-col="1">Foreign Owned at Baseline</td>
                   <td data-row="11" data-col="2"></td>
-                  <td data-row="11" data-col="3">0.161</td>
+                  <td data-row="11" data-col="3">0.183</td>
                 </tr>
                 <tr>
                   <td data-row="12" data-col="1"></td>
                   <td data-row="12" data-col="2"></td>
-                  <td data-row="12" data-col="3">(0.031)</td>
+                  <td data-row="12" data-col="3">(0.035)</td>
                 </tr>
                 <tr>
                   <td data-row="13" data-col="1">Number of Staff at Baseline</td>
                   <td data-row="13" data-col="2"></td>
-                  <td data-row="13" data-col="3">0.119</td>
+                  <td data-row="13" data-col="3">0.123</td>
                 </tr>
                 <tr>
                   <td data-row="14" data-col="1"></td>
                   <td data-row="14" data-col="2"></td>
-                  <td data-row="14" data-col="3">(0.007)</td>
+                  <td data-row="14" data-col="3">(0.009)</td>
                 </tr>
                 <tr>
                   <td data-row="15" data-col="1">Advanced Filtration at Baseline</td>
                   <td data-row="15" data-col="2"></td>
-                  <td data-row="15" data-col="3">0.376</td>
+                  <td data-row="15" data-col="3">0.345</td>
                 </tr>
                 <tr>
                   <td data-row="16" data-col="1"></td>
                   <td data-row="16" data-col="2"></td>
-                  <td data-row="16" data-col="3">(0.031)</td>
+                  <td data-row="16" data-col="3">(0.035)</td>
                 </tr>
                 <tr>
                   <td data-row="17" data-col="1">Water Treatment System at Baseline</td>
                   <td data-row="17" data-col="2"></td>
-                  <td data-row="17" data-col="3">-0.125</td>
+                  <td data-row="17" data-col="3">-0.106</td>
                 </tr>
                 <tr>
                   <td data-row="18" data-col="1"></td>
                   <td data-row="18" data-col="2"></td>
-                  <td data-row="18" data-col="3">(0.029)</td>
+                  <td data-row="18" data-col="3">(0.033)</td>
                 </tr>
                 <tr>
-                  <td data-row="19" data-col="1">Facility Area at Baseline</td>
+                  <td data-row="19" data-col="1">Business Area at Baseline</td>
                   <td data-row="19" data-col="2"></td>
-                  <td data-row="19" data-col="3">-0.028</td>
+                  <td data-row="19" data-col="3">-0.027</td>
                 </tr>
                 <tr>
                   <td data-row="20" data-col="1"></td>
                   <td data-row="20" data-col="2"></td>
-                  <td data-row="20" data-col="3">(0.005)</td>
+                  <td data-row="20" data-col="3">(0.006)</td>
                 </tr>
                 <tr>
                   <td data-row="21" data-col="1">Distance From Recycling Center</td>
@@ -504,33 +542,33 @@ Dr.&nbsp;Lucas Sempé
                 </tr>
                 <tr>
                   <td data-row="23" data-col="1">Num.Obs.</td>
-                  <td data-row="23" data-col="2">9913</td>
-                  <td data-row="23" data-col="3">9913</td>
+                  <td data-row="23" data-col="2">8328</td>
+                  <td data-row="23" data-col="3">7481</td>
                 </tr>
                 <tr>
                   <td data-row="24" data-col="1">AIC</td>
-                  <td data-row="24" data-col="2">11658.4</td>
-                  <td data-row="24" data-col="3">11037.0</td>
+                  <td data-row="24" data-col="2">10023.8</td>
+                  <td data-row="24" data-col="3">9045.7</td>
                 </tr>
                 <tr>
                   <td data-row="25" data-col="1">BIC</td>
-                  <td data-row="25" data-col="2">11680.0</td>
-                  <td data-row="25" data-col="3">11123.5</td>
+                  <td data-row="25" data-col="2">10044.9</td>
+                  <td data-row="25" data-col="3">9128.7</td>
                 </tr>
                 <tr>
                   <td data-row="26" data-col="1">Log.Lik.</td>
-                  <td data-row="26" data-col="2">-5826.175</td>
-                  <td data-row="26" data-col="3">-5506.520</td>
+                  <td data-row="26" data-col="2">-5008.920</td>
+                  <td data-row="26" data-col="3">-4510.845</td>
                 </tr>
                 <tr>
                   <td data-row="27" data-col="1">F</td>
-                  <td data-row="27" data-col="2">211.091</td>
-                  <td data-row="27" data-col="3">87.937</td>
+                  <td data-row="27" data-col="2">152.100</td>
+                  <td data-row="27" data-col="3">38.059</td>
                 </tr>
                 <tr>
                   <td data-row="28" data-col="1">RMSE</td>
                   <td data-row="28" data-col="2">0.45</td>
-                  <td data-row="28" data-col="3">0.43</td>
+                  <td data-row="28" data-col="3">0.46</td>
                 </tr>
         </tbody>
       </table>
@@ -553,23 +591,23 @@ Dr.&nbsp;Lucas Sempé
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a><span class="co"># Add propensity scores to our dataset</span></span>
 <span id="cb5-2"><a href=""></a>df_w <span class="ot">&lt;-</span> df_w <span class="sc">%&gt;%</span></span>
-<span id="cb5-3"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">ps_ur =</span> psm_ur<span class="sc">$</span>model<span class="sc">$</span>fitted.values)</span>
+<span id="cb5-3"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">ps_ur0 =</span> psm_ur0<span class="sc">$</span>model<span class="sc">$</span>fitted.values)</span>
 <span id="cb5-4"><a href=""></a></span>
 <span id="cb5-5"><a href=""></a><span class="co"># Plot the distribution</span></span>
 <span id="cb5-6"><a href=""></a>df_w <span class="sc">%&gt;%</span></span>
-<span id="cb5-7"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">enrolled_lab =</span> <span class="fu">ifelse</span>(enrolled <span class="sc">==</span> <span class="dv">1</span>, <span class="st">"Enrolled"</span>, <span class="st">"Not Enrolled"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb5-8"><a href=""></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> ps_ur,</span>
-<span id="cb5-9"><a href=""></a>             <span class="at">group =</span> enrolled_lab, <span class="at">colour =</span> enrolled_lab, <span class="at">fill =</span> enrolled_lab)) <span class="sc">+</span></span>
+<span id="cb5-7"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">intent_to_treat_lab =</span> <span class="fu">ifelse</span>(intent_to_treat <span class="sc">==</span> <span class="dv">1</span>, <span class="st">"Offered"</span>, <span class="st">"Not Offered"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-8"><a href=""></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> ps_ur0,</span>
+<span id="cb5-9"><a href=""></a>             <span class="at">group =</span> intent_to_treat_lab, <span class="at">colour =</span> intent_to_treat_lab, <span class="at">fill =</span> intent_to_treat_lab)) <span class="sc">+</span></span>
 <span id="cb5-10"><a href=""></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
 <span id="cb5-11"><a href=""></a>  <span class="fu">xlab</span>(<span class="st">"Propensity Score"</span>) <span class="sc">+</span></span>
-<span id="cb5-12"><a href=""></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of Propensity Score by Enrollment Status"</span>) <span class="sc">+</span></span>
+<span id="cb5-12"><a href=""></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of Propensity Score by Offer Status"</span>) <span class="sc">+</span></span>
 <span id="cb5-13"><a href=""></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="st">"Status:"</span>, <span class="at">end =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
 <span id="cb5-14"><a href=""></a>  <span class="fu">scale_colour_viridis_d</span>(<span class="st">"Status:"</span>, <span class="at">end =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
 <span id="cb5-15"><a href=""></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
 <span id="cb5-16"><a href=""></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
-<img data-src="session_10_files/figure-revealjs/unnamed-chunk-5-1.png" width="960" class="r-stretch"></section>
+<img data-src="session_10_updated_files/figure-revealjs/unnamed-chunk-5-1.png" width="960" class="r-stretch"></section>
 <section id="what-is-common-support" class="slide level2">
 <h2>What is Common Support?</h2>
 <ul>
@@ -602,122 +640,122 @@ Dr.&nbsp;Lucas Sempé
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">distance</td>
-<td style="text-align: right;">0.3694119</td>
-<td style="text-align: right;">0.2683525</td>
-<td style="text-align: right;">0.7780852</td>
-<td style="text-align: right;">0.8189848</td>
-<td style="text-align: right;">0.2003240</td>
-<td style="text-align: right;">0.3118783</td>
+<td style="text-align: right;">0.3645303</td>
+<td style="text-align: right;">0.3082898</td>
+<td style="text-align: right;">0.5341077</td>
+<td style="text-align: right;">0.9137492</td>
+<td style="text-align: right;">0.1467018</td>
+<td style="text-align: right;">0.2306447</td>
 <td style="text-align: right;">NA</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">age_manager_0</td>
-<td style="text-align: right;">41.6565796</td>
-<td style="text-align: right;">48.1384372</td>
-<td style="text-align: right;">-0.4731180</td>
-<td style="text-align: right;">0.7797904</td>
-<td style="text-align: right;">0.0881294</td>
-<td style="text-align: right;">0.2074113</td>
+<td style="text-align: right;">41.1971787</td>
+<td style="text-align: right;">44.2138602</td>
+<td style="text-align: right;">-0.2344410</td>
+<td style="text-align: right;">0.9102123</td>
+<td style="text-align: right;">0.0421013</td>
+<td style="text-align: right;">0.1233364</td>
 <td style="text-align: right;">NA</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">educ_manager_0</td>
-<td style="text-align: right;">2.9711803</td>
-<td style="text-align: right;">2.7744736</td>
-<td style="text-align: right;">0.0742925</td>
-<td style="text-align: right;">0.8959873</td>
-<td style="text-align: right;">0.0218441</td>
-<td style="text-align: right;">0.0622731</td>
+<td style="text-align: right;">3.1171365</td>
+<td style="text-align: right;">3.0622752</td>
+<td style="text-align: right;">0.0206419</td>
+<td style="text-align: right;">0.8537732</td>
+<td style="text-align: right;">0.0150915</td>
+<td style="text-align: right;">0.0373049</td>
 <td style="text-align: right;">NA</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">age_deputy_0</td>
-<td style="text-align: right;">36.8363698</td>
-<td style="text-align: right;">41.6117427</td>
-<td style="text-align: right;">-0.4098452</td>
-<td style="text-align: right;">0.8042407</td>
-<td style="text-align: right;">0.0647834</td>
-<td style="text-align: right;">0.2100395</td>
+<td style="text-align: right;">36.4871166</td>
+<td style="text-align: right;">38.8306195</td>
+<td style="text-align: right;">-0.2113914</td>
+<td style="text-align: right;">0.9584734</td>
+<td style="text-align: right;">0.0354490</td>
+<td style="text-align: right;">0.1252779</td>
 <td style="text-align: right;">NA</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">educ_deputy_0</td>
-<td style="text-align: right;">2.7032726</td>
-<td style="text-align: right;">2.5810189</td>
-<td style="text-align: right;">0.0494165</td>
-<td style="text-align: right;">0.9256881</td>
-<td style="text-align: right;">0.0141252</td>
-<td style="text-align: right;">0.0689847</td>
+<td style="text-align: right;">2.8601227</td>
+<td style="text-align: right;">2.8504766</td>
+<td style="text-align: right;">0.0038365</td>
+<td style="text-align: right;">0.8874035</td>
+<td style="text-align: right;">0.0104608</td>
+<td style="text-align: right;">0.0418152</td>
 <td style="text-align: right;">NA</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">female_manager_0</td>
-<td style="text-align: right;">0.0732119</td>
-<td style="text-align: right;">0.1100878</td>
-<td style="text-align: right;">-0.1415669</td>
+<td style="text-align: right;">0.0740286</td>
+<td style="text-align: right;">0.0903495</td>
+<td style="text-align: right;">-0.0623368</td>
 <td style="text-align: right;">NA</td>
-<td style="text-align: right;">0.0368759</td>
-<td style="text-align: right;">0.0368759</td>
+<td style="text-align: right;">0.0163209</td>
+<td style="text-align: right;">0.0163209</td>
 <td style="text-align: right;">NA</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">foreign_owned_0</td>
-<td style="text-align: right;">0.4291498</td>
-<td style="text-align: right;">0.3203339</td>
-<td style="text-align: right;">0.2198503</td>
+<td style="text-align: right;">0.4049080</td>
+<td style="text-align: right;">0.3480937</td>
+<td style="text-align: right;">0.1157410</td>
 <td style="text-align: right;">NA</td>
-<td style="text-align: right;">0.1088159</td>
-<td style="text-align: right;">0.1088159</td>
+<td style="text-align: right;">0.0568143</td>
+<td style="text-align: right;">0.0568143</td>
 <td style="text-align: right;">NA</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">staff_size_0</td>
-<td style="text-align: right;">5.7699055</td>
-<td style="text-align: right;">4.9263203</td>
-<td style="text-align: right;">0.4225943</td>
-<td style="text-align: right;">0.8029708</td>
-<td style="text-align: right;">0.0651539</td>
-<td style="text-align: right;">0.1833283</td>
+<td style="text-align: right;">5.6854806</td>
+<td style="text-align: right;">5.3198967</td>
+<td style="text-align: right;">0.1922569</td>
+<td style="text-align: right;">0.8189137</td>
+<td style="text-align: right;">0.0295015</td>
+<td style="text-align: right;">0.0942807</td>
 <td style="text-align: right;">NA</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">advanced_filtration_0</td>
-<td style="text-align: right;">0.7216599</td>
-<td style="text-align: right;">0.5533170</td>
-<td style="text-align: right;">0.3756130</td>
+<td style="text-align: right;">0.6952965</td>
+<td style="text-align: right;">0.6121922</td>
+<td style="text-align: right;">0.1805510</td>
 <td style="text-align: right;">NA</td>
-<td style="text-align: right;">0.1683429</td>
-<td style="text-align: right;">0.1683429</td>
+<td style="text-align: right;">0.0831043</td>
+<td style="text-align: right;">0.0831043</td>
 <td style="text-align: right;">NA</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">water_treatment_system_0</td>
-<td style="text-align: right;">0.5735493</td>
-<td style="text-align: right;">0.6340481</td>
-<td style="text-align: right;">-0.1223283</td>
+<td style="text-align: right;">0.6049080</td>
+<td style="text-align: right;">0.6201350</td>
+<td style="text-align: right;">-0.0311474</td>
 <td style="text-align: right;">NA</td>
-<td style="text-align: right;">0.0604988</td>
-<td style="text-align: right;">0.0604988</td>
+<td style="text-align: right;">0.0152271</td>
+<td style="text-align: right;">0.0152271</td>
 <td style="text-align: right;">NA</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">facility_area_0</td>
-<td style="text-align: right;">1.6771255</td>
-<td style="text-align: right;">2.2511153</td>
-<td style="text-align: right;">-0.2172044</td>
-<td style="text-align: right;">0.6390513</td>
-<td style="text-align: right;">0.0240692</td>
-<td style="text-align: right;">0.0881821</td>
+<td style="text-align: left;">business_area_0</td>
+<td style="text-align: right;">1.6413088</td>
+<td style="text-align: right;">1.8194996</td>
+<td style="text-align: right;">-0.0694425</td>
+<td style="text-align: right;">0.9340144</td>
+<td style="text-align: right;">0.0087070</td>
+<td style="text-align: right;">0.0518693</td>
 <td style="text-align: right;">NA</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">recycling_center_distance_0</td>
-<td style="text-align: right;">109.2043122</td>
-<td style="text-align: right;">103.6626222</td>
-<td style="text-align: right;">0.1323667</td>
-<td style="text-align: right;">0.9916816</td>
-<td style="text-align: right;">0.0395806</td>
-<td style="text-align: right;">0.0829805</td>
+<td style="text-align: right;">107.3139072</td>
+<td style="text-align: right;">104.9560751</td>
+<td style="text-align: right;">0.0562456</td>
+<td style="text-align: right;">0.9856733</td>
+<td style="text-align: right;">0.0171516</td>
+<td style="text-align: right;">0.0452480</td>
 <td style="text-align: right;">NA</td>
 </tr>
 </tbody>
@@ -749,123 +787,123 @@ Dr.&nbsp;Lucas Sempé
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">distance</td>
-<td style="text-align: right;">0.3694119</td>
-<td style="text-align: right;">0.3687162</td>
-<td style="text-align: right;">0.0053561</td>
-<td style="text-align: right;">1.0138523</td>
-<td style="text-align: right;">0.0007394</td>
-<td style="text-align: right;">0.0084345</td>
-<td style="text-align: right;">0.0055861</td>
+<td style="text-align: right;">0.3646307</td>
+<td style="text-align: right;">0.3644330</td>
+<td style="text-align: right;">0.0018780</td>
+<td style="text-align: right;">1.0034330</td>
+<td style="text-align: right;">0.0004996</td>
+<td style="text-align: right;">0.0069558</td>
+<td style="text-align: right;">0.0021265</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">age_manager_0</td>
-<td style="text-align: right;">41.6565796</td>
-<td style="text-align: right;">41.7867746</td>
-<td style="text-align: right;">-0.0095031</td>
-<td style="text-align: right;">1.0867281</td>
-<td style="text-align: right;">0.0114843</td>
-<td style="text-align: right;">0.0381242</td>
-<td style="text-align: right;">0.9086975</td>
+<td style="text-align: right;">41.1788469</td>
+<td style="text-align: right;">41.4124386</td>
+<td style="text-align: right;">-0.0181536</td>
+<td style="text-align: right;">1.0819378</td>
+<td style="text-align: right;">0.0106219</td>
+<td style="text-align: right;">0.0376432</td>
+<td style="text-align: right;">0.9925786</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">educ_manager_0</td>
-<td style="text-align: right;">2.9711803</td>
-<td style="text-align: right;">2.9549320</td>
-<td style="text-align: right;">0.0061367</td>
-<td style="text-align: right;">0.9271782</td>
-<td style="text-align: right;">0.0094467</td>
-<td style="text-align: right;">0.0239541</td>
-<td style="text-align: right;">1.0892771</td>
+<td style="text-align: right;">3.1171844</td>
+<td style="text-align: right;">3.0363007</td>
+<td style="text-align: right;">0.0304330</td>
+<td style="text-align: right;">0.9569419</td>
+<td style="text-align: right;">0.0089801</td>
+<td style="text-align: right;">0.0270049</td>
+<td style="text-align: right;">1.0897201</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">age_deputy_0</td>
-<td style="text-align: right;">36.8363698</td>
-<td style="text-align: right;">36.9915655</td>
-<td style="text-align: right;">-0.0133196</td>
-<td style="text-align: right;">1.1143952</td>
-<td style="text-align: right;">0.0104041</td>
-<td style="text-align: right;">0.0371120</td>
-<td style="text-align: right;">0.9332429</td>
+<td style="text-align: right;">36.4754501</td>
+<td style="text-align: right;">36.6346154</td>
+<td style="text-align: right;">-0.0143572</td>
+<td style="text-align: right;">1.1478148</td>
+<td style="text-align: right;">0.0114025</td>
+<td style="text-align: right;">0.0331424</td>
+<td style="text-align: right;">0.9966267</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">educ_deputy_0</td>
-<td style="text-align: right;">2.7032726</td>
-<td style="text-align: right;">2.7128880</td>
-<td style="text-align: right;">-0.0038867</td>
-<td style="text-align: right;">0.8918377</td>
-<td style="text-align: right;">0.0072981</td>
-<td style="text-align: right;">0.0215924</td>
-<td style="text-align: right;">1.0663763</td>
+<td style="text-align: right;">2.8612930</td>
+<td style="text-align: right;">2.8764321</td>
+<td style="text-align: right;">-0.0060211</td>
+<td style="text-align: right;">0.9652645</td>
+<td style="text-align: right;">0.0064330</td>
+<td style="text-align: right;">0.0139116</td>
+<td style="text-align: right;">1.0875452</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">female_manager_0</td>
-<td style="text-align: right;">0.0732119</td>
-<td style="text-align: right;">0.0732119</td>
-<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0740589</td>
+<td style="text-align: right;">0.0748773</td>
+<td style="text-align: right;">-0.0031256</td>
 <td style="text-align: right;">NA</td>
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: right;">0.1288799</td>
+<td style="text-align: right;">0.0008183</td>
+<td style="text-align: right;">0.0008183</td>
+<td style="text-align: right;">0.5344736</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">foreign_owned_0</td>
-<td style="text-align: right;">0.4291498</td>
-<td style="text-align: right;">0.4234143</td>
-<td style="text-align: right;">0.0115879</td>
+<td style="text-align: right;">0.4050736</td>
+<td style="text-align: right;">0.3964812</td>
+<td style="text-align: right;">0.0175044</td>
 <td style="text-align: right;">NA</td>
-<td style="text-align: right;">0.0057355</td>
-<td style="text-align: right;">0.0057355</td>
-<td style="text-align: right;">0.9031755</td>
+<td style="text-align: right;">0.0085925</td>
+<td style="text-align: right;">0.0085925</td>
+<td style="text-align: right;">0.9160649</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">staff_size_0</td>
-<td style="text-align: right;">5.7699055</td>
-<td style="text-align: right;">5.7884615</td>
-<td style="text-align: right;">-0.0092956</td>
-<td style="text-align: right;">0.8691665</td>
-<td style="text-align: right;">0.0105626</td>
-<td style="text-align: right;">0.0229420</td>
-<td style="text-align: right;">0.9946331</td>
+<td style="text-align: right;">5.6849427</td>
+<td style="text-align: right;">5.7479542</td>
+<td style="text-align: right;">-0.0331371</td>
+<td style="text-align: right;">0.8197068</td>
+<td style="text-align: right;">0.0148558</td>
+<td style="text-align: right;">0.0380524</td>
+<td style="text-align: right;">1.1150416</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">advanced_filtration_0</td>
-<td style="text-align: right;">0.7216599</td>
-<td style="text-align: right;">0.7253711</td>
-<td style="text-align: right;">-0.0082806</td>
+<td style="text-align: right;">0.6951718</td>
+<td style="text-align: right;">0.6873977</td>
+<td style="text-align: right;">0.0168900</td>
 <td style="text-align: right;">NA</td>
-<td style="text-align: right;">0.0037112</td>
-<td style="text-align: right;">0.0037112</td>
-<td style="text-align: right;">0.6857819</td>
+<td style="text-align: right;">0.0077741</td>
+<td style="text-align: right;">0.0077741</td>
+<td style="text-align: right;">0.7884945</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">water_treatment_system_0</td>
-<td style="text-align: right;">0.5735493</td>
-<td style="text-align: right;">0.5732119</td>
-<td style="text-align: right;">0.0006822</td>
+<td style="text-align: right;">0.6047463</td>
+<td style="text-align: right;">0.6088380</td>
+<td style="text-align: right;">-0.0083696</td>
 <td style="text-align: right;">NA</td>
-<td style="text-align: right;">0.0003374</td>
-<td style="text-align: right;">0.0003374</td>
-<td style="text-align: right;">0.9816638</td>
+<td style="text-align: right;">0.0040917</td>
+<td style="text-align: right;">0.0040917</td>
+<td style="text-align: right;">0.9440916</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">facility_area_0</td>
-<td style="text-align: right;">1.6771255</td>
-<td style="text-align: right;">1.7010796</td>
-<td style="text-align: right;">-0.0090645</td>
-<td style="text-align: right;">1.0159498</td>
-<td style="text-align: right;">0.0045968</td>
-<td style="text-align: right;">0.0276653</td>
-<td style="text-align: right;">0.8103167</td>
+<td style="text-align: left;">business_area_0</td>
+<td style="text-align: right;">1.6403437</td>
+<td style="text-align: right;">1.6157938</td>
+<td style="text-align: right;">0.0095673</td>
+<td style="text-align: right;">1.0690202</td>
+<td style="text-align: right;">0.0040917</td>
+<td style="text-align: right;">0.0294599</td>
+<td style="text-align: right;">0.8164105</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">recycling_center_distance_0</td>
-<td style="text-align: right;">109.2043122</td>
-<td style="text-align: right;">108.5100383</td>
-<td style="text-align: right;">0.0165832</td>
-<td style="text-align: right;">0.9993878</td>
-<td style="text-align: right;">0.0104486</td>
-<td style="text-align: right;">0.0485830</td>
-<td style="text-align: right;">1.0886493</td>
+<td style="text-align: right;">107.3148318</td>
+<td style="text-align: right;">106.8446670</td>
+<td style="text-align: right;">0.0112157</td>
+<td style="text-align: right;">1.0000232</td>
+<td style="text-align: right;">0.0100685</td>
+<td style="text-align: right;">0.0405074</td>
+<td style="text-align: right;">1.1083413</td>
 </tr>
 </tbody>
 </table>
@@ -885,21 +923,21 @@ Dr.&nbsp;Lucas Sempé
 <p>First, extract the matched dataset:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href=""></a><span class="co"># Extract matched datasets</span></span>
-<span id="cb8-2"><a href=""></a>match_df_r <span class="ot">&lt;-</span> <span class="fu">match.data</span>(psm_r)   <span class="co"># Limited set</span></span>
-<span id="cb8-3"><a href=""></a>match_df_ur <span class="ot">&lt;-</span> <span class="fu">match.data</span>(psm_ur) <span class="co"># Full set</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-2"><a href=""></a>match_df_r <span class="ot">&lt;-</span> <span class="fu">match.data</span>(psm_r, <span class="at">drop.unmatched =</span> <span class="cn">TRUE</span>)   <span class="co"># Limited set</span></span>
+<span id="cb8-3"><a href=""></a>match_df_ur <span class="ot">&lt;-</span> <span class="fu">match.data</span>(psm_ur, <span class="at">drop.unmatched =</span> <span class="cn">TRUE</span>) <span class="co"># Full set</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="regression-with-matched-data" class="slide level2">
 <h2>Regression with Matched Data</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href=""></a><span class="co"># Regression with matched data</span></span>
-<span id="cb9-2"><a href=""></a>out_lm_r <span class="ot">&lt;-</span> <span class="fu">lm_robust</span>(waste_management_costs_1 <span class="sc">~</span> enrolled,</span>
-<span id="cb9-3"><a href=""></a>                      <span class="at">data =</span> match_df_r,  <span class="at">weights =</span> weights,</span>
-<span id="cb9-4"><a href=""></a>                      <span class="at">clusters =</span> zone_identifier)</span>
+<span id="cb9-2"><a href=""></a>out_lm_r <span class="ot">&lt;-</span> <span class="fu">lm_robust</span>(waste_management_costs_1 <span class="sc">~</span> intent_to_treat,</span>
+<span id="cb9-3"><a href=""></a>                      <span class="at">data =</span> match_df_r,  </span>
+<span id="cb9-4"><a href=""></a>                      <span class="at">clusters =</span> neighborhood_identifier)</span>
 <span id="cb9-5"><a href=""></a></span>
-<span id="cb9-6"><a href=""></a>out_lm_ur <span class="ot">&lt;-</span> <span class="fu">lm_robust</span>(waste_management_costs_1 <span class="sc">~</span> enrolled,</span>
-<span id="cb9-7"><a href=""></a>                      <span class="at">data =</span> match_df_ur, <span class="at">weights =</span> weights,</span>
-<span id="cb9-8"><a href=""></a>                      <span class="at">clusters =</span> zone_identifier)</span>
+<span id="cb9-6"><a href=""></a>out_lm_ur <span class="ot">&lt;-</span> <span class="fu">lm_robust</span>(waste_management_costs_1 <span class="sc">~</span> intent_to_treat,</span>
+<span id="cb9-7"><a href=""></a>                      <span class="at">data =</span> match_df_ur, </span>
+<span id="cb9-8"><a href=""></a>                      <span class="at">clusters =</span> neighborhood_identifier)</span>
 <span id="cb9-9"><a href=""></a></span>
 <span id="cb9-10"><a href=""></a><span class="co"># Show results</span></span>
 <span id="cb9-11"><a href=""></a><span class="fu">modelsummary</span>(<span class="fu">list</span>(<span class="st">"Limited Set"</span> <span class="ot">=</span> out_lm_r, </span>
@@ -912,25 +950,25 @@ Dr.&nbsp;Lucas Sempé
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_vd6c7ag6iedpqgwhjq98 = TinyTable.createTableFunctions("tinytable_vd6c7ag6iedpqgwhjq98");
+      const tableFns_5mgvd6c7ag6iedpqgwhj = TinyTable.createTableFunctions("tinytable_5mgvd6c7ag6iedpqgwhj");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '11', j: 2 }, { i: '11', j: 3 } ], css_id: 'tinytable_css_s6sx809m5vfpf1xdtrkm',}, 
-          { positions: [ { i: '4', j: 2 }, { i: '4', j: 3 } ], css_id: 'tinytable_css_mtvqe09lzotq8iyxmbey',}, 
-          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '5', j: 3 }, { i: '6', j: 3 }, { i: '7', j: 3 }, { i: '8', j: 3 }, { i: '9', j: 3 }, { i: '10', j: 3 } ], css_id: 'tinytable_css_orsckosjsccy4cmr7nfa',}, 
-          { positions: [ { i: '0', j: 2 }, { i: '0', j: 3 } ], css_id: 'tinytable_css_jydnt7j9lg8ykfpyypcz',}, 
-          { positions: [ { i: '11', j: 1 } ], css_id: 'tinytable_css_memnws5opnv7fv0to2lg',}, 
-          { positions: [ { i: '4', j: 1 } ], css_id: 'tinytable_css_g6t708yo1a3jahd2r2rs',}, 
-          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 } ], css_id: 'tinytable_css_i7w14kuzqm2e6xuhhy8e',}, 
-          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_uihrkszjm41hbch98ysl',}, 
+          { positions: [ { i: '11', j: 2 }, { i: '11', j: 3 } ], css_id: 'tinytable_css_beys6sx809m5vfpf1xdt',}, 
+          { positions: [ { i: '4', j: 2 }, { i: '4', j: 3 } ], css_id: 'tinytable_css_nfamtvqe09lzotq8iyxm',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '5', j: 3 }, { i: '6', j: 3 }, { i: '7', j: 3 }, { i: '8', j: 3 }, { i: '9', j: 3 }, { i: '10', j: 3 } ], css_id: 'tinytable_css_pczorsckosjsccy4cmr7',}, 
+          { positions: [ { i: '0', j: 2 }, { i: '0', j: 3 } ], css_id: 'tinytable_css_2lgjydnt7j9lg8ykfpyy',}, 
+          { positions: [ { i: '11', j: 1 } ], css_id: 'tinytable_css_2rsmemnws5opnv7fv0to',}, 
+          { positions: [ { i: '4', j: 1 } ], css_id: 'tinytable_css_y8eg6t708yo1a3jahd2r',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 } ], css_id: 'tinytable_css_ysli7w14kuzqm2e6xuhh',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_q98uihrkszjm41hbch98',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_vd6c7ag6iedpqgwhjq98.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_5mgvd6c7ag6iedpqgwhj.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -939,17 +977,17 @@ Dr.&nbsp;Lucas Sempé
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_vd6c7ag6iedpqgwhjq98 td.tinytable_css_s6sx809m5vfpf1xdtrkm, #tinytable_vd6c7ag6iedpqgwhjq98 th.tinytable_css_s6sx809m5vfpf1xdtrkm {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_vd6c7ag6iedpqgwhjq98 td.tinytable_css_mtvqe09lzotq8iyxmbey, #tinytable_vd6c7ag6iedpqgwhjq98 th.tinytable_css_mtvqe09lzotq8iyxmbey {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_vd6c7ag6iedpqgwhjq98 td.tinytable_css_orsckosjsccy4cmr7nfa, #tinytable_vd6c7ag6iedpqgwhjq98 th.tinytable_css_orsckosjsccy4cmr7nfa { text-align: center }
-    #tinytable_vd6c7ag6iedpqgwhjq98 td.tinytable_css_jydnt7j9lg8ykfpyypcz, #tinytable_vd6c7ag6iedpqgwhjq98 th.tinytable_css_jydnt7j9lg8ykfpyypcz {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_vd6c7ag6iedpqgwhjq98 td.tinytable_css_memnws5opnv7fv0to2lg, #tinytable_vd6c7ag6iedpqgwhjq98 th.tinytable_css_memnws5opnv7fv0to2lg {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_vd6c7ag6iedpqgwhjq98 td.tinytable_css_g6t708yo1a3jahd2r2rs, #tinytable_vd6c7ag6iedpqgwhjq98 th.tinytable_css_g6t708yo1a3jahd2r2rs {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_vd6c7ag6iedpqgwhjq98 td.tinytable_css_i7w14kuzqm2e6xuhhy8e, #tinytable_vd6c7ag6iedpqgwhjq98 th.tinytable_css_i7w14kuzqm2e6xuhhy8e { text-align: left }
-    #tinytable_vd6c7ag6iedpqgwhjq98 td.tinytable_css_uihrkszjm41hbch98ysl, #tinytable_vd6c7ag6iedpqgwhjq98 th.tinytable_css_uihrkszjm41hbch98ysl {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_5mgvd6c7ag6iedpqgwhj td.tinytable_css_beys6sx809m5vfpf1xdt, #tinytable_5mgvd6c7ag6iedpqgwhj th.tinytable_css_beys6sx809m5vfpf1xdt {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_5mgvd6c7ag6iedpqgwhj td.tinytable_css_nfamtvqe09lzotq8iyxm, #tinytable_5mgvd6c7ag6iedpqgwhj th.tinytable_css_nfamtvqe09lzotq8iyxm {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_5mgvd6c7ag6iedpqgwhj td.tinytable_css_pczorsckosjsccy4cmr7, #tinytable_5mgvd6c7ag6iedpqgwhj th.tinytable_css_pczorsckosjsccy4cmr7 { text-align: center }
+    #tinytable_5mgvd6c7ag6iedpqgwhj td.tinytable_css_2lgjydnt7j9lg8ykfpyy, #tinytable_5mgvd6c7ag6iedpqgwhj th.tinytable_css_2lgjydnt7j9lg8ykfpyy {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_5mgvd6c7ag6iedpqgwhj td.tinytable_css_2rsmemnws5opnv7fv0to, #tinytable_5mgvd6c7ag6iedpqgwhj th.tinytable_css_2rsmemnws5opnv7fv0to {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_5mgvd6c7ag6iedpqgwhj td.tinytable_css_y8eg6t708yo1a3jahd2r, #tinytable_5mgvd6c7ag6iedpqgwhj th.tinytable_css_y8eg6t708yo1a3jahd2r {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_5mgvd6c7ag6iedpqgwhj td.tinytable_css_ysli7w14kuzqm2e6xuhh, #tinytable_5mgvd6c7ag6iedpqgwhj th.tinytable_css_ysli7w14kuzqm2e6xuhh { text-align: left }
+    #tinytable_5mgvd6c7ag6iedpqgwhj td.tinytable_css_q98uihrkszjm41hbch98, #tinytable_5mgvd6c7ag6iedpqgwhj th.tinytable_css_q98uihrkszjm41hbch98 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_vd6c7ag6iedpqgwhjq98" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_5mgvd6c7ag6iedpqgwhj" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <caption>Impact on Waste Management Costs: Matching Approach</caption>
         <thead>
               <tr>
@@ -962,58 +1000,58 @@ Dr.&nbsp;Lucas Sempé
         <tbody>
                 <tr>
                   <td data-row="1" data-col="1">(Intercept)</td>
-                  <td data-row="1" data-col="2">1900.249</td>
-                  <td data-row="1" data-col="3">1784.038</td>
+                  <td data-row="1" data-col="2">1883.333</td>
+                  <td data-row="1" data-col="3">1771.272</td>
                 </tr>
                 <tr>
                   <td data-row="2" data-col="1"></td>
-                  <td data-row="2" data-col="2">(30.125)</td>
-                  <td data-row="2" data-col="3">(28.583)</td>
+                  <td data-row="2" data-col="2">(30.540)</td>
+                  <td data-row="2" data-col="3">(27.943)</td>
                 </tr>
                 <tr>
-                  <td data-row="3" data-col="1">enrolled</td>
-                  <td data-row="3" data-col="2">-1116.272</td>
-                  <td data-row="3" data-col="3">-1000.061</td>
+                  <td data-row="3" data-col="1">intent_to_treat</td>
+                  <td data-row="3" data-col="2">-1114.801</td>
+                  <td data-row="3" data-col="3">-967.049</td>
                 </tr>
                 <tr>
                   <td data-row="4" data-col="1"></td>
-                  <td data-row="4" data-col="2">(38.359)</td>
-                  <td data-row="4" data-col="3">(36.900)</td>
+                  <td data-row="4" data-col="2">(38.503)</td>
+                  <td data-row="4" data-col="3">(35.109)</td>
                 </tr>
                 <tr>
                   <td data-row="5" data-col="1">Num.Obs.</td>
-                  <td data-row="5" data-col="2">5928</td>
-                  <td data-row="5" data-col="3">5928</td>
+                  <td data-row="5" data-col="2">5186</td>
+                  <td data-row="5" data-col="3">4888</td>
                 </tr>
                 <tr>
                   <td data-row="6" data-col="1">R2</td>
-                  <td data-row="6" data-col="2">0.300</td>
+                  <td data-row="6" data-col="2">0.306</td>
                   <td data-row="6" data-col="3">0.280</td>
                 </tr>
                 <tr>
                   <td data-row="7" data-col="1">R2 Adj.</td>
-                  <td data-row="7" data-col="2">0.300</td>
+                  <td data-row="7" data-col="2">0.306</td>
                   <td data-row="7" data-col="3">0.280</td>
                 </tr>
                 <tr>
                   <td data-row="8" data-col="1">AIC</td>
-                  <td data-row="8" data-col="2">96836.9</td>
-                  <td data-row="8" data-col="3">96118.5</td>
+                  <td data-row="8" data-col="2">84559.2</td>
+                  <td data-row="8" data-col="3">78921.6</td>
                 </tr>
                 <tr>
                   <td data-row="9" data-col="1">BIC</td>
-                  <td data-row="9" data-col="2">96857.0</td>
-                  <td data-row="9" data-col="3">96138.5</td>
+                  <td data-row="9" data-col="2">84578.8</td>
+                  <td data-row="9" data-col="3">78941.1</td>
                 </tr>
                 <tr>
                   <td data-row="10" data-col="1">RMSE</td>
-                  <td data-row="10" data-col="2">852.62</td>
-                  <td data-row="10" data-col="3">802.49</td>
+                  <td data-row="10" data-col="2">839.76</td>
+                  <td data-row="10" data-col="3">775.45</td>
                 </tr>
                 <tr>
                   <td data-row="11" data-col="1">Std.Errors</td>
-                  <td data-row="11" data-col="2">by: zone_identifier</td>
-                  <td data-row="11" data-col="3">by: zone_identifier</td>
+                  <td data-row="11" data-col="2">by: neighborhood_identifier</td>
+                  <td data-row="11" data-col="3">by: neighborhood_identifier</td>
                 </tr>
         </tbody>
       </table>
@@ -1022,7 +1060,7 @@ Dr.&nbsp;Lucas Sempé
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href=""></a><span class="co"># # Simplified version</span></span>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href=""></a><span class="co"># # # Simplified version</span></span>
 <span id="cb10-2"><a href=""></a><span class="co"># </span></span>
 <span id="cb10-3"><a href=""></a><span class="co"># library(tinytable)</span></span>
 <span id="cb10-4"><a href=""></a><span class="co"># </span></span>
@@ -1032,15 +1070,15 @@ Dr.&nbsp;Lucas Sempé
 <span id="cb10-8"><a href=""></a><span class="co">#   gof_map = c("nobs"),</span></span>
 <span id="cb10-9"><a href=""></a><span class="co">#   title = "Matching Regression Results",</span></span>
 <span id="cb10-10"><a href=""></a><span class="co">#   coef_map = c(</span></span>
-<span id="cb10-11"><a href=""></a><span class="co">#     "enrolled" = "Matching Effect",</span></span>
+<span id="cb10-11"><a href=""></a><span class="co">#     "intent_to_treat" = "Matching Effect",</span></span>
 <span id="cb10-12"><a href=""></a><span class="co">#     "(Intercept)" = "(Intercept)"</span></span>
 <span id="cb10-13"><a href=""></a><span class="co">#   ),</span></span>
-<span id="cb10-14"><a href=""></a><span class="co">#   coef_omit = NULL, </span></span>
+<span id="cb10-14"><a href=""></a><span class="co">#   coef_omit = NULL,</span></span>
 <span id="cb10-15"><a href=""></a><span class="co">#   notes = "Standard errors are in parenthesis",</span></span>
 <span id="cb10-16"><a href=""></a><span class="co">#   output = "tinytable"</span></span>
 <span id="cb10-17"><a href=""></a><span class="co"># ) |&gt;</span></span>
 <span id="cb10-18"><a href=""></a><span class="co">#   style_tt(bootstrap_class = "table caption-top")</span></span>
-<span id="cb10-19"><a href=""></a></span>
+<span id="cb10-19"><a href=""></a><span class="co"># </span></span>
 <span id="cb10-20"><a href=""></a><span class="co"># ## Output for case study</span></span>
 <span id="cb10-21"><a href=""></a><span class="co"># library(flextable)</span></span>
 <span id="cb10-22"><a href=""></a><span class="co"># library(officer)</span></span>
@@ -1052,7 +1090,7 @@ Dr.&nbsp;Lucas Sempé
 <span id="cb10-28"><a href=""></a><span class="co">#   gof_map = c("nobs"),</span></span>
 <span id="cb10-29"><a href=""></a><span class="co">#   title = "Matching Regression Results",</span></span>
 <span id="cb10-30"><a href=""></a><span class="co">#   coef_map = c(</span></span>
-<span id="cb10-31"><a href=""></a><span class="co">#     "enrolled" = "Matching Effect",</span></span>
+<span id="cb10-31"><a href=""></a><span class="co">#     "intent_to_treat" = "Matching Effect",</span></span>
 <span id="cb10-32"><a href=""></a><span class="co">#     "(Intercept)" = "(Intercept)"</span></span>
 <span id="cb10-33"><a href=""></a><span class="co">#   ),</span></span>
 <span id="cb10-34"><a href=""></a><span class="co">#   notes = "Standard errors are in parentheses",</span></span>
@@ -1077,11 +1115,11 @@ Dr.&nbsp;Lucas Sempé
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href=""></a><span class="co"># Merge matching weights back into long format</span></span>
 <span id="cb11-2"><a href=""></a>df_long_match_r <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
-<span id="cb11-3"><a href=""></a>  <span class="fu">left_join</span>(match_df_r <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(facility_identifier, weights)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-3"><a href=""></a>  <span class="fu">left_join</span>(match_df_r <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(business_identifier, weights)) <span class="sc">%&gt;%</span></span>
 <span id="cb11-4"><a href=""></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(weights))</span>
 <span id="cb11-5"><a href=""></a></span>
 <span id="cb11-6"><a href=""></a>df_long_match_ur <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
-<span id="cb11-7"><a href=""></a>  <span class="fu">left_join</span>(match_df_ur <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(facility_identifier, weights)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-7"><a href=""></a>  <span class="fu">left_join</span>(match_df_ur <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(business_identifier, weights)) <span class="sc">%&gt;%</span></span>
 <span id="cb11-8"><a href=""></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(weights))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
@@ -1089,20 +1127,20 @@ Dr.&nbsp;Lucas Sempé
 <h2>Difference-in-Differences Results</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href=""></a><span class="co"># Run DiD regression</span></span>
-<span id="cb12-2"><a href=""></a>did_reg_r <span class="ot">&lt;-</span> <span class="fu">lm_robust</span>(waste_management_costs <span class="sc">~</span> enrolled <span class="sc">*</span> round,</span>
+<span id="cb12-2"><a href=""></a>did_reg_r <span class="ot">&lt;-</span> <span class="fu">lm_robust</span>(waste_management_costs <span class="sc">~</span> intent_to_treat <span class="sc">*</span> round,</span>
 <span id="cb12-3"><a href=""></a>                        <span class="at">data =</span> df_long_match_r, <span class="at">weights =</span> weights,</span>
-<span id="cb12-4"><a href=""></a>                        <span class="at">clusters =</span> zone_identifier)</span>
+<span id="cb12-4"><a href=""></a>                        <span class="at">clusters =</span> neighborhood_identifier)</span>
 <span id="cb12-5"><a href=""></a></span>
-<span id="cb12-6"><a href=""></a>did_reg_ur <span class="ot">&lt;-</span> <span class="fu">lm_robust</span>(waste_management_costs <span class="sc">~</span> enrolled <span class="sc">*</span> round,</span>
+<span id="cb12-6"><a href=""></a>did_reg_ur <span class="ot">&lt;-</span> <span class="fu">lm_robust</span>(waste_management_costs <span class="sc">~</span> intent_to_treat <span class="sc">*</span> round,</span>
 <span id="cb12-7"><a href=""></a>                        <span class="at">data =</span> df_long_match_ur, <span class="at">weights =</span> weights,</span>
-<span id="cb12-8"><a href=""></a>                        <span class="at">clusters =</span> zone_identifier)</span>
+<span id="cb12-8"><a href=""></a>                        <span class="at">clusters =</span> neighborhood_identifier)</span>
 <span id="cb12-9"><a href=""></a></span>
 <span id="cb12-10"><a href=""></a><span class="co"># Show results</span></span>
 <span id="cb12-11"><a href=""></a><span class="fu">modelsummary</span>(<span class="fu">list</span>(<span class="st">"Limited Set"</span> <span class="ot">=</span> did_reg_r, </span>
 <span id="cb12-12"><a href=""></a>                  <span class="st">"Full Set"</span> <span class="ot">=</span> did_reg_ur),</span>
-<span id="cb12-13"><a href=""></a>             <span class="at">coef_map =</span> <span class="fu">c</span>(<span class="st">'enrolled'</span> <span class="ot">=</span> <span class="st">"Enrollment"</span>,</span>
+<span id="cb12-13"><a href=""></a>             <span class="at">coef_map =</span> <span class="fu">c</span>(<span class="st">'intent_to_treat'</span> <span class="ot">=</span> <span class="st">"Offered"</span>,</span>
 <span id="cb12-14"><a href=""></a>                          <span class="st">'round'</span> <span class="ot">=</span> <span class="st">"Round"</span>,</span>
-<span id="cb12-15"><a href=""></a>                          <span class="st">'enrolled:round'</span> <span class="ot">=</span> <span class="st">"Enrollment × Round"</span>),</span>
+<span id="cb12-15"><a href=""></a>                          <span class="st">'intent_to_treat:round'</span> <span class="ot">=</span> <span class="st">"Offered × Round"</span>),</span>
 <span id="cb12-16"><a href=""></a>             <span class="at">title =</span> <span class="st">"Impact on Waste Management Costs: Matched DiD Approach"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <!-- preamble start -->
@@ -1111,25 +1149,25 @@ Dr.&nbsp;Lucas Sempé
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_avu1lg4evyqloeytx446 = TinyTable.createTableFunctions("tinytable_avu1lg4evyqloeytx446");
+      const tableFns_atfavu1lg4evyqloeytx = TinyTable.createTableFunctions("tinytable_atfavu1lg4evyqloeytx");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '13', j: 2 }, { i: '13', j: 3 } ], css_id: 'tinytable_css_8ljtdsajgnocb52raiaz',}, 
-          { positions: [ { i: '6', j: 2 }, { i: '6', j: 3 } ], css_id: 'tinytable_css_9eihlh2h0e5w9xph4y5s',}, 
-          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '4', j: 3 }, { i: '5', j: 3 }, { i: '7', j: 3 }, { i: '8', j: 3 }, { i: '9', j: 3 }, { i: '10', j: 3 }, { i: '11', j: 3 }, { i: '12', j: 3 } ], css_id: 'tinytable_css_sb0t649z7u4lb9st0d6x',}, 
-          { positions: [ { i: '0', j: 2 }, { i: '0', j: 3 } ], css_id: 'tinytable_css_h9b2pb7g4iv1g7hpti4s',}, 
-          { positions: [ { i: '13', j: 1 } ], css_id: 'tinytable_css_9riwf57oduo7n4dw0y3y',}, 
-          { positions: [ { i: '6', j: 1 } ], css_id: 'tinytable_css_mpmukg6bviiog8muwf74',}, 
-          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 } ], css_id: 'tinytable_css_g6cycd3osf8llndtu7d0',}, 
-          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_1fmmnkhi8ii4fvepjyun',}, 
+          { positions: [ { i: '13', j: 2 }, { i: '13', j: 3 } ], css_id: 'tinytable_css_y5s8ljtdsajgnocb52ra',}, 
+          { positions: [ { i: '6', j: 2 }, { i: '6', j: 3 } ], css_id: 'tinytable_css_d6x9eihlh2h0e5w9xph4',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '4', j: 3 }, { i: '5', j: 3 }, { i: '7', j: 3 }, { i: '8', j: 3 }, { i: '9', j: 3 }, { i: '10', j: 3 }, { i: '11', j: 3 }, { i: '12', j: 3 } ], css_id: 'tinytable_css_i4ssb0t649z7u4lb9st0',}, 
+          { positions: [ { i: '0', j: 2 }, { i: '0', j: 3 } ], css_id: 'tinytable_css_y3yh9b2pb7g4iv1g7hpt',}, 
+          { positions: [ { i: '13', j: 1 } ], css_id: 'tinytable_css_f749riwf57oduo7n4dw0',}, 
+          { positions: [ { i: '6', j: 1 } ], css_id: 'tinytable_css_7d0mpmukg6bviiog8muw',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 } ], css_id: 'tinytable_css_yung6cycd3osf8llndtu',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_4461fmmnkhi8ii4fvepj',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_avu1lg4evyqloeytx446.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_atfavu1lg4evyqloeytx.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1138,17 +1176,17 @@ Dr.&nbsp;Lucas Sempé
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_avu1lg4evyqloeytx446 td.tinytable_css_8ljtdsajgnocb52raiaz, #tinytable_avu1lg4evyqloeytx446 th.tinytable_css_8ljtdsajgnocb52raiaz {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_avu1lg4evyqloeytx446 td.tinytable_css_9eihlh2h0e5w9xph4y5s, #tinytable_avu1lg4evyqloeytx446 th.tinytable_css_9eihlh2h0e5w9xph4y5s {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_avu1lg4evyqloeytx446 td.tinytable_css_sb0t649z7u4lb9st0d6x, #tinytable_avu1lg4evyqloeytx446 th.tinytable_css_sb0t649z7u4lb9st0d6x { text-align: center }
-    #tinytable_avu1lg4evyqloeytx446 td.tinytable_css_h9b2pb7g4iv1g7hpti4s, #tinytable_avu1lg4evyqloeytx446 th.tinytable_css_h9b2pb7g4iv1g7hpti4s {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_avu1lg4evyqloeytx446 td.tinytable_css_9riwf57oduo7n4dw0y3y, #tinytable_avu1lg4evyqloeytx446 th.tinytable_css_9riwf57oduo7n4dw0y3y {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_avu1lg4evyqloeytx446 td.tinytable_css_mpmukg6bviiog8muwf74, #tinytable_avu1lg4evyqloeytx446 th.tinytable_css_mpmukg6bviiog8muwf74 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_avu1lg4evyqloeytx446 td.tinytable_css_g6cycd3osf8llndtu7d0, #tinytable_avu1lg4evyqloeytx446 th.tinytable_css_g6cycd3osf8llndtu7d0 { text-align: left }
-    #tinytable_avu1lg4evyqloeytx446 td.tinytable_css_1fmmnkhi8ii4fvepjyun, #tinytable_avu1lg4evyqloeytx446 th.tinytable_css_1fmmnkhi8ii4fvepjyun {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_atfavu1lg4evyqloeytx td.tinytable_css_y5s8ljtdsajgnocb52ra, #tinytable_atfavu1lg4evyqloeytx th.tinytable_css_y5s8ljtdsajgnocb52ra {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_atfavu1lg4evyqloeytx td.tinytable_css_d6x9eihlh2h0e5w9xph4, #tinytable_atfavu1lg4evyqloeytx th.tinytable_css_d6x9eihlh2h0e5w9xph4 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_atfavu1lg4evyqloeytx td.tinytable_css_i4ssb0t649z7u4lb9st0, #tinytable_atfavu1lg4evyqloeytx th.tinytable_css_i4ssb0t649z7u4lb9st0 { text-align: center }
+    #tinytable_atfavu1lg4evyqloeytx td.tinytable_css_y3yh9b2pb7g4iv1g7hpt, #tinytable_atfavu1lg4evyqloeytx th.tinytable_css_y3yh9b2pb7g4iv1g7hpt {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_atfavu1lg4evyqloeytx td.tinytable_css_f749riwf57oduo7n4dw0, #tinytable_atfavu1lg4evyqloeytx th.tinytable_css_f749riwf57oduo7n4dw0 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_atfavu1lg4evyqloeytx td.tinytable_css_7d0mpmukg6bviiog8muw, #tinytable_atfavu1lg4evyqloeytx th.tinytable_css_7d0mpmukg6bviiog8muw {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_atfavu1lg4evyqloeytx td.tinytable_css_yung6cycd3osf8llndtu, #tinytable_atfavu1lg4evyqloeytx th.tinytable_css_yung6cycd3osf8llndtu { text-align: left }
+    #tinytable_atfavu1lg4evyqloeytx td.tinytable_css_4461fmmnkhi8ii4fvepj, #tinytable_atfavu1lg4evyqloeytx th.tinytable_css_4461fmmnkhi8ii4fvepj {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_avu1lg4evyqloeytx446" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_atfavu1lg4evyqloeytx" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <caption>Impact on Waste Management Costs: Matched DiD Approach</caption>
         <thead>
               <tr>
@@ -1160,69 +1198,69 @@ Dr.&nbsp;Lucas Sempé
         
         <tbody>
                 <tr>
-                  <td data-row="1" data-col="1">Enrollment</td>
-                  <td data-row="1" data-col="2">-144.185</td>
-                  <td data-row="1" data-col="3">-54.474</td>
+                  <td data-row="1" data-col="1">Offered</td>
+                  <td data-row="1" data-col="2">-144.088</td>
+                  <td data-row="1" data-col="3">-47.074</td>
                 </tr>
                 <tr>
                   <td data-row="2" data-col="1"></td>
-                  <td data-row="2" data-col="2">(26.444)</td>
-                  <td data-row="2" data-col="3">(23.703)</td>
+                  <td data-row="2" data-col="2">(25.704)</td>
+                  <td data-row="2" data-col="3">(18.748)</td>
                 </tr>
                 <tr>
                   <td data-row="3" data-col="1">Round</td>
-                  <td data-row="3" data-col="2">307.094</td>
-                  <td data-row="3" data-col="3">280.594</td>
+                  <td data-row="3" data-col="2">310.882</td>
+                  <td data-row="3" data-col="3">242.217</td>
                 </tr>
                 <tr>
                   <td data-row="4" data-col="1"></td>
-                  <td data-row="4" data-col="2">(23.581)</td>
-                  <td data-row="4" data-col="3">(22.671)</td>
+                  <td data-row="4" data-col="2">(23.437)</td>
+                  <td data-row="4" data-col="3">(24.812)</td>
                 </tr>
                 <tr>
-                  <td data-row="5" data-col="1">Enrollment × Round</td>
-                  <td data-row="5" data-col="2">-972.086</td>
-                  <td data-row="5" data-col="3">-945.587</td>
+                  <td data-row="5" data-col="1">Offered × Round</td>
+                  <td data-row="5" data-col="2">-970.713</td>
+                  <td data-row="5" data-col="3">-919.975</td>
                 </tr>
                 <tr>
                   <td data-row="6" data-col="1"></td>
-                  <td data-row="6" data-col="2">(30.155)</td>
-                  <td data-row="6" data-col="3">(29.768)</td>
+                  <td data-row="6" data-col="2">(30.224)</td>
+                  <td data-row="6" data-col="3">(30.681)</td>
                 </tr>
                 <tr>
                   <td data-row="7" data-col="1">Num.Obs.</td>
-                  <td data-row="7" data-col="2">11856</td>
-                  <td data-row="7" data-col="3">11856</td>
+                  <td data-row="7" data-col="2">10372</td>
+                  <td data-row="7" data-col="3">9776</td>
                 </tr>
                 <tr>
                   <td data-row="8" data-col="1">R2</td>
-                  <td data-row="8" data-col="2">0.260</td>
-                  <td data-row="8" data-col="3">0.240</td>
+                  <td data-row="8" data-col="2">0.266</td>
+                  <td data-row="8" data-col="3">0.255</td>
                 </tr>
                 <tr>
                   <td data-row="9" data-col="1">R2 Adj.</td>
-                  <td data-row="9" data-col="2">0.260</td>
-                  <td data-row="9" data-col="3">0.240</td>
+                  <td data-row="9" data-col="2">0.265</td>
+                  <td data-row="9" data-col="3">0.255</td>
                 </tr>
                 <tr>
                   <td data-row="10" data-col="1">AIC</td>
-                  <td data-row="10" data-col="2">188583.0</td>
-                  <td data-row="10" data-col="3">187359.8</td>
+                  <td data-row="10" data-col="2">164630.0</td>
+                  <td data-row="10" data-col="3">153255.0</td>
                 </tr>
                 <tr>
                   <td data-row="11" data-col="1">BIC</td>
-                  <td data-row="11" data-col="2">188619.9</td>
-                  <td data-row="11" data-col="3">187396.7</td>
+                  <td data-row="11" data-col="2">164666.2</td>
+                  <td data-row="11" data-col="3">153290.9</td>
                 </tr>
                 <tr>
                   <td data-row="12" data-col="1">RMSE</td>
-                  <td data-row="12" data-col="2">687.94</td>
-                  <td data-row="12" data-col="3">653.35</td>
+                  <td data-row="12" data-col="2">676.44</td>
+                  <td data-row="12" data-col="3">613.31</td>
                 </tr>
                 <tr>
                   <td data-row="13" data-col="1">Std.Errors</td>
-                  <td data-row="13" data-col="2">by: zone_identifier</td>
-                  <td data-row="13" data-col="3">by: zone_identifier</td>
+                  <td data-row="13" data-col="2">by: neighborhood_identifier</td>
+                  <td data-row="13" data-col="3">by: neighborhood_identifier</td>
                 </tr>
         </tbody>
       </table>
@@ -1234,9 +1272,9 @@ Dr.&nbsp;Lucas Sempé
 <section id="interpretation-of-results" class="slide level2">
 <h2>Interpretation of Results</h2>
 <ul>
-<li><strong>Enrolled</strong> coefficient: Baseline difference between groups</li>
+<li><strong>Offered</strong> coefficient: Baseline difference between groups offered program vs those not offered program</li>
 <li><strong>Round</strong> coefficient: Time trend for all facilities</li>
-<li><strong>Enrollment × Round</strong>: The program’s causal effect</li>
+<li><strong>Offered × Round</strong>: The program’s causal effect</li>
 </ul>
 <div class="callout callout-note callout-titled callout-style-default">
 <div class="callout-body">
@@ -1247,7 +1285,7 @@ Dr.&nbsp;Lucas Sempé
 <p><strong>Note</strong></p>
 </div>
 <div class="callout-content">
-<p>The interaction coefficient (Enrollment × Round) represents our estimate of the causal impact of the program on waste management costs.</p>
+<p>The interaction coefficient (Offered × Round) represents our estimate of the causal impact of the program on waste management costs.</p>
 </div>
 </div>
 </div>
@@ -1299,31 +1337,31 @@ Dr.&nbsp;Lucas Sempé
 <!--   Method = c("Randomized Assignment", "Instrumental Variables",  -->
 <!--              "Regression Discontinuity", "Difference-in-Differences",  -->
 <!--              "Matching (Full Set)"), -->
-<!--   Estimate = c(-10140, -9829, -9051, -8163, -10000), -->
-<!--   CI_Lower = c(-10922, -11684, -9921, -8792, -10723), -->
-<!--   CI_Upper = c(-9358, -7973, -8181, -7534, -9277) -->
+<!--   Estimate = c(-1014, -982, -905, -816, -1000), -->
+<!--   CI_Lower = c(-1092, -1168, -992, -879, -1072), -->
+<!--   CI_Upper = c(-935, -797, -818, -753, -927) -->
 <!-- ) -->
 <!-- # Sort by effect size -->
 <!-- all_results <- all_results %>% -->
 <!--   arrange(Estimate) -->
 <!-- # Plot forest plot of results -->
 <!-- ggplot(all_results, aes(y = reorder(Method, Estimate), x = Estimate)) + -->
-<!--   geom_vline(xintercept = -10000, linetype = "dashed", color = "red") + -->
+<!--   geom_vline(xintercept = -1000, linetype = "dashed", color = "red") + -->
 <!--   geom_point(size = 3) + -->
 <!--   geom_errorbarh(aes(xmin = CI_Lower, xmax = CI_Upper), height = 0.3) + -->
-<!--   labs(title = "Impact of HISP on Health Expenditures", -->
+<!--   labs(title = "Impact of GreenWaste on Waste Expenditures", -->
 <!--        subtitle = "Comparison Across Evaluation Methods", -->
-<!--        x = "Effect on Health Expenditures (USD)", -->
+<!--        x = "Effect on Waste Expenditures (AED)", -->
 <!--        y = "") + -->
 <!--   theme_minimal() + -->
-<!--   annotate("text", x = -10000, y = 5.5, label = "Threshold", color = "red", hjust = 1.2) -->
+<!--   annotate("text", x = -1000, y = 5.5, label = "Threshold", color = "red", hjust = 1.2) -->
 <!-- ``` -->
 <!-- ## Final Policy Recommendation -->
-<!-- - Methods produce consistent results in the range of -$8.16 to -$10.14 -->
-<!-- - Randomized assignment (gold standard): -$10.14 -->
-<!-- - Most quasi-experimental methods: Effect slightly below $10 -->
-<!-- - Given uncertainty in estimates and consistency in direction, HISP shows promising results -->
-<!-- **RECOMMENDATION**: The preponderance of evidence suggests HISP reduces health expenditures by approximately $10, which meets the threshold criterion. Given the consistency across methods and the gold-standard randomized result, HISP should be scaled up nationally. -->
+<!-- - Methods produce consistent results in the range of -816 to -1033 AED -->
+<!-- - Randomized assignment (gold standard): -1,014 AED -->
+<!-- - Most quasi-experimental methods: Effect slightly below the threshold -->
+<!-- - Given uncertainty in estimates and consistency in direction, GreenWaste shows promising results -->
+<!-- **RECOMMENDATION**: The preponderance of evidence suggests GreenWaste reduces waste expenditures by approximately 1,000 AED, which meets the threshold criterion. Given the consistency across methods and the gold-standard randomized result, GreenWaste should be scaled up nationally. -->
 <!-- ## Conclusion: Choosing the Right Method -->
 <!-- | Method | When to Use | Key Assumption | Strengths | Limitations | -->
 <!-- |--------|-------------|----------------|-----------|-------------| -->
@@ -1335,9 +1373,9 @@ Dr.&nbsp;Lucas Sempé
 <!-- ## Next Steps in Impact Evaluation -->
 <!-- 1. **Heterogeneity analysis** -->
 <!--    - Does impact vary across subgroups? -->
-<!--    - Who benefits most from HISP? -->
+<!--    - Who benefits most from GreenWaste? -->
 <!-- 2. **Cost-effectiveness analysis** -->
-<!--    - Beyond impact, is HISP cost-effective? -->
+<!--    - Beyond impact, is GreenWaste cost-effective? -->
 <!--    - How does it compare to alternative programs? -->
 <!-- 3. **Implementation research** -->
 <!--    - What factors affect successful implementation? -->
@@ -1369,19 +1407,19 @@ Dr.&nbsp;Lucas Sempé
 </div></div>
 
   <script>window.backupDefine = window.define; window.define = undefined;</script>
-  <script src="session_10_files/libs/revealjs/dist/reveal.js"></script>
+  <script src="session_10_updated_files/libs/revealjs/dist/reveal.js"></script>
   <!-- reveal.js plugins -->
-  <script src="session_10_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
-  <script src="session_10_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
-  <script src="session_10_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
-  <script src="session_10_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
-  <script src="session_10_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  <script src="session_10_updated_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="session_10_updated_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="session_10_updated_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="session_10_updated_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="session_10_updated_files/libs/revealjs/plugin/quarto-support/support.js"></script>
   
 
-  <script src="session_10_files/libs/revealjs/plugin/notes/notes.js"></script>
-  <script src="session_10_files/libs/revealjs/plugin/search/search.js"></script>
-  <script src="session_10_files/libs/revealjs/plugin/zoom/zoom.js"></script>
-  <script src="session_10_files/libs/revealjs/plugin/math/math.js"></script>
+  <script src="session_10_updated_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="session_10_updated_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="session_10_updated_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="session_10_updated_files/libs/revealjs/plugin/math/math.js"></script>
   <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
 
   <script>
