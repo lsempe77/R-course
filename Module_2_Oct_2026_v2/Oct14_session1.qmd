@@ -1,0 +1,807 @@
+---
+title: "Was It Worth It? Reading a Cost-Benefit Result"
+subtitle: "Module 2 · Day 3, Session 1: The Assumption That Decides the Answer"
+author: "3ie"
+always_allow_html: yes
+# revealjs only in this folder: the charts are interactive (plotly/htmlwidgets),
+# and pandoc cannot carry an htmlwidget into pptx. Export to PDF for a portable copy.
+format:
+  revealjs:
+    theme: [theme_editorial.scss]
+    slide-number: true
+    width: 1280
+    height: 720
+    fig-align: center
+    slide-level: 2
+    embed-resources: true
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+    dev: "png"
+    # dpi 96 is deliberate. knitr sizes every htmlwidget container as
+    # fig.width * dpi, so an inherited dpi: 200 silently inflated each chart
+    # tenfold (11.5in became 2300px) and pushed slide content off the bottom.
+    # At 96, fig.width in inches maps 1:1 onto CSS pixels. If a raster
+    # ggplot chunk is ever added, set its dpi per chunk.
+    dpi: 96
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup}
+library(tidyverse)
+library(plotly)
+library(knitr)
+library(kableExtra)
+library(qrcode)
+
+# ---- Palette (editorial theme; see theme_editorial.scss) -------------------
+ACCENT  <- "#0E6E80"
+ACCENT2 <- "#A9561F"
+ALERT   <- "#8E2413"
+INK     <- "#16181A"; MUTED <- "#61686D"; RULE <- "#E3E6E8"
+CHART_FONT <- "Segoe UI, Helvetica, Arial, sans-serif"
+
+PL_W  <- 1100
+PL_WC <- 520
+PL_WT <- 340
+
+pl_m2 <- function(p, width = PL_W, height = 290, t = 30, b = 54,
+                  title = NULL, legend_y = 1.02) {
+  p <- p %>%
+    layout(width = width, height = height,
+      font = list(family = CHART_FONT, size = 13, color = INK),
+      paper_bgcolor = "rgba(0,0,0,0)", plot_bgcolor = "rgba(0,0,0,0)",
+      margin = list(l = 70, r = 24, t = t, b = b),
+      legend = list(orientation = "h", x = 0.5, xanchor = "center",
+                    y = legend_y, yanchor = "bottom", title = list(text = "")),
+      hoverlabel = list(bgcolor = "white", bordercolor = RULE,
+                        font = list(color = INK, size = 12)))
+  if (!is.null(title)) {
+    p <- p %>% layout(title = list(text = title, x = 0, xanchor = "left",
+                                   font = list(size = 12, color = MUTED)))
+  }
+  p %>% config(displayModeBar = FALSE)
+}
+
+ax <- function(title = "", ...) {
+  modifyList(list(
+    title = list(text = title, font = list(size = 12, color = MUTED)),
+    gridcolor = RULE, zerolinecolor = RULE, linecolor = RULE,
+    tickfont = list(size = 12, color = MUTED)
+  ), list(...))
+}
+
+gfmt <- function(x) format(round(x), big.mark = ",")
+
+# ---- Live Menti poll -------------------------------------------------------
+MENTI_CODE <- "1234 5678"
+MENTI_JOIN <- paste0("https://www.menti.com/", gsub(" ", "", MENTI_CODE))
+
+menti_qr <- function(path = "menti_qr.png", url = MENTI_JOIN) {
+  png(path, width = 900, height = 900, res = 300, bg = "white")
+  on.exit(dev.off(), add = TRUE)
+  par(mar = c(0, 0, 0, 0))
+  plot(qr_code(url, ecl = "H"))
+  path
+}
+MENTI_QR <- menti_qr()
+
+# ===========================================================================
+# The cost-benefit model for GreenWaste
+# ===========================================================================
+# Everything here is shown to the room on a slide. The brief is explicit that
+# the trainer displays the calculations rather than asking participants to
+# produce them, so the arithmetic is visible and checkable rather than asserted.
+#
+# The two inputs that come from earlier in the week:
+#   the annual saving per business, which is the DiD estimate from Day 2 S1
+#   the number of businesses, which is the enrolled count from Day 2 S3
+# The one input that is a pure programme fact:
+#   the cost per business of delivering it
+
+COST_PER_BUSINESS <- 1800      # AED, one-off cost of putting a business through
+BENEFIT_PER_YEAR  <- 1000      # AED per year, from the difference-in-differences
+BENEFIT_LAG       <- 1         # no saving in year 1: rollout and adoption take time
+ENROLLED          <- 2964      # businesses enrolled, from the matching session
+
+DISCOUNT_BASE <- 0.05          # the rate the authority uses by default
+HORIZON_BASE  <- 5             # years of benefit assumed by default
+
+# Present value of 1 AED a year, from year (lag+1) to year (lag + years).
+pv_annuity <- function(r, years, lag = BENEFIT_LAG) {
+  if (r == 0) return(years)
+  a <- function(n) (1 - (1 + r)^(-n)) / r
+  a(lag + years) - a(lag)
+}
+
+# The benefit-cost ratio: present value of everything we get, over what we spend.
+bcr <- function(r = DISCOUNT_BASE, years = HORIZON_BASE,
+                cost = COST_PER_BUSINESS, benefit = BENEFIT_PER_YEAR) {
+  benefit * pv_annuity(r, years) / cost
+}
+
+bcr_headline <- bcr()
+pv_per_biz   <- BENEFIT_PER_YEAR * pv_annuity(DISCOUNT_BASE, HORIZON_BASE)
+
+# Total programme figures, for the scale of the decision.
+total_cost    <- COST_PER_BUSINESS * ENROLLED
+total_benefit <- pv_per_biz * ENROLLED
+total_net     <- total_benefit - total_cost
+
+# ---- The two analyst choices, alone and together ---------------------------
+# Choice 1: the discount rate. Choice 2: how long the benefit is assumed to last.
+rate_grid  <- c(0.03, 0.05, 0.08, 0.12, 0.20)
+years_grid <- c(2, 3, 5, 8, 10)
+
+grid_tbl <- expand_grid(years = years_grid, r = rate_grid) %>%
+  mutate(bcr = map2_dbl(r, years, ~ bcr(.x, .y)),
+         cell = sprintf("%.2f", bcr),
+         below = bcr < 1)
+
+# A tidy long form for the heat table on the slide.
+grid_wide <- grid_tbl %>%
+  mutate(rate_lab = sprintf("%.0f%%", 100 * r),
+         year_lab = sprintf("%d years", years)) %>%
+  select(year_lab, rate_lab, cell) %>%
+  pivot_wider(names_from = rate_lab, values_from = cell)
+
+# Where the ratio crosses 1 for each horizon. This is the number that makes the
+# session's point: the flip is not exotic, it happens inside normal practice.
+flip_rate <- function(yrs) {
+  r <- 0
+  while (bcr(r, yrs) >= 1 && r < 2) r <- r + 0.001
+  if (bcr(r, yrs) < 1) r * 100 else NA_real_
+}
+years_for_flip <- c(2, 3, 4, 5)
+flip_tbl <- tibble(years = years_for_flip, flip = map_dbl(years_for_flip, flip_rate))
+
+# The rate alone, over the base horizon. This shows the rate is NOT enough on its
+# own: even at 30% the ratio is still above 1. That negative result is worth a
+# slide, because a commissioner's instinct is to blame the discount rate.
+rate_only <- tibble(
+  r = c(0, 0.03, 0.05, 0.08, 0.10, 0.15, 0.20, 0.30, 0.40),
+  bcr = map_dbl(c(0, 0.03, 0.05, 0.08, 0.10, 0.15, 0.20, 0.30, 0.40),
+                ~ bcr(.x, HORIZON_BASE))
+) %>% mutate(lab = sprintf("%.0f%%", 100 * r))
+
+# ---- What the ratio would be if the benefit were smaller -------------------
+# The Day 2 S1 interval ran from 962 to 1,038 AED. Carrying that forward shows
+# the cost-benefit ratio inherits the uncertainty, rather than adding new.
+benefit_range <- tibble(
+  benefit = c(962, 1000, 1038),
+  bcr = map_dbl(c(962, 1000, 1038), ~ bcr(DISCOUNT_BASE, HORIZON_BASE,
+                                          benefit = .x))
+)
+
+# ---- The three-question framework, scored on this programme ---------------
+framework <- tribble(
+  ~Question, ~Asks,
+  "Are the benefits plausible?",
+  "The saving is the difference-in-differences estimate. It is measured, and it is local to the businesses compared.",
+  "Are all the costs included?",
+  "1,800 AED per business is the delivery cost. It does not include the authority's own set-up, or the businesses' time.",
+  "What would flip the result?",
+  "Assuming the saving lasts two years instead of five. That alone takes the ratio below break-even."
+)
+```
+
+# 1 · The headline
+
+## Where we are
+
+```{=html}
+<div class="facts">
+  <div class="k">Day 1</div>  <div class="v">three questions &middot; reading a number &middot; what a fair comparison is</div>
+  <div class="k">Day 2</div>  <div class="v">four ways to estimate an effect: descriptives, DiD, RDD, matching</div>
+  <div class="k">Today</div>  <div class="v">what the effect is <em>worth</em> &middot; cost, and the assumptions that decide it</div>
+</div>
+```
+
+::: {.panel}
+Everything so far has been about **how big the effect is**. Today is about
+whether it is **worth the money** — and that is a different question with a
+different set of judgement calls.
+:::
+
+::: {.ask}
+A programme can have a real effect and still not be worth funding. You saw the
+shape of that all week: real, and not enough.
+
+Today the bar is a ratio instead of a threshold.
+:::
+
+## The decision, and the ratio
+
+:::::: {.columns}
+
+::::: {.column width="54%"}
+GreenWaste cost the authority **`r gfmt(COST_PER_BUSINESS)` AED per business** to
+deliver, and saved each participating business about **`r gfmt(BENEFIT_PER_YEAR)`
+AED a year**.
+
+The standard way to compare those is a **benefit-cost ratio**: what you get,
+divided by what you spend, with future money counted as worth less than money
+today.
+:::::
+
+::::: {.column width="46%"}
+```{=html}
+<div class="facts">
+  <div class="k">Cost</div>     <div class="v">1,800 AED per business, one-off</div>
+  <div class="k">Benefit</div>  <div class="v">1,000 AED per business per year</div>
+  <div class="k">Decision rule</div> <div class="v">A ratio above 1 means it pays for itself</div>
+  <div class="k">Ratio found</div> <div class="v">2.29</div>
+</div>
+```
+:::::
+
+::::::
+
+## The headline number
+
+```{r results='asis'}
+cat(sprintf('
+<div class="hero">
+  <div class="value">%.2f</div>
+  <div class="label">Benefit-cost ratio, GreenWaste</div>
+</div>
+<div class="stat-row">
+  <div><span class="n">%s</span><span class="k">AED spent per business</span></div>
+  <div><span class="n">%s</span><span class="k">AED returned per business</span></div>
+  <div><span class="n">%s</span><span class="k">AED net, across the programme</span></div>
+</div>', bcr_headline, gfmt(COST_PER_BUSINESS), gfmt(pv_per_biz), gfmt(total_net)))
+```
+
+::: {.panel}
+**2.29 means: for every AED spent, about 2.29 AED comes back.** On that reading
+this is not a borderline decision. It is clearly worth doing.
+:::
+
+::: {.warn}
+The ratio is the answer to a question you did not choose. Somebody decided the
+benefit lasts a certain number of years, and decided how much future money is
+worth. Those two choices built this number.
+:::
+
+## `[MENTI PLACEHOLDER]` Would you approve it?
+
+:::::: {.columns}
+
+::::: {.column width="62%"}
+::: {.ask style="font-size: 120%;"}
+On a ratio of **2.29**, what would you do?
+
+Approve &nbsp;·&nbsp; Reject &nbsp;·&nbsp; I need to know something else first
+:::
+
+Go to **menti.com** and enter code **`r MENTI_CODE`**, or scan the code on the
+right.
+:::::
+
+::::: {.column width="38%"}
+```{r out.width='330px', out.extra='style="display:block; margin:0 auto;"'}
+knitr::include_graphics(MENTI_QR)
+```
+:::::
+
+::::::
+
+::: {.panel}
+Commit before we go further. If most of the room picks "I need to know
+something else first", ask two people **what** — write the answers up, and
+compare them with the three questions at the end of the session.
+:::
+
+## What went into that number
+
+This is the arithmetic, on the screen.
+
+```{r}
+tibble(
+  Step = c("Cost per business",
+           "Annual saving",
+           "Years of saving assumed",
+           "Discount rate assumed",
+           "Value of the savings, today's money",
+           "Benefit-cost ratio"),
+  Working = c("one-off delivery cost",
+              "from the difference-in-differences estimate",
+              "5, beginning one year after rollout",
+              "5% a year",
+              sprintf("1,000 x %.3f = %s AED", pv_annuity(DISCOUNT_BASE, HORIZON_BASE),
+                      gfmt(pv_per_biz)),
+              sprintf("%s / %s", gfmt(pv_per_biz), gfmt(COST_PER_BUSINESS))),
+  Value = c(sprintf("%s AED", gfmt(COST_PER_BUSINESS)),
+            sprintf("%s AED", gfmt(BENEFIT_PER_YEAR)),
+            "5 years", "5%",
+            sprintf("%s AED", gfmt(pv_per_biz)),
+            sprintf("%.2f", bcr_headline))
+) %>%
+  kable(align = "llr", col.names = c("Step", "Working", "Value")) %>%
+  kable_styling(full_width = FALSE, font_size = 15) %>%
+  row_spec(3:4, bold = FALSE, background = "#F7F1E8") %>%
+  row_spec(6, bold = TRUE, background = "#E6F1F5")
+```
+
+::: {.ask}
+Two rows are shaded. They are not costs and they are not benefits. They are
+**choices** — and they are the subject of the next twenty minutes.
+:::
+
+# 2 · The assumptions that decide it
+
+## The saving does not arrive today
+
+```{r results='asis'}
+cat('
+<div class="hero">
+  <div class="value" style="font-size:2.0em;">A saving next year is worth less than a saving today.<br>How much less is a choice.</div>
+</div>')
+```
+
+::: {.panel}
+Money you have now can be used, invested or saved. Money promised in three
+years cannot. Discounting is the arithmetic of that difference, and the
+**discount rate** is how fast you decide future money loses value.
+:::
+
+::: {.ask}
+Nobody debates that future money is worth less. They debate **how much less** —
+and that number goes straight into the ratio you are shown.
+:::
+
+## Choice 1: the discount rate, on its own
+
+:::::: {.columns}
+
+::::: {.column width="52%"}
+```{r fig.height=2.7, fig.width=5.6}
+rate_only %>%
+  plot_ly(x = ~lab, y = ~bcr, type = "bar",
+          marker = list(color = ifelse(rate_only$bcr < 1, ALERT, ACCENT),
+                        line = list(width = 0)),
+          text = ~sprintf("%.2f", bcr), textposition = "outside",
+          textfont = list(size = 12, color = INK), showlegend = FALSE,
+          hovertemplate = "%{x} discount: ratio %{y:.2f}<extra></extra>") %>%
+  layout(xaxis = ax("Discount rate", zeroline = FALSE),
+         yaxis = ax("Benefit-cost ratio", range = c(0, 3.3)),
+         shapes = list(list(type = "line", x0 = -0.5, x1 = 8.5,
+                            y0 = 1, y1 = 1, line = list(color = ALERT, width = 3))),
+         annotations = list(list(x = 8.5, y = 1, yref = "y", xanchor = "right",
+                                 yanchor = "bottom", showarrow = FALSE,
+                                 text = "break-even", font = list(size = 12, color = ALERT)))) %>%
+  pl_m2(width = PL_WC, height = 260)
+```
+:::::
+
+::::: {.column width="48%"}
+::: {.warn}
+**The discount rate on its own does not flip this decision.**
+
+Even at a 30% rate — far higher than any agency uses — the ratio is
+`r sprintf("%.2f", rate_only$bcr[rate_only$r == 0.30])`. You have to reach
+**40%** to push it below 1, and by then the assumption is not defensible.
+:::
+
+::: {.panel}
+So if someone tells you the ratio is fragile because of the discount rate, that
+is only half true. It is the *other* choice that does the damage.
+:::
+:::::
+
+::::::
+
+## Choice 2: how long the saving lasts
+
+:::::: {.columns}
+
+::::: {.column width="52%"}
+```{r fig.height=2.7, fig.width=5.6}
+tibble(years = years_grid, bcr = map_dbl(years_grid, ~ bcr(DISCOUNT_BASE, .x))) %>%
+  plot_ly(x = ~factor(years), y = ~bcr, type = "bar",
+          marker = list(color = ifelse(map_dbl(years_grid, ~ bcr(DISCOUNT_BASE, .x)) < 1,
+                                       ALERT, ACCENT), line = list(width = 0)),
+          text = ~sprintf("%.2f", bcr), textposition = "outside",
+          textfont = list(size = 13, color = INK), showlegend = FALSE,
+          hovertemplate = "%{x} years: ratio %{y:.2f}<extra></extra>") %>%
+  layout(xaxis = ax("Years of saving assumed (at a 5% discount rate)", zeroline = FALSE),
+         yaxis = ax("Benefit-cost ratio", range = c(0, 5)),
+         shapes = list(list(type = "line", x0 = -0.5, x1 = 4.5,
+                            y0 = 1, y1 = 1, line = list(color = ALERT, width = 3))),
+         annotations = list(list(x = 4.5, y = 1, yref = "y", xanchor = "right",
+                                 yanchor = "bottom", showarrow = FALSE,
+                                 text = "break-even", font = list(size = 12, color = ALERT)))) %>%
+  pl_m2(width = PL_WC, height = 260)
+```
+:::::
+
+::::: {.column width="48%"}
+::: {.panel}
+The Day 2 sessions measured the saving over **one period**. Nothing measured how
+long it lasts.
+
+If it lasts **two years**, the ratio is
+`r sprintf("%.2f", bcr(DISCOUNT_BASE, 2))` — **below break-even**.
+:::
+
+::: {.warn}
+Five years is a reasonable assumption. So is two. Both are guesses about a
+future nobody has observed, and they produce opposite recommendations from the
+same evidence.
+:::
+:::::
+
+::::::
+
+## Both choices together
+
+```{r}
+grid_wide %>%
+  kable(align = "lrrrrr", col.names = c("Years of saving", "3%", "5%", "8%", "12%", "20%")) %>%
+  kable_styling(full_width = FALSE, font_size = 16) %>%
+  row_spec(1, bold = TRUE, background = "#F7E9E6") %>%
+  row_spec(3, bold = TRUE, background = "#E6F1F5") %>%
+  footnote(general = "Shaded: the two cells the session turns on. Red = below break-even. Every cell uses the same cost and the same measured annual saving; only the two analyst choices differ.",
+           general_title = "", footnote_as_chunk = TRUE)
+```
+
+::: {.ask}
+**Red row:** two years of saving. **Blue row:** five years, the base case.
+
+Read the two rows against each other. The recommendation reverses, and the
+evidence never changed. Only the horizon assumption did.
+:::
+
+## Where the ratio crosses 1
+
+```{r}
+flip_tbl %>%
+  mutate(`Discount rate at which it flips` =
+           sprintf("%.1f%%", flip)) %>%
+  select(`Years of saving` = years, `Discount rate at which it flips`) %>%
+  kable(align = "rr") %>%
+  kable_styling(full_width = FALSE, font_size = 16) %>%
+  footnote(general = "Below this rate the ratio exceeds 1; above it, the programme does not pay for itself.",
+           general_title = "", footnote_as_chunk = TRUE)
+```
+
+::: {.warn}
+Read the first row. **If you assume the saving lasts two years, a discount rate
+of 4.4% flips the conclusion.** A 3% rate is normal practice in some agencies; a
+5% rate is normal in others. Both are defensible. They give opposite answers.
+:::
+
+::: {.ask}
+So the honest statement is not "the ratio is 2.29". It is:
+
+**"The ratio is 2.29 under assumptions that the evidence does not determine, and
+plausible alternatives put it anywhere between 0.71 and 4.60."**
+:::
+
+## What the ratio is actually telling you
+
+```{r fig.height=3.1, fig.width=11.5}
+grid_tbl %>%
+  mutate(r_lab = sprintf("%.0f%%", 100 * r),
+         y_lab = sprintf("%d years", years),
+         r_lab = factor(r_lab, levels = sprintf("%.0f%%", 100 * rate_grid)),
+         y_lab = factor(y_lab, levels = sprintf("%d years", rev(years_grid)))) %>%
+  plot_ly(x = ~r_lab, y = ~y_lab, z = ~bcr, type = "heatmap",
+          colorscale = list(c(0, "#8E2413"), c(0.34, "#E3C9A8"),
+                            c(0.36, "#CFE4E9"), c(1, "#0E6E80")),
+          zmin = 0.6, zmax = 4.6,
+          text = ~sprintf("%.2f", bcr), texttemplate = "%{text}",
+          textfont = list(size = 15, color = INK),
+          hovertemplate = "%{y}, discount %{x}: ratio %{z:.2f}<extra></extra>",
+          colorbar = list(title = "ratio", thickness = 14, len = 0.8)) %>%
+  layout(xaxis = ax("Discount rate", zeroline = FALSE),
+         yaxis = ax("Years of saving assumed", zeroline = FALSE)) %>%
+  pl_m2(height = 300)
+```
+
+::: {.ask}
+Every cell is the same programme, the same cost, and the same measured saving.
+
+**Only two judgement calls differ.** Find the cells below 1.0. Now ask yourself
+which cell the authority would put in the press release, and whether anyone
+would mention the others.
+:::
+
+# 3 · The three questions
+
+## How to judge any cost-benefit claim
+
+```{=html}
+<div class="facts">
+  <div class="k">1</div> <div class="v">Are the benefits plausible?</div>
+  <div class="k">2</div> <div class="v">Are all the costs included?</div>
+  <div class="k">3</div> <div class="v">What would flip the result?</div>
+</div>
+```
+
+::: {.panel}
+Three questions, and none of them needs a spreadsheet. They are the same shape
+as the questions every other session has ended on: ask what the number is
+compared to, ask what is missing, ask what it would take to change the answer.
+:::
+
+::: {.ask}
+Question 3 is the one that separates a reader from a recipient. It is also the
+one an evaluator is least often asked.
+:::
+
+## Question 1: are the benefits plausible?
+
+:::::: {.columns}
+
+::::: {.column width="52%"}
+```{r}
+benefit_range %>%
+  mutate(`Annual saving assumed` = sprintf("%s AED", gfmt(benefit)),
+         `Benefit-cost ratio` = sprintf("%.2f", bcr)) %>%
+  select(-benefit, -bcr) %>%
+  kable(align = "rr") %>%
+  kable_styling(full_width = FALSE, font_size = 16)
+```
+:::::
+
+::::: {.column width="48%"}
+::: {.panel}
+The saving here is **not** assumed. It is the difference-in-differences estimate
+from Day 2, and the three rows show its confidence interval carried forward.
+
+The ratio moves from `r sprintf("%.2f", min(benefit_range$bcr))` to
+`r sprintf("%.2f", max(benefit_range$bcr))` across the interval. So the cost-benefit
+result inherits the uncertainty already measured.
+:::
+
+::: {.warn}
+That is the **good** news about this number. The bad news is the horizon, which
+has no interval because nobody measured it.
+:::
+:::::
+
+::::::
+
+## Question 2: are all the costs included?
+
+```{=html}
+<div class="facts">
+  <div class="k">Included</div> <div class="v">1,800 AED per business to deliver the programme</div>
+  <div class="k">Not included</div> <div class="v">the authority's own set-up and administration</div>
+  <div class="k">Not included</div> <div class="v">the time the businesses spent on it</div>
+  <div class="k">Not included</div> <div class="v">anything the programme displaced</div>
+</div>
+```
+
+::: {.ask}
+Every cost left out makes the ratio **look better**. None of them appears in the
+table you were shown.
+
+Ask an evaluator what is in the cost line. A ratio built on a partial cost is not
+a conservative estimate of anything.
+:::
+
+## Question 3: what would flip it?
+
+:::::: {.columns}
+
+::::: {.column width="54%"}
+::: {.panel}
+You already know the answer for this programme, and it is not the discount rate.
+
+**Assume the saving lasts two years instead of five, and the ratio falls from
+`r sprintf("%.2f", bcr_headline)` to `r sprintf("%.2f", bcr(DISCOUNT_BASE, 2))`.**
+
+The programme goes from clearly worth doing to not paying for itself.
+:::
+
+::: {.ask}
+So the question to ask is not "what discount rate did you use?"
+
+It is: **"How long do you assume the benefit lasts, and what evidence do you
+have for that?"**
+:::
+:::::
+
+::::: {.column width="46%"}
+```{r results='asis'}
+cat(sprintf('
+<div class="hero">
+  <div class="value" style="font-size:1.9em;">%.2f &nbsp;&rarr;&nbsp; %.2f</div>
+  <div class="label">The same evidence, two horizons</div>
+</div>
+<div class="stat-row">
+  <div><span class="n">5 yrs</span><span class="k">Assumption A</span></div>
+  <div><span class="n">2 yrs</span><span class="k">Assumption B</span></div>
+</div>', bcr_headline, bcr(DISCOUNT_BASE, 2)))
+```
+:::::
+
+::::::
+
+# 4 · Put AI to work
+
+## AI Snapshot: find the scenario that breaks it
+
+::: {.panel}
+Groups: paste the cost-benefit table and this prompt.
+
+**"Generate one plausible scenario in which this programme's benefit-cost ratio
+falls below 1. Then tell me whether that scenario is realistic."**
+:::
+
+::: {.ai-output}
+**AI response:**
+
+The ratio falls below 1 if the discount rate is raised. [At a discount rate of
+around 40%, the ratio drops below break-even]{.flag}, which would mean the
+programme does not pay for itself and should not be funded.
+
+[Alternatively, if the programme's benefits are delayed by a few years, the
+ratio also falls below 1]{.flag}. Both scenarios are [realistic and commonly
+observed in infrastructure appraisal]{.flag}.
+:::
+
+::: {.ask}
+Check each claim against the table. Which is right, which is wrong, and which is
+true but useless? Four minutes.
+:::
+
+## Debrief: right arithmetic, wrong lever
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**The arithmetic is correct.** A 40% discount rate does push this ratio below 1.
+The model checks out.
+:::
+
+::: {.warn}
+**1 · Wrong lever.** 40% is not a rate any agency uses. It answered the question
+it was asked — *name a scenario* — rather than the useful one: *name a plausible
+one*. **Arithmetically true and practically irrelevant.**
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn}
+**2 · The second scenario is vague where it needed to be specific.** "Delayed by
+a few years" is not the same as a longer lag. The lever that actually works here
+is the **horizon**, and the model never named it.
+
+**3 · "Commonly observed in infrastructure appraisal."** Confident, unsourced,
+and about a different kind of programme. It reads as authority it does not have.
+:::
+:::::
+
+::::::
+
+::: {.panel}
+**This is a new failure shape.** The model did not invent a number or misread a
+table. It answered the literal question competently and missed the point.
+
+**The lesson: ask for the plausible, not the possible.** A model will find the
+scenario you asked for, and it will be technically true, and it may tell you
+nothing.
+:::
+
+## The same question, a better prompt
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**What people actually type**
+
+> Generate one plausible scenario in which this benefit-cost ratio falls below 1.
+
+The word "plausible" does the work, and it is not defined. The model reaches for
+whatever is easiest to compute.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.panel}
+**What to type instead**
+
+> Here is a cost-benefit model. The cost and annual saving are measured; the
+> discount rate and the number of benefit years are assumptions. Tell me which
+> **single assumption** has the largest effect on the ratio, quantify it, and
+> say whether that assumption is one a government agency would normally make.
+> **Ask me questions before you answer.**
+:::
+:::::
+
+::::::
+
+::: {.ask}
+Run both. The second asks the model to **rank** the assumptions before choosing
+one, which is exactly the step the first was allowed to skip.
+:::
+
+# 5 · The Abu Dhabi case
+
+## `[PLACEHOLDER]` The cost-benefit case
+
+::: {.warn}
+**Awaiting the real findings.** The Abu Dhabi cost-benefit case for the outline
+has not been shared with this workspace yet, so nothing here is presented as its
+result.
+:::
+
+```{=html}
+<div class="facts">
+  <div class="k">Programme</div>   <div class="v">[PLACEHOLDER]</div>
+  <div class="k">Ratio claimed</div><div class="v">[PLACEHOLDER]</div>
+  <div class="k">Cost per unit</div><div class="v">[PLACEHOLDER]</div>
+  <div class="k">Horizon assumed</div><div class="v">[PLACEHOLDER]</div>
+</div>
+```
+
+::: {.panel}
+The structure is fixed: the ratio, what went into it, and the two assumptions
+that decide it. When the findings arrive they drop into these fields without
+redesigning the session.
+:::
+
+## Applying the three questions
+
+```{=html}
+<div class="facts">
+  <div class="k">1</div> <div class="v">Are the benefits plausible? Measured, modelled, or assumed?</div>
+  <div class="k">2</div> <div class="v">Are all the costs included? What was left out, and does it flatter the ratio?</div>
+  <div class="k">3</div> <div class="v">What would flip it? Which assumption, and by how much?</div>
+</div>
+```
+
+::: {.ask}
+Same three questions we just ran on GreenWaste, in the same order. The programme
+changes; the interrogation does not.
+
+**In groups:** run them on whatever the real case turns out to be, and present
+your verdict in two minutes.
+:::
+
+# 6 · Close
+
+## What today gives you
+
+```{=html}
+<div class="facts">
+  <div class="k">A ratio is a model</div>  <div class="v">not a measurement &middot; it contains choices as well as evidence</div>
+  <div class="k">The rate alone</div>       <div class="v">rarely flips anything &middot; do not be satisfied with that answer</div>
+  <div class="k">The horizon</div>          <div class="v">often decides it &middot; and nobody measures it</div>
+  <div class="k">Always ask</div>           <div class="v">what is excluded from the cost, and what would change the answer</div>
+</div>
+```
+
+::: {.ask}
+The single sentence to take to a meeting:
+
+**"What assumption would have to change for this ratio to fall below 1?"**
+
+An evaluator who can answer that has thought about their model. One who cannot
+has run it.
+:::
+
+## Where this sits
+
+```{=html}
+<div class="facts">
+  <div class="k">Day 1</div>  <div class="v">is the number answering your question, and is it big enough?</div>
+  <div class="k">Day 2</div>  <div class="v">which method produced it, and what does that method assume?</div>
+  <div class="k">Today</div>  <div class="v">what is it worth, and which assumption decides that?</div>
+  <div class="k">This afternoon</div> <div class="v">reading the figures that carry these claims into a room</div>
+</div>
+```
+
+::: {.panel}
+Tomorrow morning you use all of it: a full credibility review of an evaluation
+report, then a clinic where you put the questions to an analyst who has to answer
+them.
+:::
