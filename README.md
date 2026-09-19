@@ -26,22 +26,19 @@ All current work is in **`Module_2_Oct_2026_v2/`**. The older `session_1/` … `
 | 2 · Tue 13 Oct | 3 · Reading Matching Results | `Oct13_session3.qmd` | 32 | Built |
 | 3 · Wed 14 Oct | 1 · Was It Worth It? | `Oct14_session1.qmd` | 31 | Built |
 | 3 · Wed 14 Oct | 2 · What Can You Read? | `Oct14_session2.qmd` | 30 | Built |
-| **3 · Wed 14 Oct** | **3 · Interrogate the Analyst** | — | — | **Not started** |
+| 3 · Wed 14 Oct | 3 · Interrogate the Analyst | `Oct14_session3.qmd` | 30 | Built |
 | **4 · Thu 15 Oct** | **1 · Is This Evidence Credible?** | — | — | **Not started** |
 | **4 · Thu 15 Oct** | **2 · From Findings to Policy** | — | — | **Not started** |
 | **4 · Thu 15 Oct** | **3 · Plan Your Own Evaluation** | — | — | **Not started** |
 
 ### Sessions still to build
 
-Four of the twelve sessions have no deck. Each needs an artefact that does not yet exist, which is
-the main reason they are still open:
+Three of the twelve sessions have no deck, all on Day 4. Each needs an artefact that does not yet
+exist, which is the main reason they are still open:
 
-- **Day 3 Session 3 — "Interrogate the Analyst" (QA clinic).** The trainer plays the evaluator and
-  participants use a QA checklist to challenge methodology, assumptions, data quality and
-  conclusions. Needs a **QA checklist** artefact.
-- **Day 4 Session 1 — "Is This Evidence Credible?"** Applies that same checklist to a fictitious
-  evaluation report with deliberate strengths and weaknesses; groups rate each section on a
-  traffic-light scale. Needs the **fictitious report** and the **traffic-light rating sheet**.
+- **Day 4 Session 1 — "Is This Evidence Credible?"** Applies the Day 3 Session 3 checklist to a
+  fictitious evaluation report with deliberate strengths and weaknesses; groups rate each section on
+  a traffic-light scale. Needs the **fictitious report** and the **traffic-light rating sheet**.
 - **Day 4 Session 2 — "From Findings to Policy".** Participants turn a set of findings into a short
   policy brief — headline finding, key implications, one recommendation, one risk — then swap and
   critique. Needs a **brief template** and a **findings set**.
@@ -49,6 +46,24 @@ the main reason they are still open:
   Module 1 and add a results presentation plan, a cost-benefit framework, a visualisation sketch and
   an evidence translation plan, then pitch for five minutes. Needs the **Evaluation Design Update
   template**.
+
+### The QA checklist is a shared artefact
+
+Day 3 Session 3 produced the QA checklist, and Day 4 Session 1 reuses it. It exists in two forms,
+both generated from one source so they cannot drift apart:
+
+| File | What it is |
+|------|------------|
+| `qa_checklist.R` | The single source: four areas, twenty questions, five headline questions |
+| `Oct14_session3.qmd` | The deck, which shows the five headline questions on a slide |
+| `Oct14_session3_qa_checklist.qmd` | The printable handout (renders to `.docx`), all twenty questions |
+
+To change a question, edit `qa_checklist.R` and re-render both. Do not edit the handout text
+directly — it is generated.
+
+The four areas are methodology, assumptions, data quality and conclusions, which are the brief's
+own four. The comparison questions lead the methodology area because "compared to what" is the
+spine of the week.
 
 The authoritative brief for every session is `Module_2_Oct_2026_v2/Module2_outline.xlsx`. Read it
 before drafting anything.

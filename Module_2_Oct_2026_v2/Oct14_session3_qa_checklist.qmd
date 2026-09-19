@@ -1,0 +1,71 @@
+---
+title: "Quality Assurance Checklist"
+subtitle: "Interrogating an evaluation result · Module 2, Day 3 Session 3"
+author: "3ie"
+format:
+  docx:
+    toc: false
+    number-sections: false
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+source("qa_checklist.R")
+```
+
+```{r, results='asis', echo=FALSE}
+cat("This is the checklist to work from when someone hands you an evaluation result and asks\n")
+cat("whether to act on it. It is deliberately blunt: every question is one you can ask out loud,\n")
+cat("and every one has an answer or an admission. A question the analyst cannot answer is itself\n")
+cat("a finding, and sometimes the most important one.\n\n")
+
+cat("The four areas below are the four places an evaluation most often goes wrong. Work through\n")
+cat("them in order. If you only have five minutes, use the short list on the last page.\n\n")
+
+cat("# The four areas\n\n")
+
+for (d in qa_domains) {
+  cat(sprintf("## %s\n\n", d))
+  cat(sprintf("*%s*\n\n", qa_purpose[[d]]))
+  qs <- qa_questions$question[qa_questions$domain == d]
+  for (i in seq_along(qs)) {
+    cat(sprintf("%d. %s\n", i, qs[i]))
+  }
+  cat("\n")
+  cat("Answer / what the analyst said: ....................................................\n\n")
+  cat("......................................................................................\n\n")
+}
+
+cat("\\newpage\n\n")
+
+cat("# The five to ask every time\n\n")
+cat("If the meeting is about to end and you have not asked anything yet, ask these.\n\n")
+for (i in seq_along(qa_headline)) {
+  cat(sprintf("%d. **%s**\n", i, qa_headline[i]))
+}
+
+cat("\n# Three habits that make the questions land\n\n")
+
+cat("**Ask for the number, not the adjective.** \"Was it significant?\" invites a yes. \"What was\n")
+cat("the estimate and its confidence interval?\" invites a figure you can check. An evaluator who\n")
+cat("cannot produce the figure has not finished the analysis.\n\n")
+
+cat("**Ask what would change your mind.** A claim that nothing could falsify is not a finding.\n")
+cat("Listen for a specific answer -- a rate, a horizon, a subgroup, a specification.\n\n")
+
+cat("**Ask what you would do differently if it were half the size.** If the recommendation is the\n")
+cat("same either way, the estimate is not really doing the work. The decision is being carried by\n")
+cat("something else, and you should find out what.\n\n")
+
+cat("# Notes\n\n")
+cat("Questions the analyst could not answer:\n\n")
+cat("......................................................................................\n\n")
+cat("......................................................................................\n\n")
+cat("......................................................................................\n\n")
+cat("......................................................................................\n\n")
+cat("What you would need before signing off:\n\n")
+cat("......................................................................................\n\n")
+cat("......................................................................................\n\n")
+cat("......................................................................................\n\n")
+```
