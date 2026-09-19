@@ -412,6 +412,38 @@ cat(sprintf('
 
 The same applies to `.facts`, which is written inline as `{.=html}`.
 
+### `.hero` and descenders: measure the ink, not the line box
+
+`.hero .value` sets `line-height: 1`, which is tighter than the font's own line
+box, so glyphs overflow the element. Because `overflow` is `visible` this never
+clips, but a **descender** can reach down into the `.label` below it.
+
+Descenders include `g j p q y` and, easily missed, the **comma**. So `1,000`
+descends further than `1.87` does, and prose in a hero descends further still.
+
+Before adding a hero, check the string. The reliable test measures actual glyph
+ink, not the element box:
+
+```js
+const cs = getComputedStyle(el), ctx = document.createElement('canvas').getContext('2d');
+ctx.font = cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily;
+const m = ctx.measureText(text);
+const lh = parseFloat(cs.lineHeight);
+const inkBottom = (lh - (m.fontBoundingBoxAscent + m.fontBoundingBoxDescent)) / 2
+                  + m.fontBoundingBoxAscent + m.actualBoundingBoxDescent;
+// collides only if (inkBottom - lh) > the label's margin-top (5px by default)
+```
+
+**Do not use a `Range` bounding box for this.** A Range measures the *line box*,
+which overhangs the glyphs, so it reports collisions of 2–13px on every hero in
+the deck including ones that look perfectly fine. That false positive cost an
+hour. The canvas measurement above is the one that agrees with what you see.
+
+Measured values, for reference: `1.87` ink descent 1px, `1,000` 10px (margin is
+5px, so it clears), `Sign off?` roughly 16px and it does **not** clear. State the
+number in the hero and put the question in the heading, which is what Day 3
+Session 3 does.
+
 ### Layout constraints
 
 - **1280 × 720.** Any content more than 720 logical px tall spills. Check after
