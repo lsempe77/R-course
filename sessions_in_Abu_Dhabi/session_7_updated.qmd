@@ -29,6 +29,9 @@ library(modelsummary)
 library(estimatr)
 library(kableExtra)
 library(flextable)
+# modelsummary(output = "tinytable") returns a tinytable object, so the package
+# must be attached for style_tt() below to resolve.
+library(tinytable)
 ```
 
 

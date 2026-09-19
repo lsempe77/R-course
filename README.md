@@ -137,11 +137,24 @@ in-session teaching pattern, and the verification loop. The points that most oft
   either drawn from the synthetic data in this repository or visibly marked `[PLACEHOLDER]`.
 - **The Menti code is still a placeholder.** `MENTI_CODE <- "1234 5678"` in every deck, so the QR
   codes currently point at a Menti that does not exist. Replace it before the training.
-- **Two Module 1 decks do not currently render.** `sessions_in_Abu_Dhabi/session_6_updated.qmd`
-  and `session_7_updated.qmd` fail on a clean checkout. The first passes raw HTML to a `kable`
-  caption, which crashes Quarto 1.7's Lua filter (`main.lua:16935`); the second fails inside
-  `style_tt()`. Both pre-date the GreenWaste harmonisation and are unrelated to it. The
-  `.html` files beside them are from an earlier build.
+
+### Two traps when editing the Module 1 decks
+
+Both of these have already bitten us once and neither is obvious from the error message.
+
+- **Do not pass raw HTML to a `kable` caption.** `caption = "<center><span style=…>"` makes
+  Quarto 1.7's Lua filter die with `main.lua:16935: attempt to get length of a nil value
+  (field 'content')`. The error names the Lua file, not your slide, so it reads like a problem
+  elsewhere in the deck. Use markdown instead — `caption = "**Bold text**"` renders the same and
+  is safe.
+- **`modelsummary(output = "tinytable")` needs `library(tinytable)`.** Returning a tinytable
+  object does not attach the package, so a following `style_tt()` fails with
+  `could not find function "style_tt"`. The setup chunk of `session_7_updated.qmd` loads it
+  explicitly.
+
+A quick way to find which slide is at fault when a render fails without naming one is to bisect by
+slide: write prefixes of the `.qmd` to a scratch file and render each, halving the range until the
+first failing prefix is one slide long.
 
 ---
 
