@@ -27,18 +27,15 @@ All current work is in **`Module_2_Oct_2026_v2/`**. The older `session_1/` … `
 | 3 · Wed 14 Oct | 1 · Was It Worth It? | `Oct14_session1.qmd` | 31 | Built |
 | 3 · Wed 14 Oct | 2 · What Can You Read? | `Oct14_session2.qmd` | 30 | Built |
 | 3 · Wed 14 Oct | 3 · Interrogate the Analyst | `Oct14_session3.qmd` | 30 | Built |
-| **4 · Thu 15 Oct** | **1 · Is This Evidence Credible?** | — | — | **Not started** |
+| 4 · Thu 15 Oct | 1 · Is This Evidence Credible? | `Oct15_session1.qmd` | 30 | Built |
 | **4 · Thu 15 Oct** | **2 · From Findings to Policy** | — | — | **Not started** |
 | **4 · Thu 15 Oct** | **3 · Plan Your Own Evaluation** | — | — | **Not started** |
 
 ### Sessions still to build
 
-Three of the twelve sessions have no deck, all on Day 4. Each needs an artefact that does not yet
-exist, which is the main reason they are still open:
+Two of the twelve sessions have no deck, both on Day 4. Each needs an artefact that does not yet
+exist:
 
-- **Day 4 Session 1 — "Is This Evidence Credible?"** Applies the Day 3 Session 3 checklist to a
-  fictitious evaluation report with deliberate strengths and weaknesses; groups rate each section on
-  a traffic-light scale. Needs the **fictitious report** and the **traffic-light rating sheet**.
 - **Day 4 Session 2 — "From Findings to Policy".** Participants turn a set of findings into a short
   policy brief — headline finding, key implications, one recommendation, one risk — then swap and
   critique. Needs a **brief template** and a **findings set**.
@@ -47,23 +44,29 @@ exist, which is the main reason they are still open:
   an evidence translation plan, then pitch for five minutes. Needs the **Evaluation Design Update
   template**.
 
-### The QA checklist is a shared artefact
+### The QA artefacts are shared across three sessions
 
-Day 3 Session 3 produced the QA checklist, and Day 4 Session 1 reuses it. It exists in two forms,
-both generated from one source so they cannot drift apart:
+The quality-assurance work runs across Day 3 Session 3 and Day 4 Session 1, and both are generated
+from a single source so the deck and the paper cannot disagree:
 
 | File | What it is |
 |------|------------|
 | `qa_checklist.R` | The single source: four areas, twenty questions, five headline questions |
-| `Oct14_session3.qmd` | The deck, which shows the five headline questions on a slide |
-| `Oct14_session3_qa_checklist.qmd` | The printable handout (renders to `.docx`), all twenty questions |
+| `qa_rating.R` | The report's sections, their planted strengths and weaknesses, and the traffic-light scale |
+| `Oct14_session3.qmd` | The clinic deck, showing the five headline questions |
+| `Oct14_session3_qa_checklist.qmd` | The printable checklist (→ `.docx`), all twenty questions |
+| `Oct15_session1.qmd` | The deep-dive deck, which reveals the defects section by section |
+| `Oct15_session1_report.qmd` | The fictitious report the room rates (→ `.docx`) |
+| `Oct15_session1_rating_sheet.qmd` | The printable rating sheet (→ `.docx`) |
 
-To change a question, edit `qa_checklist.R` and re-render both. Do not edit the handout text
-directly — it is generated.
+To change a question or a planted defect, edit the `.R` source and re-render. Do not edit the
+generated handout text directly — it is generated.
 
-The four areas are methodology, assumptions, data quality and conclusions, which are the brief's
-own four. The comparison questions lead the methodology area because "compared to what" is the
-spine of the week.
+The report is a **fictitious teaching artefact** and says so in a banner on its first page. It
+contains deliberate strengths as well as deliberate weaknesses, so the exercise is not "find the
+errors" but "separate the good from the weak in one document". Its numbers match the GreenWaste
+canonical values above, and the preferred specification it quietly fails to act on is the 816 AED
+difference-in-differences estimate.
 
 The authoritative brief for every session is `Module_2_Oct_2026_v2/Module2_outline.xlsx`. Read it
 before drafting anything.

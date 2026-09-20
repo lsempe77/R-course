@@ -1,0 +1,58 @@
+---
+title: "Credibility Rating Sheet"
+subtitle: "Is This Evidence Credible? · Module 2, Day 4 Session 1"
+author: "3ie"
+format:
+  docx:
+    toc: false
+    number-sections: false
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+source("qa_rating.R")
+```
+
+```{r, results='asis', echo=FALSE}
+cat("Work through the evaluation report one section at a time. For each section,\n")
+cat("rate its credibility and give the one reason that decided your rating. The\n")
+cat("reason matters more than the colour: a red with no reason is an opinion, and an\n")
+cat("amber with a named caveat is a finding.\n\n")
+
+cat("# The scale\n\n")
+for (i in seq_len(nrow(rating_scale))) {
+  cat(sprintf("- **%s.** %s\n", rating_scale$light[i], rating_scale$meaning[i]))
+}
+cat("\n")
+
+cat("# Sections to rate\n\n")
+for (i in seq_len(nrow(rating_sections))) {
+  cat(sprintf("## %s\n\n", rating_sections$section[i]))
+  cat("Rating (circle one):  **Green**   /   **Amber**   /   **Red**\n\n")
+  cat("The reason that decided it:\n\n")
+  cat("......................................................................................\n\n")
+  cat("......................................................................................\n\n")
+  cat("If amber or red, what would settle it:\n\n")
+  cat("......................................................................................\n\n")
+}
+
+cat("\\newpage\n\n")
+
+cat("# Your verdict\n\n")
+cat("Would you sign off on this evaluation for national scale-up?\n\n")
+cat("  **Yes**   /   **No**   /   **Not without more answers**\n\n")
+cat("The single most important problem you found:\n\n")
+cat("......................................................................................\n\n")
+cat("......................................................................................\n\n")
+cat("The strongest thing in the report, and why it does not rescue the above:\n\n")
+cat("......................................................................................\n\n")
+cat("......................................................................................\n\n")
+
+cat("# What changed your mind\n\n")
+cat("How did your rating of the executive summary compare with your rating of the\n")
+cat("results section? If they differ, the report has done something to you.\n\n")
+cat("......................................................................................\n\n")
+cat("......................................................................................\n\n")
+cat("......................................................................................\n\n")
+```
