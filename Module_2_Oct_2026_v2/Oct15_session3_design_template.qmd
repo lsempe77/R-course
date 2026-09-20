@@ -1,0 +1,66 @@
+---
+title: "Evaluation Design Update"
+subtitle: "Plan Your Own Evaluation · Module 2, Day 4 Session 3"
+author: "3ie"
+format:
+  docx:
+    toc: false
+    number-sections: false
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+source("qa_design_update.R")
+```
+
+```{r, results='asis', echo=FALSE}
+cat("Team name:  ..........................................................................\n\n")
+cat("Members:  ............................................................................\n\n")
+cat("The programme you are evaluating:  ....................................................\n\n")
+
+cat("\\newpage\n\n")
+cat("# Part 1. Where your design stands\n\n")
+cat("You started this design in Module 1. Before adding anything, write down the design as it\n")
+cat("stands now. If you do not have the Module 1 document to hand, use the recap below to\n")
+cat("reconstruct it \u2014 the eight conditions have not changed.\n\n")
+
+for (i in seq_len(nrow(design_conditions))) {
+  cat(sprintf("**%d. %s.** *%s*\n\n", i, design_conditions$condition[i],
+              design_conditions$recap[i]))
+  cat("Your design:  ......................................................................\n\n")
+  cat("......................................................................................\n\n")
+}
+
+cat("\\newpage\n\n")
+cat("# Part 2. The four additions\n\n")
+cat("This is the new work. Each addition comes from a session this week.\n\n")
+
+for (i in seq_len(nrow(design_additions))) {
+  cat(sprintf("## %d. %s\n\n", i, design_additions$addition[i]))
+  cat(sprintf("*From: %s*\n\n", design_additions$from[i]))
+  cat(sprintf("%s\n\n", design_additions$asks[i]))
+  cat("......................................................................................\n\n")
+  cat("......................................................................................\n\n")
+  cat("......................................................................................\n\n")
+  cat("......................................................................................\n\n")
+  if (i < nrow(design_additions)) cat("\\newpage\n\n")
+}
+
+cat("\\newpage\n\n")
+cat("# Part 3. Your five-minute pitch\n\n")
+cat("One pitch per team. Five minutes, then three minutes of feedback from the room.\n\n")
+for (i in seq_len(nrow(pitch_structure))) {
+  cat(sprintf("- **%s** *(%s).* %s\n", pitch_structure$part[i],
+              pitch_structure$minutes[i], pitch_structure$says[i]))
+}
+cat("\n")
+cat("## The one rule\n\n")
+cat("Say what your design **cannot** establish before you say what you want. A pitch that\n")
+cat("names its own limit is more persuasive, not less: it tells the room which parts you have\n")
+cat("already thought about.\n\n")
+cat("## Notes\n\n")
+cat("......................................................................................\n\n")
+cat("......................................................................................\n\n")
+cat("......................................................................................\n\n")
+```

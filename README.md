@@ -28,45 +28,57 @@ All current work is in **`Module_2_Oct_2026_v2/`**. The older `session_1/` … `
 | 3 · Wed 14 Oct | 2 · What Can You Read? | `Oct14_session2.qmd` | 30 | Built |
 | 3 · Wed 14 Oct | 3 · Interrogate the Analyst | `Oct14_session3.qmd` | 30 | Built |
 | 4 · Thu 15 Oct | 1 · Is This Evidence Credible? | `Oct15_session1.qmd` | 30 | Built |
-| **4 · Thu 15 Oct** | **2 · From Findings to Policy** | — | — | **Not started** |
-| **4 · Thu 15 Oct** | **3 · Plan Your Own Evaluation** | — | — | **Not started** |
+| 4 · Thu 15 Oct | 2 · From Findings to Policy | `Oct15_session2.qmd` | 30 | Built |
+| 4 · Thu 15 Oct | 3 · Plan Your Own Evaluation | `Oct15_session3.qmd` | 23 | Built |
 
-### Sessions still to build
+**All twelve sessions are built and published.** Nothing is outstanding on the slide decks.
 
-Two of the twelve sessions have no deck, both on Day 4. Each needs an artefact that does not yet
-exist:
+### What is still open
 
-- **Day 4 Session 2 — "From Findings to Policy".** Participants turn a set of findings into a short
-  policy brief — headline finding, key implications, one recommendation, one risk — then swap and
-  critique. Needs a **brief template** and a **findings set**.
-- **Day 4 Session 3 — "Plan Your Own Evaluation".** Teams return to the design they started in
-  Module 1 and add a results presentation plan, a cost-benefit framework, a visualisation sketch and
-  an evidence translation plan, then pitch for five minutes. Needs the **Evaluation Design Update
-  template**.
+- **The Menti code is a placeholder** in all twelve decks, so the QR codes point at a Menti that
+  does not exist. See the note under Conventions below.
+- **Day 4 Session 2's policy brief.** The task checklist records an open request to SCO for real
+  policy briefs as examples of an ideal one. The exercise works without them, but a real example
+  would sharpen the critique.
+- **Day 4 Session 3 assumes a Module 1 design exists.** Module 1's design content is the eight
+  conditions for a credible impact evaluation, and the template recaps them so the session is
+  self-contained. If Module 1 produced a written design document, the template should point at it.
 
-### The QA artefacts are shared across three sessions
+### The generated artefacts, and their sources
 
-The quality-assurance work runs across Day 3 Session 3 and Day 4 Session 1, and both are generated
-from a single source so the deck and the paper cannot disagree:
+Four printable handouts and six shared sources. Every handout is generated: **editing the `.docx`
+by hand will be overwritten on the next render.**
 
-| File | What it is |
-|------|------------|
-| `qa_checklist.R` | The single source: four areas, twenty questions, five headline questions |
-| `qa_rating.R` | The report's sections, their planted strengths and weaknesses, and the traffic-light scale |
-| `Oct14_session3.qmd` | The clinic deck, showing the five headline questions |
-| `Oct14_session3_qa_checklist.qmd` | The printable checklist (→ `.docx`), all twenty questions |
-| `Oct15_session1.qmd` | The deep-dive deck, which reveals the defects section by section |
-| `Oct15_session1_report.qmd` | The fictitious report the room rates (→ `.docx`) |
-| `Oct15_session1_rating_sheet.qmd` | The printable rating sheet (→ `.docx`) |
+| Source (`.R`) | Drives |
+|---------------|--------|
+| `qa_checklist.R` | The clinic deck and its checklist handout |
+| `qa_rating.R` | The deep-dive deck, the fictitious report, and the rating sheet |
+| `qa_translation.R` | The translation deck, the findings pack, and the brief template |
+| `qa_design_update.R` | The final deck and the Evaluation Design Update template |
 
-To change a question or a planted defect, edit the `.R` source and re-render. Do not edit the
-generated handout text directly — it is generated.
+| Handout (`.docx`) | What it is |
+|-------------------|------------|
+| `Oct14_session3_qa_checklist.docx` | Twenty questions in four areas, with space to record answers |
+| `Oct15_session1_report.docx` | The fictitious evaluation report the room rates |
+| `Oct15_session1_rating_sheet.docx` | Traffic-light rating sheet, one page per six sections |
+| `Oct15_session2_findings.docx` | The six Tariff Shield findings, and what each does not license |
+| `Oct15_session2_brief_template.docx` | The four-element brief, one side of A4 |
+| `Oct15_session3_design_template.docx` | The Evaluation Design Update, in three parts |
+
+Two of these carry teaching content that must not drift from the deck: the fictitious report's
+numbers, and the six Tariff Shield findings. Both are generated from their `.R` source, so the deck
+and the paper cannot disagree.
 
 The report is a **fictitious teaching artefact** and says so in a banner on its first page. It
 contains deliberate strengths as well as deliberate weaknesses, so the exercise is not "find the
 errors" but "separate the good from the weak in one document". Its numbers match the GreenWaste
 canonical values above, and the preferred specification it quietly fails to act on is the 816 AED
 difference-in-differences estimate.
+
+Tariff Shield, the programme in Day 4 Session 2, is a **different fictitious programme** and is
+labelled as such in its findings pack. It is deliberately not GreenWaste: the room has spent two
+days on that case study, and translating a case study they have memorised would not test
+translation.
 
 The authoritative brief for every session is `Module_2_Oct_2026_v2/Module2_outline.xlsx`. Read it
 before drafting anything.

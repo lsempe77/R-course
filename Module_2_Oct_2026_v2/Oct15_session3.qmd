@@ -1,0 +1,470 @@
+---
+title: "Plan Your Own Evaluation"
+subtitle: "Module 2 · Day 4, Session 3: Building on Module 1"
+author: "3ie"
+always_allow_html: yes
+format:
+  revealjs:
+    theme: [theme_editorial.scss]
+    slide-number: true
+    width: 1280
+    height: 720
+    fig-align: center
+    slide-level: 2
+    embed-resources: true
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+    dev: "png"
+    dpi: 96
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup}
+library(knitr)
+library(kableExtra)
+library(qrcode)
+
+# ---- Palette (editorial theme; see theme_editorial.scss) -------------------
+ACCENT  <- "#0E6E80"
+ACCENT2 <- "#A9561F"
+ALERT   <- "#8E2413"
+INK     <- "#16181A"; MUTED <- "#61686D"; RULE <- "#E3E6E8"
+
+# ---- The template ----------------------------------------------------------
+# Shared with the printable Evaluation Design Update template.
+source("qa_design_update.R")
+
+# ---- Live Menti poll -------------------------------------------------------
+MENTI_CODE <- "1234 5678"
+MENTI_JOIN <- paste0("https://www.menti.com/", gsub(" ", "", MENTI_CODE))
+
+menti_qr <- function(path = "menti_qr.png", url = MENTI_JOIN) {
+  png(path, width = 900, height = 900, res = 300, bg = "white")
+  on.exit(dev.off(), add = TRUE)
+  par(mar = c(0, 0, 0, 0))
+  plot(qr_code(url, ecl = "H"))
+  path
+}
+MENTI_QR <- menti_qr()
+```
+
+# 0 · The last session
+
+## Four days. One design.
+
+::: {.panel}
+On Monday you learned what a comparison is. Tuesday, four ways of building one.
+Wednesday, what a result costs and what a figure hides. Thursday, how to tell
+whether evidence is credible and how to translate it.
+
+Today you point all of it at your own evaluation.
+:::
+
+::: {.ask .fragment}
+**How far along is your design?**
+Not started / rough outline / drafted / ready to pitch.
+:::
+
+## What today is not
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**It is not new material.** Every technique today has already been taught. This
+session assembles them.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn}
+**It is not a written exam.** You are not being graded on completeness. You are
+being asked to make choices and to defend them in five minutes.
+:::
+:::::
+
+::::::
+
+::: {.ask .fragment}
+The template has three parts: where your design stands, the four additions, and
+your pitch. Parts 1 and 2 are working time. Part 3 is performance.
+:::
+
+# 1 · Where your design stands
+
+## The eight conditions, from Module 1
+
+```{r}
+#| results: asis
+tab <- data.frame(
+  `#` = seq_len(nrow(design_conditions)),
+  Condition = design_conditions$condition,
+  check.names = FALSE
+)
+kable(tab, col.names = c("#", "Condition"),
+      caption = "The eight conditions for a credible impact evaluation") |>
+  kable_styling(c("striped", "condensed"), full_width = FALSE, position = "left",
+                font_size = 16)
+```
+
+::: {.panel}
+Nothing here has changed since Module 1, and nothing this week contradicted it.
+Part 1 of the template asks you to write your design against these, so the new
+work has something to attach to.
+:::
+
+## The one condition that decides the rest
+
+::: {.ask}
+Of the eight, which one, if you get it wrong, makes the other seven irrelevant?
+:::
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel .fragment}
+**The counterfactual.**
+
+Every method this week has been a different way of operationalising it:
+randomisation, a cut-off, an instrument, a matched comparison, a parallel trend.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn .fragment}
+And every one of them has a specific way of being false. If you cannot state
+yours in a sentence, you have not chosen a design — you have chosen a method.
+:::
+:::::
+
+::::::
+
+::: {.ask .fragment}
+Write your counterfactual sentence now, before we go on. One sentence. You will
+read it out in the pitch.
+:::
+
+## Working time
+
+::: {.panel}
+**Twenty minutes.** Part 1 of the template: write your design as it stands,
+against the eight conditions.
+:::
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.ask}
+If you have the Module 1 document, work from it. If not, the recap on the previous
+slide is enough — write what you would do, not what you did.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn}
+Do not polish. This is the foundation for Part 2, and Part 2 is where the marks
+are in the pitch.
+:::
+:::::
+
+::::::
+
+# 2 · The four additions
+
+## What you are adding
+
+```{r}
+#| results: asis
+tab <- data.frame(
+  Addition = design_additions$addition,
+  `From` = design_additions$from,
+  check.names = FALSE
+)
+kable(tab, col.names = c("Addition", "From"),
+      caption = "The four additions, and where each came from") |>
+  kable_styling(c("striped", "condensed"), full_width = FALSE, position = "left",
+                font_size = 16)
+```
+
+::: {.panel}
+Each of these is something this week taught you to demand of someone else's
+evaluation. Now you have to supply it for your own.
+:::
+
+::: {.ask .fragment}
+Which of the four is hardest to do **before** you have any data? Why?
+:::
+
+## Addition 1: results presentation plan
+
+::: {.ask}
+What will you show, to whom, and in what order? Name the one number you will lead
+with — and say what the reader must **not** be able to conclude from it.
+:::
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**Yesterday's lesson, applied**
+
+The fictitious report led with its largest estimate and called a different one its
+preferred specification. A reader who stopped after the summary concluded the
+opposite of the truth.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn .fragment}
+So the question is not "what is my headline number". It is "what will a reader
+who reads only the headline come away believing — and is that true?"
+:::
+:::::
+
+::::::
+
+## Addition 2: cost-benefit framework
+
+::: {.ask}
+Four things to state: the **threshold**, the **benefit per unit per year**, the
+**horizon**, and the **discount rate**.
+:::
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**Wednesday's lesson**
+
+Of those four, the discount rate is the one everybody argues about and the one
+that usually matters least. The horizon decides almost everything and is often
+never stated.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn .fragment}
+Write your horizon down. If your benefit stream runs for five years and someone
+assumes two, your ratio moves from 1.87 to 0.80 — the same programme, the same
+evidence, the opposite decision.
+:::
+:::::
+
+::::::
+
+## Addition 3: data visualisation sketch
+
+::: {.ask}
+Sketch the figure that carries your headline result. Then sketch the **same data
+presented a second way**, and say what the second version hides.
+:::
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**Wednesday's lesson**
+
+Every pair of figures showed identical numbers and different impressions. The
+truncated axis, the bar of means, the denominator, the levels-versus-changes, the
+discounting.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn .fragment}
+The second sketch is the one that matters. If you cannot say what your own
+preferred figure hides, someone else will find it in the questions.
+:::
+:::::
+
+::::::
+
+## Addition 4: evidence translation plan
+
+::: {.ask}
+Write the **headline sentence** of your brief, with the number in it. Then name
+the one thing you will state plainly that your evaluation did **not** establish.
+:::
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**This morning's lesson**
+
+A brief that reports the estimate and omits the threshold leaves the reader to
+assume the target was met. Omission is the failure mode, not error.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn .fragment}
+The second half of this addition is the harder one, and it is the one that will
+distinguish your pitch. Naming your own limit is more persuasive, not less.
+:::
+:::::
+
+::::::
+
+## Working time
+
+::: {.panel}
+**Thirty minutes.** Part 2 of the template: all four additions.
+
+Work as a team. Split the four if that is faster, but every member should be able
+to speak to all four by the end.
+:::
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.ask}
+Use the template's prompts. Each one is phrased as the question a commissioner
+would ask, because that is who you are pitching to.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn}
+You will not finish all four to the same standard. That is expected. Decide as a
+team which two you will lead on.
+:::
+:::::
+
+::::::
+
+# 3 · The pitch
+
+## Five minutes, five parts
+
+```{r}
+#| results: asis
+tab <- data.frame(
+  Part = pitch_structure$part,
+  Time = pitch_structure$minutes,
+  `What it says` = pitch_structure$says,
+  check.names = FALSE
+)
+kable(tab, col.names = c("Part", "Time", "What it says"),
+      caption = "The pitch structure") |>
+  kable_styling(c("striped", "condensed"), full_width = FALSE, position = "left",
+                font_size = 15)
+```
+
+::: {.warn}
+Note the order. **The honest limit comes before the ask**, not after it. That is
+deliberate and it is not how pitches are usually built.
+:::
+
+## Why the limit comes first
+
+::: {.ask}
+If you tell the room what your design cannot do, why would that make them more
+likely to give you what you want?
+:::
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel .fragment}
+Because it tells them **which parts you have already thought about**. A pitch that
+claims no limits is either naive or hiding something, and the room cannot tell
+which.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn .fragment}
+It also changes what you are asking for. If you know your design cannot establish
+X, you can ask for what would — which is a more specific request than "fund the
+evaluation".
+:::
+:::::
+
+::::::
+
+## Feedback from the room
+
+::: {.panel}
+Three minutes per team. The room gives feedback in this order, and the order
+matters:
+
+1. **What is the design?** Say it back in one sentence. If you cannot, that is the
+   feedback.
+2. **What would make it fail?** The one assumption that would have to break.
+3. **What is missing?** One thing you would have wanted to hear.
+:::
+
+::: {.ask .fragment}
+Feedback is not a verdict. The first question is a diagnostic: if the room cannot
+say your design back to you, the pitch did not land, and that is worth knowing
+before a real commissioner.
+:::
+
+## Peer feedback on the day
+
+```{r}
+#| results: asis
+cat('<div class="panel"><b>1.</b> Write your feedback down. Spoken feedback evaporates and the team cannot use it.</div>\n')
+cat('<div class="panel"><b>2.</b> One thing that worked, one thing that did not. Not three of each.</div>\n')
+cat('<div class="panel"><b>3.</b> Direct the feedback at the design, never at the team.</div>\n')
+cat('<div class="panel"><b>4.</b> If you cannot say the design back in one sentence, say so. It is the most useful thing you can give them.</div>\n')
+```
+
+::: {.ask .fragment}
+Which of those four is hardest to do well? Which do people usually skip?
+:::
+
+# 4 · The week in one slide
+
+## What you can now do
+
+```{r}
+#| results: asis
+cat('<div class="panel"><b>1.</b> Say what a number is compared to, and why that comparison is the argument.</div>\n')
+cat('<div class="panel"><b>2.</b> Read DiD, RDD, IV and matching results, and name the assumption each rests on.</div>\n')
+cat('<div class="panel"><b>3.</b> Judge whether a benefit-cost ratio clears a threshold, and what decides it.</div>\n')
+cat('<div class="panel"><b>4.</b> See the same data drawn two ways, and say what each version hides.</div>\n')
+cat('<div class="panel"><b>5.</b> Interrogate an evaluation with a checklist, and rate a report section by section.</div>\n')
+cat('<div class="panel"><b>6.</b> Write a brief a decision-maker can act on without being misled.</div>\n')
+```
+
+::: {.ask .fragment}
+Which of the six would you have said you could do on Monday morning? Which would
+you now add?
+:::
+
+## The one question
+
+::: {.panel}
+If you take one thing from four days, take this. It has been the first question in
+every session, under every method:
+
+> **What is being compared to what, and why should those two things be
+> comparable?**
+:::
+
+::: {.ask .fragment}
+Every method this week was a different answer to it. Every method had a different
+way of being wrong about it. And every evaluation you commission from now on will
+stand or fall on it.
+:::
+
+## Thank you
+
+::: {.panel}
+Four days, twelve sessions, one question.
+
+The slides stay available online, and every dataset and script is in the
+repository if you want to reproduce any of the analyses on your own programme.
+:::
+
+::: {.ask}
+What is the first evaluation decision you will make when you get back to your
+desk?
+:::
