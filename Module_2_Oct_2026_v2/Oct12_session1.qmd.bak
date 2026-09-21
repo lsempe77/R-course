@@ -680,16 +680,12 @@ plot_ly() %>%
 ```
 
 ::: {.panel}
-Here the coefficient is the vertical gap
+Hover the diamonds, then the red bar. Here the coefficient is the vertical gap
 between the two group means, `r sprintf("%.1f", coef_gap)` points. That gap is
 what the model reports on the programme row of the next slide.
 :::
 
-::: {.notes}
-Live: hover the diamonds, then the red bar, so the room sees the coefficient is the vertical gap between the two group means.
-:::
-
-## Reading the table: find the impact
+## Reading the table column by column
 
 ```{r}
 reg_tbl %>%
@@ -703,31 +699,32 @@ reg_tbl %>%
            general_title = "", footnote_as_chunk = TRUE)
 ```
 
+:::::: {.columns}
+
+::::: {.column width="50%"}
 ::: {.panel}
-**Programme row:** the one number that answers the decision. `2.1` points, interval `[0.3, 3.9]`. The rule needs 3 points, and the interval contains 3, so we cannot say whether the programme clears the bar.
+**Programme row:** the one number that answers the decision. `2.1` points,
+interval `[0.3, 3.9]`. The rule needs 3 points. The interval contains 3, so we
+cannot say whether the programme clears the bar.
 
-**Intercept:** the value when every variable on the table is zero. It describes no real school, so ignore it.
+**Intercept:** the value when everything on the table is zero. Nobody is a
+school with zero students and zero teachers. Ignore it.
 :::
+:::::
 
-## Reading the table: the other rows
-
-```{r}
-reg_tbl %>%
-  mutate(CI = sprintf("[%.2f, %.2f]", CI_lo, CI_hi)) %>%
-  select(Variable, Coef, SE, p, CI) %>%
-  kable(align = "lrrrr", digits = 2,
-        col.names = c("Variable", "Coefficient", "Std. error", "p-value", "95% CI")) %>%
-  kable_styling(full_width = FALSE, font_size = 22) %>%
-  row_spec(2, bold = TRUE, background = "#E6F1F5") %>%
-  footnote(general = paste("N =", reg_n, "schools. Outcome: Grade 6 maths pass rate."),
-           general_title = "", footnote_as_chunk = TRUE)
-```
-
+::::: {.column width="50%"}
 ::: {.panel}
-**Covariate rows:** class size, teacher experience, baseline pass rate. These adjust the comparison; they are not recommendations. Teacher experience is `0.15`, and its interval `[-0.01, 0.31]` crosses zero, so it cannot rule out no effect.
+**Covariate rows:** class size, teacher experience, baseline pass rate. These
+adjust the comparison. They are not recommendations: the coefficient on teacher
+experience is `0.15`, and its interval `[-0.01, 0.31]` crosses zero, so it
+cannot rule out no effect at all.
 
-**Std. error:** the wobble on the estimate. Divide the coefficient by it to see how steady the estimate is.
+**Std. error:** the wobble. Divide the coefficient by it to see how steady the
+estimate is.
 :::
+:::::
+
+::::::
 
 ## Word 4 · p-value
 
@@ -774,7 +771,8 @@ That fraction is the p-value.
 
 ::: {.panel}
 Same programme. Same effect of 2.1 points. Three studies of different sizes.
-The effect never changes.
+Press play, or drag the slider, and watch the shuffled distribution tighten
+around zero. The effect never changes.
 :::
 
 ```{r fig.height=3.35, fig.width=11.5}
@@ -806,10 +804,6 @@ At 240 schools, p = `r sprintf("%.2f", null_p$p[null_p$n == 240])`. At 2,400
 schools it is below 0.001. The programme did not improve by a single point.
 **Statistically significant does not mean big, and it does not mean worth
 funding.**
-:::
-
-::: {.notes}
-Press play, or drag the slider, and watch the shuffled distribution tighten around zero as the studies grow. The measured effect never moves.
 :::
 
 ## Word 4 · The warning cuts both ways
@@ -878,14 +872,9 @@ plot_ly() %>%
   pl_m2(height = 290)
 ```
 
-::: {.notes}
-Live: hover any bar for one study's estimate, and click a legend entry to isolate the studies that miss the true effect.
-:::
-
-## Word 5 · Which one would you act on?
-
 ::: {.ask}
-Now the decision. All three programmes report an effect of 2.1 points,
+Hover any bar for one study's estimate. Click a legend entry to isolate the
+misses. Now the decision. All three programmes report an effect of 2.1 points,
 and the bar to clear is 3 points.
 
 **A** `[0.3, 3.9]` &nbsp; **B** `[1.9, 2.3]` &nbsp; **C** `[-0.6, 4.8]`
@@ -893,7 +882,7 @@ and the bar to clear is 3 points.
 Which one would you act on, and what is your answer for each?
 :::
 
-::: {.panel .fragment}
+::: {.panel}
 B is precise and below the bar: confidently not enough. A is too uncertain to
 call. C is worse still. **The interval decides, not the point estimate.** An
 interval that spans the decision threshold means the honest answer is that we
@@ -929,7 +918,7 @@ precise."
 </div>
 ```
 
-## Debrief {.dense}
+## Debrief
 
 ::: {.warn}
 **Card 1.** The flagged sentence is the classic error. A 95% interval does not
@@ -939,9 +928,9 @@ chart shows. The AI stated a probability the method does not deliver.
 :::
 
 ::: {.warn}
-**Card 3.** The AI may have answered without asking what the pass rate
+**Card 3.** The AI almost certainly answered without asking what the pass rate
 was compared to, and without asking what bar the programme has to clear. Both
-are missing from the prompt, and important context to provide.
+are missing from the prompt, and a fluent answer hides that.
 :::
 
 ::: {.panel}
@@ -950,13 +939,13 @@ reduce class sizes without noting that the interval decides whether the
 relationship is real, it has answered a different question.
 
 
-Two recommended habits: Ask the AI to **ask you questions before it answers**.
+Two habits, every time. Ask the AI to **ask you questions before it answers**.
 Then put its answer through a second chat, or a second model, and compare.
 :::
 
 # 5 · Terms bingo
 
-## Terms bingo {.dense}
+## Terms bingo
 
 :::::: {.columns}
 

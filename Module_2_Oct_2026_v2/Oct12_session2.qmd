@@ -36,6 +36,7 @@ library(plotly)
 library(knitr)
 library(kableExtra)
 library(estimatr)   # lm_robust, clustered standard errors
+library(qrcode)     # live poll QR, generated below so it cannot drift
 
 # ---- Palette (editorial theme; see theme_editorial.scss) -------------------
 ACCENT  <- "#0E6E80"   # series 1: programme / offered
@@ -86,6 +87,32 @@ ax <- function(title = "", ...) {
 }
 
 tlev <- function(x) factor(x, levels = c("Before", "After"))
+
+# ---- Live Menti poll -------------------------------------------------------
+# ONE place to set the join code. The QR and printed link on the vote slide
+# and the results iframe on the reveal slide all read from here: change
+# MENTI_CODE only and all three move together.
+#
+# PLACEHOLDER until this session's Menti is built. MENTI_CODE is the short
+# JOIN code participants type at menti.com (usually 8 digits), NOT the long
+# ID in the editor URL. Confirm it while the Menti is live: a code that is
+# not running sends the room to a "no longer active" page.
+MENTI_CODE  <- "1234 5678"   # <!-- PLACEHOLDER: this session's join code -->
+MENTI_JOIN  <- paste0("https://www.menti.com/", gsub(" ", "", MENTI_CODE))
+
+# The results embed: the SLIDES view for a webpage, not the voting view (the
+# room still votes on their phones). Set to the long ID from the editor URL.
+MENTI_EMBED <- "https://www.mentimeter.com/app/presentation/PLACEHOLDER/embed"  # <!-- PLACEHOLDER -->
+
+# Distinct filename so this QR never overwrites Session 1's menti_qr.png.
+menti_qr <- function(path = "menti_qr_s2.png", url = MENTI_JOIN) {
+  png(path, width = 900, height = 900, res = 300, bg = "white")
+  on.exit(dev.off(), add = TRUE)
+  par(mar = c(0, 0, 0, 0))
+  plot(qr_code(url, ecl = "H"))   # ecl H = highest error correction
+  path
+}
+MENTI_QR <- menti_qr()
 
 # ---- Session 2: the traffic camera programme -------------------------------
 # One row per road segment per round. 1,200 segments in 24 sectors, two rounds
@@ -169,12 +196,6 @@ everywhere at once: twelve sectors first, the rest two years later.
 It set a bar before committing further: the programme had to avoid
 **`r sprintf("%.1f", POL_RULE)` injury collisions per road segment per round**.
 Below that, the money goes elsewhere.
-
-::: {.warn .note-ctr}
-**Illustrative case, with invented figures.** This is not a real programme and
-the numbers are generated for this training. Every number in this session comes
-from this fictional dataset.
-:::
 :::::
 
 ::::: {.column width="48%"}
@@ -187,6 +208,12 @@ from this fictional dataset.
 </div>
 ```
 :::::
+
+::: {.warn .note-ctr .fragment}
+**Illustrative case, with invented figures.** This is not a real programme and
+the numbers are generated for this training. Every number in this session comes
+from this fictional dataset.
+:::
 
 ::::::
 
@@ -264,37 +291,57 @@ It is also a before-and-after comparison. It compares those roads to their own
 past, which is exactly the comparison Session 1 spent an hour on.
 :::
 
-## `[MENTI PLACEHOLDER]` Would you fund the extension?
+## Would you fund the extension?
 
-::: {.ask}
-On the number you have just seen: **would you commit the money?**
+:::::: {.columns}
+
+::::: {.column width="62%"}
+::: {.ask style="font-size: 120%;"}
+On the number you have just seen, a `r sprintf("%.0f", pol_headline_fall)`% fall
+where cameras went: **would you commit the money to extend them?**
 
 Yes &nbsp;·&nbsp; No &nbsp;·&nbsp; Not on this alone
 :::
 
-::: {.panel}
-Commit before we look further. This is the same poll shape as Session 1, and it
-worked there for the same reason: the room has to hold a position before it can
-feel it move.
-:::
+Go to **menti.com** and enter code **`r MENTI_CODE`**, or scan the code on the
+right. Commit before we look further.
+:::::
+
+::::: {.column width="38%"}
+```{r out.width='330px', out.extra='style="display:block; margin:0 auto;"'}
+knitr::include_graphics(MENTI_QR)
+```
+:::::
+
+::::::
 
 ## What else happened in those two years
 
 :::::: {.columns}
 
 ::::: {.column width="50%"}
-```{r fig.height=2.7, fig.width=5.6}
+```{r fig.height=3.1, fig.width=5.6}
 pol_means %>%
   plot_ly(x = ~Time, y = ~m, color = ~Group, type = "bar",
           colors = c("Programme sectors" = ACCENT,
                      "Comparison sectors" = ACCENT2),
           text = ~sprintf("%.1f", m), textposition = "outside",
-          textfont = list(size = 14, color = INK),
+          textfont = list(size = 18, color = INK), cliponaxis = FALSE,
           hovertemplate = "%{fullData.name}: %{y:.1f}<extra></extra>") %>%
   layout(barmode = "group",
-         xaxis = ax("", zeroline = FALSE),
-         yaxis = ax("Injury collisions per segment", range = c(0, 13))) %>%
-  pl_m2(width = PL_WC, height = 270, title = "Same two years, both groups")
+         # Title pinned to the top of the figure (container coords) so it sits
+         # above the legend and clear of the bars; wider y-range + cliponaxis
+         # give the outside data labels headroom.
+         title = list(text = "Same two years, both groups", x = 0,
+                      xanchor = "left", y = 0.97, yref = "container",
+                      yanchor = "top", font = list(size = 14, color = MUTED)),
+         xaxis = ax("", zeroline = FALSE, tickfont = list(size = 16, color = INK)),
+         yaxis = modifyList(
+                   ax("Injury collisions per segment", range = c(0, 14.5)),
+                   list(tickfont = list(size = 14, color = MUTED),
+                        title = list(text = "Injury collisions per segment",
+                                     font = list(size = 14, color = MUTED))))) %>%
+  pl_m2(width = PL_WC, height = 300, t = 74, b = 54, legend_y = 1.02)
 ```
 :::::
 
@@ -325,10 +372,11 @@ cat(sprintf('
   <div class="label">Injury collisions avoided per segment, per round</div>
 </div>
 <div class="stat-row">
-  <div><span class="n">%.1f%%</span><span class="k">Programme sectors fell</span></div>
-  <div><span class="n">%.1f%%</span><span class="k">Comparison sectors fell</span></div>
+  <div><span class="n">%.2f</span><span class="k">Programme sectors fell (collisions)</span></div>
+  <div><span class="n">%.2f</span><span class="k">Comparison sectors fell (collisions)</span></div>
   <div><span class="n">%.2f</span><span class="k">The difference</span></div>
-</div>', pol_did, pol_headline_fall, pol_comp_fall, pol_did))
+</div>', abs(pol_did), pol_t_before - pol_t_after,
+   pol_c_before - pol_c_after, abs(pol_did)))
 ```
 
 ::: {.panel}
@@ -362,7 +410,7 @@ The question is whether it cleared 2.00. It did not. Even the interval's most
 generous end, `r sprintf("%.2f", pol_avoided_hi)`, falls short.
 :::
 
-::: {.warn}
+::: {.warn .fragment}
 **Statistically significant does not mean big enough.** Session 1 said this about
 a school programme. Here is the same lesson with a real spending decision
 attached to it.
@@ -370,6 +418,30 @@ attached to it.
 :::::
 
 ::::::
+
+## Look back at your vote
+
+```{r results='asis'}
+# Shows the live Menti results once this session's Menti exists. Until
+# MENTI_EMBED is set (still a placeholder), a marked placeholder box renders
+# instead, so the deck never shows a broken iframe. data-external="1" keeps
+# embed-resources from freezing the live view into a static image.
+if (!grepl("PLACEHOLDER", MENTI_EMBED)) {
+  cat(sprintf('
+<iframe data-external="1" allowfullscreen="true" allowtransparency="true"
+        frameborder="0" src="%s"
+        style="width:100%%; height:66%%; border:none;"></iframe>', MENTI_EMBED))
+} else {
+  cat('<div class="panel note-ctr"><strong>[PLACEHOLDER] Live Menti results.</strong> Set <code>MENTI_EMBED</code> in the setup chunk to show the room vote here.</div>')
+}
+```
+
+::: {.warn}
+You voted on the `r sprintf("%.0f", pol_headline_fall)`% headline. The honest
+estimate is `r sprintf("%.2f", abs(pol_did))` avoided, short of the
+`r sprintf("%.1f", POL_RULE)` the rule needs. If the room leaned "yes", that is
+the headline doing the work, not the programme.
+:::
 
 ## Two reasons the headline overstates
 
@@ -403,37 +475,45 @@ simply less exposure. Same trap, opposite direction.
 
 ## The table you would actually be handed
 
-:::::: {.columns}
-
-::::: {.column width="52%"}
 ```{r}
 pol_tbl %>%
   kable(align = "lrrrr", digits = 2,
         col.names = c("", "Coef.", "Std. err.", "p", "95% CI")) %>%
-  kable_styling(full_width = FALSE, font_size = 16) %>%
-  row_spec(4, bold = TRUE, background = "#E6F1F5")
+  kable_styling(full_width = FALSE, font_size = 22) %>%
+  row_spec(4, bold = TRUE, background = "#E6F1F5") %>%
+  footnote(general = "Outcome: injury collisions per road segment per round. Standard errors clustered by road segment.",
+           general_title = "", footnote_as_chunk = TRUE)
 ```
-:::::
 
-::::: {.column width="48%"}
 ::: {.panel}
 **Row 4 is the impact.** The interaction of programme and round: the extra change
-in the sectors that got cameras, over and above the change everywhere else.
-
-**Row 2** is the baseline difference. Cameras went to the worst roads, so they
-started higher.
-:::
-
-::: {.panel}
-**Row 3** is the national trend: what happened in the comparison sectors anyway.
-**Std. error** is the wobble.
+in the sectors that got cameras, over and above the change everywhere else. It is
+the one number the decision turns on.
 
 Most reports lead with their preferred number. **Find the row that is actually
-the impact.**
+the impact**, not the one printed largest or first.
 :::
-:::::
 
-::::::
+## The same table: the other rows
+
+```{r}
+pol_tbl %>%
+  kable(align = "lrrrr", digits = 2,
+        col.names = c("", "Coef.", "Std. err.", "p", "95% CI")) %>%
+  kable_styling(full_width = FALSE, font_size = 22) %>%
+  row_spec(4, bold = TRUE, background = "#E6F1F5") %>%
+  footnote(general = "Outcome: injury collisions per road segment per round. Standard errors clustered by road segment.",
+           general_title = "", footnote_as_chunk = TRUE)
+```
+
+::: {.panel}
+**Row 2** is the baseline difference. Cameras went to the worst roads, so the
+programme sectors started higher. This gap is not the impact.
+
+**Row 3** is the national trend: what happened in the comparison sectors anyway.
+**Std. err.** is the wobble on each estimate: divide the coefficient by it to see
+how steady the number is.
+:::
 
 ## The same estimate, three ways of saying it
 
@@ -460,32 +540,50 @@ that **the interval decides, not the point estimate.** Does it hold here?
 
 ## An interval that does not reach the rule
 
-```{r fig.height=2.9, fig.width=11.5}
-tibble(
-  what = factor(c("The estimate", "95% interval", "Decision rule"),
-                levels = c("Decision rule", "95% interval", "The estimate")),
-  lo   = c(pol_did, pol_did_ci[1], POL_RULE),
-  hi   = c(pol_did, pol_did_ci[2], POL_RULE),
-  pt   = c(pol_did, pol_did, POL_RULE),
-  col  = c(ACCENT, ACCENT, ALERT)
-) %>%
-  plot_ly() %>%
-  add_segments(x = ~abs(lo), xend = ~abs(hi), y = ~what, yend = ~what,
-               line = list(color = ~col, width = 5), showlegend = FALSE,
-               hovertemplate = "avoids %{x:.2f}<extra></extra>") %>%
-  add_markers(x = ~abs(pt), y = ~what, marker = list(color = ~col, size = 11),
-              showlegend = FALSE,
-              hovertemplate = "avoids %{x:.2f}<extra></extra>") %>%
-  layout(xaxis = ax("Injury collisions avoided per segment, per round",
-                    range = c(0, 2.4)),
-         yaxis = ax("", zeroline = FALSE)) %>%
+```{r fig.height=2.6, fig.width=11.5}
+# One horizontal bar: the estimate (dot) with its 95% interval (whiskers), and
+# the decision rule as a vertical red line. That makes "the interval does not
+# reach the rule" something you can see: the whole bar sits to the line's left.
+# abs() flips the negative coefficient into "collisions avoided", so the CI's
+# lower (more negative) end becomes the higher avoided value.
+est <- abs(pol_did)
+lo  <- abs(pol_did_ci[2])   # least avoided (CI end nearer zero)
+hi  <- abs(pol_did_ci[1])   # most avoided (best case in the interval)
+plot_ly() %>%
+  add_segments(x = lo, xend = hi, y = 1, yend = 1, showlegend = FALSE,
+               line = list(color = ACCENT, width = 6), hoverinfo = "skip") %>%
+  add_markers(x = c(lo, hi), y = c(1, 1), showlegend = FALSE, hoverinfo = "skip",
+              marker = list(color = ACCENT, size = 18, symbol = "line-ns-open",
+                            line = list(color = ACCENT, width = 3))) %>%
+  add_markers(x = est, y = 1, showlegend = FALSE,
+              marker = list(color = ACCENT, size = 16),
+              hovertemplate = "estimate %{x:.2f} avoided<extra></extra>") %>%
+  layout(
+    shapes = list(list(type = "line", x0 = POL_RULE, x1 = POL_RULE,
+                       y0 = 0.4, y1 = 1.6, xref = "x", yref = "y",
+                       line = list(color = ALERT, width = 3, dash = "dash"))),
+    annotations = list(
+      list(x = POL_RULE, y = 1.68, xref = "x", yref = "y", showarrow = FALSE,
+           text = sprintf("Decision rule: %.1f", POL_RULE),
+           font = list(color = ALERT, size = 14), xanchor = "middle"),
+      list(x = est, y = 0.66, xref = "x", yref = "y", showarrow = FALSE,
+           text = sprintf("estimate %.2f", est),
+           font = list(color = INK, size = 13), xanchor = "middle")),
+    xaxis = ax("Injury collisions avoided per segment, per round",
+               range = c(0, 2.4)),
+    yaxis = list(range = c(0.4, 1.9), showticklabels = FALSE,
+                 showgrid = FALSE, zeroline = FALSE)) %>%
   pl_m2(height = 260)
 ```
 
 ::: {.warn}
-The whole interval sits to the left of the red line. This is not "we cannot
-tell": it is a clear result that falls short. **A precise answer below the bar
-is still a no.**
+**How to read it:** the blue dot is the estimate, `r sprintf("%.2f", abs(pol_did))`
+collisions avoided, and the blue bar is its 95% interval,
+`r sprintf("%.2f", abs(pol_did_ci[2]))` to `r sprintf("%.2f", abs(pol_did_ci[1]))`.
+The red dashed line is the rule: `r sprintf("%.1f", POL_RULE)`. The whole bar sits
+to its left, so even the best case falls short. This is not "we cannot tell": it
+is a clear result below the bar, and **a precise answer below the bar is still a
+no.**
 :::
 
 ## What the table does not tell you
@@ -522,14 +620,14 @@ diverging before 2020. Nobody has shown you a pre-trend.
 ## AI Snapshot: three sentences for a decision-maker
 
 ::: {.panel}
-Paste the table on the previous slide into an AI tool with this prompt:
+Paste or take a picture of the table on the previous slide and add it to an AI tool with this prompt:
 
 **"Explain this result to a decision-maker in three sentences. They have a rule:
 the programme must avoid 2.0 collisions per segment per round to be funded."**
 :::
 
 ::: {.ai-output}
-**AI response:**
+**Illustrative AI response:**
 
 "The programme was associated with a **22% reduction** in injury collisions in
 sectors where cameras were installed. This represents a **clear improvement in
@@ -539,20 +637,20 @@ nationally.]{.flag}"
 :::
 
 ::: {.ask}
-Mark every claim you can check against the table. How many can you falsify?
+Mark every claim you can check against the table. How many are incorrect?
 :::
 
-## Debrief
+## Debrief {.dense}
 
 ::: {.warn}
-**Three things went wrong, and only one is a fabrication.**
+**Three things that went wrong in our example.**
 
 **The 22% is real but not the impact.** It is the before-and-after figure. The
 table's fourth row says `r sprintf("%.2f", abs(pol_did))`. The AI reached for the
 most impressive true number in the room.
 
 **"Likely to be even larger" has no basis.** Nothing in the table says the
-increasing-returns case. This is the invented-precision failure: a confident
+increasing-returns case. This is an invented-precision failure: a confident
 direction supplied from nowhere.
 :::
 
@@ -564,9 +662,9 @@ to it.
 :::
 
 ::: {.panel}
-**The habit to take away.** The AI was not lying. It was fluent, and it picked
+**The habit to take away.** The AI was not lying. However, it picked
 the flattering number, and it answered "is this good?" instead of "does it clear
-the bar?" Ask it to **state the decision rule and compare against it** before it
+the bar?" Ask it to **compare against the decision rule** before it
 recommends anything.
 :::
 

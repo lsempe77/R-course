@@ -61,7 +61,7 @@ Filenames follow `[Monthday]_session[#].qmd`. "Legacy source" is the file in `se
 ## Build Conventions
 
 - **Formats:** `revealjs` (primary, for delivery) and `pptx` (secondary, lossy — see the pptx section below). Both declared in the YAML header of every session file.
-- **Theme:** `[clean.scss, module2.scss]` — `clean.scss` is the base (Grant McDermott's quarto-revealjs-clean); `module2.scss` is ours and carries the type scale, callout components and palette. Both must live in `Module_2_Oct_2026/`.
+- **Theme:** `[theme_editorial.scss]`, in `Module_2_Oct_2026_v2/` alongside the session files. This is the theme every v2 deck actually loads: confirm it in the YAML `theme:` line before editing anything. It is self-contained and carries the type scale, the callout components (`.panel`, `.ask`, `.warn`, `.excerpt`, `.ai-output`), the `.dense` slide class and the palette. `clean.scss` and `module2.scss` also sit in the folder but are the earlier design and are NOT loaded by these decks: editing them changes nothing on screen. Edit `theme_editorial.scss` for any theme or callout change.
 - **Slide size:** `width: 1280`, `height: 720` in the revealjs block.
 - **`embed-resources: true` — mandatory.** Without it, Quarto writes the deck as a small `.html` plus a `<name>_files/` folder holding every chart image *and* the entire reveal.js engine and compiled theme. Move or send the `.html` alone and it opens as an unstyled wall of text with no images. With it, everything is inlined into one portable file (~4.5 MB) that works on any machine with a browser and nothing else. Always deliver the embedded version.
 - **Data path:** relative — `./evaluation_data_GreenWaste.csv`. Keep all session files and data in the same folder so paths stay simple.
@@ -80,7 +80,7 @@ Filenames follow `[Monthday]_session[#].qmd`. "Legacy source" is the file in `se
 | **Nested fenced divs** | A two-column slide renders as one broken column; content escapes its column | Outer fences need MORE colons than inner: `:::::: {.columns}` > `::::: {.column}` > `::: {.panel}` |
 | **`display: inline-block` on `h2`** | The next block floats up alongside the heading | `display: block; width: fit-content;` |
 | **Unicode minus in ggplot labels** | Renders as literal `<U+2212>` | Use ASCII `-` inside any `annotate()` / `label =` string. Unicode is fine in markdown text. |
-| **Ad-hoc `{.smaller}`** | "Text of different sizes" across the deck | Use the type scale and the callout components; do not hand-tune sizes per slide. |
+| **Ad-hoc `{.smaller}`** | "Text of different sizes" across the deck | Use the type scale and the callout components; do not hand-tune sizes per slide. For a genuinely list-heavy slide (e.g. terms bingo, a multi-card debrief) add `{.dense}` to the slide: it steps the callouts down one defined notch, defined once in `theme_editorial.scss`. |
 
 ### R packages
 

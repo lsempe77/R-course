@@ -364,3 +364,19 @@ $link-color: $accent;
 
 .reveal .columns { align-items: flex-start; }
 .reveal figure figcaption { font-size: 0.62em; color: $muted; }
+
+// ---------- Dense slides -------------------------------------------------
+// Opt-in per slide (## Title {.dense}) for list-like reference slides that
+// must show many callouts at once (terms bingo, a multi-card debrief).
+// One defined step down from the 1.25em callout size, with tighter spacing,
+// so the deck keeps only two text sizes: normal and dense.
+.reveal .dense {
+  .panel, .ask, .warn, .ai-output {
+    font-size: 1em;
+    margin: 0.5em 0;
+  }
+  .excerpt {
+    font-size: 0.9em;
+    margin: 0.4em 0;
+  }
+}
