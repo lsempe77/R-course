@@ -564,7 +564,7 @@ tibble(
   pl_m2(width = PL_W, height = 280)
 ```
 
-::: {.warn}
+::: {.warn .fragment}
 **The comparison group started `r gfmt(gv(0, 0) - gv(1, 0))` AED worse off, and
 its costs were rising anyway.**
 

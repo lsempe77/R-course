@@ -875,7 +875,7 @@ cat(sprintf('
 </div>', abs(pr_est), 2.0, pr_avoided_least))
 ```
 
-::: {.warn}
+::: {.warn .fragment}
 Same shape as GreenWaste: the estimate clears the bar, the interval straddles
 it. The least it could be is `r sprintf("%.2f", pr_avoided_least)`, under the
 `r sprintf("%.1f", 2.0)` required.

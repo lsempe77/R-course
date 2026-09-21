@@ -378,7 +378,7 @@ tibble(
 :::::
 
 ::::: {.column width="48%"}
-::: {.panel}
+::: {.panel .fragment}
 Each of the `r gfmt(c1_pairs)` enrolled businesses found a comparison. **None
 were dropped** for having no match.
 

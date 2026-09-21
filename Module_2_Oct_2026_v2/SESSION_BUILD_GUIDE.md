@@ -350,6 +350,16 @@ what makes twelve sessions read as one course.
 
 Counts are literal occurrences in the Session 1 source.
 
+**`.ask` carries two meanings and they behave differently.** Across the twelve
+decks, 168 of 186 `.ask` blocks put a question to the room and 18 instruct the
+facilitator ("Commit before we look further", "Take two or three answers out
+loud"). Both read fine on the slide, but only the first should ever be
+fragmented — hiding an instruction from the person who has to give it is a bug.
+
+When auditing reveals, sort the `.ask` blocks first. A block that opens with an
+imperative to the trainer, or that mentions "the room", "two people" or "out
+loud", is an instruction and is correctly always visible.
+
 ### The trap: `.fragment` must go on the same div
 
 To reveal a component on a keypress, add the class to the existing one:
@@ -363,6 +373,49 @@ To reveal a component on a keypress, add the class to the existing one:
 Not `::: {.warn}` followed by a nested fragment. Both classes belong on one div,
 because the stylesheet targets `.warn`, not `.warn.something`, so the
 combination picks up the styling with no CSS change.
+
+### There are two reveal mechanisms. Pick one deliberately.
+
+A course-wide audit found the decks using two different ways to hold an answer
+back, and no rule about which to use where. That produced three sessions with
+questions whose answers were visible beside them.
+
+**Mechanism A — keypress (`.fragment`).** The answer is on the slide but hidden
+until a key is pressed. Right when the answer is short and the question and
+answer belong in one frame.
+
+**Mechanism B — page turn.** The question sits at the foot of one slide and the
+answer opens the next. Right when the answer needs a fresh, uncluttered slide —
+a chart, a table, a worked calculation. There is an idiom for it, used
+throughout:
+
+> **Before you turn the page:** what share of the enrolled businesses paid more
+> than the average non-enrolled business? Write a number down. Then turn.
+
+Both are legitimate. What is not legitimate is **neither**: a question posed and
+answered on the same slide with no fragment and no turn. The room cannot answer
+first, so the question is decoration.
+
+**The check.** For every slide that asks something, confirm the answer is
+behind one mechanism or the other:
+
+```powershell
+# For each slide in the deck, does it ask a question AND show its answer
+# in the same view with no .fragment and no turn-the-page idiom?
+```
+
+Read the flagged slides by hand. Two false-positive patterns are common and
+both are fine:
+
+- A `.panel` that sets context rather than giving a verdict ("Where we are",
+  "The decision on the table"). Leave it visible.
+- A two-part reveal where the left half poses and the right half answers in the
+  same column. Fragment the answering half only.
+
+**Counts follow from the choice, so do not target a count.** After the audit the
+course runs at 1–27 fragments per deck, and the spread is deliberate: a clinic
+built entirely of questions genuinely needs one per beat, while a chart-led
+session needs few. Session 1, the reference deck, has five.
 
 ### No timing badges on dividers
 

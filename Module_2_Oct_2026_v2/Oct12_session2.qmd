@@ -354,7 +354,7 @@ percentages cannot be checked against a rule that is written in collisions.
 :::::
 
 ::::: {.column width="52%"}
-::: {.panel}
+::: {.panel .fragment}
 The estimate is statistically clear: the interval sits well away from zero, so
 the programme did something. **That is not the question being asked.**
 
@@ -603,12 +603,11 @@ On the printed copy in front of you:
 impact.
 
 **4.** Write down one thing you cannot tell from this table, and the question
-you would put to the evaluator to get it.
+you would put to the evaluator.
 :::
 
 ::: {.panel}
-Four minutes, then we compare. Question 4 is the one that matters most, and it
-is the one Session 1 prepared you for.
+Four minutes. Question 4 matters most, and Session 1 prepared you for it.
 :::
 :::::
 

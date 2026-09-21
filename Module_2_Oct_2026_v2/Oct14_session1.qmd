@@ -548,7 +548,7 @@ flip_tbl %>%
            general_title = "", footnote_as_chunk = TRUE)
 ```
 
-::: {.warn}
+::: {.warn .fragment}
 Read the top two rows. **If you assume the saving lasts only two years, no
 discount rate at all makes this worth doing.** The programme is already below
 break-even before the discount rate is applied.
@@ -639,7 +639,7 @@ benefit_range %>%
 :::::
 
 ::::: {.column width="48%"}
-::: {.panel}
+::: {.panel .fragment}
 The saving here is **not** assumed. It is the difference-in-differences estimate
 from Day 2, and the three rows carry its confidence interval forward.
 

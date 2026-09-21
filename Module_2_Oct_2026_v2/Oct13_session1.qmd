@@ -577,7 +577,7 @@ cat(sprintf('
    gfmt(RULEBAR), gfmt(did_avoided_least)))
 ```
 
-::: {.warn}
+::: {.warn .fragment}
 The estimate is statistically clear — the interval sits far from zero. **That is
 not the question.**
 
@@ -725,6 +725,7 @@ balance_tbl %>%
                       "Difference", "p-value")) %>%
   kable_styling(full_width = FALSE, font_size = 14)
 ```
+:::::
 :::::
 
 ::::: {.column width="44%"}

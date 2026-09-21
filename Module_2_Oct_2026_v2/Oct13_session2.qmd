@@ -446,7 +446,7 @@ cat(sprintf('
 </div>', gfmt(abs(itt)), gfmt(RULEBAR), gfmt(itt_avoided_least)))
 ```
 
-::: {.warn}
+::: {.warn .fragment}
 The estimate is clearly not zero. `r gfmt(abs(itt))` AED is a real effect.
 
 The rule asks for `r gfmt(RULEBAR)`. The interval's most generous end reaches
@@ -674,7 +674,7 @@ would not be credible.
 :::::
 
 ::::: {.column width="50%"}
-::: {.panel}
+::: {.panel .fragment}
 But it is absent at +/-1, and absent again at +/-5 and +/-8.
 
 A real discontinuity does not appear at two bandwidths and vanish at the
@@ -708,7 +708,7 @@ reach_tbl %>%
 :::::
 
 ::::: {.column width="48%"}
-::: {.panel}
+::: {.panel .fragment}
 The businesses near the line are a particular group: smaller staff
 (`r sprintf("%.1f", reach_tbl$staff[1])` against
 `r sprintf("%.1f", reach_tbl$staff[2])`) and smaller premises.
