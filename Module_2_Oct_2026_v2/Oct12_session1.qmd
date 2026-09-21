@@ -281,9 +281,7 @@ spots, and school talks promoting seatbelt use and safe speeds.
 At the end of the year, someone has to decide: did it work, and should it
 run again?
 
-::: {.warn}
-*This is an illustrative example, not a real Abu Dhabi case study.*
-:::
+
 :::::
 
 ::::: {.column width="50%"}
@@ -298,6 +296,10 @@ run again?
 :::::
 
 ::::::
+
+::: {.warn .note-ctr .fragment}
+*This is an illustrative example, not a real Abu Dhabi case study.*
+:::
 
 ## The headline number
 

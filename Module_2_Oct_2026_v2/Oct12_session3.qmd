@@ -772,7 +772,7 @@ first year, 200 held back.
 
 ::::::
 
-::: {.warn}
+::: {.warn .note-ctr}
 **Illustrative case, with invented figures.** This is not a real trial and the
 numbers are generated for this training.
 :::

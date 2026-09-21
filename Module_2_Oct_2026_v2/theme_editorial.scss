@@ -138,6 +138,32 @@ $link-color: $accent;
 
 .reveal .ai-output .flag { color: $alert; font-weight: 700; background: none; }
 
+// Centred note variant. Moves the whole callout to the middle of the slide,
+// rule and text together, for a note that should read as a standalone
+// disclaimer rather than as a continuation of the body.
+// width:fit-content is doing the work: the base callout is a full-width block,
+// so there is no free space for the auto margins to absorb and the note would
+// stay pinned left. Declared after the base block so it wins on order, the two
+// selectors having equal specificity.
+.reveal .note-ctr {
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+
+.reveal .panel_big {
+  background: none;
+  border: none;
+  border-left: 3px solid $accent;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0 0 0 0.9em;
+  margin: 0.9em 0;
+  font-size: 1.5em;
+}
+
 // ---------- Hero number ---------------------------------------------------
 // No rules, no box. Size, weight and colour do the work.
 

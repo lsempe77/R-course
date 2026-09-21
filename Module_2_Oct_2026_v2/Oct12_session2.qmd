@@ -170,7 +170,7 @@ It set a bar before committing further: the programme had to avoid
 **`r sprintf("%.1f", POL_RULE)` injury collisions per road segment per round**.
 Below that, the money goes elsewhere.
 
-::: {.warn}
+::: {.warn .note-ctr}
 **Illustrative case, with invented figures.** This is not a real programme and
 the numbers are generated for this training. Every number in this session comes
 from this fictional dataset.
