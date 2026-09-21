@@ -45,8 +45,8 @@ present is two copies of the GreenWaste data, and they are not interchangeable:
 
 | File | Rows | Units named | `waste_management_costs` |
 |---|---|---|---|
-| `evaluation_data.csv` | 19,827 | zone / facility | `15.19` |
-| `evaluation_data_GreenWaste.csv` | 19,826 | neighborhood / business | `1518.55` |
+| `evaluation_data.csv` (ships in the Module 1 decks: `session_4/`, `sessions_in_Abu_Dhabi/`) | 19,827 | zone / facility | `15.19` |
+| `evaluation_data_GreenWaste.csv` (in this folder) | 19,826 | neighborhood / business | `1518.55` |
 
 Same records, but the cost column differs by **exactly 100×**. Never mix them.
 

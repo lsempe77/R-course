@@ -125,9 +125,15 @@ generators that produce them are checked in so the numbers can be rebuilt from s
 `check_traffic_camera_data.R` re-verifies that the camera data still supports all four intended
 teaching uses, and should be run after any change to the generator.
 
-> **Note.** `evaluation_data.csv` at the repository root holds the *same records* as
-> `evaluation_data_GreenWaste.csv` but with the cost column multiplied by 100. Never mix the two.
-> See `Module_2_Oct_2026_v2/SESSION_BUILD_GUIDE.md`, section 0b.
+> **Note.** The Module 1 decks ship their own `evaluation_data.csv` beside them (`session_4/`,
+> `sessions_in_Abu_Dhabi/`). It holds the *same records* as `evaluation_data_GreenWaste.csv`, but
+> `waste_management_costs` is on a legacy scale 100x smaller (`15.19` where the Module 2 file reads
+> `1518.55`). Never mix the two. See `Module_2_Oct_2026_v2/SESSION_BUILD_GUIDE.md`, section 0b.
+>
+> The exported regression tables `did.docx`, `itt.docx`, `late.docx`, `psm.docx`, `rdd.docx` and
+> `regm.docx` at the repository root are **superseded provenance, not quotable numbers**. They are on
+> the retired Module 1 scale, ten times the figures below (`did.docx` reports a DiD of `-8,162.93`
+> where this document says `-816`; `rdd.docx` reports `-9,051.37` against `-905`).
 
 ### GreenWaste: one scale, 1,000 AED
 
