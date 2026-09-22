@@ -142,7 +142,7 @@ year**, clearing the rule for national scale-up.
 
 - A difference-in-differences estimate
 - A regression discontinuity at an eligibility cut-off
-- An instrumental-variables estimate using randomised offering
+- A randomised comparison of treatment and control neighbourhoods
 - A matched comparison
 - A benefit-cost ratio over five years
 :::::
@@ -170,10 +170,9 @@ would you show it?
 #| results: asis
 tab <- data.frame(
   Method = c("Difference-in-differences", "Regression discontinuity",
-             "Instrumental variables", "Randomised offering", "Matched comparison"),
-  Estimate = c("-816", "-905", "-1,033", "-1,014", "-1,000"),
+             "Randomised offering", "Matched comparison"),
+  Estimate = c("-816", "-905", "-1,014", "-1,000"),
   `What it covers` = c("All enrolled businesses", "Businesses near the cut-off",
-                       "Those who enrolled because they were offered",
                        "All eligible businesses", "Matched enrolled businesses"),
   check.names = FALSE
 )
@@ -184,9 +183,9 @@ kable(tab, col.names = c("Method", "Estimate (AED)", "What it covers"),
 ```
 
 ::: {.warn .fragment}
-Every method lands between 816 and 1,033 AED. The rule is 1,000. **Four of the
-five estimates sit below the bar they are being used to clear**, and the two that
-don't rest on narrower populations than the claim describes.
+Every method lands between 816 and 1,014 AED, and the rule is 1,000. **Only the
+randomised estimate clears the bar outright; the matched estimate sits exactly on
+it, and the difference-in-differences and discontinuity estimates fall short.**
 :::
 
 ## The rule, and the wiggle room inside it
@@ -197,7 +196,7 @@ don't rest on narrower populations than the claim describes.
 ```{=html}
 <div class="facts">
   <div class="k">The rule</div>    <div class="v">At least 1,000 AED per business per year</div>
-  <div class="k">The range</div>   <div class="v">816 to 1,033 AED</div>
+  <div class="k">The range</div>   <div class="v">816 to 1,014 AED</div>
   <div class="k">The claim</div>   <div class="v">"About 1,000"</div>
   <div class="k">The decision</div><div class="v">Scale up nationally</div>
 </div>
@@ -228,8 +227,8 @@ others?**
 
 ::: {.panel .fragment}
 This is not a warm-up. It is the hardest question in the session. Each estimate
-describes a different population: everyone eligible, those near a cut-off, those
-who enrolled *because* they were offered, those who enrolled at all.
+describes a different population: all eligible businesses, those near a cut-off,
+the matched enrolled businesses, and the enrolled in treatment neighbourhoods.
 
 An evaluator who cannot say which population the decision concerns cannot say
 which estimate supports it.
@@ -293,7 +292,7 @@ questions, five under each area.
 **Strong**
 
 - Which assumption would reverse the sign?
-- What is the estimate and its interval?
+- What is the estimate and its confidence interval?
 - How many units were dropped, and why?
 - What changed at the same time?
 - Who is missing from the data?
@@ -559,7 +558,7 @@ session.
 ::: {.excerpt}
 I have an evaluation of a programme that subsidised waste-management technology
 for businesses. It used difference-in-differences, regression discontinuity,
-instrumental variables and matching. All four methods found a cost reduction of
+a randomised comparison and matching. All four methods found a cost reduction of
 roughly 1,000 AED per business per year. List the critical questions a
 commissioner should ask before acting on this result.
 :::

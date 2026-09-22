@@ -221,7 +221,16 @@ The bar is unchanged: **cut costs by at least `r gfmt(RULEBAR)` AED**.
 Day 1 gave you three questions. Today is question one, **compared to what?**,
 with a method that answers it properly.
 
-Before we do the method — what do you already expect the answer to be?
+Before we do the method, what do you already expect the answer to be?
+:::
+
+::: {.notes}
+Sections 1 and 2 are the "remember" recap: aim for 5 to 10 minutes total. The
+room already met GreenWaste, the before-and-after and with-and-without numbers,
+and the idea of subtracting one group's change from the other's (on the traffic
+cameras in Day 1 Session 2). Move through the recall quickly. The new material
+today is reading the table (Section 3) and the one assumption DiD rests on
+(Section 4): that is where the time should go.
 :::
 
 ## What happened to the businesses that took it up
@@ -302,36 +311,42 @@ choose it — that number is the point of the next twenty minutes.
 
 # 2 · The idea, in four numbers
 
-## Simpler comparisons, and what each one gets wrong
+## Remember from Day 1: two comparisons, two biases
 
 :::::: {.columns}
 
 ::::: {.column width="50%"}
 ::: {.warn}
-**Before and after only.** Credits the programme with the **time trend** —
-whatever would have moved costs anyway.
+**Before and after only.** Credits the programme with the **time trend**: whatever
+would have moved costs anyway.
 
-Here it gives **-`r gfmt(abs(naive_ba))` AED**.
+On Day 1 this gave **-`r gfmt(abs(naive_ba))` AED**.
 :::
 :::::
 
 ::::: {.column width="50%"}
 ::: {.warn}
 **Took part vs did not, afterwards only.** Credits the programme with the
-**baseline gap** — differences that existed before it started.
+**baseline gap**: differences that existed before it started.
 
-Here it gives **-`r gfmt(abs(naive_ww))` AED**.
+On Day 1 this gave **-`r gfmt(abs(naive_ww))` AED**.
 :::
 :::::
 
 ::::::
 
 ::: {.ask}
-Two honest-looking methods, two very different answers:
-**`r gfmt(abs(naive_ba))`** and **`r gfmt(abs(naive_ww))` AED**.
+You met both of these yesterday. Two honest-looking methods, two very different
+answers: **`r gfmt(abs(naive_ba))`** and **`r gfmt(abs(naive_ww))` AED**.
 
-One is too small, one is too big. Difference-in-differences removes both
-problems at once. That is its entire job.
+One is too small, one is too big. Today's method, difference-in-differences,
+removes both problems at once. That is its entire job.
+:::
+
+::: {.notes}
+Recap, not a re-teach: these are the two naive comparisons from Day 1 Session 3,
+on this same GreenWaste data. Spend a minute reminding the room why each is
+biased, then move on. The new work today is the assumption DiD rests on.
 :::
 
 ## One sentence to take to a minister
@@ -487,79 +502,15 @@ Rows 2 and 3 are the **two things you must not report as the effect**:
 
 ::::::
 
-## Trap 1: the baseline gap
-
-:::::: {.columns}
-
-::::: {.column width="52%"}
-::: {.panel}
-Look at the **enrolled** row: `r gfmt(abs(trap_gap))` AED. Programme businesses
-started **cheaper** than comparison businesses.
-
-That is not an effect. It was already true before anything happened.
+::: {.notes}
+Reminder for the room (vocab from Day 1 Session 1): the **coefficient** is the
+effect size, here in AED; the **95% confidence interval** is the range of
+plausible true values, not a margin of certainty; the **p-value** is how
+surprising this result would be if the programme had truly done nothing. Walk row
+4 first, then name rows 2 and 3 as the two numbers a careless report would quote
+instead. Facilitation question worth asking here: which row would you want on the
+front page of the briefing, and which two would a careless evaluator report?
 :::
-
-::: {.warn}
-If you compared the two groups only at the end, this gap would be inside your
-"effect". It is the whole reason the with-and-without answer
-(`r gfmt(abs(naive_ww))` AED) is too big.
-:::
-:::::
-
-::::: {.column width="48%"}
-```{r fig.height=2.7, fig.width=5.6}
-tibble(Group = factor(c("Took part", "Did not take part"),
-                      levels = c("Took part", "Did not take part")),
-       Cost  = c(off_b, ctl_b)) %>%
-  plot_ly(x = ~Group, y = ~Cost, type = "bar",
-          marker = list(color = c(ACCENT, ACCENT2), line = list(width = 0)),
-          text = ~gfmt(Cost), textposition = "outside",
-          textfont = list(size = 14, color = INK), showlegend = FALSE,
-          hovertemplate = "%{y:,.0f} AED<extra></extra>") %>%
-  layout(xaxis = ax("", zeroline = FALSE),
-         yaxis = ax("Costs BEFORE the programme", range = c(0, 2500))) %>%
-  pl_m2(width = PL_WC, height = 260, title = "Already different, before it began")
-```
-:::::
-
-::::::
-
-## Trap 2: the time trend
-
-:::::: {.columns}
-
-::::: {.column width="52%"}
-::: {.panel}
-Look at the **round** row: `r gfmt(trap_time)` AED.
-
-Costs were rising over this period for reasons that have nothing to do with
-GreenWaste. Fuel, labour, regulation — whatever it was, it moved **both**
-groups.
-:::
-
-::: {.warn}
-A before-and-after comparison gives the programme credit for all of it, which is
-why **-`r gfmt(abs(naive_ba))`** AED is too small.
-:::
-:::::
-
-::::: {.column width="48%"}
-```{r fig.height=2.7, fig.width=5.6}
-tibble(Group = factor(c("Took part", "Did not take part"),
-                      levels = c("Took part", "Did not take part")),
-       Change = c(off_chg, ctl_chg)) %>%
-  plot_ly(x = ~Group, y = ~Change, type = "bar",
-          marker = list(color = c(ACCENT, ACCENT2), line = list(width = 0)),
-          text = ~sprintf("%+.0f", Change), textposition = "outside",
-          textfont = list(size = 14, color = INK), showlegend = FALSE,
-          hovertemplate = "%{y:+,.0f} AED<extra></extra>") %>%
-  layout(xaxis = ax("", zeroline = FALSE),
-         yaxis = ax("Change in costs", range = c(-800, 400))) %>%
-  pl_m2(width = PL_WC, height = 260, title = "Both groups moved, in opposite ways")
-```
-:::::
-
-::::::
 
 ## The number that answers your question
 
@@ -578,12 +529,12 @@ cat(sprintf('
 ```
 
 ::: {.warn}
-The estimate is statistically clear — the interval sits far from zero. **That is
-not the question.**
+The estimate is statistically clear: the confidence interval sits far from zero.
+**That is not the question.**
 
 The rule asks for `r gfmt(RULEBAR)` AED. The estimate is
-`r gfmt(abs(did_est))`, and even the interval's most generous end reaches only
-`r gfmt(did_avoided_most)`. **It does not clear the bar.**
+`r gfmt(abs(did_est))`, and even the confidence interval's most generous end
+reaches only `r gfmt(did_avoided_most)`. **It does not clear the bar.**
 :::
 
 ::: {.ask .fragment}
@@ -592,26 +543,6 @@ verdict. Here it is a third time.
 
 Three sessions, three results that are real and not sufficient. This is one of
 the most useful things you will take home from this week.
-:::
-
-## Which row is the impact?
-
-```{=html}
-<div class="facts">
-  <div class="k">The impact</div>
-  <div class="v">Round 2 x Enrolled &middot; -816 AED, the extra change in the programme group</div>
-  <div class="k">Not the impact</div>
-  <div class="v">Enrolled &middot; -630 AED, the baseline gap, already there before</div>
-  <div class="k">Not the impact</div>
-  <div class="v">Round 2 &middot; +151 AED, the time trend, which moved everyone</div>
-</div>
-```
-
-::: {.ask .fragment}
-Three numbers in one table, all of them real, only one of them the answer.
-
-Which row do you want on the front page of the briefing, and which two would you
-expect an evaluator to report if they were being careless?
 :::
 
 # 4 · The one question
@@ -730,9 +661,9 @@ balance_tbl %>%
 
 ::::: {.column width="44%"}
 ::: {.panel}
-A balance table shows how the two groups differed **before** anything happened.
-It is not a pre-trend test — it says nothing about direction of travel — but it
-is the closest thing this data allows.
+You read one of these on Day 1: a balance table shows how the two groups
+differed **before** anything happened. It is not a pre-trend test (it says
+nothing about direction of travel), but it is the closest thing this data allows.
 :::
 
 ::: {.warn}
@@ -747,6 +678,14 @@ Read it for two things: are the differences **small**, and are the p-values
 If these two groups differ systematically at baseline **and** were free to
 choose whether to enrol, the parallel trends assumption is doing a lot of
 unpaid work. Say so when you write your recommendation.
+:::
+
+::: {.notes}
+Recap, not new teaching: they built a balance table on Day 1 Session 3. Here it
+earns its place by making the parallel-trends point concrete, because the
+pre-trend test itself cannot be run on two-wave data. Reminder for the room: the
+**p-value** answers "how surprising is this baseline gap if the two groups were
+really the same?", so a tiny p-value is the worry here, not the reassurance.
 :::
 
 ## What to ask when it cannot be tested
@@ -805,7 +744,7 @@ same substitution, every time.
 
 ::: {.warn}
 **2 · "The interval does not include zero, so the finding is robust."**
-"Not zero" and "big enough" are different claims. The interval is
+"Not zero" and "big enough" are different claims. The confidence interval is
 [`r gfmt(did_ci[1])`, `r gfmt(did_ci[2])`].
 :::
 :::::

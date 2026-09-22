@@ -418,7 +418,7 @@ rdd_tbl %>%
 the line sits, and the two slope rows describe how costs drift as the index
 moves.
 
-The jump is `r gfmt(itt)` AED, interval
+The jump is `r gfmt(itt)` AED, confidence interval
 [`r gfmt(itt_ci[1])`, `r gfmt(itt_ci[2])`].
 :::
 
@@ -430,6 +430,11 @@ the programme.
 :::::
 
 ::::::
+
+
+::: {.notes}
+Reminder for the room (vocab from Day 1 Session 1): the **coefficient** is the effect size, here in AED; the **standard error** is how much the estimate would move from sample to sample; the **95% confidence interval** is the range of plausible true values, not a margin of certainty; the **p-value** is how surprising this result would be if the programme had truly done nothing.
+:::
 
 ## Does it clear the rule?
 
@@ -449,7 +454,7 @@ cat(sprintf('
 ::: {.warn .fragment}
 The estimate is clearly not zero. `r gfmt(abs(itt))` AED is a real effect.
 
-The rule asks for `r gfmt(RULEBAR)`. The interval's most generous end reaches
+The rule asks for `r gfmt(RULEBAR)`. The confidence interval's most generous end reaches
 `r gfmt(itt_avoided_most)`, and its least generous end `r gfmt(itt_avoided_least)`.
 **It does not clear the bar.**
 :::
@@ -589,7 +594,7 @@ placebo_tbl %>%
 The real cut-off is 58. The table tests **50, 54, 62 and 66** — places where no
 rule exists, so there should be no jump.
 
-Every interval contains zero. Good news.
+Every confidence interval contains zero. Good news.
 :::
 
 ::: {.warn}
@@ -648,7 +653,7 @@ cov_tbl %>%
   kable(align = "l", col.names = c("Characteristic",
         "+/- 1", "+/- 2", "+/- 3", "+/- 5", "+/- 8")) %>%
   kable_styling(full_width = FALSE, font_size = 14) %>%
-  footnote(general = "* marks a difference whose 95% interval excludes zero.",
+  footnote(general = "* marks a difference whose 95% confidence interval excludes zero.",
            general_title = "", footnote_as_chunk = TRUE)
 ```
 

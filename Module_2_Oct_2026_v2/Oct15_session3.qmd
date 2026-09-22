@@ -427,7 +427,7 @@ Which of those four is hardest to do well? Which do people usually skip?
 ```{r}
 #| results: asis
 cat('<div class="panel"><b>1.</b> Say what a number is compared to, and why that comparison is the argument.</div>\n')
-cat('<div class="panel"><b>2.</b> Read DiD, RDD, IV and matching results, and name the assumption each rests on.</div>\n')
+cat('<div class="panel"><b>2.</b> Read DiD, RDD and matching results, and name the assumption each rests on.</div>\n')
 cat('<div class="panel"><b>3.</b> Judge whether a benefit-cost ratio clears a threshold, and what decides it.</div>\n')
 cat('<div class="panel"><b>4.</b> See the same data drawn two ways, and say what each version hides.</div>\n')
 cat('<div class="panel"><b>5.</b> Interrogate an evaluation with a checklist, and rate a report section by section.</div>\n')

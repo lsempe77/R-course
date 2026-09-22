@@ -644,17 +644,17 @@ The saving here is **not** assumed. It is the difference-in-differences estimate
 from Day 2, and the three rows carry its confidence interval forward.
 
 The ratio moves from `r sprintf("%.2f", min(benefit_range$bcr))` to
-`r sprintf("%.2f", max(benefit_range$bcr))` across the interval.
+`r sprintf("%.2f", max(benefit_range$bcr))` across the confidence interval.
 :::
 
 ::: {.warn}
 **Look at how small that is.** The measured uncertainty in the saving barely
-moves the ratio, because the interval is tight: the Day 2 estimate was
+moves the ratio, because the confidence interval is tight: the Day 2 estimate was
 `r gfmt(BENEFIT_PER_YEAR)` with bounds of `r gfmt(BENEFIT_LO)` and
 `r gfmt(BENEFIT_HI)`.
 
 The horizon, which moves the ratio from `r sprintf("%.2f", bcr(DISCOUNT_BASE, 2))`
-to `r sprintf("%.2f", bcr_headline)`, has no interval at all, because nobody
+to `r sprintf("%.2f", bcr_headline)`, has no confidence interval at all, because nobody
 measured it.
 :::
 :::::
@@ -666,7 +666,7 @@ measured it.
 ```{r results='asis'}
 cat(sprintf('
 <div class="facts">
-  <div class="k">Measured</div>  <div class="v">the annual saving &middot; %s AED &middot; interval %s to %s &middot; moves the ratio by %.2f</div>
+  <div class="k">Measured</div>  <div class="v">the annual saving &middot; %s AED &middot; confidence interval %s to %s &middot; moves the ratio by %.2f</div>
   <div class="k">Measured</div>  <div class="v">the cost &middot; %s AED &middot; a programme fact</div>
   <div class="k">Assumed</div>   <div class="v">how many years the saving lasts &middot; moves the ratio by %.2f</div>
   <div class="k">Assumed</div>   <div class="v">the discount rate &middot; at 3%% to 8%% it moves the ratio by only %.2f</div>

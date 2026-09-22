@@ -395,18 +395,18 @@ percentages cannot be checked against a rule that is written in collisions.
 <div class="facts">
   <div class="k">Decision rule</div>      <div class="v">2.00 avoided</div>
   <div class="k">The estimate</div>       <div class="v">1.13 avoided</div>
-  <div class="k">95% interval</div>       <div class="v">0.51 to 1.76</div>
-  <div class="k">Best case in interval</div> <div class="v">1.76 avoided</div>
+  <div class="k">95% confidence interval</div>       <div class="v">0.51 to 1.76</div>
+  <div class="k">Best case in the confidence interval</div> <div class="v">1.76 avoided</div>
 </div>
 ```
 :::::
 
 ::::: {.column width="52%"}
 ::: {.panel .fragment}
-The estimate is statistically clear: the interval sits well away from zero, so
+The estimate is statistically clear: the confidence interval sits well away from zero, so
 the programme did something. **That is not the question being asked.**
 
-The question is whether it cleared 2.00. It did not. Even the interval's most
+The question is whether it cleared 2.00. It did not. Even the confidence interval's most
 generous end, `r sprintf("%.2f", pol_avoided_hi)`, falls short.
 :::
 
@@ -494,6 +494,11 @@ Most reports lead with their preferred number. **Find the row that is actually
 the impact**, not the one printed largest or first.
 :::
 
+
+::: {.notes}
+Reminder for the room (vocab from Day 1 Session 1): the **coefficient** is the effect size, here in injury collisions per segment; the **standard error** is how much the estimate would move from sample to sample; the **95% confidence interval** is the range of plausible true values, not a margin of certainty; the **p-value** is how surprising this result would be if the programme had truly done nothing.
+:::
+
 ## The same table: the other rows
 
 ```{r}
@@ -528,17 +533,17 @@ equally honest.
   <div class="v">"Collisions fell 22% where cameras were installed" &middot; ignores the comparison</div>
   <div class="k">Point estimate</div>
   <div class="v">"Cameras avoided 1.13 collisions per segment per round" &middot; accurate, but a single number</div>
-  <div class="k">With its interval</div>
+  <div class="k">With its confidence interval</div>
   <div class="v">"Between 0.51 and 1.76, so somewhere short of the 2.0 required" &middot; this is the honest one</div>
 </div>
 ```
 
 ::: {.ask}
 Which of the three would you put in a briefing? Session 1's Word 5 answer was
-that **the interval decides, not the point estimate.** Does it hold here?
+that **the confidence interval decides, not the point estimate.** Does it hold here?
 :::
 
-## An interval that does not reach the rule
+## A confidence interval that does not reach the rule
 
 ```{r fig.height=2.6, fig.width=11.5}
 # One horizontal bar: the estimate (dot) with its 95% interval (whiskers), and
@@ -578,7 +583,7 @@ plot_ly() %>%
 
 ::: {.warn}
 **How to read it:** the blue dot is the estimate, `r sprintf("%.2f", abs(pol_did))`
-collisions avoided, and the blue bar is its 95% interval,
+collisions avoided, and the blue bar is its 95% confidence interval,
 `r sprintf("%.2f", abs(pol_did_ci[2]))` to `r sprintf("%.2f", abs(pol_did_ci[1]))`.
 The red dashed line is the rule: `r sprintf("%.1f", POL_RULE)`. The whole bar sits
 to its left, so even the best case falls short. This is not "we cannot tell": it
@@ -719,7 +724,7 @@ Four minutes. Question 4 matters most, and Session 1 prepared you for it.
 <div class="facts">
   <div class="k">1</div> <div class="v">Compared to what? Which group, which period, and did it move too?</div>
   <div class="k">2</div> <div class="v">Which row is the impact, and is it in units the decision is written in?</div>
-  <div class="k">3</div> <div class="v">Does the interval reach the decision rule, not just clear zero?</div>
+  <div class="k">3</div> <div class="v">Does the confidence interval reach the decision rule, not just clear zero?</div>
 </div>
 ```
 

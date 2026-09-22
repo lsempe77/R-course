@@ -316,9 +316,9 @@ shifted the level of the measure.
 
 ::: {.excerpt}
 All four estimates are negative and statistically significant… The largest
-estimate, from the instrumental-variables approach, indicates a cost reduction of
-1,033 AED per business per year. The instrumental-variables estimate is our
-headline result.
+estimate, from the randomised comparison, indicates a cost reduction of
+1,014 AED per business per year. The randomised comparison is our headline
+result.
 :::
 
 ::: {.ask}
@@ -327,11 +327,12 @@ headline?
 :::
 
 ::: {.panel .fragment}
-The report gives a reason: the IV estimate covers the population that would
-actually be scaled up.
+The report gives a reason: the randomised comparison covers all eligible
+businesses, the population that would actually be scaled up.
 
-That reason is defensible. Now check whether it is the *only* reason — because
-1,033 is also the only estimate that clears 1,000.
+That reason is defensible. Now check whether it is the *only* reason, because
+1,014 is also the largest number in the table, and the one that most clearly
+clears 1,000.
 :::
 
 ## The table you should look at twice
@@ -340,8 +341,8 @@ That reason is defensible. Now check whether it is the *only* reason — because
 #| results: asis
 tab <- data.frame(
   Method = c("Difference-in-differences", "Regression discontinuity",
-             "Instrumental variables", "Matched comparison"),
-  Estimate = c("-816", "-905", "-1,033", "-1,000"),
+             "Randomised comparison", "Matched comparison"),
+  Estimate = c("-816", "-905", "-1,014", "-1,000"),
   `Clears 1,000?` = c("No", "No", "Yes", "Exactly at it"),
   check.names = FALSE
 )
@@ -356,13 +357,18 @@ One of four clears the bar. The report calls the one that fails its **preferred
 specification** — and says so in Section 3, four pages before the recommendation.
 :::
 
+
+::: {.notes}
+Reminder for the room: read each estimate with its **95% confidence interval**, and remember that clearing the 1,000 threshold means the whole confidence interval clears it, not just the point estimate. Tabulate the numbers yourself before accepting the report's framing.
+:::
+
 ## Limitations
 
 ::: {.excerpt}
-We note three limitations. First, the instrumental-variables estimate applies to
-compliers… Second, the regression discontinuity estimate is local to the
-eligibility cut-off… Third, self-reported expenditure may be subject to recall
-error…
+We note three limitations. First, the randomised comparison estimates the effect
+of being offered the programme, not of enrolling… Second, the regression
+discontinuity estimate is local to the eligibility cut-off… Third,
+self-reported expenditure may be subject to recall error…
 :::
 
 ::: {.ask}
@@ -400,7 +406,7 @@ Nothing, and something different.
 
 Recommendation 2 turns an absence of evidence into a recommendation to do nothing.
 Recommendation 3 rests on a result that describes businesses *near* the cut-off,
-not those *below* it — and even then, the estimate there was 905, not 1,033.
+not those *below* it, and even then, the estimate there was 905, not 1,014.
 :::
 
 # 4 · The verdict
@@ -502,9 +508,9 @@ rounds and notes that 12 per cent of businesses were lost to follow-up. This lev
 of disclosure suggests a careful and honest evaluation team.
 
 **Appropriate limitations.** The limitations section correctly identifies that the
-IV estimate applies to compliers and that the RDD estimate is local to the cut-off.
+randomised comparison estimates the offer effect and that the RDD estimate is local to the cut-off.
 
-**Recommendation.** The headline estimate of 1,033 AED exceeds the 1,000 AED
+**Recommendation.** The headline estimate of 1,014 AED exceeds the 1,000 AED
 threshold, so [the programme meets the criterion for scale-up]{.flag}. The
 recommendation is [supported by the evidence]{.flag}.
 :::
@@ -522,7 +528,7 @@ Find the two flagged claims. Then find the larger problem, which is not flagged.
 **What it did well**
 
 - Found the real disclosures and called them transparency
-- Correctly described the complier and locality limitations
+- Correctly described the offer-effect and locality limitations
 - Produced a structured, readable assessment
 - Reached a verdict, which is what was asked
 :::
@@ -535,7 +541,7 @@ Find the two flagged claims. Then find the larger problem, which is not flagged.
 - It read "approximately 1,000" as if a method had produced 1,000. None did.
 - It never noticed that the preferred specification is 816, and fails the threshold.
 - It treated disclosure of attrition as evidence of quality, not as an open question.
-- It has no way to ask whether 1,033 was *chosen* as the headline.
+- It has no way to ask whether 1,014 was *chosen* as the headline.
 :::
 
 ::::::

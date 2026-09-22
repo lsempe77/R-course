@@ -704,7 +704,7 @@ reg_tbl %>%
 ```
 
 ::: {.panel}
-**Programme row:** the one number that answers the decision. `2.1` points, interval `[0.3, 3.9]`. The rule needs 3 points, and the interval contains 3, so we cannot say whether the programme clears the bar.
+**Programme row:** the one number that answers the decision. `2.1` points, confidence interval `[0.3, 3.9]`. The rule needs 3 points, and the confidence interval contains 3, so we cannot say whether the programme clears the bar.
 
 **Intercept:** the value when every variable on the table is zero. It describes no real school, so ignore it.
 :::
@@ -724,7 +724,7 @@ reg_tbl %>%
 ```
 
 ::: {.panel}
-**Covariate rows:** class size, teacher experience, baseline pass rate. These adjust the comparison; they are not recommendations. Teacher experience is `0.15`, and its interval `[-0.01, 0.31]` crosses zero, so it cannot rule out no effect.
+**Covariate rows:** class size, teacher experience, baseline pass rate. These adjust the comparison; they are not recommendations. Teacher experience is `0.15`, and its confidence interval `[-0.01, 0.31]` crosses zero, so it cannot rule out no effect.
 
 **Std. error:** the wobble on the estimate. Divide the coefficient by it to see how steady the estimate is.
 :::
@@ -895,8 +895,8 @@ Which one would you act on, and what is your answer for each?
 
 ::: {.panel .fragment}
 B is precise and below the bar: confidently not enough. A is too uncertain to
-call. C is worse still. **The interval decides, not the point estimate.** An
-interval that spans the decision threshold means the honest answer is that we
+call. C is worse still. **The confidence interval decides, not the point estimate.** A
+confidence interval that spans the decision threshold means the honest answer is that we
 do not yet know.
 :::
 
@@ -932,9 +932,9 @@ precise."
 ## Debrief {.dense}
 
 ::: {.warn}
-**Card 1.** The flagged sentence is the classic error. A 95% interval does not
+**Card 1.** The flagged sentence is the classic error. A 95% confidence interval does not
 carry a 95% probability for *this* interval. It means that if you ran the study
-100 times, 95 of the intervals would catch the true value, as the previous
+100 times, 95 of the confidence intervals would catch the true value, as the previous
 chart shows. The AI stated a probability the method does not deliver.
 :::
 
@@ -945,8 +945,8 @@ are missing from the prompt, and important context to provide.
 :::
 
 ::: {.panel}
-**Card 4.** Look for a recommendation with no interval. If the AI tells you to
-reduce class sizes without noting that the interval decides whether the
+**Card 4.** Look for a recommendation with no confidence interval. If the AI tells you to
+reduce class sizes without noting that the confidence interval decides whether the
 relationship is real, it has answered a different question.
 
 

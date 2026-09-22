@@ -176,7 +176,7 @@ allocation. It is the finding the evaluation was designed to produce.
 :::
 
 ::: {.warn .fragment}
-The whole interval lies below 900. On the commissioning authority's own rule, the
+The whole confidence interval lies below 900. On the commissioning authority's own rule, the
 programme does not clear the bar.
 :::
 :::::
@@ -300,7 +300,7 @@ How do you write a finding that says nothing was found — and is that a finding
 ::: {.panel .fragment}
 Yes, and it is a useful one, but only if you say **which kind of nothing** this is.
 
-This is *absence of evidence*: the intervals are wide, so a meaningful effect
+This is *absence of evidence*: the confidence intervals are wide, so a meaningful effect
 could be hiding in them. It is not *evidence of absence*. A brief that turns this
 into "the scheme had no wider benefits" has overstated a null.
 :::

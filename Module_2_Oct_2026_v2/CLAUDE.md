@@ -69,7 +69,7 @@ Filenames follow `[Monthday]_session[#].qmd`. "Legacy source" is the file in `se
 - **Author field:** 3ie (the legacy decks are authored "Dr. Lucas Sempé" — do not carry that over without asking).
 - **Slide budget:** roughly 22-28 slides for a 1.5h session, 30-36 for a 2h session. These sessions are discussion-heavy; slide count is low relative to a lecture.
 - **Speaker notes are fine; no separate facilitator guide.** `::: {.notes}` blocks may be used for presenter notes (they appear in revealjs presenter view, press S on the day). What Claude does not produce is a separate facilitator-guide document; facilitation prompts also live on the slides themselves as `.ask` / `.warn` callouts, and section-level timing stays visible through the `.mins` badge on each section divider (e.g. `# 2 · The result [15 min]{.mins}`).
-- **Versioning:** `_v1`, `_v2` suffixes. Never overwrite a session file that has been reviewed.
+- **Versioning:** none. Edit session files in place; git history is the record of changes. Do not create `_v1`/`_v2` copies.
 - **No em dashes.** Fiona's style preference for the training materials: do not use em dashes (—) in slides or in any prose meant for participants. Use a colon where the dash introduces an explanation, definition, or list; otherwise rephrase with a comma or split into two sentences. En dashes in numeric or time ranges (e.g. 0:00–0:03) are fine.
 
 ### Known formatting traps (found the hard way — do not repeat)
@@ -260,7 +260,7 @@ stage 3.
 2. **Fiona renders and checks:** Fiona renders the HTML and reviews it slide by slide for overflow, layout, numbers and timing. Claude does not render or screenshot. Because Claude no longer sees the rendered output, keep slides light: a 1280×720 slide holds roughly one panel plus one short callout, or two side-by-side callouts. When a slide would be denser than that, split it across two slides rather than crowd one.
 3. **Fiona reviews and runs it** — read it through, test each section, and actually run the AI tasks as a participant would.
 4. **Capture failures** — Fiona saves screenshots of any real AI mistakes into `AI_failure_exs/` and notes them in the AI Failure Library.
-5. **Iterate** — Claude revises into a `_v2` (never in place), folding in the review notes and any newly captured AI failures.
+5. **Iterate** — Claude revises the session file in place (git tracks the history), folding in the review notes and any newly captured AI failures.
 
 **Standing tasks, repeated for every session:**
 
@@ -303,13 +303,11 @@ stage 3.
 ## Dos and Don'ts
 
 ### Do
-- **Create versioned outputs** - Use `_v1` or `_v2` suffixes instead of overwriting existing files/scripts, unless given express permission to do so
+- **Edit in place** - Change existing session files directly; git history is the record of changes. Do not create `_v1`/`_v2` copies.
 - **Focus on relevant files only** - When returning to this project, review only the files needed for the next checklist step. Start with this CLAUDE.md and the main scripts. Do not view or modify files outside the current working folder unless I explicitly ask or give permission.
 
 ### Don't
 - **Don't delete files** without express permission
-- **Don't overwrite outputs** - Always create new versions instead
-- **Don't edit files/scripts in place** - Save a new versioned copy first (e.g., `script_v3.py`), then make changes there
 - **Don't make API calls** without user awareness of the cost implications (API calls should not be needed in this project)
 - **Don't view or modify files outside of the current working folder** without express permission
 

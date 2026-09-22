@@ -454,7 +454,7 @@ similar, so there was little for matching to fix.
 :::
 
 ::: {.ask}
-And the rule? The interval runs
+And the rule? The confidence interval runs
 [`r gfmt(c1_ci[1])`, `r gfmt(c1_ci[2])`], and the least generous end is
 `r gfmt(abs(c1_ci[2]))`. **Still short of `r gfmt(RULEBAR)`.**
 
@@ -652,7 +652,7 @@ reassurance.** The levels comparison was the odd one out, and it was wrong.
 :::
 
 ::: {.ask}
-Does it clear the `r sprintf("%.1f", CAM_RULE)` rule? The interval runs
+Does it clear the `r sprintf("%.1f", CAM_RULE)` rule? The confidence interval runs
 [`r sprintf("%.2f", c2_ci[1])`, `r sprintf("%.2f", c2_ci[2])`] in avoided
 collisions — so yes, this one finally does.
 

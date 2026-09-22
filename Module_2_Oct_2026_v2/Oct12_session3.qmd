@@ -648,7 +648,7 @@ rct_tbl %>%
 **Row 2 is the impact.** The difference in costs at follow-up between the two
 randomly-formed groups.
 
-`r gfmt(rct_est)` AED, interval
+`r gfmt(rct_est)` AED, confidence interval
 [`r gfmt(rct_ci[1])`, `r gfmt(rct_ci[2])`].
 :::
 
@@ -659,6 +659,11 @@ to sit. It is not an effect, and it is not attributable to anything.
 :::::
 
 ::::::
+
+
+::: {.notes}
+Reminder for the room (vocab from Day 1 Session 1): the **coefficient** is the effect size, here in AED; the **standard error** is how much the estimate would move from sample to sample; the **95% confidence interval** is the range of plausible true values, not a margin of certainty; the **p-value** is how surprising this result would be if the programme had truly done nothing.
+:::
 
 ## Which number is the impact?
 
@@ -730,7 +735,7 @@ cat(sprintf('
 ```
 
 ::: {.warn}
-The estimate clears the bar. The interval **spans** it: at its least generous,
+The estimate clears the bar. The confidence interval **spans** it: at its least generous,
 the programme avoids `r gfmt(rct_avoided_least)` AED, short of
 `r gfmt(RULEBAR)`.
 :::
@@ -739,7 +744,7 @@ the programme avoids `r gfmt(rct_avoided_least)` AED, short of
 ::::::
 
 ::: {.ask .fragment}
-Remember Session 1: **the interval decides, not the point estimate.**
+Remember Session 1: **the confidence interval decides, not the point estimate.**
 
 Compare the two ends. Would you sign a national roll-out on this? Cast your vote
 on the next slide.
@@ -751,7 +756,7 @@ on the next slide.
 
 ::::: {.column width="62%"}
 ::: {.ask style="font-size: 120%;"}
-The estimate clears the bar. The interval does not.
+The estimate clears the bar. The confidence interval does not.
 
 **On this randomised result, do you scale GreenWaste nationally?**
 
@@ -771,7 +776,7 @@ knitr::include_graphics(MENTI_QR)
 ::::::
 
 ::: {.panel}
-No single right answer: the point is that the **interval**, not the point
+No single right answer: the point is that the **confidence interval**, not the point
 estimate, is what the decision turns on. Hold the vote; we test the same call on
 a second randomised programme next.
 :::
@@ -901,7 +906,7 @@ cat(sprintf('
 Both arms fell: the national trend reached the school zones too. The package
 zones fell further.
 
-The difference is `r sprintf("%.2f", abs(pr_est))` per zone per round, interval
+The difference is `r sprintf("%.2f", abs(pr_est))` per zone per round, confidence interval
 [`r sprintf("%.2f", pr_avoided_least)`, `r sprintf("%.2f", pr_avoided_most)`]
 in collisions avoided.
 :::
@@ -955,7 +960,7 @@ cat(sprintf('
 ```
 
 ::: {.warn .fragment}
-Same shape as GreenWaste: the estimate clears the bar, the interval straddles
+Same shape as GreenWaste: the estimate clears the bar, the confidence interval straddles
 it. The least it could be is `r sprintf("%.2f", pr_avoided_least)`, under the
 `r sprintf("%.1f", RULEBAR_SZ)` required.
 :::
@@ -1072,7 +1077,7 @@ Two recommendations: make the AI **ask you questions first**, and have a
 <div class="facts">
   <div class="k">1</div> <div class="v">Compared to what? Before-and-after, with-and-without, or a fair comparison?</div>
   <div class="k">2</div> <div class="v">If the groups were not randomised, how do you know they started out alike?</div>
-  <div class="k">3</div> <div class="v">Does the effect, and its interval, clear our decision rule, not just zero?</div>
+  <div class="k">3</div> <div class="v">Does the effect, and its confidence interval, clear our decision rule, not just zero?</div>
 </div>
 ```
 
@@ -1088,7 +1093,7 @@ separates a real effect from a decision.
   <div class="k">Before-and-after</div> <div class="v">folds in everything else that changed &middot; can understate</div>
   <div class="k">With-and-without</div>  <div class="v">compares groups that already differed &middot; can overstate</div>
   <div class="k">Randomisation</div>     <div class="v">makes the groups alike on average, including on what nobody measured</div>
-  <div class="k">Reading the result</div><div class="v">find the impact row, then judge it against the rule and its interval</div>
+  <div class="k">Reading the result</div><div class="v">find the impact row, then judge it against the rule and its confidence interval</div>
 </div>
 ```
 
