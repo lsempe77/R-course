@@ -350,7 +350,7 @@ cat(sprintf('
 <div class="facts">
   <div class="k">The headline</div> <div class="v">%.0f%% fewer collisions, camera sectors only</div>
   <div class="k">The estimate</div> <div class="v">%.2f avoided, per segment per round</div>
-  <div class="k">The rule</div>     <div class="v">%.1f avoided, per segment per round, or no money</div>
+  <div class="k">The rule</div> <div class="v">%.1f avoided, per segment per round, or no money</div>
 </div>', pol_headline_fall, abs(pol_did), POL_RULE))
 ```
 
@@ -374,7 +374,6 @@ cat(sprintf('
 <div class="stat-row">
   <div><span class="n">%.1f</span><span class="k">Per segment, 2019</span></div>
   <div><span class="n">%.1f</span><span class="k">Per segment, 2021</span></div>
-  <div><span class="n">-%d%%</span><span class="k">The headline</span></div>
 </div>', pol_headline_fall, pol_t_before, pol_t_after,
    round(pol_headline_fall)))
 ```
@@ -492,14 +491,19 @@ rest of the movement happened in sectors where nothing was installed.
 ## The honest estimate
 
 ```{r results='asis'}
+# Three items, and they must fit on ONE line: .stat-row is a single-line strip
+# (see theme_editorial.scss) and a wrap breaks the row into 2+1, which reads as
+# a mistake. "(collisions)" used to sit on the first two labels and pushed the
+# row to 996px against an 819px strip. The hero above already names the unit, so
+# the labels do not need to repeat it.
 cat(sprintf('
 <div class="hero">
   <div class="value">%.2f</div>
   <div class="label">Injury collisions avoided per segment, per round</div>
 </div>
 <div class="stat-row">
-  <div><span class="n">%.2f</span><span class="k">Programme sectors fell (collisions)</span></div>
-  <div><span class="n">%.2f</span><span class="k">Comparison sectors fell (collisions)</span></div>
+  <div><span class="n">%.2f</span><span class="k">Programme sectors fell</span></div>
+  <div><span class="n">%.2f</span><span class="k">Comparison sectors fell</span></div>
   <div><span class="n">%.2f</span><span class="k">The difference</span></div>
 </div>', abs(pol_did), pol_fall_t, pol_fall_c, abs(pol_did)))
 ```
