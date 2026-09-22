@@ -6,7 +6,7 @@ The goal of this project is to develop material for the second module of an impa
 
 In close consultation with me, develop sessions based on the outline. We will develop one at a time based on whichever I ask you to work on. Wait for my input on your ideas before developing or editing any files in this folder.
 
-Output format: quarto (.qmd) files only. For each session Claude's deliverable is a correct, well-structured .qmd and nothing else: Fiona renders the HTML herself (and any PowerPoint), so Claude does not render, screenshot, or self-check the rendered deck, and does not produce a separate facilitator guide. Speaker notes in `::: {.notes}` blocks are fine to include.
+Output format: quarto (.qmd) files only. For each session Claude's deliverable is a correct, well-structured .qmd, **plus its rendered HTML** (see Rendering and Publishing below). Claude renders and publishes; Fiona reviews the live deck. Claude does not produce a separate facilitator guide. Speaker notes in `::: {.notes}` blocks are fine to include.
 
 A few ideas I had on critical questions they should learn to ask AI throughout the sessions/for each method (not necessarily in this format or way but whatever way will help the AI not make mistakes or help us catch its mistakes):
     - Ask about data needed for DID
@@ -92,6 +92,30 @@ Run `setup_packages.R` once in RStudio (`source("setup_packages.R")`) before ren
 
 - **After every commit, list the folder and check the byte size matches the source.** Size is the cheap check; for text, stage the file back and `diff` it.
 - **The fix is a fresh staged path.** Copy the file to a new name under the outputs folder and commit *that* to the destination. Re-committing the same staged path, force or not, does not reliably update.
+
+### Rendering and Publishing
+
+**One copy of each deck, in `docs/`.** GitHub Pages serves `docs/` on `main` (legacy source; it cannot be set to the repo root while `docs/` is used). The deck is **not** also kept beside the `.qmd` — that duplicate was removed on 2026-09-22. Render, then move the file into `docs/`:
+
+```powershell
+$env:PATH = "C:\Program Files\R\R-4.4.1\bin;C:\Users\LucasSempe\AppData\Local\Programs\Quarto\bin;" + $env:PATH
+Push-Location Module_2_Oct_2026_v2
+quarto render Oct12_session1.qmd
+Move-Item Oct12_session1.html ..\docs\ -Force
+Pop-Location
+```
+
+- **Render only the decks whose content changed.** Each is 3.4–7 MB, so a full re-render is ~50 MB of git churn for no benefit; an untouched deck renders byte-identical.
+- **Do not use `--output-dir ../docs`.** It does write to `docs/`, but on this OneDrive path it reliably exits 1 with `unable to open database file ... deno-kv-file` (SQLITE_CANTOPEN), which makes a real render failure indistinguishable from a spurious one. Render in place and move.
+- **The exit code is the only trustworthy signal.** `Select-String` and grep-style tools truncate these decks' 3.5 M-character minified lines and report 0 matches regardless; use `[IO.File]::ReadAllText($p).Contains($s)` instead.
+- **Confirm the live page, do not assume the push worked.** Pages builds take ~30–60 s:
+
+```powershell
+$r = Invoke-WebRequest https://sempe.dev/R-course/Oct12_session1.html -UseBasicParsing
+$r.StatusCode; $r.Content.Contains("a phrase only the new content has")
+```
+
+- **Add every new deck to `docs/index.html`.** The landing page is hand-maintained and does not discover files; a deck that is published but unlinked is invisible.
 
 ### Presenting — no R needed on the day
 
@@ -225,7 +249,7 @@ Day 2 is one story told four ways: the same programme, four methods, two differe
 - **Covariates:** manager/deputy age and education, female manager, foreign owned, staff size, advanced filtration, water treatment system, business area, recycling centre distance, recycling compliance.
 - **Key means (treatment neighbourhoods):** offered 1,449 → 784 (−665); not offered 2,079 → 2,230 (+151); DiD = **−816**; baseline gap = −630.
 
-A variant `evaluation_data_GreenWaste_IV.csv` exists in `sessions_in_Abu_Dhabi` for the IV material.
+The `evaluation_data_GreenWaste_IV.csv` variant is **gone**: no `*_IV.csv` exists anywhere in the repo. This matches the 2026-09-21 decision to drop instrumental variables from the sessions that never taught it.
 
 ### Still needed from Fiona
 
@@ -257,14 +281,14 @@ the next session is not started until the current one has been through at least
 stage 3.
 
 1. **Draft** — Claude builds the `.qmd` against the outline and the session architecture.
-2. **Fiona renders and checks:** Fiona renders the HTML and reviews it slide by slide for overflow, layout, numbers and timing. Claude does not render or screenshot. Because Claude no longer sees the rendered output, keep slides light: a 1280×720 slide holds roughly one panel plus one short callout, or two side-by-side callouts. When a slide would be denser than that, split it across two slides rather than crowd one.
-3. **Fiona reviews and runs it** — read it through, test each section, and actually run the AI tasks as a participant would.
+2. **Claude renders and publishes** — Claude renders the HTML, moves it into `docs/`, commits and pushes, and confirms the live page updated (see Rendering and Publishing below). Slides still have to be built light: a 1280×720 slide holds roughly one panel plus one short callout, or two side-by-side callouts. When a slide would be denser than that, split it across two slides rather than crowd one.
+3. **Fiona reviews the live deck** — read it through slide by slide for overflow, layout, numbers and timing, test each section, and actually run the AI tasks as a participant would.
 4. **Capture failures** — Fiona saves screenshots of any real AI mistakes into `AI_failure_exs/` and notes them in the AI Failure Library.
-5. **Iterate** — Claude revises the session file in place (git tracks the history), folding in the review notes and any newly captured AI failures.
+5. **Iterate** — Claude revises the session file in place (git tracks the history), re-renders and re-publishes, folding in the review notes and any newly captured AI failures.
 
 **Standing tasks, repeated for every session:**
 
-- [ ] After creating each session: hand the .qmd to Fiona to render and review (stages 2–5 above) before moving to the next
+- [ ] After each session: render it, publish it, and give Fiona the live URL to review (stages 2–5 above) before moving to the next
 - [ ] Fiona: run each session's AI tasks yourself and add real failure screenshots to `AI_failure_exs/`, then flag them for inclusion
 - [ ] For each session: add or update its exercises in `Module2_exercise_plan.docx` (the partner's build brief), and leave a placeholder on any slide whose exercise is not built in
 
@@ -277,7 +301,7 @@ stage 3.
 - [x] Help me improve the Claude md and fill in any missing details
 - [x] Copy `clean.scss` into `Module_2_Oct_2026/`
 - [x] Establish the design system (`module2.scss`, validated palette, callouts)
-- [ ] **Oct13 S1 — DiD** — rebuilt with the design system, a case-study opening and a Word facilitator guide. Awaiting Fiona's review and the DOH data. *(Stale `Oct13_session1.pptx` from the first draft is still in the folder and no longer matches the deck — delete it when convenient.)*
+- [ ] **Oct13 S1 — DiD** — rebuilt with the design system, a case-study opening and a Word facilitator guide. Awaiting Fiona's review and the DOH data. *(The stale `Oct13_session1.pptx` has been removed; no `.pptx` remains in the folder.)*
 - [ ] Oct13 S2 — RDD
 - [ ] Oct13 S3 — Matching
 - [ ] Oct12 S1 — Language / Compared to What?
@@ -304,6 +328,8 @@ stage 3.
 
 ### Do
 - **Edit in place** - Change existing session files directly; git history is the record of changes. Do not create `_v1`/`_v2` copies.
+- **Render and publish after every content change** - The `.qmd` and the live site are otherwise out of step, which is exactly how `docs/` came to serve Sep 19–21 HTML behind Sep 22 sources. Render, move into `docs/`, commit, push, verify.
+- **Keep one copy of each deck** - Only `docs/<deck>.html` is tracked. Do not re-create a copy beside the `.qmd`.
 - **Focus on relevant files only** - When returning to this project, review only the files needed for the next checklist step. Start with this CLAUDE.md and the main scripts. Do not view or modify files outside the current working folder unless I explicitly ask or give permission.
 
 ### Don't
