@@ -212,6 +212,12 @@ pol_rate_fall_c  <- pol_exp$rate_fall[pol_exp$Group == "Comparison sectors"]
 pol_fall_t <- pol_t_before - pol_t_after
 pol_fall_c <- pol_c_before - pol_c_after
 
+# Baseline imbalance, the measured version of "cameras went to the worst roads".
+# This is the gap a treated-only before-and-after has no way to remove.
+pol_base_gap <- pol_t_before - pol_c_before
+pol_prior_t  <- mean(pol$prior_collisions_3yr[pol$treated == 1])
+pol_prior_c  <- mean(pol$prior_collisions_3yr[pol$treated == 0])
+
 # ---- The estimate against the rule, as one picture --------------------------
 # A horizontal bar: the estimate (dot) with its 95% confidence interval
 # (whiskers) and the decision rule as a vertical red line, so "the interval does
@@ -304,17 +310,22 @@ cat(sprintf('
 ```
 
 ::: {.panel}
-Session 1 taught three questions. The first is **compared to what?** This
-session is that question pointed at one programme.
+Session 1 taught three questions.
 
-Two things about the design, before the numbers. The programme went first to the
+The first is **compared to what?** This session is that question pointed at one programme.
+
+Two things about the design, before the numbers:
+
+-  The programme went first to the
 **worst roads**, so the sectors with cameras are not the same as the sectors
-without. And traffic **grew** between the two rounds.
+without. 
+
+- Traffic **grew** between the two rounds.
 :::
 
 ::: {.ask}
 One of those two is why the headline number will turn out to overstate what the
-programme did.
+programme did. **It is not the traffic.**
 :::
 
 ## The decision on the table
@@ -591,21 +602,55 @@ before-and-after reading gives the programme credit for all of it.
 
 ::::: {.column width="50%"}
 ::: {.panel .fragment}
-**2. Traffic grew.** Vehicles travelled
-`r sprintf("%.1f", pol_vkm_rise_t)`% further in programme sectors, so part of
-the fall is simply less exposure, not less risk.
+**2. The groups started different.** Cameras went to the worst roads:
+`r sprintf("%.1f", pol_t_before)` collisions per segment against
+`r sprintf("%.1f", pol_c_before)`. A treated-only before-and-after has no way to
+separate the programme from that head start.
 :::
 :::::
 
 ::::::
 
-## Reason 2, in one picture
+## The two groups were never the same
 
-```{r fig.height=2.5, fig.width=11.5}
+```{r fig.height=2.4, fig.width=11.5}
+# The measured version of "cameras went to the worst roads": collisions in the
+# round BEFORE anything was installed. This gap is the reason a treated-only
+# before-and-after cannot be read as the programme's effect.
+tibble(
+  Group = factor(c("Programme sectors", "Comparison sectors"),
+                 levels = c("Programme sectors", "Comparison sectors")),
+  Base  = c(pol_t_before, pol_c_before)
+) %>%
+  plot_ly(x = ~Group, y = ~Base, type = "bar",
+          marker = list(color = c(ACCENT, ACCENT2), line = list(width = 0)),
+          text = ~sprintf("%.1f", Base), textposition = "outside",
+          textfont = list(size = 16, color = INK), cliponaxis = FALSE,
+          showlegend = FALSE,
+          hovertemplate = "%{x}: %{y:.2f} collisions per segment in 2019<extra></extra>") %>%
+  layout(xaxis = ax("", zeroline = FALSE,
+                    tickfont = list(size = 15, color = INK)),
+         yaxis = ax("Injury collisions per segment, 2019", range = c(0, 15)),
+         annotations = list(list(
+           x = 0.5, y = 13.2, xref = "paper", yref = "y", showarrow = FALSE,
+           text = sprintf("gap at the start = %.1f", pol_base_gap),
+           font = list(size = 13, color = ALERT)))) %>%
+  pl_m2(height = 230, b = 46)
+```
+
+::: {.warn}
+In 2019, before a single camera was installed, the programme sectors were already
+`r sprintf("%.1f", pol_base_gap)` collisions per segment worse. Nothing in the
+headline accounts for that.
+:::
+
+## And one thing that cuts the other way
+
+```{r fig.height=2.3, fig.width=11.5}
 # Exposure rose, so collisions per vehicle-km fell MORE than the raw count did.
-# Both measures agree the programme fell further than the comparison: the
-# exposure adjustment widens the gap, it does not close it. That is worth
-# showing, because Session 1 taught the opposite shape of the same trap.
+# This does NOT rescue the programme: the rule is written in collisions, so the
+# count is still the number the decision turns on. But it does mean the headline
+# is wrong in two directions at once, which is the point of the slide.
 pol_exp %>%
   pivot_longer(c(count_fall, rate_fall), names_to = "Measure", values_to = "fall") %>%
   mutate(Measure = factor(
@@ -621,13 +666,25 @@ pol_exp %>%
          xaxis = ax("", zeroline = FALSE,
                     tickfont = list(size = 15, color = INK)),
          yaxis = ax("Fall, 2019 to 2021 (%)", range = c(0, 33))) %>%
-  pl_m2(height = 240, b = 46)
+  pl_m2(height = 220, b = 46)
 ```
 
+::: {.panel}
+Exposure rose in **both** groups, so the fall in collisions per vehicle-km is
+larger than the fall in the raw count:
+`r sprintf("%.1f", pol_rate_fall_t)`% against
+`r sprintf("%.1f", pol_count_fall_t)`% in programme sectors. On the risk question
+the count understates what happened.
+:::
+
 ::: {.ask .fragment}
-Session 1's Al Falah case had exactly these two problems. There, distance driven
-**fell**, so fatalities fell. Here traffic **rose**, so part of the collision
-fall is simply less exposure. Same trap, opposite direction.
+Session 1's Al Falah case ran the same trap the other way. There, distance driven
+**fell**, so fatalities fell with it and the campaign looked better than it was.
+Here traffic **rose**, so the count looks worse than the risk.
+
+The rule is written in collisions, so the count is still the number the decision
+turns on. This changes what you can say about risk, not whether the programme
+cleared the bar.
 :::
 
 # 3 · Reading the output
@@ -873,7 +930,8 @@ Four minutes. Question 4 matters most, and Session 1 prepared you for it.
 
 ::: {.panel}
 This result would survive question 2. It fails question 3, and that is the whole
-decision.
+decision. And question 1 is why the headline number was never the answer: the
+two groups started `r sprintf("%.1f", pol_base_gap)` collisions apart.
 :::
 
 ## Where this goes next
