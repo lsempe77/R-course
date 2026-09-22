@@ -299,33 +299,33 @@ from this fictional dataset.
 ## Who is in the evaluation
 
 ```{r results='asis'}
+# Three items only. .stat-row is a single-line strip (see theme_editorial.scss):
+# a fourth item wraps to a second line and breaks 3+1, which reads as a mistake.
+# The fourth fact here was the two rounds, which the panel below now carries.
 cat(sprintf('
 <div class="stat-row">
   <div><span class="n">%s</span><span class="k">Road segments</span></div>
   <div><span class="n">%d</span><span class="k">Sectors</span></div>
   <div><span class="n">%s</span><span class="k">Segments with cameras</span></div>
-  <div><span class="n">2</span><span class="k">Rounds: 2019 and 2021</span></div>
 </div>', format(pol_seg, big.mark = ","), pol_sect,
    format(pol_t_seg, big.mark = ",")))
 ```
 
 ::: {.panel}
-Session 1 taught three questions.
-
-The first is **compared to what?** This session is that question pointed at one programme.
+Session 1 taught three questions. The first is **compared to what?** This
+session is that question pointed at one programme, measured over two rounds:
+2019 before and 2021 after.
 
 Two things about the design, before the numbers:
 
--  The programme went first to the
-**worst roads**, so the sectors with cameras are not the same as the sectors
-without. 
-
+- The programme went first to the **worst roads**, so the sectors with cameras
+  are not the same as the sectors without.
 - Traffic **grew** between the two rounds.
 :::
 
 ::: {.ask}
-One of those two is why the headline number will turn out to overstate what the
-programme did. **It is not the traffic.**
+One of those two is why the headline will overstate what the programme did.
+**It is not the traffic.**
 :::
 
 ## The decision on the table
