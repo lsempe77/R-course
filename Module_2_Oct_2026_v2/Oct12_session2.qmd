@@ -324,16 +324,16 @@ Two things about the design, before the numbers:
 :::
 
 ::: {.ask}
-One of those two is why the headline will overstate what the programme did.
-**It is not the traffic.**
+Both will come up again. One of them explains why the headline overstates the
+programme; the other does not, and you will see why.
 :::
 
 ## The decision on the table
 
 ::: {.panel}
-The authority is deciding whether to extend cameras elsewhere. That is a spending
-decision, and it turns on one figure: how many injury collisions the cameras
-avoided, **per segment, per round**.
+The authority is deciding whether to extend cameras elsewhere, so the question is
+a spending question. It turns on one figure: how many injury collisions the
+cameras avoided, **per segment, per round**.
 :::
 
 ```{r results='asis'}
@@ -482,8 +482,8 @@ pol_exp %>%
 ```
 
 ::: {.warn}
-The gap between the two falls is the part that could belong to the cameras.
-Nothing else on the slide is.
+The gap between the two falls is the part that could belong to the cameras. The
+rest of the movement happened in sectors where nothing was installed.
 :::
 :::::
 
@@ -537,8 +537,8 @@ plot_ly() %>%
 ```
 
 ::: {.panel}
-Note the units: **collisions**, not per cent. A percentage cannot be checked
-against a rule that is written in collisions.
+The estimate is in collisions per segment, which is the unit the rule is written
+in. A percentage cannot be checked against it.
 :::
 
 ## Does it clear the rule?
@@ -563,18 +563,18 @@ pol_ci_plot(height = 170, b = 38)
 
 ::::: {.column width="50%"}
 ::: {.panel .fragment}
-Statistically clear, so the programme did something. **That is not the question
-being asked.** It did not clear 2.00, and even the interval's best case,
-`r sprintf("%.2f", pol_avoided_hi)`, falls short.
+The interval sits well away from zero, so the programme did something. The
+decision turns on a different number: the rule asks for 2.00, and even the
+interval's best case, `r sprintf("%.2f", pol_avoided_hi)`, falls short.
 :::
 :::::
 
 ::::::
 
 ::: {.warn .fragment}
-**Statistically significant does not mean big enough.** Session 1 said this about
-a school programme. Here is the same lesson with a real spending decision
-attached to it.
+Session 1 made this point about a school programme: statistical significance
+answers whether an effect exists, not whether it is large enough to fund. This
+time the spending decision sits on the same slide.
 :::
 
 ## Look back at your vote
@@ -595,10 +595,10 @@ if (!grepl("PLACEHOLDER", MENTI_EMBED)) {
 ```
 
 ::: {.warn}
-You voted on the `r sprintf("%.0f", pol_headline_fall)`% headline. The honest
-estimate is `r sprintf("%.2f", abs(pol_did))` avoided, short of the
-`r sprintf("%.1f", POL_RULE)` the rule needs. If the room leaned "yes", that is
-the headline doing the work, not the programme.
+You voted on the `r sprintf("%.0f", pol_headline_fall)`% headline. The estimate
+is `r sprintf("%.2f", abs(pol_did))` avoided, short of the
+`r sprintf("%.1f", POL_RULE)` the rule asks for. If the room leaned "yes", the
+headline did the persuading.
 :::
 
 ## Two reasons the headline overstates
@@ -717,10 +717,10 @@ pol_tbl %>%
 ::: {.panel}
 **Row 4 is the impact.** The interaction of programme and round: the extra change
 in the sectors that got cameras, over and above the change everywhere else. It is
-the one number the decision turns on.
+the number the decision turns on.
 
-Most reports lead with their preferred number. **Find the row that is actually
-the impact**, not the one printed largest or first.
+Reports tend to lead with their preferred number, which is not always this row.
+Find the row that carries the impact before you read the others.
 :::
 ::: {.notes}
 Reminder for the room (vocab from Day 1 Session 1): the **coefficient** is the effect size, here in injury collisions per segment; the **standard error** is how much the estimate would move from sample to sample; the **95% confidence interval** is the range of plausible true values, not a margin of certainty; the **p-value** is how surprising this result would be if the programme had truly done nothing.
@@ -740,7 +740,8 @@ pol_tbl %>%
 
 ::: {.panel}
 **Row 2** is the baseline difference. Cameras went to the worst roads, so the
-programme sectors started higher. This gap is not the impact.
+programme sectors started higher, and that head start carries into the
+before-and-after figure.
 
 **Row 3** is the national trend: what happened in the comparison sectors anyway.
 **Std. err.** is the wobble on each estimate: divide the coefficient by it to see
@@ -787,10 +788,8 @@ pol_ci_plot(height = 250)
 **How to read it:** the blue dot is the estimate, `r sprintf("%.2f", abs(pol_did))`
 collisions avoided, and the blue bar is its 95% confidence interval,
 `r sprintf("%.2f", abs(pol_did_ci[2]))` to `r sprintf("%.2f", abs(pol_did_ci[1]))`.
-The red dashed line is the rule: `r sprintf("%.1f", POL_RULE)`. The whole bar sits
-to its left, so even the best case falls short. This is not "we cannot tell": it
-is a clear result below the bar, and **a precise answer below the bar is still a
-no.**
+The red dashed line is the rule, `r sprintf("%.1f", POL_RULE)`, and the whole bar
+sits to its left. This is a precise result, and it sits below the bar.
 :::
 
 ## What the table does not tell you
@@ -915,8 +914,8 @@ On the printed copy in front of you:
 
 **2.** Draw a box around its confidence interval.
 
-**3.** Underline the baseline difference, and say in one line why it is not the
-impact.
+**3.** Underline the baseline difference, and say in one line why it does not
+belong in the answer.
 
 **4.** Write down one thing you cannot tell from this table, and the question
 you would put to the evaluator.
@@ -942,9 +941,9 @@ Four minutes. Question 4 matters most, and Session 1 prepared you for it.
 ```
 
 ::: {.panel}
-This result would survive question 2. It fails question 3, and that is the whole
-decision. And question 1 is why the headline number was never the answer: the
-two groups started `r sprintf("%.1f", pol_base_gap)` collisions apart.
+This result survives question 2. It fails question 3, which settles the decision.
+Question 1 explains why the headline was never the number to act on: the two
+groups started `r sprintf("%.1f", pol_base_gap)` collisions apart.
 :::
 
 ## Where this goes next
