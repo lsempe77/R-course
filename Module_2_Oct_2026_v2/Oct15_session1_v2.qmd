@@ -1,0 +1,602 @@
+---
+title: "Is This Evidence Credible?"
+subtitle: "Module 2 · Day 4, Session 1: A Quality-Assurance Deep Dive"
+author: "3ie"
+always_allow_html: yes
+format:
+  revealjs:
+    theme: [theme_editorial.scss]
+    slide-number: true
+    width: 1280
+    height: 720
+    fig-align: center
+    slide-level: 2
+    embed-resources: true
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+    dev: "png"
+    dpi: 96
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup}
+library(knitr)
+library(kableExtra)
+library(qrcode)
+
+# ---- Palette (editorial theme; see theme_editorial.scss) -------------------
+ACCENT  <- "#0E6E80"
+ACCENT2 <- "#A9561F"
+ALERT   <- "#8E2413"
+INK     <- "#16181A"; MUTED <- "#61686D"; RULE <- "#E3E6E8"
+
+# ---- The report and the rating scale --------------------------------------
+# Shared with the printable rating sheet and the report itself, so the deck
+# cannot disagree with the paper the room is holding.
+source("qa_checklist.R")
+source("qa_rating.R")
+
+# Traffic-light colours for the on-screen reveal.
+LIGHT_COL <- c(Green = "#2E7D4F", Amber = ACCENT2, Red = ALERT)
+
+# ---- Live Menti poll -------------------------------------------------------
+MENTI_CODE <- "1234 5678"
+MENTI_JOIN <- paste0("https://www.menti.com/", gsub(" ", "", MENTI_CODE))
+
+menti_qr <- function(path = "menti_qr.png", url = MENTI_JOIN) {
+  png(path, width = 900, height = 900, res = 300, bg = "white")
+  on.exit(dev.off(), add = TRUE)
+  par(mar = c(0, 0, 0, 0))
+  plot(qr_code(url, ecl = "H"))
+  path
+}
+MENTI_QR <- menti_qr()
+```
+
+# 0 · Sign-off
+
+## The same question, on paper
+
+::: {.panel}
+Yesterday you interrogated an analyst who was in the room, and you did it with
+questions you wrote yourselves.
+
+Today the analyst is not here. In their place is a report — and the report cannot
+answer you back.
+:::
+
+::: {.ask .fragment}
+**Would you sign off on this evaluation for national scale-up?**
+Yes / No / Not without more answers.
+:::
+
+## Before you open it
+
+:::::: {.columns}
+
+::::: {.column width="58%"}
+```{=html}
+<div class="hero">
+  <div class="value">1,000</div>
+  <div class="label">AED per business per year &middot; the bar to clear</div>
+</div>
+```
+
+That is the threshold the commissioning authority set. Everything in the report
+is supposed to be measured against it.
+:::::
+
+::::: {.column width="42%"}
+```{r}
+#| fig.height: 3.4
+#| fig.width: 3.4
+#| fig.align: center
+knitr::include_graphics(MENTI_QR)
+```
+:::::
+
+::::::
+
+::: {.ask}
+Vote now, before reading. You will vote again at the end of the session.
+:::
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.warn}
+The report is four pages. It is well written, it is confident, and it contains
+several real strengths. It is not a bad report.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.panel}
+That is what makes it hard. You are not looking for errors in a bad document.
+You are deciding whether a good document supports the claim it makes.
+:::
+:::::
+
+::::::
+
+# 1 · The report
+
+## What is in front of you
+
+```{r}
+#| results: asis
+tab <- data.frame(
+  Section = c("1. Executive summary", "2. The programme", "3. Evaluation design",
+              "4. Data", "5. Results", "6. Limitations",
+              "7. Conclusions and recommendations", "Annexes A and B"),
+  `Pages` = c("1", "1", "1", "1", "1", "1", "1", "1"),
+  check.names = FALSE
+)
+kable(tab, col.names = c("Section", "Pages"),
+      caption = "The report, section by section") |>
+  kable_styling(c("striped", "condensed"), full_width = FALSE, position = "left",
+                font_size = 16)
+```
+
+::: {.ask}
+Read the executive summary first, on its own. Then turn the page. Do not read
+ahead.
+:::
+
+## What the report claims
+
+::: {.excerpt}
+This evaluation finds that the programme reduced waste-management costs by
+**approximately 1,000 AED per business per year**, and that the estimate is
+statistically significant. The finding is robust across four independent
+estimation methods… The programme therefore meets the threshold for scale-up.
+:::
+
+::: {.panel .fragment}
+Four claims in three sentences. Note each one, because you will rate them
+separately:
+
+- a **number**, described as approximately 1,000
+- a claim of **statistical significance**
+- a claim of **robustness** across four methods
+- a claim that the **threshold is met**
+:::
+
+## Read the summary and rate it
+
+::: {.ask}
+On your rating sheet: **the executive summary**.
+
+Give it a colour. Then write the one reason that decided it — and if you rate it
+amber or red, what would settle it.
+:::
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**Five minutes.** Work alone, not in groups. The point is your own reading, before
+anyone else's.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn .fragment}
+If you found nothing wrong, that is a useful result and you should say so. Hold
+your colour and we will come back to it.
+:::
+:::::
+
+::::::
+
+# 2 · The four areas, applied
+
+## The checklist, on paper this time
+
+```{r}
+#| results: asis
+dom <- data.frame(
+  Area = qa_domains,
+  `What you are testing` = unname(qa_purpose[qa_domains]),
+  check.names = FALSE
+)
+kable(dom, col.names = c("Area", "What you are testing"),
+      caption = "The four areas from yesterday") |>
+  kable_styling(c("striped", "condensed"), full_width = FALSE, position = "left",
+                font_size = 16)
+```
+
+::: {.panel}
+Yesterday you asked these out loud and the analyst could answer. Today the report
+has to answer, and it answers only what it chose to write down.
+:::
+
+::: {.ask .fragment}
+Which of the four areas can a report make look strong without actually being
+strong?
+:::
+
+## The five questions, and what a report can hide
+
+```{r}
+#| results: asis
+for (i in seq_along(qa_headline)) {
+  cat(sprintf('<div class="panel"><b>%d.</b> %s</div>\n', i, qa_headline[i]))
+}
+```
+
+::: {.warn .fragment}
+Notice what is missing from that list: **the colour of the conclusion**. None of
+the five asks whether the report sounds convincing. A confident report and a
+credible report are different objects, and this one is confident.
+:::
+
+## What the rating means
+
+```{r}
+#| results: asis
+for (i in seq_len(nrow(rating_scale))) {
+  cat(sprintf('<div class="panel"><b style="color:%s">%s.</b> %s</div>\n',
+              LIGHT_COL[[rating_scale$light[i]]], rating_scale$light[i],
+              rating_scale$meaning[i]))
+}
+```
+
+::: {.ask .fragment}
+Amber is not a soft red. It is the most useful rating on the scale, because it
+forces you to name the one thing that would change your mind.
+:::
+
+# 3 · Section by section
+
+## Evaluation design
+
+::: {.excerpt}
+The parallel trends assumption underlying the difference-in-differences design is
+the standard assumption in this literature and is satisfied by construction in
+programmes of this type, since treatment and control neighbourhoods were selected
+from the same administrative area and are subject to the same economic conditions.
+:::
+
+::: {.ask}
+Rate **Section 3, Evaluation design**. Then answer this: what does parallel trends
+actually require?
+:::
+
+::: {.warn .fragment}
+Parallel trends requires that the two groups **would have moved in parallel
+without the programme**. Sharing an administrative area and facing the same
+economic conditions is about the *level* of a shared shock, not about whether the
+two groups were on the same path.
+
+And no pre-trend test is reported anywhere in the document. The assumption is
+asserted, in the passive voice, and the word "satisfied" is doing all the work.
+:::
+
+## Data
+
+::: {.excerpt}
+Of the businesses present in the baseline round, 12 per cent were not present in
+the follow-up round. This reflects the normal churn of the business register.
+
+…the survey instrument separated expenditure on collection from expenditure on
+treatment… This change improves the precision of the measure and was applied
+consistently across treatment and control groups.
+:::
+
+::: {.ask}
+Rate **Section 4, Data**. There are two disclosures here. Which is handled well,
+and which is not?
+:::
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel .fragment}
+**Handled well:** the instrument change is *disclosed*. Most reports would not
+mention it.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn .fragment}
+**Not handled:** disclosure is not the same as analysis. Neither change is tested
+for its effect on the outcome, and "applied consistently" does not help if it
+shifted the level of the measure.
+:::
+:::::
+
+::::::
+
+## Results
+
+::: {.excerpt}
+All four estimates are negative and statistically significant… The largest
+estimate, from the randomised comparison, indicates a cost reduction of
+1,014 AED per business per year. The randomised comparison is our headline
+result.
+:::
+
+::: {.ask}
+Rate **Section 5, Results**. Four estimates are given. Why is this one the
+headline?
+:::
+
+::: {.panel .fragment}
+The report gives a reason: the randomised comparison covers all eligible
+businesses, the population that would actually be scaled up.
+
+That reason is defensible. Now check whether it is the *only* reason, because
+1,014 is also the largest number in the table, and the one that most clearly
+clears 1,000.
+:::
+
+## The table you should look at twice
+
+```{r}
+#| results: asis
+tab <- data.frame(
+  Method = c("Difference-in-differences", "Regression discontinuity",
+             "Randomised comparison", "Matched comparison"),
+  Estimate = c("-816", "-905", "-1,014", "-1,000"),
+  `Clears 1,000?` = c("No", "No", "Yes", "Exactly at it"),
+  check.names = FALSE
+)
+kable(tab, col.names = c("Method", "Estimate (AED)", "Clears the 1,000 threshold?"),
+      caption = "Table 1 of the report, with one column added") |>
+  kable_styling(c("striped", "condensed"), full_width = FALSE, position = "left",
+                font_size = 16)
+```
+
+::: {.warn .fragment}
+One of four clears the bar. The report calls the one that fails its **preferred
+specification** — and says so in Section 3, four pages before the recommendation.
+:::
+
+## Limitations
+
+::: {.excerpt}
+We note three limitations. First, the randomised comparison estimates the effect
+of being offered the programme, not of enrolling… Second, the regression
+discontinuity estimate is local to the eligibility cut-off… Third,
+self-reported expenditure may be subject to recall error…
+:::
+
+::: {.ask}
+Rate **Section 6, Limitations**. Are these the right three?
+:::
+
+::: {.warn .fragment}
+All three are correct and all three are harmless. They are textbook limitations
+that any reviewer would accept.
+
+The two limitations that actually threaten this conclusion — the 12 per cent
+attrition and the change in the survey instrument — appear in Section 4 and are
+never mentioned again.
+:::
+
+## Conclusions
+
+::: {.excerpt}
+**Recommendation 2.** The subsidy rate should be maintained at its current level,
+since the evaluation provides no evidence that a lower rate would be less
+effective.
+
+**Recommendation 3.** The eligibility cut-off should be reviewed, as the
+regression discontinuity results suggest that businesses just below the threshold
+may also benefit.
+:::
+
+::: {.ask}
+Rate **Section 7, Conclusions**. What was estimated about subsidy rates, and about
+businesses below the cut-off?
+:::
+
+::: {.warn .fragment}
+Nothing, and something different.
+
+Recommendation 2 turns an absence of evidence into a recommendation to do nothing.
+Recommendation 3 rests on a result that describes businesses *near* the cut-off,
+not those *below* it, and even then, the estimate there was 905, not 1,014.
+:::
+
+# 4 · The verdict
+
+## The same question
+
+:::::: {.columns}
+
+::::: {.column width="58%"}
+```{=html}
+<div class="hero">
+  <div class="value">1,000</div>
+  <div class="label">The bar, and the number the report never produced</div>
+</div>
+```
+
+Vote again. Same three options.
+:::::
+
+::::: {.column width="42%"}
+```{r}
+#| fig.height: 3.4
+#| fig.width: 3.4
+#| fig.align: center
+knitr::include_graphics(MENTI_QR)
+```
+:::::
+
+::::::
+
+::: {.ask .fragment}
+If your vote moved, name the section that moved it. That section is the finding of
+this session.
+:::
+
+## The most important problem
+
+```{r}
+#| results: asis
+cat(sprintf('<div class="warn">%s</div>\n', rating_decisive))
+```
+
+::: {.ask .fragment}
+Which of the six sections did you rate **green**? Keep those — a report that is
+wrong about one thing is not wrong about everything, and saying which parts hold
+is part of the job.
+:::
+
+## The strengths are real
+
+::: {.panel}
+Before we close, the report's genuine merits, because a QA exercise that only
+collects defects teaches you to read for defects:
+
+- It **states the threshold up front**, so the reader knows the standard being applied.
+- It **reports four methods** with their different populations named, rather than one number.
+- It **discloses** the survey instrument change, which most reports would bury.
+- It gives **confidence intervals for every estimate**, and an annex of robustness specifications.
+- Its **limitations are technically correct**, even though they are the wrong ones.
+:::
+
+::: {.ask .fragment}
+Now the hard question: does any of that rescue the recommendation?
+:::
+
+# 5 · Put AI to work
+
+## The prompt
+
+::: {.excerpt}
+Here is an evaluation report on a programme that subsidised waste-management
+technology for businesses. It found a cost reduction of approximately 1,000 AED
+per business per year and recommends national scale-up. Assess the credibility of
+this evidence and tell me whether the recommendation is sound.
+:::
+
+::: {.panel}
+You have just done this by hand, section by section, with a rating sheet. Now watch
+a model do it in one pass, and compare its verdict with yours.
+:::
+
+## What came back
+
+::: {.ai-output}
+**Assessment: the evidence is credible and the recommendation is sound.**
+
+The report is unusually thorough for this kind of evaluation. Several points
+support its credibility:
+
+**Multiple methods.** The use of four estimation approaches, all producing
+consistent results, is a strong indicator of robustness. When independent methods
+agree, the finding is unlikely to be an artefact of any single specification.
+
+**Large sample.** With roughly 9,900 observations, the study is well powered and
+the estimates are precise.
+
+**Transparency.** The report discloses a change in the survey instrument between
+rounds and notes that 12 per cent of businesses were lost to follow-up. This level
+of disclosure suggests a careful and honest evaluation team.
+
+**Appropriate limitations.** The limitations section correctly identifies that the
+randomised comparison estimates the offer effect and that the RDD estimate is local to the cut-off.
+
+**Recommendation.** The headline estimate of 1,014 AED exceeds the 1,000 AED
+threshold, so [the programme meets the criterion for scale-up]{.flag}. The
+recommendation is [supported by the evidence]{.flag}.
+:::
+
+::: {.ask .fragment}
+Find the two flagged claims. Then find the larger problem, which is not flagged.
+:::
+
+## What AI got, and what it could not get
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**What it did well**
+
+- Found the real disclosures and called them transparency
+- Correctly described the offer-effect and locality limitations
+- Produced a structured, readable assessment
+- Reached a verdict, which is what was asked
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn .fragment}
+**What it could not do**
+
+- It read "approximately 1,000" as if a method had produced 1,000. None did.
+- It never noticed that the preferred specification is 816, and fails the threshold.
+- It treated disclosure of attrition as evidence of quality, not as an open question.
+- It has no way to ask whether 1,014 was *chosen* as the headline.
+:::
+
+::::::
+
+::: {.ask .fragment}
+Which of the four failures is the most dangerous in practice? Which would you
+notice, and which would slip through?
+:::
+
+## The same task, a better prompt
+
+::: {.excerpt}
+The same report claims a cost reduction of approximately 1,000 AED against a
+decision threshold of 1,000 AED. Do three things.
+
+First, list every estimate the report gives, with its confidence interval, and say
+for each one whether it clears the threshold.
+
+Second, identify any claim in the executive summary that is not supported by the
+results section, and quote both.
+
+Third, tell me what the report does not tell me that I would need in order to
+decide.
+:::
+
+::: {.panel .fragment}
+The first instruction makes the model tabulate rather than summarise, and the
+816 becomes impossible to miss. The second forces a comparison the model would
+otherwise never make. The third gives it permission to find an absence.
+:::
+
+::: {.ask .fragment}
+Note what all three have in common: **they ask for a comparison, not a verdict.**
+The model is good at verdicts. It needs help with comparisons.
+:::
+
+# 6 · Take this back to your desk
+
+## Three habits for reading a report
+
+```{r}
+#| results: asis
+cat('<div class="panel"><b>1.</b> Tabulate the estimates yourself, with the threshold in its own column. Do not let the report choose which number you see first.</div>\n')
+cat('<div class="panel"><b>2.</b> Read the limitations section, then check whether it names the limitations in the data section. If it does not, the analysis stopped early.</div>\n')
+cat('<div class="panel"><b>3.</b> Find the preferred specification and check whether the headline is it. When they differ, ask why.</div>\n')
+```
+
+::: {.ask .fragment}
+Which of the three would have caught the most important problem in this report?
+:::
+
+## Tomorrow
+
+::: {.panel}
+You have spent two days learning to read other people\'s evidence critically. In
+the next session you write your own: a policy brief, from findings to
+recommendation.
+:::
+
+::: {.panel .fragment}
+Bring the ratings you gave today. You will be making the same judgements about
+your own draft, and it is harder when it is yours.
+:::

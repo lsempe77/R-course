@@ -1,0 +1,702 @@
+---
+title: "Interrogate the Analyst"
+subtitle: "Module 2 · Day 3, Session 3: The Quality Assurance Clinic"
+author: "3ie"
+always_allow_html: yes
+# revealjs only in this folder: the decks are HTML so that fragments, the Menti
+# QR and speaker notes all work as one file. Export to PDF for a portable copy.
+format:
+  revealjs:
+    theme: [theme_editorial.scss]
+    slide-number: true
+    width: 1280
+    height: 720
+    fig-align: center
+    slide-level: 2
+    embed-resources: true
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+    dev: "png"
+    dpi: 96
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup}
+library(knitr)
+library(kableExtra)
+library(qrcode)
+
+# ---- Palette (editorial theme; see theme_editorial.scss) -------------------
+ACCENT  <- "#0E6E80"
+ACCENT2 <- "#A9561F"
+ALERT   <- "#8E2413"
+INK     <- "#16181A"; MUTED <- "#61686D"; RULE <- "#E3E6E8"
+
+# ---- The checklist itself -------------------------------------------------
+# Defined once in qa_checklist.R and shared with the printable handout, so the
+# slide and the handout cannot drift apart.
+source("qa_checklist.R")
+
+# ---- Live Menti poll -------------------------------------------------------
+MENTI_CODE <- "1234 5678"
+MENTI_JOIN <- paste0("https://www.menti.com/", gsub(" ", "", MENTI_CODE))
+
+menti_qr <- function(path = "menti_qr.png", url = MENTI_JOIN) {
+  png(path, width = 900, height = 900, res = 300, bg = "white")
+  on.exit(dev.off(), add = TRUE)
+  par(mar = c(0, 0, 0, 0))
+  plot(qr_code(url, ecl = "H"))
+  path
+}
+MENTI_QR <- menti_qr()
+```
+
+# 0 · Sign-off
+
+## Three days of reading. Today you ask the questions.
+
+::: {.panel}
+On Monday you learned what a comparison is. On Tuesday you read four ways of
+building one. On Wednesday morning you costed a programme and took five figures
+apart.
+
+Every session so far has given you someone else's analysis to read. This one
+does not. This one hands you an evaluation and asks whether you would act on it.
+:::
+
+::: {.ask .fragment}
+The analyst who ran it is in this room, playing themselves. You have the
+checklist. They have to answer.
+:::
+
+## Would you sign off?
+
+:::: {.columns}
+
+::: {.column width="58%"}
+The question for the next two hours is not *is this good research*. It is:
+
+```{=html}
+<div class="hero">
+  <div class="value">1,000</div>
+  <div class="label">AED per business per year &middot; the bar to clear</div>
+</div>
+```
+
+Vote before we start. You will vote again at the end, and the two votes are
+compared.
+:::
+
+::: {.column width="42%"}
+```{r}
+#| fig.height: 3.4
+#| fig.width: 3.4
+#| fig.align: center
+knitr::include_graphics(MENTI_QR)
+```
+::::
+
+::: {.ask}
+Menti: **Would you sign off on this evaluation for national scale-up?**
+Yes / No / Not without more answers.
+:::
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.warn}
+**Hold your position.** Tomorrow morning you rate the same evidence
+section by section. If your answer has not moved by then, either the clinic
+taught you nothing or you were right to begin with.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.panel}
+A show of hands is enough if the Menti is not running. What matters is that the
+room is on record *before* the evaluator speaks.
+:::
+:::::
+
+::::::
+
+# 1 · The claim on the table
+
+## What is being offered for sign-off
+
+::: {.panel}
+An evaluation of a programme that subsidises waste-management technology for
+businesses. It ran in selected neighbourhoods. The published claim is that the
+programme **reduced waste-management costs by about 1,000 AED per business per
+year**, clearing the rule for national scale-up.
+:::
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+**What the evidence consists of**
+
+- A difference-in-differences estimate
+- A regression discontinuity at an eligibility cut-off
+- A randomised comparison of treatment and control neighbourhoods
+- A matched comparison
+- A benefit-cost ratio over five years
+:::::
+
+::::: {.column width="50%"}
+**What the analyst says it shows**
+
+- Four methods, same direction, similar size
+- The result is statistically significant
+- The programme pays for itself
+- Nothing in the analysis depends on a single fragile choice
+:::::
+
+::::::
+
+::: {.ask .fragment}
+You already know one of those four statements is not true. Which one, and how
+would you show it?
+:::
+
+## The numbers, as presented
+
+```{r}
+#| echo: false
+#| results: asis
+tab <- data.frame(
+  Method = c("Difference-in-differences", "Regression discontinuity",
+             "Randomised offering", "Matched comparison"),
+  Estimate = c("-816", "-905", "-1,014", "-1,000"),
+  `What it covers` = c("All enrolled businesses", "Businesses near the cut-off",
+                       "All eligible businesses", "Matched enrolled businesses"),
+  check.names = FALSE
+)
+kable(tab, col.names = c("Method", "Estimate (AED)", "What it covers"),
+      caption = "Cost reduction per business per year, by method") |>
+  kable_styling(c("striped", "condensed"), full_width = FALSE, position = "left",
+                font_size = 17)
+```
+
+::: {.warn .fragment}
+Every method lands between 816 and 1,014 AED, and the rule is 1,000. **Only the
+randomised estimate clears the bar outright; the matched estimate sits exactly on
+it, and the difference-in-differences and discontinuity estimates fall short.**
+:::
+
+## The rule, and the wiggle room inside it
+
+:::::: {.columns}
+
+::::: {.column width="44%"}
+```{=html}
+<div class="facts">
+  <div class="k">The rule</div>    <div class="v">At least 1,000 AED per business per year</div>
+  <div class="k">The range</div>   <div class="v">816 to 1,014 AED</div>
+  <div class="k">The claim</div>   <div class="v">"About 1,000"</div>
+  <div class="k">The decision</div><div class="v">Scale up nationally</div>
+</div>
+```
+:::::
+
+::::: {.column width="56%"}
+::: {.panel}
+Notice what the claim does. It reports a number the evidence never produced
+exactly, brackets a range that straddles the threshold, and then treats the
+threshold as crossed.
+:::
+
+::: {.ask .fragment}
+Is that a rounding convention, or is it the decision being made by the choice of
+where to put the decimal point?
+:::
+:::::
+
+::::::
+
+## First question of the day
+
+::: {.ask}
+**Which of the five estimates should the decision rest on, and why not the
+others?**
+:::
+
+::: {.panel .fragment}
+This is not a warm-up. It is the hardest question in the session. Each estimate
+describes a different population: all eligible businesses, those near a cut-off,
+the matched enrolled businesses, and the enrolled in treatment neighbourhoods.
+
+An evaluator who cannot say which population the decision concerns cannot say
+which estimate supports it.
+:::
+
+# 2 · The checklist
+
+## Four areas, in the order they break
+
+```{r}
+#| echo: false
+#| results: asis
+dom <- data.frame(
+  Area = qa_domains,
+  `What you are testing` = unname(qa_purpose[qa_domains]),
+  check.names = FALSE
+)
+kable(dom, col.names = c("Area", "What you are testing"),
+      caption = "The four areas of the checklist") |>
+  kable_styling(c("striped", "condensed"), full_width = FALSE, position = "left",
+                font_size = 17)
+```
+
+::: {.panel}
+The order matters. Methodology comes first because a design that cannot answer
+the question cannot be rescued by good data. Conclusions come last because a
+conclusion is only as strong as the three areas underneath it.
+:::
+
+## The five to ask every time
+
+```{r}
+#| echo: false
+#| results: asis
+for (i in seq_along(qa_headline)) {
+  cat(sprintf('<div class="panel"><b>%d.</b> %s</div>\n', i, qa_headline[i]))
+}
+```
+
+::: {.warn}
+Five questions is what you can hold in your head in a meeting. The full checklist
+is thirty pages shorter than it sounds: the printed handout has all twenty
+questions, five under each area.
+:::
+
+## How to tell a strong question from a weak one
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+**Weak**
+
+- Was the study rigorous?
+- Are the results significant?
+- Was the sample size adequate?
+- Did you control for confounders?
+- Is the data reliable?
+:::::
+
+::::: {.column width="50%"}
+**Strong**
+
+- Which assumption would reverse the sign?
+- What is the estimate and its interval?
+- How many units were dropped, and why?
+- What changed at the same time?
+- Who is missing from the data?
+:::::
+
+::::::
+
+::: {.ask .fragment}
+The difference is not politeness or expertise. A weak question can be answered
+"yes" by anyone. A strong question requires a fact, and the fact has to exist.
+:::
+
+## Your turn: sort these
+
+```{r}
+#| echo: false
+#| results: asis
+cands <- c(
+  "Did the programme work?",
+  "What would have happened to these businesses without the programme?",
+  "Was the sample large enough?",
+  "How many businesses dropped out between the two survey rounds?",
+  "Were the results statistically significant?",
+  "Which assumption, if wrong, would flip the finding?",
+  "Is this good quality data?",
+  "If the effect were half this size, would you still recommend scale-up?"
+)
+cat('<div class="excerpt">\n')
+for (i in seq_along(cands)) cat(sprintf('<p><b>%d.</b> %s</p>\n', i, cands[i]))
+cat('</div>\n')
+```
+
+::: {.ask}
+Mark each one **S** or **W**. Then tell me what makes the S ones answerable.
+:::
+
+## Which of those survived
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.warn}
+**Weak, and why**
+
+- *Did the programme work?* — Answerable with one word. Worthless.
+- *Was the sample large enough?* — For what? Precision is not the binding constraint here.
+- *Were the results significant?* — A yes/no where the number is what matters.
+- *Is this good quality data?* — Invites an adjective, not a fact.
+:::::
+
+::::: {.column width="50%"}
+::: {.panel .fragment}
+**Strong, and why**
+
+- *What would have happened without the programme?* — Asks for the counterfactual, which the whole week has been about.
+- *How many dropped out?* — A count the analyst either has or does not.
+- *Which assumption would flip it?* — Forces the fragility into the open.
+- *Half the size?* — Tests whether the estimate is carrying the decision.
+:::
+
+::::::
+
+::: {.ask .fragment}
+Notice that none of the strong questions is harder to *ask*. They are harder to
+*answer*. That is the whole trick.
+:::
+
+# 3 · The clinic
+
+## How this runs
+
+:::::: {.columns}
+
+::::: {.column width="58%"}
+::: {.panel}
+The analyst answers as themselves. Groups fire questions, one area at a time.
+
+**The rules of engagement**
+
+1. One question at a time, and the answer is given before the next question
+2. Any group may follow up once on an answer
+3. The analyst may answer *"I don't know"* or *"we didn't check that"*
+4. An admission is not a failure. It is the most useful thing said all session
+5. Nothing is scored. The point is the questions, not the stump
+:::
+:::::
+
+::::: {.column width="42%"}
+::: {.warn}
+**Groups:** four, one per area. Methodology, assumptions, data quality,
+conclusions.
+
+You have five minutes to agree your three sharpest questions before the clinic
+opens.
+:::
+:::::
+
+::::::
+
+::: {.ask .fragment}
+Write your questions down. You will want them for the debrief, and for tomorrow.
+:::
+
+## The questions that cost the analyst something
+
+::: {.panel}
+Some questions have answers that make the analysis look better. Some have answers
+that make it look worse. You are looking for the second kind.
+
+You will know you have found one when the analyst pauses.
+:::
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.warn}
+**Listen for these phrases**
+
+- "That's a good question…"
+- "In the main specification, yes"
+- "We discussed that"
+- "That was outside the scope"
+- "The data doesn't let us"
+:::::
+
+::::: {.column width="50%"}
+::: {.panel .fragment}
+**Translate**
+
+- *Which other specification?*
+- *What happened in the ones that aren't main?*
+- *And what did you decide, and why?*
+- *Whose scope? Who set it?*
+- *What would you need to answer it?*
+:::
+
+::::::
+
+::: {.ask .fragment}
+An answer that is true but narrower than the claim is the same as a problem. Press
+it.
+:::
+
+## The one you must not let go
+
+::: {.ask}
+**What is the comparison, and how was it chosen?**
+:::
+
+::: {.panel .fragment}
+If you ask one question in this clinic and it is this one, the session has done
+its job.
+
+Every method on Tuesday's and Wednesday's slides rests on a comparison group
+that was equivalent to the participants before the programme began — because it
+was randomly assigned, or because it was just below a cut-off, or because it was
+matched on observables, or because it was trending in parallel. Those are four
+different reasons, and each has its own way of being false.
+
+An evaluator who cannot state which one applies here, in a sentence, has not
+finished the analysis.
+:::
+
+# 4 · The debrief
+
+## The unanswered questions are the finding
+
+::: {.panel}
+Now we count. For each area, how many of your questions got a definite answer,
+and how many got an admission?
+:::
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+```{=html}
+<div class="facts">
+  <div class="k">Answered</div>     <div class="v">The fact exists and was produced</div>
+  <div class="k">Admitted</div>     <div class="v">"We didn't check that"</div>
+  <div class="k">Deflected</div>    <div class="v">Answered a different question</div>
+  <div class="k">Unanswerable</div> <div class="v">The design cannot settle it</div>
+</div>
+```
+:::::
+
+::::: {.column width="50%"}
+::: {.ask .fragment}
+Which of the four is *not* a failure — and which one tells you the analysis is
+weaker than it looked?
+:::
+:::::
+
+::::::
+
+::: {.warn .fragment}
+A deflection is worse than an admission. An admission tells you where the edge of
+the evidence is. A deflection tells you the analyst may not know either.
+:::
+
+## Which unanswered question changes the decision
+
+::: {.ask}
+Of everything the analyst could not answer, which **one** would move your
+sign-off if it came back the wrong way?
+:::
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+Most unanswered questions are interesting and not decisive. They belong in the
+limitations section and nowhere else.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.panel .fragment}
+One or two are decisive. Those are the ones worth commissioning more work on, or
+writing into the decision as a condition.
+:::
+:::::
+
+::::::
+
+::: {.ask .fragment}
+If nothing you raised would change the decision, either the evaluation is strong
+or your questions were not pointed at the decision. Which is it?
+:::
+
+## Would you sign off now?
+
+:::::: {.columns}
+
+::::: {.column width="58%"}
+```{=html}
+<div class="hero">
+  <div class="value">1,000</div>
+  <div class="label">The same bar, after the clinic</div>
+</div>
+```
+
+Same Menti, same three options. The room has now heard the analyst answer.
+:::::
+
+::::: {.column width="42%"}
+```{r}
+#| fig.height: 3.4
+#| fig.width: 3.4
+#| fig.align: center
+knitr::include_graphics(MENTI_QR)
+```
+::::
+
+::: {.ask .fragment}
+If your vote moved, say which answer moved it. That answer is the finding of this
+session.
+:::
+
+# 5 · Put AI to work
+
+## The prompt
+
+::: {.excerpt}
+I have an evaluation of a programme that subsidised waste-management technology
+for businesses. It used difference-in-differences, regression discontinuity,
+a randomised comparison and matching. All four methods found a cost reduction of
+roughly 1,000 AED per business per year. List the critical questions a
+commissioner should ask before acting on this result.
+:::
+
+::: {.panel}
+This is the prompt most people write. It is a reasonable prompt. Watch what comes
+back, and read it as a *list* rather than as advice.
+:::
+
+## What came back
+
+::: {.ai-output}
+Here are the critical questions a commissioner should ask:
+
+**1. Was the study well designed?** Confirm that the evaluation used a
+comparison group and a pre-post design, which this one did.
+
+**2. Was the sample size adequate?** A sample of roughly 9,900 observations is
+large, so statistical power is [not a concern here]{.flag}, and the results can be
+trusted.
+
+**3. Were the results statistically significant?** This should be confirmed, as
+significance is the main indicator that a result is real.
+
+**4. Were confounders controlled for?** The mention of four methods suggests
+robustness.
+
+**5. Is the data reliable?** Check for missing values and obvious errors.
+
+**6. Is the result policy relevant?** The cost reduction appears to exceed the
+stated threshold.
+
+**Overall:** the evaluation appears methodologically strong. The convergence of
+four methods on a similar estimate is [strong evidence of causality]{.flag}.
+:::
+
+::: {.ask .fragment}
+Find the two errors flagged above. Then find the bigger problem, which is not
+flagged.
+:::
+
+## What AI got, and what it could not get
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**What it did well**
+
+- Produced the *shape* of a critique
+- Covered the right broad topics
+- Read fluently and organised itself
+- Was confident, which is what people mistake for competence
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn .fragment}
+**What it could not do**
+
+- Sample size does not address selection bias. The two flagged errors are both that confusion.
+- It cannot know *which* assumption this design rests on, because that depends on facts it was never given.
+- It never asks what the comparison was.
+- It has no way to say "we did not check that".
+:::
+
+::::::
+
+::: {.ask .fragment}
+Which of its six questions would have survived your sorting exercise as **strong**?
+:::
+
+## The same task, a better prompt
+
+::: {.excerpt}
+I am advising on whether to scale up a programme nationally. An evaluator reports
+a cost reduction of about 1,000 AED per business per year from
+difference-in-differences, with a decision threshold of 1,000 AED.
+
+Do three things. First, tell me which single assumption this design rests on.
+Second, tell me exactly what evidence would show that assumption holds, and what
+it would look like if it failed. Third, tell me what you cannot determine from
+the information I have given you.
+:::
+
+::: {.panel .fragment}
+Three changes, and none of them is a trick.
+
+**Ask for the one thing**, not a list. **Ask what would falsify it**, which forces
+a testable answer. And **ask what it cannot tell you**, which gives the model
+permission to admit a limit instead of writing around it.
+:::
+
+::: {.ask .fragment}
+The third instruction is the one that changes the output most. Try it on your own
+material this week.
+:::
+
+# 6 · Take this back to your desk
+
+## The three you will actually use
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**From memory, no notes**
+
+1. What is the comparison, and how was it chosen?
+2. What has to be true for this to be causal, and did you test it?
+3. Does the conclusion follow, or does it outrun the evidence?
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn}
+If you remember only one, remember the first. Every method this week has been a
+different answer to it, and every method has a different way of being wrong about
+it.
+:::
+
+::::::
+
+::: {.ask .fragment}
+Next time someone brings you a result, which of the three will you ask first —
+and does it depend on the method they used?
+:::
+
+## Tomorrow
+
+::: {.panel}
+The full checklist, applied to a written report, section by section, with a
+traffic-light rating for each.
+
+You have just done the hard version. Tomorrow you do the structured one.
+:::
+
+::: {.panel .fragment}
+Bring the questions you wrote down today. Some of them you will not have to ask
+again.
+:::

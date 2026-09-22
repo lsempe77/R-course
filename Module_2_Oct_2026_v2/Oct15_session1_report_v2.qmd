@@ -1,0 +1,193 @@
+---
+title: "GreenWaste Programme: Impact Evaluation Report"
+subtitle: "Prepared for the commissioning authority · Evaluation Report ER-2026-014"
+author: "Commissioned evaluation team"
+date: "September 2026"
+format:
+  docx:
+    toc: false
+    number-sections: false
+editor_options:
+  chunk_output_type: console
+---
+
+::: {custom-style="Intense Quote"}
+**This is a fictitious evaluation report**, written for the Module 2 quality-assurance
+session. The programme, the data and every number in it are invented for teaching.
+It contains deliberate strengths and deliberate weaknesses. It does not describe any
+real programme, and no real organisation produced it.
+:::
+
+# 1. Executive summary
+
+The GreenWaste programme subsidises advanced waste-management technology for
+businesses in selected neighbourhoods. It was introduced in 2024 with the
+objective of reducing the waste-management costs borne by participating
+businesses, and the commissioning authority set a decision threshold: the
+programme would be recommended for national scale-up if it reduced costs by at
+least 1,000 AED per business per year.
+
+This evaluation finds that the programme reduced waste-management costs by
+**approximately 1,000 AED per business per year**, and that the estimate is
+statistically significant. The finding is robust across four independent
+estimation methods, each of which produced a result in the same direction and of
+similar magnitude.
+
+The programme therefore meets the threshold for scale-up. The evidence base is
+unusually strong for a programme of this size, combining a randomised design with
+three quasi-experimental methods, and the consistency of the results across
+methods gives us high confidence in the conclusion. We recommend national
+scale-up, with implementation beginning in the next financial year.
+
+# 2. The programme
+
+GreenWaste was piloted across selected neighbourhoods in the emirate. Businesses
+in treatment neighbourhoods were offered a subsidy covering the capital cost of
+advanced filtration and water-treatment equipment, together with a contribution
+towards installation.
+
+Eligibility was determined by an efficiency index maintained by the authority.
+Businesses scoring at or above 58 on that index were eligible for the subsidy;
+businesses scoring below it were not. In treatment neighbourhoods, all eligible
+businesses were offered the programme and could choose whether to enrol. In
+control neighbourhoods, no businesses were offered it.
+
+Two survey rounds were conducted: a baseline round before the programme began and
+a follow-up round approximately eighteen months later. The outcome of interest is
+`waste_management_costs`, the annual waste-management expenditure reported by
+each business, expressed in AED.
+
+# 3. Evaluation design
+
+We estimate the programme's effect using four complementary approaches. Reporting
+four estimates rather than one allows the reader to assess how sensitive the
+finding is to the method chosen, and is a departure from the single-specification
+reporting common in this literature.
+
+**Difference-in-differences.** We compare the change in waste-management costs
+among enrolled businesses in treatment neighbourhoods with the change among
+non-enrolled businesses in the same neighbourhoods, differencing out any common
+time trend. This is our preferred specification, as it uses all enrolled
+businesses.
+
+**Regression discontinuity.** Eligibility is determined by a sharp cut-off on the
+efficiency index at 58. Businesses just above and just below that cut-off are
+comparable on all characteristics other than eligibility, so the jump in
+outcomes at the cut-off identifies the programme's effect.
+
+**Randomised comparison.** Because treatment neighbourhoods were selected at
+random, we compare eligible businesses in treatment and control neighbourhoods at
+follow-up, which recovers the effect of being offered the programme across all
+eligible businesses.
+
+**Matched comparison.** We match each enrolled business to a non-enrolled
+business with a similar profile on observable characteristics, and compare
+outcomes within matched pairs.
+
+The parallel trends assumption underlying the difference-in-differences design is
+the standard assumption in this literature and is satisfied by construction in
+programmes of this type, since treatment and control neighbourhoods were selected
+from the same administrative area and are subject to the same economic
+conditions.
+
+# 4. Data
+
+The evaluation uses the authority's administrative records, linked to two
+business surveys. The baseline round contains 9,919 businesses in treatment
+neighbourhoods and the follow-up round contains a comparable number. The sample
+is large by the standards of this literature, which gives us confidence in the
+precision of the estimates.
+
+Outcome data were collected by enumerator visit, with a small number of
+observations obtained by telephone follow-up where a business had relocated.
+
+Of the businesses present in the baseline round, 12 per cent were not present in
+the follow-up round. This reflects the normal churn of the business register.
+
+One refinement should be noted. In the baseline round, businesses reported total
+waste-management expenditure. In the follow-up round, the survey instrument
+separated expenditure on collection from expenditure on treatment, and the
+outcome variable is defined as the sum of the two. This change improves the
+precision of the measure and was applied consistently across treatment and
+control groups.
+
+# 5. Results
+
+Table 1 reports the estimated effect under each of the four approaches.
+
+| Method | Estimate (AED per business per year) | 95% confidence interval |
+|---|---|---|
+| Difference-in-differences | −816 | [−879, −753] |
+| Regression discontinuity | −905 | [−992, −818] |
+| Randomised comparison | −1,014 | [−1,093, −935] |
+| Matched comparison | −1,000 | [−1,072, −927] |
+
+*Table 1: Estimated effect on annual waste-management costs. Negative values
+indicate a reduction in costs.*
+
+All four estimates are negative and statistically significant at conventional
+levels. The largest estimate, from the randomised comparison, indicates
+a cost reduction of 1,014 AED per business per year.
+
+The randomised comparison is our headline result. It is the most appropriate
+estimate for the policy question, because it estimates the effect across all
+eligible businesses, and all eligible businesses are the population the authority
+would be scaling up to.
+
+Robustness checks are reported in Annex B. Estimates are stable across the
+inclusion of covariates, across quadratic and cubic specifications of the
+regression discontinuity, and across bandwidth choices.
+
+# 6. Limitations
+
+We note three limitations.
+
+First, the randomised comparison estimates the effect of being offered the
+programme, not of enrolling in it. Because take-up was voluntary the two differ,
+and the figure understates the effect on the businesses that actually
+participated. This is inherent to the design and is not a defect of this
+evaluation.
+
+Second, the regression discontinuity estimate is local to the eligibility
+cut-off. It describes the effect for businesses scoring near 58 on the efficiency
+index, and may not apply to businesses far from that threshold.
+
+Third, self-reported expenditure may be subject to recall error, though we have
+no reason to believe such error would differ systematically between treatment and
+control groups.
+
+# 7. Conclusions and recommendations
+
+The programme reduced waste-management costs by approximately 1,000 AED per
+business per year. This meets the 1,000 AED threshold set by the commissioning
+authority, and the result is robust across four independent methods.
+
+**Recommendation 1.** The programme should be scaled up nationally, beginning in
+the next financial year.
+
+**Recommendation 2.** The subsidy rate should be maintained at its current level,
+since the evaluation provides no evidence that a lower rate would be less
+effective.
+
+**Recommendation 3.** The eligibility cut-off should be reviewed, as the
+regression discontinuity results suggest that businesses just below the threshold
+may also benefit.
+
+# Annex A: Survey instruments
+
+The baseline and follow-up instruments are reproduced in full in the
+accompanying data annex.
+
+# Annex B: Robustness checks
+
+Estimates under alternative specifications are reported below. Full tables are
+available on request.
+
+| Specification | Estimate (AED) |
+|---|---|
+| Preferred specification (difference-in-differences) | −816 |
+| With covariate adjustment | −828 |
+| Randomised comparison | −1,014 |
+| Regression discontinuity, quadratic polynomial | −905 |
+| Regression discontinuity, cubic polynomial | −912 |
+| Matched comparison | −1,000 |
