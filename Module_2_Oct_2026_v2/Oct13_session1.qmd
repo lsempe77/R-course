@@ -432,38 +432,70 @@ you are ever handed is this, wrapped in a regression.
 
 ## Why that number is bigger than the headline
 
-```{r fig.height=3.1, fig.width=11.5}
-bind_rows(
-  did_tbl_viz,
-  tibble(Time = tlev(c("Before", "After")), Group = "What would have happened",
-         Cost = c(off_b, cf_after))
-) %>%
-  plot_ly(x = ~Time, y = ~Cost, color = ~Group, type = "scatter",
-          mode = "lines+markers",
-          colors = c("Took part" = ACCENT, "Did not take part" = ACCENT2,
-                     "What would have happened" = MUTED),
-          line = list(width = 3, dash = c("solid", "solid", "dot")),
-          marker = list(size = 12),
-          hovertemplate = "%{fullData.name}: %{y:,.0f} AED<extra></extra>") %>%
+```{r fig.height=2.9, fig.width=11.5}
+# The DiD estimate drawn where it lives: the vertical gap at "After" between the
+# dotted counterfactual and where "Took part" actually ended up. Without the
+# marker the chart shows three lines and leaves the reader to infer which gap is
+# the estimate.
+#
+# Everything below goes in xref="x"/yref="y" (data coords), so it moves with the
+# axes. Do not use paper coordinates for a category axis: "paper" maps to the
+# whole plot width, which is not where the "After" tick sits.
+did_delta <- abs(did_hand)                     # 816, the estimate in AED
+y_lo <- cf_after                               # counterfactual, the lower end
+y_hi <- off_a                                  # what actually happened
+y_mid <- (y_lo + y_hi) / 2
+
+plot_ly() %>%
+  add_trace(data = filter(did_tbl_viz, Group == "Did not take part"),
+            x = ~Time, y = ~Cost, type = "scatter", mode = "lines+markers",
+            name = "Did not take part",
+            line = list(color = ACCENT2, width = 3), marker = list(size = 12),
+            hovertemplate = "%{fullData.name}: %{y:,.0f} AED<extra></extra>") %>%
+  add_trace(data = filter(did_tbl_viz, Group == "Took part"),
+            x = ~Time, y = ~Cost, type = "scatter", mode = "lines+markers",
+            name = "Took part",
+            line = list(color = ACCENT, width = 3), marker = list(size = 12),
+            hovertemplate = "%{fullData.name}: %{y:,.0f} AED<extra></extra>") %>%
+  add_trace(x = tlev(c("Before", "After")), y = c(off_b, cf_after),
+            type = "scatter", mode = "lines+markers",
+            name = "What would have happened",
+            line = list(color = MUTED, width = 3, dash = "dot"),
+            marker = list(size = 12, color = MUTED),
+            hovertemplate = "%{fullData.name}: %{y:,.0f} AED<extra></extra>") %>%
+  # The bracket: a vertical segment at "After", capped at each end, spanning the
+  # gap the estimate measures.
+  add_segments(x = "After", xend = "After", y = y_lo, yend = y_hi,
+               line = list(color = ALERT, width = 4), showlegend = FALSE,
+               hoverinfo = "skip") %>%
   layout(xaxis = ax("", zeroline = FALSE),
-         yaxis = ax("Waste costs (AED)", range = c(0, 2800))) %>%
-  pl_m2(height = 300)
+         yaxis = ax("Waste costs (AED)", range = c(0, 2800)),
+         shapes = list(
+           list(type = "line", x0 = 0.93, x1 = 1.07, y0 = y_lo, y1 = y_lo,
+                xref = "x", yref = "y",
+                line = list(color = ALERT, width = 3)),
+           list(type = "line", x0 = 0.93, x1 = 1.07, y0 = y_hi, y1 = y_hi,
+                xref = "x", yref = "y",
+                line = list(color = ALERT, width = 3))),
+         annotations = list(
+           list(x = 1.13, y = y_mid, xref = "x", yref = "y", showarrow = FALSE,
+                xanchor = "left", align = "left",
+                text = sprintf("<b>\u0394 = %s AED</b><br>the DiD estimate",
+                               gfmt(did_delta)),
+                font = list(color = ALERT, size = 14)))) %>%
+  pl_m2(height = 270, t = 30, b = 50)
 ```
 
 ::: {.panel}
 The dotted line is the counterfactual: what the businesses that took part would
-have paid, **had they merely followed the other group's path**.
-
-The gap between the dotted line and where "took part" actually ended up is the
-DiD estimate, `r gfmt(abs(did_hand))` AED. Everything above the dotted line is
+have paid **had they followed the other group's path**. Everything above it is
 the time trend, not the programme.
 :::
 
 ::: {.ask}
-Hover the dotted line. Compare it with where "took part" finished.
-
-Session 1's World B asked whether a headline was the programme or the tide.
-Same question, and now you can answer it.
+Hover the dotted line and compare it with where "took part" finished. Session 1's
+World B asked whether a headline was the programme or the tide. Same question,
+and now you can answer it.
 :::
 
 # 3 · The table an evaluator hands you
@@ -656,7 +688,6 @@ balance_tbl %>%
                       "Difference", "p-value")) %>%
   kable_styling(full_width = FALSE, font_size = 14)
 ```
-:::::
 :::::
 
 ::::: {.column width="44%"}
