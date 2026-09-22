@@ -331,21 +331,34 @@ One of those two is why the headline will overstate what the programme did.
 ## The decision on the table
 
 ::: {.panel}
-The authority is deciding whether to extend cameras elsewhere. That is a
-spending decision, and it turns on one figure: how many injury collisions the
-cameras avoided, **per segment, per round**.
-
-The rule is `r sprintf("%.1f", POL_RULE)`. A result below it does not justify the
-money, however impressive it looks as a percentage.
+The authority is deciding whether to extend cameras elsewhere. That is a spending
+decision, and it turns on one figure: how many injury collisions the cameras
+avoided, **per segment, per round**.
 :::
 
+```{r results='asis'}
+# A .facts grid, not a .stat-row: each number needs its unit spelled out, and
+# stat-row labels are a single-line strip (see theme_editorial.scss). The rule
+# is labelled as the bar the other two are measured against, not as a third
+# candidate answer, which is what an unlabelled strip made it look like.
+#
+# No minus signs. The labels already say "fewer" and "avoided", and the
+# underlying coefficient is negative, so "-1.13 avoided" would be a double
+# negative. Dropping them also puts the estimate and the rule in identical
+# wording, so 1.13 against 2.0 reads as a direct comparison.
+cat(sprintf('
+<div class="facts">
+  <div class="k">The headline</div> <div class="v">%.0f%% fewer collisions, camera sectors only</div>
+  <div class="k">The estimate</div> <div class="v">%.2f avoided, per segment per round</div>
+  <div class="k">The rule</div>     <div class="v">%.1f avoided, per segment per round, or no money</div>
+</div>', pol_headline_fall, abs(pol_did), POL_RULE))
+```
+
 ::: {.ask}
-Three numbers describe the same programme:
+Two are results, in different units. One is the bar they must be measured
+against.
 
-**-`r sprintf("%.0f", pol_headline_fall)`%** &nbsp;·&nbsp; **-`r format(abs(pol_did), nsmall = 2)`** &nbsp;·&nbsp; **`r sprintf("%.1f", POL_RULE)`**
-
-Two are wrong answers to the question being asked. Work out which is the real
-one, and whether it clears the rule.
+**Which two are in the same units, and does the estimate clear the rule?**
 :::
 
 # 2 · What the numbers say
