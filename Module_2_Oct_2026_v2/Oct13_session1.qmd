@@ -552,7 +552,79 @@ Press **Run** to draw it. The gap between the dotted counterfactual and where
 everything above the dotted line is the time trend, not the programme.
 :::
 
-# 3 · The table an evaluator hands you
+# 3 · Implementing DID in R
+
+## Remember: what DiD needs from the data
+
+::: {.panel}
+1. **An outcome**, measured the same way each time
+2. **A before and an after**: a time variable
+3. **A group that got the programme and one that did not**: a group variable
+4. **The same units followed over time**, or comparable samples in each period
+5. **Ideally, more than one "before" period**, so we can check the groups were moving together before the programme
+:::
+
+::: {.ask}
+This checklist is the first thing to ask AI before any DiD: *what data do I
+need, and does my dataset have it?* Ask it to question you about your data
+before it answers.
+:::
+
+::: {.notes}
+Tie each item back to the minister sentence: "the change over time" needs items
+2 and 4; "in a group that did not" needs item 3. Item 5 is a deliberate
+foreshadow of Section 4. Do not resolve it here.
+:::
+
+## Does GreenWaste have what we need?
+
+:::::: {.columns}
+
+::::: {.column width="56%"}
+```{webr}
+tn %>%
+  select(business_identifier, round, enrolled,
+         waste_management_costs) %>%
+  arrange(business_identifier, round) %>%
+  mutate(waste_management_costs =
+           round(waste_management_costs)) %>%
+  head(6)
+
+tn %>% count(enrolled, round)
+```
+:::::
+
+::::: {.column width="44%"}
+::: {.panel}
+✔ **Outcome:** `waste_management_costs` (AED)
+
+✔ **Time:** `round`, 0 before and 1 after
+
+✔ **Group:** `enrolled`, 1 took part and 0 did not
+
+✔ **Same businesses:** each one appears in both rounds
+:::
+
+::: {.warn}
+⚠ Only **one** before period. Hold that thought for Section 4.
+:::
+:::::
+
+::::::
+
+::: {.notes}
+Press Run. Read one business across its two rows (business 11 went from about
+1,308 to 240 AED) so the room sees "one row per business per round". The counts
+table shows 2,964 businesses that took part and 1,995 that did not, each
+observed in both rounds (4,959 businesses in total).
+
+If asked about `tn`: it is the businesses in the neighbourhoods where the
+programme was offered (treatment_neighborhood == 1). Within those, some
+businesses enrolled and some did not, and that is our comparison.
+
+The warning sets up "The honest answer for this data" in Section 4: with a single
+pre-period, parallel pre-trends cannot be tested.
+:::
 
 ## Implementing DiD with a regression
 
@@ -1027,7 +1099,7 @@ method, and they are the ones that decide whether the number means anything.
   <div class="k">Day 1 S1</div> <div class="v">compared to what? &middot; the three questions</div>
   <div class="k">Day 1 S2</div> <div class="v">reading a descriptive output &middot; -1.13 against a 2.0 rule</div>
   <div class="k">Day 1 S3</div> <div class="v">naive comparisons and an RCT &middot; the design that removes the difference</div>
-  <div class="k">Today</div>  <div class="v">DiD &middot; -816 against a 1,000 rule, with the assumption that cannot be tested</div>
+  <div class="k">Today</div>  <div class="v">DiD &middot; -816 against a 1,000 rule, with the assumption that could not be tested</div>
 </div>
 ```
 
