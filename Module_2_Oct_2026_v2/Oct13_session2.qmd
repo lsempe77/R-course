@@ -374,7 +374,7 @@ programme, one did not. That is the whole idea.
   <div class="k">Running variable</div> <div class="v">Efficiency index</div>
   <div class="k">Cut-off</div>         <div class="v">58</div>
   <div class="k">Eligible</div>        <div class="v">at or below 58</div>
-  <div class="k">Rule followed?</div>  <div class="v">we check, next slide</div>
+  <div class="k">Rule followed?</div>  <div class="v">we check it shortly</div>
 </div>
 ```
 :::::
@@ -385,55 +385,6 @@ programme, one did not. That is the whole idea.
 **Read the direction carefully.** The rule offers the programme to the **less**
 efficient businesses. A "higher is better" rule would put the eligible side on
 the right. Getting this backwards inverts every number that follows.
-:::
-
-## What RDD needs from the data {.dense}
-
-:::::: {.columns}
-
-::::: {.column width="44%"}
-::: {.panel}
-1. **A score** that decides eligibility
-2. **A known cut-off**, and which side is eligible
-3. **The outcome**, after the programme
-4. **Who was offered it**, and **who took it up**
-5. **Enough businesses near the line**
-:::
-
-::: {.ask}
-Same habit as yesterday: ask AI *what data do I need, and does mine have it?*
-before you ask for a result.
-:::
-:::::
-
-::::: {.column width="56%"}
-```{webr}
-gw1 %>%
-  mutate(side = ifelse(efficiency_index <= 58,
-                       "At or below 58", "Above 58")) %>%
-  group_by(side) %>%
-  summarise(businesses = n(),
-            offered    = mean(eligible),
-            took_part  = mean(enrolled))
-```
-
-::: {.panel .fragment}
-**Offered**: 1 on one side, 0 on the other. The rule was followed exactly.
-
-**Took part**: only about half. Hold on to that.
-:::
-:::::
-
-::::::
-
-::: {.notes}
-Press Run. Read the two rows aloud. "offered" is a share: 1 means every
-business on that side was offered the programme, 0 means none were. So the
-offer follows the rule perfectly (a sharp rule). "took_part" is the share that
-enrolled: about 53% below the line and nobody above.
-
-This is the setup for "The number that matters: who actually took it up" in
-Section 2. Do not resolve it here.
 :::
 
 ## `[MENTI PLACEHOLDER]` Which side is which?
@@ -504,8 +455,6 @@ Markers are sized by how many businesses sit in each bucket, so you can see
 where the evidence is thicker.
 :::
 
-# 2 · From the picture to a number
-
 ## Regression discontinuity in one sentence
 
 ::: {.ask style="font-size: 120%;"}
@@ -518,8 +467,8 @@ of chance. So the two sides are alike in every way except one: which side was
 offered the programme.
 
 ::: {.panel .fragment}
-The **step in costs at the cut-off** is the estimated effect. Everything in this
-section is about measuring the height of that step.
+The **step in costs at the cut-off** is the estimated effect. The next section
+measures the height of that step.
 :::
 
 ::: {.notes}
@@ -531,6 +480,57 @@ near-twins who happened to fall on opposite sides of an administrative line.
 Point back at the previous chart: the "step" is the gap between the two clouds
 of dots right at the dotted line.
 :::
+
+## What RDD needs from the data {.dense}
+
+:::::: {.columns}
+
+::::: {.column width="44%"}
+::: {.panel}
+1. **A score** that decides eligibility
+2. **A known cut-off**, and which side is eligible
+3. **The outcome**, after the programme
+4. **Who was offered it**, and **who took it up**
+5. **Enough businesses near the line**
+:::
+
+::: {.ask}
+Same habit as yesterday: ask AI *what data do I need, and does mine have it?*
+before you ask for a result.
+:::
+:::::
+
+::::: {.column width="56%"}
+```{webr}
+gw1 %>%
+  mutate(side = ifelse(efficiency_index <= 58,
+                       "At or below 58", "Above 58")) %>%
+  group_by(side) %>%
+  summarise(businesses = n(),
+            offered    = mean(eligible),
+            took_part  = mean(enrolled))
+```
+
+::: {.panel .fragment}
+**Offered**: 1 on one side, 0 on the other. The rule was followed exactly.
+
+**Took part**: only about half. Hold on to that.
+:::
+:::::
+
+::::::
+
+::: {.notes}
+Press Run. Read the two rows aloud. "offered" is a share: 1 means every
+business on that side was offered the programme, 0 means none were. So the
+offer follows the rule perfectly (a sharp rule). "took_part" is the share that
+enrolled: about 53% below the line and nobody above.
+
+This is the setup for "The number that matters: who actually took it up" in
+Section 2. Do not resolve it here.
+:::
+
+# 2 · From the picture to a number
 
 ## A first, rough number
 
