@@ -3,17 +3,36 @@ title: "Reading a Difference-in-Differences Result"
 subtitle: "Module 2 · Day 2, Session 1: The Extra Change in the Programme Group"
 author: "3ie"
 always_allow_html: yes
-# revealjs only in this folder: the charts are interactive (plotly/htmlwidgets),
-# and pandoc cannot carry an htmlwidget into pptx. Export to PDF for a portable copy.
+# live-revealjs (quarto-live): the baked plotly/kable charts still render at knit time
+# exactly as before; the three teaching code cells (Running the regression, Visualising
+# the DiD, Testing for parallel pre-trends) are {webr} cells that run live in the browser
+# via WebAssembly. Needs internet at presentation time to load webR. Export to PDF for a
+# portable copy (live cells then show their code but do not run).
 format:
-  revealjs:
+  live-revealjs:
     theme: [theme_editorial.scss]
     slide-number: true
     width: 1280
     height: 720
     fig-align: center
     slide-level: 2
+    # Single-file deck. The live (webR) cells work fine with this over http —
+    # via `quarto preview` or a published URL — but NOT from a file:// path.
+    # Do not open the rendered .html directly from disk; serve it or publish it.
     embed-resources: true
+engine: knitr
+resources:
+  - evaluation_data_GreenWaste.csv
+webr:
+  packages:
+    - dplyr
+    - ggplot2
+    - estimatr
+    - broom
+  cell-options:
+    autorun: false
+    edit: true
+    warning: false
 knitr:
   opts_chunk:
     echo: false
@@ -29,6 +48,8 @@ knitr:
 editor_options:
   chunk_output_type: console
 ---
+
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
 
 ```{r setup}
 library(tidyverse)
@@ -188,6 +209,63 @@ balance_tbl <- map_dfr(bal_vars, function(v) {
 })
 ```
 
+:::: {style="display:none;"}
+```{webr}
+#| autorun: true
+#| edit: false
+#| echo: false
+#| output: false
+#| warning: false
+#| message: false
+# ---- Live (webR) setup ----------------------------------------------------
+# Runs once in the browser when the deck opens, priming the shared webR session
+# so the three teaching cells (Running the regression, Visualising the DiD,
+# Testing for parallel pre-trends) have their data and helpers ready. This is
+# separate from the knitr `setup` chunk above, which prepares the baked charts.
+library(dplyr)
+library(ggplot2)
+library(estimatr)
+library(broom)
+
+gw <- read.csv("evaluation_data_GreenWaste.csv")
+tn <- gw %>% filter(treatment_neighborhood == 1)
+
+gw_means <- tn %>%
+  group_by(enrolled, round) %>%
+  summarise(mc = mean(waste_management_costs), .groups = "drop")
+gv <- function(e, r) gw_means$mc[gw_means$enrolled == e & gw_means$round == r]
+off_b <- gv(1, 0); off_a <- gv(1, 1)
+ctl_b <- gv(0, 0); ctl_a <- gv(0, 1)
+off_chg <- off_a - off_b
+ctl_chg <- ctl_a - ctl_b
+did_hand <- off_chg - ctl_chg
+
+tlev <- function(x) factor(x, levels = c("Before", "After"))
+viz <- data.frame(
+  Time  = tlev(rep(c("Before", "After"), 2)),
+  Group = rep(c("Took part", "Did not take part"), each = 2),
+  Cost  = c(off_b, off_a, ctl_b, ctl_a))
+
+ACCENT  <- "#0E6E80"; ACCENT2 <- "#A9561F"; ALERT <- "#8E2413"
+INK <- "#16181A"; MUTED <- "#61686D"; RULE <- "#E3E6E8"
+grp_cols <- c("Took part" = ACCENT, "Did not take part" = ACCENT2)
+
+theme_m2 <- function(base = 15) {
+  theme_minimal(base_size = base) +
+    theme(text = element_text(colour = INK),
+          axis.title = element_text(colour = MUTED, size = rel(0.85)),
+          axis.text = element_text(colour = MUTED),
+          panel.grid.minor = element_blank(),
+          panel.grid.major = element_line(colour = RULE, linewidth = 0.4),
+          legend.position = "bottom", legend.title = element_blank(),
+          strip.text = element_text(colour = INK, size = rel(0.95)),
+          plot.margin = margin(4, 10, 4, 4))
+}
+
+CUTOFF <- 58; THRESHOLD <- 1000
+```
+::::
+
 # 1 · Compared to what, again
 
 ## The GreenWaste programme, one more time
@@ -235,49 +313,27 @@ today is reading the table (Section 3) and the one assumption DiD rests on
 
 ## What happened to the businesses that took it up
 
-:::::: {.columns}
-
-::::: {.column width="50%"}
-```{r fig.height=2.9, fig.width=5.6}
+```{r fig.height=4.7, fig.width=11.5}
 tibble(Time = tlev(c("Before", "After")), Cost = c(off_b, off_a)) %>%
-  plot_ly(x = ~Time, y = ~Cost, type = "bar",
-          marker = list(color = ACCENT, line = list(width = 0)),
-          text = ~gfmt(Cost), textposition = "outside",
-          textfont = list(size = 15, color = INK), showlegend = FALSE,
+  plot_ly(x = ~Time, y = ~Cost, type = "scatter",
+          mode = "lines+markers+text",
+          line = list(color = ACCENT, width = 4),
+          marker = list(color = ACCENT, size = 15),
+          text = ~paste0(gfmt(Cost), " AED"), textposition = "top center",
+          textfont = list(size = 17, color = INK), showlegend = FALSE,
           hovertemplate = "%{y:,.0f} AED<extra></extra>") %>%
   layout(xaxis = ax("", zeroline = FALSE),
          yaxis = ax("Waste costs (AED)", range = c(0, 1900))) %>%
-  pl_m2(width = PL_WC, height = 275, title = "Businesses that took part")
-```
-:::::
-
-::::: {.column width="50%"}
-::: {.panel}
-Businesses that took part paid **`r gfmt(off_b)` AED** before and
-**`r gfmt(off_a)` AED** after.
-:::
-
-```{r results='asis'}
-cat(sprintf('
-<div class="hero">
-  <div class="value">-%s</div>
-  <div class="label">AED, before to after</div>
-</div>', gfmt(abs(off_chg))))
+  pl_m2(height = 460, title = "Businesses that took part")
 ```
 
-::: {.warn}
-A real fall, in the right direction. Below the `r gfmt(RULEBAR)` bar, so on this
-reading the programme **fails**.
-:::
-:::::
+Costs fell by **`r gfmt(abs(off_chg))` AED**, a drop of
+**`r sprintf("%.0f", 100 * abs(off_chg) / off_b)`%**.
 
-::::::
-
-::: {.ask}
-Hold that judgement, and hold the number: **`r gfmt(abs(off_chg))` AED**.
-
-Day 1 taught you not to trust a before-and-after. Today you find out what the
-honest number is instead.
+::: {.notes}
+Do not editorialise. Present it the way an evaluator might present a headline
+finding, and let it look good. The honest number only appears once the comparison
+group is on the chart, which is the next move after the Menti.
 :::
 
 ## `[MENTI PLACEHOLDER]` Did the programme work?
@@ -307,6 +363,32 @@ knitr::include_graphics(MENTI_QR)
 ::: {.panel}
 Commit now. "Can't tell yet" is a legitimate answer and I want to see how many
 choose it — that number is the point of the next twenty minutes.
+:::
+
+## Now we add the businesses that did not receive the program
+
+```{r fig.height=4.5, fig.width=11.5}
+did_tbl_viz %>%
+  plot_ly(x = ~Time, y = ~Cost, color = ~Group, type = "scatter",
+          mode = "lines+markers",
+          colors = c("Took part" = ACCENT, "Did not take part" = ACCENT2),
+          line = list(width = 4), marker = list(size = 13),
+          hovertemplate = "%{fullData.name}: %{y:,.0f} AED<extra></extra>") %>%
+  layout(xaxis = ax("", zeroline = FALSE),
+         yaxis = ax("Waste costs (AED)", range = c(0, 2800))) %>%
+  pl_m2(height = 440)
+```
+
+::: {.panel}
+The comparison group's costs **rose** over the same period. So the honest effect
+is *larger* than the headline drop, not smaller — a comparison group is a
+correction, and it can go either way.
+:::
+
+::: {.notes}
+Silence for a beat. Let them see the comparison line rising, then ask the Menti
+question again and watch the hands change. A comparison group is a correction,
+not a haircut, and here it makes the effect bigger. We compute it exactly next.
 :::
 
 # 2 · The idea, in four numbers
@@ -354,7 +436,7 @@ biased, then move on. The new work today is the assumption DiD rests on.
 ```{r results='asis'}
 cat('
 <div class="hero">
-  <div class="value" style="font-size:2.05em;">Compare the change over time in the group that got it,<br>with the change over time in a group that did not.</div>
+  <div class="value" style="font-size:2.05em;">Compare <strong>the change over time</strong> in the group that got it,<br>with <strong>the change over time</strong> in a group that did not.</div>
 </div>')
 ```
 
@@ -365,14 +447,27 @@ Everything else today is detail on top of that sentence.
 :::
 
 ::: {.ask}
-Say it back to me before we go on. If you can say this sentence, you can read
+If you can remember this sentence, you can read
 every DiD table you will ever be handed.
 :::
 
-## Your turn: four numbers, two minutes
+## Your turn: fill in the blanks
 
 Difference-in-differences = (change for "took part") − (change for "did not")
 
+:::::: {.columns}
+
+::::: {.column width="44%"}
+::: {.panel}
+**First difference:** each group's change over time. This nets out fixed
+differences between the groups, but still contains the general time trend.
+
+**Second difference:** the difference between those two changes. This nets out
+the time trend and leaves the estimated effect.
+:::
+:::::
+
+::::: {.column width="56%"}
 ```{r}
 tibble(
   Group  = c("Took part", "Did not take part", "Difference of the changes"),
@@ -381,20 +476,20 @@ tibble(
   Change = c("?", "?", "?")
 ) %>%
   kable(align = "lrrr", col.names = c("", "Before", "After", "Change")) %>%
-  kable_styling(full_width = FALSE, font_size = 22)
+  kable_styling(full_width = FALSE, font_size = 20)
 ```
+:::::
+
+::::::
 
 ::: {.ask .fragment}
-Two subtractions. Work out the three missing numbers **before** I show the
-answer.
-
-The top two are easy. The bottom one is the method.
+Two subtractions, done in less than two minutes. The top two are easy; the
+bottom one is the method.
 :::
 
 ::: {.panel .fragment}
-**Watch the sign.** "Did not take part" went **up**, not down. So the difference
-between the changes is bigger than the fall in the top row alone — which is why
-the honest answer will not match your first guess.
+**Watch the sign.** "Did not take part" went **up**, not down — so the difference
+between the changes is bigger than the fall in the top row alone.
 :::
 
 ## The answer
@@ -430,75 +525,76 @@ You have just estimated a causal effect with two subtractions. Every DiD table
 you are ever handed is this, wrapped in a regression.
 :::
 
-## Why that number is bigger than the headline
+## Visualising the DiD
 
-```{r fig.height=2.9, fig.width=11.5}
-# The DiD estimate drawn where it lives: the vertical gap at "After" between the
-# dotted counterfactual and where "Took part" actually ended up. Without the
-# marker the chart shows three lines and leaves the reader to infer which gap is
-# the estimate.
-#
-# Everything below goes in xref="x"/yref="y" (data coords), so it moves with the
-# axes. Do not use paper coordinates for a category axis: "paper" maps to the
-# whole plot width, which is not where the "After" tick sits.
-did_delta <- abs(did_hand)                     # 816, the estimate in AED
-y_lo <- cf_after                               # counterfactual, the lower end
-y_hi <- off_a                                  # what actually happened
-y_mid <- (y_lo + y_hi) / 2
+```{webr}
+#| fig-width: 9
+#| fig-height: 4.5
+# The dotted segment is the counterfactual: where "took part" would have ended
+# up if it had merely followed the comparison group's change over time.
+cf <- off_b + ctl_chg
 
-plot_ly() %>%
-  add_trace(data = filter(did_tbl_viz, Group == "Did not take part"),
-            x = ~Time, y = ~Cost, type = "scatter", mode = "lines+markers",
-            name = "Did not take part",
-            line = list(color = ACCENT2, width = 3), marker = list(size = 12),
-            hovertemplate = "%{fullData.name}: %{y:,.0f} AED<extra></extra>") %>%
-  add_trace(data = filter(did_tbl_viz, Group == "Took part"),
-            x = ~Time, y = ~Cost, type = "scatter", mode = "lines+markers",
-            name = "Took part",
-            line = list(color = ACCENT, width = 3), marker = list(size = 12),
-            hovertemplate = "%{fullData.name}: %{y:,.0f} AED<extra></extra>") %>%
-  add_trace(x = tlev(c("Before", "After")), y = c(off_b, cf_after),
-            type = "scatter", mode = "lines+markers",
-            name = "What would have happened",
-            line = list(color = MUTED, width = 3, dash = "dot"),
-            marker = list(size = 12, color = MUTED),
-            hovertemplate = "%{fullData.name}: %{y:,.0f} AED<extra></extra>") %>%
-  # The bracket: a vertical segment at "After", capped at each end, spanning the
-  # gap the estimate measures.
-  add_segments(x = "After", xend = "After", y = y_lo, yend = y_hi,
-               line = list(color = ALERT, width = 4), showlegend = FALSE,
-               hoverinfo = "skip") %>%
-  layout(xaxis = ax("", zeroline = FALSE),
-         yaxis = ax("Waste costs (AED)", range = c(0, 2800)),
-         shapes = list(
-           list(type = "line", x0 = 0.93, x1 = 1.07, y0 = y_lo, y1 = y_lo,
-                xref = "x", yref = "y",
-                line = list(color = ALERT, width = 3)),
-           list(type = "line", x0 = 0.93, x1 = 1.07, y0 = y_hi, y1 = y_hi,
-                xref = "x", yref = "y",
-                line = list(color = ALERT, width = 3))),
-         annotations = list(
-           list(x = 1.13, y = y_mid, xref = "x", yref = "y", showarrow = FALSE,
-                xanchor = "left", align = "left",
-                text = sprintf("<b>\u0394 = %s AED</b><br>the DiD estimate",
-                               gfmt(did_delta)),
-                font = list(color = ALERT, size = 14)))) %>%
-  pl_m2(height = 270, t = 30, b = 50)
+ggplot(viz, aes(Time, Cost, colour = Group, group = Group)) +
+  geom_line(linewidth = 1.4) +
+  geom_point(size = 3.5) +
+  annotate("segment", x = 1, xend = 2, y = off_b, yend = cf,
+           linetype = "22", colour = ACCENT) +
+  annotate("label", x = 2, y = (off_a + cf) / 2, colour = ALERT,
+           label = sprintf("DiD = %.0f AED", did_hand), fill = "white") +
+  scale_colour_manual(values = grp_cols) +
+  labs(x = NULL, y = "Waste costs (AED)") +
+  theme_m2()
 ```
 
 ::: {.panel}
-The dotted line is the counterfactual: what the businesses that took part would
-have paid **had they followed the other group's path**. Everything above it is
-the time trend, not the programme.
-:::
-
-::: {.ask}
-Hover the dotted line and compare it with where "took part" finished. Session 1's
-World B asked whether a headline was the programme or the tide. Same question,
-and now you can answer it.
+Press **Run** to draw it. The gap between the dotted counterfactual and where
+"took part" actually ended up is the DiD estimate, `r gfmt(abs(did_hand))` AED —
+everything above the dotted line is the time trend, not the programme.
 :::
 
 # 3 · The table an evaluator hands you
+
+## Implementing DiD with a regression
+
+```{r}
+#| echo: true
+#| eval: false
+# One regression recovers all four numbers at once.
+# The interaction term is the difference-in-differences.
+out_did <- lm_robust(
+  waste_management_costs ~ round * enrolled,
+  data     = tn,                        # businesses in treatment neighbourhoods
+  clusters = neighborhood_identifier)   # cluster standard errors by neighbourhood
+```
+
+::: {.panel}
+- `round`: time indicator, 0 before the programme and 1 after
+- `enrolled`: group indicator, 1 took the programme up and 0 did not
+- `round:enrolled`: the interaction, which is the DiD effect
+:::
+
+## Running the regression
+
+```{webr}
+out_did <- lm_robust(waste_management_costs ~ round * enrolled,
+                     data = tn, clusters = neighborhood_identifier)
+
+res <- tidy(out_did)[, c("term", "estimate", "std.error", "p.value")]
+res[, -1] <- round(res[, -1], 1)
+res
+```
+
+::: {.ask}
+Press **Run**. An intercept and three coefficients — only one of them is the
+programme's effect. Which row?
+:::
+
+::: {.notes}
+Run the chunk live, then take a vote across the three coefficients. Many will
+pick `enrolled` because it is large and has the word "enrolled" in it — that is
+the trap the next slides unpack. The number in `round:enrolled` is the same
+-816 they got by hand.
+:::
 
 ## Running it as a regression
 
@@ -636,6 +732,40 @@ of what the method calls an effect was going to happen anyway.
 
 Note the directions: **B would overstate** the effect, **C would understate**
 it. The bias is not always in the flattering direction.
+:::
+
+## Testing for parallel pre-trends
+
+When you have several periods *before* the programme, you plot the two groups and
+check they were already moving together. **Press Run** to generate an example.
+
+```{webr}
+#| fig-width: 9
+#| fig-height: 4.2
+set.seed(1)
+pre <- expand.grid(period = 1:4, unit = 1:50,
+                   group = c("Comparison", "Programme")) %>%
+  mutate(y = 10 + 1.5 * period +
+    ifelse(group == "Programme" & period > 2, -3 * (period - 2), 0) + rnorm(n()))
+
+ggplot(pre, aes(period, y, colour = group)) +
+  stat_summary(fun = mean, geom = "line", linewidth = 1.3) +
+  geom_vline(xintercept = 2.5, linetype = "dashed", colour = ALERT) +
+  scale_colour_manual(values = c(Programme = ACCENT, Comparison = ACCENT2)) +
+  labs(x = "Period", y = "Outcome") +
+  theme_m2()
+```
+
+::: {.warn}
+The lines run parallel **before** the dashed line and split only after — that is
+what a credible pre-trend looks like. GreenWaste has only **one** period before
+the programme, so this check is impossible for it (next slide).
+:::
+
+::: {.notes}
+Illustrative data, not GreenWaste. Point out that the groups move together before
+the dashed cut-off and only diverge after. Then contrast: GreenWaste has a single
+before-period, so the check cannot be run — which sets up the honest answer next.
 :::
 
 ## The honest answer for this data
