@@ -1,0 +1,1097 @@
+---
+title: "Spot the Problem: Naive Comparisons and Reading an RCT"
+subtitle: "Module 2 · Day 1, Session 3: Opening the Box on Module 1's Numbers"
+author: "3ie"
+always_allow_html: yes
+# live-revealjs: the quarto-live extension (_extensions/r-wasm/live) runs R in
+# the browser through webR. The live cells need an internet connection on the
+# day (webR loads from a CDN) and the two CSVs listed under webr: resources
+# must sit next to the published .html. Static knitr chunks work as before.
+format:
+  live-revealjs:
+    theme: [theme_editorial.scss, theme_live.scss]
+    slide-number: true
+    width: 1280
+    height: 720
+    fig-align: center
+    slide-level: 2
+    embed-resources: true
+webr:
+  packages: [estimatr]
+  resources:
+    - evaluation_data_GreenWaste.csv
+    - evaluation_data_SchoolZoneRCT.csv
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+    dev: "png"
+    # dpi 96 is deliberate: knitr sizes htmlwidgets as fig.width * dpi.
+    dpi: 96
+editor_options:
+  chunk_output_type: console
+---
+
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+
+```{r setup}
+library(tidyverse)
+library(plotly)
+library(knitr)
+library(kableExtra)
+library(estimatr)
+library(qrcode)
+
+# ---- Palette (editorial theme; see theme_editorial.scss) -------------------
+ACCENT  <- "#0E6E80"; ACCENT2 <- "#A9561F"; ALERT <- "#8E2413"
+INK     <- "#16181A"; MUTED <- "#61686D"; RULE <- "#E3E6E8"
+CHART_FONT <- "Segoe UI, Helvetica, Arial, sans-serif"
+
+PL_W <- 1100; PL_WC <- 520; PL_WT <- 340
+
+pl_m2 <- function(p, width = PL_W, height = 290, t = 30, b = 54,
+                  title = NULL, legend_y = 1.02) {
+  p <- p %>%
+    layout(
+      width = width, height = height,
+      font = list(family = CHART_FONT, size = 13, color = INK),
+      paper_bgcolor = "rgba(0,0,0,0)",
+      plot_bgcolor  = "rgba(0,0,0,0)",
+      margin = list(l = 70, r = 24, t = t, b = b),
+      legend = list(orientation = "h", x = 0.5, xanchor = "center",
+                    y = legend_y, yanchor = "bottom", title = list(text = "")),
+      hoverlabel = list(bgcolor = "white", bordercolor = RULE,
+                        font = list(color = INK, size = 12))
+    )
+  if (!is.null(title)) {
+    p <- p %>% layout(title = list(text = title, x = 0, xanchor = "left",
+                                   font = list(size = 12, color = MUTED)))
+  }
+  p %>% config(displayModeBar = FALSE)
+}
+
+ax <- function(title = "", ...) {
+  modifyList(list(
+    title = list(text = title, font = list(size = 12, color = MUTED)),
+    gridcolor = RULE, zerolinecolor = RULE, linecolor = RULE,
+    tickfont = list(size = 12, color = MUTED)
+  ), list(...))
+}
+
+gfmt <- function(x) format(round(x), big.mark = ",")
+
+# ---- Live Menti poll -------------------------------------------------------
+MENTI_CODE <- "1234 5678"
+MENTI_JOIN <- paste0("https://www.menti.com/", gsub(" ", "", MENTI_CODE))
+
+menti_qr <- function(path = "menti_qr.png", url = MENTI_JOIN) {
+  png(path, width = 900, height = 900, res = 300, bg = "white")
+  on.exit(dev.off(), add = TRUE)
+  par(mar = c(0, 0, 0, 0))
+  plot(qr_code(url, ecl = "H"))
+  path
+}
+MENTI_QR <- menti_qr()
+
+RULEBAR <- 1000    # must cut costs by at least this many AED
+
+# ---- The numbers the static slides quote -----------------------------------
+# The live cells recompute every one of these in the browser. They are computed
+# here too so the static slides (recap, rule charts) cannot drift from them.
+gw <- read.csv("./evaluation_data_GreenWaste.csv")
+mc <- function(keep) mean(gw$waste_management_costs[keep])
+
+# A. Before-and-after among businesses that enrolled (Module 1: -665).
+ba_before <- mc(gw$enrolled == 1 & gw$round == 0)
+ba_after  <- mc(gw$enrolled == 1 & gw$round == 1)
+ba_change <- ba_after - ba_before
+
+# B. Enrolled vs not enrolled at follow-up, in the offered neighbourhoods
+# (Module 1: -1,446). Within those neighbourhoods enrolled == eligible, so the
+# "not enrolled" group is the businesses that scored above the cut-off.
+# NOTE: the earlier Oct12_session3.qmd filtered to eligible == 1 here, which
+# compares enrolled businesses with eligible businesses in the CONTROL
+# neighbourhoods. That is the randomised comparison (-1,014), not a naive one.
+ww_prog <- mc(gw$treatment_neighborhood == 1 & gw$enrolled == 1 & gw$round == 1)
+ww_comp <- mc(gw$treatment_neighborhood == 1 & gw$enrolled == 0 & gw$round == 1)
+ww_gap  <- ww_prog - ww_comp
+ww_gap0 <- mc(gw$treatment_neighborhood == 1 & gw$enrolled == 1 & gw$round == 0) -
+           mc(gw$treatment_neighborhood == 1 & gw$enrolled == 0 & gw$round == 0)
+
+# C. The randomised estimate (Module 1: -1,014), clustered by neighbourhood.
+fu  <- gw %>% filter(round == 1, eligible == 1)
+rct <- lm_robust(waste_management_costs ~ treatment_neighborhood,
+                 data = fu, clusters = neighborhood_identifier)
+rct_est     <- coef(rct)[["treatment_neighborhood"]]
+rct_ci      <- confint(rct)["treatment_neighborhood", ]
+rct_control <- coef(rct)[["(Intercept)"]]
+# SIGN TRAP: sort the absolute values so [1] is always the end closest to zero.
+rct_avoided       <- sort(abs(rct_ci))
+rct_avoided_least <- rct_avoided[1]
+rct_avoided_most  <- rct_avoided[2]
+
+# ---- School-zone trial (FICTIONAL, make_school_zone_rct_data.R) ------------
+pr  <- read.csv("./evaluation_data_SchoolZoneRCT.csv") %>%
+  mutate(arm = factor(arm, levels = c("No package", "Package")))
+pr0 <- pr %>% filter(round == 0)
+pr1 <- pr %>% filter(round == 1)
+pr_fit <- lm_robust(injury_collisions ~ arm, data = pr1, clusters = segment_id)
+pr_est <- coef(pr_fit)[["armPackage"]]
+pr_ci  <- confint(pr_fit)["armPackage", ]
+pr_avoided       <- sort(abs(pr_ci))
+pr_avoided_least <- pr_avoided[1]
+pr_avoided_most  <- pr_avoided[2]
+
+pr_bal <- map_dfr(c("lanes", "road_length_km", "prior_collisions_3yr"),
+                  function(v) {
+  a <- pr0[[v]][pr0$arm == "Package"]; b <- pr0[[v]][pr0$arm == "No package"]
+  tibble(Characteristic = c(lanes = "Lanes",
+                            road_length_km = "Length (km)",
+                            prior_collisions_3yr = "Collisions, prior 3 yrs")[[v]],
+         Package = mean(a), Control = mean(b), p = t.test(a, b)$p.value)
+})
+
+# One chart used twice: estimate, interval and rule on one axis.
+rule_chart <- function(est, least, most, rule, xlab, xmax, digits = 0) {
+  fmt <- paste0("avoids %{x:,.", digits, "f}<extra></extra>")
+  tibble(
+    what = factor(c("The estimate", "95% interval", "Decision rule"),
+                  levels = c("Decision rule", "95% interval", "The estimate")),
+    lo = c(abs(est), least, rule), hi = c(abs(est), most, rule),
+    col = c(ACCENT, ACCENT, ALERT)
+  ) %>%
+    plot_ly() %>%
+    add_segments(x = ~lo, xend = ~hi, y = ~what, yend = ~what,
+                 line = list(color = ~col, width = 5), showlegend = FALSE,
+                 hovertemplate = fmt) %>%
+    add_markers(x = ~lo, y = ~what, marker = list(color = ~col, size = 11),
+                showlegend = FALSE, hovertemplate = fmt) %>%
+    layout(xaxis = ax(xlab, range = c(0, xmax)),
+           yaxis = ax("", zeroline = FALSE)) %>%
+    pl_m2(width = PL_WC, height = 250)
+}
+```
+
+# 0 · Where Module 1 left us
+
+## Where we left GreenWaste
+
+```{webr}
+#| autorun: true
+#| include: false
+# Runs once, in the browser, when the deck opens. Everything the live cells
+# below use is defined here, so each cell on a slide stays two or three lines.
+gw <- read.csv("evaluation_data_GreenWaste.csv")
+sz <- read.csv("evaluation_data_SchoolZoneRCT.csv")
+RULE <- 1000
+ACCENT <- "#0E6E80"; ACCENT2 <- "#A9561F"; ALERT <- "#8E2413"; MUTED <- "#61686D"
+options(width = 100, scipen = 6)
+
+clean_par <- function() par(mar = c(3, 5.5, 1, 1), family = "sans", las = 1,
+                            col.axis = MUTED, col.lab = MUTED, fg = MUTED, cex = 1.25)
+aed <- function(x) format(round(x), big.mark = ",")
+
+# Before-and-after lines for the two groups in the offered neighbourhoods.
+plot_two_lines <- function() {
+  offered <- subset(gw, treatment_neighborhood == 1)
+  took <- tapply(offered$waste_management_costs[offered$enrolled == 1],
+                 offered$round[offered$enrolled == 1], mean)
+  oth  <- tapply(offered$waste_management_costs[offered$enrolled == 0],
+                 offered$round[offered$enrolled == 0], mean)
+  clean_par()
+  plot(0:1, took, type = "b", pch = 19, lwd = 4, col = ACCENT, bty = "n",
+       ylim = c(0, 2500), xlim = c(-0.1, 1.6), xaxt = "n",
+       xlab = "", ylab = "Waste costs, AED")
+  lines(0:1, oth, type = "b", pch = 19, lwd = 4, col = ACCENT2)
+  axis(1, at = 0:1, labels = c("Before", "After"))
+  text(1.06, took[2], paste("Took part", aed(took[2])), col = ACCENT, adj = 0)
+  text(1.06, oth[2],  paste("Did not", aed(oth[2])),    col = ACCENT2, adj = 0)
+}
+
+# Neighbourhood averages at baseline, among eligible businesses: the units the
+# real lottery was drawn over.
+nb <- aggregate(waste_management_costs ~ neighborhood_identifier,
+                data = subset(gw, round == 0 & eligible == 1), FUN = mean)
+names(nb)[2] <- "baseline_cost"
+
+draw_lottery <- function(how, seed) {
+  set.seed(seed)
+  half <- nrow(nb) %/% 2
+  picked <- if (how == "Random draw") sample(nrow(nb), half) else
+            order(nb$baseline_cost)[1:half]   # the cheapest-to-run go first
+  m <- c(Offered = mean(nb$baseline_cost[picked]),
+         `Not offered` = mean(nb$baseline_cost[-picked]))
+  clean_par()
+  b <- barplot(m, col = c(ACCENT, ACCENT2), border = NA, ylim = c(0, 2100),
+               ylab = "Baseline costs, AED")
+  text(b, m + 110, aed(m), cex = 1.3)
+  cat(sprintf("Gap BEFORE the programme started: %+.0f AED\n", m[1] - m[2]))
+}
+
+crowd_gaps <- function(k, draws = 1000) {
+  set.seed(7)
+  gaps <- replicate(draws, {
+    s <- sample(nrow(nb), k)
+    t <- s[seq_len(k / 2)]; c <- s[-seq_len(k / 2)]
+    mean(nb$baseline_cost[t]) - mean(nb$baseline_cost[c])
+  })
+  clean_par()
+  hist(gaps, breaks = seq(-1500, 1500, by = 50), col = ACCENT, border = "white",
+       main = "", xlab = "Baseline gap between the two groups, AED", ylab = "Draws",
+       xlim = c(-1200, 1200))
+  abline(v = 0, col = ALERT, lwd = 2, lty = 2)
+  cat(sprintf("%d neighbourhoods: in 95%% of %d lotteries the groups start within +/- %.0f AED\n",
+              k, draws, quantile(abs(gaps), 0.95)))
+}
+```
+
+:::::: {.columns}
+
+::::: {.column width="52%"}
+In Module 1 you met the **GreenWaste Program** and saw three estimates of what
+it did to businesses' waste costs. The bar for a national roll-out, fixed for
+the whole week: **cut at least `r gfmt(RULEBAR)` AED**.
+
+::: {.ask}
+From memory: which one did Module 1 tell you to trust, and what was wrong with
+the other two?
+:::
+:::::
+
+::::: {.column width="48%"}
+```{r results='asis'}
+cat(sprintf('
+<div class="facts">
+  <div class="k">Before and after</div>     <div class="v">%s AED</div>
+  <div class="k">Enrolled vs not</div>      <div class="v">%s AED</div>
+  <div class="k">Randomised</div>           <div class="v">%s AED</div>
+</div>', gfmt(ba_change), gfmt(ww_gap), gfmt(rct_est)))
+```
+
+::: {.panel .fragment}
+Module 1 called the first two **counterfeit counterfactuals**: one ignores what
+else changed over time, the other compares groups that were never alike.
+:::
+:::::
+
+::::::
+
+::: {.notes}
+~3 min. Pure recall; do not re-teach. Take two answers, then reveal the panel.
+The live cells start loading in the background while you talk (about 10 s).
+:::
+
+## Today we open the box
+
+::: {.panel}
+Module 1 showed you the three numbers. Today we **make them**, from the raw
+data, on screen, and find the problems *in the data* rather than taking them on
+trust.
+:::
+
+```{=html}
+<div class="facts">
+  <div class="k">1</div> <div class="v">Meet the data: what one row is, and who was offered what</div>
+  <div class="k">2</div> <div class="v">Rebuild the two counterfeit numbers, then catch each one out</div>
+  <div class="k">3</div> <div class="v">Run the lottery ourselves, and see why it works</div>
+  <div class="k">4</div> <div class="v">Read the randomised result against the 1,000 AED rule</div>
+</div>
+```
+
+::: {.warn}
+You will not write any code. You will call the numbers; I will type them in and
+press **Run**. The grey boxes are real R, running in this page.
+:::
+
+# 1 · Meet the data
+
+## One row, one business, one round
+
+```{webr}
+#| autorun: true
+head(gw[, c("business_identifier", "round", "treatment_neighborhood",
+            "enrolled", "waste_management_costs")], 4)
+```
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**round** 0 before, 1 after. **treatment_neighborhood** 1: the neighbourhood
+was offered the programme. **enrolled** 1: the business took part.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.ask}
+The file has 19,826 rows. How many **businesses**? Say a number before I show the next
+line.
+:::
+
+::: {.panel .fragment}
+Half: 9,913 businesses, each measured twice. One row is a business in a round.
+:::
+:::::
+
+::::::
+
+## Who was offered, who took part?
+
+```{webr}
+#| autorun: true
+base <- subset(gw, round == 0)
+ftable(table(offered = base$treatment_neighborhood,
+             eligible = base$eligible, enrolled = base$enrolled))
+```
+
+::: {.ask}
+**Who enrolled in the offered neighbourhoods?** And in the others?
+:::
+
+::: {.warn .fragment}
+In offered neighbourhoods **every eligible business enrolled, and no other
+did.** So "did not take part" means "scored above the cut-off": a different kind
+of business.
+:::
+
+# 2 · Rebuild the two counterfeit numbers
+
+## Comparison A: before and after
+
+```{webr}
+before <- mean(gw$waste_management_costs[gw$enrolled == 1 & gw$round == 0])
+after  <- mean(gw$waste_management_costs[gw$enrolled == 1 & gw$round == 1])
+round(c(before = before, after = after, change = after - before))
+```
+
+:::::: {.columns}
+
+::::: {.column width="55%"}
+::: {.ask}
+Module 1 said **`r gfmt(ba_change)`**. Before I press Run: will we get the same
+number from the raw rows?
+:::
+:::::
+
+::::: {.column width="45%"}
+::: {.panel}
+Three lines: the average cost of the businesses that took part, before and
+after, and the difference.
+:::
+:::::
+
+::::::
+
+::: {.notes}
+Press Run live. The room should see -665 appear. Point at each line as you read
+it aloud in plain words.
+:::
+
+## Comparison B: with and without
+
+```{webr}
+offered <- subset(gw, treatment_neighborhood == 1 & round == 1)
+took    <- mean(offered$waste_management_costs[offered$enrolled == 1])
+didnt   <- mean(offered$waste_management_costs[offered$enrolled == 0])
+round(c(took_part = took, did_not = didnt, gap = took - didnt))
+```
+
+::: {.panel}
+Same neighbourhoods, same moment (after the programme), two groups: those who
+took part and those who did not. Module 1 said **`r gfmt(ww_gap)`**.
+:::
+
+::: {.warn}
+Two readings of one programme: **`r gfmt(ba_change)`** and
+**`r gfmt(ww_gap)`**. One misses the 1,000 AED bar, the other clears it
+easily. They cannot both be right.
+:::
+
+## `[MENTI PLACEHOLDER]` Which way is each one wrong?
+
+:::::: {.columns}
+
+::::: {.column width="62%"}
+::: {.ask style="font-size: 115%;"}
+You know from Module 1 both numbers are biased. The harder question:
+
+**Is `r gfmt(abs(ba_change))` too big or too small?**
+
+**Is `r gfmt(abs(ww_gap))` too big or too small?**
+:::
+
+Go to **menti.com** and enter code **`r MENTI_CODE`**, or scan the code.
+:::::
+
+::::: {.column width="38%"}
+```{r out.width='330px', out.extra='style="display:block; margin:0 auto;"'}
+knitr::include_graphics(MENTI_QR)
+```
+:::::
+
+::::::
+
+::: {.notes}
+~4 min. Do not settle it. The next three slides answer it from the data.
+:::
+
+# 3 · Catch each one out, in the data
+
+## A: what happened to everyone else?
+
+:::::: {.columns}
+
+::::: {.column width="56%"}
+```{webr}
+#| fig-width: 6.2
+#| fig-height: 4.2
+plot_two_lines()
+```
+:::::
+
+::::: {.column width="44%"}
+::: {.panel}
+Before-and-after compares the programme to **the past**. If costs were moving
+anyway, that movement is baked into the `r gfmt(abs(ba_change))`.
+:::
+
+::: {.ask}
+Look at the businesses that did **not** take part. Which way did their costs go
+with no programme at all?
+:::
+
+::: {.warn .fragment}
+Up, by about 150 AED. Time was not standing still: costs were rising. So the
+`r gfmt(abs(ba_change))` fall happened *against* a rising tide, and it
+**understates** what the programme did.
+:::
+:::::
+
+::::::
+
+## B: the same gap, before the programme existed
+
+```{ojs}
+//| echo: false
+viewof when = Inputs.radio(["After the programme", "Before the programme"],
+  {value: "After the programme", label: "Compare the two groups"})
+```
+
+```{webr}
+#| input:
+#|   - when
+#| autorun: true
+r <- if (when == "Before the programme") 0 else 1
+offered <- subset(gw, treatment_neighborhood == 1 & round == r)
+round(tapply(offered$waste_management_costs, offered$enrolled, mean))
+```
+
+::: {.ask}
+Before the programme started, nobody had received anything. **What gap should we
+see between the two groups?** Say a number, then I flip the switch.
+:::
+
+::: {.warn .fragment}
+It should be zero. It is about **`r gfmt(ww_gap0)`** AED. The groups differed by
+600 AED before anyone was treated, so the `r gfmt(abs(ww_gap))` gap mixes the
+programme with a head start: it **overstates** the effect.
+:::
+
+## Why they were already different
+
+```{webr}
+#| autorun: true
+before <- subset(gw, round == 0 & treatment_neighborhood == 1)
+round(aggregate(cbind(staff_size, business_area, age_manager,
+                      advanced_filtration) ~ enrolled, data = before, FUN = mean), 2)
+```
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+Same businesses, **before** the programme. Enrolled (1) vs not (0) on four
+things we measured.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn}
+Younger managers, smaller premises, more filtration already installed. The two
+groups were different kinds of business, and **some of the ways they differ we
+did not measure at all.**
+:::
+:::::
+
+::::::
+
+## Two biases, opposite directions
+
+```{r results='asis'}
+cat(sprintf('
+<div class="facts">
+  <div class="k">Before and after</div>
+  <div class="v">%s AED &middot; folds in the rising costs everyone faced &middot; UNDERSTATES</div>
+  <div class="k">With and without</div>
+  <div class="v">%s AED &middot; folds in a %s AED head start &middot; OVERSTATES</div>
+  <div class="k">So the truth</div>
+  <div class="v">sits somewhere between the two, and neither comparison can say where</div>
+</div>', gfmt(ba_change), gfmt(ww_gap), gfmt(abs(ww_gap0))))
+```
+
+::: {.ask}
+Check your Menti answer. What would it take to land on the truth
+**deliberately**, instead of guessing between two wrong numbers?
+:::
+
+::: {.warn}
+Both problems have one root: **the two groups were not comparable.** After the
+break: a design that makes them comparable by construction.
+:::
+
+# Break
+
+## Five-minute break
+
+::: {.panel}
+Back in five minutes. When we return, we run the lottery ourselves.
+:::
+
+# 4 · Run the lottery yourself
+
+## What the lottery buys you
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**Module 1 recap.** GreenWaste was offered to **neighbourhoods drawn by lot**.
+Inside both kinds of neighbourhood, only eligible businesses count.
+
+So the randomised comparison is: eligible businesses in drawn neighbourhoods
+vs eligible businesses in the others.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.panel}
+The claim is that a draw makes the two groups **alike on average**, on what we
+measured *and* on what we did not.
+:::
+
+::: {.ask}
+That is a strong claim. Don't take it from Module 1: let's **test it** on the
+real neighbourhoods.
+:::
+:::::
+
+::::::
+
+## Draw the lottery again
+
+```{ojs}
+//| echo: false
+viewof how = Inputs.radio(["Random draw", "Officials pick"],
+  {value: "Random draw", label: "How neighbourhoods are chosen"})
+viewof draw = Inputs.button("Draw again")
+```
+
+:::::: {.columns}
+
+::::: {.column width="55%"}
+```{webr}
+#| input:
+#|   - how
+#|   - draw
+#| autorun: true
+#| edit: false
+#| fig-width: 5.6
+#| fig-height: 3.4
+draw_lottery(how, seed = draw)
+```
+:::::
+
+::::: {.column width="45%"}
+::: {.panel}
+Bars show **baseline** costs, before anyone was offered anything.
+:::
+
+::: {.ask}
+Press **Draw again** five times. How big does the gap get? Then let officials
+pick.
+:::
+
+::: {.warn .fragment}
+Hand-picked, the programme starts hundreds of AED ahead: a "success" before
+doing anything.
+:::
+:::::
+
+::::::
+
+## Two neighbourhoods or two hundred?
+
+```{ojs}
+//| echo: false
+viewof k = Inputs.range([4, 196], {value: 4, step: 2, label: "Neighbourhoods in the lottery"})
+```
+
+```{webr}
+#| input:
+#|   - k
+#| autorun: true
+#| edit: false
+#| fig-width: 10
+#| fig-height: 3.3
+crowd_gaps(k)
+```
+
+::: {.ask}
+One thousand lotteries at each size. Start at 4 neighbourhoods, then slide up.
+**At what size would you trust a single draw?**
+:::
+
+::: {.notes}
+At 4 the gaps run to hundreds of AED either way; at ~196 almost every draw
+starts within a few dozen. This is "two people versus two crowds" from Module 1,
+seen in the data. The same holds for characteristics nobody measured.
+:::
+
+## `[MENTI PLACEHOLDER]` True or false?
+
+::: {.panel}
+**1.** Randomisation makes the groups similar only on things we can measure.
+
+**2.** With enough units, random assignment balances unmeasured things too.
+
+**3.** A randomised comparison needs the groups to have started out alike.
+:::
+
+::: {.ask}
+Live quiz, revealed one at a time. Commit before I show each answer.
+:::
+
+::: {.panel .fragment}
+**1. False.** Measured *and* unmeasured, on average. The slider showed why.
+
+**2. True.** That is what "on average" is doing, and why the count matters.
+
+**3. It creates that.** It does not need it beforehand, which is the point.
+:::
+
+# 5 · Reading the randomised result
+
+## First check: did the real draw work?
+
+```{webr}
+#| autorun: true
+before <- subset(gw, round == 0 & eligible == 1)
+round(aggregate(cbind(waste_management_costs, staff_size, business_area,
+                      age_manager) ~ treatment_neighborhood, data = before, FUN = mean), 1)
+```
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+Same check as three slides ago, but now the two groups are **drawn**
+neighbourhoods (1) vs the others (0), eligible businesses only.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn}
+Compare with the enrolled vs not table: there, managers differed by ten years.
+Here, the groups look alike **before** the programme. That is what a balance
+table is for.
+:::
+:::::
+
+::::::
+
+## The effect is a difference of two averages
+
+```{webr}
+after <- subset(gw, round == 1 & eligible == 1)
+offered     <- mean(after$waste_management_costs[after$treatment_neighborhood == 1])
+not_offered <- mean(after$waste_management_costs[after$treatment_neighborhood == 0])
+round(c(offered = offered, not_offered = not_offered, effect = offered - not_offered))
+```
+
+::: {.ask}
+Module 1 said **`r gfmt(rct_est)`**. Three lines of averages. Will they match?
+:::
+
+::: {.panel .fragment}
+No model, no adjustment. Because the draw made the groups alike, **the
+difference in averages is the effect.** Everything else on the next slides is
+just a more formal way of writing this subtraction.
+:::
+
+## The regression gives the same number
+
+```{webr}
+fit <- lm(waste_management_costs ~ treatment_neighborhood, data = after)
+round(coef(fit))
+```
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+The table an evaluator hands you comes from a line like this one.
+
+**(Intercept)** is the not-offered average. **treatment_neighborhood** is the
+gap between the groups.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.ask}
+Which of these two numbers is the impact? And what is the other one?
+:::
+
+::: {.warn .fragment}
+The coefficient is the difference you just computed by hand. The intercept is
+where the comparison group sits: **not an effect**. Reading it as one is a
+common mistake, by people and by AI.
+:::
+:::::
+
+::::::
+
+## How sure? Count neighbourhoods, not businesses
+
+```{webr}
+round(confint(fit)["treatment_neighborhood", ])   # as if 5,628 separate draws
+library(estimatr)
+fit_nb <- lm_robust(waste_management_costs ~ treatment_neighborhood,
+                    data = after, clusters = neighborhood_identifier)
+round(confint(fit_nb)["treatment_neighborhood", ]) # the draw was by neighbourhood
+```
+
+::: {.panel}
+The lottery drew about 200 **neighbourhoods**, not 5,628 businesses, and
+businesses in one neighbourhood are not independent pieces of evidence.
+:::
+
+::: {.warn .fragment}
+Counting honestly **widens** the interval: its least generous end moves from
+974 to **`r gfmt(rct_avoided_least)`** AED. Ask: *"were your errors clustered
+where you randomised?"*
+:::
+
+## Which number is the impact?
+
+```{r results='asis'}
+cat(sprintf('
+<div class="facts">
+  <div class="k">The impact</div>
+  <div class="v">the treatment_neighborhood coefficient: %s AED &middot; the difference the programme made</div>
+  <div class="k">Not the impact</div>
+  <div class="v">the intercept, %s AED &middot; where the comparison group sat</div>
+  <div class="k">Not sufficient either</div>
+  <div class="v">the p-value &middot; it says the effect is unlikely to be zero, not that it is big enough</div>
+</div>', gfmt(rct_est), gfmt(rct_control)))
+```
+
+::: {.ask}
+Three ways to misread one table. Session 1 met the third: **statistically
+significant does not mean big enough.** Here it is on a clean randomised result.
+:::
+
+## Does it clear the rule?
+
+:::::: {.columns}
+
+::::: {.column width="52%"}
+```{r fig.height=2.5, fig.width=6}
+rule_chart(rct_est, rct_avoided_least, rct_avoided_most, RULEBAR,
+           "AED avoided per business", 1350)
+```
+:::::
+
+::::: {.column width="48%"}
+```{r results='asis'}
+cat(sprintf('
+<div class="hero">
+  <div class="value">-%s</div>
+  <div class="label">AED, the randomised estimate</div>
+</div>
+<div class="stat-row">
+  <div><span class="n">%s</span><span class="k">The rule</span></div>
+  <div><span class="n">%s</span><span class="k">Least it could be</span></div>
+</div>', gfmt(abs(rct_est)), gfmt(RULEBAR), gfmt(rct_avoided_least)))
+```
+
+::: {.warn}
+The estimate clears the bar. The interval **spans** it: at its least generous
+the programme avoids `r gfmt(rct_avoided_least)` AED, short of
+`r gfmt(RULEBAR)`.
+:::
+:::::
+
+::::::
+
+::: {.ask .fragment}
+Would you sign a national roll-out on this? Commit, then we try the same three
+lines on a different programme.
+:::
+
+# 6 · Same three lines, new data
+
+## The school-zone package, decided by lottery
+
+:::::: {.columns}
+
+::::: {.column width="54%"}
+A roads authority had a safety package for school zones: raised crossings, lower
+limits, crossing patrols. Four hundred zones needed it and only half could be
+done in the first year.
+
+Rather than pick the worst, it **drew lots**: 200 zones chosen at random, 200
+held back.
+:::::
+
+::::: {.column width="46%"}
+```{=html}
+<div class="facts">
+  <div class="k">Programme</div>  <div class="v">School-zone safety package</div>
+  <div class="k">Allocation</div> <div class="v">Random draw, 200 vs 200</div>
+  <div class="k">Outcome</div>    <div class="v">Injury collisions</div>
+  <div class="k">The rule</div>   <div class="v">Avoid 2.0 per zone per round</div>
+</div>
+```
+:::::
+
+::::::
+
+::: {.warn .note-ctr}
+**Illustrative case, with invented figures.** This is not a real trial and the
+numbers are generated for this training.
+:::
+
+## Did the draw work?
+
+:::::: {.columns}
+
+::::: {.column width="54%"}
+```{r}
+pr_bal %>%
+  mutate(across(c(Package, Control), ~ round(.x, 2)), p = round(p, 2)) %>%
+  kable(align = "lrrr", digits = 2,
+        col.names = c("Characteristic", "Package", "No package", "p-value")) %>%
+  kable_styling(full_width = FALSE, font_size = 16)
+```
+:::::
+
+::::: {.column width="46%"}
+::: {.ask}
+Your turn to read a balance table. Are the differences small? Are the p-values
+tiny? **Did the draw work?**
+:::
+
+::: {.panel .fragment}
+Small differences, p-values nowhere near tiny. The zones are alike before the
+package: a lottery placed them, they did not choose.
+:::
+:::::
+
+::::::
+
+::: {.warn .note-ctr}
+**Illustrative case, with invented figures.**
+:::
+
+## The same three lines
+
+```{webr}
+after_sz <- subset(sz, round == 1)
+fit_sz <- lm_robust(injury_collisions ~ arm, data = after_sz, clusters = segment_id)
+round(cbind(estimate = coef(fit_sz), confint(fit_sz)), 2)
+```
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.ask}
+In groups, one minute: **which row is the impact? Where is its interval? Does
+it clear 2.0 collisions avoided?**
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn .note-ctr}
+**Illustrative case, with invented figures.** This is not a real trial.
+:::
+:::::
+
+::::::
+
+::: {.notes}
+Same code as GreenWaste with the data and outcome swapped. The point: the
+reading skill transfers; the table always has the same shape.
+:::
+
+## Does it clear the rule?
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+```{r fig.height=2.5, fig.width=5.6}
+rule_chart(pr_est, pr_avoided_least, pr_avoided_most, 2.0,
+           "Collisions avoided per zone per round", 4.2, digits = 2)
+```
+:::::
+
+::::: {.column width="50%"}
+```{r results='asis'}
+cat(sprintf('
+<div class="hero">
+  <div class="value">-%.2f</div>
+  <div class="label">Collisions avoided, per zone per round</div>
+</div>
+<div class="stat-row">
+  <div><span class="n">%.2f</span><span class="k">The rule</span></div>
+  <div><span class="n">%.2f</span><span class="k">Least it could be</span></div>
+</div>', abs(pr_est), 2.0, pr_avoided_least))
+```
+
+::: {.warn .fragment}
+Same shape as GreenWaste: the estimate clears the bar, the interval straddles
+it. The least it could be is `r sprintf("%.2f", pr_avoided_least)`, under the
+2.0 required.
+:::
+:::::
+
+::::::
+
+::: {.warn .note-ctr}
+**Illustrative case, with invented figures.**
+:::
+
+# 7 · Put AI to work
+
+## AI Snapshot: explaining the pitfall
+
+::: {.ask}
+Groups paste: **"Explain in plain language why a before-and-after comparison
+can be misleading."** Then mark anything wrong in the reply. Three minutes.
+:::
+
+::: {.ai-output}
+**AI response:**
+
+A before-and-after comparison treats the change as the programme's effect. It
+can mislead because [if the numbers changed, the programme is what changed them]{.flag}.
+
+The fix is simple: [as long as you measure the same group before and after, a
+before-and-after comparison gives you the true effect]{.flag}. To be safe, you
+can also [run a statistical test, and if the change is significant then the
+programme worked]{.flag}.
+
+In this case costs fell, so [we can conclude the programme caused the full fall
+of 665 AED]{.flag}.
+:::
+
+## Debrief: four errors
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.warn}
+**1 · It assumed away the whole problem.** "If the numbers changed, the
+programme changed them" ignores the rising costs you saw in the other group.
+:::
+
+::: {.warn}
+**2 · It called before-and-after a true-effect method.** There is no comparison
+group in it at all.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn}
+**3 · It confused significant with correct.** A significant before-and-after
+change is still a biased number.
+:::
+
+::: {.warn}
+**4 · It quoted 665 as the causal effect.** You computed the randomised estimate
+yourselves: `r gfmt(abs(rct_est))` AED.
+:::
+:::::
+
+::::::
+
+::: {.panel}
+**Nothing in the tone flagged the wrong parts.** Error 2 is the dangerous one:
+the model recommended the exact design you just caught out, in fluent prose.
+:::
+
+## The same question, a better prompt
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**What people actually type**
+
+> Explain why a before-and-after comparison can be misleading.
+
+The model answers in general and recommends a fix without knowing your design.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.panel}
+**What to type instead**
+
+> Our programme was randomised by neighbourhood. Here is our output: [paste
+> the live table]. What would a before-and-after comparison get wrong?
+> **Ask me questions before you answer.**
+:::
+:::::
+
+::::::
+
+::: {.ask}
+Run both. Which one asks about *your* data before asserting anything?
+
+Two habits, every session: make the AI **ask you questions first**, and have a
+**second chat** review the first one's answer.
+:::
+
+# 8 · Close
+
+## Three questions to ask the evaluator
+
+```{=html}
+<div class="facts">
+  <div class="k">1</div> <div class="v">Compared to what? Before-and-after, with-and-without, or a fair comparison?</div>
+  <div class="k">2</div> <div class="v">Show me the balance table. How do you know the groups started out alike?</div>
+  <div class="k">3</div> <div class="v">Were errors clustered where you randomised, and does the interval clear our rule?</div>
+</div>
+```
+
+::: {.panel}
+Question 2 separates a convincing number from a trustworthy one. Question 3
+separates a real effect from a decision.
+:::
+
+## What today gives you
+
+```{=html}
+<div class="facts">
+  <div class="k">Before-and-after</div> <div class="v">folds in everything else that changed &middot; here it understated</div>
+  <div class="k">With-and-without</div>  <div class="v">compares groups that already differed &middot; here it overstated</div>
+  <div class="k">A lottery</div>         <div class="v">makes groups alike on average, and more so the more units it draws</div>
+  <div class="k">Reading the result</div><div class="v">a difference of two averages; judge its interval against the rule</div>
+</div>
+```
+
+::: {.panel}
+Tomorrow: GreenWaste without the lottery. If the groups were not drawn, **was
+the gap between them at least stable before the programme started?**
+:::
