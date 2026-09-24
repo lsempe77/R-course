@@ -50,7 +50,7 @@ transl_findings <- data.frame(
     "The direction is suggestive, but the estimate is not distinguishable from zero.",
     "A measured participation rate with a described pattern. The evaluation reports it; it does not explain it.",
     "A cost figure from the scheme's own accounts, not an estimate.",
-    "An honest null result with wide intervals. Absence of evidence, and the evaluation says so."
+    "A null result with wide intervals. Absence of evidence, and the evaluation says so."
   ),
   does_not_license = c(
     "\u201CThe scheme works.\u201D A saving below the threshold is still below the threshold.",

@@ -342,11 +342,8 @@ knitr::include_graphics(MENTI_QR)
 ::::::
 
 ::: {.warn .fragment}
-Every number you will be shown this week is **correct**. Almost none of them will
-be *wrong*.
-
-BUT... sometimes an accurate
-number answers a question you did not ask, so we might still be wrong.
+The numbers you will see this week are accurate. The risk is that an accurate
+number answers a question you did not ask.
 :::
 
 ## What else happened that year
@@ -434,12 +431,12 @@ cat(sprintf('
 
 ::: {.warn .fragment}
 If the roads emptied by 30% and deaths fell by 30%, the risk of dying on them
-did not change. The campaign saved nobody. The headline was the fuel price.
+did not change. On this reading the campaign saved no lives; the fall came from less driving.
 :::
 
 ::: {.panel .fragment}
-Two worlds, one headline, opposite verdicts. Nothing in the headline, or in the
-number 30%, tells you which world you are in.
+The same headline fits both worlds, and the 30% figure alone cannot tell you
+which one you are in.
 :::
 
 ## Did it work?
@@ -507,8 +504,8 @@ questions you are entitled to ask of any number you are handed.
 ```
 
 ::: {.ask}
-Keep these three questions. You will use them on every slide for the rest of the week,
-and on the next evaluation report that lands on your desk.
+Keep these three questions. You will use them throughout the week and on
+the next evaluation report you receive.
 :::
 
 # 3 · The five words
@@ -839,8 +836,7 @@ plot_ly(tibble(mid = sm_h0$mids, n = sm_h0$counts),
 
 ::: {.warn}
 At 40 schools the same study would have found nothing, and nothing is exactly
-what it would have reported. **Absence of evidence is not evidence of
-absence.**
+what it would have reported. **A study too small to detect an effect is not evidence that there is none.**
 :::
 
 ::: {.ask}
@@ -896,8 +892,8 @@ Which one would you act on, and what is your answer for each?
 ::: {.panel .fragment}
 B is precise and below the bar: confidently not enough. A is too uncertain to
 call. C is worse still. **The confidence interval decides, not the point estimate.** A
-confidence interval that spans the decision threshold means the honest answer is that we
-do not yet know.
+confidence interval that spans the decision threshold means we do not
+yet know.
 :::
 
 # 4 · Put AI to work
@@ -911,6 +907,8 @@ with the answer on the next slide.
 :::
 
 ::: {.ai-output}
+*A response like this is possible, especially with a short or leading prompt:*
+
 **Prompt:** "Explain what a 95% confidence interval means, in one paragraph, for
 someone who is not a statistician."
 
@@ -935,7 +933,8 @@ precise."
 **Card 1.** The flagged sentence is the classic error. A 95% confidence interval does not
 carry a 95% probability for *this* interval. It means that if you ran the study
 100 times, 95 of the confidence intervals would catch the true value, as the previous
-chart shows. The AI stated a probability the method does not deliver.
+chart shows. If your AI said this, it stated a probability the method does not deliver. Many
+human explanations make the same slip.
 :::
 
 ::: {.warn}
@@ -952,6 +951,7 @@ relationship is real, it has answered a different question.
 
 Two recommended habits: Ask the AI to **ask you questions before it answers**.
 Then put its answer through a second chat, or a second model, and compare.
+Also: what did your AI explain especially well?
 :::
 
 # 5 · Terms bingo
@@ -1024,3 +1024,11 @@ number?
 </div>
 ```
 
+::: {.notes}
+If there is time at the very end, ask the room: is there a different
+question you would ask AI to help you understand a concept from today? For
+example: "I am learning about impact evaluation to help me make policy
+decisions. How should I think about a confidence interval, and how is it
+relevant when I compare an estimate to a decision threshold?" Adding context
+about who you are and why you are asking usually gets a more useful answer.
+:::

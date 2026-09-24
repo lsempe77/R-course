@@ -109,7 +109,7 @@ you will vote again before you write.
 :::::: {.columns}
 
 ::::: {.column width="58%"}
-The evaluation was randomised, well executed, and reported honestly. Nothing in
+The evaluation was randomised, well executed, and reported transparently. Nothing in
 it fails yesterday's checklist.
 :::::
 
@@ -192,8 +192,7 @@ Is the scheme a success or a failure?
 :::
 
 ::: {.panel .fragment}
-This is not a trick, and the evaluation does not pretend it is. It states the
-shortfall plainly. A shortfall of 157 AED against a threshold is a shortfall.
+The evaluation states the 157 AED shortfall plainly.
 
 But notice what the shortfall does **not** tell you: whether the threshold was the
 right threshold. Nothing in the evaluation was designed to answer that.
@@ -248,9 +247,9 @@ The evaluation reports a pattern. Does it explain it?
 No. It measured **who** did not join, not **why**. The pattern is a fact; the
 reason is a question the evaluation left open.
 
-This distinction is where most briefs go wrong. "Small operators did not take it
+Briefs often blur this distinction. "Small operators did not take it
 up" is reportable. "Small operators could not take it up" is an inference the
-evidence does not support — and it points at a completely different
+evidence does not support, and it points at a completely different
 recommendation.
 :::
 
@@ -285,7 +284,7 @@ discover it after deciding.
 
 ::::::
 
-## Finding 6: the honest null
+## Finding 6: the null result
 
 ::: {.excerpt}
 No measurable effect on vehicle maintenance or fleet renewal. Point estimates for
@@ -294,7 +293,7 @@ cannot rule out effects of either sign.
 :::
 
 ::: {.ask .fragment}
-How do you write a finding that says nothing was found — and is that a finding?
+How do you write a finding that says nothing was found, and is that a finding?
 :::
 
 ::: {.panel .fragment}
@@ -324,8 +323,7 @@ kable(tab, col.names = c("Element", "Length", "What it has to do"),
 ```
 
 ::: {.warn}
-One side of A4. A brief that needs a second page is not being read by the person
-who decides.
+One side of A4. Decision-makers rarely read past the first page.
 :::
 
 ## The headline sentence
@@ -353,7 +351,7 @@ the evidence does not support.
 "Fuel costs fell for participating operators" passes a readability test and fails
 this one. It is true, and it lets the reader assume the threshold was cleared.
 
-The number is not decoration. It is what stops the misreading.
+Including the number prevents that misreading.
 :::
 :::::
 
@@ -391,8 +389,7 @@ decide.
 ::::::
 
 ::: {.ask .fragment}
-Which of the three decidable options is defensible on these findings — and does it
-depend on how you weigh the 743 against the 900?
+Which of the three decidable options is defensible on these findings, and does it depend on how you weigh the 743 against the 900?
 :::
 
 ## The risk
@@ -417,7 +414,7 @@ would exceed the saving. The first two quarters of spend would show this."
 ::: {.warn .fragment}
 **A caveat dressed as a risk**
 
-"Results may not generalise." True of every evaluation ever conducted. It tells
+"Results may not generalise." True of almost any evaluation. It tells
 the authority nothing and can be neither confirmed nor falsified.
 :::
 :::::
@@ -439,7 +436,7 @@ Pairs, swap briefs. Read your partner's as though you were the person deciding.
 :::
 
 ::: {.ask .fragment}
-Question 3 is the one that matters, and the one people skip. You are looking for
+Question 3 is the one most often skipped. You are looking for
 the omission, not the error.
 :::
 
@@ -469,7 +466,7 @@ sentence and misleading as a whole.
 **Omitting the threshold**
 
 A brief that reports 743 and never mentions 900 leaves the reader to conclude the
-scheme met its target. This is the most common failure, and the most consequential.
+scheme met its target. It is a common and consequential failure.
 :::
 :::::
 
@@ -500,14 +497,15 @@ risk to flag.
 :::
 
 ::: {.panel}
-A reasonable prompt. It asks for exactly what the room was asked for. Read the
-draft, then edit it as a team — and note that editing is the exercise, not
-reading.
+A reasonable prompt: it asks for exactly what the room was asked for. Read the
+draft, then edit it as a team. The editing is the exercise.
 :::
 
 ## What came back
 
 ::: {.ai-output}
+*A response like this is possible, especially with a short or leading prompt:*
+
 **Policy Brief: Fuel-Price Stabilisation Scheme**
 
 **Headline finding.** The scheme reduced fuel costs for participating operators,
@@ -561,8 +559,7 @@ leaves out entirely, which are not flagged.
 ::::::
 
 ::: {.ask .fragment}
-Notice the pattern: **it overstated the good news and softened the bad**. That is
-the failure mode to expect, and the one to check for.
+Notice the pattern: **it overstated the good news and softened the bad**. Check your own drafts, and any AI draft, for this.
 :::
 
 ## The same task, a better prompt
@@ -588,8 +585,8 @@ established**, which makes omission harder.
 :::
 
 ::: {.ask .fragment}
-The first instruction is the one that changes the output most, and it is the one
-you can use on any writing task this week.
+The first instruction often makes the biggest difference, and you can use it on
+any writing task.
 :::
 
 # 5 · Close
@@ -621,11 +618,10 @@ knitr::include_graphics(MENTI_QR)
 ::::::
 
 ::: {.ask .fragment}
-Compare the two votes. If they moved, it was the threshold that moved them — which
-is exactly what a good brief does.
+Compare the two votes. If they moved, was it the threshold that moved them?
 :::
 
-## What makes a brief honest
+## What makes a brief trustworthy
 
 ```{r}
 #| results: asis

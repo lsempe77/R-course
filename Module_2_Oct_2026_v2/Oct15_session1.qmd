@@ -65,8 +65,7 @@ MENTI_QR <- menti_qr()
 Yesterday you interrogated an analyst who was in the room, and you did it with
 questions you wrote yourselves.
 
-Today the analyst is not here. In their place is a report — and the report cannot
-answer you back.
+Today the analyst is not here. In their place is a report, and a report cannot answer follow-up questions.
 :::
 
 ::: {.ask .fragment}
@@ -109,15 +108,13 @@ Vote now, before reading. You will vote again at the end of the session.
 
 ::::: {.column width="50%"}
 ::: {.warn}
-The report is four pages. It is well written, it is confident, and it contains
-several real strengths. It is not a bad report.
+The report is four pages. It is well written and confident, and it has several real strengths.
 :::
 :::::
 
 ::::: {.column width="50%"}
 ::: {.panel}
-That is what makes it hard. You are not looking for errors in a bad document.
-You are deciding whether a good document supports the claim it makes.
+Your task is to decide whether a good document supports the claim it makes.
 :::
 :::::
 
@@ -171,7 +168,7 @@ separately:
 ::: {.ask}
 On your rating sheet: **the executive summary**.
 
-Give it a colour. Then write the one reason that decided it — and if you rate it
+Give it a colour. Then write the one reason that decided it. If you rate it
 amber or red, what would settle it.
 :::
 
@@ -231,8 +228,7 @@ for (i in seq_along(qa_headline)) {
 
 ::: {.warn .fragment}
 Notice what is missing from that list: **the colour of the conclusion**. None of
-the five asks whether the report sounds convincing. A confident report and a
-credible report are different objects, and this one is confident.
+the five asks whether the report sounds convincing. A report can be confident without being credible.
 :::
 
 ## What the rating means
@@ -247,8 +243,8 @@ for (i in seq_len(nrow(rating_scale))) {
 ```
 
 ::: {.ask .fragment}
-Amber is not a soft red. It is the most useful rating on the scale, because it
-forces you to name the one thing that would change your mind.
+Amber is a useful rating in its own right: it asks you to name the one thing
+that would change your mind.
 :::
 
 # 3 · Section by section
@@ -297,8 +293,7 @@ and which is not?
 
 ::::: {.column width="50%"}
 ::: {.panel .fragment}
-**Handled well:** the instrument change is *disclosed*. Most reports would not
-mention it.
+**Handled well:** the instrument change is *disclosed*. Many reports would not mention it.
 :::
 :::::
 
@@ -353,8 +348,7 @@ kable(tab, col.names = c("Method", "Estimate (AED)", "Clears the 1,000 threshold
 ```
 
 ::: {.warn .fragment}
-One of four clears the bar. The report calls the one that fails its **preferred
-specification** — and says so in Section 3, four pages before the recommendation.
+One of four clears the bar. The report calls the one that fails its **preferred specification**, and says so in Section 3, four pages before the recommendation.
 :::
 
 
@@ -379,8 +373,8 @@ Rate **Section 6, Limitations**. Are these the right three?
 All three are correct and all three are harmless. They are textbook limitations
 that any reviewer would accept.
 
-The two limitations that actually threaten this conclusion — the 12 per cent
-attrition and the change in the survey instrument — appear in Section 4 and are
+The two limitations that actually threaten this conclusion (the 12 per cent attrition and the change in the survey instrument)
+appear in Section 4 and are
 never mentioned again.
 :::
 
@@ -438,8 +432,7 @@ knitr::include_graphics(MENTI_QR)
 ::::::
 
 ::: {.ask .fragment}
-If your vote moved, name the section that moved it. That section is the finding of
-this session.
+If your vote moved, name the section that moved it.
 :::
 
 ## The most important problem
@@ -450,7 +443,7 @@ cat(sprintf('<div class="warn">%s</div>\n', rating_decisive))
 ```
 
 ::: {.ask .fragment}
-Which of the six sections did you rate **green**? Keep those — a report that is
+Which of the six sections did you rate **green**? Keep those: a report that is
 wrong about one thing is not wrong about everything, and saying which parts hold
 is part of the job.
 :::
@@ -484,13 +477,16 @@ this evidence and tell me whether the recommendation is sound.
 :::
 
 ::: {.panel}
-You have just done this by hand, section by section, with a rating sheet. Now watch
-a model do it in one pass, and compare its verdict with yours.
+You have just done this by hand, section by section. Run the prompt on the
+report yourselves, then compare the AI's verdict, and the example on the next
+slide, with yours.
 :::
 
 ## What came back
 
 ::: {.ai-output}
+*A response like this is possible, especially with a short or leading prompt:*
+
 **Assessment: the evidence is credible and the recommendation is sound.**
 
 The report is unusually thorough for this kind of evaluation. Several points
@@ -516,7 +512,8 @@ recommendation is [supported by the evidence]{.flag}.
 :::
 
 ::: {.ask .fragment}
-Find the two flagged claims. Then find the larger problem, which is not flagged.
+Find the two flagged claims, then the larger problem, which is not flagged. What
+did the AI you ran get right, and what did it miss?
 :::
 
 ## What AI got, and what it could not get
@@ -536,12 +533,12 @@ Find the two flagged claims. Then find the larger problem, which is not flagged.
 
 ::::: {.column width="50%"}
 ::: {.warn .fragment}
-**What it could not do**
+**What it missed**
 
 - It read "approximately 1,000" as if a method had produced 1,000. None did.
 - It never noticed that the preferred specification is 816, and fails the threshold.
 - It treated disclosure of attrition as evidence of quality, not as an open question.
-- It has no way to ask whether 1,014 was *chosen* as the headline.
+- It did not ask whether 1,014 was *chosen* as the headline.
 :::
 
 ::::::
@@ -569,13 +566,12 @@ decide.
 
 ::: {.panel .fragment}
 The first instruction makes the model tabulate rather than summarise, and the
-816 becomes impossible to miss. The second forces a comparison the model would
-otherwise never make. The third gives it permission to find an absence.
+816 becomes impossible to miss. The second forces a comparison the model would otherwise often skip. The third gives it permission to find an absence.
 :::
 
 ::: {.ask .fragment}
 Note what all three have in common: **they ask for a comparison, not a verdict.**
-The model is good at verdicts. It needs help with comparisons.
+Models tend to give verdicts readily; comparisons often have to be asked for.
 :::
 
 # 6 · Take this back to your desk

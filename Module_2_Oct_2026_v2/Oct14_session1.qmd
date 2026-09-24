@@ -225,15 +225,14 @@ framework <- tribble(
 ```{=html}
 <div class="facts">
   <div class="k">Day 1</div>  <div class="v">three questions &middot; reading a number &middot; what a fair comparison is</div>
-  <div class="k">Day 2</div>  <div class="v">four ways to estimate an effect: descriptives, DiD, RDD, matching</div>
+  <div class="k">Day 2</div>  <div class="v">three ways to estimate an effect: DiD, RDD, matching</div>
   <div class="k">Today</div>  <div class="v">what the effect is <em>worth</em> &middot; cost, and the assumptions that decide it</div>
 </div>
 ```
 
 ::: {.panel}
 Everything so far has been about **how big the effect is**. Today is about
-whether it is **worth the money** — and that is a different question with a
-different set of judgement calls.
+whether it is **worth the money**, a different question with its own judgement calls.
 :::
 
 ::: {.ask}
@@ -250,7 +249,7 @@ Today the bar is a ratio instead of a threshold.
 ::::: {.column width="54%"}
 GreenWaste cost the authority **`r gfmt(COST_PER_BUSINESS)` AED per business** to
 deliver, and saved each participating business about **`r gfmt(BENEFIT_PER_YEAR)`
-AED a year** — the estimate the room computed by hand on Day 2, and the one that
+AED a year**: the estimate the room computed by hand on Day 2, and the one that
 missed that session's 1,000 AED rule.
 
 The standard way to compare those is a **benefit-cost ratio**: what you get,
@@ -288,10 +287,9 @@ cat(sprintf('
 
 ::: {.panel}
 **`r sprintf("%.2f", bcr_headline)` means: for every AED spent, about
-`r sprintf("%.2f", bcr_headline)` AED comes back.** On that reading this is not
-a borderline decision. It is clearly worth doing.
+`r sprintf("%.2f", bcr_headline)` AED comes back.** On that reading it looks clearly worth doing.
 
-**And that is the puzzle.** This is the same programme that failed the Day 2
+This is the same programme that failed the Day 2
 rule. It cut costs by `r gfmt(BENEFIT_PER_YEAR)` AED against a `r gfmt(RULEBAR)`
 AED bar, and here it returns nearly twice what it cost. Both statements are
 right.
@@ -302,8 +300,6 @@ A ratio and a rule are not the same test. The rule asks what happens **in one
 period**. The ratio asks what happens **over the whole life of the investment**.
 A programme can be too small to scale on the first test and comfortably worth
 funding on the second.
-
-Keep that gap in view. It is the reason this session exists.
 :::
 
 ## `[MENTI PLACEHOLDER]` Would you approve it?
@@ -331,12 +327,11 @@ knitr::include_graphics(MENTI_QR)
 
 ::: {.panel}
 Commit before we go further. If most of the room picks "I need to know
-something else first", ask two people **what** — write the answers up, and
+something else first", ask two people **what**, write the answers up, and
 compare them with the three questions at the end of the session.
 
 If anyone notices that this is the same programme that missed the 1,000 AED
-rule on Day 2, stop and let them make the point to the room. That observation is
-the session's hinge.
+rule on Day 2, stop and let them make the point to the room. The rest of the session builds on it.
 :::
 
 ## What went into that number
@@ -372,7 +367,7 @@ tibble(
 
 ::: {.ask}
 Two rows are shaded. They are not costs and they are not benefits. They are
-**choices** — and they are the subject of the next twenty minutes.
+**choices**, and they are the subject of the next twenty minutes.
 :::
 
 # 2 · The assumptions that decide it
@@ -393,8 +388,7 @@ years cannot. Discounting is the arithmetic of that difference, and the
 :::
 
 ::: {.ask}
-Nobody debates that future money is worth less. They debate **how much less** —
-and that number goes straight into the ratio you are shown.
+Nobody debates that future money is worth less. They debate **how much less**, and that number goes straight into the ratio you are shown.
 :::
 
 ## Choice 1: the discount rate, on its own
@@ -425,7 +419,7 @@ rate_only %>%
 ::: {.warn}
 **The discount rate on its own does not flip this decision.**
 
-Across the whole range an agency might actually use — 3% to 8% — the ratio moves
+Across the whole range an agency might actually use (3% to 8%), the ratio moves
 only from `r sprintf("%.2f", bcr(0.03, HORIZON_BASE))` to
 `r sprintf("%.2f", bcr(0.08, HORIZON_BASE))`. You have to reach
 **`r sprintf("%.0f%%", 100 * min(rate_only$r[rate_only$bcr < 1]))`** to push it
@@ -470,7 +464,7 @@ The Day 2 sessions measured the saving over **one period**. Nothing measured how
 long it lasts.
 
 If it lasts **two years**, the ratio is
-`r sprintf("%.2f", bcr(DISCOUNT_BASE, 2))` — **below break-even**.
+`r sprintf("%.2f", bcr(DISCOUNT_BASE, 2))`: **below break-even**.
 :::
 
 ::: {.warn}
@@ -531,8 +525,8 @@ grid_wide %>%
 ::: {.ask}
 **Red row:** two years of saving. **Blue row:** five years, the base case.
 
-Read the two rows against each other. The recommendation reverses, and the
-evidence never changed. Only the horizon assumption did.
+Read the two rows against each other. The recommendation reverses even though the evidence is the same; only the
+horizon assumption changed.
 :::
 
 ## Where the ratio crosses 1
@@ -563,7 +557,7 @@ have already assumed the saving persists for years.
 :::
 
 ::: {.ask}
-So the honest statement is not "the ratio is `r sprintf("%.2f", bcr_headline)`".
+So the accurate statement is not "the ratio is `r sprintf("%.2f", bcr_headline)`".
 It is:
 
 **"The ratio is `r sprintf("%.2f", bcr_headline)` under assumptions the evidence
@@ -596,8 +590,7 @@ grid_tbl %>%
 ::: {.ask}
 Every cell is the same programme, the same cost, and the same measured saving.
 
-**Only two judgement calls differ.** The whole grid is one decision, drawn nine
-ways. Find the cells below 1.0, then find the row that is below 1 everywhere.
+**Only two judgement calls differ.** Find the cells below 1.0, then find the row that is below 1 everywhere.
 :::
 
 # 3 · The three questions
@@ -619,8 +612,7 @@ compared to, ask what is missing, ask what it would take to change the answer.
 :::
 
 ::: {.ask}
-Question 3 is the one that separates a reader from a recipient. It is also the
-one an evaluator is least often asked.
+Question 3 is the one most likely to change the answer.
 :::
 
 ## Question 1: are the benefits plausible?
@@ -648,7 +640,7 @@ The ratio moves from `r sprintf("%.2f", min(benefit_range$bcr))` to
 :::
 
 ::: {.warn}
-**Look at how small that is.** The measured uncertainty in the saving barely
+**That range is small.** The measured uncertainty in the saving barely
 moves the ratio, because the confidence interval is tight: the Day 2 estimate was
 `r gfmt(BENEFIT_PER_YEAR)` with bounds of `r gfmt(BENEFIT_LO)` and
 `r gfmt(BENEFIT_HI)`.
@@ -682,7 +674,7 @@ cat(sprintf('
 Two lines are measured and two are assumed. **The assumed lines move the answer
 more than the measured ones do.**
 
-That is the whole session in one table. A confident-looking ratio can rest almost
+A confident-looking ratio can rest almost
 entirely on choices nobody has evidence for, and the numbers that were carefully
 estimated are not the ones deciding it.
 :::
@@ -702,8 +694,7 @@ estimated are not the ones deciding it.
 Every cost left out makes the ratio **look better**. None of them appears in the
 table you were shown.
 
-Ask an evaluator what is in the cost line. A ratio built on a partial cost is not
-a conservative estimate of anything.
+Ask an evaluator what is in the cost line. A ratio built on partial costs overstates the return.
 :::
 
 ## Question 3: what would flip it?
@@ -719,9 +710,7 @@ You already know the answer for this programme, and it is not the discount rate.
 :::
 
 ::: {.ask}
-So the question to ask is not "what discount rate did you use?"
-
-It is: **"How long do you assume the benefit lasts, and what evidence do you
+The more useful question is: **"How long do you assume the benefit lasts, and what evidence do you
 have for that?"**
 :::
 :::::
@@ -754,7 +743,9 @@ falls below 1. Then tell me whether that scenario is realistic."**
 :::
 
 ::: {.ai-output}
-**AI response:**
+*A response like this is possible, especially with a short or leading prompt:*
+
+
 
 The ratio falls below 1 if the discount rate is raised. [At a discount rate of
 around 40%, the ratio drops below break-even]{.flag}, which would mean the
@@ -814,8 +805,8 @@ reached for the lever that is easiest to compute, and when it stumbled onto the
 right one it stopped at a direction and never produced a figure.
 
 **The lesson: ask for the assumption that matters, and ask for the number.**
-A model will find the scenario you asked for, and it may even name the true
-cause, and it can still leave you with nothing you can act on.
+A model may find the scenario you asked for, and even name the right cause, and
+still leave you with nothing you can act on.
 :::
 
 ## The same question, a better prompt
@@ -828,8 +819,8 @@ cause, and it can still leave you with nothing you can act on.
 
 > Generate one plausible scenario in which this benefit-cost ratio falls below 1.
 
-The word "plausible" does the work, and it is not defined. The model reaches for
-whatever is easiest to compute.
+The word "plausible" is not defined, so the model may reach for whatever is
+easiest to compute.
 :::
 :::::
 
@@ -849,7 +840,7 @@ whatever is easiest to compute.
 
 ::: {.ask}
 Run both. The second asks the model to **rank** the assumptions before choosing
-one, which is exactly the step the first was allowed to skip.
+one, the step the first was allowed to skip. What did each explain well?
 :::
 
 # 5 · The Abu Dhabi case
@@ -926,8 +917,7 @@ your verdict in two minutes.
 ::: {.ask}
 These are the same programme, the same estimate and the same cost.
 
-**One test says no and the other says yes.** That is not a contradiction. The
-rule asks whether the effect is big enough to be worth scaling; the ratio asks
+**One test says no and the other says yes.** The rule asks whether the effect is big enough to be worth scaling; the ratio asks
 whether the investment pays for itself over its life. An evaluator who reports
 only one of them has answered half the question the commissioner asked.
 :::
@@ -954,8 +944,7 @@ The single sentence to take to a meeting:
 **"What assumption would have to change for this ratio to fall below 1, and what
 is your evidence for that assumption?"**
 
-An evaluator who can answer that has thought about their model. One who cannot
-has run it.
+An evaluator should be able to answer it.
 :::
 
 ## Where this sits
@@ -970,7 +959,6 @@ has run it.
 ```
 
 ::: {.panel}
-Next: the same claims, in the form they actually reach a decision-maker — a
-chart. Every assumption you have interrogated this morning is invisible in the
-picture, and the picture is what gets remembered.
+Next: the same claims, in the form they actually reach a decision-maker: a
+chart. The assumptions you questioned this morning are invisible in the picture.
 :::
