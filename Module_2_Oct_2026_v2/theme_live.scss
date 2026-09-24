@@ -40,3 +40,28 @@
 
 // A live cell and a callout side by side sit top-aligned.
 .reveal .columns .cell { margin-top: 0; }
+
+// Data frames from live cells (webr render-df: kable) as editorial tables.
+.reveal .cell-output-webr table {
+  font-size: 19px;
+  border-collapse: collapse;
+  margin: 0.2em 0 0.4em 0;
+  width: auto;
+}
+.reveal .cell-output-webr th {
+  font-weight: 600;
+  color: #61686D;
+  border-bottom: 2px solid #16181A;
+  padding: 1px 14px;
+  line-height: 1.25;
+  text-align: right;
+}
+.reveal .cell-output-webr td {
+  border-bottom: 1px solid #E3E6E8;
+  padding: 1px 14px;
+  line-height: 1.25;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.reveal .cell-output-webr th:first-child,
+.reveal .cell-output-webr td:first-child { text-align: left; }

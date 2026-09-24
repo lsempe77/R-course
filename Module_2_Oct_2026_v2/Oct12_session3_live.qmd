@@ -18,6 +18,9 @@ format:
     embed-resources: true
 webr:
   packages: [estimatr]
+  # Data frames print as HTML tables (styled in theme_live.scss) instead of
+  # console text. knitr is already loaded by quarto-live, so this costs nothing.
+  render-df: kable
   resources:
     - evaluation_data_GreenWaste.csv
 knitr:
@@ -320,8 +323,9 @@ press **Run**. The grey boxes are real R, running in this page.
 ## One row, one business, one round
 
 ```{webr}
-head(gw[, c("business_identifier", "round", "treatment_neighborhood",
-            "enrolled", "waste_management_costs")], 4)
+rows <- gw[, c("business_identifier", "round", "treatment_neighborhood",
+               "enrolled", "waste_management_costs")]
+round(head(rows, 4))
 ```
 
 :::::: {.columns}
@@ -350,8 +354,9 @@ Half: 9,913 businesses, each measured twice. One row is a business in a round.
 
 ```{webr}
 base <- subset(gw, round == 0)
-ftable(table(offered = base$treatment_neighborhood,
-             eligible = base$eligible, enrolled = base$enrolled))
+base$businesses <- 1
+aggregate(cbind(businesses, enrolled) ~ treatment_neighborhood + eligible,
+          data = base, FUN = sum)
 ```
 
 ::: {.ask}
@@ -371,7 +376,7 @@ of business.
 ```{webr}
 before <- mean(gw$waste_management_costs[gw$enrolled == 1 & gw$round == 0])
 after  <- mean(gw$waste_management_costs[gw$enrolled == 1 & gw$round == 1])
-round(c(before = before, after = after, change = after - before))
+round(data.frame(before, after, change = after - before))
 ```
 
 :::::: {.columns}
@@ -403,7 +408,7 @@ it aloud in plain words.
 offered <- subset(gw, treatment_neighborhood == 1 & round == 1)
 took    <- mean(offered$waste_management_costs[offered$enrolled == 1])
 didnt   <- mean(offered$waste_management_costs[offered$enrolled == 0])
-round(c(took_part = took, did_not = didnt, gap = took - didnt))
+round(data.frame(took_part = took, did_not = didnt, gap = took - didnt))
 ```
 
 ::: {.panel}
@@ -493,7 +498,7 @@ viewof when = Inputs.radio(["After the programme", "Before the programme"],
 #| autorun: true
 r <- if (when == "Before the programme") 0 else 1
 offered <- subset(gw, treatment_neighborhood == 1 & round == r)
-round(tapply(offered$waste_management_costs, offered$enrolled, mean))
+round(aggregate(waste_management_costs ~ enrolled, data = offered, FUN = mean))
 ```
 
 ::: {.ask}
@@ -723,7 +728,7 @@ table is for.
 after <- subset(gw, round == 1 & eligible == 1)
 offered     <- mean(after$waste_management_costs[after$treatment_neighborhood == 1])
 not_offered <- mean(after$waste_management_costs[after$treatment_neighborhood == 0])
-round(c(offered = offered, not_offered = not_offered, effect = offered - not_offered))
+round(data.frame(offered, not_offered, effect = offered - not_offered))
 ```
 
 ::: {.ask}
@@ -740,7 +745,7 @@ just a more formal way of writing this subtraction.
 
 ```{webr}
 fit <- lm(waste_management_costs ~ treatment_neighborhood, data = after)
-round(coef(fit))
+round(data.frame(coefficient = coef(fit)))
 ```
 
 :::::: {.columns}
@@ -771,11 +776,12 @@ common mistake, by people and by AI.
 ## How sure? Count neighbourhoods, not businesses
 
 ```{webr}
-round(confint(fit)["treatment_neighborhood", ])   # as if 5,628 separate draws
 library(estimatr)
 fit_nb <- lm_robust(waste_management_costs ~ treatment_neighborhood,
                     data = after, clusters = neighborhood_identifier)
-round(confint(fit_nb)["treatment_neighborhood", ]) # the draw was by neighbourhood
+round(as.data.frame(rbind(
+  "as if 5,628 separate draws" = confint(fit)["treatment_neighborhood", ],
+  "counted by neighbourhood"   = confint(fit_nb)["treatment_neighborhood", ])))
 ```
 
 ::: {.panel}
