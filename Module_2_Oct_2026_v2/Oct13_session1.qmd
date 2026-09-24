@@ -802,7 +802,7 @@ Only **A**. In B the gap was already widening and in C already closing, so part
 of what the method calls an effect was going to happen anyway.
 
 Note the directions: **B would overstate** the effect, **C would understate**
-it. The bias is not always in the flattering direction.
+it. 
 :::
 
 ## Testing for parallel pre-trends
@@ -939,7 +939,7 @@ not finished the job.
 
 # 5 · Put AI to work
 
-## AI Snapshot: explaining the table
+## AI Snapshot: explaining the table {.dense}
 
 ::: {.panel}
 Paste the table from Section 3 into an AI tool with this prompt:
@@ -962,7 +962,7 @@ the 1,000 AED threshold required for scale-up]{.flag}.
 
 ::: {.ask}
 Mark every sentence you can check against the table, and every sentence the
-table does **not** support. Four minutes.
+table does **not** support.
 :::
 
 ## Debrief: three errors, one of them serious
@@ -1088,20 +1088,20 @@ That is the point of reading the two side by side.
 ## Your turn: ask AI first
 
 ::: {.ask style="font-size: 110%;"}
-Before we show our list, ask an AI tool:
+Before we show our list of questions to ask someone presenting DiD, ask an AI tool:
 
-**"I am a commissioner about to hear an evaluator present a difference-in-differences (DiD) result. What are the key questions I should ask? Fit them on one slide."**
+**"I am a commissioner about to hear an evaluator present a difference-in-differences (DiD) result. What are the key questions I should ask?"**
 :::
 
 ::: {.panel}
-Three minutes. Then compare with our list on the next slide: what did it miss, what did it add, and is anything wrong?
+Three minutes. Then compare with our list on the next slide: what did it miss, what did it add, and is anything incorrect?
 :::
 
 ::: {.notes}
 OPTIONAL. If time is short, skip this slide and go straight to the questions
 on the next one. If you run it: give three minutes, then reveal the list and
 ask what the AI missed, what it added that is worth keeping, and whether
-anything it suggested was wrong.
+anything it suggested was incorrect.
 :::
 
 ## Three questions to ask any evaluator presenting DiD
