@@ -5,7 +5,7 @@ author: "3ie"
 always_allow_html: yes
 # live-revealjs: the quarto-live extension (_extensions/r-wasm/live) runs R in
 # the browser through webR. The live cells need an internet connection on the
-# day (webR loads from a CDN) and the two CSVs listed under webr: resources
+# day (webR loads from a CDN) and the CSV listed under webr: resources
 # must sit next to the published .html. Static knitr chunks work as before.
 format:
   live-revealjs:
@@ -20,7 +20,6 @@ webr:
   packages: [estimatr]
   resources:
     - evaluation_data_GreenWaste.csv
-    - evaluation_data_SchoolZoneRCT.csv
 knitr:
   opts_chunk:
     echo: false
@@ -81,6 +80,16 @@ ax <- function(title = "", ...) {
 
 gfmt <- function(x) format(round(x), big.mark = ",")
 
+# Emit an HTML snippet as a raw block. Plain cat() leaves it to pandoc, which
+# reads indented lines inside a multi-line <div> as a code block and prints the
+# tags on the slide.
+FENCE <- strrep("`", 3)   # built, not typed: a literal fence would end the chunk
+html_out <- function(x) cat("
+", FENCE, "{=html}
+", x, "
+", FENCE, "
+", sep = "")
+
 # ---- Live Menti poll -------------------------------------------------------
 MENTI_CODE <- "1234 5678"
 MENTI_JOIN <- paste0("https://www.menti.com/", gsub(" ", "", MENTI_CODE))
@@ -131,28 +140,7 @@ rct_avoided       <- sort(abs(rct_ci))
 rct_avoided_least <- rct_avoided[1]
 rct_avoided_most  <- rct_avoided[2]
 
-# ---- School-zone trial (FICTIONAL, make_school_zone_rct_data.R) ------------
-pr  <- read.csv("./evaluation_data_SchoolZoneRCT.csv") %>%
-  mutate(arm = factor(arm, levels = c("No package", "Package")))
-pr0 <- pr %>% filter(round == 0)
-pr1 <- pr %>% filter(round == 1)
-pr_fit <- lm_robust(injury_collisions ~ arm, data = pr1, clusters = segment_id)
-pr_est <- coef(pr_fit)[["armPackage"]]
-pr_ci  <- confint(pr_fit)["armPackage", ]
-pr_avoided       <- sort(abs(pr_ci))
-pr_avoided_least <- pr_avoided[1]
-pr_avoided_most  <- pr_avoided[2]
-
-pr_bal <- map_dfr(c("lanes", "road_length_km", "prior_collisions_3yr"),
-                  function(v) {
-  a <- pr0[[v]][pr0$arm == "Package"]; b <- pr0[[v]][pr0$arm == "No package"]
-  tibble(Characteristic = c(lanes = "Lanes",
-                            road_length_km = "Length (km)",
-                            prior_collisions_3yr = "Collisions, prior 3 yrs")[[v]],
-         Package = mean(a), Control = mean(b), p = t.test(a, b)$p.value)
-})
-
-# One chart used twice: estimate, interval and rule on one axis.
+# Estimate, interval and rule on one axis.
 rule_chart <- function(est, least, most, rule, xlab, xmax, digits = 0) {
   fmt <- paste0("avoids %{x:,.", digits, "f}<extra></extra>")
   tibble(
@@ -183,7 +171,7 @@ rule_chart <- function(est, least, most, rule, xlab, xmax, digits = 0) {
 # Runs once, in the browser, when the deck opens. Everything the live cells
 # below use is defined here, so each cell on a slide stays two or three lines.
 gw <- read.csv("evaluation_data_GreenWaste.csv")
-sz <- read.csv("evaluation_data_SchoolZoneRCT.csv")
+library(estimatr)
 RULE <- 1000
 ACCENT <- "#0E6E80"; ACCENT2 <- "#A9561F"; ALERT <- "#8E2413"; MUTED <- "#61686D"
 options(width = 100, scipen = 6)
@@ -229,6 +217,29 @@ draw_lottery <- function(how, seed) {
   cat(sprintf("Gap BEFORE the programme started: %+.0f AED\n", m[1] - m[2]))
 }
 
+# Re-estimate on a random subset of k neighbourhoods: a smaller trial.
+small_trial <- function(k) {
+  set.seed(11)
+  after <- subset(gw, round == 1 & eligible == 1)
+  keep  <- c(sample(unique(after$neighborhood_identifier[after$treatment_neighborhood == 1]), k / 2),
+             sample(unique(after$neighborhood_identifier[after$treatment_neighborhood == 0]), k / 2))
+  d   <- after[after$neighborhood_identifier %in% keep, ]
+  fit <- lm_robust(waste_management_costs ~ treatment_neighborhood,
+                   data = d, clusters = neighborhood_identifier)
+  est <- -coef(fit)[["treatment_neighborhood"]]
+  ci  <- sort(-confint(fit)["treatment_neighborhood", ])
+  clean_par()
+  plot(NA, xlim = c(0, 2000), ylim = c(0.5, 1.5), yaxt = "n", bty = "n",
+       xlab = "AED avoided per business", ylab = "")
+  abline(v = RULE, col = ALERT, lwd = 3, lty = 2)
+  segments(ci[1], 1, ci[2], 1, col = ACCENT, lwd = 8)
+  points(est, 1, pch = 19, cex = 2.5, col = ACCENT)
+  text(RULE, 1.4, "the rule", col = ALERT, pos = 4)
+  cat(sprintf("%d neighbourhoods: avoids %.0f AED, interval %.0f to %.0f
+",
+              k, est, ci[1], ci[2]))
+}
+
 crowd_gaps <- function(k, draws = 1000) {
   set.seed(7)
   gaps <- replicate(draws, {
@@ -261,7 +272,7 @@ the other two?
 
 ::::: {.column width="48%"}
 ```{r results='asis'}
-cat(sprintf('
+html_out(sprintf('
 <div class="facts">
   <div class="k">Before and after</div>     <div class="v">%s AED</div>
   <div class="k">Enrolled vs not</div>      <div class="v">%s AED</div>
@@ -309,7 +320,6 @@ press **Run**. The grey boxes are real R, running in this page.
 ## One row, one business, one round
 
 ```{webr}
-#| autorun: true
 head(gw[, c("business_identifier", "round", "treatment_neighborhood",
             "enrolled", "waste_management_costs")], 4)
 ```
@@ -339,7 +349,6 @@ Half: 9,913 businesses, each measured twice. One row is a business in a round.
 ## Who was offered, who took part?
 
 ```{webr}
-#| autorun: true
 base <- subset(gw, round == 0)
 ftable(table(offered = base$treatment_neighborhood,
              eligible = base$eligible, enrolled = base$enrolled))
@@ -501,7 +510,6 @@ programme with a head start: it **overstates** the effect.
 ## Why they were already different
 
 ```{webr}
-#| autorun: true
 before <- subset(gw, round == 0 & treatment_neighborhood == 1)
 round(aggregate(cbind(staff_size, business_area, age_manager,
                       advanced_filtration) ~ enrolled, data = before, FUN = mean), 2)
@@ -529,7 +537,7 @@ did not measure at all.**
 ## Two biases, opposite directions
 
 ```{r results='asis'}
-cat(sprintf('
+html_out(sprintf('
 <div class="facts">
   <div class="k">Before and after</div>
   <div class="v">%s AED &middot; folds in the rising costs everyone faced &middot; UNDERSTATES</div>
@@ -685,7 +693,6 @@ Live quiz, revealed one at a time. Commit before I show each answer.
 ## First check: did the real draw work?
 
 ```{webr}
-#| autorun: true
 before <- subset(gw, round == 0 & eligible == 1)
 round(aggregate(cbind(waste_management_costs, staff_size, business_area,
                       age_manager) ~ treatment_neighborhood, data = before, FUN = mean), 1)
@@ -785,7 +792,7 @@ where you randomised?"*
 ## Which number is the impact?
 
 ```{r results='asis'}
-cat(sprintf('
+html_out(sprintf('
 <div class="facts">
   <div class="k">The impact</div>
   <div class="v">the treatment_neighborhood coefficient: %s AED &middot; the difference the programme made</div>
@@ -814,7 +821,7 @@ rule_chart(rct_est, rct_avoided_least, rct_avoided_most, RULEBAR,
 
 ::::: {.column width="48%"}
 ```{r results='asis'}
-cat(sprintf('
+html_out(sprintf('
 <div class="hero">
   <div class="value">-%s</div>
   <div class="label">AED, the randomised estimate</div>
@@ -835,143 +842,53 @@ the programme avoids `r gfmt(rct_avoided_least)` AED, short of
 ::::::
 
 ::: {.ask .fragment}
-Would you sign a national roll-out on this? Commit, then we try the same three
-lines on a different programme.
+Would you sign a national roll-out on this? Commit, then we ask what a smaller
+trial would have told us.
 :::
 
-# 6 · Same three lines, new data
+## What if the trial had been smaller?
 
-## The school-zone package, decided by lottery
-
-:::::: {.columns}
-
-::::: {.column width="54%"}
-A roads authority had a safety package for school zones: raised crossings, lower
-limits, crossing patrols. Four hundred zones needed it and only half could be
-done in the first year.
-
-Rather than pick the worst, it **drew lots**: 200 zones chosen at random, 200
-held back.
-:::::
-
-::::: {.column width="46%"}
-```{=html}
-<div class="facts">
-  <div class="k">Programme</div>  <div class="v">School-zone safety package</div>
-  <div class="k">Allocation</div> <div class="v">Random draw, 200 vs 200</div>
-  <div class="k">Outcome</div>    <div class="v">Injury collisions</div>
-  <div class="k">The rule</div>   <div class="v">Avoid 2.0 per zone per round</div>
-</div>
+```{ojs}
+//| echo: false
+viewof kt = Inputs.range([10, 196], {value: 196, step: 2, label: "Neighbourhoods in the trial"})
 ```
-:::::
-
-::::::
-
-::: {.warn .note-ctr}
-**Illustrative case, with invented figures.** This is not a real trial and the
-numbers are generated for this training.
-:::
-
-## Did the draw work?
-
-:::::: {.columns}
-
-::::: {.column width="54%"}
-```{r}
-pr_bal %>%
-  mutate(across(c(Package, Control), ~ round(.x, 2)), p = round(p, 2)) %>%
-  kable(align = "lrrr", digits = 2,
-        col.names = c("Characteristic", "Package", "No package", "p-value")) %>%
-  kable_styling(full_width = FALSE, font_size = 16)
-```
-:::::
-
-::::: {.column width="46%"}
-::: {.ask}
-Your turn to read a balance table. Are the differences small? Are the p-values
-tiny? **Did the draw work?**
-:::
-
-::: {.panel .fragment}
-Small differences, p-values nowhere near tiny. The zones are alike before the
-package: a lottery placed them, they did not choose.
-:::
-:::::
-
-::::::
-
-::: {.warn .note-ctr}
-**Illustrative case, with invented figures.**
-:::
-
-## The same three lines
 
 ```{webr}
-after_sz <- subset(sz, round == 1)
-fit_sz <- lm_robust(injury_collisions ~ arm, data = after_sz, clusters = segment_id)
-round(cbind(estimate = coef(fit_sz), confint(fit_sz)), 2)
+#| input:
+#|   - kt
+#| autorun: true
+#| edit: false
+#| fig-width: 10
+#| fig-height: 1.8
+small_trial(kt)
 ```
 
 :::::: {.columns}
 
 ::::: {.column width="50%"}
 ::: {.ask}
-In groups, one minute: **which row is the impact? Where is its interval? Does
-it clear 2.0 collisions avoided?**
+Slide down to 20. **What happens to the estimate, and to the interval?**
 :::
 :::::
 
 ::::: {.column width="50%"}
-::: {.warn .note-ctr}
-**Illustrative case, with invented figures.** This is not a real trial.
+::: {.warn .fragment}
+The estimate barely moves; the interval balloons, from about 590 to 1,290 AED.
+It can no longer tell you whether the bar is cleared. **Small trials give less
+certain answers, not different ones.**
 :::
 :::::
 
 ::::::
 
 ::: {.notes}
-Same code as GreenWaste with the data and outcome swapped. The point: the
-reading skill transfers; the table always has the same shape.
+Same seed each time, so the subset at a given size is stable while you talk.
+Measured: 196 neighbourhoods 1,014 [935, 1,093]; 60 gives 1,022 [864, 1,179];
+20 gives 940 [591, 1,289]. Link back to Session 1: a study that is too small
+may fail to find a real effect.
 :::
 
-## Does it clear the rule?
-
-:::::: {.columns}
-
-::::: {.column width="50%"}
-```{r fig.height=2.5, fig.width=5.6}
-rule_chart(pr_est, pr_avoided_least, pr_avoided_most, 2.0,
-           "Collisions avoided per zone per round", 4.2, digits = 2)
-```
-:::::
-
-::::: {.column width="50%"}
-```{r results='asis'}
-cat(sprintf('
-<div class="hero">
-  <div class="value">-%.2f</div>
-  <div class="label">Collisions avoided, per zone per round</div>
-</div>
-<div class="stat-row">
-  <div><span class="n">%.2f</span><span class="k">The rule</span></div>
-  <div><span class="n">%.2f</span><span class="k">Least it could be</span></div>
-</div>', abs(pr_est), 2.0, pr_avoided_least))
-```
-
-::: {.warn .fragment}
-Same shape as GreenWaste: the estimate clears the bar, the interval straddles
-it. The least it could be is `r sprintf("%.2f", pr_avoided_least)`, under the
-2.0 required.
-:::
-:::::
-
-::::::
-
-::: {.warn .note-ctr}
-**Illustrative case, with invented figures.**
-:::
-
-# 7 · Put AI to work
+# 6 · Put AI to work
 
 ## AI Snapshot: explaining the pitfall
 
@@ -1063,7 +980,7 @@ Two habits, every session: make the AI **ask you questions first**, and have a
 **second chat** review the first one's answer.
 :::
 
-# 8 · Close
+# 7 · Close
 
 ## Three questions to ask the evaluator
 
