@@ -1,0 +1,827 @@
+---
+title: "Interrogate the Analyst"
+subtitle: "Module 2 · Day 3, Session 3: The Quality Assurance Clinic"
+author: "3ie"
+always_allow_html: yes
+title-slide-attributes:
+  data-state: title-slide-state
+# live-revealjs: the quarto-live extension (_extensions/r-wasm/live) runs R in
+# the browser through webR. The live cells need an internet connection on the
+# day (webR loads from a CDN) and the CSV listed under webr: resources must sit
+# next to the published .html.
+#
+# One example all session: GreenWaste. New in this version: section 4, "The
+# analyst answers with the data", where the trainer (playing the analyst)
+# answers the strongest questions by running the analysis live.
+format:
+  live-revealjs:
+    theme: [theme_dge.scss, theme_live.scss]
+    logo: assets/dge_logo_horizontal.svg
+    slide-number: true
+    width: 1280
+    height: 720
+    fig-align: center
+    slide-level: 2
+    embed-resources: true
+webr:
+  packages: [estimatr]
+  render-df: kable
+  resources:
+    - evaluation_data_GreenWaste.csv
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+    dev: "png"
+    dpi: 96
+editor_options:
+  chunk_output_type: console
+---
+
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+
+```{r setup}
+library(knitr)
+library(qrcode)
+
+FENCE <- strrep("`", 3)   # built, not typed: a literal fence would end the chunk
+html_out <- function(x) cat("\n", FENCE, "{=html}\n", x, "\n", FENCE, "\n", sep = "")
+
+# ---- The checklist itself -------------------------------------------------
+# Defined once in qa_checklist.R and shared with the printable handout, so the
+# slide and the handout cannot drift apart.
+source("qa_checklist.R")
+
+# ---- Live Menti poll (placeholder until the in-slide poll is built) --------
+MENTI_CODE <- "1234 5678"
+MENTI_JOIN <- paste0("https://www.menti.com/", gsub(" ", "", MENTI_CODE))
+menti_qr <- function(path = "menti_qr_d3s3.png", url = MENTI_JOIN) {
+  png(path, width = 900, height = 900, res = 300, bg = "white")
+  on.exit(dev.off(), add = TRUE)
+  par(mar = c(0, 0, 0, 0)); plot(qr_code(url, ecl = "H")); path
+}
+MENTI_QR <- menti_qr()
+```
+
+# 0 · Sign-off {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## Three days of reading. Today you ask the questions.
+
+```{webr}
+#| autorun: true
+#| include: false
+# Runs once, in the browser, when the deck opens. The analyst's answers in
+# section 4 use what is defined here.
+gw <- read.csv("evaluation_data_GreenWaste.csv")
+library(estimatr)
+ACCENT <- "#215a9e"; ACCENT2 <- "#7da1c4"; ALERT <- "#B8272C"; MUTED <- "#545860"
+options(width = 100, scipen = 6)
+
+# Warm up estimatr now, while the opening slides are talked through: its first
+# call in the browser takes about 10 seconds, every later one is instant.
+invisible(estimatr::lm_robust(y ~ x, data = data.frame(y = c(1, 3, 2, 5), x = c(0, 1, 0, 1)),
+                              clusters = c(1, 1, 2, 2)))
+clean_par <- function() par(mar = c(4.2, 12, 1, 1), family = "sans", las = 1,
+                            col.axis = MUTED, col.lab = MUTED, fg = MUTED, cex = 1.2)
+
+offered  <- subset(gw, treatment_neighborhood == 1)          # DiD sample, both rounds
+rdd_data <- subset(offered, round == 1)
+rdd_data$distance <- rdd_data$efficiency_index - 58
+rct_data <- subset(gw, round == 1 & eligible == 1)
+covs <- c("age_manager", "age_deputy", "educ_manager", "educ_deputy", "female_manager",
+          "foreign_owned", "staff_size", "advanced_filtration", "water_treatment_system",
+          "business_area", "recycling_center_distance")
+
+row_of <- function(method, fit, term, n) {
+  ci <- confint(fit)[term, ]
+  data.frame(method, estimate = coef(fit)[[term]], lower = ci[1], upper = ci[2],
+             businesses = n, row.names = NULL)
+}
+
+# The three estimates we can rerun here, each with its 95% interval.
+estimates <- function() {
+  # se_type "stata" (CR1): the default CR2 with 4,959 clusters is too slow in
+  # the browser, and the interval differs from CR2 by about 1 AED.
+  did <- lm_robust(waste_management_costs ~ enrolled * round, data = offered,
+                   clusters = business_identifier, se_type = "stata")
+  rdd <- lm_robust(reformulate(c("eligible", "distance", covs), "waste_management_costs"),
+                   data = rdd_data)
+  rct <- lm_robust(waste_management_costs ~ treatment_neighborhood, data = rct_data,
+                   clusters = neighborhood_identifier)
+  rbind(row_of("Difference-in-differences", did, "enrolled:round", nrow(offered) / 2),
+        row_of("Regression discontinuity", rdd, "eligible", nrow(rdd_data)),
+        row_of("Randomised offering", rct, "treatment_neighborhood", nrow(rct_data)))
+}
+
+# Each estimate as AED avoided, with its interval, against the 1,000 AED bar.
+interval_plot <- function(tab) {
+  clean_par()
+  lo <- pmin(-tab$lower, -tab$upper); hi <- pmax(-tab$lower, -tab$upper)
+  y  <- rev(seq_len(nrow(tab)))
+  plot(NA, xlim = c(400, 1300), ylim = c(0.5, nrow(tab) + 0.5), yaxt = "n", bty = "n",
+       xlab = "AED avoided per business per year", ylab = "")
+  axis(2, at = y, labels = tab$method, tick = FALSE)
+  abline(v = 1000, col = ALERT, lwd = 3, lty = 2)
+  segments(lo, y, hi, y, col = ACCENT, lwd = 8)
+  points(-tab$estimate, y, pch = 19, cex = 2.2, col = ACCENT)
+}
+
+# The discontinuity at a chosen window around the cut-off.
+rdd_window <- function(width) {
+  d <- subset(rdd_data, abs(distance) <= width)
+  f <- lm_robust(waste_management_costs ~ eligible * distance, data = d)
+  row_of(sprintf("Discontinuity, +/- %s points", width), f, "eligible", nrow(d))
+}
+```
+
+::: {.panel}
+On Monday you learned what a comparison is. On Tuesday you read three more ways
+of building one. This morning you costed a programme.
+
+Until now you have read someone else's analysis. Today you question the analyst
+and decide whether you would act on the evaluation.
+:::
+
+::: {.ask .fragment}
+The analyst is in this room, played by the trainer. You have the checklist. The
+analyst has to answer, and today the analyst has the data open.
+:::
+
+## Would you sign off?
+
+:::::: {.columns}
+
+::::: {.column width="58%"}
+```{=html}
+<div class="hero">
+  <div class="value">1,000</div>
+  <div class="label">AED per business per year, the bar to clear</div>
+</div>
+```
+
+::: {.ask}
+**`[MENTI PLACEHOLDER]`** Would you sign off on this evaluation for national
+scale-up? Yes / No / Not without more answers.
+:::
+:::::
+
+::::: {.column width="42%"}
+```{r out.width='280px', out.extra='style="display:block; margin:0 auto;"'}
+knitr::include_graphics(MENTI_QR)
+```
+:::::
+
+::::::
+
+::: {.warn}
+Vote now. You vote again at the end, and the two votes are compared.
+:::
+
+::: {.notes}
+Open the deck a couple of minutes before the session starts: R and its statistics package take about a minute to load in the browser, after which every live cell runs in a few seconds. A show of hands is enough if the Menti is not running. What matters is that the
+room is on record before the analyst speaks.
+:::
+
+# 1 · The claim on the table {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## What is being offered for sign-off
+
+::: {.panel}
+The GreenWaste evaluation. The published claim: the programme **reduced
+waste-management costs by about 1,000 AED per business per year**, clearing the
+rule for national scale-up.
+:::
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+**The evidence**
+
+- A difference-in-differences estimate
+- A regression discontinuity at the eligibility cut-off
+- A randomised comparison of neighbourhoods
+- A matched comparison
+- A benefit-cost ratio over five years
+:::::
+
+::::: {.column width="50%"}
+**What the analyst says it shows**
+
+- Four methods, same direction, similar size
+- The result is statistically significant
+- The programme pays for itself
+- Nothing depends on a single fragile choice
+:::::
+
+::::::
+
+::: {.ask .fragment}
+You already know one of those four statements is not true. Which one, and how
+would you show it?
+:::
+
+## The numbers, as presented
+
+```{r}
+kable(data.frame(
+  Method = c("Difference-in-differences", "Regression discontinuity",
+             "Randomised offering", "Matched comparison"),
+  `Estimate (AED)` = c("-816", "-905", "-1,014", "-1,000"),
+  `What it covers` = c("Enrolled and not, offered neighbourhoods", "Businesses near the cut-off",
+                       "All eligible businesses", "Matched enrolled businesses"),
+  check.names = FALSE), align = "lrl")
+```
+
+::: {.warn .fragment}
+Every method lands between 816 and 1,014 AED, and the rule is 1,000. The
+randomised estimate clears it on its point estimate, the matched one sits on it,
+and the other two fall short. None of this table shows an interval.
+:::
+
+## The rule, and the room to manoeuvre inside it
+
+:::::: {.columns}
+
+::::: {.column width="44%"}
+```{=html}
+<div class="facts">
+  <div class="k">The rule</div>    <div class="v">At least 1,000 AED per business per year</div>
+  <div class="k">The range</div>   <div class="v">816 to 1,014 AED</div>
+  <div class="k">The claim</div>   <div class="v">"About 1,000"</div>
+  <div class="k">The decision</div><div class="v">Scale up nationally</div>
+</div>
+```
+:::::
+
+::::: {.column width="56%"}
+::: {.panel}
+The claim reports a number no method produced, summarises a range that
+straddles the threshold, and treats the threshold as crossed.
+:::
+
+::: {.ask .fragment}
+Is "about 1,000" a rounding convention, or is the decision being made by the
+rounding?
+:::
+:::::
+
+::::::
+
+## First question of the day
+
+::: {.ask}
+**Which of the estimates should the decision rest on, and why not the others?**
+:::
+
+::: {.panel .fragment}
+Each estimate describes a different group of businesses: all eligible
+businesses, those near a cut-off, the matched enrolled businesses, or the
+enrolled and not enrolled in offered neighbourhoods. An evaluator who cannot say
+which group the decision concerns cannot say which estimate supports it.
+:::
+
+# 2 · The checklist {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## Four areas, in the order they break
+
+```{r}
+kable(data.frame(Area = qa_domains,
+                 `What you are testing` = unname(qa_purpose[qa_domains]),
+                 check.names = FALSE), align = "ll")
+```
+
+::: {.panel}
+Methodology comes first: a design that cannot answer the question cannot be
+rescued by good data. Conclusions come last: a conclusion is only as strong as
+the three areas under it.
+:::
+
+## The five to ask every time
+
+```{r results='asis'}
+html_out(paste(sprintf('<div class="panel"><b>%d.</b> %s</div>', seq_along(qa_headline),
+                       qa_headline), collapse = "\n"))
+```
+
+::: {.warn}
+Five are easy to hold in your head in a meeting. The printed handout has all
+twenty, five under each area.
+:::
+
+## How to tell a strong question from a weak one
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+**Weak**
+
+- Was the study rigorous?
+- Are the results significant?
+- Was the sample size adequate?
+- Did you control for confounders?
+- Is the data reliable?
+:::::
+
+::::: {.column width="50%"}
+**Strong**
+
+- Which assumption would reverse the sign?
+- What is the estimate and its confidence interval?
+- How many units were dropped, and why?
+- What changed at the same time?
+- Who is missing from the data?
+:::::
+
+::::::
+
+::: {.ask .fragment}
+Anyone can answer a weak question with "yes". A strong question needs a fact to
+answer it.
+:::
+
+## Your turn: sort these
+
+```{r results='asis'}
+cands <- c(
+  "Did the programme work?",
+  "What would have happened to these businesses without the programme?",
+  "Was the sample large enough?",
+  "How many businesses dropped out between the two survey rounds?",
+  "Were the results statistically significant?",
+  "Which assumption, if wrong, would flip the finding?",
+  "Is this good quality data?",
+  "If the effect were half this size, would you still recommend scale-up?"
+)
+html_out(paste0('<div class="excerpt">',
+                paste(sprintf('<p><b>%d.</b> %s</p>', seq_along(cands), cands), collapse = ""),
+                '</div>'))
+```
+
+::: {.ask}
+Mark each one **S** or **W**. Then say what makes the S ones answerable.
+:::
+
+## Which of those survived
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.warn}
+**Weak, and why**
+
+- *Did the programme work?* One word answers it.
+- *Was the sample large enough?* For what? Precision is not the problem here.
+- *Were the results significant?* Yes or no, where the number is what matters.
+- *Is this good quality data?* Invites an adjective, not a fact.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.panel .fragment}
+**Strong, and why**
+
+- *What would have happened without it?* Asks for the counterfactual.
+- *How many dropped out?* A count the analyst has or does not have.
+- *Which assumption would flip it?* Brings the weak point into the open.
+- *Half the size?* Tests whether the estimate is carrying the decision.
+:::
+:::::
+
+::::::
+
+::: {.notes}
+Point out that the strong questions are no harder to ask; the difference is
+that they need a fact to answer. Section 4 shows the analyst producing those
+facts.
+:::
+
+## Five-minute break
+
+::: {.panel}
+Back in five minutes. When we return: the clinic, with the analyst in the room.
+:::
+
+# 3 · The clinic {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## How this runs
+
+:::::: {.columns}
+
+::::: {.column width="58%"}
+::: {.panel}
+The analyst answers as themselves. Groups ask questions, one area at a time.
+
+1. One question at a time; the answer comes before the next question
+2. Any group may follow up once on an answer
+3. The analyst may say *"I don't know"* or *"we didn't check that"*
+4. An admission is useful information, not a failure
+5. Nothing is scored
+:::
+:::::
+
+::::: {.column width="42%"}
+::: {.warn}
+**Four groups**, one per area: methodology, assumptions, data quality,
+conclusions.
+
+Five minutes to agree your three sharpest questions before the clinic opens.
+:::
+:::::
+
+::::::
+
+::: {.notes}
+When a group asks one of the questions in section 4, jump to that slide and run
+it: the analyst answers with the data. Questions without a prepared slide get a
+spoken answer, or an honest "we did not check".
+:::
+
+## The answers that cost the analyst something
+
+::: {.panel}
+Some answers make the analysis look better. Some make it look worse. You are
+looking for the second kind.
+:::
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.warn}
+**Listen for these phrases**
+
+- "That's a good question…"
+- "In the main specification, yes"
+- "We discussed that"
+- "That was outside the scope"
+- "The data doesn't let us"
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.panel .fragment}
+**And follow up with**
+
+- *Which other specification?*
+- *What happened in the others?*
+- *What did you decide, and why?*
+- *Whose scope? Who set it?*
+- *What would you need to answer it?*
+:::
+:::::
+
+::::::
+
+## The one you must not let go
+
+::: {.ask}
+**What is the comparison, and how was it chosen?**
+:::
+
+::: {.panel .fragment}
+Every method this week rests on a comparison group that matched the
+participants before the programme began: because it was drawn by lot, sat just
+past a cut-off, was matched on what was measured, or was trending in parallel.
+Those are four different reasons, and each can fail in its own way. The analyst
+should be able to say, in one sentence, which one applies here.
+:::
+
+# 4 · The analyst answers with the data {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## "What is the estimate, and how sure are you?"
+
+```{webr}
+#| fig-width: 7.5
+#| fig-height: 2.2
+tab <- estimates()
+round(tab[, -1])
+interval_plot(tab)
+```
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+Three estimates rerun live, each with its 95% interval. The matched −1,000 is as
+reported.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn .fragment}
+No interval clears the 1,000 line at its least generous end.
+:::
+:::::
+
+::::::
+
+## "Does anything depend on a single choice?"
+
+```{ojs}
+//| echo: false
+viewof width = Inputs.range([2, 12], {value: 12, step: 1, label: "Window around the cut-off (index points)"})
+```
+
+```{webr}
+#| input:
+#|   - width
+#| autorun: true
+#| edit: false
+round(rdd_window(width)[, -1])
+```
+
+::: {.ask}
+The analyst said nothing depends on a fragile choice. Narrow the window the
+discontinuity uses. **What happens to the estimate?**
+:::
+
+::: {.warn .fragment}
+At ±2 points it falls to about 790 AED; at ±6 it is about 1,080. The same data
+gives an answer on either side of the rule depending on one analyst choice. The
+fourth statement on the claim slide is the false one.
+:::
+
+## "Who is each estimate about?"
+
+```{webr}
+data.frame(
+  estimate = c("Difference-in-differences", "Discontinuity", "Randomised"),
+  businesses = c(length(unique(offered$business_identifier)), nrow(rdd_data), nrow(rct_data)),
+  who = c("offered neighbourhoods, enrolled and not", "offered neighbourhoods, 2021",
+          "eligible businesses, all neighbourhoods"))
+```
+
+::: {.panel}
+Different groups of businesses, so different questions. A national roll-out
+would reach businesses like the eligible ones in every neighbourhood.
+:::
+
+::: {.ask .fragment}
+Which estimate speaks to the businesses a national roll-out would reach?
+:::
+
+## "Who is missing from the data?"
+
+```{webr}
+data.frame(rows_per_business = names(table(table(gw$business_identifier))),
+           businesses = as.vector(table(table(gw$business_identifier))))
+missing <- colSums(is.na(gw))
+missing[missing > 0]
+with(gw, table(compliance_missing = is.na(recycling_compliance), enrolled))
+```
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+Every business appears in both rounds, so no one dropped out. But one column is
+empty for 8,570 rows.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn .fragment}
+Recycling compliance was recorded only for eligible businesses. Any analysis
+that controls for it silently drops every ineligible business. Ask what was
+dropped, not only what was measured.
+:::
+:::::
+
+::::::
+
+## "Were the groups on the same path before?"
+
+```{webr}
+table(round = gw$round)
+```
+
+::: {.ask}
+The parallel-trends question from Day 2. What can the analyst show?
+:::
+
+::: {.panel .fragment}
+Nothing: there are only two rounds, one before and one after. The honest answer
+is "the data does not let us check." That is an admission, and it belongs in the
+decision: the difference-in-differences estimate rests on an assumption nobody
+tested.
+:::
+
+# 5 · The debrief {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## The unanswered questions are the finding
+
+::: {.panel}
+For each area, how many of your questions got a definite answer, and how many
+got an admission?
+:::
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+```{=html}
+<div class="facts">
+  <div class="k">Answered</div>     <div class="v">The fact exists and was produced</div>
+  <div class="k">Admitted</div>     <div class="v">"We didn't check that"</div>
+  <div class="k">Deflected</div>    <div class="v">Answered a different question</div>
+  <div class="k">Unanswerable</div> <div class="v">The design cannot settle it</div>
+</div>
+```
+:::::
+
+::::: {.column width="50%"}
+::: {.ask .fragment}
+Which of the four is not a failure, and which one tells you the analysis is
+weaker than it looked?
+:::
+:::::
+
+::::::
+
+::: {.warn .fragment}
+A deflection is worse than an admission. An admission shows where the evidence
+stops. A deflection suggests the analyst may not know either.
+:::
+
+## Which unanswered question changes the decision
+
+::: {.ask}
+Of everything the analyst could not answer, which **one** would change your
+sign-off if it came back the wrong way?
+:::
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+Most unanswered questions are interesting and not decisive. They belong in the
+limitations section.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.panel .fragment}
+One or two are decisive. Those are worth commissioning more work on, or writing
+into the decision as a condition.
+:::
+:::::
+
+::::::
+
+## Would you sign off now?
+
+:::::: {.columns}
+
+::::: {.column width="58%"}
+```{=html}
+<div class="hero">
+  <div class="value">1,000</div>
+  <div class="label">The same bar, after the clinic</div>
+</div>
+```
+
+::: {.ask}
+**`[MENTI PLACEHOLDER]`** Same three options. If your vote moved, say which
+answer moved it.
+:::
+:::::
+
+::::: {.column width="42%"}
+```{r out.width='280px', out.extra='style="display:block; margin:0 auto;"'}
+knitr::include_graphics(MENTI_QR)
+```
+:::::
+
+::::::
+
+# 6 · Put AI to work {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## The prompt
+
+::: {.excerpt}
+I have an evaluation of a programme that subsidised waste-management technology
+for businesses. It used difference-in-differences, regression discontinuity,
+a randomised comparison and matching. All four methods found a cost reduction of
+roughly 1,000 AED per business per year. List the critical questions a
+commissioner should ask before acting on this result.
+:::
+
+::: {.panel}
+A common kind of prompt. Run it yourselves, then compare what you get with the
+example on the next slide and with your own questions.
+:::
+
+## What came back
+
+:::::: {.columns}
+
+::::: {.column width="58%"}
+::: {.ai-output}
+*A response like this is possible, especially with a short or leading prompt:*
+
+**1. Was the study well designed?** It used a comparison group and a pre-post
+design. **2. Was the sample adequate?** About 9,900 observations, so power is
+[not a concern here]{.flag} and the results can be trusted. **3. Were the
+results significant?** Significance is the main sign a result is real.
+**4. Were confounders controlled for?** Four methods suggest robustness.
+**5. Is the data reliable?** Check for missing values. **6. Is it policy
+relevant?** The reduction appears to exceed the threshold.
+
+**Overall:** the convergence of four methods on a similar estimate is [strong
+evidence of causality]{.flag}.
+:::
+:::::
+
+::::: {.column width="42%"}
+::: {.ask}
+Find the two flagged errors. Then find the bigger problem, which is not flagged.
+How does your AI's list compare?
+:::
+
+::: {.panel .fragment}
+The bigger problem: none of the six questions needs a fact to answer. Every one
+would pass the sorting exercise as **weak**.
+:::
+:::::
+
+::::::
+
+## What AI got, and what it could not get
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**What it did well**
+
+- Produced the shape of a critique
+- Covered the right broad topics
+- Read fluently and organised itself
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn .fragment}
+**What it missed**
+
+- A large sample does not remove selection bias; both flagged errors confuse the two.
+- It cannot know which assumption this design rests on: it was never told.
+- It never asks what the comparison was.
+- It never asks what was not checked, which is where the clinic found most.
+:::
+:::::
+
+::::::
+
+## The same task, a better prompt
+
+::: {.excerpt}
+I am advising on whether to scale up a programme nationally. An evaluator reports
+a cost reduction of about 1,000 AED per business per year from
+difference-in-differences, with a decision threshold of 1,000 AED. First, tell me
+which single assumption this design rests on. Second, tell me what evidence would
+show that assumption holds, and what it would look like if it failed. Third, tell
+me what you cannot determine from the information I have given you.
+:::
+
+::: {.panel .fragment}
+Three changes: ask for **one** assumption, not a list; ask what would **show it
+failing**; and ask what it **cannot tell you**, which lets the model admit a
+limit instead of writing around it.
+:::
+
+# 7 · Take this back to your desk {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## The three you will use
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**From memory, no notes**
+
+1. What is the comparison, and how was it chosen?
+2. What has to be true for this to be causal, and did you test it?
+3. Does the conclusion follow, or does it go beyond the evidence?
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn}
+If you remember one, remember the first. Every method this week is a different
+answer to it.
+:::
+:::::
+
+::::::
+
+::: {.ask .fragment}
+Which of the three will you ask first next time, and does it depend on the
+method?
+:::
+
+## Tomorrow
+
+::: {.panel}
+The full checklist, applied to a written report section by section, with a
+traffic-light rating for each. Bring the questions you wrote down today.
+:::

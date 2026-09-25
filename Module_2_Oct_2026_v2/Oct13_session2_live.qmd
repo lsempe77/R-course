@@ -1,0 +1,790 @@
+---
+title: "Reading a Regression Discontinuity Result"
+subtitle: "Module 2 · Day 2, Session 2: What Happens at the Cut-off"
+author: "3ie"
+always_allow_html: yes
+title-slide-attributes:
+  data-state: title-slide-state
+# live-revealjs: the quarto-live extension (_extensions/r-wasm/live) runs R in
+# the browser through webR. The live cells need an internet connection on the
+# day (webR loads from a CDN) and the CSV listed under webr: resources must sit
+# next to the published .html.
+#
+# Built from Fiona's Oct13_session2.qmd (Sep 24), with one correction that
+# changes the numbers: the RDD uses businesses in the OFFERED neighbourhoods
+# only, as Module 1 did. In the other neighbourhoods an "eligible" business was
+# offered nothing, so pooling them waters the jump down (to about -249 at +/-2)
+# and makes a sharp design look fuzzy. Here the rule is sharp and take-up is
+# complete. One example all session: the Abu Dhabi case slot is dropped.
+format:
+  live-revealjs:
+    theme: [theme_dge.scss, theme_live.scss]
+    logo: assets/dge_logo_horizontal.svg
+    slide-number: true
+    width: 1280
+    height: 720
+    fig-align: center
+    slide-level: 2
+    embed-resources: true
+webr:
+  packages: [estimatr]
+  render-df: kable
+  resources:
+    - evaluation_data_GreenWaste.csv
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+    dev: "png"
+    dpi: 96
+editor_options:
+  chunk_output_type: console
+---
+
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+
+```{r setup}
+library(knitr)
+library(estimatr)
+library(qrcode)
+
+gfmt  <- function(x) format(round(x), big.mark = ",")
+FENCE <- strrep("`", 3)   # built, not typed: a literal fence would end the chunk
+html_out <- function(x) cat("\n", FENCE, "{=html}\n", x, "\n", FENCE, "\n", sep = "")
+
+# ---- Live Menti poll (placeholder until the in-slide poll is built) --------
+MENTI_CODE <- "1234 5678"
+MENTI_JOIN <- paste0("https://www.menti.com/", gsub(" ", "", MENTI_CODE))
+menti_qr <- function(path = "menti_qr_d2s2.png", url = MENTI_JOIN) {
+  png(path, width = 900, height = 900, res = 300, bg = "white")
+  on.exit(dev.off(), add = TRUE)
+  par(mar = c(0, 0, 0, 0)); plot(qr_code(url, ecl = "H")); path
+}
+MENTI_QR <- menti_qr()
+
+RULEBAR <- 1000
+CUT     <- 58
+
+# ---- The numbers the static slides quote (live cells recompute them) -------
+gw  <- read.csv("./evaluation_data_GreenWaste.csv")
+off <- subset(gw, round == 1 & treatment_neighborhood == 1)   # offered neighbourhoods
+off$distance <- off$efficiency_index - CUT
+off$below    <- as.integer(off$efficiency_index <= CUT)
+
+at <- function(d, width) {
+  d <- subset(d, abs(distance) <= width)
+  f <- lm_robust(waste_management_costs ~ below * distance, data = d)
+  list(est = coef(f)[["below"]], ci = confint(f)["below", ], n = nrow(d),
+       slope = coef(f)[["distance"]])
+}
+w2 <- at(off, 2)                                   # the +/-2 window: about -791
+w2_least <- min(abs(w2$ci))                        # interval end closest to zero
+
+# Module 1's two numbers: every business in offered neighbourhoods, a straight
+# line either side, without and with covariates.
+covs <- c("age_manager", "age_deputy", "educ_manager", "educ_deputy", "female_manager",
+          "foreign_owned", "staff_size", "advanced_filtration", "water_treatment_system",
+          "business_area", "recycling_center_distance")
+m1_plain <- coef(lm(waste_management_costs ~ below + distance, data = off))[["below"]]
+m1_cov_fit <- lm_robust(reformulate(c("below", "distance", covs), "waste_management_costs"), data = off)
+m1_cov    <- coef(m1_cov_fit)[["below"]]
+m1_cov_ci <- confint(m1_cov_fit)["below", ]
+
+# The pooled version (all neighbourhoods) that the earlier deck used.
+all1 <- subset(gw, round == 1)
+all1$distance <- all1$efficiency_index - CUT
+all1$below    <- as.integer(all1$efficiency_index <= CUT)
+pooled2 <- at(all1, 2)
+```
+
+# 0 · Where Module 1 left us {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## What you saw in Module 1
+
+```{webr}
+#| autorun: true
+#| include: false
+# Runs once, in the browser, when the deck opens. Everything the live cells
+# below use is defined here, so each cell on a slide stays a few lines long.
+gw <- read.csv("evaluation_data_GreenWaste.csv")
+library(estimatr)
+ACCENT <- "#215a9e"; ACCENT2 <- "#7da1c4"; ALERT <- "#B8272C"; MUTED <- "#545860"
+options(width = 100, scipen = 6)
+# Warm up estimatr now: its first call in the browser is slow, later ones fast.
+invisible(lm_robust(y ~ x, data = data.frame(y = c(1, 3, 2, 5), x = c(0, 1, 0, 1))))
+
+CUT <- 58
+prep <- function(d) {
+  d$distance <- d$efficiency_index - CUT          # the score measured from the line
+  d$below    <- as.integer(d$efficiency_index <= CUT)   # 1 = eligible side
+  d
+}
+offered <- prep(subset(gw, round == 1 & treatment_neighborhood == 1))
+everyone <- prep(subset(gw, round == 1))
+
+clean_par <- function() par(mar = c(4.2, 5.5, 1, 1), family = "sans", las = 1,
+                            col.axis = MUTED, col.lab = MUTED, fg = MUTED, cex = 1.2)
+
+# The jump at the line, inside a window of +/- width points, with its interval.
+jump_at <- function(d, width, cut = CUT) {
+  d$distance <- d$efficiency_index - cut
+  d$below    <- as.integer(d$efficiency_index <= cut)
+  d <- subset(d, abs(distance) <= width)
+  f <- lm_robust(waste_management_costs ~ below * distance, data = d)
+  ci <- confint(f)["below", ]
+  data.frame(cut_off = cut, window = width, businesses = nrow(d),
+             jump = round(coef(f)[["below"]]), lower = round(ci[1]), upper = round(ci[2]),
+             row.names = NULL)
+}
+
+# Average cost in half-point bins, a fitted line on each side, and the jump.
+jump_plot <- function(width = 4, view = 10) {
+  d <- subset(offered, abs(distance) <= view)
+  d$bin <- floor(d$distance * 2) / 2 + 0.25            # half-point bins
+  bins <- aggregate(waste_management_costs ~ bin, data = d, FUN = mean)
+  names(bins) <- c("bin", "cost")
+  clean_par()
+  plot(bins$bin + CUT, bins$cost, pch = 19, cex = 1.3, bty = "n",
+       col = ifelse(bins$bin < 0, ACCENT, ACCENT2),
+       xlab = "Efficiency index (eligible: 58 or below)", ylab = "Waste costs, AED")
+  abline(v = CUT, col = MUTED, lty = 2)
+  w <- subset(offered, abs(distance) <= width)
+  f <- lm(waste_management_costs ~ below * distance, data = w)
+  for (s in 0:1) {
+    xs <- if (s == 1) seq(-width, 0, length.out = 20) else seq(0, width, length.out = 20)
+    lines(xs + CUT, predict(f, data.frame(below = s, distance = xs)),
+          col = if (s == 1) ACCENT else ACCENT2, lwd = 4)
+  }
+  top <- coef(f)[["(Intercept)"]]
+  segments(CUT, top, CUT, top + coef(f)[["below"]], col = ALERT, lwd = 6)
+}
+
+# Does a characteristic jump at the line? Same regression, a covariate as outcome.
+balance <- function(width) {
+  vars <- c(manager_age = "age_manager", staff = "staff_size",
+            area = "business_area", recycling_distance = "recycling_center_distance")
+  d <- subset(offered, abs(distance) <= width)
+  do.call(rbind, lapply(names(vars), function(v) {
+    f  <- lm_robust(reformulate(c("below", "distance", "below:distance"), vars[[v]]), data = d)
+    ci <- confint(f)["below", ]
+    data.frame(characteristic = v, jump = round(coef(f)[["below"]], 2),
+               lower = round(ci[1], 2), upper = round(ci[2], 2),
+               differs = ci[1] > 0 | ci[2] < 0, row.names = NULL)
+  }))
+}
+
+# Businesses per one-point slice of the index, 54 to 62.
+density_plot <- function() {
+  slice <- subset(offered, efficiency_index >= 54 & efficiency_index < 62)
+  clean_par()
+  hist(slice$efficiency_index, breaks = 54:62, col = ifelse(54:61 < 58, ACCENT, ACCENT2),
+       border = "white", main = "", xlab = "Efficiency index", ylab = "Businesses")
+  abline(v = 58, col = ALERT, lwd = 3, lty = 2)
+}
+```
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+Module 1 compared businesses either side of the eligibility cut-off, in the
+neighbourhoods where GreenWaste was offered, and reported two numbers.
+:::
+
+::: {.ask}
+From memory: why does a comparison at a cut-off count as fair?
+:::
+:::::
+
+::::: {.column width="50%"}
+```{r results='asis'}
+html_out(sprintf('
+<div class="facts">
+  <div class="k">Module 1, straight lines</div> <div class="v">%s AED</div>
+  <div class="k">Module 1, with covariates</div> <div class="v">%s AED</div>
+  <div class="k">The rule</div>                  <div class="v">at least 1,000 AED</div>
+</div>', gfmt(m1_plain), gfmt(m1_cov)))
+```
+
+::: {.panel .fragment}
+Businesses just either side of the line are near-twins. Which side they land on
+is close to chance, so the line creates the comparison.
+:::
+:::::
+
+::::::
+
+::: {.notes}
+About 3 minutes, recall only. Open the deck a couple of minutes before the
+session: R and its statistics package take about a minute to load in the
+browser, after which every live cell runs in a few seconds.
+:::
+
+## Today we open the box
+
+::: {.panel}
+Why did adding covariates move the answer from `r gfmt(m1_plain)` to
+`r gfmt(m1_cov)`? Today we rebuild the estimate from the data and run the four
+checks an RDD result has to pass.
+:::
+
+```{=html}
+<div class="facts">
+  <div class="k">1</div> <div class="v">The rule and the data: who was offered, who took part</div>
+  <div class="k">2</div> <div class="v">From the picture to a number</div>
+  <div class="k">3</div> <div class="v">Four checks: the window, bending the rule, balance, who it applies to</div>
+</div>
+```
+
+::: {.warn}
+You will not write code. You call the choices; I type and press **Run**.
+:::
+
+# 1 · The rule and the data {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## The rule that decided who got in
+
+:::::: {.columns}
+
+::::: {.column width="54%"}
+In the offered neighbourhoods, GreenWaste went to businesses whose **efficiency
+index** was **at or below 58**: the less efficient ones.
+
+Two businesses either side of that line are almost identical. One got the
+programme, one did not.
+:::::
+
+::::: {.column width="46%"}
+```{=html}
+<div class="facts">
+  <div class="k">Running variable</div> <div class="v">Efficiency index</div>
+  <div class="k">Cut-off</div>          <div class="v">58</div>
+  <div class="k">Eligible</div>         <div class="v">at or below 58</div>
+  <div class="k">Rule followed?</div>   <div class="v">we check it next</div>
+</div>
+```
+:::::
+
+::::::
+
+::: {.warn}
+**Read the direction carefully.** The rule offers the programme to the **less**
+efficient businesses, so the eligible side is on the **left** of the chart.
+Getting this backwards flips the sign of everything that follows.
+:::
+
+## `[MENTI PLACEHOLDER]` Which side is which?
+
+:::::: {.columns}
+
+::::: {.column width="62%"}
+::: {.ask style="font-size: 115%;"}
+Businesses at or below 58 were offered the programme. On the chart we are about
+to draw, is the eligible side on the **left** or the **right**?
+:::
+
+Go to **menti.com**, code **`r MENTI_CODE`**, or scan the code.
+:::::
+
+::::: {.column width="38%"}
+```{r out.width='280px', out.extra='style="display:block; margin:0 auto;"'}
+knitr::include_graphics(MENTI_QR)
+```
+:::::
+
+::::::
+
+::: {.panel .fragment}
+**Left.** A low index sits on the left of a normal axis, and low is eligible.
+Anyone who assumed the programme went to the *better* businesses would misread
+the chart and the sign of the estimate.
+:::
+
+## Did the rule hold?
+
+```{webr}
+data.frame(side = c("above 58", "58 or below"),
+           businesses = as.vector(table(offered$below)),
+           offered    = as.vector(tapply(offered$eligible, offered$below, mean)),
+           took_part  = as.vector(tapply(offered$enrolled, offered$below, mean)))
+```
+
+::: {.ask}
+Before I press Run: what share of eligible businesses do you expect took part?
+:::
+
+::: {.panel .fragment}
+Every business at or below 58 was offered and took part; none above 58 did. The
+rule is **sharp**, and the jump at the line is the effect of taking part.
+:::
+
+::: {.notes}
+Read the two rows aloud. `offered` and `took_part` are shares: 1 means every
+business on that side, 0 means none.
+:::
+
+## Which businesses belong in the comparison?
+
+```{ojs}
+//| echo: false
+viewof sample = Inputs.radio(["Offered neighbourhoods only", "Every neighbourhood"],
+  {value: "Offered neighbourhoods only"})
+```
+
+```{webr}
+#| input:
+#|   - sample
+#| autorun: true
+#| edit: false
+d <- if (sample == "Every neighbourhood") everyone else offered
+data.frame(jump_at_the_line = jump_at(d, width = 2)$jump,
+           eligible_who_took_part = round(mean(d$enrolled[d$below == 1]), 2))
+```
+
+::: {.ask}
+Switch to every neighbourhood. **Why does the jump shrink, and why does take-up
+fall to about half?**
+:::
+
+::: {.warn .fragment}
+In the other neighbourhoods an "eligible" business was offered nothing. Mixing
+them in puts untreated businesses on the eligible side, so the jump falls from
+about `r gfmt(w2$est)` to `r gfmt(pooled2$est)` AED. Ask the evaluator exactly
+which businesses are in the comparison.
+:::
+
+::: {.notes}
+An earlier version of this deck made this mistake and reported -249. Module 1
+used the offered neighbourhoods only.
+:::
+
+## The picture the method is built on
+
+```{webr}
+#| autorun: true
+#| edit: false
+#| fig-width: 11
+#| fig-height: 3.6
+jump_plot(width = 4)
+```
+
+::: {.ask}
+Dots are average costs in half-point bins. **Is there a step at the dashed line?**
+:::
+
+# 2 · From the picture to a number {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## Regression discontinuity in one sentence
+
+::: {.panel}
+Compare businesses **just below** the cut-off, who got the programme, with
+businesses **just above** it, who did not.
+:::
+
+::: {.panel}
+Right at the line, scoring 57.9 or 58.1 is close to a matter of chance, so the
+two sides are alike except for the programme. The **step in costs at the
+cut-off** is the estimated effect.
+:::
+
+::: {.notes}
+Point back at the previous chart: the step is the gap between the two clouds of
+dots at the dashed line.
+:::
+
+## A first, rough number
+
+```{webr}
+near <- subset(offered, abs(distance) <= 2)          # within 2 points of the line
+eligible_side <- mean(near$waste_management_costs[near$below == 1])
+other_side    <- mean(near$waste_management_costs[near$below == 0])
+round(data.frame(eligible_side, other_side, gap = eligible_side - other_side))
+```
+
+::: {.panel}
+Two averages, one subtraction. This is a starting point, not the answer: costs
+rise with the index, so an average across the window mixes that slope into the
+gap.
+:::
+
+## Running the regression
+
+```{webr}
+near <- subset(offered, abs(distance) <= 2)
+fit <- lm_robust(waste_management_costs ~ below * distance, data = near)
+round(as.data.frame(summary(fit)$coefficients[, c(1, 2, 4)]), 1)
+```
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+`distance` is the score measured from the line (0 = 58); `below` is 1 on the
+eligible side. `below * distance` fits a line on each side.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.ask}
+Only one row is the programme's effect. Which one?
+:::
+
+::: {.panel .fragment}
+**`below`: the jump, `r gfmt(w2$est)` AED.** `distance`, about
+`r sprintf("%+.0f", w2$slope)` AED per point, is the slope **along** the line,
+not the step **at** it.
+:::
+:::::
+
+::::::
+
+## Seeing the jump: the red line is `below`
+
+```{webr}
+#| autorun: true
+#| edit: false
+#| fig-width: 11
+#| fig-height: 3.4
+jump_plot(width = 2, view = 4)
+```
+
+::: {.panel}
+A line on each side, fitted to businesses within 2 points of 58. The red segment
+at the line is the `below` row, `r gfmt(w2$est)` AED. The lines slope up, which
+is why the raw average overstated the gap.
+:::
+
+## Does it clear the rule?
+
+```{r results='asis'}
+html_out(sprintf('
+<div class="hero">
+  <div class="value">%s</div>
+  <div class="label">AED at the cut-off, within 2 points</div>
+</div>
+<div class="stat-row">
+  <div><span class="n">%s</span><span class="k">The rule</span></div>
+  <div><span class="n">%s</span><span class="k">Least it could be</span></div>
+  <div><span class="n">No</span><span class="k">Clears the bar</span></div>
+</div>', gfmt(w2$est), gfmt(RULEBAR), gfmt(w2_least)))
+```
+
+::: {.ask}
+A real effect, clearly not zero. The interval runs from `r gfmt(w2_least)` to
+`r gfmt(max(abs(w2$ci)))`. **Would you scale the programme on this?**
+:::
+
+::: {.notes}
+The interval is wide because only 773 businesses sit within 2 points. Check 1
+shows how the answer moves with that choice.
+:::
+
+# 3 · Four checks {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## This method's one assumption
+
+```{=html}
+<div class="hero">
+  <div class="value" style="font-size:1.9em;">Nothing else jumps at the cut-off.</div>
+</div>
+```
+
+::: {.panel}
+A business one point below 58 and one point above should be alike in every way
+except whether it got the programme. If something else also changes at 58, the
+jump is not only the programme.
+:::
+
+::: {.ask}
+Yesterday's assumption was that the groups moved in parallel. Today's is that
+nothing else changes at the line. Neither can be proven; both can be checked.
+:::
+
+## Check 1: does the jump survive a different window?
+
+```{ojs}
+//| echo: false
+viewof width = Inputs.range([1, 10], {value: 2, step: 1, label: "Window either side of 58 (index points)"})
+```
+
+```{webr}
+#| input:
+#|   - width
+#| autorun: true
+#| edit: false
+jump_at(offered, width)
+```
+
+::: {.ask}
+The window is the analyst's choice. Slide from 1 to 10. **Does the verdict against
+1,000 AED change?**
+:::
+
+::: {.warn .fragment}
+The estimate moves between about 790 and 1,120 AED, above the bar from a window
+of 5. The least generous end of the interval never reaches 1,000 (at most about
+960). Ask which window
+was used, and why.
+:::
+
+## Check 1, continued: a jump where there is no rule?
+
+```{ojs}
+//| echo: false
+viewof placebo = Inputs.range([48, 68], {value: 62, step: 2, label: "Pretend the cut-off is at"})
+```
+
+```{webr}
+#| input:
+#|   - placebo
+#| autorun: true
+#| edit: false
+jump_at(offered, width = 2, cut = placebo)
+```
+
+::: {.ask}
+Move the cut-off to 50, 54, 62, 66, where no rule exists. **What should the jump
+be?**
+:::
+
+::: {.panel .fragment}
+Close to zero, and every interval there contains zero. At 58 the jump is far
+outside that range. If the method found jumps where there is no programme, its
+jump at 58 would mean nothing.
+:::
+
+## Check 2: did anyone bend the rule?
+
+```{webr}
+#| fig-width: 10
+#| fig-height: 2.6
+density_plot()
+```
+
+::: {.ask}
+If businesses could nudge their score to 58 or below to qualify, what would the
+bar just left of the line look like?
+:::
+
+::: {.panel .fragment}
+Taller than its neighbours, with a dip just right. The bars at the line are not
+out of pattern: no sign of a pile-up. Ask anyway; it is invisible unless someone
+looks.
+:::
+
+## Check 3: are the two sides alike?
+
+```{ojs}
+//| echo: false
+viewof bwidth = Inputs.range([1, 8], {value: 2, step: 1, label: "Window (index points)"})
+```
+
+```{webr}
+#| input:
+#|   - bwidth
+#| autorun: true
+#| edit: false
+balance(bwidth)
+```
+
+::: {.ask}
+Each row runs the same regression with a business characteristic as the outcome.
+If the sides are alike, no row should jump. Change the window. **Which row does
+not behave?**
+:::
+
+::: {.warn .fragment}
+**Manager age**: businesses just below the line have managers 5 to 9 years
+younger, at every window. Something other than the programme changes at 58.
+This check fails.
+:::
+
+## What that row means
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+If younger managers also run their waste costs differently, part of the jump is
+the managers, not the programme. That is why Module 1's estimate with covariates
+(`r gfmt(m1_cov)`) differs from the one without (`r gfmt(m1_plain)`).
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn}
+Adjusting for manager age only fixes what was measured. If manager age jumps at
+58, something unmeasured may jump too.
+:::
+
+::: {.ask .fragment}
+What would you ask the evaluator? *Why does manager age change at the cut-off,
+and what else might?*
+:::
+:::::
+
+::::::
+
+## Check 4: who does the result apply to?
+
+```{webr}
+near <- abs(offered$distance) <= 2
+data.frame(group = c("within 2 points of 58", "everyone else"),
+           businesses = c(sum(near), sum(!near)),
+           staff = round(c(mean(offered$staff_size[near]), mean(offered$staff_size[!near])), 1),
+           area  = round(c(mean(offered$business_area[near]), mean(offered$business_area[!near])), 2))
+```
+
+::: {.panel}
+The estimate describes the businesses near the line: somewhat smaller, with
+smaller premises. It does not describe the businesses far from it.
+:::
+
+::: {.ask .fragment}
+If the plan is to extend the programme to everyone, what have you learned about
+the businesses the extension would reach?
+:::
+
+# 4 · Put AI to work {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## AI Snapshot: who does this apply to?
+
+:::::: {.columns}
+
+::::: {.column width="42%"}
+::: {.panel}
+Paste the regression table and the four checks into an AI tool with this
+prompt:
+
+**"Explain, without jargon, who this result actually applies to."**
+:::
+
+::: {.ask}
+Mark every claim the study supports. Four minutes.
+:::
+:::::
+
+::::: {.column width="58%"}
+::: {.ai-output}
+*A response like this is possible, especially with a short or leading prompt:*
+
+This study found that the GreenWaste programme reduced costs by around
+**790 AED** for participating businesses. [Because the study uses a cut-off at
+an efficiency index of 58, the findings apply to all businesses in the
+programme]{.flag}. [The cut-off design means the result generalises to the wider
+population of inefficient businesses]{.flag}. The estimate is therefore a
+reasonable basis for [scaling the programme to every business below average
+efficiency]{.flag}.
+:::
+:::::
+
+::::::
+
+## Debrief: one error, three times
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.warn}
+**1 · "Applies to all businesses in the programme."** The estimate is local to
+businesses near the line.
+:::
+
+::: {.warn}
+**2 · "Generalises to the wider population."** Backwards: RDD uses only the
+businesses closest to the line, so it generalises least.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn}
+**3 · "A basis for scaling to every business."** A scale-up needs what happens
+away from the cut-off, which this design discards.
+:::
+
+::: {.panel}
+And it never mentions the manager-age jump. The question it was asked, *who does
+this apply to?*, is the one it answered least well.
+:::
+:::::
+
+::::::
+
+## The same question, a better prompt
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**What people actually type**
+
+> Explain, without jargon, who this result actually applies to.
+
+Nothing about the design, so the model may reach for the most natural-sounding
+story.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.panel}
+**What to type instead**
+
+> This is a regression discontinuity result with the cut-off at an efficiency
+> index of 58, estimated within 2 points either side. The businesses near the
+> line are smaller than average, and manager age differs across the line. Name
+> which businesses the estimate describes and what it cannot tell us. **Ask me
+> questions before you answer.**
+:::
+:::::
+
+::::::
+
+::: {.ask}
+Run both. Does error 1 survive? What did each answer explain well? The habit:
+give the model the constraint it cannot infer, then ask a narrower question.
+:::
+
+# 5 · Close {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## Your turn: ask AI first
+
+::: {.ask}
+Before we show our list, ask an AI tool: **"I am a commissioner about to hear an
+evaluator present a regression discontinuity result. What are the key questions
+I should ask?"** Three minutes, then compare with the next slide.
+:::
+
+::: {.notes}
+Optional. If time is short, skip to the next slide. If you run it, ask what the
+AI missed, what it added that is worth keeping, and whether anything was wrong.
+:::
+
+## Five questions to ask any evaluator presenting RDD
+
+```{=html}
+<div class="facts">
+  <div class="k">1</div> <div class="v">Where is the cut-off, which side is eligible, and exactly which units are compared?</div>
+  <div class="k">2</div> <div class="v">Does the jump survive other windows, and is there none at placebo cut-offs?</div>
+  <div class="k">3</div> <div class="v">Is the number of units smooth at the line, or did anyone bend the rule?</div>
+  <div class="k">4</div> <div class="v">Does anything else jump at the line, such as manager age?</div>
+  <div class="k">5</div> <div class="v">Who is near the line, and does the estimate clear our rule for them?</div>
+</div>
+```
+
+## Where this sits
+
+```{r results='asis'}
+html_out(sprintf('
+<div class="facts">
+  <div class="k">Day 1 S3</div> <div class="v">naive comparisons and a randomised trial: -1,014, interval spans 1,000</div>
+  <div class="k">Day 2 S1</div> <div class="v">difference-in-differences: -816 against a 1,000 rule</div>
+  <div class="k">Today</div>    <div class="v">regression discontinuity: %s near the line (%s with covariates), against 1,000</div>
+</div>', gfmt(w2$est), gfmt(m1_cov)))
+```
+
+::: {.panel}
+DiD buys a comparison by assuming parallel trends. RDD buys it from the rule and
+pays with **reach**: an estimate about a narrow group. Next session, matching
+reaches wider by assuming everything that matters was measured.
+:::

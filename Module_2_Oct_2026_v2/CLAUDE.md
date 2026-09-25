@@ -68,7 +68,7 @@ Filenames follow `[Monthday]_session[#].qmd`. "Legacy source" is the file in `se
 - **Default `echo: false`; opt in to `echo: true` on the mechanics slides.** Keep the YAML default `echo: false` so framing and result slides never leak code, and set `echo: true` per chunk on the analysis slides meant to show the code (see the Code Question above). On a code-plus-output slide keep the code short and put it in a two-column layout beside the figure or table so the slide fits 1280x720.
 - **Author field:** 3ie (the legacy decks are authored "Dr. Lucas Sempé" — do not carry that over without asking).
 - **Slide budget:** roughly 22-28 slides for a 1.5h session, 30-36 for a 2h session. These sessions are discussion-heavy; slide count is low relative to a lecture.
-- **Speaker notes are fine; no separate facilitator guide.** `::: {.notes}` blocks may be used for presenter notes (they appear in revealjs presenter view, press S on the day). What Claude does not produce is a separate facilitator-guide document; facilitation prompts also live on the slides themselves as `.ask` / `.warn` callouts, and section-level timing stays visible through the `.mins` badge on each section divider (e.g. `# 2 · The result [15 min]{.mins}`).
+- **Speaker notes are fine; no separate facilitator guide.** `::: {.notes}` blocks may be used for presenter notes (they appear in revealjs presenter view, press S on the day). What Claude does not produce is a separate facilitator-guide document; facilitation prompts also live on the slides themselves as `.ask` / `.warn` callouts. **Do not put timing badges on section dividers.** `.mins` is still defined in the theme but nothing uses it, and timing belongs in the speaker notes rather than on the slide the room is reading. `SESSION_BUILD_GUIDE.md` §5 has the same rule and a grep to enforce it.
 - **Versioning:** none. Edit session files in place; git history is the record of changes. Do not create `_v1`/`_v2` copies.
 - **No em dashes.** Fiona's style preference for the training materials: do not use em dashes (—) in slides or in any prose meant for participants. Use a colon where the dash introduces an explanation, definition, or list; otherwise rephrase with a comma or split into two sentences. En dashes in numeric or time ranges (e.g. 0:00–0:03) are fine.
 
@@ -142,27 +142,40 @@ Practical consequences:
 
 ## Design System
 
-### Palette (validated — CVD-safe, chroma floor, contrast vs surface)
+### Palette (single source: `theme_editorial.scss`)
 
 | Role | Hex | Use |
 |---|---|---|
-| Accent / series 1 | `#00789E` | The programme / offered / treated group |
-| Series 2 | `#B45309` | Comparison / not-offered group |
-| Alert | `#9A2515` | Decision rules, annotations, flagged AI errors. **Never a data series.** |
-| Ink | `#131516` | Primary text |
-| Muted | `#5C6467` | Axis labels, secondary text |
-| Rule / panel | `#DCE1E3` / `#F4F6F7` | Borders, panel backgrounds |
+| Accent / series 1 | `#0E6E80` | The programme / offered / treated group |
+| Series 2 | `#A9561F` | Comparison / not-offered group |
+| Alert | `#8E2413` | Decision rules, annotations, flagged AI errors. **Never a data series.** |
+| Ink | `#16181A` | Primary text |
+| Muted | `#61686D` | Axis labels, secondary text |
+| Rule | `#E3E6E8` | Borders |
 
-The `#00789E` / `#B45309` pair passes CVD separation, the normal-vision floor, the chroma floor and contrast. Do not substitute a grey for the comparison group — teal-vs-grey fails colourblind separation.
+The values above are read from `theme_editorial.scss`, the theme every deck loads, and each
+deck's setup chunk mirrors them as `ACCENT`, `ACCENT2`, `ALERT`, `INK`, `MUTED` and `RULE`.
+Keep the two in step, or a chart and the slide around it will disagree.
+
+The teal / orange pair is what carries the separation between the programme and comparison
+groups, so **do not substitute a grey for the comparison group.** The CVD-safety and contrast
+figures on record were written for the earlier `module2.scss` hexes (`#00789E` / `#B45309`),
+so if a strict accessibility audit is ever needed, run it against the current pair rather than
+citing the old result.
 
 ### Chart conventions
 
-- One shared `theme_m2()` defined in each deck's setup chunk — never per-chart theming.
-- `fig.width` ~8–10, `fig.height` ~3.4–4.2, `dpi: 200`, `dev: "png"`.
-- Legend at the bottom, no legend title, minor gridlines off.
-- Direct-label the values that matter; never label every point.
+- **Every chart is plotly, sized by `pl_m2()`.** No deck uses `ggplot`, and there is no
+  `theme_m2()`: `pl_m2()` and `ax()` are shared across the twelve decks and must stay identical.
+- **`dpi: 96`, never 200.** knitr sizes an htmlwidget container as `fig.width × dpi`, so at 200
+  a `fig.width` of 11.5 rendered 2,300 px wide and pushed slide content off the bottom. At 96,
+  inches map 1:1 onto CSS pixels.
+- Full-width charts: `pl_m2(width = PL_W, height = 290)` with `fig.width = 11.5, fig.height = 3`.
+  Half-width: `pl_m2(width = PL_WC, height = 250)` with `fig.width = 5.4, fig.height = 2.6`.
+- `pl_m2()` gives every chart an explicit pixel width, a transparent background, no mode bar
+  and a bottom legend with no title. Direct-label the values that matter; never label every point.
 
-### Callout components (defined in `module2.scss`)
+### Callout components (defined in `theme_editorial.scss`)
 
 | Class | Use |
 |---|---|
@@ -172,7 +185,7 @@ The `#00789E` / `#B45309` pair passes CVD separation, the normal-vision floor, t
 | `.ai-output` | Verbatim AI response for participants to mark up; wrap planted errors in `[...]{.flag}` |
 | `.hero` / `.stat-row` | The single number a slide exists to deliver; a three-across figure row |
 | `.facts` | Case-study "at a glance" key/value grid |
-| `.mins` | Timing badge on a section divider, e.g. `# 2 · The result [15 min]{.mins}` |
+| `.mins` | **Deprecated.** A timing badge for a section divider. Nothing uses it and `SESSION_BUILD_GUIDE.md` §5 bans it; timing belongs in the speaker notes. |
 
 Use these instead of bold paragraphs. They are what keep the decks visually consistent across twelve sessions.
 
@@ -294,27 +307,71 @@ stage 3.
 
 ---
 
+## Session Ownership
+
+Every session has one named owner, and the other person is its second pair of eyes. The
+owner is accountable for that session's content and delivery; the other reviews the live
+deck (stage 3 of the Working Rhythm) and is the reviewer of record, so no session goes
+unreviewed.
+
+| Day | Session | Owner | Second pair of eyes |
+|---|---|---|---|
+| Oct 12 | S1 · Compared to What? | Lucas | Fiona |
+| Oct 12 | S2 · What Do the Numbers Say? | Fiona | Lucas |
+| Oct 12 | S3 · Spot the Problem | Lucas | Fiona |
+| Oct 13 | S1 · Reading DiD Results | Fiona | Lucas |
+| Oct 13 | S2 · Reading RDD Results | Lucas | Fiona |
+| Oct 13 | S3 · Reading Matching Results | Fiona | Lucas |
+| Oct 14 | S1 · Was It Worth It? | Lucas | Fiona |
+| Oct 14 | S2 · What Can You Read? | Fiona | Lucas |
+| Oct 14 | S3 · Interrogate the Analyst | Lucas | Fiona |
+| Oct 15 | S1 · Is This Evidence Credible? | Fiona | Lucas |
+| Oct 15 | S2 · From Findings to Policy | Lucas | Fiona |
+| Oct 15 | S3 · Plan Your Own Evaluation | Fiona | Lucas |
+
+**Lucas reviews Fiona's six.** Note that an owner is not the same as a builder: the decks
+were built by Claude, and git history rather than this table records who wrote what.
+
+---
+
 ## Checklist / Next Steps
 
-- [ ] Keep `Module2_exercise_plan.docx` current as sessions are built (Oct13 S1 seeded)
-- [x] Set up folder and draft Claude md
-- [x] Help me improve the Claude md and fill in any missing details
-- [x] Copy `clean.scss` into `Module_2_Oct_2026/`
-- [x] Establish the design system (`module2.scss`, validated palette, callouts)
-- [ ] **Oct13 S1 — DiD** — rebuilt with the design system, a case-study opening and a Word facilitator guide. Awaiting Fiona's review and the DOH data. *(The stale `Oct13_session1.pptx` has been removed; no `.pptx` remains in the folder.)*
-- [ ] Oct13 S2 — RDD
-- [ ] Oct13 S3 — Matching
-- [ ] Oct12 S1 — Language / Compared to What?
-- [ ] Oct12 S2 — Abu Dhabi Police descriptives
-- [ ] Oct12 S3 — Naive comparisons and RCT
-- [ ] Oct14 S1 — Cost analysis
-- [ ] Oct14 S2 — Data visualisation
-- [ ] Oct14 S3 — QA clinic
-- [ ] Oct15 S1 — QA deep dive
-- [ ] Oct15 S2 — Evidence translation
-- [ ] Oct15 S3 — Plan your own evaluation
-- [ ] Cross-session pass: check the running Day 2 comparison slide is consistent
-- [ ] Upload outstanding case data (see Data Inventory)
+**All twelve decks are built and published.** Nothing is outstanding on the slides
+themselves; what remains is delivery readiness.
+
+### Delivery readiness
+
+- [ ] **Session length. All four 2h sessions are short of the 30–36 slide budget.**
+      Oct12 S3 is 26, Oct13 S3 25, Oct14 S3 23 and Oct15 S3 18. The last of these is the
+      capstone and the largest gap. Counting sessions rather than slides hides this: the
+      table above reads as twelve of twelve complete while a quarter of the delivery time
+      is under-filled. Slide counts here are the published decks in `docs/`.
+- [ ] **Real case data, four decks.** Oct13 S1 (DOH), Oct13 S2 (DCD RDD), Oct13 S3
+      (DCD matching, Case 2) and Oct14 S1 (the cost-benefit case) carry visible
+      `[PLACEHOLDER]` slots. The structure is final, so the findings drop in.
+- [ ] **Menti.** `MENTI_CODE` is still the placeholder in every deck, so the published QR
+      codes point at a Menti that does not exist. Set a real code while the Menti is live.
+- [ ] **Publish the pending Oct12 edits.** `Oct12_session1/2/3.qmd` carry uncommitted
+      edits and `docs/` is behind them. Re-render and publish once those are settled.
+- [ ] **Keep `Module2_exercise_plan.docx` current.** It is the partner's build brief for
+      every exercise, card and handout. Oct13 S1 is seeded.
+- [ ] Fiona: run each session's AI tasks, capture real failures into `AI_failure_exs/`,
+      and flag them for inclusion in the AI Failure Library.
+- [ ] Cross-session pass: the running Day 2 comparison slide reads consistently across
+      Oct13 S1–S3.
+- [ ] **Pending decision, `.dense`.** The uncommitted Oct12 edits delete the `.dense`
+      component from the theme and from every slide that used it. If that change lands,
+      the advice in the "Known formatting traps" table above and `SESSION_BUILD_GUIDE.md`
+      §5 has to go with it, or the next session will be told to use a class that no
+      longer exists.
+
+### Done
+
+- [x] Set up the folder and this file
+- [x] Establish the design system and the single editorial theme
+- [x] Build all twelve decks
+- [x] Publish them, with one copy of each in `docs/`
+- [x] Resolve the theme fork, the author field, and the false Abu Dhabi Police attribution
 
 ---
 

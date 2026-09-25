@@ -11,7 +11,7 @@ session_files.*
 .quarto/
 
 # Generated at render time by the Menti QR helper in each deck
-menti_qr.png
+menti_qr*.png
 
 # R generated output
 Rplot*.png

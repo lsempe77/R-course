@@ -176,6 +176,17 @@ $body-weight: 300;
 
 .reveal .ai-output .flag { color: $alert; font-weight: 700; background: none; }
 
+// A prompt quoted inside a callout reads as a quotation, one step smaller
+// than the callout's own text, so a prompt-comparison slide fits.
+.reveal .panel blockquote, .reveal .ask blockquote {
+  font-size: 0.85em;
+  margin: 0.3em 0;
+  padding: 0 0 0 0.8em;
+  border-left: 2px solid $rule;
+  box-shadow: none;
+  width: auto;
+}
+
 // The editorial theme centres this variant. The brand does not allow centred
 // text, so here it is a plain left-aligned callout.
 .reveal .note-ctr { width: auto; margin-left: 0; margin-right: 0; text-align: left; }

@@ -1,0 +1,721 @@
+---
+title: "From Findings to Policy"
+subtitle: "Module 2 · Day 4, Session 2: Evidence Translation"
+author: "3ie"
+always_allow_html: yes
+title-slide-attributes:
+  data-state: title-slide-state
+# live-revealjs: the quarto-live extension (_extensions/r-wasm/live) runs R in
+# the browser through webR. The live cells need an internet connection on the
+# day (webR loads from a CDN). No data file: the findings are in qa_translation.R
+# (static slides) and repeated in the hidden setup cell (live slides).
+#
+# One example all session: Tariff Shield, a fictional scheme, deliberately not
+# GreenWaste (see qa_translation.R for why). New in this version: a brief
+# checker the trainer runs live on the room's sentences and on the AI draft.
+format:
+  live-revealjs:
+    theme: [theme_dge.scss, theme_live.scss]
+    logo: assets/dge_logo_horizontal.svg
+    slide-number: true
+    width: 1280
+    height: 720
+    fig-align: center
+    slide-level: 2
+    embed-resources: true
+webr:
+  packages: []
+  render-df: kable
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+    dev: "png"
+    dpi: 96
+editor_options:
+  chunk_output_type: console
+---
+
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+
+```{r setup}
+library(knitr)
+library(qrcode)
+
+FENCE <- strrep("`", 3)   # built, not typed: a literal fence would end the chunk
+html_out <- function(x) cat("\n", FENCE, "{=html}\n", x, "\n", FENCE, "\n", sep = "")
+
+# ---- The findings set and the brief template ------------------------------
+# Shared with the printable pack and template, so the deck cannot disagree with
+# the paper in the room's hands.
+source("qa_translation.R")
+
+# ---- Live Menti poll (placeholder until the in-slide poll is built) --------
+MENTI_CODE <- "1234 5678"
+MENTI_JOIN <- paste0("https://www.menti.com/", gsub(" ", "", MENTI_CODE))
+menti_qr <- function(path = "menti_qr_d4s2.png", url = MENTI_JOIN) {
+  png(path, width = 900, height = 900, res = 300, bg = "white")
+  on.exit(dev.off(), add = TRUE)
+  par(mar = c(0, 0, 0, 0)); plot(qr_code(url, ecl = "H")); path
+}
+MENTI_QR <- menti_qr()
+```
+
+# 0 · The decision {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## From reading evidence to writing it
+
+```{webr}
+#| autorun: true
+#| include: false
+# Runs once, in the browser, when the deck opens. The numbers repeat
+# qa_translation.R; keep the two in step.
+ACCENT <- "#215a9e"; ACCENT2 <- "#7da1c4"; ALERT <- "#B8272C"; MUTED <- "#545860"
+options(width = 100, scipen = 6)
+saving <- 743; ci_low <- 690; ci_high <- 796; threshold <- 900
+
+# One line: the estimate and its interval against a threshold.
+threshold_plot <- function(rule) {
+  par(mar = c(4.2, 1, 1, 1), family = "sans", las = 1, col.axis = MUTED,
+      col.lab = MUTED, fg = MUTED, cex = 1.25)
+  plot(NA, xlim = c(500, 1100), ylim = c(0.5, 1.5), yaxt = "n", bty = "n",
+       xlab = "Net saving, AED per vehicle per year", ylab = "")
+  abline(v = rule, col = ALERT, lwd = 3, lty = 2)
+  segments(ci_low, 1, ci_high, 1, col = ACCENT, lwd = 10)
+  points(saving, 1, pch = 19, cex = 2.8, col = ACCENT)
+  text(rule, 1.3, paste("threshold", rule), col = ALERT, pos = 4)
+}
+
+# The verdict at a given threshold: a small table, then the chart.
+threshold_view <- function(rule) {
+  threshold_plot(rule)
+  data.frame(threshold = rule, shortfall = rule - saving, interval_clears = ci_low >= rule)
+}
+
+# The six checks from "What to look for", run on any piece of text. Each is a
+# plain word search, so it can be fooled; it is a prompt for the room, not a
+# verdict.
+has <- function(text, words) any(sapply(words, grepl, x = tolower(text), fixed = TRUE))
+check_brief <- function(text) {
+  data.frame(
+    check = c("Gives the saving (743)",
+              "States the 900 AED threshold",
+              "Does not claim customers benefited",
+              "Gives the enrolment figure (34%)",
+              "Mentions the 22% cost overrun",
+              "Does not turn the null into 'no effect'"),
+    result = ifelse(c(
+      has(text, "743"),
+      has(text, c("900", "threshold")),
+      !has(text, c("customers benefit", "benefit to customers", "passed part of the saving",
+                   "passed on to customers", "wider economic benefit", "consumers benefit")),
+      has(text, c("34%", "34 per", "two-thirds", "two thirds", "a third")),
+      has(text, c("22%", "overrun", "over budget")),
+      !has(text, c("no effect", "no wider benefit", "no impact", "had no benefit"))),
+      "yes", "NO"))
+}
+```
+
+::: {.panel}
+Three days of reading other people's evidence. This morning you decided whether
+a report was credible. Now someone hands you the findings and asks what the
+authority should do. That is the job most of you actually have.
+:::
+
+::: {.ask .fragment}
+**Would you recommend this programme for rollout?** Yes / No / Only with changes.
+:::
+
+::: {.notes}
+Open the deck a couple of minutes before the session starts: R takes about a
+minute to load in the browser, after which every live cell runs in a few seconds.
+:::
+
+## The programme
+
+```{r results='asis'}
+html_out(sprintf('
+<div class="facts">
+  <div class="k">Programme</div>  <div class="v">%s</div>
+  <div class="k">What it is</div> <div class="v">%s</div>
+  <div class="k">Where</div>      <div class="v">%s</div>
+  <div class="k">When</div>       <div class="v">%s</div>
+</div>', transl_programme$name, transl_programme$what,
+    transl_programme$where, transl_programme$when))
+```
+
+::: {.warn}
+This is **not** GreenWaste. It is a different scheme, and you have not seen these
+findings before. **Illustrative case, with invented figures.**
+:::
+
+## The number the decision turns on
+
+:::::: {.columns}
+
+::::: {.column width="58%"}
+```{=html}
+<div class="hero">
+  <div class="value">900</div>
+  <div class="label">AED per vehicle per year, the threshold to clear</div>
+</div>
+```
+
+The evaluation was randomised, well executed and reported transparently. Nothing
+in it fails this morning's checklist.
+
+::: {.ask}
+**`[MENTI PLACEHOLDER]`** Vote now, before reading the findings. You vote again
+before you write.
+:::
+:::::
+
+::::: {.column width="42%"}
+```{r out.width='280px', out.extra='style="display:block; margin:0 auto;"'}
+knitr::include_graphics(MENTI_QR)
+```
+:::::
+
+::::::
+
+# 1 · The findings {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## Six findings, all of them sound
+
+```{r}
+kable(data.frame(`#` = seq_len(nrow(transl_findings)), Finding = transl_findings$finding,
+                 check.names = FALSE), align = "rl")
+```
+
+::: {.panel}
+Every one survives this morning's checklist. There is no methodological problem
+to find and no number to distrust.
+:::
+
+::: {.ask .fragment}
+So the difficulty is not whether to believe the evidence. What is it?
+:::
+
+## Finding 1: the saving
+
+::: {.excerpt}
+Fuel costs fell for participating operators. Net saving of **743 AED per vehicle
+per year** (95% CI: 690 to 796). Statistically significant at conventional levels.
+:::
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+```{=html}
+<div class="facts">
+  <div class="k">Estimate</div>  <div class="v">743 AED per vehicle per year</div>
+  <div class="k">Interval</div>  <div class="v">690 to 796</div>
+  <div class="k">Threshold</div> <div class="v">900</div>
+</div>
+```
+:::::
+
+::::: {.column width="50%"}
+::: {.panel .fragment}
+A clean, well-measured effect on the main outcome, from a randomised
+allocation. It is the finding the evaluation was designed to produce.
+:::
+
+::: {.warn .fragment}
+The whole interval lies below 900. On the authority's own rule, the scheme does
+not clear the bar.
+:::
+:::::
+
+::::::
+
+## Finding 2: the same finding, read against the rule
+
+```{ojs}
+//| echo: false
+viewof rule = Inputs.range([600, 1000], {value: 900, step: 10, label: "Threshold (AED per vehicle)"})
+```
+
+```{webr}
+#| input:
+#|   - rule
+#| autorun: true
+#| edit: false
+#| fig-width: 6
+#| fig-height: 1.9
+threshold_view(rule)
+```
+
+::: {.ask}
+743 against 900: success or failure? Move the threshold: **where does the
+verdict flip, and who chose 900?**
+:::
+
+::: {.panel .fragment}
+The evaluation states the 157 AED shortfall plainly. It does not say whether 900
+was the right threshold; nothing in it was designed to answer that.
+:::
+
+## Finding 3: the pass-through
+
+::: {.excerpt}
+Freight rates charged by participating operators fell by an average of **1.8%**,
+against **0.4%** among non-participants. The difference is **not statistically
+significant** (p = 0.11).
+:::
+
+::: {.ask}
+This is the finding most likely to end up in a brief. What would you write?
+:::
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel .fragment}
+**What the evidence supports**
+
+Freight rates fell among participants, in the expected direction, and more than
+among non-participants.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn .fragment}
+**What it does not**
+
+That customers benefited. The estimate cannot be told apart from zero: it is a
+hypothesis the evaluation could not settle.
+:::
+:::::
+
+::::::
+
+## Finding 4: who did not join
+
+::: {.excerpt}
+**34%** of eligible operators enrolled. Non-participants were more likely to be
+small fleets and to operate on fixed public-sector contracts.
+:::
+
+::: {.ask .fragment}
+The evaluation reports a pattern. Does it explain it?
+:::
+
+::: {.panel .fragment}
+No. It measured **who** did not join, not **why**. "Small operators did not take
+it up" is reportable. "Small operators could not take it up" is an inference the
+evidence does not support, and it points to a different recommendation.
+:::
+
+## Finding 5: the cost of running it
+
+::: {.excerpt}
+Administration ran **22% over budget**. The overrun is concentrated in
+verification of fuel purchase records, which required manual inspection in
+**41%** of cases.
+:::
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+This is not an estimate. It is a figure from the scheme's own accounts, and it
+bears most directly on whether to do this again.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn .fragment}
+It is also the finding most often left out of a brief, because it is about
+delivery rather than impact. If a brief recommends rollout without it, the
+authority finds out after deciding.
+:::
+:::::
+
+::::::
+
+## Finding 6: the null result
+
+::: {.excerpt}
+No measurable effect on vehicle maintenance or fleet renewal. Point estimates for
+both outcomes are close to zero with **wide confidence intervals**. The evaluation
+cannot rule out effects of either sign.
+:::
+
+::: {.ask .fragment}
+How do you write a finding that says nothing was found, and is that a finding?
+:::
+
+::: {.panel .fragment}
+Yes, if you say which kind of nothing it is. The intervals are wide, so a
+meaningful effect could be inside them: absence of evidence, not evidence of
+absence. "The scheme had no wider benefits" overstates it.
+:::
+
+# 2 · The brief {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## Four elements, one page
+
+```{r}
+kable(data.frame(Element = brief_elements$element, Length = brief_elements$length_guide,
+                 `What it has to do` = brief_elements$asks, check.names = FALSE),
+      align = "lll")
+```
+
+::: {.warn}
+One side of A4. Decision-makers rarely read past the first page.
+:::
+
+## The headline sentence
+
+::: {.ask}
+Write your headline finding as **one sentence**, with the number in it. Then ask:
+if this were the only sentence anyone read, could they conclude the opposite of
+what you found?
+:::
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**The test**
+
+A reader who stops after one sentence should not be able to reach a conclusion
+the evidence does not support.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn .fragment}
+"Fuel costs fell for participating operators" is true and easy to read, and it
+lets the reader assume the threshold was cleared. The number prevents that.
+:::
+:::::
+
+::::::
+
+## Test your headline
+
+```{webr}
+headline <- "Fuel costs fell for participating operators."
+check_brief(headline)[1:2, ]
+```
+
+::: {.ask}
+Read me your headline. I type it between the quotes and press Run. A headline
+needs the first two checks; the rest apply to the whole brief.
+:::
+
+::: {.notes}
+Take three or four headlines from the room. The check is a word search, so it
+can be fooled: a sentence can contain "900" and still mislead. Use it to start
+the discussion, not to settle it.
+:::
+
+## The recommendation
+
+::: {.ask}
+Your recommendation must be **one specific action** the authority can decide.
+:::
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**Decidable**
+
+- Roll out to the three regions where the scheme was piloted
+- Extend the pilot for two years and re-run the costing
+- Do not roll out, and re-tender the verification process
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn}
+**Not decidable**
+
+- The scheme should be improved
+- More evidence is needed
+- Stakeholders should be engaged
+:::
+:::::
+
+::::::
+
+::: {.ask .fragment}
+Which option can you defend, and does it depend on how you weigh 743 against 900?
+:::
+
+## The risk
+
+::: {.ask}
+Name **one thing** that would make your recommendation wrong, stated so that it
+can be watched.
+:::
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**A risk you can watch**
+
+"If the 22% cost overrun is repeated at scale, administration cost per vehicle
+would exceed the saving. The first two quarters of spending would show this."
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn .fragment}
+**A caveat presented as a risk**
+
+"Results may not generalise." True of almost any evaluation; it can be neither
+confirmed nor watched.
+:::
+:::::
+
+::::::
+
+# 3 · Pairs and critique {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## Swap
+
+::: {.panel}
+Pairs, swap briefs. Read your partner's as the person deciding.
+
+1. What does this brief want me to do?
+2. What is its strongest claim, and does the findings pack support it?
+3. What has it left out that I would have wanted to know?
+:::
+
+::: {.ask .fragment}
+Question 3 is the one most often skipped. Look for the omission, not the error.
+:::
+
+## What to look for
+
+```{r results='asis'}
+checks <- c("Does the headline sentence contain the number?",
+            "Does it mention the 900 AED threshold at all?",
+            "Does it claim a customer benefit from the pass-through finding?",
+            "Does it explain why two-thirds did not enrol?",
+            "Does it mention the 22% cost overrun?",
+            "Does it turn the null finding into a statement of no effect?")
+html_out(paste(sprintf('<div class="panel"><b>%d.</b> %s</div>', seq_along(checks), checks),
+               collapse = "\n"))
+```
+
+::: {.warn .fragment}
+Each is a way to write a brief that is accurate sentence by sentence and
+misleading as a whole.
+:::
+
+## Run the checks on a draft
+
+```{webr}
+draft <- "Tariff Shield saved operators 743 AED per vehicle per year, short of the
+900 AED threshold. Freight rates fell slightly, but the evaluation could not show
+customers gained. Only 34% of eligible operators joined."
+check_brief(draft)
+```
+
+::: {.ask}
+A volunteer pair reads out their brief; I paste it in and press Run. Which
+checks does it pass, and is the check right?
+:::
+
+::: {.notes}
+The default draft passes five checks and misses the cost overrun, which is the
+point to draw out. The word search misreads some phrasing (for example
+"customers did not benefit" contains "customers benefit"): say so if it happens,
+and let the room judge.
+:::
+
+## The two failures that matter most
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.warn}
+**Omitting the threshold**
+
+A brief that reports 743 and never mentions 900 lets the reader conclude the
+scheme met its target.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn}
+**Omitting the cost overrun**
+
+The authority is deciding whether to spend money. A brief about impact and not
+cost answers a different question from the one asked.
+:::
+:::::
+
+::::::
+
+::: {.ask .fragment}
+Both are omissions rather than errors. Which is harder to catch in your own
+draft?
+:::
+
+# 4 · Put AI to work {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## The prompt
+
+::: {.excerpt}
+Here are six findings from an evaluation of a fuel-price stabilisation scheme for
+small freight operators. Write a one-page policy brief for the commissioning
+authority with a headline finding, key implications, a recommendation, and one
+risk to flag.
+:::
+
+::: {.panel}
+It asks for exactly what the room was asked for. Read the draft, then edit it as
+a team. The editing is the exercise.
+:::
+
+## What came back
+
+:::::: {.columns}
+
+::::: {.column width="60%"}
+::: {.ai-output}
+*A response like this is possible, especially with a short or leading prompt:*
+
+**Headline finding.** The scheme reduced fuel costs for participating operators,
+[delivering a net saving of 743 AED per vehicle per year]{.flag}. The result is
+statistically significant and the evaluation was rigorously conducted.
+**Key implications.** Operators [passed part of the saving on to customers, with
+freight rates falling by 1.8%]{.flag}, suggesting a wider economic benefit.
+[Some operators chose not to enrol]{.flag}, which may indicate a need for better
+communication. **Recommendation.** Roll the scheme out more widely, with
+[targeted outreach to operators who did not participate]{.flag}.
+**Risk to flag.** Results from a pilot may not generalise to a full rollout.
+:::
+:::::
+
+::::: {.column width="40%"}
+::: {.ask}
+Find the four flagged problems. Then find the two things the draft leaves out
+entirely, which are not flagged.
+:::
+:::::
+
+::::::
+
+## The checks, run on the AI draft
+
+```{webr}
+ai_draft <- "The scheme reduced fuel costs for participating operators, delivering a
+net saving of 743 AED per vehicle per year. Operators passed part of the saving on
+to customers, suggesting a wider economic benefit. Some operators chose not to
+enrol. The scheme should be rolled out more widely. Results may not generalise."
+check_brief(ai_draft)
+```
+
+::: {.panel .fragment}
+It fails four of six: no threshold, a customer benefit it cannot show, no
+enrolment figure, no cost overrun. It overstated the good news and softened the
+bad. Check your own drafts, and any AI draft, for the same pattern.
+:::
+
+## What AI did, and what it could not do
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**What it did well**
+
+- The right four elements, in the right order
+- The register of a brief
+- One page, fluent enough to send unedited
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn .fragment}
+**What it did not**
+
+- Never mentions the 900 threshold
+- Calls a non-significant estimate a wider benefit
+- Turns 34% enrolment into "some operators"
+- Leaves out the 22% cost overrun
+- Names a caveat, not a risk
+:::
+:::::
+
+::::::
+
+## The same task, a better prompt
+
+::: {.excerpt}
+The same six findings. Before you write anything: first, list the findings that
+argue **against** rollout and how strongly each one argues, then those that argue
+for it. Second, tell me which finding would have to be different for your
+recommendation to change, and in which direction. Then write the brief, including
+a sentence that states plainly what the evaluation did not establish.
+:::
+
+::: {.panel .fragment}
+Three changes: ask for **the case against first**, so it is not an afterthought;
+ask **what would change the recommendation**, which brings the threshold in; and
+require a statement of **what was not established**, which makes omission harder.
+:::
+
+# 5 · Close {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## Vote again
+
+:::::: {.columns}
+
+::::: {.column width="58%"}
+```{=html}
+<div class="hero">
+  <div class="value">900</div>
+  <div class="label">The bar, and 743 sits below it</div>
+</div>
+```
+
+::: {.ask}
+**`[MENTI PLACEHOLDER]`** Same three options: Yes / No / Only with changes.
+Compare the two votes. If they moved, was it the threshold that moved them?
+:::
+:::::
+
+::::: {.column width="42%"}
+```{r out.width='280px', out.extra='style="display:block; margin:0 auto;"'}
+knitr::include_graphics(MENTI_QR)
+```
+:::::
+
+::::::
+
+## What makes a brief trustworthy
+
+```{r results='asis'}
+rules <- c("The number is in the headline sentence, not buried in the body.",
+           "The threshold the number is judged against is stated, even when it is missed.",
+           "Findings that argue against the recommendation are named, not left out.",
+           "The recommendation is an action the reader can take or refuse.",
+           "The risk is something that could happen and could be watched.",
+           "What the evaluation did not establish is stated as plainly as what it did.")
+html_out(paste(sprintf('<div class="panel"><b>%d.</b> %s</div>', seq_along(rules), rules),
+               collapse = "\n"))
+```
+
+::: {.ask .fragment}
+Which of the six is hardest to write when you already know the recommendation
+you want?
+:::
+
+## Next session
+
+::: {.panel}
+The last session of the module. You take the evaluation design you started in
+Module 1 and add to it: how you would present results, cost the programme, show
+the figures and translate the findings. Then a five-minute pitch, with feedback.
+Bring your notes from the week.
+:::

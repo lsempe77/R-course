@@ -16,27 +16,40 @@ offline from a USB stick with no network and no R installation. Everything publi
 All current work is in **`Module_2_Oct_2026_v2/`**. The older `session_1/` … `session_4/` and
 `sessions_in_Abu_Dhabi/` folders are the Module 1 material and are kept for reference only.
 
-| Day | Session | Deck | Slides | Status |
-|-----|---------|------|--------|--------|
-| 1 · Mon 12 Oct | 1 · Compared to What? | `Oct12_session1.qmd` | 29 | Built |
-| 1 · Mon 12 Oct | 2 · What Do the Numbers Say? | `Oct12_session2.qmd` | 24 | Built |
-| 1 · Mon 12 Oct | 3 · Spot the Problem | `Oct12_session3.qmd` | 33 | Built |
-| 2 · Tue 13 Oct | 1 · Reading DiD Results | `Oct13_session1.qmd` | 32 | Built |
-| 2 · Tue 13 Oct | 2 · Reading RDD Results | `Oct13_session2.qmd` | 28 | Built |
-| 2 · Tue 13 Oct | 3 · Reading Matching Results | `Oct13_session3.qmd` | 32 | Built |
-| 3 · Wed 14 Oct | 1 · Was It Worth It? | `Oct14_session1.qmd` | 31 | Built |
-| 3 · Wed 14 Oct | 2 · What Can You Read? | `Oct14_session2.qmd` | 30 | Built |
-| 3 · Wed 14 Oct | 3 · Interrogate the Analyst | `Oct14_session3.qmd` | 30 | Built |
-| 4 · Thu 15 Oct | 1 · Is This Evidence Credible? | `Oct15_session1.qmd` | 30 | Built |
-| 4 · Thu 15 Oct | 2 · From Findings to Policy | `Oct15_session2.qmd` | 30 | Built |
-| 4 · Thu 15 Oct | 3 · Plan Your Own Evaluation | `Oct15_session3.qmd` | 23 | Built |
+| Day | Session | Deck | Length | Slides | Status |
+|-----|---------|------|--------|--------|--------|
+| 1 · Mon 12 Oct | 1 · Compared to What? | `Oct12_session1.qmd` | 1.5 h | 23 | Built |
+| 1 · Mon 12 Oct | 2 · What Do the Numbers Say? | `Oct12_session2.qmd` | 1.5 h | 23 | Built |
+| 1 · Mon 12 Oct | 3 · Spot the Problem | `Oct12_session3.qmd` | 2 h | 26 | Built |
+| 2 · Tue 13 Oct | 1 · Reading DiD Results | `Oct13_session1.qmd` | 1.5 h | 22 | Built |
+| 2 · Tue 13 Oct | 2 · Reading RDD Results | `Oct13_session2.qmd` | 1.5 h | 22 | Built |
+| 2 · Tue 13 Oct | 3 · Reading Matching Results | `Oct13_session3.qmd` | 2 h | 25 | Built |
+| 3 · Wed 14 Oct | 1 · Was It Worth It? | `Oct14_session1.qmd` | 1.5 h | 25 | Built |
+| 3 · Wed 14 Oct | 2 · What Can You Read? | `Oct14_session2.qmd` | 1.5 h | 22 | Built |
+| 3 · Wed 14 Oct | 3 · Interrogate the Analyst | `Oct14_session3.qmd` | 2 h | 23 | Built |
+| 4 · Thu 15 Oct | 1 · Is This Evidence Credible? | `Oct15_session1.qmd` | 1.5 h | 23 | Built |
+| 4 · Thu 15 Oct | 2 · From Findings to Policy | `Oct15_session2.qmd` | 1.5 h | 24 | Built |
+| 4 · Thu 15 Oct | 3 · Plan Your Own Evaluation | `Oct15_session3.qmd` | 2 h | 18 | Built |
 
-**All twelve sessions are built and published.** Nothing is outstanding on the slide decks.
+Slide counts are those of the published decks in `docs/`, counted as `class="slide level2"`.
+Counting `##` in the `.qmd` gives a higher and wrong number, because a heading inside a
+speaker-notes block or a code chunk never becomes a slide.
+
+**All twelve sessions are built and published.** The build is finished, but the delivery is not
+evenly filled: all four 2-hour sessions (S3 of every day) sit below the 30–36 slide budget for
+that length, and Oct15 Session 3, the capstone, is the furthest short at 18.
 
 ### What is still open
 
+- **Real case data is still missing for four decks.** Oct13 Sessions 1, 2 and 3 and Oct14
+  Session 1 carry visible `[PLACEHOLDER]` slots where the Abu Dhabi DOH and DCD findings and
+  the cost-benefit case will go. The exercise structure around them is final, so the findings
+  drop in without a redesign, but four of the twelve sessions cannot be delivered as they
+  stand.
 - **The Menti code is a placeholder** in all twelve decks, so the QR codes point at a Menti that
   does not exist. See the note under Conventions below.
+- **Oct12 Sessions 1, 2 and 3 have edits that are not yet rendered.** The published copies in
+  `docs/` are behind their sources, so the live site is serving an older revision of those three.
 - **Day 4 Session 2's policy brief.** The task checklist records an open request to SCO for real
   policy briefs as examples of an ideal one. The exercise works without them, but a real example
   would sharpen the critique.

@@ -110,23 +110,27 @@ Every deck using invented numbers must say so on the slide. Both built decks do.
 
 ---
 
-## 1 · First decision: the theme fork
+## 1 · The theme fork (RESOLVED — every deck uses editorial)
 
-**This is the single most important thing to settle before writing a slide.**
+**Settled 2026-09-21. All twelve decks load `[theme_editorial.scss]`.**
 
-The five decks in `Module_2_Oct_2026_v2` do **not** share a theme:
+`clean.scss` and `module2.scss` are dead files: nothing loads them and editing
+them changes nothing on screen. Any theme or callout change goes in
+`theme_editorial.scss`. This section is kept as the record of why, so that a
+future session does not re-open it.
 
-| Deck | Theme declared | Status |
+When this guide was first written, the five decks then in the folder did **not**
+share a theme:
+
+| Deck | Theme declared then | Theme now |
 |---|---|---|
-| `Oct12_session1` | `[theme_editorial.scss]` | the built reference |
-| `Oct12_session3` | `[clean.scss, module2.scss]` | older scheme |
-| `Oct13_session1` | `[clean.scss, module2.scss]` | older scheme |
-| `Oct13_session2` | `[clean.scss, module2.scss]` | older scheme |
-| `Oct13_session3` | `[clean.scss, module2.scss]` | older scheme |
+| `Oct12_session1` | `[theme_editorial.scss]` | editorial |
+| `Oct12_session3` | `[clean.scss, module2.scss]` | editorial |
+| `Oct13_session1` | `[clean.scss, module2.scss]` | editorial |
+| `Oct13_session2` | `[clean.scss, module2.scss]` | editorial |
+| `Oct13_session3` | `[clean.scss, module2.scss]` | editorial |
 
-Verified with a `theme:` grep across all five `.qmd` files.
-
-They are genuinely different, not two names for one thing:
+The two schemes are genuinely different, not two names for one thing:
 
 | | `theme_editorial.scss` | `clean.scss` + `module2.scss` |
 |---|---|---|
@@ -136,19 +140,10 @@ They are genuinely different, not two names for one thing:
 | Look | rule-and-indent, nothing filled | rounded cards, shadows, filled table headers |
 | Chart container | plain, no box | card with border, radius, shadow |
 
-**Decision needed, and only you can make it:** does Session 2 follow the editorial
-theme (matching the Session 1 deck on the wall next to it), or the
-`clean + module2` theme the other four decks already use? The rest of this guide
-assumes **editorial**, because that is the deck we built — but a deck that looks
-different from Session 1 will read as a different course.
-
-### One consequence, worth acting on either way
-
-The scrollbar fix (section 6) exists **only** in `theme_editorial.scss`.
-`module2.scss` has no `.cell-output-display` overflow rule, so the four older
-decks still carry Quarto's default `overflow: auto` and will show a stray
-scrollbar beside every pixel-sized chart. If they keep their current theme, port
-the two-line rule from section 6 into `module2.scss`.
+**One consequence that still matters.** The scrollbar fix (section 6) exists only
+in `theme_editorial.scss`. `module2.scss` has no `.cell-output-display` overflow
+rule, so any deck put back on that theme shows a stray scrollbar beside every
+pixel-sized chart. The rule is load-bearing and must not be removed in a tidy-up.
 
 ---
 
@@ -812,8 +807,8 @@ normal and acceptable for a print copy.
 2. **Check whether the data exists.** If not, design a generated dataset whose
    columns serve every session that will use it (section 0b), and write a
    `check_*.R` that proves each intended use.
-3. **Settle the theme fork** (section 1) before writing a slide. Both built decks
-   now use `theme_editorial.scss`.
+3. **Use `[theme_editorial.scss]`.** The theme fork is settled (section 1); do not
+   load `clean.scss` or `module2.scss`.
 4. Copy the YAML block (section 2) and the setup chunk skeleton (section 3),
    including `pl_m2()` and `ax()` unchanged.
 5. Copy the Menti block (section 8) and **set a real `MENTI_CODE`**.

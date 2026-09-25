@@ -1,0 +1,873 @@
+---
+title: "Compared to What? Know the Language First"
+subtitle: "Module 2 · Day 1, Session 1: Five Words for Reading Any Result"
+author: "3ie"
+always_allow_html: yes
+title-slide-attributes:
+  data-state: title-slide-state
+# live-revealjs: the quarto-live extension (_extensions/r-wasm/live) runs R in
+# the browser through webR. The live cells need an internet connection on the
+# day (webR loads from a CDN) and the CSV listed under webr: resources must sit
+# next to the published .html. Static knitr chunks work as before.
+#
+# One example all session: the fictional traffic camera programme
+# (make_traffic_camera_data.R), the same data Session 2 opens in full. This
+# session works on a ten-road slice and on average SPEED, so it does not give
+# away Session 2's collision results.
+format:
+  live-revealjs:
+    theme: [theme_dge.scss, theme_live.scss]
+    logo: assets/dge_logo_horizontal.svg
+    slide-number: true
+    width: 1280
+    height: 720
+    fig-align: center
+    slide-level: 2
+    embed-resources: true
+webr:
+  packages: [estimatr]
+  render-df: kable
+  resources:
+    - evaluation_data_TrafficCameras.csv
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+    dev: "png"
+    dpi: 96
+editor_options:
+  chunk_output_type: console
+---
+
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+
+```{r setup}
+library(tidyverse)
+library(knitr)
+library(qrcode)
+
+gfmt  <- function(x, d = 0) formatC(x, format = "f", digits = d, big.mark = ",")
+FENCE <- strrep("`", 3)   # built, not typed: a literal fence would end the chunk
+html_out <- function(x) cat("\n", FENCE, "{=html}\n", x, "\n", FENCE, "\n", sep = "")
+
+# ---- Live Menti poll (placeholder until the in-slide poll is built) --------
+MENTI_CODE <- "1234 5678"
+MENTI_JOIN <- paste0("https://www.menti.com/", gsub(" ", "", MENTI_CODE))
+menti_qr <- function(path = "menti_qr_s1.png", url = MENTI_JOIN) {
+  png(path, width = 900, height = 900, res = 300, bg = "white")
+  on.exit(dev.off(), add = TRUE)
+  par(mar = c(0, 0, 0, 0))
+  plot(qr_code(url, ecl = "H"))
+  path
+}
+MENTI_QR <- menti_qr()
+
+# ---- Numbers the static slides quote (the live cells recompute them) -------
+tc  <- read.csv("./evaluation_data_TrafficCameras.csv")
+cam <- subset(tc, treated == 1)
+tot <- function(col, yr) sum(cam[[col]][cam$year == yr])
+
+fatal_before <- tot("fatal_collisions", 2019)          # 233
+fatal_after  <- tot("fatal_collisions", 2021)          # 159
+fatal_pct    <- 100 * (fatal_after - fatal_before) / fatal_before
+vkm_before   <- tot("vehicles_km_millions", 2019)
+vkm_after    <- tot("vehicles_km_millions", 2021)
+vkm_pct      <- 100 * (vkm_after - vkm_before) / vkm_before
+rate_before  <- 1000 * fatal_before / vkm_before       # per 1,000 million km
+rate_after   <- 1000 * fatal_after  / vkm_after
+rate_pct     <- 100 * (rate_after - rate_before) / rate_before
+
+# Ten camera roads, 2019, chosen once (seed 12 in the planning script) so the
+# room can do the arithmetic by hand. The last one is the busiest road in the
+# programme, which is what makes the mean and the median part company.
+TEN <- c("SEC08-013", "SEC10-021", "SEC10-024", "SEC12-020", "SEC04-033",
+         "SEC02-023", "SEC10-047", "SEC08-002", "SEC06-011", "SEC05-018")
+ten <- subset(tc, year == 2019 & segment_id %in% TEN)
+ten <- ten[order(ten$injury_collisions), ]
+
+# Average speed, the 2x2 for Word 2.
+spd <- function(t, yr) mean(tc$ave_speed_kmh[tc$treated == t & tc$year == yr])
+sp_c0 <- spd(1, 2019); sp_c1 <- spd(1, 2021)     # camera roads
+sp_o0 <- spd(0, 2019); sp_o1 <- spd(0, 2021)     # roads without cameras
+r1 <- function(x) round(x, 2)   # two decimals keep the hand arithmetic exact
+sp_effect <- (r1(sp_c1) - r1(sp_c0)) - (r1(sp_o1) - r1(sp_o0))
+```
+
+# 0 · Where Module 1 left us {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## The word Module 1 was built on
+
+```{webr}
+#| autorun: true
+#| include: false
+# Runs once, in the browser, when the deck opens. Every live cell below uses
+# what is defined here, so each one on a slide stays two or three lines long.
+tc <- read.csv("evaluation_data_TrafficCameras.csv")
+library(estimatr)
+ACCENT <- "#215a9e"; ACCENT2 <- "#7da1c4"; ALERT <- "#B8272C"; MUTED <- "#545860"
+options(width = 100, scipen = 6)
+
+# Warm up estimatr now, while the opening slides are talked through: its first
+# call in the browser takes about 10 seconds, every later one is instant.
+invisible(estimatr::lm_robust(y ~ x, data = data.frame(y = c(1, 3, 2, 5), x = c(0, 1, 0, 1)),
+                              clusters = c(1, 1, 2, 2)))
+
+clean_par <- function() par(mar = c(4.2, 5.5, 1, 1), family = "sans", las = 1,
+                            col.axis = MUTED, col.lab = MUTED, fg = MUTED, cex = 1.25)
+aed <- function(x) format(round(x), big.mark = ",")
+
+TEN <- c("SEC08-013", "SEC10-021", "SEC10-024", "SEC12-020", "SEC04-033",
+         "SEC02-023", "SEC10-047", "SEC08-002", "SEC06-011", "SEC05-018")
+ten <- subset(tc, year == 2019 & segment_id %in% TEN)
+cam <- subset(tc, treated == 1)
+
+# Bars with the value printed on each (handles negative values).
+bars <- function(v, col = c(ACCENT, ACCENT2, ALERT)) {
+  clean_par(); par(mar = c(2.5, 1, 1.5, 1))
+  b <- barplot(v, col = col, border = NA, axes = FALSE,
+               ylim = range(c(0, v)) + c(-1.2, 1.2))
+  abline(h = 0, col = MUTED)
+  text(b, v, sprintf("%.1f km/h", v), pos = ifelse(v < 0, 1, 3), cex = 1.2, xpd = NA)
+}
+
+# One row per road: speed in 2019, speed in 2021, and the change.
+wide <- reshape(tc[, c("segment_id", "treated", "year", "ave_speed_kmh",
+                       "school_within_500m", "lanes")],
+                idvar = c("segment_id", "treated", "school_within_500m", "lanes"),
+                timevar = "year", direction = "wide")
+names(wide) <- sub("ave_speed_kmh.", "speed_", names(wide))
+wide$change <- wide$speed_2021 - wide$speed_2019
+
+# Dots for a handful of values, with the mean (red) and the median (dashed).
+dots <- function(x, labels = NULL) {
+  clean_par()
+  stripchart(x, method = "stack", pch = 19, cex = 2.2, col = ACCENT, offset = 0.7,
+             xlim = c(0, 45), xlab = "Injury collisions, 2019", at = 0.2, ylim = c(0, 1.2))
+  abline(v = mean(x), col = ALERT, lwd = 3)
+  abline(v = median(x), col = MUTED, lwd = 3, lty = 2)
+  text(mean(x), 1.1, paste("mean", round(mean(x), 1)), col = ALERT, pos = 4)
+  text(median(x), 0.9, paste("median", median(x)), col = MUTED, pos = 2)
+}
+
+# A study of n roads (half with cameras), always the same draw for a given n.
+study <- function(n, seed = 3) {
+  set.seed(seed)
+  rbind(wide[sample(which(wide$treated == 1), n / 2), ],
+        wide[sample(which(wide$treated == 0), n / 2), ])
+}
+gap <- function(d) mean(d$change[d$treated == 1]) - mean(d$change[d$treated == 0])
+
+# Shuffle the camera labels k times and count how often chance alone beats
+# the gap we measured.
+shuffle_plot <- function(d, k) {
+  real <- gap(d)
+  set.seed(1)
+  sh <- replicate(max(k, 1), { e <- d; e$treated <- sample(d$treated); gap(e) })
+  if (k == 0) sh <- numeric(0)
+  clean_par()
+  hist(sh, breaks = seq(-6, 6, by = 0.25), col = ACCENT2, border = "white",
+       main = "", xlab = "Gap in speed change, shuffled labels (km/h)",
+       ylab = "Shuffles", xlim = c(-5, 5), ylim = c(0, max(12, k / 8)))
+  abline(v = c(real, -real), col = ALERT, lwd = 3, lty = c(1, 2))
+  cat(sprintf("Measured gap: %.1f km/h.  Shuffles: %d.  As far from zero by chance: %d  ->  p = %s\n",
+              real, k, sum(abs(sh) >= abs(real)),
+              if (k == 0) "?" else format(round(mean(abs(sh) >= abs(real)), 3))))
+}
+
+# Estimate and 95% interval against zero, one line.
+one_interval <- function(est, lo, hi, xlim = c(-5, 1)) {
+  clean_par()
+  plot(NA, xlim = xlim, ylim = c(0.5, 1.5), yaxt = "n", bty = "n",
+       xlab = "Effect on average speed (km/h)", ylab = "")
+  abline(v = 0, col = MUTED, lwd = 2, lty = 2)
+  segments(lo, 1, hi, 1, col = ACCENT, lwd = 8)
+  points(est, 1, pch = 19, cex = 2.5, col = ACCENT)
+}
+
+# "Suppose the cameras had cut speed by only `cut_by` km/h": shift the camera
+# roads' changes so the effect is exactly that, keep all 1,200 roads, re-test.
+significance_demo <- function(cut_by) {
+  what_if <- wide
+  what_if$change <- what_if$change + what_if$treated * (-gap(wide) - cut_by)
+  f  <- lm(change ~ treated, data = what_if)
+  ci <- confint(f)["treated", ]
+  p  <- summary(f)$coefficients["treated", 4]
+  cat(sprintf("All 1,200 roads. Effect %.1f km/h, 95%% interval %.2f to %.2f, p = %s
+",
+              coef(f)[["treated"]], ci[1], ci[2], format.pval(p, digits = 2, eps = 0.001)))
+  one_interval(coef(f)[["treated"]], ci[1], ci[2])
+}
+
+# 100 studies of n roads each, with their intervals. Red: misses the value we
+# get from all 1,200 roads.
+many_studies <- function(n = 40, runs = 100, seed = 1) {
+  truth <- gap(wide)
+  set.seed(seed)
+  res <- t(replicate(runs, {
+    d <- rbind(wide[sample(which(wide$treated == 1), n / 2), ],
+               wide[sample(which(wide$treated == 0), n / 2), ])
+    f <- lm(change ~ treated, data = d)
+    c(coef(f)[["treated"]], confint(f)["treated", ])
+  }))
+  res  <- res[order(res[, 1]), ]
+  miss <- res[, 2] > truth | res[, 3] < truth
+  clean_par()
+  plot(NA, xlim = c(-7, 1), ylim = c(1, runs), yaxt = "n", bty = "n",
+       xlab = "Effect on average speed (km/h), one line per study", ylab = "")
+  segments(res[, 2], 1:runs, res[, 3], 1:runs, col = ifelse(miss, ALERT, ACCENT2), lwd = 2)
+  points(res[, 1], 1:runs, pch = 19, cex = 0.5, col = ifelse(miss, ALERT, ACCENT))
+  abline(v = truth, col = MUTED, lwd = 2)
+  cat(sprintf("%d studies of %d roads. %d intervals contain the all-roads value (%.2f); %d miss it.\n",
+              runs, n, sum(!miss), truth, sum(miss)))
+}
+```
+
+::: {.ask}
+From Module 1: what is a **counterfactual**?
+:::
+
+::: {.panel .fragment}
+What would have happened to the same people, over the same period, without the
+programme. We never observe it. Every evaluation method estimates it with a
+**comparison**, and a result can only be read once you know what that
+comparison was.
+:::
+
+::: {.panel .fragment}
+Today we attach five words to that idea, using one programme and its data from
+start to finish.
+:::
+
+::: {.notes}
+About 3 minutes. Recall only; Module 1 taught this. Open the deck a couple of minutes before the session starts: R and its statistics package take about a minute to load in the browser, after which every live cell runs in a few seconds.
+:::
+
+# 1 · What are we comparing? {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## The traffic camera programme
+
+:::::: {.columns}
+
+::::: {.column width="54%"}
+In 2020 a roads authority installed automated speed cameras in twelve sectors
+of its road network. The other twelve sectors were due to get them two years
+later.
+
+Before extending the programme, someone has to decide whether the cameras
+worked.
+:::::
+
+::::: {.column width="46%"}
+```{=html}
+<div class="facts">
+  <div class="k">Programme</div>  <div class="v">Automated speed cameras</div>
+  <div class="k">Roads</div>      <div class="v">1,200 road segments in 24 sectors</div>
+  <div class="k">Measured</div>   <div class="v">2019, before; 2021, after</div>
+  <div class="k">Decision</div>   <div class="v">Extend to the other twelve sectors?</div>
+</div>
+```
+:::::
+
+::::::
+
+::: {.warn}
+**Illustrative case, with invented figures.** This is not a real programme; the
+numbers are generated for this training.
+:::
+
+## The headline
+
+```{r results='asis'}
+html_out(sprintf('
+<div class="hero">
+  <div class="value">%s%%</div>
+  <div class="label">Fatal collisions on camera roads, 2019 to 2021</div>
+</div>
+<div class="stat-row">
+  <div><span class="n">%d</span><span class="k">Before</span></div>
+  <div><span class="n">%d</span><span class="k">After</span></div>
+</div>', gfmt(fatal_pct), fatal_before, fatal_after))
+```
+
+:::::: {.columns}
+
+::::: {.column width="62%"}
+::: {.ask}
+**`[MENTI PLACEHOLDER]`** On this number alone, would you extend the cameras to
+the other twelve sectors?
+
+Go to **menti.com**, code **`r MENTI_CODE`**, or scan the code.
+:::
+:::::
+
+::::: {.column width="38%"}
+```{r out.width='230px', out.extra='style="display:block; margin:0 auto;"'}
+knitr::include_graphics(MENTI_QR)
+```
+:::::
+
+::::::
+
+::: {.warn .note-ctr}
+**Illustrative case, with invented figures.**
+:::
+
+## What if traffic had changed?
+
+```{ojs}
+//| echo: false
+viewof traffic = Inputs.range([-40, 20], {value: 0, step: 2, label: "Change in driving on camera roads (%)"})
+```
+
+```{webr}
+#| input:
+#|   - traffic
+#| autorun: true
+#| edit: false
+fatal <- tapply(cam$fatal_collisions, cam$year, sum)
+km    <- sum(cam$vehicles_km_millions[cam$year == 2019]) * c(1, 1 + traffic / 100)
+round(data.frame(fatal_change_pct = 100 * (fatal[2] / fatal[1] - 1),
+                 risk_per_km_change_pct = 100 * ((fatal[2] / km[2]) / (fatal[1] / km[1]) - 1),
+                 row.names = NULL))
+```
+
+::: {.ask}
+The count fell 32%. Slide driving down to −32%. **What happens to the risk per
+kilometre driven?**
+:::
+
+::: {.panel .fragment}
+It stops moving. If people drove a third less, a third fewer deaths is what you
+would expect with or without cameras. The headline cannot tell you which of
+these worlds you are in.
+:::
+
+## What actually happened to traffic
+
+```{webr}
+fatal <- tapply(cam$fatal_collisions, cam$year, sum)
+km    <- tapply(cam$vehicles_km_millions, cam$year, sum)
+round(data.frame(fatal_change_pct = 100 * (fatal[2] / fatal[1] - 1),
+                 driving_change_pct = 100 * (km[2] / km[1] - 1),
+                 risk_per_km_change_pct = 100 * ((fatal[2] / km[2]) / (fatal[1] / km[1]) - 1),
+                 row.names = NULL), 1)
+```
+
+::: {.panel}
+Driving on camera roads went **up** by `r gfmt(vkm_pct, 1)`%. So the risk per
+kilometre fell by `r gfmt(abs(rate_pct))`%, a little more than the headline
+said.
+:::
+
+::: {.ask .fragment}
+The comparison moved the answer, this time in the programme's favour. What
+other comparison would you want before crediting the cameras?
+:::
+
+::: {.notes}
+Take answers. If someone says "roads without cameras", say that is exactly
+where Session 2 goes, and leave it there. Do not show the comparison roads'
+collisions here: Session 2's last section depends on it.
+:::
+
+## "Compared to what?"
+
+::: {.panel}
+Every result is a comparison. A before-and-after number compares the programme
+with **its own past**. What else changed over the same period (traffic,
+vehicles, a national campaign) is inside that number, and it can push the
+answer either way.
+:::
+
+::: {.ask}
+If you do not know what a number is being compared to, you do not yet know
+what it means.
+:::
+
+# 2 · Three questions for any number {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## One idea, three questions
+
+::: {.panel}
+The five words that follow each answer one of three questions you can ask of
+any number an evaluator hands you.
+:::
+
+```{=html}
+<div class="facts">
+  <div class="k">Compared to what?</div>             <div class="v">Comparison group, counterfactual</div>
+  <div class="k">How big, in units that matter?</div> <div class="v">Mean · treatment effect · coefficient</div>
+  <div class="k">How sure are we?</div>              <div class="v">p-value · confidence interval</div>
+</div>
+```
+
+::: {.ask}
+Keep these three. You will use them all week, and on the next evaluation report
+you receive.
+:::
+
+# 3 · The five words {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## Word 1 · Mean: ten roads, by hand
+
+:::::: {.columns}
+
+::::: {.column width="42%"}
+```{r}
+ten %>%
+  transmute(Road = segment_id, Type = corridor_type,
+            `Injury collisions` = injury_collisions) %>%
+  kable(align = "llr", row.names = FALSE)
+```
+:::::
+
+::::: {.column width="58%"}
+::: {.ask}
+Ten camera roads in 2019. With pen and paper: **what is the average number of
+injury collisions per road?** Then: is a typical road close to it?
+:::
+
+::: {.panel .fragment}
+The mean is **`r gfmt(mean(ten$injury_collisions), 1)`**.
+`r sum(ten$injury_collisions < mean(ten$injury_collisions))` of the ten roads are
+below it. One ring road with `r max(ten$injury_collisions)` collisions pulls
+the mean up; the middle road (the **median**) has
+`r median(ten$injury_collisions)`.
+:::
+:::::
+
+::::::
+
+::: {.warn .note-ctr}
+**Illustrative case, with invented figures.**
+:::
+
+## Word 1 · What the mean hides
+
+::::::: {.columns}
+
+:::::: {.column width="45%"}
+```{ojs}
+//| echo: false
+viewof keep = Inputs.radio(["All ten roads", "Without the busiest road"], {value: "All ten roads"})
+```
+::::::
+
+:::::: {.column width="55%"}
+::: {.ask}
+Remove one road. How far does the mean move, and how far does the median move?
+:::
+::::::
+
+:::::::
+
+```{webr}
+#| input:
+#|   - keep
+#| autorun: true
+#| fig-width: 10
+#| fig-height: 1.9
+roads <- ten$injury_collisions
+if (keep == "Without the busiest road") roads <- roads[roads < max(roads)]
+dots(roads)
+```
+
+::: {.panel .fragment}
+The mean drops from 13.5 to 10.3; the median from 10 to 8. One road moved the
+mean further than the median. When an evaluator reports an average, ask what
+the spread looks like and whether a few cases drive it.
+:::
+
+## Word 2 · Treatment effect
+
+```{r results='asis'}
+html_out(sprintf('
+<table>
+  <thead><tr><th>Average speed (km/h)</th><th>2019</th><th>2021</th><th>Change</th></tr></thead>
+  <tbody>
+    <tr><td>Camera roads</td><td>%.2f</td><td>%.2f</td><td class="fragment" data-fragment-index="1">%.2f</td></tr>
+    <tr><td>Roads without cameras</td><td>%.2f</td><td>%.2f</td><td class="fragment" data-fragment-index="1">%.2f</td></tr>
+    <tr class="fragment" data-fragment-index="1"><td><strong>Difference</strong></td><td>%.2f</td><td>%.2f</td><td><strong>%.2f</strong></td></tr>
+  </tbody>
+</table>',
+  r1(sp_c0), r1(sp_c1), r1(sp_c1) - r1(sp_c0), r1(sp_o0), r1(sp_o1), r1(sp_o1) - r1(sp_o0),
+  r1(sp_c0) - r1(sp_o0), r1(sp_c1) - r1(sp_o1), sp_effect))
+```
+
+::: {.ask}
+Three numbers describe this result: **`r sprintf("%.2f", r1(sp_c1) - r1(sp_c0))`**,
+**`r sprintf("%.2f", r1(sp_c1) - r1(sp_o1))`** and **`r sprintf("%.2f", r1(sp_c0) - r1(sp_o0))`**.
+Work out what each one is, then decide which is the effect of the cameras on speed.
+:::
+
+::: {.panel .fragment fragment-index=2}
+**`r sprintf("%.2f", r1(sp_c0) - r1(sp_o0))`** is the head start: camera roads
+were faster before anything happened, and **`r sprintf("%.2f", r1(sp_c1) - r1(sp_o1))`**
+still carries it. The **treatment effect** is the change on camera roads minus
+the change on the others: **`r sprintf("%.2f", sp_effect)`** km/h. It is close to
+the camera roads' own change only because the other roads barely moved.
+:::
+
+::: {.warn .note-ctr}
+**Illustrative case, with invented figures.**
+:::
+
+## Word 2 · The same number from 1,200 roads
+
+```{webr}
+cams   <- mean(wide$change[wide$treated == 1])
+others <- mean(wide$change[wide$treated == 0])
+round(data.frame(camera_roads = cams, other_roads = others, effect = cams - others), 2)
+```
+
+::: {.panel}
+`wide` holds one row per road: its speed in 2019, in 2021, and the change. The
+three lines are the arithmetic you just did, on every road.
+:::
+
+## Word 2 · The effect depends on the comparison
+
+```{ojs}
+//| echo: false
+viewof other = Inputs.range([-4, 2], {value: 0, step: 0.2, label: "Speed change on roads without cameras (km/h)"})
+```
+
+```{webr}
+#| input:
+#|   - other
+#| autorun: true
+#| edit: false
+#| fig-width: 7
+#| fig-height: 2.6
+cams <- mean(wide$change[wide$treated == 1])
+bars(c("Camera roads" = cams, "Other roads" = other, "Effect" = cams - other))
+```
+
+::: {.ask}
+Camera roads are fixed at −3.4. Move the other roads. **Which value makes the
+effect zero, and what would that mean in plain words?**
+:::
+
+## Word 3 · Coefficient
+
+```{webr}
+fit <- lm(change ~ treated, data = wide)
+round(data.frame(coefficient = coef(fit)), 2)
+```
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+`treated` is 1 for camera roads, 0 for the rest. A **coefficient** says how much
+the outcome moves per one unit of the row. Here one unit is "has cameras".
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.ask}
+Which of the two numbers is the effect? What is the other one?
+:::
+
+::: {.panel .fragment}
+`treated` is **−3.36**, the effect you worked out by hand. `(Intercept)` is the
+average change on roads without cameras. It is not an effect.
+:::
+:::::
+
+::::::
+
+## Word 3 · The other rows of a table
+
+```{webr}
+fit2 <- lm_robust(change ~ treated + school_within_500m + lanes, data = wide)
+round(as.data.frame(summary(fit2)$coefficients[, 1:4]), 3)
+```
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**Std. Error** is how much the estimate would move from one sample of roads to
+another. Small relative to the estimate means a steady estimate.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn .fragment}
+The other rows adjust the comparison. `school_within_500m` says roads near
+schools slowed a little more. That is not a recommendation to build schools
+next to roads.
+:::
+:::::
+
+::::::
+
+## Word 4 · p-value: shuffle the labels
+
+```{ojs}
+//| echo: false
+viewof k = Inputs.range([0, 1000], {value: 0, step: 50, label: "Times we shuffle the camera labels"})
+```
+
+```{webr}
+#| input:
+#|   - k
+#| autorun: true
+#| edit: false
+#| fig-width: 10
+#| fig-height: 2.6
+small <- study(20)          # a study of 20 roads: 10 with cameras, 10 without
+shuffle_plot(small, k)
+```
+
+::: {.panel}
+If the cameras did nothing, the labels "camera" and "no camera" would be
+arbitrary. Shuffle them and count how often chance alone gives a gap this large.
+That share is the **p-value**.
+:::
+
+::: {.notes}
+Start at 0 shuffles; the red line is this 20-road study's gap (-1.9). Slide up.
+At 1,000 shuffles p is about 0.17: chance produces a gap this big about one time
+in six. Keep that number for two slides from now.
+:::
+
+## Word 4 · Significant is not the same as big
+
+```{ojs}
+//| echo: false
+viewof cut_by = Inputs.range([0.1, 3.4], {value: 3.4, step: 0.1, label: "Suppose cameras cut speed by only (km/h)"})
+```
+
+```{webr}
+#| input:
+#|   - cut_by
+#| autorun: true
+#| edit: false
+#| fig-width: 10
+#| fig-height: 1.7
+significance_demo(cut_by)
+```
+
+::: {.ask}
+Slide the effect down to 0.3 km/h, a change no driver would notice. **Is it
+still statistically significant?**
+:::
+
+::: {.warn .fragment}
+Yes, p is about 0.03. With 1,200 roads even a trivial change passes the test.
+**Statistically significant does not mean big, and it does not mean worth
+funding.**
+:::
+
+## Word 4 · The warning cuts both ways
+
+```{ojs}
+//| echo: false
+viewof roads_n = Inputs.range([6, 200], {value: 20, step: 2, label: "Roads in the study"})
+```
+
+```{webr}
+#| input:
+#|   - roads_n
+#| autorun: true
+#| edit: false
+set.seed(3)
+p <- replicate(200, t.test(change ~ treated, data = study(roads_n, seed = sample(1e6, 1)))$p.value)
+data.frame(roads_in_study = roads_n, share_of_studies_that_detect_it = round(mean(p < 0.05), 2))
+```
+
+::: {.panel}
+The real effect is −3.4 km/h on every run. What changes is the size of the
+study. At 20 roads, about one study in five misses it, like the p = 0.17 study
+two slides ago.
+:::
+
+::: {.ask .fragment}
+An evaluator reports "no significant effect". Ask two things: **how many roads
+(or people) were in the study, and what is the smallest effect it could have
+detected?**
+:::
+
+## Word 5 · Confidence interval
+
+```{ojs}
+//| echo: false
+viewof run = Inputs.button("Run another 100 studies")
+```
+
+```{webr}
+#| input:
+#|   - run
+#| autorun: true
+#| edit: false
+#| fig-width: 10
+#| fig-height: 3.3
+many_studies(n = 40, runs = 100, seed = run + 1)
+```
+
+::: {.panel}
+Each line is one study of 40 roads and its **95% confidence interval**: the
+range of values consistent with that study's data. Wider means less certain,
+not a bigger effect.
+:::
+
+::: {.notes}
+About 95 of 100 lines cross the grey line (the all-roads value), and about 5 miss
+(red). That is what "95%" refers to: the method, over many studies, not the
+probability for any one interval. Press the button two or three times.
+:::
+
+## Word 5 · Which one would you act on?
+
+::: {.panel}
+Suppose three evaluations of the cameras each reported **1.8 fewer injury
+collisions per road**, and the authority's bar is **2.0**. Only the intervals
+differ.
+:::
+
+```{=html}
+<div class="facts">
+  <div class="k">A</div> <div class="v">1.8 fewer, 95% interval 0.4 to 3.2</div>
+  <div class="k">B</div> <div class="v">1.8 fewer, 95% interval 1.6 to 2.0</div>
+  <div class="k">C</div> <div class="v">1.8 fewer, 95% interval -0.9 to 4.5</div>
+</div>
+```
+
+::: {.ask}
+Which would you act on? What is your answer for each?
+:::
+
+::: {.panel .fragment}
+B is precise and below the bar: confidently not enough. A is too uncertain to
+call, and C more so. **The interval decides, not the point estimate.**
+:::
+
+::: {.notes}
+These three results are invented for this exercise; they are not the
+programme's result, which Session 2 and Day 2 estimate from the data.
+:::
+
+# 4 · Put AI to work {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## AI prompt cards
+
+:::::: {.columns}
+
+::::: {.column width="45%"}
+::: {.panel}
+Each group takes one card. Paste its prompt into your AI tool, read the answer
+together, and mark anything it gets wrong or overstates.
+:::
+
+```{=html}
+<div class="facts">
+  <div class="k">Card 1</div> <div class="v">"Explain a 95% confidence interval, in one paragraph, for someone who is not a statistician."</div>
+  <div class="k">Card 2</div> <div class="v">"Explain what a p-value means."</div>
+  <div class="k">Card 3</div> <div class="v">"Fatal collisions on our camera roads fell 32%. Is that a good result?"</div>
+  <div class="k">Card 4</div> <div class="v">"The coefficient on school_within_500m is -0.37. What should I do about it?"</div>
+</div>
+```
+:::::
+
+::::: {.column width="55%"}
+::: {.ai-output}
+*Card 1. A response like this is possible:*
+
+"A 95% confidence interval is the range in which the true value is likely to
+fall. [There is a 95% probability that the true effect lies inside this
+interval]{.flag}, so if the interval is −3.6 to −3.1 km/h the true effect is
+probably in that range. A narrower interval means a more precise estimate."
+:::
+:::::
+
+::::::
+
+## Debrief
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.warn}
+**Card 1.** The flagged sentence is the common error. "95%" describes the method:
+over many studies, 95 of 100 intervals catch the true value, as the chart of 100
+studies showed. It is not a probability for this one interval.
+:::
+
+::: {.warn}
+**Card 3.** Did the AI ask what the 32% was compared with, or how much driving
+changed? The prompt gave it neither.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn}
+**Card 4.** Look for advice about schools. The row adjusts the comparison; it is
+not a policy lever.
+:::
+
+::: {.panel}
+Two habits: ask the AI to **ask you questions before it answers**, and put its
+answer through a second chat to check it. Also note what it explained well.
+:::
+:::::
+
+::::::
+
+# 5 · Terms bingo {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## Terms bingo
+
+::: {.excerpt}
+**1.** "Fatal collisions on camera roads fell 32% over two years." \
+**2.** "The effect of cameras on speed is −3.4 km/h, 95% confidence interval −3.6 to −3.1." \
+**3.** "The fall in speed is statistically significant (p < 0.001), so every road should get a camera." \
+**4.** "Speed fell 3.4 km/h on camera roads and did not change on roads without them." \
+**5.** "The average road in our sample had 13.5 injury collisions." \
+**6.** "A study of 20 roads found no significant change in speed." \
+**7.** "The coefficient on school_within_500m is −0.37, so schools near roads slow traffic." \
+**8.** "Speed fell 3.4 km/h more than on roads without cameras; the target was at least 3 km/h."
+:::
+
+::: {.ask}
+Mark every term you recognise. Then two calls: would you act on **excerpt 3**?
+On **excerpt 8**? They do not have the same answer.
+:::
+
+::: {.notes}
+Target in excerpt 8 is invented for the exercise. Answers: 3 has significance
+and no bar or comparison; 8 has a comparison and a bar, and clears it.
+Excerpt 5 is the ten-road mean pulled up by one road; 6 is the small study.
+:::
+
+# 6 · Take this back to your desk {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## The three questions
+
+::: {.panel}
+From memory, before you look: what are the three questions you can ask of any
+number?
+:::
+
+```{=html}
+<div class="facts">
+  <div class="k">1</div> <div class="v">Compared to what?</div>
+  <div class="k">2</div> <div class="v">How big is it, in units that matter to the decision?</div>
+  <div class="k">3</div> <div class="v">How sure are we?</div>
+</div>
+```
+
+::: {.panel}
+Next session opens the full camera data file and asks these three questions of
+the collision numbers.
+:::
+
+::: {.notes}
+If there is time: ask the room for a better way to ask AI about one of today's
+words. For example: "I make policy decisions using impact evaluations. How
+should I read a confidence interval when I compare an estimate with a decision
+threshold? Ask me questions first." Saying who you are and why you ask usually
+gets a more useful answer.
+:::

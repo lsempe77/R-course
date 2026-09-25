@@ -1,0 +1,815 @@
+---
+title: "Was It Worth It? Reading a Cost-Benefit Result"
+subtitle: "Module 2 · Day 3, Session 1: The Assumption That Decides the Answer"
+author: "3ie"
+always_allow_html: yes
+title-slide-attributes:
+  data-state: title-slide-state
+# live-revealjs: the quarto-live extension (_extensions/r-wasm/live) runs R in
+# the browser through webR. The live cells need an internet connection on the
+# day (webR loads from a CDN) and the CSV listed under webr: resources must sit
+# next to the published .html. Static knitr chunks work as before.
+#
+# One example all session: GreenWaste. The Abu Dhabi case slot of the earlier
+# version is dropped (one example per session); the group exercise now runs
+# scenarios on the GreenWaste model instead.
+format:
+  live-revealjs:
+    theme: [theme_dge.scss, theme_live.scss]
+    logo: assets/dge_logo_horizontal.svg
+    slide-number: true
+    width: 1280
+    height: 720
+    fig-align: center
+    slide-level: 2
+    embed-resources: true
+webr:
+  packages: []
+  render-df: kable
+  resources:
+    - evaluation_data_GreenWaste.csv
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+    dev: "png"
+    dpi: 96
+editor_options:
+  chunk_output_type: console
+---
+
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+
+```{r setup}
+library(tidyverse)
+library(plotly)
+library(knitr)
+library(qrcode)
+
+# ---- Palette (DGE theme; see theme_dge.scss) --------------------------------
+ACCENT  <- "#215a9e"; ACCENT2 <- "#7da1c4"; ALERT <- "#B8272C"
+INK     <- "#111418"; MUTED <- "#545860"; RULE <- "#D5DEE8"
+CHART_FONT <- "Noto Kufi Arabic, Segoe UI, Arial, sans-serif"
+PL_W <- 1100; PL_WC <- 520
+
+pl_m2 <- function(p, width = PL_W, height = 290, t = 30, b = 54) {
+  p %>%
+    layout(width = width, height = height,
+           font = list(family = CHART_FONT, size = 13, color = INK),
+           paper_bgcolor = "rgba(0,0,0,0)", plot_bgcolor = "rgba(0,0,0,0)",
+           margin = list(l = 70, r = 24, t = t, b = b),
+           hoverlabel = list(bgcolor = "white", bordercolor = RULE,
+                             font = list(color = INK, size = 12))) %>%
+    config(displayModeBar = FALSE)
+}
+ax <- function(title = "", ...) {
+  modifyList(list(title = list(text = title, font = list(size = 12, color = MUTED)),
+                  gridcolor = RULE, zerolinecolor = RULE, linecolor = RULE,
+                  tickfont = list(size = 12, color = MUTED)), list(...))
+}
+
+gfmt  <- function(x) format(round(x), big.mark = ",")
+FENCE <- strrep("`", 3)   # built, not typed: a literal fence would end the chunk
+html_out <- function(x) cat("\n", FENCE, "{=html}\n", x, "\n", FENCE, "\n", sep = "")
+
+# ---- Live Menti poll (placeholder until the in-slide poll is built) --------
+MENTI_CODE <- "1234 5678"
+MENTI_JOIN <- paste0("https://www.menti.com/", gsub(" ", "", MENTI_CODE))
+menti_qr <- function(path = "menti_qr_d3s1.png", url = MENTI_JOIN) {
+  png(path, width = 900, height = 900, res = 300, bg = "white")
+  on.exit(dev.off(), add = TRUE)
+  par(mar = c(0, 0, 0, 0)); plot(qr_code(url, ecl = "H")); path
+}
+MENTI_QR <- menti_qr()
+
+# ---- The GreenWaste cost-benefit model ---------------------------------------
+# The saving is the difference-in-differences estimate from Day 2 (816 AED),
+# recomputed here from the data so the deck cannot drift from it. It missed the
+# week's 1,000 AED rule; using the rule as the saving would inflate the ratio.
+gw <- read.csv("./evaluation_data_GreenWaste.csv")
+tn <- subset(gw, treatment_neighborhood == 1)
+did_fit <- lm(waste_management_costs ~ enrolled * round, data = tn)
+SAVING     <- -coef(did_fit)[["enrolled:round"]]                 # 816
+SAVING_CI  <- sort(-confint(did_fit)["enrolled:round", ])        # 753 to 880
+ENROLLED   <- sum(tn$enrolled == 1 & tn$round == 0)              # 2,964
+COST       <- 1800    # AED per business, one-off delivery cost (programme fact)
+LAG        <- 1       # no saving in year 1: rollout and adoption take time
+RATE_BASE  <- 0.05    # the authority's default discount rate
+YEARS_BASE <- 5       # years of saving assumed by default
+RULEBAR    <- 1000
+
+# Present value of 1 AED a year for `years` years, starting after the lag.
+pv <- function(r, years, lag = LAG) {
+  t <- seq_len(lag + years)
+  sum(ifelse(t <= lag, 0, 1) / (1 + r)^t)
+}
+bcr <- function(r = RATE_BASE, years = YEARS_BASE, saving = SAVING, cost = COST) {
+  saving * pv(r, years) / cost
+}
+bcr_base  <- bcr()
+pv_base   <- SAVING * pv(RATE_BASE, YEARS_BASE)
+total_net <- (pv_base - COST) * ENROLLED
+flip_rate <- uniroot(function(r) bcr(r) - 1, c(0.05, 1))$root          # about 24%
+extra_flip <- pv_base - COST                                           # about 1,565
+rate_grid  <- c(0.03, 0.05, 0.08, 0.12, 0.20)
+years_grid <- c(2, 3, 5, 8, 10)
+grid_tbl <- expand_grid(years = years_grid, r = rate_grid) %>%
+  mutate(bcr = map2_dbl(r, years, ~ bcr(.x, .y)))
+```
+
+# 0 · Where the week has got to {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## From "how big" to "worth it"
+
+```{webr}
+#| autorun: true
+#| include: false
+# Runs once, in the browser, when the deck opens.
+gw <- read.csv("evaluation_data_GreenWaste.csv")
+ACCENT <- "#215a9e"; ACCENT2 <- "#7da1c4"; ALERT <- "#B8272C"; MUTED <- "#545860"
+options(width = 100, scipen = 6)
+clean_par <- function() par(mar = c(4.2, 5.5, 1, 1), family = "sans", las = 1,
+                            col.axis = MUTED, col.lab = MUTED, fg = MUTED, cex = 1.25)
+COST <- 1800; SAVING <- 816; LAG <- 1
+
+# Year by year: the saving, the discount factor, and what it is worth today.
+# `extra` adds costs the headline left out; `decay` shrinks the saving each year.
+savings_table <- function(rate, years, saving = SAVING, decay = 0, lag = LAG) {
+  year <- seq_len(lag + years)
+  s <- ifelse(year <= lag, 0, saving * (1 - decay / 100)^pmax(year - lag - 1, 0))
+  f <- 1 / (1 + rate / 100)^year
+  data.frame(year, saving = s, discount_factor = f, worth_today = s * f)
+}
+ratio <- function(tb, cost = COST) sum(tb$worth_today) / cost
+
+# One line of arithmetic, then the payback chart.
+calculator <- function(rate, years, ...) {
+  tb <- savings_table(rate, years, ...)
+  cat(sprintf("%d%% discount, %d years: savings worth %s AED today. Ratio = %s / 1,800 = %.2f\n",
+              rate, years, format(round(sum(tb$worth_today)), big.mark = ","),
+              format(round(sum(tb$worth_today)), big.mark = ","), ratio(tb)))
+  payback_plot(tb)
+}
+
+# Running total of the savings (today's money) against what was spent.
+payback_plot <- function(tb, cost = COST) {
+  clean_par()
+  run <- cumsum(tb$worth_today)
+  b <- barplot(run, names.arg = tb$year, col = ifelse(run >= cost, ACCENT, ACCENT2),
+               border = NA, ylim = c(0, max(cost, run) * 1.18),
+               xlab = "Year", ylab = "AED, today's money")
+  abline(h = cost, col = ALERT, lwd = 3)
+  text(b[1], cost, paste("cost", format(cost, big.mark = ",")), col = ALERT, pos = 3, adj = 0)
+}
+```
+
+```{=html}
+<div class="facts">
+  <div class="k">Day 1</div>  <div class="v">three questions for any number; what a fair comparison is</div>
+  <div class="k">Day 2</div>  <div class="v">three ways to estimate an effect: DiD, RDD, matching</div>
+  <div class="k">Today</div>  <div class="v">what the effect is <em>worth</em>, and which assumption decides it</div>
+</div>
+```
+
+::: {.ask}
+A programme can have a real effect and still not be worth funding. Today the bar
+is a ratio instead of a threshold.
+:::
+
+::: {.notes}
+About 2 minutes. Open the deck a couple of minutes before the session starts: R and its statistics package take about a minute to load in the browser, after which every live cell runs in a few seconds.
+:::
+
+## Where the 816 AED comes from
+
+```{webr}
+offered <- subset(gw, treatment_neighborhood == 1)
+m <- tapply(offered$waste_management_costs, list(offered$enrolled, offered$round), mean)
+round(data.frame(before = m[, "0"], after = m[, "1"], change = m[, "1"] - m[, "0"],
+                 row.names = c("did not enrol", "enrolled")))
+```
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.ask}
+From Day 2: which two numbers do you subtract to get the saving?
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.panel .fragment}
+The two changes: **−665 − 151 = −816 AED** a year per business, with a 95%
+interval of about `r gfmt(SAVING_CI[1])` to `r gfmt(SAVING_CI[2])`. It missed the
+1,000 AED rule. Today we ask a different question of the same number.
+:::
+:::::
+
+::::::
+
+# 1 · The headline {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## The decision, and the ratio
+
+:::::: {.columns}
+
+::::: {.column width="54%"}
+GreenWaste cost the authority **`r gfmt(COST)` AED per business** to deliver,
+once. It saved each business about **`r gfmt(SAVING)` AED a year**.
+
+A **benefit-cost ratio** compares the two: what you get back, divided by what you
+spend, with future money counted as worth less than money today.
+:::::
+
+::::: {.column width="46%"}
+```{r results='asis'}
+html_out(sprintf('
+<div class="facts">
+  <div class="k">Cost</div>          <div class="v">%s AED per business, one-off</div>
+  <div class="k">Saving</div>        <div class="v">%s AED per business per year</div>
+  <div class="k">Decision rule</div> <div class="v">a ratio above 1 pays for itself</div>
+  <div class="k">Businesses</div>    <div class="v">%s enrolled</div>
+</div>', gfmt(COST), gfmt(SAVING), gfmt(ENROLLED)))
+```
+:::::
+
+::::::
+
+## The headline number
+
+```{r results='asis'}
+html_out(sprintf('
+<div class="hero">
+  <div class="value">%.2f</div>
+  <div class="label">Benefit-cost ratio, GreenWaste</div>
+</div>
+<div class="stat-row">
+  <div><span class="n">%s</span><span class="k">AED spent per business</span></div>
+  <div><span class="n">%s</span><span class="k">AED returned per business</span></div>
+  <div><span class="n">%s</span><span class="k">AED net, whole programme</span></div>
+</div>', bcr_base, gfmt(COST), gfmt(pv_base), gfmt(total_net)))
+```
+
+::: {.panel}
+For every AED spent, about `r sprintf("%.2f", bcr_base)` AED comes back. This is
+the programme that missed the Day 2 rule, and both statements are correct.
+:::
+
+::: {.warn}
+The rule asks about the saving **in one year**. The ratio adds up the savings
+**over several years** and sets them against a one-off cost. Different
+questions can give different answers.
+:::
+
+## `[MENTI PLACEHOLDER]` Would you approve it?
+
+:::::: {.columns}
+
+::::: {.column width="62%"}
+::: {.ask style="font-size: 115%;"}
+On a ratio of **`r sprintf("%.2f", bcr_base)`**, what would you do?
+
+Approve &nbsp;·&nbsp; Reject &nbsp;·&nbsp; I need to know something else first
+:::
+
+Go to **menti.com**, code **`r MENTI_CODE`**, or scan the code.
+:::::
+
+::::: {.column width="38%"}
+```{r out.width='300px', out.extra='style="display:block; margin:0 auto;"'}
+knitr::include_graphics(MENTI_QR)
+```
+:::::
+
+::::::
+
+::: {.notes}
+If most pick "something else first", ask two people what, write it up, and
+come back to it at the three questions.
+:::
+
+## What went into that number
+
+```{r}
+tibble(
+  Step = c("Cost per business", "Annual saving", "Years of saving assumed",
+           "Discount rate assumed", "Savings, in today's money", "Benefit-cost ratio"),
+  Value = c(sprintf("%s AED", gfmt(COST)), sprintf("%s AED", gfmt(SAVING)),
+            "5, starting in year 2", "5% a year", sprintf("%s AED", gfmt(pv_base)),
+            sprintf("%s / %s = %.2f", gfmt(pv_base), gfmt(COST), bcr_base)),
+  Source = c("programme records", "measured, Day 2", "assumed", "assumed",
+             "calculated", "calculated")
+) %>%
+  mutate(across(everything(), ~ ifelse(Source == "assumed",
+                                        sprintf('<strong style="color:%s">%s</strong>', ALERT, .x), .x))) %>%
+  kable(align = "lrl", escape = FALSE)
+```
+
+::: {.ask}
+Two rows are neither costs nor savings. They are **choices** made by the analyst.
+The next twenty minutes are about those two rows.
+:::
+
+# 2 · Build the ratio yourself {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## A saving next year is worth less than one today
+
+```{webr}
+round(savings_table(rate = 5, years = 5), 2)
+```
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.ask}
+Before I press Run: 816 AED saved in **year 4**. At 5% a year, what is it worth
+in today's money? Guess a number.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.panel .fragment}
+About 670 AED: 816 × 0.82. The **discount rate** says how fast future money loses
+value. Year 1 shows 0 because the saving starts a year after rollout.
+:::
+:::::
+
+::::::
+
+## The calculator
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+```{ojs}
+//| echo: false
+viewof rate  = Inputs.range([0, 40], {value: 5, step: 1, label: "Discount rate (%)"})
+viewof years = Inputs.range([1, 10], {value: 5, step: 1, label: "Years the saving lasts"})
+```
+:::::
+
+::::: {.column width="50%"}
+::: {.panel}
+Bars: savings so far, in today's money. It pays for itself once a bar reaches
+the red line.
+:::
+:::::
+
+::::::
+
+```{webr}
+#| input:
+#|   - rate
+#|   - years
+#| autorun: true
+#| edit: false
+#| fig-width: 10
+#| fig-height: 2.9
+calculator(rate, years)
+```
+
+::: {.notes}
+Start at the base case (5%, 5 years): ratio 1.87. Do not move the sliders yet;
+the next two slides move one at a time.
+:::
+
+## Choice 1: the discount rate, on its own
+
+```{ojs}
+//| echo: false
+viewof rate1 = Inputs.range([0, 40], {value: 5, step: 1, label: "Discount rate (%)"})
+```
+
+```{webr}
+#| input:
+#|   - rate1
+#| autorun: true
+#| edit: false
+#| fig-width: 10
+#| fig-height: 2.4
+calculator(rate1, years = 5)
+```
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.ask}
+Agencies typically use 3% to 8%. **At what rate does the ratio fall below 1?**
+Guess, then slide.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn .fragment}
+Around **`r sprintf("%.0f%%", 100 * flip_rate)`**. Across 3% to 8% the ratio only
+moves from `r sprintf("%.2f", bcr(0.03))` to `r sprintf("%.2f", bcr(0.08))`. The
+rate alone does not flip this decision.
+:::
+:::::
+
+::::::
+
+## Choice 2: how long the saving lasts
+
+```{ojs}
+//| echo: false
+viewof years2 = Inputs.range([1, 10], {value: 5, step: 1, label: "Years the saving lasts (5% rate)"})
+```
+
+```{webr}
+#| input:
+#|   - years2
+#| autorun: true
+#| edit: false
+#| fig-width: 10
+#| fig-height: 2
+calculator(rate = 5, years = years2)
+```
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.ask}
+The Day 2 evaluations measured the saving for **one year**. Slide down to 2.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn .fragment}
+At two years the ratio is **`r sprintf("%.2f", bcr(years = 2))`**: below
+break-even. Below about 2.5 years the programme does not pay for itself, and
+nothing in the evaluation measured how long the saving lasts.
+:::
+:::::
+
+::::::
+
+## Both choices together
+
+```{r fig.height=3.1, fig.width=11.5}
+grid_tbl %>%
+  mutate(r_lab = factor(sprintf("%.0f%%", 100 * r), levels = sprintf("%.0f%%", 100 * rate_grid)),
+         y_lab = factor(sprintf("%d years", years), levels = sprintf("%d years", rev(years_grid)))) %>%
+  plot_ly(x = ~r_lab, y = ~y_lab, z = ~bcr, type = "heatmap",
+          colorscale = list(c(0, ALERT), c(0.14, "#E3A6A8"), c(0.15, "#DCE7F2"), c(1, ACCENT)),
+          zmin = 0.55, zmax = 3.4, showscale = FALSE,
+          text = ~sprintf("%.2f", bcr), texttemplate = "%{text}",
+          textfont = list(size = 16, color = INK),
+          hovertemplate = "%{y}, discount %{x}: ratio %{z:.2f}<extra></extra>") %>%
+  layout(xaxis = ax("Discount rate", zeroline = FALSE),
+         yaxis = ax("Years of saving assumed", zeroline = FALSE)) %>%
+  pl_m2(height = 300)
+```
+
+::: {.ask}
+Same programme, same cost, same measured saving in every cell; only the two
+choices differ. **Find the row that is below 1 whatever the rate.**
+:::
+
+::: {.panel .fragment}
+Two years. If the saving lasts two years, no discount rate makes this worth
+doing. Read down the columns, not across the rows: the horizon matters far more
+than the rate.
+:::
+
+# 3 · Three questions for any ratio {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## How to judge a cost-benefit claim
+
+```{=html}
+<div class="facts">
+  <div class="k">1</div> <div class="v">Are the benefits plausible?</div>
+  <div class="k">2</div> <div class="v">Are all the costs included?</div>
+  <div class="k">3</div> <div class="v">What would flip the result?</div>
+</div>
+```
+
+::: {.panel}
+None of these needs a spreadsheet. They follow the pattern of the week: what is
+the number compared to, what is missing, and what would change the answer.
+:::
+
+## Question 1: are the benefits plausible?
+
+```{webr}
+low  <- savings_table(5, 5, saving = 753)     # the interval end closest to zero
+high <- savings_table(5, 5, saving = 880)
+round(data.frame(saving = c(753, 816, 880),
+                 ratio = c(ratio(low), ratio(savings_table(5, 5)), ratio(high))), 2)
+```
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+The saving here is **measured**. The three rows carry its confidence interval
+from Day 2 into the ratio.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn .fragment}
+The ratio stays between `r sprintf("%.2f", bcr(saving = SAVING_CI[1]))` and
+`r sprintf("%.2f", bcr(saving = SAVING_CI[2]))`. The measured uncertainty barely
+moves it. The horizon, which nobody measured, moves it from
+`r sprintf("%.2f", bcr(years = 2))` to `r sprintf("%.2f", bcr_base)`.
+:::
+:::::
+
+::::::
+
+## The measured part and the assumed part
+
+```{r results='asis'}
+html_out(sprintf('
+<div class="facts">
+  <div class="k">Measured</div> <div class="v">the annual saving, %s AED (interval %s to %s): moves the ratio by %.2f</div>
+  <div class="k">Measured</div> <div class="v">the cost, %s AED: a programme fact</div>
+  <div class="k">Assumed</div>  <div class="v">how many years the saving lasts: moves the ratio by %.2f</div>
+  <div class="k">Assumed</div>  <div class="v">the discount rate: across 3%% to 8%%, moves it by %.2f</div>
+</div>',
+  gfmt(SAVING), gfmt(SAVING_CI[1]), gfmt(SAVING_CI[2]),
+  bcr(saving = SAVING_CI[2]) - bcr(saving = SAVING_CI[1]), gfmt(COST),
+  bcr_base - bcr(years = 2), bcr(0.03) - bcr(0.08)))
+```
+
+::: {.ask}
+The assumed lines move the answer more than the measured ones. The numbers that
+were carefully estimated are not the ones deciding it.
+:::
+
+## Question 2: are all the costs included?
+
+```{ojs}
+//| echo: false
+viewof extra = Inputs.range([0, 2000], {value: 0, step: 100, label: "Costs left out, per business (AED)"})
+```
+
+```{webr}
+#| input:
+#|   - extra
+#| autorun: true
+#| edit: false
+tb <- savings_table(5, 5)
+data.frame(cost_counted = 1800 + extra, ratio = round(ratio(tb, cost = 1800 + extra), 2))
+```
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+The 1,800 AED is the delivery cost only. Not counted: the authority's set-up and
+administration, the businesses' own time, anything the programme displaced.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.ask}
+How much would the missing costs have to add, per business, before the ratio
+falls below 1?
+:::
+
+::: {.warn .fragment}
+About **`r gfmt(round(extra_flip, -2))` AED**. Every cost left out makes the
+ratio look better, so ask what is in the cost line.
+:::
+:::::
+
+::::::
+
+## Question 3: what would flip it?
+
+:::::: {.columns}
+
+::::: {.column width="54%"}
+::: {.panel}
+For this programme it is not the discount rate. **If the saving lasts two years
+instead of five, the ratio falls from `r sprintf("%.2f", bcr_base)` to
+`r sprintf("%.2f", bcr(years = 2))`.**
+:::
+
+::: {.ask}
+The question to put to the evaluator: **"How long do you assume the benefit
+lasts, and what evidence do you have for that?"**
+:::
+:::::
+
+::::: {.column width="46%"}
+```{r results='asis'}
+html_out(sprintf('
+<div class="hero">
+  <div class="value">%.2f &nbsp;&rarr;&nbsp; %.2f</div>
+  <div class="label">The same evidence, five years or two</div>
+</div>', bcr_base, bcr(years = 2)))
+```
+:::::
+
+::::::
+
+## Your turn: stress-test the ratio
+
+```{ojs}
+//| echo: false
+viewof s_rate  = Inputs.range([0, 20], {value: 5, step: 1, label: "Discount rate (%)"})
+viewof s_years = Inputs.range([1, 10], {value: 5, step: 1, label: "Years the saving lasts"})
+viewof s_decay = Inputs.range([0, 50], {value: 0, step: 5, label: "Saving shrinks each year by (%)"})
+viewof s_extra = Inputs.range([0, 2000], {value: 0, step: 100, label: "Costs left out (AED)"})
+```
+
+```{webr}
+#| input:
+#|   - s_rate
+#|   - s_years
+#|   - s_decay
+#|   - s_extra
+#| autorun: true
+#| edit: false
+tb <- savings_table(s_rate, s_years, decay = s_decay)
+data.frame(ratio = round(ratio(tb, cost = 1800 + s_extra), 2),
+           verdict = ifelse(ratio(tb, cost = 1800 + s_extra) >= 1, "pays for itself", "does not pay"))
+```
+
+::: {.ask}
+Each group takes one card and tells me the settings. Is your scenario plausible
+for a waste-cost programme, and what is your verdict?
+:::
+
+::: {.notes}
+Cards for the partner to print (one per group): (1) businesses drift back to old
+habits, saving shrinks 30% a year; (2) set-up and admin add 600 AED per
+business; (3) the ministry of finance insists on 8%; (4) the saving lasts three
+years; (5) all of 1 and 2 together. About 10 minutes including report-back.
+:::
+
+# 4 · Put AI to work {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## AI Snapshot: find the scenario that breaks it
+
+:::::: {.columns}
+
+::::: {.column width="42%"}
+::: {.panel}
+Groups: paste the cost-benefit table and this prompt.
+
+**"Generate one plausible scenario in which this programme's benefit-cost ratio
+falls below 1. Then tell me whether that scenario is realistic."**
+:::
+
+::: {.ask}
+Check each claim against the calculator. Which is right, which is wrong, and
+which is true but no use to you? Four minutes.
+:::
+:::::
+
+::::: {.column width="58%"}
+::: {.ai-output}
+*A response like this is possible, especially with a short or leading prompt:*
+
+The ratio falls below 1 if the discount rate is raised. [At a discount rate of
+around 40%, the ratio drops below break-even]{.flag}, which would mean the
+programme does not pay for itself and should not be funded.
+
+[Alternatively, if the programme's benefits are delayed by a few years, the
+ratio also falls below 1]{.flag}. Both scenarios are [realistic and commonly
+observed in infrastructure appraisal]{.flag}.
+:::
+:::::
+
+::::::
+
+## Debrief
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**The arithmetic holds.** At 40% the ratio is below 1; in fact it crosses at
+about `r sprintf("%.0f%%", 100 * flip_rate)`.
+:::
+
+::: {.warn}
+**1 · It picked the easiest lever.** No agency uses a rate that high. The model
+answered "name a scenario", not "name the one that matters".
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn}
+**2 · It came near the right lever and gave no number.** "Benefits delayed" is
+close to the horizon, which decides this programme, but it never says how many
+years or what the ratio becomes.
+:::
+
+::: {.warn}
+**3 · "Commonly observed in infrastructure appraisal."** Unsourced, and about a
+different kind of programme.
+:::
+:::::
+
+::::::
+
+::: {.panel}
+The model invented no number and misread no table. It chose what was easy to
+compute. Ask for the assumption that matters most, and ask for the number.
+:::
+
+## The same question, a better prompt
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**What people actually type**
+
+> Generate one plausible scenario in which this benefit-cost ratio falls below 1.
+
+"Plausible" is not defined, so the model may pick whatever is easiest to compute.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.panel}
+**What to type instead**
+
+> Here is a cost-benefit model. The cost and annual saving are measured; the
+> discount rate and the number of benefit years are assumptions. Tell me which
+> **single assumption** moves the ratio most, give the ratio under a realistic
+> alternative, and say whether a government agency would normally make that
+> assumption. **Ask me questions before you answer.**
+:::
+:::::
+
+::::::
+
+::: {.ask}
+Run both. Does the second rank the assumptions before choosing one? What did
+each explain well?
+:::
+
+# 5 · Close {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## Two tests, one programme
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+```{r results='asis'}
+html_out(sprintf('
+<div class="facts">
+  <div class="k">Day 2 rule</div>     <div class="v">cut costs by 1,000 AED in a year</div>
+  <div class="k">What was found</div> <div class="v">%s AED, real and short of the bar</div>
+  <div class="k">Verdict</div>        <div class="v">do not scale on that evidence</div>
+</div>', gfmt(SAVING)))
+```
+:::::
+
+::::: {.column width="50%"}
+```{r results='asis'}
+html_out(sprintf('
+<div class="facts">
+  <div class="k">Today\'s ratio</div>   <div class="v">%.2f AED back per AED spent</div>
+  <div class="k">What it assumes</div> <div class="v">the saving lasts five years</div>
+  <div class="k">Verdict</div>         <div class="v">worth funding, if that holds</div>
+</div>', bcr_base))
+```
+:::::
+
+::::::
+
+::: {.ask}
+Same programme, estimate and cost. The rule asks whether the effect is big
+enough to scale; the ratio asks whether the spending pays for itself over time.
+A report that gives only one of them answers half the question.
+:::
+
+::: {.warn}
+The rule rests on a measurement. The ratio rests mostly on assumptions.
+:::
+
+## What today gives you
+
+```{=html}
+<div class="facts">
+  <div class="k">A ratio is a model</div> <div class="v">it contains choices as well as evidence</div>
+  <div class="k">The rate</div>           <div class="v">3% to 8% barely moves this one</div>
+  <div class="k">The horizon</div>        <div class="v">decides it, and the evaluation did not measure it</div>
+  <div class="k">The costs</div>          <div class="v">anything left out flatters the ratio</div>
+</div>
+```
+
+::: {.ask}
+The sentence to take to a meeting: **"What assumption would have to change for
+this ratio to fall below 1, and what is your evidence for it?"**
+:::
+
+## Where this sits
+
+```{=html}
+<div class="facts">
+  <div class="k">Day 1</div>        <div class="v">is the number answering your question, and is it big enough?</div>
+  <div class="k">Day 2</div>        <div class="v">which method produced it, and what does that method assume?</div>
+  <div class="k">Today</div>        <div class="v">what is it worth, and which assumption decides that?</div>
+  <div class="k">Next session</div> <div class="v">reading the charts that carry these claims into a meeting</div>
+</div>
+```
