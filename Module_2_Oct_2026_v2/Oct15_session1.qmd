@@ -5,7 +5,8 @@ author: "3ie"
 always_allow_html: yes
 format:
   revealjs:
-    theme: [theme_editorial.scss]
+    theme: [theme_dge.scss]
+    logo: assets/dge_logo_horizontal.svg
     slide-number: true
     width: 1280
     height: 720
@@ -28,11 +29,9 @@ library(knitr)
 library(kableExtra)
 library(qrcode)
 
-# ---- Palette (editorial theme; see theme_editorial.scss) -------------------
-ACCENT  <- "#0E6E80"
-ACCENT2 <- "#A9561F"
-ALERT   <- "#8E2413"
-INK     <- "#16181A"; MUTED <- "#61686D"; RULE <- "#E3E6E8"
+# ---- Palette (DGE theme; see theme_dge.scss) --------------------------------
+ACCENT  <- "#215a9e"; ACCENT2 <- "#7da1c4"; ALERT <- "#B8272C"
+INK     <- "#111418"; MUTED <- "#545860"; RULE <- "#D5DEE8"
 
 # ---- The report and the rating scale --------------------------------------
 # Shared with the printable rating sheet and the report itself, so the deck
@@ -41,7 +40,7 @@ source("qa_checklist.R")
 source("qa_rating.R")
 
 # Traffic-light colours for the on-screen reveal.
-LIGHT_COL <- c(Green = "#2E7D4F", Amber = ACCENT2, Red = ALERT)
+LIGHT_COL <- c(Green = "#2E7D4F", Amber = "#A9561F", Red = ALERT)
 
 # ---- Live Menti poll -------------------------------------------------------
 MENTI_CODE <- "1234 5678"
@@ -57,7 +56,7 @@ menti_qr <- function(path = "menti_qr.png", url = MENTI_JOIN) {
 MENTI_QR <- menti_qr()
 ```
 
-# 0 · Sign-off
+# 0 · Sign-off {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## The same question, on paper
 
@@ -120,7 +119,7 @@ Your task is to decide whether a good document supports the claim it makes.
 
 ::::::
 
-# 1 · The report
+# 1 · The report {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## What is in front of you
 
@@ -130,10 +129,9 @@ tab <- data.frame(
   Section = c("1. Executive summary", "2. The programme", "3. Evaluation design",
               "4. Data", "5. Results", "6. Limitations",
               "7. Conclusions and recommendations", "Annexes A and B"),
-  `Pages` = c("1", "1", "1", "1", "1", "1", "1", "1"),
   check.names = FALSE
 )
-kable(tab, col.names = c("Section", "Pages"),
+kable(tab, col.names = "Section",
       caption = "The report, section by section") |>
   kable_styling(c("striped", "condensed"), full_width = FALSE, position = "left",
                 font_size = 16)
@@ -169,7 +167,7 @@ separately:
 On your rating sheet: **the executive summary**.
 
 Give it a colour. Then write the one reason that decided it. If you rate it
-amber or red, what would settle it.
+amber or red, write what would settle it.
 :::
 
 :::::: {.columns}
@@ -190,7 +188,7 @@ your colour and we will come back to it.
 
 ::::::
 
-# 2 · The four areas, applied
+# 2 · The four areas, applied {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## The checklist, on paper this time
 
@@ -228,7 +226,7 @@ for (i in seq_along(qa_headline)) {
 
 ::: {.warn .fragment}
 Notice what is missing from that list: **the colour of the conclusion**. None of
-the five asks whether the report sounds convincing. A report can be confident without being credible.
+the five asks whether the report sounds convincing.
 :::
 
 ## What the rating means
@@ -247,7 +245,7 @@ Amber is a useful rating in its own right: it asks you to name the one thing
 that would change your mind.
 :::
 
-# 3 · Section by section
+# 3 · Section by section {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## Evaluation design
 
@@ -265,12 +263,12 @@ actually require?
 
 ::: {.warn .fragment}
 Parallel trends requires that the two groups **would have moved in parallel
-without the programme**. Sharing an administrative area and facing the same
-economic conditions is about the *level* of a shared shock, not about whether the
-two groups were on the same path.
+without the programme**. Sharing an area and facing the same economic conditions
+makes a common shock likely. It does not show that the two groups were on the
+same path.
 
-And no pre-trend test is reported anywhere in the document. The assumption is
-asserted, in the passive voice, and the word "satisfied" is doing all the work.
+No pre-trend test is reported anywhere in the document, so the assumption is
+stated without evidence.
 :::
 
 ## Data
@@ -348,7 +346,7 @@ kable(tab, col.names = c("Method", "Estimate (AED)", "Clears the 1,000 threshold
 ```
 
 ::: {.warn .fragment}
-One of four clears the bar. The report calls the one that fails its **preferred specification**, and says so in Section 3, four pages before the recommendation.
+Only one of the four clears the bar. The report's **preferred specification**, named in Section 3, is the DiD estimate of 816, which does not.
 :::
 
 
@@ -370,8 +368,7 @@ Rate **Section 6, Limitations**. Are these the right three?
 :::
 
 ::: {.warn .fragment}
-All three are correct and all three are harmless. They are textbook limitations
-that any reviewer would accept.
+All three are correct, and none of them threatens the conclusion.
 
 The two limitations that actually threaten this conclusion (the 12 per cent attrition and the change in the survey instrument)
 appear in Section 4 and are
@@ -396,14 +393,15 @@ businesses below the cut-off?
 :::
 
 ::: {.warn .fragment}
-Nothing, and something different.
+Nothing was estimated about subsidy rates, and nothing about businesses below the
+cut-off.
 
 Recommendation 2 turns an absence of evidence into a recommendation to do nothing.
 Recommendation 3 rests on a result that describes businesses *near* the cut-off,
-not those *below* it, and even then, the estimate there was 905, not 1,014.
+and even there the estimate was 905, below the threshold.
 :::
 
-# 4 · The verdict
+# 4 · The verdict {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## The same question
 
@@ -465,7 +463,7 @@ collects defects teaches you to read for defects:
 Now the hard question: does any of that rescue the recommendation?
 :::
 
-# 5 · Put AI to work
+# 5 · Put AI to work {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## The prompt
 
@@ -540,6 +538,7 @@ did the AI you ran get right, and what did it miss?
 - It treated disclosure of attrition as evidence of quality, not as an open question.
 - It did not ask whether 1,014 was *chosen* as the headline.
 :::
+:::::
 
 ::::::
 
@@ -565,8 +564,8 @@ decide.
 :::
 
 ::: {.panel .fragment}
-The first instruction makes the model tabulate rather than summarise, and the
-816 becomes impossible to miss. The second forces a comparison the model would otherwise often skip. The third gives it permission to find an absence.
+The first instruction makes the model tabulate rather than summarise, so the
+816 is hard to miss. The second forces a comparison the model would otherwise often skip. The third gives it permission to find an absence.
 :::
 
 ::: {.ask .fragment}
@@ -574,7 +573,7 @@ Note what all three have in common: **they ask for a comparison, not a verdict.*
 Models tend to give verdicts readily; comparisons often have to be asked for.
 :::
 
-# 6 · Take this back to your desk
+# 6 · Take this back to your desk {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## Three habits for reading a report
 
@@ -589,15 +588,15 @@ cat('<div class="panel"><b>3.</b> Find the preferred specification and check whe
 Which of the three would have caught the most important problem in this report?
 :::
 
-## Tomorrow
+## Next session
 
 ::: {.panel}
-You have spent two days learning to read other people\'s evidence critically. In
-the next session you write your own: a policy brief, from findings to
+This week you have practised reading other people's evidence critically. In the
+next session you write your own: a policy brief, from findings to
 recommendation.
 :::
 
 ::: {.panel .fragment}
-Bring the ratings you gave today. You will be making the same judgements about
-your own draft, and it is harder when it is yours.
+Bring the ratings you gave today. You will apply the same judgements to your own
+draft.
 :::

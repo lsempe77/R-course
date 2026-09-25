@@ -11,7 +11,8 @@ always_allow_html: yes
 # before. revealjs only: pandoc cannot carry live cells or htmlwidgets into pptx.
 format:
   live-revealjs:
-    theme: [theme_editorial.scss, theme_live.scss]
+    theme: [theme_dge.scss, theme_live.scss]
+    logo: assets/dge_logo_horizontal.svg
     slide-number: true
     width: 1280
     height: 720
@@ -41,16 +42,41 @@ editor_options:
 library(tidyverse)
 library(plotly)
 library(knitr)
-library(kableExtra)
 library(estimatr)   # lm_robust, errors clustered by road segment
 library(qrcode)     # live poll QR, generated below so it cannot drift
 
-# ---- Palette (editorial theme; see theme_editorial.scss) -------------------
-ACCENT  <- "#0E6E80"   # series 1: sectors with cameras
-ACCENT2 <- "#A9561F"   # series 2: sectors without cameras
-ALERT   <- "#8E2413"   # decision rules and flagged errors, never a series
-INK     <- "#16181A"; MUTED <- "#61686D"; RULE <- "#E3E6E8"
-CHART_FONT <- "Segoe UI, Helvetica, Arial, sans-serif"
+# ---- Palette (DGE theme; see theme_dge.scss) --------------------------------
+ACCENT  <- "#215a9e"; ACCENT2 <- "#7da1c4"; ALERT <- "#B8272C"
+INK     <- "#111418"; MUTED <- "#545860"; RULE <- "#D5DEE8"
+CHART_FONT <- "Noto Kufi Arabic, Segoe UI, Arial, sans-serif"
+
+# ---- Tables: plain knitr::kable, styled by theme_dge.scss -------------------
+# No kableExtra: its JavaScript needs jQuery, which live-revealjs does not load.
+# font_size in px; hl = rows to shade (hl_bold to bold them); note = a line
+# under the table. The table is centred, as kable_styling(full_width = FALSE) did.
+HL_BLUE <- "#E4EBF3"; HL_RED <- "#F8E9EA"
+tbl <- function(df, ..., font_size = NULL, hl = NULL, hl_bg = HL_BLUE,
+                hl_bold = FALSE, note = NULL) {
+  h <- as.character(knitr::kable(df, format = "html", ...))
+  fs <- if (is.null(font_size)) "" else sprintf(" font-size:%dpx;", font_size)
+  h <- sub("<table", sprintf('<table style="margin-left:auto; margin-right:auto;%s"', fs),
+           h, fixed = TRUE)
+  if (length(hl)) {
+    parts <- strsplit(h, "<tbody>", fixed = TRUE)[[1]]
+    rows  <- strsplit(parts[2], "<tr>", fixed = TRUE)[[1]]
+    st <- sprintf("background:%s;%s", hl_bg, if (hl_bold) " font-weight:700;" else "")
+    for (i in hl) {
+      rows[i + 1] <- gsub('<td style="', paste0('<td style="', st, " "), rows[i + 1], fixed = TRUE)
+      rows[i + 1] <- gsub("<td>", paste0('<td style="', st, '">'), rows[i + 1], fixed = TRUE)
+    }
+    h <- paste0(parts[1], "<tbody>", paste(rows, collapse = "<tr>"))
+  }
+  if (!is.null(note))
+    h <- paste0(h, sprintf('\n<p style="text-align:center; font-size:0.75em; color:%s; margin-top:0.3em;">%s</p>',
+                           MUTED, note))
+  fence <- strrep("`", 3)
+  knitr::asis_output(paste0("\n", fence, "{=html}\n", h, "\n", fence, "\n"))
+}
 
 PL_W <- 1100; PL_WC <- 520
 
@@ -175,7 +201,7 @@ rule_plot <- function(height = 200, b = 46) {
 }
 ```
 
-# 1 · The case
+# 1 · The case {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ::: {.notes}
 Section timing: about 8 minutes.
@@ -190,7 +216,7 @@ Section timing: about 8 minutes.
 # below use is defined here, so each cell on a slide stays a few lines long.
 pol  <- read.csv("evaluation_data_TrafficCameras.csv")
 library(estimatr)
-ACCENT <- "#0E6E80"; ACCENT2 <- "#A9561F"; ALERT <- "#8E2413"; MUTED <- "#61686D"
+ACCENT <- "#215a9e"; ACCENT2 <- "#7da1c4"; ALERT <- "#B8272C"; MUTED <- "#545860"
 options(width = 100, scipen = 6)
 
 # Layout only: margins, font size and muted axes for a projector.
@@ -265,7 +291,7 @@ You will not write any code. You call the numbers; I type and press **Run**. The
 grey boxes are real R, running in this page.
 :::
 
-# 2 · Meet the data
+# 2 · Meet the data {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ::: {.notes}
 Section timing: about 15 minutes.
@@ -390,7 +416,7 @@ median stayed at 10.
      point with ten camera roads (mean 13.5, median 10), so the reference was
      updated to match. -->
 
-# 3 · Graph it
+# 3 · Graph it {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ::: {.notes}
 Section timing: about 12 minutes.
@@ -464,7 +490,7 @@ knitr::include_graphics(MENTI_QR)
 Leave the vote open. We look at the results again at the end of the session.
 :::
 
-# 4 · How big, and how sure?
+# 4 · How big, and how sure? {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ::: {.notes}
 Section timing: about 20 minutes.
@@ -596,7 +622,7 @@ Which of Session 1's three questions have we not asked yet?
 
 ::::::
 
-# 5 · Put AI to work
+# 5 · Put AI to work {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ::: {.notes}
 Section timing: about 15 minutes.
@@ -689,7 +715,7 @@ second answer asks what happened on roads without cameras, and whether traffic
 changed.
 :::
 
-# 6 · Compared to what?
+# 6 · Compared to what? {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ::: {.notes}
 Section timing: about 10 minutes.
@@ -769,7 +795,7 @@ well, and it still clears the rule. It cannot answer "compared to what?", and
 roads without cameras also improved.
 :::
 
-# 7 · Take this back to your desk
+# 7 · Take this back to your desk {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ::: {.notes}
 Section timing: about 10 minutes.
@@ -789,10 +815,9 @@ tibble(
   `CI Lower`   = ba_fit$conf.low,
   `CI Upper`   = ba_fit$conf.high
 ) %>%
-  kable(align = "lrrrrr", digits = 3,
+  tbl(align = "lrrrrr", digits = 3,
         col.names = c("", "Estimate", "Std. Error", "p-value",
-                      "CI Lower", "CI Upper")) %>%
-  kable_styling(full_width = FALSE, font_size = 16)
+                      "CI Lower", "CI Upper"), font_size = 16)
 ```
 
 ::: {.panel}

@@ -11,7 +11,8 @@ always_allow_html: yes
 # code but do not run).
 format:
   live-revealjs:
-    theme: [theme_editorial.scss]
+    theme: [theme_dge.scss, theme_live.scss]
+    logo: assets/dge_logo_horizontal.svg
     slide-number: true
     width: 1280
     height: 720
@@ -56,16 +57,41 @@ editor_options:
 library(tidyverse)
 library(plotly)
 library(knitr)
-library(kableExtra)
 library(estimatr)
 library(broom)
 
-# ---- Palette (editorial theme; see theme_editorial.scss) -------------------
-ACCENT  <- "#0E6E80"
-ACCENT2 <- "#A9561F"
-ALERT   <- "#8E2413"
-INK     <- "#16181A"; MUTED <- "#61686D"; RULE <- "#E3E6E8"
-CHART_FONT <- "Segoe UI, Helvetica, Arial, sans-serif"
+# ---- Palette (DGE theme; see theme_dge.scss) --------------------------------
+ACCENT  <- "#215a9e"; ACCENT2 <- "#7da1c4"; ALERT <- "#B8272C"
+INK     <- "#111418"; MUTED <- "#545860"; RULE <- "#D5DEE8"
+CHART_FONT <- "Noto Kufi Arabic, Segoe UI, Arial, sans-serif"
+
+# ---- Tables: plain knitr::kable, styled by theme_dge.scss -------------------
+# No kableExtra: its JavaScript needs jQuery, which live-revealjs does not load.
+# font_size in px; hl = rows to shade (hl_bold to bold them); note = a line
+# under the table. The table is centred, as kable_styling(full_width = FALSE) did.
+HL_BLUE <- "#E4EBF3"; HL_RED <- "#F8E9EA"
+tbl <- function(df, ..., font_size = NULL, hl = NULL, hl_bg = HL_BLUE,
+                hl_bold = FALSE, note = NULL) {
+  h <- as.character(knitr::kable(df, format = "html", ...))
+  fs <- if (is.null(font_size)) "" else sprintf(" font-size:%dpx;", font_size)
+  h <- sub("<table", sprintf('<table style="margin-left:auto; margin-right:auto;%s"', fs),
+           h, fixed = TRUE)
+  if (length(hl)) {
+    parts <- strsplit(h, "<tbody>", fixed = TRUE)[[1]]
+    rows  <- strsplit(parts[2], "<tr>", fixed = TRUE)[[1]]
+    st <- sprintf("background:%s;%s", hl_bg, if (hl_bold) " font-weight:700;" else "")
+    for (i in hl) {
+      rows[i + 1] <- gsub('<td style="', paste0('<td style="', st, " "), rows[i + 1], fixed = TRUE)
+      rows[i + 1] <- gsub("<td>", paste0('<td style="', st, '">'), rows[i + 1], fixed = TRUE)
+    }
+    h <- paste0(parts[1], "<tbody>", paste(rows, collapse = "<tr>"))
+  }
+  if (!is.null(note))
+    h <- paste0(h, sprintf('\n<p style="text-align:center; font-size:0.75em; color:%s; margin-top:0.3em;">%s</p>',
+                           MUTED, note))
+  fence <- strrep("`", 3)
+  knitr::asis_output(paste0("\n", fence, "{=html}\n", h, "\n", fence, "\n"))
+}
 
 PL_W  <- 1100
 PL_WC <- 520
@@ -343,7 +369,7 @@ compare_tbl <- tibble(
 ```
 
 
-# 1 · The third way to build a comparison
+# 1 · The third way to build a comparison {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 <!-- Hidden setup (webR priming, deck CSS). Kept under the first section heading, not before it: content before the first heading makes Quarto create an empty slide after the title. -->
 :::: {style="display:none;"}
@@ -392,8 +418,8 @@ find_twins <- function(data, score) {
 biz$score <- fitted(glm(f_all, data = biz, family = binomial))
 matched   <- find_twins(biz, "score")
 
-ACCENT  <- "#0E6E80"; ACCENT2 <- "#A9561F"; ALERT <- "#8E2413"
-INK <- "#16181A"; MUTED <- "#61686D"; RULE <- "#E3E6E8"
+ACCENT  <- "#215a9e"; ACCENT2 <- "#7da1c4"; ALERT <- "#B8272C"
+INK <- "#111418"; MUTED <- "#545860"; RULE <- "#D5DEE8"
 grp_cols <- c("Enrolled" = ACCENT, "Not enrolled" = ACCENT2)
 
 theme_m2 <- function(base = 15) {
@@ -519,8 +545,7 @@ tibble(
   Size = c("small", "large", "small"),
   `Cost after` = c("900", "1,400", "700")
 ) %>%
-  kable(align = "lccr", caption = "Enrolled") %>%
-  kable_styling(full_width = FALSE, font_size = 19)
+  tbl(align = "lccr", caption = "Enrolled", font_size = 19)
 ```
 :::::
 
@@ -532,8 +557,7 @@ tibble(
   Size = c("large", "small", "small", "large"),
   `Cost after` = c("2,300", "1,900", "1,800", "2,600")
 ) %>%
-  kable(align = "lccr", caption = "Not enrolled") %>%
-  kable_styling(full_width = FALSE, font_size = 19)
+  tbl(align = "lccr", caption = "Not enrolled", font_size = 19)
 ```
 :::::
 
@@ -623,7 +647,7 @@ Frame 3: circles that nobody picked fade out. They are set aside, and the
 comparison is now only between the pairs.
 :::
 
-# 2 · Implementing matching in R
+# 2 · Implementing matching in R {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## Remember: what matching needs from the data
 
@@ -998,7 +1022,7 @@ Back in five minutes. When we return: what matching cannot see, and how to
 check how much that matters.
 :::
 
-# 3 · The one question, and how to check it
+# 3 · The one question, and how to check it {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## What matching can and cannot see
 
@@ -1167,7 +1191,7 @@ Owner motivation always comes up and it is the perfect example: unmeasured,
 plausible, and biased in the direction that flatters the programme.
 :::
 
-# 4 · Case 2: when the lookalikes run out
+# 4 · Case 2: when the lookalikes run out {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## The cameras went where the roads were worst
 
@@ -1182,8 +1206,7 @@ d2 %>%
             `Collisions, baseline` = round(mean(y0), 2),
             `Collisions, prior 3 yrs` = round(mean(prior_collisions_3yr), 1),
             .groups = "drop") %>%
-  kable(align = "lrrrr", digits = 2) %>%
-  kable_styling(full_width = FALSE, font_size = 15)
+  tbl(align = "lrrrr", digits = 2, font_size = 15)
 ```
 
 ::: {.warn .note-ctr}
@@ -1211,8 +1234,8 @@ fewer collisions** per segment per round. Watch which check fails.
 
 ::: {.notes}
 Section 4 is the second case study the outline asks for: a matching study that
-is carried out correctly and still only half works. It stands in for the
-"imperfect match" DCD case until those findings arrive. Move at pace: the room
+is carried out correctly and still only half works: some treated units have no
+good match. Move at pace: the room
 now knows the checks, so this section is about spotting which one fails.
 :::
 
@@ -1277,11 +1300,9 @@ evaluator should tell you which.
 ```{r}
 c2_bal %>%
   mutate(across(c(Before, After), ~ sprintf("%.2f", .x))) %>%
-  kable(align = "lrr", col.names = c("Characteristic", "Before", "After")) %>%
-  kable_styling(full_width = FALSE, font_size = 14) %>%
-  row_spec(nrow(c2_bal), bold = TRUE, background = "#F7E9E6") %>%
-  footnote(general = "Standardised differences. Beyond about 0.1 is usually a problem.",
-           general_title = "", footnote_as_chunk = TRUE)
+  tbl(align = "lrr", col.names = c("Characteristic", "Before", "After"),
+      font_size = 14, hl = nrow(c2_bal), hl_bg = HL_RED, hl_bold = TRUE,
+      note = "Standardised differences. Beyond about 0.1 is usually a problem.")
 ```
 :::::
 
@@ -1349,9 +1370,8 @@ because the pairs did start level.
 
 ```{r}
 compare_tbl %>%
-  kable(align = "l", col.names = c("", "Case 1 · GreenWaste", "Case 2 · Cameras")) %>%
-  kable_styling(full_width = FALSE, font_size = 15) %>%
-  row_spec(c(1, 4), background = "#F7E9E6")
+  tbl(align = "l", col.names = c("", "Case 1 · GreenWaste", "Case 2 · Cameras"),
+      font_size = 15, hl = c(1, 4), hl_bg = HL_RED)
 ```
 
 ::: {.ask}
@@ -1365,7 +1385,7 @@ and the outcome's own baseline. Neither appears in a typical matching results
 table, which is why they are on the question card at the end.
 :::
 
-# 5 · Group exercise: which would you trust?
+# 5 · Group exercise: which would you trust? {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## Which case would you trust?
 
@@ -1411,7 +1431,7 @@ weight you give the headline.
 reported balance table would not reveal.
 :::
 
-# 6 · Put AI to work
+# 6 · Put AI to work {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## AI Snapshot: comparing two studies
 
@@ -1510,49 +1530,7 @@ well? Then paste the second answer into a **fresh chat** and
 ask it to check for overstatement.
 :::
 
-# 7 · The Abu Dhabi case
-
-## `[PLACEHOLDER]` The DCD matching evaluation
-
-::: {.warn}
-**Awaiting the real findings.** The second case study in the outline is an Abu
-Dhabi Department of Community Development matching study, on real-world data
-where some participants had no good match. It has not been shared with this
-workspace, so nothing here is presented as its result.
-:::
-
-```{=html}
-<div class="facts">
-  <div class="k">Programme</div>      <div class="v">[PLACEHOLDER]</div>
-  <div class="k">Design</div>         <div class="v">Matching on observables</div>
-  <div class="k">Match rate</div>     <div class="v">[PLACEHOLDER]</div>
-  <div class="k">Outcome</div>        <div class="v">[PLACEHOLDER]</div>
-</div>
-```
-
-::: {.panel}
-The structure is fixed, and it is the same structure as Case 2 above. When the
-DCD findings arrive they drop into these fields without redesigning the session.
-:::
-
-## The five questions for the DCD result
-
-```{=html}
-<div class="facts">
-  <div class="k">1</div> <div class="v">What was matched on, and what was left out of the model?</div>
-  <div class="k">2</div> <div class="v">How many treated units had no real lookalike, and what happened to them?</div>
-  <div class="k">3</div> <div class="v">Do the covariates balance after matching, and does the outcome's own baseline balance?</div>
-  <div class="k">4</div> <div class="v">Do the levels-based and change-based estimates agree?</div>
-  <div class="k">5</div> <div class="v">What else might differ between matched pairs that was never measured?</div>
-</div>
-```
-
-::: {.ask}
-Same five questions we just worked through on the camera case. The programme
-changes; the interrogation does not.
-:::
-
-# 8 · Close
+# 7 · Close {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## Your turn: ask AI first
 
@@ -1600,7 +1578,7 @@ on its own.
   <div class="k">Day 1 S2</div> <div class="v">descriptive reading &middot; -1.13 against a 2.0 rule</div>
   <div class="k">Day 1 S3</div> <div class="v">randomisation &middot; the comparison created by a lottery</div>
   <div class="k">Day 2 S1</div> <div class="v">DiD &middot; -816 against a 1,000 rule, and an assumption that could not be tested</div>
-  <div class="k">Day 2 S2</div> <div class="v">RDD &middot; -249 against a 1,000 rule, and local to the line</div>
+  <div class="k">Day 2 S2</div> <div class="v">RDD &middot; -791 against a 1,000 rule, and local to the line</div>
   <div class="k">Today</div>  <div class="v">matching &middot; `r gfmt(est1)` against a 1,000 rule, and only as good as the list</div>
 </div>
 ```

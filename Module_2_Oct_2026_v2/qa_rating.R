@@ -36,7 +36,7 @@ rating_sections <- data.frame(
     "Four methods reported with their different target populations named. Most reports of this kind give one number and no way to interrogate it.",
     "Names the outcome, gives sample sizes, and discloses that the survey instrument changed between rounds. Disclosure is the right instinct.",
     "A full table with confidence intervals for every method, plus an annex of robustness specifications. Nothing is hidden in a footnote.",
-    "Three limitations stated plainly, and the description of compliers and of locality is technically correct.",
+    "Three limitations stated plainly, and the offer-versus-enrolment and near-the-cut-off points are technically correct.",
     "Recommendations are specific enough to act on, and the first follows from the stated threshold."
   ),
   # The planted defect. Each is answerable from the report itself.

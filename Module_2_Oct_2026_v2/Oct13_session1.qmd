@@ -10,7 +10,8 @@ always_allow_html: yes
 # portable copy (live cells then show their code but do not run).
 format:
   live-revealjs:
-    theme: [theme_editorial.scss]
+    theme: [theme_dge.scss, theme_live.scss]
+    logo: assets/dge_logo_horizontal.svg
     slide-number: true
     width: 1280
     height: 720
@@ -55,16 +56,41 @@ editor_options:
 library(tidyverse)
 library(plotly)
 library(knitr)
-library(kableExtra)
 library(estimatr)
 library(qrcode)
 
-# ---- Palette (editorial theme; see theme_editorial.scss) -------------------
-ACCENT  <- "#0E6E80"   # series 1: programme / offered
-ACCENT2 <- "#A9561F"   # series 2: comparison / not offered
-ALERT   <- "#8E2413"   # decision rules and flagged errors, never a series
-INK     <- "#16181A"; MUTED <- "#61686D"; RULE <- "#E3E6E8"
-CHART_FONT <- "Segoe UI, Helvetica, Arial, sans-serif"
+# ---- Palette (DGE theme; see theme_dge.scss) --------------------------------
+ACCENT  <- "#215a9e"; ACCENT2 <- "#7da1c4"; ALERT <- "#B8272C"
+INK     <- "#111418"; MUTED <- "#545860"; RULE <- "#D5DEE8"
+CHART_FONT <- "Noto Kufi Arabic, Segoe UI, Arial, sans-serif"
+
+# ---- Tables: plain knitr::kable, styled by theme_dge.scss -------------------
+# No kableExtra: its JavaScript needs jQuery, which live-revealjs does not load.
+# font_size in px; hl = rows to shade (hl_bold to bold them); note = a line
+# under the table. The table is centred, as kable_styling(full_width = FALSE) did.
+HL_BLUE <- "#E4EBF3"; HL_RED <- "#F8E9EA"
+tbl <- function(df, ..., font_size = NULL, hl = NULL, hl_bg = HL_BLUE,
+                hl_bold = FALSE, note = NULL) {
+  h <- as.character(knitr::kable(df, format = "html", ...))
+  fs <- if (is.null(font_size)) "" else sprintf(" font-size:%dpx;", font_size)
+  h <- sub("<table", sprintf('<table style="margin-left:auto; margin-right:auto;%s"', fs),
+           h, fixed = TRUE)
+  if (length(hl)) {
+    parts <- strsplit(h, "<tbody>", fixed = TRUE)[[1]]
+    rows  <- strsplit(parts[2], "<tr>", fixed = TRUE)[[1]]
+    st <- sprintf("background:%s;%s", hl_bg, if (hl_bold) " font-weight:700;" else "")
+    for (i in hl) {
+      rows[i + 1] <- gsub('<td style="', paste0('<td style="', st, " "), rows[i + 1], fixed = TRUE)
+      rows[i + 1] <- gsub("<td>", paste0('<td style="', st, '">'), rows[i + 1], fixed = TRUE)
+    }
+    h <- paste0(parts[1], "<tbody>", paste(rows, collapse = "<tr>"))
+  }
+  if (!is.null(note))
+    h <- paste0(h, sprintf('\n<p style="text-align:center; font-size:0.75em; color:%s; margin-top:0.3em;">%s</p>',
+                           MUTED, note))
+  fence <- strrep("`", 3)
+  knitr::asis_output(paste0("\n", fence, "{=html}\n", h, "\n", fence, "\n"))
+}
 
 PL_W  <- 1100
 PL_WC <- 520
@@ -210,7 +236,7 @@ balance_tbl <- map_dfr(bal_vars, function(v) {
 ```
 
 
-# 1 · Compared to what
+# 1 · Compared to what {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 <!-- Hidden setup (webR priming, deck CSS). Kept under the first section heading, not before it: content before the first heading makes Quarto create an empty slide after the title. -->
 :::: {style="display:none;"}
@@ -250,8 +276,8 @@ viz <- data.frame(
   Group = rep(c("Took part", "Did not take part"), each = 2),
   Cost  = c(off_b, off_a, ctl_b, ctl_a))
 
-ACCENT  <- "#0E6E80"; ACCENT2 <- "#A9561F"; ALERT <- "#8E2413"
-INK <- "#16181A"; MUTED <- "#61686D"; RULE <- "#E3E6E8"
+ACCENT  <- "#215a9e"; ACCENT2 <- "#7da1c4"; ALERT <- "#B8272C"
+INK <- "#111418"; MUTED <- "#545860"; RULE <- "#D5DEE8"
 grp_cols <- c("Took part" = ACCENT, "Did not take part" = ACCENT2)
 
 theme_m2 <- function(base = 15) {
@@ -392,7 +418,7 @@ question again and watch the hands change. A comparison group is a correction,
 not a haircut, and here it makes the effect bigger. We compute it exactly next.
 :::
 
-# 2 · The idea, in four numbers
+# 2 · The idea, in four numbers {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## Remember from Day 1: two comparisons, two biases
 
@@ -475,8 +501,7 @@ tibble(
   After  = c(gfmt(off_a), gfmt(ctl_a), ""),
   Change = c("?", "?", "?")
 ) %>%
-  kable(align = "lrrr", col.names = c("", "Before", "After", "Change")) %>%
-  kable_styling(full_width = FALSE, font_size = 20)
+  tbl(align = "lrrr", col.names = c("", "Before", "After", "Change"), font_size = 20)
 ```
 :::::
 
@@ -502,9 +527,8 @@ tibble(
   Change = c(sprintf("%+.0f", off_chg), sprintf("%+.0f", ctl_chg),
              sprintf("%.0f", did_hand))
 ) %>%
-  kable(align = "lrrr", col.names = c("", "Before", "After", "Change")) %>%
-  kable_styling(full_width = FALSE, font_size = 24) %>%
-  row_spec(3, bold = TRUE, background = "#E6F1F5")
+  tbl(align = "lrrr", col.names = c("", "Before", "After", "Change"),
+      font_size = 24, hl = 3, hl_bold = TRUE)
 ```
 
 ```{r results='asis'}
@@ -552,7 +576,7 @@ Press **Run** to draw it. The gap between the dotted counterfactual and where
 Everything above the dotted line is the time trend, not the programme.
 :::
 
-# 3 · Implementing DID in R
+# 3 · Implementing DID in R {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## Remember: what DiD needs from the data
 
@@ -677,10 +701,9 @@ the trap the next slides unpack. The number in `round:enrolled` is the same
 did_tbl %>%
   mutate(across(c(estimate, std.error), ~ round(.x, 0)),
          p.value = ifelse(p.value < 0.001, "<0.001", sprintf("%.3f", p.value))) %>%
-  kable(align = "lrrrr", digits = 2,
-        col.names = c("", "Coefficient", "Std. error", "p", "95% CI")) %>%
-  kable_styling(full_width = FALSE, font_size = 15) %>%
-  row_spec(4, bold = TRUE, background = "#E6F1F5")
+  tbl(align = "lrrrr", digits = 2,
+      col.names = c("", "Coefficient", "Std. error", "p", "95% CI"),
+      font_size = 15, hl = 4, hl_bold = TRUE)
 ```
 :::::
 
@@ -744,7 +767,7 @@ verdict. Here it is a third time.
 Three sessions, three results that are real and not sufficient.
 :::
 
-# 4 · The one question
+# 4 · The one question {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## Everything rests on one assumption
 
@@ -884,10 +907,9 @@ Ask for the things that stand in for the test:
 balance_tbl %>%
   mutate(across(c(Programme, Comparison), ~ round(.x, 2)),
          Difference = round(Difference, 2), p = round(p, 2)) %>%
-  kable(align = "lrrrr", digits = 2,
-        col.names = c("Characteristic", "Took part", "Did not",
-                      "Difference", "p-value")) %>%
-  kable_styling(full_width = FALSE, font_size = 14)
+  tbl(align = "lrrrr", digits = 2,
+      col.names = c("Characteristic", "Took part", "Did not",
+                    "Difference", "p-value"), font_size = 14)
 ```
 :::::
 
@@ -937,7 +959,7 @@ commissioner is entitled to ask, and an evaluator who cannot answer them has
 not finished the job.
 :::
 
-# 5 · Put AI to work
+# 5 · Put AI to work {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## AI Snapshot: explaining the table {.dense}
 
@@ -1042,48 +1064,7 @@ check anyway. What did each answer explain well?
 mention the 1,000 AED rule or parallel trends without being asked?
 :::
 
-# 6 · The Abu Dhabi case
-
-## `[PLACEHOLDER]` The DOH evaluation
-
-::: {.warn}
-**Awaiting the real findings.** The Abu Dhabi Department of Health evaluation
-has not been shared with this workspace yet, so nothing here is presented as its
-result.
-:::
-
-```{=html}
-<div class="facts">
-  <div class="k">Programme</div>     <div class="v">[PLACEHOLDER]</div>
-  <div class="k">Design</div>        <div class="v">Difference-in-differences</div>
-  <div class="k">Outcome</div>       <div class="v">[PLACEHOLDER]</div>
-  <div class="k">Decision rule</div><div class="v">[PLACEHOLDER]</div>
-</div>
-```
-
-::: {.panel}
-The structure above is fixed. When the DOH findings arrive, they drop into these
-four fields and the three slides that follow, without redesigning the session.
-:::
-
-## Reading a DOH result: the same three questions
-
-```{=html}
-<div class="facts">
-  <div class="k">1</div> <div class="v">Which row is the DiD estimate, and does it clear the rule, not just zero?</div>
-  <div class="k">2</div> <div class="v">How many waves before the programme? If one, can parallel trends be tested at all?</div>
-  <div class="k">3</div> <div class="v">What differed between the groups before the programme started?</div>
-</div>
-```
-
-::: {.ask}
-Same three questions as the GreenWaste table. The programme changes; the
-interrogation does not.
-
-That is the point of reading the two side by side.
-:::
-
-# 7 · Close
+# 6 · Close {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## Your turn: ask AI first
 

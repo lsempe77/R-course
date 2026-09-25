@@ -5,7 +5,8 @@ author: "3ie"
 always_allow_html: yes
 format:
   revealjs:
-    theme: [theme_editorial.scss]
+    theme: [theme_dge.scss]
+    logo: assets/dge_logo_horizontal.svg
     slide-number: true
     width: 1280
     height: 720
@@ -28,11 +29,9 @@ library(knitr)
 library(kableExtra)
 library(qrcode)
 
-# ---- Palette (editorial theme; see theme_editorial.scss) -------------------
-ACCENT  <- "#0E6E80"
-ACCENT2 <- "#A9561F"
-ALERT   <- "#8E2413"
-INK     <- "#16181A"; MUTED <- "#61686D"; RULE <- "#E3E6E8"
+# ---- Palette (DGE theme; see theme_dge.scss) --------------------------------
+ACCENT  <- "#215a9e"; ACCENT2 <- "#7da1c4"; ALERT <- "#B8272C"
+INK     <- "#111418"; MUTED <- "#545860"; RULE <- "#D5DEE8"
 
 # ---- The template ----------------------------------------------------------
 # Shared with the printable Evaluation Design Update template.
@@ -52,7 +51,7 @@ menti_qr <- function(path = "menti_qr.png", url = MENTI_JOIN) {
 MENTI_QR <- menti_qr()
 ```
 
-# 0 · The last session
+# 0 · The last session {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## Four days. One design.
 
@@ -61,7 +60,9 @@ On Monday you learned what a comparison is. Tuesday, three more ways of building
 Wednesday, what a result costs and what a figure hides. Thursday, how to tell
 whether evidence is credible and how to translate it.
 
-Today you point all of it at your own evaluation.
+Today you point all of it at your own evaluation. Nothing new is taught: the
+template has three parts (where your design stands, the four additions, and your
+pitch), and most of the session is working time.
 :::
 
 ::: {.ask .fragment}
@@ -69,32 +70,7 @@ Today you point all of it at your own evaluation.
 Not started / rough outline / drafted / ready to pitch.
 :::
 
-## What today is not
-
-:::::: {.columns}
-
-::::: {.column width="50%"}
-::: {.panel}
-**It is not new material.** Every technique today has already been taught. This
-session assembles them.
-:::
-:::::
-
-::::: {.column width="50%"}
-::: {.warn}
-**It is not a written exam.** You are not being graded on completeness. You are
-being asked to make choices and to defend them in five minutes.
-:::
-:::::
-
-::::::
-
-::: {.ask .fragment}
-The template has three parts: where your design stands, the four additions, and
-your pitch. Parts 1 and 2 are working time. Part 3 is performance.
-:::
-
-# 1 · Where your design stands
+# 1 · Where your design stands {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## The eight conditions, from Module 1
 
@@ -136,8 +112,8 @@ randomisation, a cut-off, a matched comparison, a parallel trend.
 
 ::::: {.column width="50%"}
 ::: {.warn .fragment}
-And every one of them has a specific way of being false. If you cannot state
-yours in a sentence, you have a method but not yet a design.
+Each one has its own way of failing. If you cannot state yours in one sentence,
+the design is not finished.
 :::
 :::::
 
@@ -172,7 +148,7 @@ Do not polish. This is the foundation for Part 2, and Part 2 is what the pitch f
 
 ::::::
 
-# 2 · The four additions
+# 2 · The four additions {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## What you are adding
 
@@ -209,11 +185,11 @@ with, and say what the reader must **not** be able to conclude from it.
 
 ::::: {.column width="50%"}
 ::: {.panel}
-**Yesterday's lesson, applied**
+**This morning's lesson, applied**
 
 The fictitious report led with its largest estimate and called a different one its
-preferred specification. A reader who stopped after the summary concluded the
-opposite of the truth.
+preferred specification. A reader who stopped after the summary would have
+believed the threshold was met, when the preferred estimate did not meet it.
 :::
 :::::
 
@@ -239,16 +215,15 @@ Four things to state: the **threshold**, the **benefit per unit per year**, the
 ::: {.panel}
 **Wednesday's lesson**
 
-Of those four, the discount rate is the one everybody argues about and the one
-that usually matters least. The horizon decides almost everything and is often
-never stated.
+In the GreenWaste example the horizon moved the ratio more than the discount
+rate did, and reports often leave the horizon unstated.
 :::
 :::::
 
 ::::: {.column width="50%"}
 ::: {.warn .fragment}
 Write your horizon down. If your benefit stream runs for five years and someone
-assumes two, your ratio moves from 1.87 to 0.80: the same evidence, the opposite decision.
+assumes two, your ratio moves from 1.87 to 0.80, which changes the decision.
 :::
 :::::
 
@@ -275,8 +250,8 @@ discounting.
 
 ::::: {.column width="50%"}
 ::: {.warn .fragment}
-The second sketch is the one that matters. If you cannot say what your own
-preferred figure hides, someone else will find it in the questions.
+The second sketch matters more. If you cannot say what your preferred figure
+hides, expect it to come up in questions.
 :::
 :::::
 
@@ -296,14 +271,14 @@ the one thing you will state plainly that your evaluation did **not** establish.
 **This morning's lesson**
 
 A brief that reports the estimate and omits the threshold leaves the reader to
-assume the target was met. The failure here is an omission, not an error.
+assume the target was met. The problem is what it leaves out.
 :::
 :::::
 
 ::::: {.column width="50%"}
 ::: {.warn .fragment}
-The second half of this addition is the harder one, and it is the one that will
-distinguish your pitch. Naming your own limit is more persuasive, not less.
+The second half is harder. Naming your own limit makes the pitch more
+credible.
 :::
 :::::
 
@@ -342,7 +317,7 @@ team which two you will lead on.
 Back in five minutes. When we return: the pitches.
 :::
 
-# 3 · The pitch
+# 3 · The pitch {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## Five minutes, five parts
 
@@ -404,27 +379,17 @@ matters:
 3. **What is missing?** One thing you would have wanted to hear.
 :::
 
-::: {.ask .fragment}
-Feedback is not a verdict. The first question is a diagnostic: if the room cannot
-say your design back to you, the pitch did not land, and that is worth knowing
-before a real commissioner.
+::: {.warn}
+**Write it down**, so the team can use it. Aim it at the design, never at the team.
 :::
 
-## Peer feedback on the day
-
-```{r}
-#| results: asis
-cat('<div class="panel"><b>1.</b> Write your feedback down. Spoken feedback evaporates and the team cannot use it.</div>\n')
-cat('<div class="panel"><b>2.</b> One thing that worked, one thing that did not. Not three of each.</div>\n')
-cat('<div class="panel"><b>3.</b> Direct the feedback at the design, never at the team.</div>\n')
-cat('<div class="panel"><b>4.</b> If you cannot say the design back in one sentence, say so. It is the most useful thing you can give them.</div>\n')
-```
-
-::: {.ask .fragment}
-Which of those four is hardest to do well? Which do people usually skip?
+::: {.notes}
+The first question is a check: if the room cannot say the design back in one
+sentence, the pitch did not land, and saying so is the most useful feedback a
+team can get. Better to learn that here than from a real commissioner.
 :::
 
-# 4 · The week in one slide
+# 4 · The week in one slide {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## What you can now do
 
