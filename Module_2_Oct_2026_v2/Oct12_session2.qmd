@@ -381,8 +381,14 @@ abline(v = mean(before$injury_collisions), col = ALERT, lwd = 3, lty = 2)
 ::: {.warn .fragment}
 About seven in ten segments had between 5 and 15 collisions in 2019, and nine
 had more than 30. Those few pull the mean (red line) above the median. Session 1 showed the
-same thing with Programmes A and B: one average can sit on very different spreads.
+same thing with ten camera roads: one busy ring road pulled the mean to 13.5 while the
+median stayed at 10.
 :::
+
+<!-- Lucas, 2026-09-25: this line used to refer to "Programmes A and B", an example
+     from the old Session 1. Oct12_session1_live.qmd now makes the mean-vs-median
+     point with ten camera roads (mean 13.5, median 10), so the reference was
+     updated to match. -->
 
 # 3 · Graph it
 

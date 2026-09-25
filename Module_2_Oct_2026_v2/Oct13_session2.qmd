@@ -1,5 +1,11 @@
 ---
 title: "Reading a Regression Discontinuity Result"
+# RETIRED (Lucas, 2026-09-25). The deck used in the room is Oct13_session2_live.qmd.
+# This version pools ALL neighbourhoods in the RDD, including those where
+# GreenWaste was never offered, which puts untreated businesses on the eligible
+# side and shrinks the jump to -249 AED. Module 1 used the offered neighbourhoods
+# only: -791 within +/-2 points (-1,119 in Module 1, -905 with covariates). Do not
+# quote the -249 figure. Kept for reference; delete once Fiona has seen this note.
 subtitle: "Module 2 · Day 2, Session 2: What Happens at the Cut-off"
 author: "3ie"
 always_allow_html: yes
