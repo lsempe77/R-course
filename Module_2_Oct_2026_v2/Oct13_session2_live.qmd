@@ -274,21 +274,24 @@ efficient businesses, so the eligible side is on the **left** of the chart.
 Getting this backwards flips the sign of everything that follows.
 :::
 
-## `[MENTI PLACEHOLDER]` Which side is which?
+## `[MENTI PLACEHOLDER]` Predict the picture
 
 :::::: {.columns}
 
 ::::: {.column width="62%"}
-::: {.ask style="font-size: 115%;"}
-Businesses at or below 58 were offered the programme. On the chart we are about
-to draw, is the eligible side on the **left** or the **right**?
+::: {.ask}
+Businesses at or below 58 got the programme, and it cut costs. On the chart of
+costs against the index, **where is the eligible side, and at the line does it
+sit above or below the other side?**
+
+**A** Left, lower · **B** Left, higher · **C** Right, lower · **D** Right, higher
 :::
 
 Go to **menti.com**, code **`r MENTI_CODE`**, or scan the code.
 :::::
 
 ::::: {.column width="38%"}
-```{r out.width='280px', out.extra='style="display:block; margin:0 auto;"'}
+```{r out.width='260px', out.extra='style="display:block; margin:0 auto;"'}
 knitr::include_graphics(MENTI_QR)
 ```
 :::::
@@ -296,9 +299,14 @@ knitr::include_graphics(MENTI_QR)
 ::::::
 
 ::: {.panel .fragment}
-**Left.** A low index sits on the left of a normal axis, and low is eligible.
-Anyone who assumed the programme went to the *better* businesses would misread
-the chart and the sign of the estimate.
+**A.** A low index sits on the left, and low is eligible; a programme that cut
+costs puts the eligible side **below** at the line. Anyone who assumed the
+programme went to the *better* businesses would read the chart backwards.
+:::
+
+::: {.notes}
+Two predictions in one vote: the direction of the rule and the sign of the
+effect. Keep the result on screen and point back to it on the next chart.
 :::
 
 ## Did the rule hold?
@@ -402,14 +410,19 @@ other_side    <- mean(near$waste_management_costs[near$below == 0])
 round(data.frame(eligible_side, other_side, gap = eligible_side - other_side))
 ```
 
-::: {.panel}
-Two averages, one subtraction. This is a starting point, not the answer: costs
-rise with the index, so an average across the window mixes that slope into the
-gap.
+::: {.ask}
+Each pair: call out the jump on your card. **Why are they so different?** Then
+Run: the same subtraction on every business within 2 points.
+:::
+
+::: {.panel .fragment}
+Six businesses a side is too few to trust. And even with many, an average across
+the window mixes in the slope of costs along the index. The regression deals
+with both.
 :::
 
 ::: {.notes}
-Paper (Oct13_session2_materials.docx): Before pressing Run, hand out the jump card (pack page 1, one per pair). Pairs average each side and subtract (about -1,000), then compare with the live result.
+Paper (Oct13_session2_materials.docx): Before pressing Run, hand out the jump cards (pack pages 1-4, four different cards A-D; neighbouring pairs get different cards). Pairs average six businesses on each side and subtract. Write every pair's jump on the flipchart (they range from about -170 to -1,260), ask why they differ, then press Run: the regression uses the 773 businesses within two points.
 :::
 
 ## Running the regression
@@ -506,7 +519,7 @@ nothing else changes at the line. Neither can be proven; both can be checked.
 :::
 
 ::: {.notes}
-Paper (Oct13_session2_materials.docx): Hand out the four-checks scorecard (pack page 2, one per group). Groups mark each check as you run it, starting with check 0 (who is compared) from Section 1.
+Paper (Oct13_session2_materials.docx): Hand out the four-checks scorecard (pack page 5, one per group). Groups mark each check as you run it, starting with check 0 (who is compared) from Section 1.
 :::
 
 ## Check 1: does the jump survive a different window?
@@ -690,7 +703,7 @@ efficiency]{.flag}.
 ::::::
 
 ::: {.notes}
-Paper (Oct13_session2_materials.docx): Hand out the AI handout (pack page 3, one per group).
+Paper (Oct13_session2_materials.docx): Hand out the AI handout (pack page 6, one per group).
 :::
 
 ## Debrief: one error, three times
@@ -785,7 +798,7 @@ AI missed, what it added that is worth keeping, and whether anything was wrong.
 ```
 
 ::: {.notes}
-Paper (Oct13_session2_materials.docx): Hand out the take-away cards (pack page 4).
+Paper (Oct13_session2_materials.docx): Hand out the take-away cards (pack page 7). Give a minute to fill in "On my desk" on the card, then take two or three examples from the room.
 :::
 
 ## Where this sits

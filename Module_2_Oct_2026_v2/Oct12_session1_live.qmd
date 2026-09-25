@@ -367,7 +367,9 @@ other comparison would you want before crediting the cameras?
 
 ::: {.notes}
 Take answers. If someone says "roads without cameras", say that is exactly
-where Session 2 goes, and leave it there. Do not show the comparison roads'
+where Session 2 goes, and leave it there. Then a show of hands: who would now
+change their vote from the headline slide? Take one reason from someone who
+changed and one from someone who did not. Do not show the comparison roads'
 collisions here: Session 2's last section depends on it.
 :::
 
@@ -830,9 +832,9 @@ answer through a second chat to check it. Also note what it explained well.
 
 ::::::
 
-# 5 · Terms bingo {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+# 5 · Triage the claims {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
-## Terms bingo
+## Triage the claims
 
 ::: {.excerpt}
 **1.** "Fatal collisions on camera roads fell 32% over two years." \
@@ -846,16 +848,21 @@ answer through a second chat to check it. Also note what it explained well.
 :::
 
 ::: {.ask}
-Mark every term you recognise. Then two calls: would you act on **excerpt 3**?
-On **excerpt 8**? They do not have the same answer.
+In groups: for each excerpt, **which of the three questions does it leave
+unanswered, and would you act, not act, or ask first?** Six minutes. Then: which
+one were you most tempted to act on?
 :::
 
 ::: {.notes}
-Target in excerpt 8 is invented for the exercise. Answers: 3 has significance
-and no bar or comparison; 8 has a comparison and a bar, and clears it.
-Excerpt 5 is the ten-road mean pulled up by one road; 6 is the small study.
+Target in excerpt 8 is invented for the exercise. Key: 1 compared to what (ask
+first); 2 how big in units that matter, speed not collisions (ask first); 3
+significance is not a decision rule (do not act); 4 how sure, no interval (ask
+first); 5 one road pulls the mean (ask for the spread); 6 too small to see
+anything (do not conclude "no effect"); 7 not a policy lever (do not act); 8
+comparison, effect and bar (act). Groups usually split on 2 and 4: take one
+group's reasoning for each.
 
-Paper (Oct12_session1_materials.docx): Hand out one bingo card per participant or pair (pack pages 4-7, eight different cards). Read the excerpts aloud from the slips (page 8).
+Paper (Oct12_session1_materials.docx): Hand out the triage sheet (pack page 4, one per group) and one set of excerpt slips per group (page 5, cut).
 :::
 
 # 6 · Take this back to your desk {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
@@ -887,5 +894,5 @@ should I read a confidence interval when I compare an estimate with a decision
 threshold? Ask me questions first." Saying who you are and why you ask usually
 gets a more useful answer.
 
-Paper (Oct12_session1_materials.docx): Hand out the take-away cards (pack page 9).
+Paper (Oct12_session1_materials.docx): Hand out the take-away cards (pack page 6). Give a minute to fill in "On my desk" on the card, then take two or three examples from the room.
 :::

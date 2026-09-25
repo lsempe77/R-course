@@ -797,6 +797,12 @@ A report that gives only one of them answers half the question.
 The rule rests on a measurement. The ratio rests mostly on assumptions.
 :::
 
+::: {.notes}
+Re-run the opening approval poll now ("On a ratio of 1.87, what would you do?")
+and compare with the first vote. Ask someone who moved what moved them: it is
+usually the horizon or the missing costs.
+:::
+
 ## What today gives you
 
 ```{=html}
@@ -814,7 +820,7 @@ this ratio to fall below 1, and what is your evidence for it?"**
 :::
 
 ::: {.notes}
-Paper (Oct14_session1_materials.docx): Hand out the take-away cards (pack page 4).
+Paper (Oct14_session1_materials.docx): Hand out the take-away cards (pack page 4). Give a minute to fill in "On my desk" on the card, then take two or three examples from the room.
 :::
 
 ## Where this sits

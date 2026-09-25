@@ -700,26 +700,32 @@ starts within a few dozen. This is "two people versus two crowds" from Module 1,
 seen in the data. The same holds for characteristics nobody measured.
 :::
 
-## `[MENTI PLACEHOLDER]` True or false?
+## `[MENTI PLACEHOLDER]` Would you trust this draw?
 
 ::: {.panel}
-**1.** Randomisation makes the groups similar only on things we can measure.
-
-**2.** With enough units, random assignment balances unmeasured things too.
-
-**3.** A randomised comparison needs the groups to have started out alike.
+Suppose GreenWaste had drawn only **6 neighbourhoods**, 3 offered and 3 not.
+Before the programme the offered three already had costs **300 AED lower**.
+Afterwards they are **900 AED lower**.
 :::
 
 ::: {.ask}
-Live quiz, revealed one at a time. Commit before I show each answer.
+What do you conclude? **A** The effect is 900: it was randomised. **B** About 600:
+take off the head start. **C** Too few neighbourhoods to trust either number.
+**D** I need to see something else first. Vote, then say what you would need.
 :::
 
 ::: {.panel .fragment}
-**1. False.** Measured *and* unmeasured, on average. The slider showed why.
+C, with D's instinct. A draw makes groups alike **on average over many draws**,
+not in every draw: with a handful of units a 300 AED head start is ordinary (the
+slider showed about ±400 at 4 neighbourhoods). B looks careful but assumes the
+head start would have stayed the same. Ask how many units were randomised, and
+for the balance table.
+:::
 
-**2. True.** That is what "on average" is doing, and why the count matters.
-
-**3. It creates that.** It does not need it beforehand.
+::: {.notes}
+Replaces a true/false quiz: this asks the room to apply what the two lottery
+slides showed to a result they might actually be handed. Expect a split between
+A and B; let one person from each argue before revealing.
 :::
 
 # 5 · Reading the randomised result {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
@@ -1088,7 +1094,7 @@ whether the result is enough to act on.
 :::
 
 ::: {.notes}
-Paper (Oct12_session3_materials.docx): Hand out the take-away cards (pack page 3).
+Paper (Oct12_session3_materials.docx): Hand out the take-away cards (pack page 3). Give a minute to fill in "On my desk" on the card, then take two or three examples from the room.
 :::
 
 ## What today gives you

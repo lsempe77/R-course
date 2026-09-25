@@ -112,9 +112,6 @@ ten_x <- ten$injury_collisions
 spd <- function(t, yr) round(mean(tc$ave_speed_kmh[tc$treated == t & tc$year == yr]), 2)
 sp <- c(c0 = spd(1, 2019), c1 = spd(1, 2021), o0 = spd(0, 2019), o1 = spd(0, 2021))
 
-bingo_terms <- c("Mean", "Median", "Comparison group", "Treatment effect", "Coefficient",
-                 "Standard error", "p-value", "Confidence interval", "Statistically significant",
-                 "Sample size", "Counterfactual", "Baseline")
 excerpts <- c(
   "Fatal collisions on camera roads fell 32% over two years.",
   "The effect of cameras on speed is -3.4 km/h, 95% confidence interval -3.6 to -3.1.",
@@ -179,24 +176,20 @@ s1 <- new_pack() |>
       "\"The coefficient on school_within_500m is -0.37. What should I do about it?\"",
       "", "Did it give you advice about schools?", "", "", "")), min_height = 3.2)
 
-set.seed(12)
-bingo_cards <- lapply(1:8, function(k) sample(bingo_terms, 9))
-for (pg in 1:4) {
-  s1 <- s1 |> new_page() |> title_("Terms bingo", S1) |>
-    print_line("8 different cards on 4 pages; 1 card per participant or pair; cut in half")
-  for (k in (2 * pg - 1):(2 * pg)) {
-    grid <- as.data.frame(matrix(bingo_cards[[k]], 3, 3, byrow = TRUE))
-    ft <- flextable(grid) |> delete_part("header") |> border_remove() |>
-      border_outer(border = fp_border(color = DARK, width = 1.5)) |>
-      border_inner(border = thin_line) |> width(width = 2.2) |> height_all(height = 0.9) |> hrule(rule = "atleast") |>
-      align(align = "center", part = "all") |> valign(valign = "center") |>
-      bold() |> fontsize(size = 12) |> color(color = DARK)
-    s1 <- s1 |> p_(sprintf("Card %d", k), 9, color = GREY) |>
-      body_add_flextable(ft, align = "center") |> p_(" ", space_after = 14)
-  }
-}
-s1 <- s1 |> new_page() |> title_("Terms bingo: the excerpts", S1) |>
-  print_line("1 set for the trainer to read aloud, or 1 per table; cut into slips") |>
+s1 <- s1 |> new_page() |> title_("Triage the claims", S1) |>
+  print_line("1 per group, with one set of the excerpt slips (next page)") |>
+  p_("You are the commissioner. Eight sentences from reports on the camera programme land on your desk. For each one: which of the three questions does it leave unanswered, and what do you do with it?") |>
+  body_add_flextable(plain_table(data.frame(
+    Excerpt = 1:8,
+    `Unanswered: compared to what? / how big? / how sure? / none` = rep("", 8),
+    `Act / do not act / ask first` = rep("", 8),
+    `The question you would send back` = rep("", 8), check.names = FALSE),
+    widths = c(0.8, 2.3, 1.4, 2.4)) |> height_all(height = 0.55, part = "body") |>
+    hrule(rule = "atleast", part = "body")) |>
+  p_("Then pick the one excerpt you would be most tempted to act on, and say what would have to be true first.") |>
+  write_lines(2) |>
+  new_page() |> title_("Triage the claims: the excerpts", S1) |>
+  print_line("1 set per group; cut into slips") |>
   add_cards(lapply(seq_along(excerpts), function(i) c(sprintf("Excerpt %d", i), excerpts[i])),
             ncol = 2, min_height = 1.1) |>
   illustrative() |>
@@ -204,7 +197,7 @@ s1 <- s1 |> new_page() |> title_("Terms bingo: the excerpts", S1) |>
   print_line("1 per participant, cut into cards") |>
   add_cards(rep(list(c("Three questions for any number", "1. Compared to what?",
                        "2. How big is it, in units that matter to the decision?",
-                       "3. How sure are we?")), 8), min_height = 1.3) |>
+                       "3. How sure are we?", "", "On my desk, I will ask these about:", "______________________________")), 8), min_height = 1.8) |>
   new_page() |> title_("Facilitator key", S1) |> print_line("trainer only") |>
   h2_("Ten roads") |>
   p_(sprintf("Mean %s; %d of the ten roads are below it; median %s. Without the busiest road (%d collisions): mean %s, median %s. One road moved the mean further than the median.",
@@ -219,17 +212,21 @@ s1 <- s1 |> new_page() |> title_("Terms bingo: the excerpts", S1) |>
   p_("B: do not act, it is precise and below the bar. A and C: cannot tell yet; the intervals span the bar. The interval decides, not the point estimate.") |>
   h2_("AI prompt cards") |>
   p_("Card 1: look for \"95% probability that the true value is in this interval\". 95% describes the method over many studies. Card 2: look for \"the probability the result is due to chance\" or \"the probability the programme works\". Card 3: a good answer asks what the 32% was compared with and how much driving changed. Card 4: the row adjusts the comparison; it is not a policy lever.") |>
-  h2_("Bingo excerpts") |>
+  h2_("Triage key") |>
   body_add_flextable(plain_table(data.frame(
     Excerpt = 1:8,
-    `Terms it uses` = c("comparison group (missing), baseline", "treatment effect, confidence interval",
-                        "statistically significant, p-value", "treatment effect, comparison group",
-                        "mean (pulled up by one road)", "sample size, statistically significant",
-                        "coefficient", "treatment effect, comparison group"),
-    `The call` = c("Before-and-after: compared to what?", "", "Do not act: no bar, no comparison",
-                   "", "Ask for the spread", "Too small to see anything", "Not a policy lever",
-                   "Act: a comparison and a bar, and it clears"), check.names = FALSE),
-    widths = c(0.8, 3.0, 3.0)))
+    Unanswered = c("Compared to what? (before and after; driving rose 4%)",
+                   "How big, in units that matter? (speed, not collisions)",
+                   "How big? Significance is not a decision rule",
+                   "How sure? (no interval)",
+                   "How big, for a typical road? (one road pulls the mean)",
+                   "How sure? (20 roads is too few to see anything)",
+                   "Misread coefficient: not a policy lever",
+                   "None: a comparison, an effect and a bar"),
+    Call = c("Ask first", "Ask first", "Do not act on this", "Ask first",
+             "Ask for the spread", "Do not conclude 'no effect'", "Do not act on this", "Act"),
+    check.names = FALSE), widths = c(0.8, 4.0, 2.0))) |>
+  p_("Debrief: groups disagree most on 2 and 4, which is the point; take one group's reasoning for each.")
 print(s1, target = "Oct12_session1_materials.docx")
 
 # ===========================================================================
@@ -282,8 +279,8 @@ s3 <- new_pack() |>
   add_cards(rep(list(c("Three questions to ask the evaluator",
                        "1. Compared to what? Before-and-after, with-and-without, or a fair comparison?",
                        "2. Show me the balance table. How do you know the groups started out alike?",
-                       "3. Were errors clustered where you randomised, and does the interval clear our rule?")), 6),
-            min_height = 1.7) |>
+                       "3. Were errors clustered where you randomised, and does the interval clear our rule?", "", "On my desk, I will ask these about:", "______________________________")), 6),
+            min_height = 2.2) |>
   new_page() |> title_("Facilitator key", S3) |> print_line("trainer only") |>
   h2_("Session tracker") |>
   p_(sprintf("Before and after %s: too small; costs for non-participants rose about 150 AED, so the fall understates the effect. Enrolled vs not %s: too big; the groups differed by %s AED before the programme. Randomised %s: fair. Interval counted by neighbourhood about -1,093 to -935: the estimate clears 1,000, the interval spans it.",
@@ -298,27 +295,36 @@ print(s3, target = "Oct12_session3_materials.docx")
 # ===========================================================================
 S5 <- "Module 2 · Day 2, Session 2 · Reading RDD Results"
 off <- subset(gw, round == 1 & treatment_neighborhood == 1)
-set.seed(1)   # 16 businesses within one point of the cut-off (seed 1 gives a gap near -1,000)
-below <- off[sample(which(off$efficiency_index > 57 & off$efficiency_index <= 58), 8), ]
-above <- off[sample(which(off$efficiency_index > 58 & off$efficiency_index <= 59), 8), ]
-card_rows <- data.frame(
-  `Just below 58 (offered): index` = gfmt(below$efficiency_index, 2),
-  `Waste cost (AED)` = gfmt(below$waste_management_costs),
-  `Just above 58 (not offered): index` = gfmt(above$efficiency_index, 2),
-  `Waste cost (AED) ` = gfmt(above$waste_management_costs), check.names = FALSE)
-gap16 <- mean(below$waste_management_costs) - mean(above$waste_management_costs)
+# Four cards (A-D), each with a different random six businesses on each side of
+# the line. Pairs call out their gaps; the spread is the lesson.
+jump_card <- function(seed) {
+  set.seed(seed)
+  b <- off[sample(which(off$efficiency_index > 57 & off$efficiency_index <= 58), 6), ]
+  a <- off[sample(which(off$efficiency_index > 58 & off$efficiency_index <= 59), 6), ]
+  list(rows = data.frame(`Just below 58 (offered): index` = gfmt(b$efficiency_index, 2),
+                         `Waste cost (AED)` = gfmt(round(b$waste_management_costs, -1)),
+                         `Just above 58 (not offered): index` = gfmt(a$efficiency_index, 2),
+                         `Waste cost (AED) ` = gfmt(round(a$waste_management_costs, -1)),
+                         check.names = FALSE),
+       below = mean(round(b$waste_management_costs, -1)), above = mean(round(a$waste_management_costs, -1)))
+}
+cards5 <- lapply(c(A = 1, B = 4, C = 3, D = 6), jump_card)
 
-s5 <- new_pack() |>
-  title_("By hand: the jump at the line", S5) |>
-  print_line("1 per pair") |>
-  p_("Sixteen GreenWaste businesses in the offered neighbourhoods, all within one index point of the cut-off at 58. Eligible businesses (58 or below) got the programme.") |>
-  body_add_flextable(plain_table(card_rows, widths = c(1.8, 1.3, 1.9, 1.3))) |>
-  h2_("Work it out") |>
-  p_("Average cost just below the line:  ________      Average cost just above:  ________") |>
-  p_("The jump (below minus above):  ________ AED") |>
-  p_("Would a different sixteen businesses give the same number? What does the regression do that this card cannot?") |>
-  write_lines(2) |>
-  new_page() |>
+s5 <- new_pack()
+for (k in names(cards5)) {
+  s5 <- s5 |>
+    title_(sprintf("By hand: the jump at the line (card %s)", k), S5) |>
+    print_line("four different cards (A-D); give each pair one card, so neighbours hold different cards") |>
+    p_("Twelve GreenWaste businesses in the offered neighbourhoods, all within one index point of the cut-off at 58. Businesses at 58 or below got the programme. Costs are rounded to the nearest 10 AED.") |>
+    body_add_flextable(plain_table(cards5[[k]]$rows, widths = c(1.8, 1.3, 1.9, 1.3))) |>
+    h2_("Work it out") |>
+    p_("Average cost just below the line:  ________      Average cost just above:  ________") |>
+    p_("The jump (below minus above):  ________ AED.   Write it on the flipchart when the trainer asks.") |>
+    p_("Your neighbours had different businesses. Why do the jumps differ, and what would you need to trust one number?") |>
+    write_lines(2) |>
+    new_page()
+}
+s5 <- s5 |>
   title_("Four checks scorecard", S5) |>
   print_line("1 per group; mark each check as the trainer runs it") |>
   body_add_flextable(plain_table(data.frame(
@@ -351,12 +357,17 @@ s5 <- new_pack() |>
                        "2. Does the jump survive other windows, and is there none at placebo cut-offs?",
                        "3. Is the number of units smooth at the line?",
                        "4. Does anything else jump at the line?",
-                       "5. Who is near the line, and does the estimate clear our rule for them?")), 6),
-            min_height = 2.0) |>
+                       "5. Who is near the line, and does the estimate clear our rule for them?", "", "On my desk, I will ask these about:", "______________________________")), 6),
+            min_height = 2.5) |>
   new_page() |> title_("Facilitator key", S5) |> print_line("trainer only") |>
   h2_("The jump by hand") |>
-  p_(sprintf("Below: %s AED. Above: %s AED. Jump: %s AED. Another sixteen businesses can give anything from about -300 to -1,200: sixteen is too few, which is why the regression uses hundreds of businesses near the line and reports an interval.",
-             gfmt(mean(below$waste_management_costs)), gfmt(mean(above$waste_management_costs)), gfmt(gap16))) |>
+  body_add_flextable(plain_table(data.frame(
+    Card = names(cards5),
+    `Below (AED)` = sapply(cards5, function(x) gfmt(x$below)),
+    `Above (AED)` = sapply(cards5, function(x) gfmt(x$above)),
+    Jump = sapply(cards5, function(x) gfmt(x$below - x$above)), check.names = FALSE),
+    widths = c(0.8, 1.4, 1.4, 1.2))) |>
+  p_("Write the pairs' jumps on the flipchart. They spread widely because six businesses a side is too few; the regression uses the 773 businesses within two points and reports an interval (-791, from -1,084 to -498). The rough gap is also inflated by the slope of costs along the index, which the regression removes.") |>
   h2_("Scorecard") |>
   p_("0: pass only with the offered neighbourhoods (pooling every neighbourhood waters the jump down to about -249). 1: the estimate moves between about 790 and 1,120; the least generous end never reaches 1,000 (verdict: does not clear). 1b: pass. 2: pass. 3: FAIL, manager age is 5 to 9 years younger just below the line at every window. 4: the 773 businesses near the line are smaller than the rest.") |>
   h2_("AI Snapshot") |>
@@ -428,8 +439,8 @@ s7 <- new_pack() |>
                        "1. Are the benefits plausible? Measured, modelled or assumed?",
                        "2. Are all the costs included? What was left out?",
                        "3. What would flip the result? Which assumption, and by how much?",
-                       "", "Ask: \"What assumption would have to change for this ratio to fall below 1, and what is your evidence for it?\"")), 6),
-            min_height = 2.0) |>
+                       "", "Ask: \"What assumption would have to change for this ratio to fall below 1, and what is your evidence for it?\"", "", "On my desk, I will ask these about:", "______________________________")), 6),
+            min_height = 2.5) |>
   new_page() |> title_("Facilitator key", S7) |> print_line("trainer only") |>
   body_add_flextable(plain_table(data.frame(
     Card = scen$card, Scenario = scen$name, Ratio = sprintf("%.2f", scen$value),
@@ -485,8 +496,8 @@ s9 <- new_pack() |>
   add_cards(rep(list(c("The three you will use",
                        "1. What is the comparison, and how was it chosen?",
                        "2. What has to be true for this to be causal, and did you test it?",
-                       "3. Does the conclusion follow, or does it go beyond the evidence?")), 8),
-            min_height = 1.4) |>
+                       "3. Does the conclusion follow, or does it go beyond the evidence?", "", "On my desk, I will ask these about:", "______________________________")), 8),
+            min_height = 1.9) |>
   new_page() |> title_("Facilitator key", S9) |> print_line("trainer only") |>
   p_("Strong: 2, 4, 6, 8. Weak: 1, 3, 5, 7.") |>
   p_("The analyst's answers with the data (section 4 of the deck): intervals DiD -873 to -760, RDD -992 to -818, randomised -1,093 to -935, none clears 1,000 at its least generous end; the discontinuity moves from about -790 to -1,080 with the window; no business dropped out, but recycling compliance is recorded only for eligible businesses (8,570 empty rows); only two rounds, so parallel trends cannot be checked.") |>
@@ -534,8 +545,8 @@ s11 <- new_pack() |>
                        "3. Findings against the recommendation are named.",
                        "4. The recommendation is an action the reader can take or refuse.",
                        "5. The risk can happen and can be watched.",
-                       "6. What was not established is stated plainly.")), 6),
-            min_height = 2.0) |>
+                       "6. What was not established is stated plainly.", "", "On my desk, I will ask these about:", "______________________________")), 6),
+            min_height = 2.5) |>
   new_page() |> title_("Facilitator key", S11) |> print_line("trainer only") |>
   p_("The AI draft: says what the scheme did and drops the threshold (743 against 900 is never mentioned); calls a non-significant pass-through (p = 0.11) a wider benefit; turns 34% enrolment into 'some operators chose not to'; recommends outreach as if it explained non-participation. Left out: the 900 AED threshold and the 22% cost overrun. The risk named is a caveat that cannot be watched.") |>
   p_("The six checks: a strong brief passes all six. Most first drafts miss the overrun or the threshold.")
