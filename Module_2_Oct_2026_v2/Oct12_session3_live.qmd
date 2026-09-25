@@ -182,6 +182,11 @@ RULE <- 1000
 ACCENT <- "#215a9e"; ACCENT2 <- "#7da1c4"; ALERT <- "#B8272C"; MUTED <- "#545860"
 options(width = 100, scipen = 6)
 
+# Warm up estimatr now, while the opening slides are talked through: its first
+# call in the browser takes about 10 seconds, every later one is instant.
+invisible(estimatr::lm_robust(y ~ x, data = data.frame(y = c(1, 3, 2, 5), x = c(0, 1, 0, 1)),
+                              clusters = c(1, 1, 2, 2)))
+
 # Defined here as well as on the slides that teach them, so a later slide
 # still runs if an earlier one was skipped or the page was reloaded mid-deck.
 after <- subset(gw, round == 1 & eligible == 1)
@@ -311,15 +316,14 @@ else changed over time, the other compares groups that were never alike.
 
 ::: {.notes}
 ~3 min. Pure recall; do not re-teach. Take two answers, then reveal the panel.
-The live cells start loading in the background while you talk (about 10 s).
+Open the deck a couple of minutes before the session starts: R and its statistics package take about a minute to load in the browser, after which every live cell runs in a few seconds.
 :::
 
 ## Today we open the box
 
 ::: {.panel}
-Module 1 showed you the three numbers. Today we **make them**, from the raw
-data, on screen, and find the problems *in the data* rather than taking them on
-trust.
+Module 1 showed you the three numbers. Today we compute them from the raw data,
+on screen, and look for each problem in the data itself.
 :::
 
 ```{=html}
@@ -481,9 +485,8 @@ with no programme at all?
 :::
 
 ::: {.warn .fragment}
-Up, by about 150 AED. Time was not standing still: costs were rising. So the
-`r gfmt(abs(ba_change))` fall happened *against* a rising tide, and it
-**understates** what the programme did.
+Up, by about 150 AED. Costs were rising anyway, so the
+`r gfmt(abs(ba_change))` fall **understates** what the programme did.
 :::
 :::::
 
@@ -611,8 +614,7 @@ measured *and* on what we did not.
 :::
 
 ::: {.ask}
-That is a strong claim. Don't take it from Module 1: let's **test it** on the
-real neighbourhoods.
+We can check that claim on the real neighbourhoods.
 :::
 :::::
 
@@ -653,8 +655,8 @@ pick.
 :::
 
 ::: {.warn .fragment}
-Hand-picked, the programme starts hundreds of AED ahead: a "success" before
-doing anything.
+When officials pick, the offered neighbourhoods start hundreds of AED ahead, so
+the programme looks successful before it has done anything.
 :::
 :::::
 
@@ -707,7 +709,7 @@ Live quiz, revealed one at a time. Commit before I show each answer.
 
 **2. True.** That is what "on average" is doing, and why the count matters.
 
-**3. It creates that.** It does not need it beforehand, which is the point.
+**3. It creates that.** It does not need it beforehand.
 :::
 
 # 5 · Reading the randomised result {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
@@ -808,7 +810,7 @@ businesses in one neighbourhood are not independent pieces of evidence.
 :::
 
 ::: {.warn .fragment}
-Counting honestly **widens** the interval: its least generous end moves from
+Counting neighbourhoods **widens** the interval: its least generous end moves from
 974 to **`r gfmt(rct_avoided_least)`** AED. Ask: *"were your errors clustered
 where you randomised?"*
 :::
@@ -897,9 +899,8 @@ Slide down to 20. **What happens to the estimate, and to the interval?**
 
 ::::: {.column width="50%"}
 ::: {.warn .fragment}
-The estimate barely moves; the interval balloons, from about 590 to 1,290 AED.
-It can no longer tell you whether the bar is cleared. **Small trials give less
-certain answers, not different ones.**
+The estimate barely moves, but the interval widens to about 590 to 1,290 AED.
+At that size the trial cannot tell you whether the bar is cleared.
 :::
 :::::
 
@@ -914,27 +915,39 @@ may fail to find a real effect.
 
 # 6 · Put AI to work {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
-## AI Snapshot: explaining the pitfall
+## AI Snapshot: a paragraph for the minister
+
+:::::: {.columns}
+
+::::: {.column width="42%"}
+::: {.panel}
+Groups, paste this prompt, written the way a busy official might write it:
+
+**"Our pilot cut waste costs by 665 AED per business (costs before vs after,
+p < 0.001). Write a short paragraph for the minister on what this shows."**
+:::
 
 ::: {.ask}
-Groups paste: **"Explain in plain language why a before-and-after comparison
-can be misleading."** Then mark anything wrong in the reply. Three minutes.
+Mark anything the evidence does not support. Three minutes, in your groups. Then
+run the same prompt yourselves: did your AI write something similar?
 :::
+:::::
 
+::::: {.column width="58%"}
 ::: {.ai-output}
-**AI response:**
+*A response like this is possible, especially with a short or leading prompt:*
 
-A before-and-after comparison treats the change as the programme's effect. It
-can mislead because [if the numbers changed, the programme is what changed them]{.flag}.
-
-The fix is simple: [as long as you measure the same group before and after, a
-before-and-after comparison gives you the true effect]{.flag}. To be safe, you
-can also [run a statistical test, and if the change is significant then the
-programme worked]{.flag}.
-
-In this case costs fell, so [we can conclude the programme caused the full fall
-of 665 AED]{.flag}.
+The GreenWaste pilot produced a clear result: waste-management costs fell by 665
+AED per business, and [with p < 0.001 we can be confident the programme caused
+this reduction]{.flag}. [Because the same businesses were measured before and
+after, differences between businesses are already accounted for]{.flag}, so
+[the 665 AED saving can be attributed to the programme]{.flag}. [This makes a
+strong case for national scale-up]{.flag}. As with any pilot, results should be
+monitored as the programme expands.
 :::
+:::::
+
+::::::
 
 ## Debrief: four errors
 
@@ -942,33 +955,37 @@ of 665 AED]{.flag}.
 
 ::::: {.column width="50%"}
 ::: {.warn}
-**1 · It assumed away the whole problem.** "If the numbers changed, the
-programme changed them" ignores the rising costs you saw in the other group.
+**1 · Significant is not causal.** p < 0.001 says the fall is unlikely to be
+chance. It says nothing about *what* caused it.
 :::
 
 ::: {.warn}
-**2 · It called before-and-after a true-effect method.** There is no comparison
-group in it at all.
+**2 · Half right, which makes it convincing.** Following the same businesses
+removes fixed differences between them. It does not remove what changed for
+everyone: costs for businesses that did not take part rose by about 150 AED.
 :::
 :::::
 
 ::::: {.column width="50%"}
 ::: {.warn}
-**3 · It confused significant with correct.** A significant before-and-after
-change is still a biased number.
+**3 · It reported 665 as the effect.** That is the naive figure. The randomised
+estimate is `r gfmt(abs(rct_est))` AED, and the prompt gave the model no way to
+know that.
 :::
 
 ::: {.warn}
-**4 · It quoted 665 as the causal effect.** You computed the randomised estimate
-yourselves: `r gfmt(abs(rct_est))` AED.
+**4 · It recommended scale-up without asking** what bar the programme has to
+clear, or what 665 was compared to. The closing caveat is generic.
 :::
 :::::
 
 ::::::
 
 ::: {.panel}
-**Nothing in the tone flagged the wrong parts.** Error 2 is the dangerous one:
-the model recommended the exact design you just caught out, in fluent prose.
+**The prompt did some of the pushing.** It supplied a p-value, the word "cut" and
+a request for the minister, so a model may write a confident summary instead of
+questioning the design. People asked for a quick paragraph for a minister often
+do the same.
 :::
 
 ## The same question, a better prompt
@@ -979,9 +996,11 @@ the model recommended the exact design you just caught out, in fluent prose.
 ::: {.panel}
 **What people actually type**
 
-> Explain why a before-and-after comparison can be misleading.
+> Our pilot cut waste costs by 665 AED per business (before vs after,
+> p < 0.001). Write a short paragraph for the minister.
 
-The model answers in general and recommends a fix without knowing your design.
+The prompt frames the fall as the programme's doing, and the model may follow
+that framing.
 :::
 :::::
 
@@ -989,8 +1008,10 @@ The model answers in general and recommends a fix without knowing your design.
 ::: {.panel}
 **What to type instead**
 
-> Our programme was randomised by neighbourhood. Here is our output: [paste
-> the live table]. What would a before-and-after comparison get wrong?
+> Costs for participating businesses were 665 AED lower after the pilot than
+> before (p < 0.001). We also have businesses that did not take part and a
+> randomised comparison. The scale-up rule is at least 1,000 AED. Before writing
+> anything, tell me what this before-and-after number can and cannot show.
 > **Ask me questions before you answer.**
 :::
 :::::
@@ -998,13 +1019,40 @@ The model answers in general and recommends a fix without knowing your design.
 ::::::
 
 ::: {.ask}
-Run both. Which one asks about *your* data before asserting anything?
+Run both. Which one questions the 665 before writing the paragraph? What did
+each explain well?
 
-Two habits, every session: make the AI **ask you questions first**, and have a
-**second chat** review the first one's answer.
+Two habits: make the AI **ask you questions first**, and have a **second chat**
+review the first one's answer.
+:::
+
+::: {.notes}
+The outline's version of this snapshot asked AI to explain why before-and-after
+can mislead. Current models usually answer that general question well, so the
+exercise uses a leading, realistic prompt instead; the better prompt still asks
+the model to explain what a before-and-after number can and cannot show.
 :::
 
 # 7 · Close {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## Your turn: ask AI first
+
+::: {.ask style="font-size: 110%;"}
+Before we show our list of questions to ask someone presenting an RCT, ask an AI tool:
+
+**"I am a commissioner about to hear an evaluator present a randomised controlled trial (RCT) result. What are the key questions I should ask?"**
+:::
+
+::: {.panel}
+Three minutes. Then compare with our list on the next slide: what did it miss, what did it add, and is anything incorrect?
+:::
+
+::: {.notes}
+OPTIONAL. If time is short, skip this slide and go straight to the questions
+on the next one. If you run it: give three minutes, then reveal the list and
+ask what the AI missed, what it added that is worth keeping, and whether
+anything it suggested was incorrect.
+:::
 
 ## Three questions to ask the evaluator
 
@@ -1017,8 +1065,8 @@ Two habits, every session: make the AI **ask you questions first**, and have a
 ```
 
 ::: {.panel}
-Question 2 separates a convincing number from a trustworthy one. Question 3
-separates a real effect from a decision.
+Question 2 tells you whether the comparison is fair. Question 3 tells you
+whether the result is enough to act on.
 :::
 
 ## What today gives you

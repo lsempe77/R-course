@@ -51,7 +51,7 @@ design_additions <- data.frame(
 
 # The five-minute pitch structure, timed.
 pitch_structure <- data.frame(
-  part = c("The question", "The design", "The four additions", "The honest limit",
+  part = c("The question", "The design", "The four additions", "The main limit",
            "What you want"),
   minutes = c("0:45", "0:45", "2:00", "0:45", "0:45"),
   says = c(

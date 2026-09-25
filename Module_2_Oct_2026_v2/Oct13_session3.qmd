@@ -342,6 +342,10 @@ compare_tbl <- tibble(
 )
 ```
 
+
+# 1 · The third way to build a comparison
+
+<!-- Hidden setup (webR priming, deck CSS). Kept under the first section heading, not before it: content before the first heading makes Quarto create an empty slide after the title. -->
 :::: {style="display:none;"}
 ```{webr}
 #| autorun: true
@@ -420,14 +424,12 @@ theme_m2 <- function(base = 15) {
 </style>
 ```
 
-# 1 · The third way to build a comparison
-
 ## Where we are
 
 ```{=html}
 <div class="facts">
   <div class="k">Day 1 S3</div> <div class="v">randomisation &middot; the comparison chosen by a lottery</div>
-  <div class="k">Day 2 S1</div> <div class="v">difference-in-differences &middot; and an assumption that cannot be tested</div>
+  <div class="k">Day 2 S1</div> <div class="v">difference-in-differences &middot; and an assumption that could not be tested</div>
   <div class="k">Day 2 S2</div> <div class="v">regression discontinuity &middot; the comparison the rule creates</div>
   <div class="k">Today</div>     <div class="v">matching &middot; the comparison you build yourself</div>
 </div>
@@ -480,8 +482,8 @@ knitr::include_graphics(MENTI_QR)
 ::::::
 
 ::: {.panel .fragment}
-**"Only if nothing else matters" is the honest answer, and it is the rest of this
-session.** Matching handles what you measured. Everything you did not measure is
+**"Only if nothing else matters" is the best answer. Most of this session
+explains why.** Matching handles what you measured. Everything you did not measure is
 left in the comparison, and you will not be able to see it in the table.
 :::
 
@@ -989,6 +991,13 @@ has landed close to it, which is reassuring about the method here. But the
 commissioner deciding from a matching study alone would not know that.
 :::
 
+## Five-minute break
+
+::: {.panel}
+Back in five minutes. When we return: what matching cannot see, and how to
+check how much that matters.
+:::
+
 # 3 · The one question, and how to check it
 
 ## What matching can and cannot see
@@ -1007,7 +1016,7 @@ business was about to invest anyway, unless somebody wrote it down.
 :::
 
 ::: {.warn}
-So the honest version of this method is: **we have made the two groups alike in
+So the accurate claim for this method is: **we have made the two groups alike in
 every way we can observe.** The words doing the work are the last four.
 :::
 
@@ -1255,7 +1264,7 @@ roads are doing most of the comparing.
 Contrast with GreenWaste, where the curves overlapped almost completely and
 `r n_beyond` enrolled businesses sat outside. Here `r c2_outside` do. Nothing in
 a standard results table flags them: the match rate still reads 100%. The
-honest options are to drop them (and say the result no longer covers the worst
+two reasonable options are to drop them (and say the result no longer covers the worst
 roads) or to keep them and say the comparison for them is weak. Either way, the
 evaluator should tell you which.
 :::
@@ -1374,8 +1383,7 @@ The uncomfortable answer: **Case 1** is the more trustworthy study, and it
 cannot show it clears the rule. **Case 2** gives the more attractive answer,
 and it carries the unquantified risk.
 
-If your instinct was to prefer Case 2 because it says the programme worked,
-that instinct is exactly what this session is here to interrupt.
+
 :::
 
 ::: {.notes}
@@ -1414,6 +1422,8 @@ commissioner should flag."
 :::
 
 ::: {.ai-output}
+*A response like this is possible, especially with a short or leading prompt:*
+
 **Case 1:** Matching was highly effective, with every business matched and
 excellent covariate balance. The programme reduced costs by around 1,000 AED,
 with an interval that straddles the 1,000 AED threshold.
@@ -1477,7 +1487,7 @@ details, not against the world.
 > Summarise the key differences between these two studies and identify what a
 > commissioner should flag.
 
-The model summarises the tables it was given, and repeats their framing.
+The model may summarise the tables it was given and repeat their framing.
 :::
 :::::
 
@@ -1495,7 +1505,8 @@ The model summarises the tables it was given, and repeats their framing.
 ::::::
 
 ::: {.ask}
-Run both, then compare. Then paste the second answer into a **fresh chat** and
+Run both, then compare: what did each get wrong, and what did each explain
+well? Then paste the second answer into a **fresh chat** and
 ask it to check for overstatement.
 :::
 
@@ -1543,6 +1554,25 @@ changes; the interrogation does not.
 
 # 8 · Close
 
+## Your turn: ask AI first
+
+::: {.ask style="font-size: 110%;"}
+Before we show our list of questions to ask someone presenting matching results, ask an AI tool:
+
+**"I am a commissioner about to hear an evaluator present a matching result. What are the key questions I should ask?"**
+:::
+
+::: {.panel}
+Three minutes. Then compare with our list on the next slide: what did it miss, what did it add, and is anything incorrect?
+:::
+
+::: {.notes}
+OPTIONAL. If time is short, skip this slide and go straight to the questions
+on the next one. If you run it: give three minutes, then reveal the list and
+ask what the AI missed, what it added that is worth keeping, and whether
+anything it suggested was incorrect.
+:::
+
 ## Five questions to ask any evaluator presenting matching
 
 ```{=html}
@@ -1569,7 +1599,7 @@ on its own.
 <div class="facts">
   <div class="k">Day 1 S2</div> <div class="v">descriptive reading &middot; -1.13 against a 2.0 rule</div>
   <div class="k">Day 1 S3</div> <div class="v">randomisation &middot; the comparison created by a lottery</div>
-  <div class="k">Day 2 S1</div> <div class="v">DiD &middot; -816 against a 1,000 rule, one assumption untestable</div>
+  <div class="k">Day 2 S1</div> <div class="v">DiD &middot; -816 against a 1,000 rule, and an assumption that could not be tested</div>
   <div class="k">Day 2 S2</div> <div class="v">RDD &middot; -249 against a 1,000 rule, and local to the line</div>
   <div class="k">Today</div>  <div class="v">matching &middot; `r gfmt(est1)` against a 1,000 rule, and only as good as the list</div>
 </div>
@@ -1584,4 +1614,13 @@ line. **Matching** assumes everything that matters was measured.
 Those three sentences are the whole of Day 2. Tomorrow turns from reading
 results to **questioning them**: cost analysis, data visualisation, and then a
 clinic where you interrogate an analyst.
+:::
+
+::: {.notes}
+If there is time at the very end, ask the room: is there a different
+question you would ask AI to help you understand a concept from today? For
+example: "I am learning about impact evaluation to help me make policy
+decisions. How should I think about a confidence interval, and how is it
+relevant when I compare an estimate to a decision threshold?" Adding context
+about who you are and why you are asking usually gets a more useful answer.
 :::

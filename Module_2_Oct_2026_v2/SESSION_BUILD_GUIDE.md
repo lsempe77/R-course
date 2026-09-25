@@ -340,7 +340,7 @@ what makes twelve sessions read as one course.
 | `.hero` | The single number a slide exists to deliver | 3 |
 | `.stat-row` | A row of figures below a hero | 3 |
 | `.ai-output` | Verbatim AI response, with `[...]{.flag}` on planted errors | 1 |
-| `.mins` | Timing badge on a section divider | every divider |
+| `.mins` | Not used on slides (see below); timing goes in speaker notes | none |
 | `.fragment` | Hidden until a keypress | 5 |
 
 Counts are literal occurrences in the Session 1 source.

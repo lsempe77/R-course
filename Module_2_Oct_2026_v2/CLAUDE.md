@@ -68,7 +68,7 @@ Filenames follow `[Monthday]_session[#].qmd`. "Legacy source" is the file in `se
 - **Default `echo: false`; opt in to `echo: true` on the mechanics slides.** Keep the YAML default `echo: false` so framing and result slides never leak code, and set `echo: true` per chunk on the analysis slides meant to show the code (see the Code Question above). On a code-plus-output slide keep the code short and put it in a two-column layout beside the figure or table so the slide fits 1280x720.
 - **Author field:** 3ie (the legacy decks are authored "Dr. Lucas Sempé" — do not carry that over without asking).
 - **Slide budget:** roughly 22-28 slides for a 1.5h session, 30-36 for a 2h session. These sessions are discussion-heavy; slide count is low relative to a lecture.
-- **Speaker notes are fine; no separate facilitator guide.** `::: {.notes}` blocks may be used for presenter notes (they appear in revealjs presenter view, press S on the day). What Claude does not produce is a separate facilitator-guide document; facilitation prompts also live on the slides themselves as `.ask` / `.warn` callouts. **Do not put timing badges on section dividers.** `.mins` is still defined in the theme but nothing uses it, and timing belongs in the speaker notes rather than on the slide the room is reading. `SESSION_BUILD_GUIDE.md` §5 has the same rule and a grep to enforce it.
+- **Speaker notes are fine; no separate facilitator guide.** `::: {.notes}` blocks may be used for presenter notes (they appear in revealjs presenter view, press S on the day). What Claude does not produce is a separate facilitator-guide document; facilitation prompts also live on the slides themselves as `.ask` / `.warn` callouts, and section-level timing goes in the section divider's speaker notes (e.g. "Section timing: about 15 minutes."). Do NOT put `.mins` timing badges on slides: Fiona removed them from the visible decks.
 - **Versioning:** none. Edit session files in place; git history is the record of changes. Do not create `_v1`/`_v2` copies.
 - **No em dashes.** Fiona's style preference for the training materials: do not use em dashes (—) in slides or in any prose meant for participants. Use a colon where the dash introduces an explanation, definition, or list; otherwise rephrase with a comma or split into two sentences. En dashes in numeric or time ranges (e.g. 0:00–0:03) are fine.
 
@@ -185,7 +185,7 @@ citing the old result.
 | `.ai-output` | Verbatim AI response for participants to mark up; wrap planted errors in `[...]{.flag}` |
 | `.hero` / `.stat-row` | The single number a slide exists to deliver; a three-across figure row |
 | `.facts` | Case-study "at a glance" key/value grid |
-| `.mins` | **Deprecated.** A timing badge for a section divider. Nothing uses it and `SESSION_BUILD_GUIDE.md` §5 bans it; timing belongs in the speaker notes. |
+| `.mins` | Not used. Timing lives in speaker notes, not on slides. |
 
 Use these instead of bold paragraphs. They are what keep the decks visually consistent across twelve sessions.
 

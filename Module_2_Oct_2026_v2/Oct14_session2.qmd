@@ -209,9 +209,8 @@ If the assumption does not survive the translation, it cannot be interrogated.
 :::
 
 ::: {.ask}
-So this session is not about making charts. It is about **reading them as
-evidence** — the same interrogation you have practised all week, applied to the
-form the evidence is usually delivered in.
+This session is about **reading charts as evidence**: the same interrogation
+you have practised all week, applied to the form evidence usually arrives in.
 :::
 
 ## The same data, two pictures
@@ -222,8 +221,7 @@ that enrolled paid **`r gfmt(mean_enr)` AED** in waste costs at baseline and the
 ones that did not paid **`r gfmt(mean_non)` AED**. A gap of
 **`r gfmt(gap)` AED**.
 
-That gap is fixed. It is the same number in every figure below. **What changes is
-what you think of it.**
+That gap is the same number in every figure below. Only the drawing changes.
 :::
 
 ```{r fig.height=2.6, fig.width=5.6}
@@ -259,7 +257,7 @@ tibble(group = c("Enrolled", "Not enrolled"), cost = c(mean_enr, mean_non)) %>%
 ```
 
 ::: {.warn}
-**Same numbers. Same labels. Different decision.**
+**Same numbers and labels, but a different impression.**
 
 The gap is `r gfmt(gap)` AED in both figures, but here it looks like a chasm. The
 y-axis starts at `r gfmt(1300)`, not zero, so a
@@ -278,11 +276,11 @@ minister? Which would you put in an annex? Is your answer the same for both?
 
 ::::: {.column width="54%"}
 ::: {.panel}
-A truncated axis is not dishonest by itself. It is a **magnifying glass**, and
+A truncated axis is not misleading by itself. It is a **magnifying glass**, and
 magnifying glasses are useful when the question is whether a difference exists at
 all.
 
-It becomes dishonest when the reader is not told the glass is there.
+It becomes misleading when the reader is not told the glass is there.
 :::
 
 ::: {.ask}
@@ -298,7 +296,7 @@ The practical test, and you can do it in two seconds:
   <div class="k">The gap</div>     <div class="v">630 AED &middot; the same in both figures</div>
   <div class="k">As a share</div>  <div class="v">30% of the non-enrolled mean</div>
   <div class="k">In SD units</div> <div class="v">1.13 standard deviations</div>
-  <div class="k">The honest line</div> <div class="v">"a substantial gap on a truncated axis"</div>
+  <div class="k">The accurate line</div> <div class="v">"a substantial gap on a truncated axis"</div>
 </div>
 ```
 :::::
@@ -307,9 +305,8 @@ The practical test, and you can do it in two seconds:
 
 ::: {.ask}
 Note that the third line **supports** the claim. A gap of
-`r sprintf("%.2f", sd_gap)` standard deviations is genuinely large by any
-convention. The problem was never the finding. It was that the figure asked you
-to accept the finding on the strength of the drawing rather than the number.
+`r sprintf("%.2f", sd_gap)` standard deviations is large by any convention. The finding holds up. The issue is that the figure asks you to accept it on the
+strength of the drawing rather than the number.
 :::
 
 # 2 · What the bar is hiding
@@ -319,8 +316,8 @@ to accept the finding on the strength of the drawing rather than the number.
 ::: {.panel}
 Here is the same comparison as one number per group. **A bar chart of means.**
 
-It is the most common figure in evaluation reporting and the least informative,
-because two groups with the same mean can have nothing else in common.
+It is a very common figure in evaluation reporting, and it hides a lot: two
+groups with the same mean can have little else in common.
 :::
 
 ```{r fig.height=2.5, fig.width=5.6}
@@ -377,7 +374,7 @@ businesses paid more than the average non-enrolled business, which is
 `r sprintf("%.1f%%", 100 * mean(non < mean_enr))` of the comparison group paid
 less than the enrolled average.
 
-The gap is real, it is large, and the bar chart showed you none of this.
+The bar chart showed none of this.
 :::
 
 ::: {.ask}
@@ -401,8 +398,7 @@ them sit somewhere else.
 
 ::: {.ask}
 This is the same instinct as Day 1's confidence interval and Day 2's baseline
-balance table. **Every summary throws information away, and the useful question
-is always which information.**
+balance table. **Every summary leaves information out, so ask which information.**
 
 Here the discarded information happened to *support* the finding. It often does
 not.
@@ -417,7 +413,7 @@ The school-zone trial measured child collisions at 400 segments, before and
 after. An analyst wants to report **the percentage change in child collisions at
 the typical segment.**
 
-A reasonable-sounding request. Here is why it cannot be answered.
+It sounds reasonable, but for many segments it cannot be calculated.
 :::
 
 ```{r}
@@ -434,7 +430,7 @@ sc %>%
 ::: {.warn}
 **`r gfmt(zero_base)` of the 400 segments recorded no child collisions at
 baseline.** For those segments a percentage change is undefined: anything divided
-by zero is not a number, and no amount of care in the plotting will fix it.
+by zero is not a number.
 
 Any figure reporting a percentage change has already made a decision about these
 `r gfmt(zero_base)` segments, and it is unlikely to have told you what it was.
@@ -475,7 +471,7 @@ big_abs %>%
 ::::::
 
 ::: {.warn}
-**These two lists share `r overlap` segment** — they are almost entirely
+**These two lists share `r overlap` segment**: they are almost entirely
 different places.
 
 Every segment on the left reduced child collisions by 100%. Every one of them had
@@ -486,8 +482,8 @@ two, three or four to begin with. The right-hand list is where the
 ::: {.ask}
 **Neither list is wrong.** They answer different questions:
 
-*Where did the programme work best?* — the left.
-*Where did it prevent the most harm?* — the right.
+*Where did the programme work best?* The left.
+*Where did it prevent the most harm?* The right.
 
 A report that shows only one of them has chosen your question for you.
 :::
@@ -509,8 +505,7 @@ The pooled change across all 400 segments is
 changes is `r sprintf("%.1f%%", average_pct)`.
 
 **The same data, two answers, differing by
-`r sprintf("%.0f", abs(average_pct - pooled_pct))` percentage points** — because
-one weights by how many collisions a segment had and the other gives every
+`r sprintf("%.0f", abs(average_pct - pooled_pct))` percentage points**, because one weights by how many collisions a segment had and the other gives every
 segment equal say.
 :::
 
@@ -540,7 +535,7 @@ tibble(group = c("Enrolled", "Not enrolled"),
 ```
 
 ::: {.ask}
-Everything on this slide is true and the figure is honest. It would appear in a
+Everything on this slide is true and the figure is accurate. It would appear in a
 perfectly reputable report.
 
 **What question does it answer, and what question did the evaluation ask?**
@@ -570,7 +565,7 @@ its costs were rising anyway.**
 
 So the level comparison on the previous slide is not a programme effect. It is
 the programme effect **plus** a pre-existing gap **plus** a time trend that had
-nothing to do with the programme. The honest estimate is
+nothing to do with the programme. The DiD estimate is
 `r gfmt(did_est)` AED, not `r gfmt(gv(0, 1) - gv(1, 1))`.
 :::
 
@@ -579,8 +574,8 @@ nothing to do with the programme. The honest estimate is
 On Day 2 you saw it as a table. Here it is a bar chart, and it is much more
 convincing.
 
-The figure is not misleading because the analyst was careless. It is misleading
-because **the level comparison is the easiest one to draw.**
+The analyst need not have been careless: **the level comparison is simply the
+easiest one to draw.**
 :::
 
 ## Rule 4: compare changes, not levels
@@ -642,8 +637,8 @@ one received today.
 
 The upper line reaches `r gfmt(cb_nom_total)` AED after five years. The lower
 reaches `r gfmt(cb_dis_total)`. The gap between them,
-`r gfmt(cb_nom_total - cb_dis_total)` AED, is **not a finding**. It is the
-discount rate, drawn as if it were money.
+`r gfmt(cb_nom_total - cb_dis_total)` AED, comes from the
+**discount rate**, not from the evidence.
 :::
 
 ## Rule 5: discount in front of the reader
@@ -663,11 +658,10 @@ discount rate, drawn as if it were money.
 
 ::::: {.column width="48%"}
 ::: {.ask}
-The undiscounted line is the one that gets drawn, because it is easier to explain
-and it always looks better. Nobody has to defend it in the same way they would
-have to defend a 5% rate.
+The undiscounted line often gets drawn because it is easier to explain and looks
+better, and nobody has to defend it the way they would defend a 5% rate.
 
-**That asymmetry is the point.** A choice that favours the programme is treated
+A choice that favours the programme is treated
 as arithmetic; a choice that does not is treated as an assumption.
 :::
 :::::
@@ -703,7 +697,7 @@ tibble(severity = factor(c("Minor", "Injury", "Child"),
 ```
 
 ::: {.ask}
-**In groups, three minutes.** This is a real breakdown of a real dataset. Write
+**In groups, three minutes.** This is the breakdown from the school-zone dataset. Write
 down two things this chart tells you, and two things it does not.
 :::
 
@@ -728,8 +722,7 @@ down two things this chart tells you, and two things it does not.
 slices partition a whole. These do not: every child collision is also counted as
 an injury collision, so the slices overlap.
 
-The chart cannot be read correctly by a careful reader, because it has no correct
-reading.
+Even a careful reader cannot read this chart correctly.
 :::
 :::::
 
@@ -737,10 +730,11 @@ reading.
 
 ::: {.ask}
 **This is a different kind of failure from the other four figures.** The truncated
-axis and the level comparison were honest charts inviting a wrong inference. This
-one is a chart with no right answer.
+axis and the level comparison were accurate charts inviting a wrong inference.
+This one has no correct reading at all.
 
-Before you ask what a figure shows, ask **whether it can show anything at all.**
+Before you ask what a figure shows, check **whether it can be read correctly at
+all.**
 :::
 
 # 7 · Put AI to work
@@ -748,15 +742,16 @@ Before you ask what a figure shows, ask **whether it can show anything at all.**
 ## AI Snapshot: the chart that cannot be wrong
 
 ::: {.panel}
-Groups: give the model the two GreenWaste baseline figures — the zero-axis one
-and the truncated one — and this prompt.
+Groups: give the model the two GreenWaste baseline figures (the zero-axis one and the truncated one) and this prompt.
 
 **"Which of these two charts better represents the difference between the two
 groups, and why?"**
 :::
 
 ::: {.ai-output}
-**AI response:**
+*A response like this is possible, especially with a short or leading prompt:*
+
+
 
 Both charts present the same underlying data accurately. [The truncated-axis
 chart is often preferable for a policy audience because it makes the difference
@@ -770,7 +765,7 @@ a reader who wants the absolute values can consult the data labels]{.flag}.
 ::: {.ask}
 **Four minutes.** Judge this answer against what you have just learned.
 
-Is it wrong? Is it right? Is it answering the question that was asked?
+Is it wrong? Is it right? Is it answering the question that was asked? What does it explain well?
 :::
 
 ## Debrief: true statements, wrong question
@@ -791,8 +786,8 @@ Each sentence would survive a fact-check.
 represents better*. It did not ask *what does the reader need to know*, and it
 never mentions the two things that decide the answer:
 
-* **who is reading it** — a minister and an analyst need different figures;
-* **what the sentence next to it will say** — a truncated axis is fine beside "a
+* **who is reading it**: a minister and an analyst need different figures;
+* **what the sentence next to it will say**: a truncated axis is fine beside "a
   difference exists" and not fine beside "a large difference".
 :::
 :::::
@@ -810,8 +805,8 @@ at all.
 ::: {.warn}
 **The failure shape: competence without a standpoint.** The model gave a balanced,
 well-informed answer to a question that could not be answered without knowing the
-audience. It did not notice that the question was underspecified, and it did not
-ask.
+audience. It did not flag that the question was underspecified, and it did not ask. Yours
+may have done better; check.
 :::
 :::::
 
@@ -844,15 +839,14 @@ fig_rules %>%
 Five checks, none of them requiring software, all of them applicable in the
 thirty seconds you actually get with a figure before forming an impression.
 
-**You have run all five today**, on five real figures, from data you have already
+**You have run all five today**, on five figures, from data you have already
 worked with this week.
 :::
 
 ## The one you will actually use
 
 ::: {.panel}
-If you remember one thing, make it this. It is the fastest of the five and it
-catches the most.
+The fastest of the five checks:
 
 **Read the y-axis, then read the sentence underneath the figure, then decide
 whether they are describing the same thing.**
@@ -869,8 +863,8 @@ whether they are describing the same thing.**
 
 ::: {.warn}
 Every figure this session has a defensible version and a misleading version, made
-from the same numbers. **The difference was never the data.** It was a choice
-somebody made, usually without noticing they had made it.
+from the same numbers. The data was the same each time. The difference came from choices about how to
+draw it, often made without noticing.
 :::
 
 ## Where this sits

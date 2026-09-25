@@ -260,6 +260,10 @@ rdd_tbl <- rdd_fit %>% tidy() %>%
   select(` `, estimate, std.error, p.value, CI)
 ```
 
+
+# 1 · A different way to find a comparison
+
+<!-- Hidden setup (webR priming, deck CSS). Kept under the first section heading, not before it: content before the first heading makes Quarto create an empty slide after the title. -->
 :::: {style="display:none;"}
 ```{webr}
 #| autorun: true
@@ -334,8 +338,6 @@ theme_m2 <- function(base = 15) {
 </style>
 ```
 
-# 1 · A different way to find a comparison
-
 ## Where we are
 
 ```{=html}
@@ -352,8 +354,7 @@ theme_m2 <- function(base = 15) {
 Yesterday's method needed a comparison group that was heading the same way, and
 we could not check whether it was.
 
-Today's method does not need you to believe anything about a comparison group.
-It builds one out of a rule.
+Today's method builds a comparison group from an eligibility rule.
 :::
 
 ## The rule that decided who got in
@@ -768,9 +769,6 @@ cat(sprintf('
 ::: {.ask .fragment}
 Fourth session, same verdict. Day 1 S2, Day 1 S3, yesterday's DiD, and now this:
 every result has been **real**, and none has been **enough**.
-
-That is not a coincidence in the data. It is what evidence usually looks like
-when it is asked to clear a bar set in advance.
 :::
 
 ::: {.notes}
@@ -802,7 +800,7 @@ were bent, the jump is not the programme.
 It is the same shape as yesterday's assumption. Yesterday it was *the groups
 were moving in parallel*. Today it is *nothing else changes at the line*.
 
-Both are statements about a world you cannot see. Both have to be probed.
+Neither can be proven; both can be checked.
 :::
 
 ## Check 1: does the jump survive a different window?
@@ -923,8 +921,7 @@ pattern, and it is not.
 
 ## Check 3: are the two sides alike?
 
-This is the check that **does not fully pass**, and it is the most useful slide
-in the session.
+This is the check that **does not fully pass**.
 
 ```{r}
 cov_tbl %>%
@@ -1020,7 +1017,7 @@ data.
 ::::::
 
 ::: {.ask .fragment}
-So the honest reading is: **there is no strong evidence of a jump in the
+A fair reading is: **there is no strong evidence of a jump in the
 covariates, but the check is not clean either.**
 
 Which is a different claim from "the check passed", and a different claim from
@@ -1073,7 +1070,9 @@ Paste the table and the four checks into an AI tool with this prompt:
 :::
 
 ::: {.ai-output}
-**AI response:**
+*A response like this is possible, especially with a short or leading prompt:*
+
+
 
 This study found that the GreenWaste programme reduced costs by around
 **249 AED** for participating businesses. [Because the study uses a
@@ -1125,8 +1124,8 @@ happens away from the cut-off.
 different words, and each restatement sounded more confident than the last.
 
 The question it was asked, *who does this apply to?*, is the one it answered
-least well. A narrow question about scope is where a fluent model is at its
-most dangerous, because a broad answer reads better than a careful one.
+least well. If the prompt leaves out the design, the model
+may fill the gap with the most natural-sounding story.
 :::
 
 ## The same question, a better prompt {.dense}
@@ -1139,8 +1138,8 @@ most dangerous, because a broad answer reads better than a careful one.
 
 > Explain, without jargon, who this result actually applies to.
 
-Nothing about the design, so the model reaches for the most natural-sounding
-story: the programme, everyone in it, and what to do next.
+Nothing about the design, so the model may reach for the most
+natural-sounding story: the programme, everyone in it, and what to do next.
 :::
 :::::
 
@@ -1159,11 +1158,16 @@ story: the programme, everyone in it, and what to do next.
 ::::::
 
 ::: {.ask}
-Give the model the design and the local nature of the estimate, then run both.
-Does error 1 survive? Does error 2?
+Give the model the design and the local nature of the estimate, then run both. Does error 1 survive? What did each answer explain well?
 
 The habit: **supply the constraint the model cannot infer, then ask a narrower
 question.**
+:::
+
+::: {.panel .fragment}
+**If time allows, a subtler test:** paste only the table and ask *"What was the
+programme's effect?"* Does it separate the effect of being **offered** from the
+effect on those who **took part** (roughly twice the size)?
 :::
 
 # 5 · The Abu Dhabi case
@@ -1210,6 +1214,25 @@ what you are here for.
 
 # 6 · Close
 
+## Your turn: ask AI first
+
+::: {.ask style="font-size: 110%;"}
+Before we show our list of questions to ask someone presenting RDD, ask an AI tool:
+
+**"I am a commissioner about to hear an evaluator present a regression discontinuity (RDD) result. What are the key questions I should ask?"**
+:::
+
+::: {.panel}
+Three minutes. Then compare with our list on the next slide: what did it miss, what did it add, and is anything incorrect?
+:::
+
+::: {.notes}
+OPTIONAL. If time is short, skip this slide and go straight to the questions
+on the next one. If you run it: give three minutes, then reveal the list and
+ask what the AI missed, what it added that is worth keeping, and whether
+anything it suggested was incorrect.
+:::
+
 ## Four questions to ask any evaluator presenting RDD
 
 ```{=html}
@@ -1247,4 +1270,13 @@ estimate about a narrow group.
 
 Next session does the same trade a third time, with **matching**: a much wider
 reach, bought by assuming that everything that matters was measured.
+:::
+
+::: {.notes}
+If there is time at the very end, ask the room: is there a different
+question you would ask AI to help you understand a concept from today? For
+example: "I am learning about impact evaluation to help me make policy
+decisions. How should I think about a confidence interval, and how is it
+relevant when I compare an estimate to a decision threshold?" Adding context
+about who you are and why you are asking usually gets a more useful answer.
 :::

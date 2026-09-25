@@ -1,81 +1,70 @@
 ---
 title: "What Do the Numbers Say? Reading an Evaluation Output"
-subtitle: "Module 2 · Day 1, Session 2: Illustrative Case Data"
+subtitle: "Module 2 · Day 1, Session 2: Descriptive Analysis, Live"
 author: "3ie"
 always_allow_html: yes
-# revealjs only in this folder: the charts are interactive (plotly/htmlwidgets),
-# and pandoc cannot carry an htmlwidget into pptx. Export to PDF for a portable copy.
+# live-revealjs: the quarto-live extension (_extensions/r-wasm/live) runs R in
+# the browser through webR, the same set-up as Oct12_session3_live.qmd. The live
+# cells need an internet connection on the day (webR loads from a CDN), and the
+# CSV listed under webr: resources must sit next to the published .html.
+# Static knitr chunks (the CI chart, the Menti QR, the printed table) work as
+# before. revealjs only: pandoc cannot carry live cells or htmlwidgets into pptx.
 format:
-  revealjs:
-    theme: [theme_editorial.scss]
+  live-revealjs:
+    theme: [theme_editorial.scss, theme_live.scss]
     slide-number: true
     width: 1280
     height: 720
     fig-align: center
     slide-level: 2
     embed-resources: true
+webr:
+  packages: [estimatr]
+  render-df: kable
+  resources:
+    - evaluation_data_TrafficCameras.csv
 knitr:
   opts_chunk:
     echo: false
     warning: false
     message: false
     dev: "png"
-    # dpi 96 is deliberate. knitr sizes every htmlwidget container as
-    # fig.width * dpi, so an inherited dpi: 200 silently inflated each chart
-    # tenfold (11.5in became 2300px) and pushed slide content off the bottom.
-    # At 96, fig.width in inches maps 1:1 onto CSS pixels. If a raster
-    # ggplot chunk is ever added, set its dpi per chunk.
+    # dpi 96 is deliberate: knitr sizes htmlwidgets as fig.width * dpi.
     dpi: 96
 editor_options:
   chunk_output_type: console
 ---
+
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
 
 ```{r setup}
 library(tidyverse)
 library(plotly)
 library(knitr)
 library(kableExtra)
-library(estimatr)   # lm_robust, clustered standard errors
+library(estimatr)   # lm_robust, errors clustered by road segment
 library(qrcode)     # live poll QR, generated below so it cannot drift
 
 # ---- Palette (editorial theme; see theme_editorial.scss) -------------------
-ACCENT  <- "#0E6E80"   # series 1: programme / offered
-ACCENT2 <- "#A9561F"   # series 2: comparison / not offered
+ACCENT  <- "#0E6E80"   # series 1: sectors with cameras
+ACCENT2 <- "#A9561F"   # series 2: sectors without cameras
 ALERT   <- "#8E2413"   # decision rules and flagged errors, never a series
 INK     <- "#16181A"; MUTED <- "#61686D"; RULE <- "#E3E6E8"
 CHART_FONT <- "Segoe UI, Helvetica, Arial, sans-serif"
 
-# ---- Chart sizing ----------------------------------------------------------
-# Every chart carries an explicit pixel size. Relying on plotly's autosize
-# inside revealjs produces half-drawn charts: a widget initialised while its
-# slide is hidden measures a narrow container and never corrects itself.
-# These must stay in step with the chunk's fig.width / fig.height, which size
-# the htmlwidgets wrapper (at dpi 96, one inch is 96 px).
+PL_W <- 1100; PL_WC <- 520
 
-PL_W  <- 1100   # full-width chart
-PL_WC <- 520    # chart sitting in a half-width column
-PL_WT <- 340    # chart sitting in a third-width column
-
-pl_m2 <- function(p, width = PL_W, height = 290, t = 30, b = 54,
-                  title = NULL, legend_y = 1.02) {
-  p <- p %>%
+pl_m2 <- function(p, width = PL_W, height = 290, t = 30, b = 54) {
+  p %>%
     layout(
-      width  = width,
-      height = height,
+      width = width, height = height,
       font = list(family = CHART_FONT, size = 13, color = INK),
-      paper_bgcolor = "rgba(0,0,0,0)",
-      plot_bgcolor  = "rgba(0,0,0,0)",
+      paper_bgcolor = "rgba(0,0,0,0)", plot_bgcolor = "rgba(0,0,0,0)",
       margin = list(l = 70, r = 24, t = t, b = b),
-      legend = list(orientation = "h", x = 0.5, xanchor = "center",
-                    y = legend_y, yanchor = "bottom", title = list(text = "")),
       hoverlabel = list(bgcolor = "white", bordercolor = RULE,
                         font = list(color = INK, size = 12))
-    )
-  if (!is.null(title)) {
-    p <- p %>% layout(title = list(text = title, x = 0, xanchor = "left",
-                                   font = list(size = 12, color = MUTED)))
-  }
-  p %>% config(displayModeBar = FALSE)
+    ) %>%
+    config(displayModeBar = FALSE)
 }
 
 ax <- function(title = "", ...) {
@@ -86,22 +75,19 @@ ax <- function(title = "", ...) {
   ), list(...))
 }
 
-tlev <- function(x) factor(x, levels = c("Before", "After"))
+# Emit an HTML snippet as a raw block. Plain cat() leaves it to pandoc, which
+# reads indented lines inside a multi-line <div> as a code block.
+FENCE <- strrep("`", 3)   # built, not typed: a literal fence would end the chunk
+html_out <- function(x) cat("\n", FENCE, "{=html}\n", x, "\n", FENCE, "\n", sep = "")
 
 # ---- Live Menti poll -------------------------------------------------------
 # ONE place to set the join code. The QR and printed link on the vote slide
-# and the results iframe on the reveal slide all read from here: change
-# MENTI_CODE only and all three move together.
-#
-# PLACEHOLDER until this session's Menti is built. MENTI_CODE is the short
-# JOIN code participants type at menti.com (usually 8 digits), NOT the long
-# ID in the editor URL. Confirm it while the Menti is live: a code that is
-# not running sends the room to a "no longer active" page.
+# and the results iframe on the look-back slide all read from here.
+# MENTI_CODE is the short JOIN code participants type at menti.com, NOT the
+# long ID in the editor URL.
 MENTI_CODE  <- "1234 5678"   # <!-- PLACEHOLDER: this session's join code -->
 MENTI_JOIN  <- paste0("https://www.menti.com/", gsub(" ", "", MENTI_CODE))
-
-# The results embed: the SLIDES view for a webpage, not the voting view (the
-# room still votes on their phones). Set to the long ID from the editor URL.
+# The results embed: the SLIDES view for a webpage. Long ID from the editor URL.
 MENTI_EMBED <- "https://www.mentimeter.com/app/presentation/PLACEHOLDER/embed"  # <!-- PLACEHOLDER -->
 
 # Distinct filename so this QR never overwrites Session 1's menti_qr.png.
@@ -109,172 +95,130 @@ menti_qr <- function(path = "menti_qr_s2.png", url = MENTI_JOIN) {
   png(path, width = 900, height = 900, res = 300, bg = "white")
   on.exit(dev.off(), add = TRUE)
   par(mar = c(0, 0, 0, 0))
-  plot(qr_code(url, ecl = "H"))   # ecl H = highest error correction
+  plot(qr_code(url, ecl = "H"))
   path
 }
 MENTI_QR <- menti_qr()
 
-# ---- Session 2: the traffic camera programme -------------------------------
-# One row per road segment per round. 1,200 segments in 24 sectors, two rounds
-# (2019 before, 2021 after). Twelve sectors got cameras in 2020.
-#
-# NOTE ON THE DATA, AND READ THIS BEFORE EDITING ANY SLIDE.
-#
+# ---- The traffic camera data ------------------------------------------------
 # evaluation_data_TrafficCameras.csv is FICTIONAL data generated by
-# make_traffic_camera_data.R. It is not an Abu Dhabi Police evaluation and it is
-# not any real programme. It was originally drafted as a stand-in for Police
-# findings that do not exist in this workspace, and it named the force, which
-# attributed fabricated numbers to a real organisation on a public site. The
-# case now names no real body.
+# make_traffic_camera_data.R. It is not an Abu Dhabi Police evaluation and not
+# any real programme, so the case names no real body. Every slide with a number
+# from it sits under the invented-figures disclaimer on the case slide.
 #
-# Every slide that shows a number from it carries a visible disclaimer, per
-# CLAUDE.md's placeholder convention.
-pol <- read.csv("./evaluation_data_TrafficCameras.csv")
+# This session is DESCRIPTIVE: it reads the data, graphs it and measures the
+# before-and-after change in the camera sectors. It is not a DiD, and this case
+# is not reused in the method sessions (those use GreenWaste). The comparison
+# sectors appear once, at the end, to raise "compared to what?".
+#
+# The live cells recompute every number below in the browser. They are computed
+# here too so the static slides (rule chart, printed table) cannot drift.
+pol  <- read.csv("./evaluation_data_TrafficCameras.csv")
+cams <- pol %>% filter(treated == 1)
 
-# The bar the authority set before committing to a national roll-out.
 POL_RULE <- 2.0     # injury collisions avoided, per segment per round
 
-pol_before <- pol %>% filter(round == 0)
-pol_after  <- pol %>% filter(round == 1)
+n_rows <- nrow(pol)
+n_seg  <- n_distinct(pol$segment_id)
 
-# The headline the authority would put in a press release: treated sectors only,
-# before and after, no comparison.
-pol_t_before <- mean(pol_before$injury_collisions[pol_before$treated == 1])
-pol_t_after  <- mean(pol_after$injury_collisions[pol_after$treated == 1])
-pol_headline_fall <- 100 * (pol_t_before - pol_t_after) / pol_t_before
+cam_before <- mean(cams$injury_collisions[cams$round == 0])
+cam_after  <- mean(cams$injury_collisions[cams$round == 1])
+cam_fall   <- cam_before - cam_after
+cam_pct    <- 100 * cam_fall / cam_before
 
-# What happened in the sectors that did not get cameras over the same period.
-pol_c_before <- mean(pol_before$injury_collisions[pol_before$treated == 0])
-pol_c_after  <- mean(pol_after$injury_collisions[pol_after$treated == 0])
+oth_before <- mean(pol$injury_collisions[pol$treated == 0 & pol$round == 0])
+oth_after  <- mean(pol$injury_collisions[pol$treated == 0 & pol$round == 1])
+oth_fall   <- oth_before - oth_after
+oth_pct    <- 100 * oth_fall / oth_before
 
-# The honest estimate: the model the deck projects, with errors clustered by
-# road segment because the two rounds of one segment are not independent.
-pol_fit <- lm_robust(injury_collisions ~ treated * round,
-                     data = pol, clusters = segment_id)
+# Share of camera segments whose count fell.
+seg_chg <- cams %>%
+  select(segment_id, round, injury_collisions) %>%
+  pivot_wider(names_from = round, values_from = injury_collisions,
+              names_prefix = "r") %>%
+  mutate(change = r1 - r0)
+share_fell <- 100 * mean(seg_chg$change < 0)
 
-pol_did    <- coef(pol_fit)[["treated:round"]]
-pol_did_ci <- confint(pol_fit)["treated:round", ]
-pol_did_p  <- pol_fit$p.value[["treated:round"]]
-pol_avoided_hi <- abs(pol_did_ci[1])   # most the interval will allow
+# The before-and-after regression, errors clustered by road segment because
+# each segment appears twice.
+ba_fit <- lm_robust(injury_collisions ~ round, data = cams, clusters = segment_id)
+ba_ci  <- sort(abs(confint(ba_fit)["round", ]))   # [1] = end closest to zero
 
-# The table as a participant would receive it. Built here rather than on the
-# slide so that the "reading the output" slide and the "annotate this output"
-# exercise show the identical table.
-pol_tbl <- pol_fit %>%
-  tidy() %>%
-  mutate(` ` = c("(Intercept)", "Programme sectors", "Round 2 (2021)",
-                 "Programme x Round 2"),
-         CI = sprintf("[%.2f, %.2f]", conf.low,
-                      estimate + (estimate - conf.low))) %>%
-  select(` `, estimate, std.error, p.value, CI)
-
-# The two group means behind the four numbers on the comparison slide.
-pol_means <- pol %>%
-  mutate(Group = ifelse(treated == 1, "Programme sectors",
-                        "Comparison sectors"),
-         Time  = tlev(ifelse(round == 0, "Before", "After"))) %>%
-  group_by(Group, Time) %>%
-  summarise(m = mean(injury_collisions), .groups = "drop")
-
-# Segment counts, for the "who is in the evaluation" slide.
-pol_seg  <- n_distinct(pol$segment_id)
-pol_sect <- n_distinct(pol$sector_id)
-pol_t_seg <- n_distinct(pol$segment_id[pol$treated == 1])
-
-# ---- Exposure, and why the count and the rate disagree ----------------------
-# The CSV carries a per-segment ratio, injuries_per_million_vkm. Averaging that
-# column is NOT the rate for the group: a mean of ratios gives a 0.6 km slip
-# road the same weight as a 3 km arterial, and the two disagree by a percentage
-# point here. For "did risk fall", take the totals first and divide once.
-pol_agg <- pol %>%
-  mutate(Group = ifelse(treated == 1, "Programme sectors", "Comparison sectors")) %>%
-  group_by(Group, round) %>%
-  summarise(coll = sum(injury_collisions),
-            vkm  = sum(vehicles_km_millions),
-            .groups = "drop") %>%
-  mutate(rate = coll / vkm)
-
-pol_exp <- pol_agg %>%
-  group_by(Group) %>%
-  summarise(count_fall = 100 * (coll[round == 0] - coll[round == 1]) / coll[round == 0],
-            vkm_rise   = 100 * (vkm[round == 1]  - vkm[round == 0])  / vkm[round == 0],
-            rate_fall  = 100 * (rate[round == 0] - rate[round == 1]) / rate[round == 0],
-            .groups = "drop")
-
-pol_count_fall_t <- pol_exp$count_fall[pol_exp$Group == "Programme sectors"]
-pol_count_fall_c <- pol_exp$count_fall[pol_exp$Group == "Comparison sectors"]
-pol_vkm_rise_t   <- pol_exp$vkm_rise[pol_exp$Group == "Programme sectors"]
-pol_vkm_rise_c   <- pol_exp$vkm_rise[pol_exp$Group == "Comparison sectors"]
-pol_rate_fall_t  <- pol_exp$rate_fall[pol_exp$Group == "Programme sectors"]
-pol_rate_fall_c  <- pol_exp$rate_fall[pol_exp$Group == "Comparison sectors"]
-
-# The two falls the waterfall subtracts, in collisions per segment.
-pol_fall_t <- pol_t_before - pol_t_after
-pol_fall_c <- pol_c_before - pol_c_after
-
-# Baseline imbalance, the measured version of "cameras went to the worst roads".
-# This is the gap a treated-only before-and-after has no way to remove.
-pol_base_gap <- pol_t_before - pol_c_before
-pol_prior_t  <- mean(pol$prior_collisions_3yr[pol$treated == 1])
-pol_prior_c  <- mean(pol$prior_collisions_3yr[pol$treated == 0])
-
-# ---- The estimate against the rule, as one picture --------------------------
-# A horizontal bar: the estimate (dot) with its 95% confidence interval
-# (whiskers) and the decision rule as a vertical red line, so "the interval does
-# not reach the rule" is something you can see rather than read.
-#
-# abs() flips the negative coefficient into "collisions avoided", so the
-# interval's lower (more negative) end becomes the HIGHER avoided value: lo is
-# the least avoided, hi is the best case the interval allows.
-#
-# A function, not a chunk, because two slides show this chart. Defined once so
-# they cannot disagree about where the rule sits.
-pol_ci_plot <- function(width = PL_W, height = 260, t = 30, b = 54) {
-  est <- abs(pol_did)
-  lo  <- abs(pol_did_ci[2])
-  hi  <- abs(pol_did_ci[1])
+# Estimate, interval and rule on one axis.
+rule_plot <- function(height = 200, b = 46) {
+  est <- cam_fall; lo <- ba_ci[1]; hi <- ba_ci[2]
   plot_ly() %>%
     add_segments(x = lo, xend = hi, y = 1, yend = 1, showlegend = FALSE,
                  line = list(color = ACCENT, width = 6), hoverinfo = "skip") %>%
-    add_markers(x = c(lo, hi), y = c(1, 1), showlegend = FALSE,
-                hoverinfo = "skip",
+    add_markers(x = c(lo, hi), y = c(1, 1), showlegend = FALSE, hoverinfo = "skip",
                 marker = list(color = ACCENT, size = 18, symbol = "line-ns-open",
                               line = list(color = ACCENT, width = 3))) %>%
     add_markers(x = est, y = 1, showlegend = FALSE,
                 marker = list(color = ACCENT, size = 16),
-                hovertemplate = "estimate %{x:.2f} avoided<extra></extra>") %>%
+                hovertemplate = "estimate %{x:.2f} fewer<extra></extra>") %>%
     layout(
       shapes = list(list(type = "line", x0 = POL_RULE, x1 = POL_RULE,
                          y0 = 0.4, y1 = 1.6, xref = "x", yref = "y",
                          line = list(color = ALERT, width = 3, dash = "dash"))),
       annotations = list(
-        list(x = POL_RULE, y = 1.68, xref = "x", yref = "y", showarrow = FALSE,
+        list(x = POL_RULE, y = 1.72, xref = "x", yref = "y", showarrow = FALSE,
              text = sprintf("Decision rule: %.1f", POL_RULE),
-             font = list(color = ALERT, size = 14), xanchor = "middle"),
-        list(x = est, y = 0.66, xref = "x", yref = "y", showarrow = FALSE,
+             font = list(color = ALERT, size = 14)),
+        list(x = est, y = 0.62, xref = "x", yref = "y", showarrow = FALSE,
              text = sprintf("estimate %.2f", est),
-             font = list(color = INK, size = 13), xanchor = "middle")),
-      xaxis = ax("Injury collisions avoided per segment, per round",
-                 range = c(0, 2.4)),
+             font = list(color = INK, size = 13))),
+      xaxis = ax("Fewer injury collisions per segment, 2019 to 2021",
+                 range = c(0, 3.6)),
       yaxis = list(range = c(0.4, 1.9), showticklabels = FALSE,
                    showgrid = FALSE, zeroline = FALSE)) %>%
-    pl_m2(width = width, height = height, t = t, b = b)
+    pl_m2(height = height, b = b)
 }
 ```
 
 # 1 · The case
 
+::: {.notes}
+Section timing: about 8 minutes.
+:::
+
 ## The traffic camera programme
+
+```{webr}
+#| autorun: true
+#| include: false
+# Runs once, in the browser, when the deck opens. Everything the live cells
+# below use is defined here, so each cell on a slide stays a few lines long.
+pol  <- read.csv("evaluation_data_TrafficCameras.csv")
+library(estimatr)
+ACCENT <- "#0E6E80"; ACCENT2 <- "#A9561F"; ALERT <- "#8E2413"; MUTED <- "#61686D"
+options(width = 100, scipen = 6)
+
+# Layout only: margins, font size and muted axes for a projector.
+clean_par <- function() par(mar = c(4.2, 5.5, 1, 1), family = "sans", las = 1,
+                            col.axis = MUTED, col.lab = MUTED, fg = MUTED, cex = 1.25)
+
+# Two lines, before and after: sectors with cameras and sectors without.
+plot_two_groups <- function(means) {
+  clean_par()
+  plot(0:1, means[, "1"], type = "b", pch = 19, lwd = 4, col = ACCENT, bty = "n",
+       ylim = c(0, 13), xlim = c(-0.1, 1.7), xaxt = "n",
+       xlab = "", ylab = "Collisions per segment")
+  lines(0:1, means[, "0"], type = "b", pch = 19, lwd = 4, col = ACCENT2)
+  axis(1, at = 0:1, labels = rownames(means))
+  text(1.06, means[2, "1"], "With cameras", col = ACCENT, adj = 0)
+  text(1.06, means[2, "0"], "Without cameras", col = ACCENT2, adj = 0)
+}
+```
 
 :::::: {.columns}
 
 ::::: {.column width="52%"}
-In 2020 a roads authority began installing automated speed cameras. Not
-everywhere at once: twelve sectors first, the rest two years later.
+In 2020 a roads authority began installing automated speed cameras. It started
+with twelve sectors and planned the rest for two years later.
 
-It set a bar before committing further: the programme had to avoid
-**`r sprintf("%.1f", POL_RULE)` injury collisions per road segment per round**.
-Below that, the money goes elsewhere.
+Before extending the programme, it set a bar: cameras had to cut injury
+collisions by at least **`r sprintf("%.1f", POL_RULE)` per road segment per
+round**. Below that, the money goes to other road safety work.
 :::::
 
 ::::: {.column width="48%"}
@@ -296,115 +240,194 @@ from this fictional dataset.
 
 ::::::
 
-## Who is in the evaluation
-
-```{r results='asis'}
-# Three items only. .stat-row is a single-line strip (see theme_editorial.scss):
-# a fourth item wraps to a second line and breaks 3+1, which reads as a mistake.
-# The fourth fact here was the two rounds, which the panel below now carries.
-cat(sprintf('
-<div class="stat-row">
-  <div><span class="n">%s</span><span class="k">Road segments</span></div>
-  <div><span class="n">%d</span><span class="k">Sectors</span></div>
-  <div><span class="n">%s</span><span class="k">Segments with cameras</span></div>
-</div>', format(pol_seg, big.mark = ","), pol_sect,
-   format(pol_t_seg, big.mark = ",")))
-```
-
-::: {.panel}
-Session 1 taught three questions. The first is **compared to what?** This
-session is that question pointed at one programme, measured over two rounds:
-2019 before and 2021 after.
-
-Two things about the design, before the numbers:
-
-- The programme went first to the **worst roads**, so the sectors with cameras
-  are not the same as the sectors without.
-- Traffic **grew** between the two rounds.
+::: {.notes}
+The live cells start loading in the background while you talk (about 10 s).
 :::
 
-::: {.ask}
-Both will come up again. One of them explains why the headline overstates the
-programme; the other does not, and you will see why.
-:::
+## Today we answer two of Session 1's questions
 
-## The decision on the table
-
-::: {.panel}
-The authority is deciding whether to extend cameras elsewhere, so the question is
-a spending question. It turns on one figure: how many injury collisions the
-cameras avoided, **per segment, per round**.
-:::
-
-```{r results='asis'}
-# A .facts grid, not a .stat-row: each number needs its unit spelled out, and
-# stat-row labels are a single-line strip (see theme_editorial.scss). The rule
-# is labelled as the bar the other two are measured against, not as a third
-# candidate answer, which is what an unlabelled strip made it look like.
-#
-# No minus signs. The labels already say "fewer" and "avoided", and the
-# underlying coefficient is negative, so "-1.13 avoided" would be a double
-# negative. Dropping them also puts the estimate and the rule in identical
-# wording, so 1.13 against 2.0 reads as a direct comparison.
-cat(sprintf('
+```{=html}
 <div class="facts">
-  <div class="k">The headline</div> <div class="v">%.0f%% fewer collisions, camera sectors only</div>
-  <div class="k">The estimate</div> <div class="v">%.2f avoided, per segment per round</div>
-  <div class="k">The rule</div> <div class="v">%.1f avoided, per segment per round, or no money</div>
-</div>', pol_headline_fall, abs(pol_did), POL_RULE))
-```
-
-::: {.ask}
-Two are results, in different units. One is the bar they must be measured
-against.
-
-**Which two are in the same units, and does the estimate clear the rule?**
-:::
-
-# 2 · What the numbers say
-
-## The headline
-
-```{r results='asis'}
-cat(sprintf('
-<div class="hero">
-  <div class="value">-%.0f%%</div>
-  <div class="label">Injury collisions, sectors with cameras</div>
+  <div class="k">How big?</div>          <div class="v">In the units the decision is written in: collisions per segment</div>
+  <div class="k">How sure?</div>         <div class="v">The p-value and the confidence interval</div>
+  <div class="k">Compared to what?</div> <div class="v">We come back to this at the end</div>
 </div>
-<div class="stat-row">
-  <div><span class="n">%.1f</span><span class="k">Per segment, 2019</span></div>
-  <div><span class="n">%.1f</span><span class="k">Per segment, 2021</span></div>
-</div>', pol_headline_fall, pol_t_before, pol_t_after,
-   round(pol_headline_fall)))
 ```
+
+::: {.panel}
+We start from the raw data file, as an evaluator would, and build the numbers on
+screen: what is in the file, what it looks like on a chart, and how much
+collisions changed where cameras went.
+:::
 
 ::: {.warn}
-This is the number that reaches the minister. It is **accurate**: in the sectors
-where cameras went, injury collisions fell
-`r sprintf("%.0f", pol_headline_fall)`% between 2019 and 2021.
-
-It is also a before-and-after comparison. It compares those roads to their own
-past, which is exactly the comparison Session 1 spent an hour on.
+You will not write any code. You call the numbers; I type and press **Run**. The
+grey boxes are real R, running in this page.
 :::
 
-```{r fig.height=2.2, fig.width=11.5}
-# The headline has to be a picture before the room votes on it. One group, two
-# rounds, nothing else: this is deliberately the same shape as the Al Falah
-# slide in Session 1, so the room recognises the trap.
-pol_means %>%
-  filter(Group == "Programme sectors") %>%
-  plot_ly(x = ~Time, y = ~m, type = "bar",
-          marker = list(color = ACCENT, line = list(width = 0)),
-          text = ~sprintf("%.1f", m), textposition = "outside",
-          textfont = list(size = 17, color = INK), cliponaxis = FALSE,
-          showlegend = FALSE,
-          hovertemplate = "%{y:.1f} collisions per segment<extra></extra>") %>%
-  layout(barmode = "group",
-         xaxis = ax("", zeroline = FALSE,
-                    tickfont = list(size = 16, color = INK)),
-         yaxis = ax("Injury collisions per segment", range = c(0, 14.5))) %>%
-  pl_m2(height = 200, b = 40)
+# 2 · Meet the data
+
+::: {.notes}
+Section timing: about 15 minutes.
+:::
+
+## One row, one road segment, one year
+
+```{webr}
+cols <- c("segment_id", "sector_id", "corridor_type", "year",
+          "treated", "injury_collisions")
+head(pol[, cols], 4)
 ```
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**treated** is 1 if the segment's sector got cameras in 2020.
+**injury_collisions** is the number of collisions with an injury on that segment
+in that year.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.ask}
+The file has `r format(n_rows, big.mark = ",")` rows. How many **road
+segments**? Say a number before I show the next slide.
+:::
+
+::: {.panel .fragment}
+`r format(n_seg, big.mark = ",")`: each segment appears twice, once in 2019 and
+once in 2021.
+:::
+:::::
+
+::::::
+
+::: {.notes}
+`head()` shows the first rows of a data file. Read one row aloud in plain words:
+"segment 1 in sector 1, a suburban arterial, in 2019, in a camera sector, had 10
+injury collisions."
+:::
+
+## Who is in the data?
+
+```{webr}
+base <- subset(pol, year == 2019)
+data.frame(
+  segments = tapply(base$segment_id, base$treated, length),
+  sectors  = tapply(base$sector_id, base$treated, function(x) length(unique(x))))
+```
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+Row **1** is the sectors that got cameras in 2020; row **0** is the sectors still
+waiting. Half the road network in each.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.ask}
+Before we look at any collisions: what would you want to know about **how** the
+first twelve sectors were chosen?
+:::
+:::::
+
+::::::
+
+::: {.notes}
+Take two or three answers. The design document says cameras went first to the
+sectors with the worst safety record. Note it and move on: it matters for the
+"compared to what?" question at the end, and Session 3 takes it further.
+:::
+
+## Word 1 · The average
+
+```{webr}
+summary(pol$injury_collisions)
+```
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+`summary()` gives six numbers for one column: the smallest, the largest, the
+middle road (**median**) and the **mean**.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.ask}
+The mean is about 9.5 collisions. Is a typical road segment close to 9.5?
+What do the minimum and maximum suggest?
+:::
+:::::
+
+::::::
+
+## Word 1 · What the average hides
+
+```{webr}
+#| fig-width: 10
+#| fig-height: 3.1
+before <- subset(pol, year == 2019)
+clean_par()
+hist(before$injury_collisions, breaks = 40, col = ACCENT, border = "white",
+     main = "", xlab = "Injury collisions per segment, 2019")
+abline(v = mean(before$injury_collisions), col = ALERT, lwd = 3, lty = 2)
+```
+
+::: {.warn .fragment}
+About seven in ten segments had between 5 and 15 collisions in 2019, and nine
+had more than 30. Those few pull the mean (red line) above the median. Session 1 showed the
+same thing with Programmes A and B: one average can sit on very different spreads.
+:::
+
+# 3 · Graph it
+
+::: {.notes}
+Section timing: about 12 minutes.
+:::
+
+## Before and after, where cameras went
+
+```{webr}
+#| fig-width: 7
+#| fig-height: 3.3
+cams  <- subset(pol, treated == 1)
+means <- tapply(cams$injury_collisions, cams$year, mean)
+clean_par()
+b <- barplot(means, col = ACCENT, border = NA, ylim = c(0, 14),
+             ylab = "Collisions per segment")
+text(b, means + 0.8, round(means, 1), cex = 1.3)
+```
+
+::: {.ask}
+This is the chart a press release would use. What does it show, and what does
+it not show?
+:::
+
+## Did every road fall?
+
+```{webr}
+#| fig-width: 10
+#| fig-height: 2.8
+wide <- reshape(cams[, c("segment_id", "year", "injury_collisions")],
+                idvar = "segment_id", timevar = "year", direction = "wide")
+change <- wide$injury_collisions.2021 - wide$injury_collisions.2019
+clean_par()
+hist(change, breaks = 30, col = ACCENT, border = "white", main = "",
+     xlab = "Change in collisions per segment, 2019 to 2021")
+abline(v = 0, col = ALERT, lwd = 3, lty = 2)
+```
+
+::: {.panel .fragment}
+The average fell, but not on every road. About
+`r sprintf("%.0f", share_fell)`% of camera segments had fewer collisions in 2021;
+the rest stayed the same or went up. This is Word 1 again: an average change
+hides how much roads differ.
+:::
 
 ## Would you fund the extension?
 
@@ -412,14 +435,15 @@ pol_means %>%
 
 ::::: {.column width="62%"}
 ::: {.ask style="font-size: 120%;"}
-On the number you have just seen, a `r sprintf("%.0f", pol_headline_fall)`% fall
-where cameras went: **would you commit the money to extend them?**
+Collisions fell from `r sprintf("%.1f", cam_before)` to
+`r sprintf("%.1f", cam_after)` per segment where cameras went.
+**Would you commit the money to extend them?**
 
 Yes &nbsp;·&nbsp; No &nbsp;·&nbsp; Not on this alone
 :::
 
 Go to **menti.com** and enter code **`r MENTI_CODE`**, or scan the code on the
-right. Commit before we look further.
+right.
 :::::
 
 ::::: {.column width="38%"}
@@ -430,542 +454,380 @@ knitr::include_graphics(MENTI_QR)
 
 ::::::
 
-## What else happened in those two years
+::: {.notes}
+Leave the vote open. We look at the results again at the end of the session.
+:::
+
+# 4 · How big, and how sure?
+
+::: {.notes}
+Section timing: about 20 minutes.
+:::
+
+## How big? Work it out from the averages
+
+```{webr}
+before <- mean(cams$injury_collisions[cams$year == 2019])
+after  <- mean(cams$injury_collisions[cams$year == 2021])
+round(data.frame(before, after, change = after - before,
+                 percent = 100 * (after - before) / before), 2)
+```
 
 :::::: {.columns}
 
 ::::: {.column width="50%"}
-```{r fig.height=2.6, fig.width=5.4}
-# Levels, both groups. The comparison bars are the counterfactual the headline
-# ignores: collisions fell there too, with no cameras installed.
-pol_means %>%
-  plot_ly(x = ~Time, y = ~m, color = ~Group, type = "bar",
-          colors = c("Programme sectors" = ACCENT,
-                     "Comparison sectors" = ACCENT2),
-          text = ~sprintf("%.1f", m), textposition = "outside",
-          textfont = list(size = 16, color = INK), cliponaxis = FALSE,
-          hovertemplate = "%{fullData.name}: %{y:.1f}<extra></extra>") %>%
-  layout(barmode = "group",
-         xaxis = ax("", zeroline = FALSE,
-                    tickfont = list(size = 15, color = INK)),
-         yaxis = ax("Collisions per segment", range = c(0, 15))) %>%
-  pl_m2(width = PL_WC, height = 250)
-```
-
-::: {.panel}
-Cameras went to the twelve worst sectors. The twelve without cameras also saw
-collisions fall, and nothing was installed there.
+::: {.ask}
+The rule asks for **`r sprintf("%.1f", POL_RULE)` fewer collisions per
+segment**. Which of these numbers do you check against it?
 :::
 :::::
 
 ::::: {.column width="50%"}
-```{r fig.height=2.6, fig.width=5.4}
-# The same data as the two FALLS. Turning levels into falls is the whole trick:
-# once both groups are measured as falls, the comparison's fall is visibly not
-# the programme's, and the gap between the bars is what is left.
-pol_exp %>%
-  plot_ly(x = ~Group, y = ~count_fall, type = "bar",
-          marker = list(color = c(ACCENT, ACCENT2), line = list(width = 0)),
-          text = ~sprintf("%.0f%%", count_fall), textposition = "outside",
-          textfont = list(size = 16, color = INK), cliponaxis = FALSE,
-          showlegend = FALSE,
-          hovertemplate = "%{x}: %{y:.1f}%% fewer<extra></extra>") %>%
-  layout(xaxis = ax("", zeroline = FALSE,
-                    tickfont = list(size = 14, color = INK)),
-         yaxis = ax("Fall in injury collisions (%)", range = c(0, 30)),
-         annotations = list(list(
-           x = 0.5, y = 27, xref = "paper", yref = "y", showarrow = FALSE,
-           text = sprintf("gap = %.0f points", pol_count_fall_t - pol_count_fall_c),
-           font = list(size = 13, color = ALERT)))) %>%
-  pl_m2(width = PL_WC, height = 250)
-```
-
-::: {.warn}
-The gap between the two falls is the part that could belong to the cameras. The
-rest of the movement happened in sectors where nothing was installed.
+::: {.panel .fragment}
+The change, `r sprintf("%.2f", -cam_fall)`, which is in the same units as the
+rule. It clears 2.0. The `r sprintf("%.0f", cam_pct)`% is in different units
+and cannot be checked against the rule.
 :::
 :::::
 
 ::::::
 
-## The honest estimate
+## Word 3 · The regression gives the same number
 
-```{r results='asis'}
-# Three items, and they must fit on ONE line: .stat-row is a single-line strip
-# (see theme_editorial.scss) and a wrap breaks the row into 2+1, which reads as
-# a mistake. "(collisions)" used to sit on the first two labels and pushed the
-# row to 996px against an 819px strip. The hero above already names the unit, so
-# the labels do not need to repeat it.
-cat(sprintf('
-<div class="hero">
-  <div class="value">%.2f</div>
-  <div class="label">Injury collisions avoided per segment, per round</div>
-</div>
-<div class="stat-row">
-  <div><span class="n">%.2f</span><span class="k">Programme sectors fell</span></div>
-  <div><span class="n">%.2f</span><span class="k">Comparison sectors fell</span></div>
-  <div><span class="n">%.2f</span><span class="k">The difference</span></div>
-</div>', abs(pol_did), pol_fall_t, pol_fall_c, abs(pol_did)))
-```
-
-```{r fig.height=2.5, fig.width=11.5}
-# The subtraction the slide used to describe in words. The comparison's fall is
-# not a gain, so it is drawn as a step DOWN from the programme's fall; what
-# survives to the right of it is the estimate. Reads left to right as the
-# arithmetic the room is being asked to trust.
-wf <- tibble(
-  step = factor(c("Programme\nsectors fell", "Less the comparison's\nown fall",
-                  "What is left"),
-                levels = c("Programme\nsectors fell", "Less the comparison's\nown fall",
-                           "What is left")),
-  base = c(0, abs(pol_did), 0),
-  val  = c(pol_fall_t, pol_fall_t - abs(pol_did), abs(pol_did)),
-  # The minus sign is load-bearing: without it the middle bar reads as a gain.
-  lab  = c(sprintf("%.2f", pol_fall_t), sprintf("\u2212%.2f", pol_fall_c),
-           sprintf("%.2f", abs(pol_did))),
-  col  = c(ACCENT, ACCENT2, ALERT)
-)
-plot_ly() %>%
-  add_bars(data = wf, x = ~step, y = ~base, marker = list(color = "rgba(0,0,0,0)"),
-           showlegend = FALSE, hoverinfo = "skip") %>%
-  add_bars(data = wf, x = ~step, y = ~val, marker = list(color = ~col),
-           text = ~lab, textposition = "outside",
-           textfont = list(size = 15, color = INK), cliponaxis = FALSE,
-           showlegend = FALSE,
-           hovertemplate = "%{x}: %{text} collisions<extra></extra>") %>%
-  layout(bargap = 0.45,
-         xaxis = ax("", zeroline = FALSE,
-                    tickfont = list(size = 14, color = INK)),
-         yaxis = ax("Collisions per segment", range = c(0, 3.4))) %>%
-  pl_m2(height = 230, b = 46)
-```
-
-::: {.panel}
-The estimate is in collisions per segment, which is the unit the rule is written
-in. A percentage cannot be checked against it.
-:::
-
-## Does it clear the rule?
-
-```{r fig.height=1.9, fig.width=11.5}
-# Same chart as the later slide, from the shared function, so the rule cannot
-# sit in one place here and another place there.
-pol_ci_plot(height = 170, b = 38)
+```{webr}
+fit <- lm(injury_collisions ~ round, data = cams)
+coef(fit)
 ```
 
 :::::: {.columns}
 
 ::::: {.column width="50%"}
-```{=html}
+::: {.panel}
+**round** is 0 for 2019 and 1 for 2021. The table an evaluator hands you comes
+from a line like this one.
+:::
+
+::: {.ask}
+Which number is the 2019 average, and which is the change?
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn .fragment}
+**(Intercept)** is the 2019 average, `r sprintf("%.2f", cam_before)`.
+**round** is the change, `r sprintf("%.2f", -cam_fall)`: the same number we
+got by subtracting two averages. Session 1's Word 3: a coefficient is a gap
+between two groups. Here the two groups are the same roads in two years.
+:::
+:::::
+
+::::::
+
+## Words 4 and 5 · How sure?
+
+```{webr}
+fit <- lm_robust(injury_collisions ~ round, data = cams, clusters = segment_id)
+round(summary(fit)$coefficients[, c(1, 2, 4, 5, 6)], 3)
+```
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**Pr(>|t|)** is the p-value. Printed as 0, it means smaller than 0.001: a fall
+this size would be very unlikely if collisions had not really changed.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.panel}
+**CI Lower** and **CI Upper** are the 95% confidence interval: the fall is
+somewhere between `r sprintf("%.2f", ba_ci[1])` and
+`r sprintf("%.2f", ba_ci[2])` collisions per segment.
+:::
+:::::
+
+::::::
+
+::: {.notes}
+`lm_robust` with `clusters = segment_id` counts each road once rather than
+twice, because the same segment appears in 2019 and 2021. Session 3 returns to
+why this matters. Vocabulary recap from Session 1: the **standard error** is how
+much the estimate would move from sample to sample; the **p-value** is how
+surprising the result would be if nothing had changed; the **confidence
+interval** is the range of plausible values.
+:::
+
+## Does it clear the rule?
+
+```{r fig.height=2.2, fig.width=11.5}
+rule_plot(height = 200)
+```
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+```{r results='asis'}
+html_out(sprintf('
 <div class="facts">
-  <div class="k">Decision rule</div>      <div class="v">2.00 avoided</div>
-  <div class="k">The estimate</div>       <div class="v">1.13 avoided</div>
-  <div class="k">95% confidence interval</div>       <div class="v">0.51 to 1.76</div>
-</div>
+  <div class="k">Decision rule</div>           <div class="v">%.2f fewer</div>
+  <div class="k">The change</div>              <div class="v">%.2f fewer</div>
+  <div class="k">95%% confidence interval</div> <div class="v">%.2f to %.2f</div>
+</div>', POL_RULE, cam_fall, ba_ci[1], ba_ci[2]))
 ```
 :::::
 
 ::::: {.column width="50%"}
 ::: {.panel .fragment}
-The interval sits well away from zero, so the programme did something. The
-decision turns on a different number: the rule asks for 2.00, and even the
-interval's best case, `r sprintf("%.2f", pol_avoided_hi)`, falls short.
+The estimate clears the rule, and so does the whole interval, just. On
+**how big** and **how sure**, the programme passes.
+:::
+
+::: {.ask .fragment}
+Which of Session 1's three questions have we not asked yet?
 :::
 :::::
 
 ::::::
 
-::: {.warn .fragment}
-Session 1 made this point about a school programme: statistical significance
-answers whether an effect exists, not whether it is large enough to fund. This
-time the spending decision sits on the same slide.
+# 5 · Put AI to work
+
+::: {.notes}
+Section timing: about 15 minutes.
 :::
+
+## AI Snapshot: ask AI to read the chart
+
+:::::: {.columns}
+
+::::: {.column width="55%"}
+::: {.panel}
+Give a picture of the before-and-after bar chart to an AI tool with the prompt
+most people would type: **"What does this chart show? Did the cameras work?"**
+:::
+:::::
+
+::::: {.column width="45%"}
+::: {.ask}
+In pairs: mark every claim you can check against the chart. Which ones can the
+chart support?
+:::
+:::::
+
+::::::
+
+::: {.ai-output}
+*Illustrative response. A response like this is possible, especially with a short or leading prompt:*
+
+"The chart shows a 22% reduction in injury collisions after speed cameras were
+installed, from 11.5 to 9.0 per road segment. This reduction is statistically
+significant (p < 0.001), confirming that the cameras caused the decline. The
+fall was consistent across all road types, which suggests the effect is robust.
+Given the size of the effect, the programme should be extended to the remaining
+sectors."
+:::
+
+## Debrief: what the AI added
+
+```{=html}
+<div class="facts">
+  <div class="k">"22% reduction, 11.5 to 9.0"</div>
+  <div class="v">Correct. This is what the chart shows.</div>
+  <div class="k">"p &lt; 0.001"</div>
+  <div class="v">Not on the chart. The model supplied a p-value it was never given.</div>
+  <div class="k">"confirming that the cameras caused"</div>
+  <div class="v">A before-and-after chart cannot show cause. A small p-value says the fall is unlikely to be noise, not what caused it.</div>
+  <div class="k">"consistent across all road types"</div>
+  <div class="v">Invented. The chart has no road types, and more than a third of camera roads did not fall.</div>
+  <div class="k">"should be extended"</div>
+  <div class="v">A recommendation with no rule and no comparison.</div>
+</div>
+```
+
+::: {.warn .fragment}
+Only the first sentence comes from the chart. Everything after it is the model filling gaps with what often follows a chart
+like this. Check whether yours did the same.
+:::
+
+## A better prompt
+
+::: {.panel}
+**"This chart shows average injury collisions per road segment in the sectors
+that got speed cameras, in 2019 and 2021. Describe only what the chart shows.
+Then list what else could explain the change, and what comparison you would need
+before saying the cameras caused it. Before you answer, ask me any questions you
+need."**
+:::
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.ask}
+Run both prompts on the same chart. What does the second answer include that the first left out? What did either
+explain especially well?
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn}
+Two habits for every session: ask the AI to **ask you questions first**, and have
+a second chat review what the first one wrote.
+:::
+:::::
+
+::::::
+
+::: {.notes}
+~7 min for groups to run both prompts, ~3 min to take answers. Listen for: the
+second answer asks what happened on roads without cameras, and whether traffic
+changed.
+:::
+
+# 6 · Compared to what?
+
+::: {.notes}
+Section timing: about 10 minutes.
+:::
+
+## What else happened between 2019 and 2021?
+
+::: {.panel}
+So far we have compared the camera roads with **their own past**. The fall of
+`r sprintf("%.2f", cam_fall)` includes anything else that changed over those two
+years.
+:::
+
+::: {.ask}
+In your table, list two or three things apart from cameras that could have cut
+collisions in these sectors. Then say what you would compare the camera roads
+with to rule them out.
+:::
+
+::: {.notes}
+Likely answers: a national safety campaign, new vehicles, fewer trips during
+2020, road works, police patrols. For comparisons, steer the room towards "roads
+that did not get cameras over the same years".
+:::
+
+## One comparison: roads without cameras
+
+:::::: {.columns}
+
+::::: {.column width="56%"}
+```{webr}
+#| fig-width: 6.2
+#| fig-height: 4
+means <- tapply(pol$injury_collisions,
+                list(pol$year, pol$treated), mean)
+plot_two_groups(means)
+```
+:::::
+
+::::: {.column width="44%"}
+::: {.ask}
+The twelve sectors still waiting for cameras. Which way did their collisions go?
+:::
+
+::: {.warn .fragment}
+Down too, by `r sprintf("%.2f", oth_fall)` per segment
+(`r sprintf("%.0f", oth_pct)`%), with no cameras installed. Some of the
+`r sprintf("%.2f", cam_fall)` would have happened anyway.
+:::
+
+::: {.panel .fragment}
+How much, and whether these roads are a fair comparison, is the subject of
+Session 3.
+:::
+:::::
+
+::::::
 
 ## Look back at your vote
 
 ```{r results='asis'}
 # Shows the live Menti results once this session's Menti exists. Until
-# MENTI_EMBED is set (still a placeholder), a marked placeholder box renders
-# instead, so the deck never shows a broken iframe. data-external="1" keeps
-# embed-resources from freezing the live view into a static image.
+# MENTI_EMBED is set, a marked placeholder box renders instead.
 if (!grepl("PLACEHOLDER", MENTI_EMBED)) {
-  cat(sprintf('
+  html_out(sprintf('
 <iframe data-external="1" allowfullscreen="true" allowtransparency="true"
         frameborder="0" src="%s"
         style="width:100%%; height:66%%; border:none;"></iframe>', MENTI_EMBED))
 } else {
-  cat('<div class="panel note-ctr"><strong>[PLACEHOLDER] Live Menti results.</strong> Set <code>MENTI_EMBED</code> in the setup chunk to show the room vote here.</div>')
+  html_out('<div class="panel note-ctr"><strong>[PLACEHOLDER] Live Menti results.</strong> Set <code>MENTI_EMBED</code> in the setup chunk to show the room vote here.</div>')
 }
 ```
 
 ::: {.warn}
-You voted on the `r sprintf("%.0f", pol_headline_fall)`% headline. The estimate
-is `r sprintf("%.2f", abs(pol_did))` avoided, short of the
-`r sprintf("%.1f", POL_RULE)` the rule asks for. If the room leaned "yes", the
-headline did the persuading.
+You voted on a before-and-after chart. It answers "how big?" and "how sure?"
+well, and it still clears the rule. It cannot answer "compared to what?", and
+roads without cameras also improved.
 :::
 
-## Two reasons the headline overstates
+# 7 · Take this back to your desk
+
+::: {.notes}
+Section timing: about 10 minutes.
+:::
+
+## Annotate this output
 
 :::::: {.columns}
 
-::::: {.column width="50%"}
-::: {.panel .fragment}
-**1. The comparison moved too.** Collisions fell
-`r sprintf("%.0f", pol_count_fall_c)`% in sectors with no cameras. A
-before-and-after reading gives the programme credit for all of it.
-:::
-:::::
-
-::::: {.column width="50%"}
-::: {.panel .fragment}
-**2. The groups started different.** Cameras went to the worst roads:
-`r sprintf("%.1f", pol_t_before)` collisions per segment against
-`r sprintf("%.1f", pol_c_before)`. A treated-only before-and-after has no way to
-separate the programme from that head start.
-:::
-:::::
-
-::::::
-
-## The two groups were never the same
-
-```{r fig.height=2.4, fig.width=11.5}
-# The measured version of "cameras went to the worst roads": collisions in the
-# round BEFORE anything was installed. This gap is the reason a treated-only
-# before-and-after cannot be read as the programme's effect.
+::::: {.column width="58%"}
+```{r}
 tibble(
-  Group = factor(c("Programme sectors", "Comparison sectors"),
-                 levels = c("Programme sectors", "Comparison sectors")),
-  Base  = c(pol_t_before, pol_c_before)
+  ` `       = c("(Intercept)", "round"),
+  Estimate  = coef(ba_fit),
+  `Std. Error` = ba_fit$std.error,
+  `Pr(>|t|)`   = ba_fit$p.value,
+  `CI Lower`   = ba_fit$conf.low,
+  `CI Upper`   = ba_fit$conf.high
 ) %>%
-  plot_ly(x = ~Group, y = ~Base, type = "bar",
-          marker = list(color = c(ACCENT, ACCENT2), line = list(width = 0)),
-          text = ~sprintf("%.1f", Base), textposition = "outside",
-          textfont = list(size = 16, color = INK), cliponaxis = FALSE,
-          showlegend = FALSE,
-          hovertemplate = "%{x}: %{y:.2f} collisions per segment in 2019<extra></extra>") %>%
-  layout(xaxis = ax("", zeroline = FALSE,
-                    tickfont = list(size = 15, color = INK)),
-         yaxis = ax("Injury collisions per segment, 2019", range = c(0, 15)),
-         annotations = list(list(
-           x = 0.5, y = 13.2, xref = "paper", yref = "y", showarrow = FALSE,
-           text = sprintf("gap at the start = %.1f", pol_base_gap),
-           font = list(size = 13, color = ALERT)))) %>%
-  pl_m2(height = 230, b = 46)
-```
-
-::: {.warn}
-In 2019, before a single camera was installed, the programme sectors were already
-`r sprintf("%.1f", pol_base_gap)` collisions per segment worse. Nothing in the
-headline accounts for that.
-:::
-
-## And one thing that cuts the other way
-
-```{r fig.height=2.3, fig.width=11.5}
-# Exposure rose, so collisions per vehicle-km fell MORE than the raw count did.
-# This does NOT rescue the programme: the rule is written in collisions, so the
-# count is still the number the decision turns on. But it does mean the headline
-# is wrong in two directions at once, which is the point of the slide.
-pol_exp %>%
-  pivot_longer(c(count_fall, rate_fall), names_to = "Measure", values_to = "fall") %>%
-  mutate(Measure = factor(
-    ifelse(Measure == "count_fall", "Raw collision count", "Per million vehicle-km"),
-    levels = c("Raw collision count", "Per million vehicle-km"))) %>%
-  plot_ly(x = ~Group, y = ~fall, color = ~Measure, type = "bar",
-          colors = c("Raw collision count" = ACCENT,
-                     "Per million vehicle-km" = ACCENT2),
-          text = ~sprintf("%.0f%%", fall), textposition = "outside",
-          textfont = list(size = 15, color = INK), cliponaxis = FALSE,
-          hovertemplate = "%{fullData.name}: %{y:.1f}%% fewer<extra></extra>") %>%
-  layout(barmode = "group",
-         xaxis = ax("", zeroline = FALSE,
-                    tickfont = list(size = 15, color = INK)),
-         yaxis = ax("Fall, 2019 to 2021 (%)", range = c(0, 33))) %>%
-  pl_m2(height = 220, b = 46)
+  kable(align = "lrrrrr", digits = 3,
+        col.names = c("", "Estimate", "Std. Error", "p-value",
+                      "CI Lower", "CI Upper")) %>%
+  kable_styling(full_width = FALSE, font_size = 16)
 ```
 
 ::: {.panel}
-Exposure rose in **both** groups, so the fall in collisions per vehicle-km is
-larger than the fall in the raw count:
-`r sprintf("%.1f", pol_rate_fall_t)`% against
-`r sprintf("%.1f", pol_count_fall_t)`% in programme sectors. On the risk question
-the count understates what happened.
-:::
-
-::: {.ask .fragment}
-Session 1's Al Falah case ran the same trap the other way. There, distance driven
-**fell**, so fatalities fell with it and the campaign looked better than it was.
-Here traffic **rose**, so the count looks worse than the risk.
-
-The rule is written in collisions, so the count is still the number the decision
-turns on. This changes what you can say about risk, not whether the programme
-cleared the bar.
-:::
-
-# 3 · Reading the output
-
-## The table you would actually be handed
-
-```{r}
-pol_tbl %>%
-  kable(align = "lrrrr", digits = 2,
-        col.names = c("", "Coef.", "Std. err.", "p", "95% CI")) %>%
-  kable_styling(full_width = FALSE, font_size = 22) %>%
-  row_spec(4, bold = TRUE, background = "#E6F1F5") %>%
-  footnote(general = "Outcome: injury collisions per road segment per round. Standard errors clustered by road segment.",
-           general_title = "", footnote_as_chunk = TRUE)
-```
-
-::: {.panel}
-**Row 4 is the impact.** The interaction of programme and round: the extra change
-in the sectors that got cameras, over and above the change everywhere else. It is
-the number the decision turns on.
-
-Reports tend to lead with their preferred number, which is not always this row.
-Find the row that carries the impact before you read the others.
-:::
-::: {.notes}
-Reminder for the room (vocab from Day 1 Session 1): the **coefficient** is the effect size, here in injury collisions per segment; the **standard error** is how much the estimate would move from sample to sample; the **95% confidence interval** is the range of plausible true values, not a margin of certainty; the **p-value** is how surprising this result would be if the programme had truly done nothing.
-:::
-
-## The same table: the other rows
-
-```{r}
-pol_tbl %>%
-  kable(align = "lrrrr", digits = 2,
-        col.names = c("", "Coef.", "Std. err.", "p", "95% CI")) %>%
-  kable_styling(full_width = FALSE, font_size = 22) %>%
-  row_spec(4, bold = TRUE, background = "#E6F1F5") %>%
-  footnote(general = "Outcome: injury collisions per road segment per round. Standard errors clustered by road segment.",
-           general_title = "", footnote_as_chunk = TRUE)
-```
-
-::: {.panel}
-**Row 2** is the baseline difference. Cameras went to the worst roads, so the
-programme sectors started higher, and that head start carries into the
-before-and-after figure.
-
-**Row 3** is the national trend: what happened in the comparison sectors anyway.
-**Std. err.** is the wobble on each estimate: divide the coefficient by it to see
-how steady the number is.
-:::
-
-::: {.notes}
-Reminder for the room (vocab from Day 1 Session 1): the **coefficient** is the effect size, here in injury collisions per segment; the **standard error** is how much the estimate would move from sample to sample; the **95% confidence interval** is the range of plausible true values, not a margin of certainty; the **p-value** is how surprising this result would be if the programme had truly done nothing.
-:::
-
-## The same estimate, three ways of saying it
-
-::: {.panel}
-A decision-maker will be offered three framings of this one number. They are not
-equally honest.
-:::
-
-```{=html}
-<div class="facts">
-  <div class="k">Per cent</div>
-  <div class="v">"Collisions fell 22% where cameras were installed" &middot; ignores the comparison</div>
-  <div class="k">Point estimate</div>
-  <div class="v">"Cameras avoided 1.13 collisions per segment per round" &middot; accurate, but a single number</div>
-  <div class="k">With its confidence interval</div>
-  <div class="v">"Between 0.51 and 1.76, so somewhere short of the 2.0 required" &middot; this is the honest one</div>
-</div>
-```
-
-::: {.ask}
-Which would you put in a briefing? Session 1's Word 5 answer was that **the
-confidence interval decides, not the point estimate.** Does it hold here?
-:::
-
-## A confidence interval that does not reach the rule
-
-```{r fig.height=2.6, fig.width=11.5}
-# The same chart as the "does it clear the rule?" slide, from the shared
-# function. Here the room has the vocabulary, so it is redrawn bigger and the
-# callout below names each part.
-pol_ci_plot(height = 250)
-```
-
-::: {.warn}
-**How to read it:** the blue dot is the estimate, `r sprintf("%.2f", abs(pol_did))`
-collisions avoided, and the blue bar is its 95% confidence interval,
-`r sprintf("%.2f", abs(pol_did_ci[2]))` to `r sprintf("%.2f", abs(pol_did_ci[1]))`.
-The red dashed line is the rule, `r sprintf("%.1f", POL_RULE)`, and the whole bar
-sits to its left. This is a precise result, and it sits below the bar.
-:::
-
-## What the table does not tell you
-
-:::::: {.columns}
-
-::::: {.column width="50%"}
-::: {.panel}
-**Nothing about roads without cameras.** The comparison sectors are a
-counterfactual, not a plan. The estimate says what the cameras did where they
-went, not what they would do elsewhere.
+Outcome: injury collisions per road segment, camera sectors only, 2019 (round 0)
+and 2021 (round 1). Standard errors clustered by road segment. The p-value is
+the column R printed as Pr(>|t|).
 :::
 :::::
 
-::::: {.column width="50%"}
-::: {.panel}
-**Nothing about compliance.** Cameras work by changing behaviour. If drivers
-learned where they are and sped up in between, the effect fades after 2021.
-:::
-:::::
-
-::::::
-
-::: {.ask}
-Two habits from Session 1, applied to this table:
-
-Ask what is **not** in it. Then ask the evaluator what would have to be true for
-the result to be wrong. Here, the answer is that the two groups were already
-diverging before 2020. Nobody has shown you a pre-trend.
-:::
-
-# 4 · Put AI to work
-
-## AI Snapshot: three sentences for a decision-maker
-
-::: {.panel}
-Paste or take a picture of the table on the previous slide and add it to an AI tool with this prompt:
-
-**"Explain this result to a decision-maker in three sentences. They have a rule:
-the programme must avoid 2.0 collisions per segment per round to be funded."**
-:::
-
-::: {.ai-output}
-**Illustrative AI response:**
-
-"The programme was associated with a **22% reduction** in injury collisions in
-sectors where cameras were installed. This represents a **clear improvement in
-road safety**, with the effect likely to be **even larger** once the remaining
-sectors are covered. [The evidence supports extending the programme
-nationally.]{.flag}"
-:::
-
-::: {.ask}
-Mark every claim you can check against the table. How many are incorrect?
-:::
-
-## Debrief: what the AI got wrong
-
-```{=html}
-<div class="facts">
-  <div class="k">Claim 1</div>
-  <div class="v">"22% reduction in injury collisions" &middot; true, but it is the before-and-after figure, not the impact</div>
-  <div class="k">Claim 2</div>
-  <div class="v">"effect likely to be even larger" &middot; nothing in the table supports a direction, let alone a bigger one</div>
-  <div class="k">Claim 3</div>
-  <div class="v">"evidence supports extending nationally" &middot; the rule it was given never appears in the answer</div>
-</div>
-```
-
-::: {.warn .fragment}
-**Claim 2 is the invention.** It supplies a confident direction from nowhere. The
-table's fourth row says `r sprintf("%.2f", abs(pol_did))`, and the interval's best
-case is `r sprintf("%.2f", pol_avoided_hi)`. Neither is "larger".
-:::
-
-## Debrief: the habit to take away
-
-::: {.panel}
-The AI was not lying. It picked the flattering number, and it answered
-"is this good?" instead of "does it clear the bar?"
-:::
-
-```{=html}
-<div class="facts">
-  <div class="k">What it did</div>      <div class="v">Reached for the most impressive true number in the room</div>
-  <div class="k">What it skipped</div>  <div class="v">Compared the estimate to the 2.0 rule it was handed</div>
-  <div class="k">What to ask next time</div> <div class="v">"Compare this against the decision rule before you recommend anything."</div>
-</div>
-```
-
-::: {.ask}
-Session 1's habit, applied here: ask the AI to **ask you questions before it
-answers**. It had the rule and still did not use it.
-:::
-
-# 5 · Annotate this output
-
-## Your turn
-
-:::::: {.columns}
-
-::::: {.column width="54%"}
-```{r}
-pol_tbl %>%
-  kable(align = "lrrrr", digits = 2,
-        col.names = c("", "Coef.", "Std. err.", "p", "95% CI")) %>%
-  kable_styling(full_width = FALSE, font_size = 16) %>%
-  row_spec(4, bold = TRUE, background = "#E6F1F5")
-```
-
-::: {.panel}
-Outcome: injury collisions per road segment per round. Standard errors
-clustered by road segment.
-:::
-:::::
-
-::::: {.column width="46%"}
+::::: {.column width="42%"}
 ::: {.ask}
 On the printed copy in front of you:
 
-**1.** Circle the number that is the treatment effect.
+**1.** Circle the before-and-after change.
 
 **2.** Draw a box around its confidence interval.
 
-**3.** Underline the baseline difference, and say in one line why it does not
-belong in the answer.
+**3.** Underline the 2019 average, and say in one line why it is not an effect.
 
-**4.** Write down one thing you cannot tell from this table, and the question
-you would put to the evaluator.
+**4.** Write the comparison you would ask the evaluator for.
 :::
 
-::: {.panel}
-Four minutes. Question 4 matters most, and Session 1 prepared you for it.
+::: {.notes}
+Four minutes. Question 4 carries into Session 3.
 :::
 :::::
 
 ::::::
-
-# 6 · Take this back to your desk
 
 ## Three questions to ask the evaluator
 
 ```{=html}
 <div class="facts">
-  <div class="k">1</div> <div class="v">Compared to what? Which group, which period, and did it move too?</div>
-  <div class="k">2</div> <div class="v">Which row is the impact, and is it in units the decision is written in?</div>
-  <div class="k">3</div> <div class="v">Does the confidence interval reach the decision rule, not just clear zero?</div>
+  <div class="k">How big?</div>          <div class="v">In the units the decision is written in, not a percentage</div>
+  <div class="k">How sure?</div>         <div class="v">Does the confidence interval clear the rule, not just zero?</div>
+  <div class="k">Compared to what?</div> <div class="v">Which group, which period, and did it move too?</div>
 </div>
 ```
 
 ::: {.panel}
-This result survives question 2. It fails question 3, which settles the decision.
-Question 1 explains why the headline was never the number to act on: the two
-groups started `r sprintf("%.1f", pol_base_gap)` collisions apart.
-:::
-
-## Where this goes next
-
-::: {.panel}
-Today you read a **before-and-after with a comparison group**. That is the
-simplest honest design, and it rests on one assumption: that the two groups were
-heading the same way before the programme started.
-
-Day 2 does three things this session did not:
-
-**Difference-in-differences** on this same data, testing that assumption rather
-than assuming it. **Regression discontinuity** on the speed cut-off that decided
-which roads got cameras. **Matching**, because the twelve worst sectors were not
-chosen at random.
-:::
-
-::: {.ask}
-Same programme, same 1,200 road segments, four ways of asking what it did. The
-answers will not be identical, and the differences are the lesson.
+The camera result passes the first two questions. The third is still open: the
+roads without cameras improved as well, and Session 3 looks at how to account
+for that.
 :::

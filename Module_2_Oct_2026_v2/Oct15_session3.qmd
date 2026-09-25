@@ -57,7 +57,7 @@ MENTI_QR <- menti_qr()
 ## Four days. One design.
 
 ::: {.panel}
-On Monday you learned what a comparison is. Tuesday, four ways of building one.
+On Monday you learned what a comparison is. Tuesday, three more ways of building one.
 Wednesday, what a result costs and what a figure hides. Thursday, how to tell
 whether evidence is credible and how to translate it.
 
@@ -130,14 +130,14 @@ Of the eight, which one, if you get it wrong, makes the other seven irrelevant?
 **The counterfactual.**
 
 Every method this week has been a different way of operationalising it:
-randomisation, a cut-off, an instrument, a matched comparison, a parallel trend.
+randomisation, a cut-off, a matched comparison, a parallel trend.
 :::
 :::::
 
 ::::: {.column width="50%"}
 ::: {.warn .fragment}
 And every one of them has a specific way of being false. If you cannot state
-yours in a sentence, you have not chosen a design — you have chosen a method.
+yours in a sentence, you have a method but not yet a design.
 :::
 :::::
 
@@ -160,14 +160,13 @@ against the eight conditions.
 ::::: {.column width="50%"}
 ::: {.ask}
 If you have the Module 1 document, work from it. If not, the recap on the previous
-slide is enough — write what you would do, not what you did.
+slide is enough: write what you would do, not what you did.
 :::
 :::::
 
 ::::: {.column width="50%"}
 ::: {.warn}
-Do not polish. This is the foundation for Part 2, and Part 2 is where the marks
-are in the pitch.
+Do not polish. This is the foundation for Part 2, and Part 2 is what the pitch focuses on.
 :::
 :::::
 
@@ -203,7 +202,7 @@ Which of the four is hardest to do **before** you have any data? Why?
 
 ::: {.ask}
 What will you show, to whom, and in what order? Name the one number you will lead
-with — and say what the reader must **not** be able to conclude from it.
+with, and say what the reader must **not** be able to conclude from it.
 :::
 
 :::::: {.columns}
@@ -220,8 +219,8 @@ opposite of the truth.
 
 ::::: {.column width="50%"}
 ::: {.warn .fragment}
-So the question is not "what is my headline number". It is "what will a reader
-who reads only the headline come away believing — and is that true?"
+So ask: "What will a reader who reads only the headline come away believing,
+and is that true?"
 :::
 :::::
 
@@ -249,8 +248,7 @@ never stated.
 ::::: {.column width="50%"}
 ::: {.warn .fragment}
 Write your horizon down. If your benefit stream runs for five years and someone
-assumes two, your ratio moves from 1.87 to 0.80 — the same programme, the same
-evidence, the opposite decision.
+assumes two, your ratio moves from 1.87 to 0.80: the same evidence, the opposite decision.
 :::
 :::::
 
@@ -298,7 +296,7 @@ the one thing you will state plainly that your evaluation did **not** establish.
 **This morning's lesson**
 
 A brief that reports the estimate and omits the threshold leaves the reader to
-assume the target was met. Omission is the failure mode, not error.
+assume the target was met. The failure here is an omission, not an error.
 :::
 :::::
 
@@ -338,6 +336,12 @@ team which two you will lead on.
 
 ::::::
 
+## Five-minute break
+
+::: {.panel}
+Back in five minutes. When we return: the pitches.
+:::
+
 # 3 · The pitch
 
 ## Five minutes, five parts
@@ -357,8 +361,8 @@ kable(tab, col.names = c("Part", "Time", "What it says"),
 ```
 
 ::: {.warn}
-Note the order. **The honest limit comes before the ask**, not after it. That is
-deliberate and it is not how pitches are usually built.
+Note the order. **The limit comes before the ask.** Most pitches put it after,
+if at all.
 :::
 
 ## Why the limit comes first
@@ -381,7 +385,7 @@ which.
 ::::: {.column width="50%"}
 ::: {.warn .fragment}
 It also changes what you are asking for. If you know your design cannot establish
-X, you can ask for what would — which is a more specific request than "fund the
+X, you can ask for what would, which is a more specific request than "fund the
 evaluation".
 :::
 :::::
@@ -442,24 +446,20 @@ you now add?
 ## The one question
 
 ::: {.panel}
-If you take one thing from four days, take this. It has been the first question in
-every session, under every method:
+The question behind every session this week:
 
 > **What is being compared to what, and why should those two things be
 > comparable?**
 :::
 
 ::: {.ask .fragment}
-Every method this week was a different answer to it. Every method had a different
-way of being wrong about it. And every evaluation you commission from now on will
-stand or fall on it.
+Each method this week answered it differently, and each can be wrong about it
+in its own way. The evaluations you commission will depend on it too.
 :::
 
 ## Thank you
 
 ::: {.panel}
-Four days, twelve sessions, one question.
-
 The slides stay available online, and every dataset and script is in the
 repository if you want to reproduce any of the analyses on your own programme.
 :::

@@ -336,7 +336,7 @@ cat(sprintf('
 ```
 
 ::: {.warn}
-The **same programme**, a bigger number. Two honest-looking readings:
+The **same programme**, a bigger number. Two reasonable-looking readings:
 **-`r gfmt(abs(ba_change))`** and **-`r gfmt(abs(ww_gap))`**. They cannot both
 be right.
 :::
@@ -469,7 +469,7 @@ tibble(Time  = tlev(rep(c("Before", "After"), 2)),
 
 ::: {.ask}
 The two numbers **bracket** something. `r gfmt(abs(ba_change))` is too small,
-`r gfmt(abs(ww_gap))` is too big, and the honest answer is in between.
+`r gfmt(abs(ww_gap))` is too big, and the true effect is likely in between.
 
 What would it take to land in the middle, deliberately?
 :::
@@ -492,7 +492,7 @@ between the groups, instead of trying to adjust for it afterwards.
 
 ::: {.panel}
 Decide who is offered the programme by **random draw**: not by who is eligible,
-who is keen, or who is easy to reach. That single change is the whole idea.
+who is keen, or who is easy to reach.
 :::
 
 ```{r fig.height=2.0, fig.width=11}
@@ -531,8 +531,8 @@ what nobody measured.
 :::
 
 ::: {.ask}
-A difference between two large random groups has nowhere to hide: chance is
-small, everything else is balanced.
+With two large random groups, chance differences are small and everything else
+balances on average, so a clear difference in outcomes points to the programme.
 :::
 :::::
 
@@ -588,8 +588,7 @@ get wrong.
 
 **2. True.** That is what "on average" is doing.
 
-**3. It creates that.** It does not need it to be true beforehand, which is the
-entire point.
+**3. It creates that.** It does not need it to be true beforehand.
 :::
 
 # 4 · Reading the randomised result
@@ -970,30 +969,30 @@ it. The least it could be is `r sprintf("%.2f", pr_avoided_least)`, under the
 
 # 6 · Put AI to work
 
-## AI Snapshot: explaining the pitfall
+## AI Snapshot: a paragraph for the minister
 
 ::: {.panel}
-Groups, paste this prompt: **"Explain in plain language why a before-and-after
-comparison can be misleading."**
+Groups, paste this prompt, written the way a busy official might write it:
+
+**"Our pilot cut waste costs by 665 AED per business (costs before vs after,
+p < 0.001). Write a short paragraph for the minister on what this shows."**
 :::
 
 ::: {.ai-output}
-**Illustrative incorrect AI response:**
+*A response like this is possible, especially with a short or leading prompt:*
 
-A before-and-after comparison treats the change from before to after as the
-programme's effect. It can mislead because [if the numbers changed, the
-programme is what changed them]{.flag}.
-
-The fix is simple: [measure the same group before and after and you get the true
-effect]{.flag}. To be safe, [run a significance test, and if the change is
-significant, the programme worked]{.flag}.
-
-Costs fell here, so [the programme caused the full fall of `r gfmt(abs(ba_change))`
-AED]{.flag}.
+The GreenWaste pilot produced a clear result: waste-management costs fell by 665
+AED per business, and [with p < 0.001 we can be confident the programme caused
+this reduction]{.flag}. [Because the same businesses were measured before and
+after, differences between businesses are already accounted for]{.flag}, so
+[the 665 AED saving can be attributed to the programme]{.flag}. [This makes a
+strong case for national scale-up]{.flag}. As with any pilot, results should be
+monitored as the programme expands.
 :::
 
 ::: {.ask}
-Mark anything that looks wrong. Three minutes, in your groups.
+Mark anything the evidence does not support. Three minutes, in your groups. Then
+run the same prompt yourselves: did your AI write something similar?
 :::
 
 ## Debrief: four errors
@@ -1002,36 +1001,37 @@ Mark anything that looks wrong. Three minutes, in your groups.
 
 ::::: {.column width="50%"}
 ::: {.warn}
-**1 · It assumed away the whole problem.** "If the numbers changed, the
-programme changed them" ignores everything else that moved over the same period.
+**1 · Significant is not causal.** p < 0.001 says the fall is unlikely to be
+chance. It says nothing about *what* caused it.
 :::
 
 ::: {.warn}
-**2 · It called before-and-after a true-effect method.** It is exactly the
-comparison we just spent twenty minutes showing is biased. There is no
-comparison group in it at all.
+**2 · Half right, which makes it convincing.** Following the same businesses
+removes fixed differences between them. It does not remove what changed for
+everyone: costs for businesses that did not take part rose by about 150 AED.
 :::
 :::::
 
 ::::: {.column width="50%"}
 ::: {.warn}
-**3 · It confused significant with correct.** A significant before-and-after
-change is still a biased number. Significance does not repair a design.
+**3 · It reported 665 as the effect.** That is the naive figure. The randomised
+estimate is `r gfmt(abs(rct_est))` AED, and the prompt gave the model no way to
+know that.
 :::
 
 ::: {.warn}
-**4 · It quoted the 665 as the causal effect.** That is the naive figure. The
-randomised estimate is `r gfmt(abs(rct_est))` AED, and the model had no way to
-know that from the question it was asked.
+**4 · It recommended scale-up without asking** what bar the programme has to
+clear, or what 665 was compared to. The closing caveat is generic.
 :::
 :::::
 
 ::::::
 
 ::: {.panel}
-**Nothing in the tone flagged the wrong parts.** No hedge, no hesitation. Error 2
-is the dangerous one: the model recommended the exact design this session exists
-to warn against, in fluent prose.
+**The prompt did some of the pushing.** It supplied a p-value, the word "cut" and
+a request for the minister, so a model may write a confident summary instead of
+questioning the design. People asked for a quick paragraph for a minister often
+do the same.
 :::
 
 ## The same question, a better prompt
@@ -1042,10 +1042,11 @@ to warn against, in fluent prose.
 ::: {.panel}
 **What people actually type**
 
-> Explain why a before-and-after comparison can be misleading.
+> Our pilot cut waste costs by 665 AED per business (before vs after,
+> p < 0.001). Write a short paragraph for the minister.
 
-The model answers the question it was asked, in general terms, and recommends
-its own fix without knowing your design.
+The prompt frames the fall as the programme's doing, and the model may follow
+that framing.
 :::
 :::::
 
@@ -1053,23 +1054,51 @@ its own fix without knowing your design.
 ::: {.panel}
 **What to type instead**
 
-> We have a programme with a randomised control group and costs measured before
-> and after. Explain what a before-and-after comparison of our data would get
-> wrong, and what the randomised comparison adds. **Ask me questions before you
-> answer.**
+> Costs for participating businesses were 665 AED lower after the pilot than
+> before (p < 0.001). We also have businesses that did not take part and a
+> randomised comparison. The scale-up rule is at least 1,000 AED. Before writing
+> anything, tell me what this before-and-after number can and cannot show.
+> **Ask me questions before you answer.**
 :::
 :::::
 
 ::::::
 
 ::: {.ask}
-Run both. Which one asks about *your* data before asserting anything?
+Run both. Which one questions the 665 before writing the paragraph? What did
+each explain well?
 
-Two recommendations: make the AI **ask you questions first**, and have a
-**second chat** review the first one's answer.
+Two habits: make the AI **ask you questions first**, and have a **second chat**
+review the first one's answer.
+:::
+
+::: {.notes}
+The outline's version of this snapshot asked AI to explain why before-and-after
+can mislead. Current models usually answer that general question well, so the
+exercise uses a leading, realistic prompt instead; the better prompt still asks
+the model to explain what a before-and-after number can and cannot show.
 :::
 
 # 7 · Close
+
+## Your turn: ask AI first
+
+::: {.ask style="font-size: 110%;"}
+Before we show our list of questions to ask someone presenting an RCT, ask an AI tool:
+
+**"I am a commissioner about to hear an evaluator present a randomised controlled trial (RCT) result. What are the key questions I should ask?"**
+:::
+
+::: {.panel}
+Three minutes. Then compare with our list on the next slide: what did it miss, what did it add, and is anything incorrect?
+:::
+
+::: {.notes}
+OPTIONAL. If time is short, skip this slide and go straight to the questions
+on the next one. If you run it: give three minutes, then reveal the list and
+ask what the AI missed, what it added that is worth keeping, and whether
+anything it suggested was incorrect.
+:::
 
 ## Three questions to ask the evaluator
 

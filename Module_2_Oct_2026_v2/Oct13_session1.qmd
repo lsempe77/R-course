@@ -209,6 +209,10 @@ balance_tbl <- map_dfr(bal_vars, function(v) {
 })
 ```
 
+
+# 1 · Compared to what
+
+<!-- Hidden setup (webR priming, deck CSS). Kept under the first section heading, not before it: content before the first heading makes Quarto create an empty slide after the title. -->
 :::: {style="display:none;"}
 ```{webr}
 #| autorun: true
@@ -266,8 +270,6 @@ CUTOFF <- 58; THRESHOLD <- 1000
 ```
 ::::
 
-# 1 · Compared to what, again
-
 ## The GreenWaste programme, one more time
 
 :::::: {.columns}
@@ -276,7 +278,7 @@ CUTOFF <- 58; THRESHOLD <- 1000
 **GreenWaste** cut waste-management costs for businesses that took it up. You
 met it on Day 1.
 
-Today the question changes. Not *did costs fall* — but **how much of the fall
+Today the question changes from *did costs fall* to **how much of the fall
 was the programme**, and how much was going to happen anyway.
 
 The bar is unchanged: **cut costs by at least `r gfmt(RULEBAR)` AED**.
@@ -332,8 +334,7 @@ Costs fell by **`r gfmt(abs(off_chg))` AED**, a drop of
 
 ::: {.notes}
 Do not editorialise. Present it the way an evaluator might present a headline
-finding, and let it look good. The honest number only appears once the comparison
-group is on the chart, which is the next move after the Menti.
+finding, and let it look good. The full picture only appears once the comparison group is on the chart, which is the next move after the Menti.
 :::
 
 ## `[MENTI PLACEHOLDER]` Did the programme work?
@@ -362,7 +363,7 @@ knitr::include_graphics(MENTI_QR)
 
 ::: {.panel}
 Commit now. "Can't tell yet" is a legitimate answer and I want to see how many
-choose it — that number is the point of the next twenty minutes.
+choose it; that number is the point of the next twenty minutes.
 :::
 
 ## Now we add the businesses that did not receive the program
@@ -380,9 +381,9 @@ did_tbl_viz %>%
 ```
 
 ::: {.panel}
-The comparison group's costs **rose** over the same period. So the honest effect
-is *larger* than the headline drop, not smaller — a comparison group is a
-correction, and it can go either way.
+The comparison group's costs **rose** over the same period. So the programme's effect
+is *larger* than the headline drop. A comparison group is a correction, and it
+can go either way.
 :::
 
 ::: {.notes}
@@ -418,11 +419,11 @@ On Day 1 this gave **-`r gfmt(abs(naive_ww))` AED**.
 ::::::
 
 ::: {.ask}
-You met both of these yesterday. Two honest-looking methods, two very different
+You met both of these yesterday. Two reasonable-looking methods, two very different
 answers: **`r gfmt(abs(naive_ba))`** and **`r gfmt(abs(naive_ww))` AED**.
 
 One is too small, one is too big. Today's method, difference-in-differences,
-removes both problems at once. That is its entire job.
+removes both problems at once.
 :::
 
 ::: {.notes}
@@ -447,8 +448,7 @@ Everything else today is detail on top of that sentence.
 :::
 
 ::: {.ask}
-If you can remember this sentence, you can read
-every DiD table you will ever be handed.
+Keep this sentence in mind whenever you read a DiD table.
 :::
 
 ## Your turn: fill in the blanks
@@ -482,14 +482,14 @@ tibble(
 
 ::::::
 
-::: {.ask .fragment}
-Two subtractions, done in less than two minutes. The top two are easy; the
-bottom one is the method.
-:::
+
 
 ::: {.panel .fragment}
-**Watch the sign.** "Did not take part" went **up**, not down — so the difference
-between the changes is bigger than the fall in the top row alone.
+**Watch the sign.** "Did not take part" went **up**, so the DiD is bigger than the top row's fall.
+:::
+
+::: {.notes}
+Give the room under two minutes for the two subtractions.
 :::
 
 ## The answer
@@ -521,8 +521,8 @@ cat(sprintf('
 ```
 
 ::: {.ask}
-You have just estimated a causal effect with two subtractions. Every DiD table
-you are ever handed is this, wrapped in a regression.
+You have just estimated a causal effect with two subtractions. A regression does the same two
+subtractions and adds a confidence interval.
 :::
 
 ## Visualising the DiD
@@ -548,8 +548,8 @@ ggplot(viz, aes(Time, Cost, colour = Group, group = Group)) +
 
 ::: {.panel}
 Press **Run** to draw it. The gap between the dotted counterfactual and where
-"took part" actually ended up is the DiD estimate, `r gfmt(abs(did_hand))` AED —
-everything above the dotted line is the time trend, not the programme.
+"took part" actually ended up is the DiD estimate, `r gfmt(abs(did_hand))` AED.
+Everything above the dotted line is the time trend, not the programme.
 :::
 
 # 3 · Implementing DID in R
@@ -622,7 +622,7 @@ If asked about `tn`: it is the businesses in the neighbourhoods where the
 programme was offered (treatment_neighborhood == 1). Within those, some
 businesses enrolled and some did not, and that is our comparison.
 
-The warning sets up "The honest answer for this data" in Section 4: with a single
+The warning sets up "What this data can and cannot show" in Section 4: with a single
 pre-period, parallel pre-trends cannot be tested.
 :::
 
@@ -657,13 +657,13 @@ res
 ```
 
 ::: {.ask}
-Press **Run**. An intercept and three coefficients — only one of them is the
+Press **Run**. An intercept and three coefficients, and only one of them is the
 programme's effect. Which row?
 :::
 
 ::: {.notes}
 Run the chunk live, then take a vote across the three coefficients. Many will
-pick `enrolled` because it is large and has the word "enrolled" in it — that is
+pick `enrolled` because it is large and has the word "enrolled" in it; that is
 the trap the next slides unpack. The number in `round:enrolled` is the same
 -816 they got by hand.
 :::
@@ -741,8 +741,7 @@ reaches only `r gfmt(did_avoided_most)`. **It does not clear the bar.**
 Session 1: *statistically significant does not mean big enough.* Session 2: same
 verdict. Here it is a third time.
 
-Three sessions, three results that are real and not sufficient. This is one of
-the most useful things you will take home from this week.
+Three sessions, three results that are real and not sufficient.
 :::
 
 # 4 · The one question
@@ -763,8 +762,8 @@ plausible.
 :::
 
 ::: {.ask}
-This is the question to ask any evaluator presenting DiD, and most reports do
-not raise it. Learn to ask it before you look at the estimate.
+This is the question to ask any evaluator presenting DiD. Ask it before you
+look at the estimate.
 :::
 
 ## Which of these would you trust?
@@ -803,7 +802,7 @@ Only **A**. In B the gap was already widening and in C already closing, so part
 of what the method calls an effect was going to happen anyway.
 
 Note the directions: **B would overstate** the effect, **C would understate**
-it. The bias is not always in the flattering direction.
+it. 
 :::
 
 ## Testing for parallel pre-trends
@@ -829,7 +828,7 @@ ggplot(pre, aes(period, y, colour = group)) +
 ```
 
 ::: {.warn}
-The lines run parallel **before** the dashed line and split only after — that is
+The lines run parallel **before** the dashed line and split only after; that is
 what a credible pre-trend looks like. GreenWaste has only **one** period before
 the programme, so this check is impossible for it (next slide).
 :::
@@ -837,10 +836,10 @@ the programme, so this check is impossible for it (next slide).
 ::: {.notes}
 Illustrative data, not GreenWaste. Point out that the groups move together before
 the dashed cut-off and only diverge after. Then contrast: GreenWaste has a single
-before-period, so the check cannot be run — which sets up the honest answer next.
+before-period, so the check cannot be run, which sets up the next slide.
 :::
 
-## The honest answer for this data
+## What this data can and cannot show
 
 :::::: {.columns}
 
@@ -855,7 +854,7 @@ observations before it started**. We have one.
 ::: {.panel}
 So the parallel trends assumption **cannot be tested with this data**.
 
-Not "was not tested". **Cannot be.**
+The check was not skipped; this data does not allow it.
 :::
 :::::
 
@@ -909,8 +908,8 @@ Read it for two things: are the differences **small**, and are the p-values
 
 ::: {.ask}
 If these two groups differ systematically at baseline **and** were free to
-choose whether to enrol, the parallel trends assumption is doing a lot of
-unpaid work. Say so when you write your recommendation.
+choose whether to enrol, the result depends heavily on the parallel trends
+assumption. Say so when you write your recommendation.
 :::
 
 ::: {.notes}
@@ -940,7 +939,7 @@ not finished the job.
 
 # 5 · Put AI to work
 
-## AI Snapshot: explaining the table
+## AI Snapshot: explaining the table {.dense}
 
 ::: {.panel}
 Paste the table from Section 3 into an AI tool with this prompt:
@@ -950,6 +949,8 @@ should be checked before believing the result."**
 :::
 
 ::: {.ai-output}
+*A response like this is possible, especially with a short or leading prompt:*
+
 The table reports a difference-in-differences estimate. **The programme reduced
 costs by 816 AED**, and the effect is highly statistically significant
 (p < 0.001), **so the programme was a success**. [The confidence interval does
@@ -961,7 +962,7 @@ the 1,000 AED threshold required for scale-up]{.flag}.
 
 ::: {.ask}
 Mark every sentence you can check against the table, and every sentence the
-table does **not** support. Four minutes.
+table does **not** support.
 :::
 
 ## Debrief: three errors, one of them serious
@@ -1000,18 +1001,18 @@ That third error is Session 2's fabricated-robustness failure, in a new place.
 performed.**
 :::
 
-## The same question, a better prompt
+## The same question, a better prompt {.dense}
 
 :::::: {.columns}
 
 ::::: {.column width="50%"}
 ::: {.panel}
-**What people actually type**
+**What people usually type**
 
 > Explain this regression table to a non-technical decision-maker and say what
 > should be checked before believing the result.
 
-The model answers, confidently, on all three points — including the one it
+The model may answer confidently on all three points, including the one it
 cannot know.
 :::
 :::::
@@ -1030,8 +1031,15 @@ cannot know.
 ::::::
 
 ::: {.ask}
-Give the model the constraint — two waves, no pre-trend test — and see whether
-error 3 survives. Supply what it cannot know, and it stops inventing.
+Give the model the constraint (two waves, no pre-trend test) and see whether
+error 3 survives. Supplying what it cannot know makes the error less likely;
+check anyway. What did each answer explain well?
+:::
+
+::: {.panel .fragment}
+**If time allows, a leading prompt:** *"Our DiD shows an 816 AED cut in costs
+(p<0.001). Write two sentences for the minister recommending scale-up."* Does it
+mention the 1,000 AED rule or parallel trends without being asked?
 :::
 
 # 6 · The Abu Dhabi case
@@ -1077,6 +1085,25 @@ That is the point of reading the two side by side.
 
 # 7 · Close
 
+## Your turn: ask AI first
+
+::: {.ask style="font-size: 110%;"}
+Before we show our list of questions to ask someone presenting DiD, ask an AI tool:
+
+**"I am a commissioner about to hear an evaluator present a difference-in-differences (DiD) result. What are the key questions I should ask?"**
+:::
+
+::: {.panel}
+Three minutes. Then compare with our list on the next slide: what did it miss, what did it add, and is anything incorrect?
+:::
+
+::: {.notes}
+OPTIONAL. If time is short, skip this slide and go straight to the questions
+on the next one. If you run it: give three minutes, then reveal the list and
+ask what the AI missed, what it added that is worth keeping, and whether
+anything it suggested was incorrect.
+:::
+
 ## Three questions to ask any evaluator presenting DiD
 
 ```{=html}
@@ -1110,4 +1137,13 @@ of them has cleared its bar.
 Ask yourself what that means for the way evaluations get commissioned. Then
 bring it to the next session, where the identification comes from a **cut-off**
 rather than a comparison group.
+:::
+
+::: {.notes}
+If there is time at the very end, ask the room: is there a different
+question you would ask AI to help you understand a concept from today? For
+example: "I am learning about impact evaluation to help me make policy
+decisions. How should I think about a confidence interval, and how is it
+relevant when I compare an estimate to a decision threshold?" Adding context
+about who you are and why you are asking usually gets a more useful answer.
 :::
