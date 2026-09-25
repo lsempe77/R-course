@@ -1,0 +1,341 @@
+/*-- scss:defaults --*/
+
+// ============================================================
+// Module 2 · DGE theme
+//
+// The editorial theme (theme_editorial.scss) re-dressed in the
+// Department of Government Enablement brand, per the DGE Brand
+// Identity Guideline 2025 (DGE_theme/, not committed). Same layout
+// rules and callout components, so a deck switches by changing
+// one line:   theme: [theme_dge.scss, theme_live.scss]
+//
+// From the guideline:
+//   colour   Tech Blue #215a9e (lead), Reliable Blue #063360,
+//            Light Blue #7da1c4, Grey #545860, black, white
+//   type     Noto Kufi Arabic only. Headline SemiBold 110%,
+//            subline / paragraph heading Bold 120%, body Light 150%
+//   text     sentence case, left aligned, never centred, justified
+//            or set in capitals
+//   gradient Light Blue -> Tech Blue -> Reliable Blue only, never
+//            on text, never with the brandmark sitting on it
+//   logo     white or light background, 2x clear space, >= 18px
+//
+// Data colours (agreed 2026-09-25): programme = Tech Blue,
+// comparison = Light Blue (well apart in lightness, so they
+// separate for colour-blind viewers and in greyscale). The
+// decision-rule red is not a brand colour; it is kept, darkened
+// from the crest red for text contrast, and is never a series.
+// ============================================================
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;500;600;700&display=swap');
+
+$tech-blue:     #215a9e;
+$reliable-blue: #063360;
+$light-blue:    #7da1c4;
+$grey:          #545860;
+
+$ink:     #111418;
+$muted:   $grey;
+$accent:  $tech-blue;    // series 1: programme / offered
+$accent2: $light-blue;   // series 2: comparison / not offered
+$alert:   #B8272C;       // decision rules and flagged errors, never a series
+$rule:    #D5DEE8;
+
+$kufi: "Noto Kufi Arabic", "Segoe UI", system-ui, Arial, sans-serif;
+
+$font-family-sans-serif:           $kufi;
+$presentation-heading-font:        $kufi;
+$presentation-heading-color:       $reliable-blue;
+$presentation-heading-font-weight: 600;
+// Kufi's Latin is wide; one notch below the editorial 24px keeps the
+// slides inside the same line lengths.
+$presentation-font-size-root:      22px;
+
+$body-color: $ink;
+$body-bg:    #FFFFFF;
+$link-color: $accent;
+
+/*-- scss:rules --*/
+
+.reveal { font-family: $kufi; }
+
+// ---------- Title slide ---------------------------------------------------
+// White, left aligned, primary (horizontal) brandmark top-left. The mark is
+// placed through title-slide-attributes in the deck YAML so it is embedded.
+
+#title-slide {
+  text-align: left;
+
+  .title {
+    font-family: $kufi;
+    font-size: 2.3em;
+    font-weight: 600;
+    line-height: 1.1;
+    color: $reliable-blue;
+  }
+  .subtitle {
+    margin-top: 0.6em;
+    font-size: 1.3em;
+    font-weight: 700;
+    font-style: normal;
+    line-height: 1.2;
+    color: $tech-blue;
+  }
+  .author, .quarto-title-author-name, .date, .institute {
+    margin-top: 0.8em;
+    font-size: 1.1em;
+    font-weight: 500;
+    font-style: normal;
+    color: $muted;
+  }
+  .quarto-title-authors { display: block; }
+}
+
+// ---------- Section dividers ----------------------------------------------
+// The brand's primary gradient, white text. No brandmark here: the guideline
+// forbids placing it on a gradient.
+
+// The gradient itself is set per divider in the deck, so it fills the whole
+// screen rather than the slide box:
+//   # 1 · Section {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+.reveal section.level1 > h1 {
+  font-size: 2em;
+  font-weight: 600;
+  line-height: 1.1;
+  color: #FFFFFF !important;   // reveal writes an inline colour on dividers
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+// ---------- Headings ------------------------------------------------------
+
+.reveal h1, .reveal h2, .reveal h3 { font-family: $kufi; letter-spacing: 0; }
+
+.reveal h2 {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  font-size: 1.45em;
+  font-weight: 600;
+  line-height: 1.1;
+  margin: 0 0 0.55em 0;
+  padding-bottom: 0.24em;
+  border: none;
+  border-bottom: 2px solid $tech-blue;
+  color: $reliable-blue;
+}
+
+.reveal h3 {
+  font-size: 1.02em;
+  font-weight: 700;
+  font-style: normal;
+  line-height: 1.2;
+  color: $tech-blue;
+}
+
+// ---------- Body ----------------------------------------------------------
+// Brand body weight is Light. On a projector Light at these sizes can read
+// thin; switch $body-weight to 500 (Medium, also a brand weight) if it does.
+
+$body-weight: 300;
+
+.reveal p, .reveal li { line-height: 1.5; font-weight: $body-weight; }
+.reveal ul, .reveal ol { font-size: 1em; padding-left: 1.05em; }
+.reveal li { margin-bottom: 0.25em; }
+.reveal ul > li::marker { color: $accent; }
+.reveal strong { font-weight: 700; }
+.reveal .slides section > p { max-width: 36em; }
+
+// ---------- Callouts ------------------------------------------------------
+
+.reveal .panel,
+.reveal .ask,
+.reveal .warn,
+.reveal .ai-output,
+.reveal .excerpt {
+  background: none;
+  border: none;
+  border-left: 3px solid $accent;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0 0 0 0.9em;
+  margin: 0.9em 0;
+  font-size: 1.25em;
+  font-weight: $body-weight;
+}
+.reveal .panel p, .reveal .ask p, .reveal .warn p,
+.reveal .ai-output p, .reveal .excerpt p { font-weight: $body-weight; }
+
+.reveal .ask       { border-left-color: $tech-blue; }
+.reveal .panel     { border-left-color: $light-blue; }
+.reveal .warn      { border-left-color: $alert; }
+.reveal .excerpt   { border-left-color: $reliable-blue; }
+.reveal .ai-output { border-left-color: $muted; }
+
+.reveal .ai-output .flag { color: $alert; font-weight: 700; background: none; }
+
+// The editorial theme centres this variant. The brand does not allow centred
+// text, so here it is a plain left-aligned callout.
+.reveal .note-ctr { width: auto; margin-left: 0; margin-right: 0; text-align: left; }
+
+.reveal .panel_big {
+  background: none;
+  border: none;
+  border-left: 3px solid $accent;
+  padding: 0 0 0 0.9em;
+  margin: 0.9em 0;
+  font-size: 1.5em;
+}
+
+// ---------- Hero number ---------------------------------------------------
+// Labels in sentence case: the brand forbids capitals and letter-spacing.
+
+.reveal .hero {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0.35em 0 0.7em 0;
+  text-align: left;
+
+  .value {
+    font-size: 3.2em;
+    font-weight: 600;
+    line-height: 1.05;
+    color: $tech-blue;
+  }
+  .value.alert { color: $alert; }
+  .label {
+    margin-top: 0.35em;
+    font-size: 0.75em;
+    font-weight: 500;
+    color: $muted;
+  }
+}
+
+// ---------- Stat strip ----------------------------------------------------
+
+.reveal .stat-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5em 2em;
+  margin: 0.6em 0 0.4em 0;
+
+  > div {
+    display: flex;
+    align-items: baseline;
+    gap: 0.55em;
+    background: none;
+    border: none;
+    padding: 0;
+    text-align: left;
+  }
+  .k { order: 1; font-size: 1em; font-weight: 500; color: $muted; }
+  .n { order: 2; font-size: 1.45em; font-weight: 600; color: $reliable-blue; line-height: 1; }
+}
+
+// ---------- Fact list -----------------------------------------------------
+
+.reveal .facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.4em 1.1em;
+  background: none;
+  border: none;
+  border-left: 3px solid $reliable-blue;
+  padding: 0 0 0 0.9em;
+  margin: 0.6em 0;
+  font-size: 0.94em;
+
+  .k { color: $reliable-blue; font-weight: 700; white-space: nowrap; }
+  .v { color: $ink; font-weight: $body-weight; }
+}
+
+// ---------- Tables --------------------------------------------------------
+
+.reveal table {
+  margin: 0.5em 0;
+  font-size: 0.88em;
+  border-collapse: collapse;
+
+  th {
+    padding: 0.35em 0.7em;
+    text-align: right;
+    background: none;
+    color: $reliable-blue;
+    font-weight: 700;
+    border: none;
+    border-bottom: 2px solid $tech-blue;
+  }
+  th:first-child { text-align: left; }
+
+  td {
+    padding: 0.3em 0.7em;
+    text-align: right;
+    background: none;
+    border: none;
+    border-bottom: 1px solid $rule;
+    font-weight: $body-weight;
+  }
+  td:first-child { text-align: left; }
+
+  tbody tr:nth-child(even) td { background: none; }
+  tbody tr:last-child td { border-bottom: none; }
+}
+
+// ---------- Charts (same fixes as the editorial theme) --------------------
+
+.reveal .cell-output-display { overflow: visible; }
+.reveal .cell-output-display .html-widget {
+  background: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+.reveal .cell { margin-bottom: 0.4em; }
+.reveal .cell-output { margin-top: 0.3em; margin-bottom: 0.1em; }
+
+// ---------- Vertical rhythm (same as editorial) ---------------------------
+
+.reveal .slides section.present:not(.stack) {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  justify-content: safe center;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+// ---------- Chrome --------------------------------------------------------
+
+// Brandmark: the primary (horizontal) mark, top-right, on every slide.
+// Set with `logo:` in the deck YAML (so it is embedded).
+.reveal .slide-logo {
+  display: block !important;
+  top: 3.2vh !important;
+  right: 3.2vw !important;
+  left: auto !important;
+  bottom: auto !important;
+  height: 12vh !important;      // about 12% of the short side; raise/lower to taste
+  max-height: none !important;
+  width: auto !important;
+  z-index: 20 !important;
+}
+
+.reveal .progress {
+  height: 4px;
+  background: rgba(33, 90, 158, 0.12);
+  span { background: $tech-blue; }
+}
+
+.reveal .slide-number {
+  color: $muted !important;
+  background: none !important;
+  font-weight: 500 !important;
+  font-size: 0.5em !important;
+}
+
+.reveal .columns { align-items: flex-start; }
+.reveal figure figcaption { font-size: 0.62em; color: $muted; }

@@ -31,3 +31,7 @@ Module_2_Oct_2026_v2/*.html
 *.rmarkdown
 # Local recovery / backup copies (kept locally, not pushed)
 *_RECOVERED_*
+
+# DGE brand kit (118 MB of fonts and artwork). Decks use only the two SVGs
+# copied into Module_2_Oct_2026_v2/assets/; fonts load from Google Fonts.
+Module_2_Oct_2026_v2/DGE_theme/

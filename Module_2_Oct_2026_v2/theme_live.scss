@@ -45,19 +45,19 @@
 .reveal .cell-output-webr table {
   font-size: 19px;
   border-collapse: collapse;
-  margin: 0.2em 0 0.4em 0;
+  margin: 0;
   width: auto;
 }
 .reveal .cell-output-webr th {
   font-weight: 600;
-  color: #61686D;
-  border-bottom: 2px solid #16181A;
+  color: $muted;
+  border-bottom: 2px solid $ink;
   padding: 1px 14px;
   line-height: 1.25;
   text-align: right;
 }
 .reveal .cell-output-webr td {
-  border-bottom: 1px solid #E3E6E8;
+  border-bottom: 1px solid $rule;
   padding: 1px 14px;
   line-height: 1.25;
   text-align: right;
@@ -65,3 +65,14 @@
 }
 .reveal .cell-output-webr th:first-child,
 .reveal .cell-output-webr td:first-child { text-align: left; }
+
+// A cell that prints a table and then draws a plot: put them side by side,
+// table left, plot right, so the pair fits under the code on one slide.
+// Wide outputs (a full-width plot) still wrap onto their own line.
+.reveal .cell-output-container-webr {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 48px;
+  row-gap: 0;
+}

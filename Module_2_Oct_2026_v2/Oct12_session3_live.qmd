@@ -3,13 +3,16 @@ title: "Spot the Problem: Naive Comparisons and Reading an RCT"
 subtitle: "Module 2 · Day 1, Session 3: Opening the Box on Module 1's Numbers"
 author: "3ie"
 always_allow_html: yes
+title-slide-attributes:
+  data-state: title-slide-state
 # live-revealjs: the quarto-live extension (_extensions/r-wasm/live) runs R in
 # the browser through webR. The live cells need an internet connection on the
 # day (webR loads from a CDN) and the CSV listed under webr: resources
 # must sit next to the published .html. Static knitr chunks work as before.
 format:
   live-revealjs:
-    theme: [theme_editorial.scss, theme_live.scss]
+    theme: [theme_dge.scss, theme_live.scss]
+    logo: assets/dge_logo_horizontal.svg
     slide-number: true
     width: 1280
     height: 720
@@ -45,10 +48,10 @@ library(kableExtra)
 library(estimatr)
 library(qrcode)
 
-# ---- Palette (editorial theme; see theme_editorial.scss) -------------------
-ACCENT  <- "#0E6E80"; ACCENT2 <- "#A9561F"; ALERT <- "#8E2413"
-INK     <- "#16181A"; MUTED <- "#61686D"; RULE <- "#E3E6E8"
-CHART_FONT <- "Segoe UI, Helvetica, Arial, sans-serif"
+# ---- Palette (DGE theme; see theme_dge.scss) --------------------------------
+ACCENT  <- "#215a9e"; ACCENT2 <- "#7da1c4"; ALERT <- "#B8272C"   # Tech / Light Blue
+INK     <- "#111418"; MUTED <- "#545860"; RULE <- "#D5DEE8"
+CHART_FONT <- "Noto Kufi Arabic, Segoe UI, Arial, sans-serif"
 
 PL_W <- 1100; PL_WC <- 520; PL_WT <- 340
 
@@ -164,7 +167,7 @@ rule_chart <- function(est, least, most, rule, xlab, xmax, digits = 0) {
 }
 ```
 
-# 0 · Where Module 1 left us
+# 0 · Where Module 1 left us {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## Where we left GreenWaste
 
@@ -176,12 +179,27 @@ rule_chart <- function(est, least, most, rule, xlab, xmax, digits = 0) {
 gw <- read.csv("evaluation_data_GreenWaste.csv")
 library(estimatr)
 RULE <- 1000
-ACCENT <- "#0E6E80"; ACCENT2 <- "#A9561F"; ALERT <- "#8E2413"; MUTED <- "#61686D"
+ACCENT <- "#215a9e"; ACCENT2 <- "#7da1c4"; ALERT <- "#B8272C"; MUTED <- "#545860"
 options(width = 100, scipen = 6)
+
+# Defined here as well as on the slides that teach them, so a later slide
+# still runs if an earlier one was skipped or the page was reloaded mid-deck.
+after <- subset(gw, round == 1 & eligible == 1)
+fit   <- lm(waste_management_costs ~ treatment_neighborhood, data = after)
 
 clean_par <- function() par(mar = c(3, 5.5, 1, 1), family = "sans", las = 1,
                             col.axis = MUTED, col.lab = MUTED, fg = MUTED, cex = 1.25)
 aed <- function(x) format(round(x), big.mark = ",")
+
+# Bar chart of a few averages, value printed on each bar:
+#   bars(Before = before, After = after)
+bars <- function(..., col = ACCENT) {
+  v <- c(...)
+  clean_par()
+  par(mar = c(2.5, 1, 2, 1))               # no y axis: the value sits on each bar
+  b <- barplot(v, col = col, border = NA, ylim = c(0, max(v) * 1.15), axes = FALSE)
+  text(b, v, paste(aed(v), "AED"), pos = 3, cex = 1.2, xpd = NA)
+}
 
 # Before-and-after lines for the two groups in the offered neighbourhoods.
 plot_two_lines <- function() {
@@ -318,7 +336,7 @@ You will not write any code. You will call the numbers; I will type them in and
 press **Run**. The grey boxes are real R, running in this page.
 :::
 
-# 1 · Meet the data
+# 1 · Meet the data {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## One row, one business, one round
 
@@ -339,8 +357,7 @@ was offered the programme. **enrolled** 1: the business took part.
 
 ::::: {.column width="50%"}
 ::: {.ask}
-The file has 19,826 rows. How many **businesses**? Say a number before I show the next
-line.
+The file has 19,826 rows. How many **businesses**? 
 :::
 
 ::: {.panel .fragment}
@@ -369,33 +386,23 @@ did.** So "did not take part" means "scored above the cut-off": a different kind
 of business.
 :::
 
-# 2 · Rebuild the two counterfeit numbers
+# 2 · Rebuild the two counterfeit numbers {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## Comparison A: before and after
 
+::: {.ask}
+Module 1 said **`r gfmt(ba_change)`**. Before I press Run: will the raw rows
+give the same number?
+:::
+
 ```{webr}
+#| fig-width: 6
+#| fig-height: 2.5
 before <- mean(gw$waste_management_costs[gw$enrolled == 1 & gw$round == 0])
 after  <- mean(gw$waste_management_costs[gw$enrolled == 1 & gw$round == 1])
 round(data.frame(before, after, change = after - before))
+bars(Before = before, After = after)
 ```
-
-:::::: {.columns}
-
-::::: {.column width="55%"}
-::: {.ask}
-Module 1 said **`r gfmt(ba_change)`**. Before I press Run: will we get the same
-number from the raw rows?
-:::
-:::::
-
-::::: {.column width="45%"}
-::: {.panel}
-Three lines: the average cost of the businesses that took part, before and
-after, and the difference.
-:::
-:::::
-
-::::::
 
 ::: {.notes}
 Press Run live. The room should see -665 appear. Point at each line as you read
@@ -405,21 +412,19 @@ it aloud in plain words.
 ## Comparison B: with and without
 
 ```{webr}
+#| fig-width: 6
+#| fig-height: 2.5
 offered <- subset(gw, treatment_neighborhood == 1 & round == 1)
 took    <- mean(offered$waste_management_costs[offered$enrolled == 1])
 didnt   <- mean(offered$waste_management_costs[offered$enrolled == 0])
 round(data.frame(took_part = took, did_not = didnt, gap = took - didnt))
+bars("Took part" = took, "Did not" = didnt, col = c(ACCENT, ACCENT2))
 ```
 
-::: {.panel}
-Same neighbourhoods, same moment (after the programme), two groups: those who
-took part and those who did not. Module 1 said **`r gfmt(ww_gap)`**.
-:::
-
 ::: {.warn}
-Two readings of one programme: **`r gfmt(ba_change)`** and
-**`r gfmt(ww_gap)`**. One misses the 1,000 AED bar, the other clears it
-easily. They cannot both be right.
+Same neighbourhoods, after the programme. Module 1 said **`r gfmt(ww_gap)`**.
+Two readings of one programme, **`r gfmt(ba_change)`** and
+**`r gfmt(ww_gap)`**: one misses the 1,000 AED bar, one clears it.
 :::
 
 ## `[MENTI PLACEHOLDER]` Which way is each one wrong?
@@ -450,7 +455,7 @@ knitr::include_graphics(MENTI_QR)
 ~4 min. Do not settle it. The next three slides answer it from the data.
 :::
 
-# 3 · Catch each one out, in the data
+# 3 · Catch each one out, in the data {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## A: what happened to everyone else?
 
@@ -486,30 +491,42 @@ Up, by about 150 AED. Time was not standing still: costs were rising. So the
 
 ## B: the same gap, before the programme existed
 
+:::::: {.columns}
+
+::::: {.column width="42%"}
 ```{ojs}
 //| echo: false
 viewof when = Inputs.radio(["After the programme", "Before the programme"],
-  {value: "After the programme", label: "Compare the two groups"})
+  {value: "After the programme"})
 ```
+:::::
+
+::::: {.column width="58%"}
+::: {.ask}
+Before the programme, nobody had received anything. **What gap should we see?**
+:::
+:::::
+
+::::::
 
 ```{webr}
 #| input:
 #|   - when
 #| autorun: true
+#| fig-width: 6
+#| fig-height: 1.8
 r <- if (when == "Before the programme") 0 else 1
 offered <- subset(gw, treatment_neighborhood == 1 & round == r)
-round(aggregate(waste_management_costs ~ enrolled, data = offered, FUN = mean))
+took    <- mean(offered$waste_management_costs[offered$enrolled == 1])
+didnt   <- mean(offered$waste_management_costs[offered$enrolled == 0])
+round(data.frame(took_part = took, did_not = didnt, gap = took - didnt))
+bars("Took part" = took, "Did not" = didnt, col = c(ACCENT, ACCENT2))
 ```
 
-::: {.ask}
-Before the programme started, nobody had received anything. **What gap should we
-see between the two groups?** Say a number, then I flip the switch.
-:::
 
 ::: {.warn .fragment}
-It should be zero. It is about **`r gfmt(ww_gap0)`** AED. The groups differed by
-600 AED before anyone was treated, so the `r gfmt(abs(ww_gap))` gap mixes the
-programme with a head start: it **overstates** the effect.
+It should be zero. It is **`r gfmt(ww_gap0)`** AED: a head start, so the
+`r gfmt(abs(ww_gap))` gap **overstates** the effect.
 :::
 
 ## Why they were already different
@@ -563,7 +580,7 @@ Both problems have one root: **the two groups were not comparable.** After the
 break: a design that makes them comparable by construction.
 :::
 
-# Break
+# Break {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## Five-minute break
 
@@ -571,7 +588,7 @@ break: a design that makes them comparable by construction.
 Back in five minutes. When we return, we run the lottery ourselves.
 :::
 
-# 4 · Run the lottery yourself
+# 4 · Run the lottery yourself {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## What the lottery buys you
 
@@ -693,7 +710,7 @@ Live quiz, revealed one at a time. Commit before I show each answer.
 **3. It creates that.** It does not need it beforehand, which is the point.
 :::
 
-# 5 · Reading the randomised result
+# 5 · Reading the randomised result {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## First check: did the real draw work?
 
@@ -724,21 +741,22 @@ table is for.
 
 ## The effect is a difference of two averages
 
-```{webr}
-after <- subset(gw, round == 1 & eligible == 1)
-offered     <- mean(after$waste_management_costs[after$treatment_neighborhood == 1])
-not_offered <- mean(after$waste_management_costs[after$treatment_neighborhood == 0])
-round(data.frame(offered, not_offered, effect = offered - not_offered))
-```
-
 ::: {.ask}
 Module 1 said **`r gfmt(rct_est)`**. Three lines of averages. Will they match?
 :::
 
+```{webr}
+#| fig-width: 6
+#| fig-height: 2
+after <- subset(gw, round == 1 & eligible == 1)
+offered     <- mean(after$waste_management_costs[after$treatment_neighborhood == 1])
+not_offered <- mean(after$waste_management_costs[after$treatment_neighborhood == 0])
+round(data.frame(offered, not_offered, effect = offered - not_offered))
+bars(Offered = offered, "Not offered" = not_offered, col = c(ACCENT, ACCENT2))
+```
+
 ::: {.panel .fragment}
-No model, no adjustment. Because the draw made the groups alike, **the
-difference in averages is the effect.** Everything else on the next slides is
-just a more formal way of writing this subtraction.
+No model, no adjustment: the draw made the groups alike, so **the gap is the effect.**
 :::
 
 ## The regression gives the same number
@@ -894,7 +912,7 @@ Measured: 196 neighbourhoods 1,014 [935, 1,093]; 60 gives 1,022 [864, 1,179];
 may fail to find a real effect.
 :::
 
-# 6 · Put AI to work
+# 6 · Put AI to work {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## AI Snapshot: explaining the pitfall
 
@@ -986,7 +1004,7 @@ Two habits, every session: make the AI **ask you questions first**, and have a
 **second chat** review the first one's answer.
 :::
 
-# 7 · Close
+# 7 · Close {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## Three questions to ask the evaluator
 
