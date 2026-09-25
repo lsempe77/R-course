@@ -339,8 +339,8 @@ kilometre driven?**
 
 ::: {.panel .fragment}
 It stops moving. If people drove a third less, a third fewer deaths is what you
-would expect with or without cameras. The headline cannot tell you which of
-these worlds you are in.
+would expect with or without cameras. The headline alone cannot tell the two
+apart.
 :::
 
 ## What actually happened to traffic
@@ -383,8 +383,8 @@ answer either way.
 :::
 
 ::: {.ask}
-If you do not know what a number is being compared to, you do not yet know
-what it means.
+Think of a figure you reported, or were sent, this year. **What was it compared
+to?** If nobody said, what would you have picked?
 :::
 
 # 2 · Three questions for any number {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
@@ -404,9 +404,9 @@ any number an evaluator hands you.
 </div>
 ```
 
-::: {.ask}
-Keep these three. You will use them all week, and on the next evaluation report
-you receive.
+::: {.panel}
+We come back to this list at the end of the session, and on every day of the
+week.
 :::
 
 # 3 · The five words {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
@@ -627,15 +627,18 @@ viewof k = Inputs.range([0, 1000], {value: 0, step: 50, label: "Times we shuffle
 #| autorun: true
 #| edit: false
 #| fig-width: 10
-#| fig-height: 2.6
+#| fig-height: 1.7
 small <- study(20)          # a study of 20 roads: 10 with cameras, 10 without
 shuffle_plot(small, k)
 ```
 
-::: {.panel}
-If the cameras did nothing, the labels "camera" and "no camera" would be
-arbitrary. Shuffle them and count how often chance alone gives a gap this large.
-That share is the **p-value**.
+::: {.ask}
+If the cameras did nothing, the labels would be arbitrary, so we shuffle them.
+**How often does chance alone give a gap as large as the red line?** Guess first.
+:::
+
+::: {.panel .fragment}
+That share is the **p-value**: here about 0.17, one shuffle in six.
 :::
 
 ::: {.notes}
@@ -668,8 +671,8 @@ still statistically significant?**
 
 ::: {.warn .fragment}
 Yes, p is about 0.03. With 1,200 roads even a trivial change passes the test.
-**Statistically significant does not mean big, and it does not mean worth
-funding.**
+Whether 0.3 km/h is worth paying for is a separate question, and the p-value
+cannot answer it.
 :::
 
 ## Word 4 · The warning cuts both ways
@@ -714,14 +717,14 @@ viewof run = Inputs.button("Run another 100 studies")
 #| autorun: true
 #| edit: false
 #| fig-width: 10
-#| fig-height: 3.3
+#| fig-height: 2.4
 many_studies(n = 40, runs = 100, seed = run + 1)
 ```
 
-::: {.panel}
-Each line is one study of 40 roads and its **95% confidence interval**: the
-range of values consistent with that study's data. Wider means less certain,
-not a bigger effect.
+::: {.ask}
+Each line is one study of 40 roads and its **95% confidence interval**, the
+range of values consistent with its data. **Out of 100, how many will miss the
+grey line?** Guess before the next press.
 :::
 
 ::: {.notes}
@@ -752,7 +755,8 @@ Which would you act on? What is your answer for each?
 
 ::: {.panel .fragment}
 B is precise and below the bar: confidently not enough. A is too uncertain to
-call, and C more so. **The interval decides, not the point estimate.**
+call, and C more so. All three have the same estimate, so the intervals make the
+difference.
 :::
 
 ::: {.notes}

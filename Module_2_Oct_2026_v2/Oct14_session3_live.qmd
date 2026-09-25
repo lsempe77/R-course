@@ -66,7 +66,7 @@ MENTI_QR <- menti_qr()
 
 # 0 · Sign-off {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
-## Three days of reading. Today you ask the questions.
+## Today you question the analyst
 
 ```{webr}
 #| autorun: true
@@ -143,9 +143,8 @@ Until now you have read someone else's analysis. Today you question the analyst
 and decide whether you would act on the evaluation.
 :::
 
-::: {.ask .fragment}
-The analyst is in this room, played by the trainer. You have the checklist. The
-analyst has to answer, and today the analyst has the data open.
+::: {.panel .fragment}
+The trainer plays the analyst, with the data open. You have the checklist.
 :::
 
 ## Would you sign off?
@@ -283,7 +282,7 @@ which group the decision concerns cannot say which estimate supports it.
 
 # 2 · The checklist {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
-## Four areas, in the order they break
+## Four areas, in the order to check them
 
 ```{r}
 kable(data.frame(Area = qa_domains,
@@ -292,9 +291,9 @@ kable(data.frame(Area = qa_domains,
 ```
 
 ::: {.panel}
-Methodology comes first: a design that cannot answer the question cannot be
-rescued by good data. Conclusions come last: a conclusion is only as strong as
-the three areas under it.
+Methodology comes first, because good data cannot fix a design that cannot
+answer the question. Conclusions come last, because they depend on the other
+three.
 :::
 
 ## The five to ask every time
@@ -307,37 +306,6 @@ html_out(paste(sprintf('<div class="panel"><b>%d.</b> %s</div>', seq_along(qa_he
 ::: {.warn}
 Five are easy to hold in your head in a meeting. The printed handout has all
 twenty, five under each area.
-:::
-
-## How to tell a strong question from a weak one
-
-:::::: {.columns}
-
-::::: {.column width="50%"}
-**Weak**
-
-- Was the study rigorous?
-- Are the results significant?
-- Was the sample size adequate?
-- Did you control for confounders?
-- Is the data reliable?
-:::::
-
-::::: {.column width="50%"}
-**Strong**
-
-- Which assumption would reverse the sign?
-- What is the estimate and its confidence interval?
-- How many units were dropped, and why?
-- What changed at the same time?
-- Who is missing from the data?
-:::::
-
-::::::
-
-::: {.ask .fragment}
-Anyone can answer a weak question with "yes". A strong question needs a fact to
-answer it.
 :::
 
 ## Your turn: sort these
@@ -398,6 +366,37 @@ Paper (Oct14_session3_materials.docx): Hand out the eight question slips (pack p
 Point out that the strong questions are no harder to ask; the difference is
 that they need a fact to answer. Section 4 shows the analyst producing those
 facts.
+:::
+
+## The rule behind the sort
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+**Weak**
+
+- Was the study rigorous?
+- Are the results significant?
+- Was the sample size adequate?
+- Did you control for confounders?
+- Is the data reliable?
+:::::
+
+::::: {.column width="50%"}
+**Strong**
+
+- Which assumption would reverse the sign?
+- What is the estimate and its confidence interval?
+- How many units were dropped, and why?
+- What changed at the same time?
+- Who is missing from the data?
+:::::
+
+::::::
+
+::: {.ask .fragment}
+A weak question can be answered with "yes"; a strong one needs a fact. **Pick a
+weak question from your own work and rewrite it so it needs a fact.**
 :::
 
 ## Five-minute break
@@ -478,7 +477,7 @@ looking for the second kind.
 
 ::::::
 
-## The one you must not let go
+## The question to keep pressing
 
 ::: {.ask}
 **What is the comparison, and how was it chosen?**
@@ -507,9 +506,9 @@ interval_plot(tab)
 :::::: {.columns}
 
 ::::: {.column width="50%"}
-::: {.panel}
-Three estimates rerun live, each with its 95% interval. The matched −1,000 is as
-reported.
+::: {.ask}
+Three estimates rerun live with 95% intervals (the matched −1,000 is as
+reported). **Before Run: how many clear 1,000 at their least generous end?**
 :::
 :::::
 
@@ -614,7 +613,7 @@ tested.
 
 # 5 · The debrief {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
-## The unanswered questions are the finding
+## Score the answers
 
 ::: {.panel}
 For each area, how many of your questions got a definite answer, and how many

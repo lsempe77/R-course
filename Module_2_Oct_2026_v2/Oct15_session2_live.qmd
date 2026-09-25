@@ -118,13 +118,14 @@ check_brief <- function(text) {
 ```
 
 ::: {.panel}
-Three days of reading other people's evidence. This morning you decided whether
-a report was credible. Now someone hands you the findings and asks what the
-authority should do. That is the job most of you actually have.
+This morning you judged whether a report was credible. Now someone hands you
+findings you did not produce and asks what the authority should do. For many of
+you that is the usual request.
 :::
 
 ::: {.ask .fragment}
-**Would you recommend this programme for rollout?** Yes / No / Only with changes.
+**The last time you wrote up evidence for a decision, what was the hardest
+part?**
 :::
 
 ::: {.notes}
@@ -166,8 +167,8 @@ The evaluation was randomised, well executed and reported transparently. Nothing
 in it fails this morning's checklist.
 
 ::: {.ask}
-**`[MENTI PLACEHOLDER]`** Vote now, before reading the findings. You vote again
-before you write.
+**`[MENTI PLACEHOLDER]`** Would you recommend this scheme for rollout? Yes / No
+/ Only with changes. Vote before reading the findings; you vote again at the end.
 :::
 :::::
 
@@ -189,12 +190,11 @@ kable(data.frame(`#` = seq_len(nrow(transl_findings)), Finding = transl_findings
 ```
 
 ::: {.panel}
-Every one survives this morning's checklist. There is no methodological problem
-to find and no number to distrust.
+Every one survives this morning's checklist.
 :::
 
 ::: {.ask .fragment}
-So the difficulty is not whether to believe the evidence. What is it?
+**If the evidence is sound, what makes the brief hard to write?**
 :::
 
 ::: {.notes}
@@ -324,8 +324,8 @@ verification of fuel purchase records, which required manual inspection in
 
 ::::: {.column width="50%"}
 ::: {.panel}
-This is not an estimate. It is a figure from the scheme's own accounts, and it
-bears most directly on whether to do this again.
+This figure comes from the scheme's own accounts, not from the impact
+estimate, and it bears most directly on whether to do this again.
 :::
 :::::
 
@@ -352,9 +352,9 @@ How do you write a finding that says nothing was found, and is that a finding?
 :::
 
 ::: {.panel .fragment}
-Yes, if you say which kind of nothing it is. The intervals are wide, so a
-meaningful effect could be inside them: absence of evidence, not evidence of
-absence. "The scheme had no wider benefits" overstates it.
+Yes, if you say what kind of result it is. The intervals are wide, so the study
+could have missed an effect that matters. "The evaluation could not detect an
+effect" is accurate; "the scheme had no wider benefits" overstates it.
 :::
 
 # 2 · The brief {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
@@ -484,6 +484,23 @@ confirmed nor watched.
 
 ::::::
 
+## Write the brief
+
+::: {.panel}
+Pairs, twelve minutes, on the template: the headline with its number, two or
+three implications, one recommendation, one risk you can watch.
+:::
+
+::: {.ask}
+Keep the findings pack open. Every sentence in your brief should point to a
+finding.
+:::
+
+::: {.notes}
+Walk the room. If a pair is stuck, ask them to write the recommendation first
+and work back to the headline.
+:::
+
 # 3 · Pairs and critique {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## Swap
@@ -497,7 +514,8 @@ Pairs, swap briefs. Read your partner's as the person deciding.
 :::
 
 ::: {.ask .fragment}
-Question 3 is the one most often skipped. Look for the omission, not the error.
+Spend most of your time on question 3. What is missing is harder to spot than
+what is wrong.
 :::
 
 ::: {.notes}
@@ -584,8 +602,8 @@ risk to flag.
 :::
 
 ::: {.panel}
-It asks for exactly what the room was asked for. Read the draft, then edit it as
-a team. The editing is the exercise.
+It asks for what you were just asked to write. Read the draft, then edit it as
+a team.
 :::
 
 ## What came back

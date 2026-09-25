@@ -173,8 +173,8 @@ payback_plot <- function(tb, cost = COST) {
 ```
 
 ::: {.ask}
-A programme can have a real effect and still not be worth funding. Today the bar
-is a ratio instead of a threshold.
+On Day 2 the saving missed the 1,000 AED rule. **Could the same programme still
+be worth funding?** Hold your answer; we test it today.
 :::
 
 ::: {.notes}
@@ -307,8 +307,8 @@ tibble(
 ```
 
 ::: {.ask}
-Two rows are neither costs nor savings. They are **choices** made by the analyst.
-The next twenty minutes are about those two rows.
+The two red rows were not measured: the analyst chose them. **Which of the two
+would you expect to move the ratio more?**
 :::
 
 ::: {.notes}
@@ -435,7 +435,8 @@ calculator(rate = 5, years = years2)
 
 ::::: {.column width="50%"}
 ::: {.ask}
-The Day 2 evaluations measured the saving for **one year**. Slide down to 2.
+The Day 2 evaluations measured the saving for **one year**. Guess the ratio at
+two years, then slide down.
 :::
 :::::
 
@@ -523,26 +524,6 @@ moves it. The horizon, which nobody measured, moves it from
 
 ::::::
 
-## The measured part and the assumed part
-
-```{r results='asis'}
-html_out(sprintf('
-<div class="facts">
-  <div class="k">Measured</div> <div class="v">the annual saving, %s AED (interval %s to %s): moves the ratio by %.2f</div>
-  <div class="k">Measured</div> <div class="v">the cost, %s AED: a programme fact</div>
-  <div class="k">Assumed</div>  <div class="v">how many years the saving lasts: moves the ratio by %.2f</div>
-  <div class="k">Assumed</div>  <div class="v">the discount rate: across 3%% to 8%%, moves it by %.2f</div>
-</div>',
-  gfmt(SAVING), gfmt(SAVING_CI[1]), gfmt(SAVING_CI[2]),
-  bcr(saving = SAVING_CI[2]) - bcr(saving = SAVING_CI[1]), gfmt(COST),
-  bcr_base - bcr(years = 2), bcr(0.03) - bcr(0.08)))
-```
-
-::: {.ask}
-The assumed lines move the answer more than the measured ones. The numbers that
-were carefully estimated are not the ones deciding it.
-:::
-
 ## Question 2: are all the costs included?
 
 ```{ojs}
@@ -582,36 +563,7 @@ ratio look better, so ask what is in the cost line.
 
 ::::::
 
-## Question 3: what would flip it?
-
-:::::: {.columns}
-
-::::: {.column width="54%"}
-::: {.panel}
-For this programme it is not the discount rate. **If the saving lasts two years
-instead of five, the ratio falls from `r sprintf("%.2f", bcr_base)` to
-`r sprintf("%.2f", bcr(years = 2))`.**
-:::
-
-::: {.ask}
-The question to put to the evaluator: **"How long do you assume the benefit
-lasts, and what evidence do you have for that?"**
-:::
-:::::
-
-::::: {.column width="46%"}
-```{r results='asis'}
-html_out(sprintf('
-<div class="hero">
-  <div class="value">%.2f &nbsp;&rarr;&nbsp; %.2f</div>
-  <div class="label">The same evidence, five years or two</div>
-</div>', bcr_base, bcr(years = 2)))
-```
-:::::
-
-::::::
-
-## Your turn: stress-test the ratio
+## Question 3: what would flip it? Your turn
 
 ```{ojs}
 //| echo: false
@@ -636,7 +588,8 @@ data.frame(ratio = round(ratio(tb, cost = 1800 + s_extra), 2),
 
 ::: {.ask}
 Each group takes one card and tells me the settings. Is your scenario plausible
-for a waste-cost programme, and what is your verdict?
+for a waste-cost programme, and what is your verdict? Then: **how long do you
+think the saving lasts, and what evidence would you ask for?**
 :::
 
 ::: {.notes}
@@ -787,14 +740,15 @@ html_out(sprintf('
 
 ::::::
 
-::: {.ask}
+::: {.panel}
 Same programme, estimate and cost. The rule asks whether the effect is big
 enough to scale; the ratio asks whether the spending pays for itself over time.
-A report that gives only one of them answers half the question.
+The rule rests on a measured saving. The ratio also rests on how long that
+saving lasts, which nobody measured.
 :::
 
-::: {.warn}
-The rule rests on a measurement. The ratio rests mostly on assumptions.
+::: {.ask}
+**Which would you put in front of the minister, and what would you add to it?**
 :::
 
 ::: {.notes}

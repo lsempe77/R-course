@@ -383,7 +383,7 @@ Dots are average costs in half-point bins. **Is there a step at the dashed line?
 
 # 2 · From the picture to a number {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
-## Regression discontinuity in one sentence
+## The idea behind the method
 
 ::: {.panel}
 Compare businesses **just below** the cut-off, who got the programme, with
@@ -514,8 +514,9 @@ jump is not only the programme.
 :::
 
 ::: {.ask}
-Yesterday's assumption was that the groups moved in parallel. Today's is that
-nothing else changes at the line. Neither can be proven; both can be checked.
+This morning's difference-in-differences assumed the groups moved in parallel;
+this method assumes nothing else changes at the line. **If something else did
+change at 58, where in the data would you see it?**
 :::
 
 ::: {.notes}
@@ -590,8 +591,8 @@ bar just left of the line look like?
 
 ::: {.panel .fragment}
 Taller than its neighbours, with a dip just right. The bars at the line are not
-out of pattern: no sign of a pile-up. Ask anyway; it is invisible unless someone
-looks.
+out of pattern: no sign of a pile-up. Ask whether anyone drew this chart; a
+pile-up only shows if someone looks.
 :::
 
 ## Check 3: are the two sides alike?
@@ -813,7 +814,8 @@ html_out(sprintf('
 ```
 
 ::: {.panel}
-DiD buys a comparison by assuming parallel trends. RDD buys it from the rule and
-pays with **reach**: an estimate about a narrow group. Next session, matching
-reaches wider by assuming everything that matters was measured.
+DiD gets its comparison by assuming parallel trends. RDD gets it from the rule,
+and the estimate describes only the businesses near the line. Next session,
+matching covers more businesses by assuming everything that matters was
+measured.
 :::

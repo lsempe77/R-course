@@ -27392,7 +27392,7 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiYmVmb3JlIDwtIHN1YnNldChn
 <p>Check your Menti answer. What would it take to land on the truth <strong>deliberately</strong>, instead of guessing between two wrong numbers?</p>
 </div>
 <div class="warn">
-<p>Both problems have one root: <strong>the two groups were not comparable.</strong> After the break: a design that makes them comparable by construction.</p>
+<p>In both cases <strong>the two groups were not comparable.</strong> After the break we look at a design that makes them comparable by construction.</p>
 </div>
 <aside class="notes">
 <p>Paper (Oct12_session3_materials.docx): Tracker check: every row should now say too big or too small, with a reason.</p>
@@ -27437,16 +27437,16 @@ display:block!important;
 <p>The claim is that a draw makes the two groups <strong>alike on average</strong>, on what we measured <em>and</em> on what we did not.</p>
 </div>
 <div class="ask">
-<p>We can check that claim on the real neighbourhoods.</p>
+<p>If the claim holds, what should the gap in <strong>baseline</strong> costs between drawn and not-drawn neighbourhoods look like?</p>
 </div>
 </div></div>
 </section>
 <section id="draw-the-lottery-again" class="slide level2">
 <h2>Draw the lottery again</h2>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb2" data-startfrom="633" data-source-offset="-0"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 632;"><span id="cb2-633"><a href></a>viewof how <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">radio</span>([<span class="st">&quot;Random draw&quot;</span><span class="op">,</span> <span class="st">&quot;Officials pick&quot;</span>]<span class="op">,</span></span>
-<span id="cb2-634"><a href></a>  {<span class="dt">value</span><span class="op">:</span> <span class="st">&quot;Random draw&quot;</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">&quot;How neighbourhoods are chosen&quot;</span>})</span>
-<span id="cb2-635"><a href></a>viewof draw <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">button</span>(<span class="st">&quot;Draw again&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb2" data-startfrom="634" data-source-offset="-0"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 633;"><span id="cb2-634"><a href></a>viewof how <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">radio</span>([<span class="st">&quot;Random draw&quot;</span><span class="op">,</span> <span class="st">&quot;Officials pick&quot;</span>]<span class="op">,</span></span>
+<span id="cb2-635"><a href></a>  {<span class="dt">value</span><span class="op">:</span> <span class="st">&quot;Random draw&quot;</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">&quot;How neighbourhoods are chosen&quot;</span>})</span>
+<span id="cb2-636"><a href></a>viewof draw <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">button</span>(<span class="st">&quot;Draw again&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <div id="ojs-cell-2-1" data-nodetype="declaration">
@@ -27502,7 +27502,7 @@ display:block!important;
 <section id="two-neighbourhoods-or-two-hundred" class="slide level2">
 <h2>Two neighbourhoods or two hundred?</h2>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb3" data-startfrom="678" data-source-offset="0"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 677;"><span id="cb3-678"><a href></a>viewof k <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">4</span><span class="op">,</span> <span class="dv">196</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="dv">4</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">&quot;Neighbourhoods in the lottery&quot;</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb3" data-startfrom="679" data-source-offset="0"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 678;"><span id="cb3-679"><a href></a>viewof k <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">4</span><span class="op">,</span> <span class="dv">196</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="dv">4</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">&quot;Neighbourhoods in the lottery&quot;</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-3" data-nodetype="declaration">
 
@@ -27548,7 +27548,7 @@ display:block!important;
 <p>C, with D’s instinct. A draw makes groups alike <strong>on average over many draws</strong>, not in every draw: with a handful of units a 300 AED head start is ordinary (the slider showed about ±400 at 4 neighbourhoods). B looks careful but assumes the head start would have stayed the same. Ask how many units were randomised, and for the balance table.</p>
 </div>
 <aside class="notes">
-<p>Replaces a true/false quiz: this asks the room to apply what the two lottery slides showed to a result they might actually be handed. Expect a split between A and B; let one person from each argue before revealing.</p>
+<p>This asks the room to apply what the two lottery slides showed to a result they might be handed. Expect a split between A and B; let one person from each argue before revealing.</p>
 <style type="text/css">
 span.MJX_Assistive_MathML {
 position:absolute!important;
@@ -27605,7 +27605,7 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWUsImZpZy1oZWlnaHQiOjIsImZpZy13aWR0aCI6
 </div>
 </div>
 <div class="panel fragment">
-<p>No model, no adjustment: the draw made the groups alike, so <strong>the gap is the effect.</strong></p>
+<p>Yes. The draw made the groups alike, so the gap between the two averages <strong>is the effect</strong>, with no adjustment.</p>
 </div>
 </section>
 <section id="the-regression-gives-the-same-number" class="slide level2">
@@ -27679,7 +27679,7 @@ display:block!important;
   <div class="v">the p-value · it says the effect is unlikely to be zero, not that it is big enough</div>
 </div>
 <div class="ask">
-<p>Three ways to misread one table. Session 1 met the third: <strong>statistically significant does not mean big enough.</strong> Here it is on a clean randomised result.</p>
+<p>A summary reads: <em>“highly significant, so the programme works and should be scaled.”</em> Which line of this table does it misuse?</p>
 </div>
 </section>
 <section id="does-it-clear-the-rule" class="slide level2">
@@ -27688,8 +27688,8 @@ display:block!important;
 <div class="column" style="width:52%;">
 <div class="cell">
 <div class="cell-output-display">
-<div class="plotly html-widget html-fill-item" id="htmlwidget-91adce35db55032023d6" style="width:576px;height:240px;"></div>
-<script type="application/json" data-for="htmlwidget-91adce35db55032023d6">{"x":{"visdat":{"69681b13690c":["function () ","plotlyVisDat"]},"cur_data":"69681b13690c","attrs":{"69681b13690c":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"x":{},"y":{},"xend":{},"yend":{},"type":"scatter","mode":"lines","line":{"color":{},"width":5},"showlegend":false,"hovertemplate":"avoids %{x:,.0f}<extra><\/extra>","inherit":true},"69681b13690c.1":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"x":{},"y":{},"type":"scatter","mode":"markers","marker":{"color":{},"size":11},"showlegend":false,"hovertemplate":"avoids %{x:,.0f}<extra><\/extra>","inherit":true}},"layout":{"width":520,"height":250,"margin":{"b":54,"l":70,"t":30,"r":24},"xaxis":{"domain":[0,1],"automargin":true,"title":{"text":"AED avoided per business","font":{"size":12,"color":"#545860"}},"gridcolor":"#D5DEE8","zerolinecolor":"#D5DEE8","linecolor":"#D5DEE8","tickfont":{"size":12,"color":"#545860"},"range":[0,1350]},"yaxis":{"domain":[0,1],"automargin":true,"title":{"text":"","font":{"size":12,"color":"#545860"}},"gridcolor":"#D5DEE8","zerolinecolor":"#D5DEE8","linecolor":"#D5DEE8","tickfont":{"size":12,"color":"#545860"},"zeroline":false,"type":"category","categoryorder":"array","categoryarray":["Decision rule","95% interval","The estimate"]},"font":{"family":"Noto Kufi Arabic, Segoe UI, Arial, sans-serif","size":13,"color":"#111418"},"paper_bgcolor":"rgba(0,0,0,0)","plot_bgcolor":"rgba(0,0,0,0)","legend":{"orientation":"h","x":0.5,"xanchor":"center","y":1.02,"yanchor":"bottom","title":{"text":""}},"hoverlabel":{"bgcolor":"white","bordercolor":"#D5DEE8","font":{"color":"#111418","size":12}},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false,"displayModeBar":false},"data":[{"x":[1014.0776838656737,1014.0776838656737,null,935.00696880178111,1093.1483989295664,null,1000,1000],"y":["The estimate","The estimate",null,"95% interval","95% interval",null,"Decision rule","Decision rule"],"type":"scatter","mode":"lines","line":{"color":["#215a9e","#215a9e","#B8272C"],"width":5},"showlegend":false,"hovertemplate":["avoids %{x:,.0f}<extra><\/extra>","avoids %{x:,.0f}<extra><\/extra>",null,"avoids %{x:,.0f}<extra><\/extra>","avoids %{x:,.0f}<extra><\/extra>",null,"avoids %{x:,.0f}<extra><\/extra>","avoids %{x:,.0f}<extra><\/extra>"],"marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[1014.0776838656737,935.00696880178111,1000],"y":["The estimate","95% interval","Decision rule"],"type":"scatter","mode":"markers","marker":{"color":["#215a9e","#215a9e","#B8272C"],"size":11,"line":{"color":"rgba(255,127,14,1)"}},"showlegend":false,"hovertemplate":["avoids %{x:,.0f}<extra><\/extra>","avoids %{x:,.0f}<extra><\/extra>","avoids %{x:,.0f}<extra><\/extra>"],"error_y":{"color":"rgba(255,127,14,1)"},"error_x":{"color":"rgba(255,127,14,1)"},"line":{"color":"rgba(255,127,14,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<div class="plotly html-widget html-fill-item" id="htmlwidget-bf59538ee1f40ecb1ead" style="width:576px;height:240px;"></div>
+<script type="application/json" data-for="htmlwidget-bf59538ee1f40ecb1ead">{"x":{"visdat":{"692026bd2fc0":["function () ","plotlyVisDat"]},"cur_data":"692026bd2fc0","attrs":{"692026bd2fc0":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"x":{},"y":{},"xend":{},"yend":{},"type":"scatter","mode":"lines","line":{"color":{},"width":5},"showlegend":false,"hovertemplate":"avoids %{x:,.0f}<extra><\/extra>","inherit":true},"692026bd2fc0.1":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"x":{},"y":{},"type":"scatter","mode":"markers","marker":{"color":{},"size":11},"showlegend":false,"hovertemplate":"avoids %{x:,.0f}<extra><\/extra>","inherit":true}},"layout":{"width":520,"height":250,"margin":{"b":54,"l":70,"t":30,"r":24},"xaxis":{"domain":[0,1],"automargin":true,"title":{"text":"AED avoided per business","font":{"size":12,"color":"#545860"}},"gridcolor":"#D5DEE8","zerolinecolor":"#D5DEE8","linecolor":"#D5DEE8","tickfont":{"size":12,"color":"#545860"},"range":[0,1350]},"yaxis":{"domain":[0,1],"automargin":true,"title":{"text":"","font":{"size":12,"color":"#545860"}},"gridcolor":"#D5DEE8","zerolinecolor":"#D5DEE8","linecolor":"#D5DEE8","tickfont":{"size":12,"color":"#545860"},"zeroline":false,"type":"category","categoryorder":"array","categoryarray":["Decision rule","95% interval","The estimate"]},"font":{"family":"Noto Kufi Arabic, Segoe UI, Arial, sans-serif","size":13,"color":"#111418"},"paper_bgcolor":"rgba(0,0,0,0)","plot_bgcolor":"rgba(0,0,0,0)","legend":{"orientation":"h","x":0.5,"xanchor":"center","y":1.02,"yanchor":"bottom","title":{"text":""}},"hoverlabel":{"bgcolor":"white","bordercolor":"#D5DEE8","font":{"color":"#111418","size":12}},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false,"displayModeBar":false},"data":[{"x":[1014.0776838656737,1014.0776838656737,null,935.00696880178111,1093.1483989295664,null,1000,1000],"y":["The estimate","The estimate",null,"95% interval","95% interval",null,"Decision rule","Decision rule"],"type":"scatter","mode":"lines","line":{"color":["#215a9e","#215a9e","#B8272C"],"width":5},"showlegend":false,"hovertemplate":["avoids %{x:,.0f}<extra><\/extra>","avoids %{x:,.0f}<extra><\/extra>",null,"avoids %{x:,.0f}<extra><\/extra>","avoids %{x:,.0f}<extra><\/extra>",null,"avoids %{x:,.0f}<extra><\/extra>","avoids %{x:,.0f}<extra><\/extra>"],"marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[1014.0776838656737,935.00696880178111,1000],"y":["The estimate","95% interval","Decision rule"],"type":"scatter","mode":"markers","marker":{"color":["#215a9e","#215a9e","#B8272C"],"size":11,"line":{"color":"rgba(255,127,14,1)"}},"showlegend":false,"hovertemplate":["avoids %{x:,.0f}<extra><\/extra>","avoids %{x:,.0f}<extra><\/extra>","avoids %{x:,.0f}<extra><\/extra>"],"error_y":{"color":"rgba(255,127,14,1)"},"error_x":{"color":"rgba(255,127,14,1)"},"line":{"color":"rgba(255,127,14,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </div><div class="column" style="width:48%;">
@@ -27713,7 +27713,7 @@ display:block!important;
 <section id="what-if-the-trial-had-been-smaller" class="slide level2">
 <h2>What if the trial had been smaller?</h2>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb4" data-startfrom="898" data-source-offset="0"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 897;"><span id="cb4-898"><a href></a>viewof kt <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">10</span><span class="op">,</span> <span class="dv">196</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="dv">196</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">&quot;Neighbourhoods in the trial&quot;</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb4" data-startfrom="900" data-source-offset="0"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 899;"><span id="cb4-900"><a href></a>viewof kt <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">10</span><span class="op">,</span> <span class="dv">196</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="dv">196</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">&quot;Neighbourhoods in the trial&quot;</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-4" data-nodetype="declaration">
 
@@ -27798,7 +27798,7 @@ display:block!important;
 <p><strong>1 · Significant is not causal.</strong> p &lt; 0.001 says the fall is unlikely to be chance. It says nothing about <em>what</em> caused it.</p>
 </div>
 <div class="warn">
-<p><strong>2 · Half right, which makes it convincing.</strong> Following the same businesses removes fixed differences between them. It does not remove what changed for everyone: costs for businesses that did not take part rose by about 150 AED.</p>
+<p><strong>2 · Half right.</strong> Following the same businesses removes fixed differences between them. It does not remove what changed for everyone: costs for businesses that did not take part rose by about 150 AED.</p>
 </div>
 </div><div class="column" style="width:50%;">
 <div class="warn">
@@ -27809,7 +27809,7 @@ display:block!important;
 </div>
 </div></div>
 <div class="panel">
-<p><strong>The prompt did some of the pushing.</strong> It supplied a p-value, the word “cut” and a request for the minister, so a model may write a confident summary instead of questioning the design. People asked for a quick paragraph for a minister often do the same.</p>
+<p><strong>The prompt steered the answer.</strong> It supplied a p-value, the word “cut” and a request for the minister, so a model may write a confident summary instead of questioning the design. People asked for a quick paragraph for a minister often do the same.</p>
 </div>
 </section>
 <section id="the-same-question-a-better-prompt" class="slide level2">
@@ -27836,7 +27836,7 @@ display:block!important;
 <p>Two habits: make the AI <strong>ask you questions first</strong>, and have a <strong>second chat</strong> review the first one’s answer.</p>
 </div>
 <aside class="notes">
-<p>The outline’s version of this snapshot asked AI to explain why before-and-after can mislead. Current models usually answer that general question well, so the exercise uses a leading, realistic prompt instead; the better prompt still asks the model to explain what a before-and-after number can and cannot show.</p>
+<p>If someone asks why we did not simply ask the AI to explain before-and-after bias: current models answer that general question well. The short prompt is closer to what people type when they are busy.</p>
 <style type="text/css">
 span.MJX_Assistive_MathML {
 position:absolute!important;

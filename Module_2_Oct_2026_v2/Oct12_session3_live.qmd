@@ -581,8 +581,8 @@ Check your Menti answer. What would it take to land on the truth
 :::
 
 ::: {.warn}
-Both problems have one root: **the two groups were not comparable.** After the
-break: a design that makes them comparable by construction.
+In both cases **the two groups were not comparable.** After the break we look
+at a design that makes them comparable by construction.
 :::
 
 ::: {.notes}
@@ -620,7 +620,8 @@ measured *and* on what we did not.
 :::
 
 ::: {.ask}
-We can check that claim on the real neighbourhoods.
+If the claim holds, what should the gap in **baseline** costs between drawn and
+not-drawn neighbourhoods look like?
 :::
 :::::
 
@@ -723,8 +724,8 @@ for the balance table.
 :::
 
 ::: {.notes}
-Replaces a true/false quiz: this asks the room to apply what the two lottery
-slides showed to a result they might actually be handed. Expect a split between
+This asks the room to apply what the two lottery slides showed to a result
+they might be handed. Expect a split between
 A and B; let one person from each argue before revealing.
 :::
 
@@ -774,7 +775,8 @@ bars(Offered = offered, "Not offered" = not_offered, col = c(ACCENT, ACCENT2))
 ```
 
 ::: {.panel .fragment}
-No model, no adjustment: the draw made the groups alike, so **the gap is the effect.**
+Yes. The draw made the groups alike, so the gap between the two averages **is
+the effect**, with no adjustment.
 :::
 
 ## The regression gives the same number
@@ -850,8 +852,8 @@ html_out(sprintf('
 ```
 
 ::: {.ask}
-Three ways to misread one table. Session 1 met the third: **statistically
-significant does not mean big enough.** Here it is on a clean randomised result.
+A summary reads: *"highly significant, so the programme works and should be
+scaled."* Which line of this table does it misuse?
 :::
 
 ## Does it clear the rule?
@@ -984,7 +986,7 @@ chance. It says nothing about *what* caused it.
 :::
 
 ::: {.warn}
-**2 · Half right, which makes it convincing.** Following the same businesses
+**2 · Half right.** Following the same businesses
 removes fixed differences between them. It does not remove what changed for
 everyone: costs for businesses that did not take part rose by about 150 AED.
 :::
@@ -1006,7 +1008,7 @@ clear, or what 665 was compared to. The closing caveat is generic.
 ::::::
 
 ::: {.panel}
-**The prompt did some of the pushing.** It supplied a p-value, the word "cut" and
+**The prompt steered the answer.** It supplied a p-value, the word "cut" and
 a request for the minister, so a model may write a confident summary instead of
 questioning the design. People asked for a quick paragraph for a minister often
 do the same.
@@ -1051,10 +1053,9 @@ review the first one's answer.
 :::
 
 ::: {.notes}
-The outline's version of this snapshot asked AI to explain why before-and-after
-can mislead. Current models usually answer that general question well, so the
-exercise uses a leading, realistic prompt instead; the better prompt still asks
-the model to explain what a before-and-after number can and cannot show.
+If someone asks why we did not simply ask the AI to explain before-and-after
+bias: current models answer that general question well. The short prompt is
+closer to what people type when they are busy.
 :::
 
 # 7 · Close {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}

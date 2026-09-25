@@ -25317,7 +25317,7 @@ eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImVkaXQiOmZhbHNlLCJldmFsIjp0cnVlLCJpbnB1dCI6WyJ0
 <p>The count fell 32%. Slide driving down to −32%. <strong>What happens to the risk per kilometre driven?</strong></p>
 </div>
 <div class="panel fragment">
-<p>It stops moving. If people drove a third less, a third fewer deaths is what you would expect with or without cameras. The headline cannot tell you which of these worlds you are in.</p>
+<p>It stops moving. If people drove a third less, a third fewer deaths is what you would expect with or without cameras. The headline alone cannot tell the two apart.</p>
 </div>
 </section>
 <section id="what-actually-happened-to-traffic" class="slide level2">
@@ -25358,7 +25358,7 @@ display:block!important;
 <p>Every result is a comparison. A before-and-after number compares the programme with <strong>its own past</strong>. What else changed over the same period (traffic, vehicles, a national campaign) is inside that number, and it can push the answer either way.</p>
 </div>
 <div class="ask">
-<p>If you do not know what a number is being compared to, you do not yet know what it means.</p>
+<p>Think of a figure you reported, or were sent, this year. <strong>What was it compared to?</strong> If nobody said, what would you have picked?</p>
 </div>
 </section></section>
 <section>
@@ -25376,8 +25376,8 @@ display:block!important;
   <div class="k">How big, in units that matter?</div> <div class="v">Mean · treatment effect · coefficient</div>
   <div class="k">How sure are we?</div>              <div class="v">p-value · confidence interval</div>
 </div>
-<div class="ask">
-<p>Keep these three. You will use them all week, and on the next evaluation report you receive.</p>
+<div class="panel">
+<p>We come back to this list at the end of the session, and on every day of the week.</p>
 </div>
 </section></section>
 <section>
@@ -25670,12 +25670,15 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiZml0MiA8LSBsbV9yb2J1c3Qo
 
 </div>
 <script type="webr-9-contents">
-eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImVkaXQiOmZhbHNlLCJldmFsIjp0cnVlLCJmaWctaGVpZ2h0IjoyLjYsImZpZy13aWR0aCI6MTAsImlucHV0IjpbImsiXX0sImNvZGUiOiJzbWFsbCA8LSBzdHVkeSgyMCkgICAgICAgICAgIyBhIHN0dWR5IG9mIDIwIHJvYWRzOiAxMCB3aXRoIGNhbWVyYXMsIDEwIHdpdGhvdXRcbnNodWZmbGVfcGxvdChzbWFsbCwgaykifQ==
+eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImVkaXQiOmZhbHNlLCJldmFsIjp0cnVlLCJmaWctaGVpZ2h0IjoxLjcsImZpZy13aWR0aCI6MTAsImlucHV0IjpbImsiXX0sImNvZGUiOiJzbWFsbCA8LSBzdHVkeSgyMCkgICAgICAgICAgIyBhIHN0dWR5IG9mIDIwIHJvYWRzOiAxMCB3aXRoIGNhbWVyYXMsIDEwIHdpdGhvdXRcbnNodWZmbGVfcGxvdChzbWFsbCwgaykifQ==
 </script>
 </div>
 </div>
-<div class="panel">
-<p>If the cameras did nothing, the labels “camera” and “no camera” would be arbitrary. Shuffle them and count how often chance alone gives a gap this large. That share is the <strong>p-value</strong>.</p>
+<div class="ask">
+<p>If the cameras did nothing, the labels would be arbitrary, so we shuffle them. <strong>How often does chance alone give a gap as large as the red line?</strong> Guess first.</p>
+</div>
+<div class="panel fragment">
+<p>That share is the <strong>p-value</strong>: here about 0.17, one shuffle in six.</p>
 </div>
 <aside class="notes">
 <p>Start at 0 shuffles; the red line is this 20-road study’s gap (-1.9). Slide up. At 1,000 shuffles p is about 0.17: chance produces a gap this big about one time in six. Keep that number for two slides from now.</p>
@@ -25694,7 +25697,7 @@ display:block!important;
 <section id="word-4-significant-is-not-the-same-as-big" class="slide level2">
 <h2>Word 4 · Significant is not the same as big</h2>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb5" data-startfrom="650" data-source-offset="0"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 649;"><span id="cb5-650"><a href></a>viewof cut_by <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="fl">0.1</span><span class="op">,</span> <span class="fl">3.4</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="fl">3.4</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="fl">0.1</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">&quot;Suppose cameras cut speed by only (km/h)&quot;</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb5" data-startfrom="653" data-source-offset="0"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 652;"><span id="cb5-653"><a href></a>viewof cut_by <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="fl">0.1</span><span class="op">,</span> <span class="fl">3.4</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="fl">3.4</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="fl">0.1</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">&quot;Suppose cameras cut speed by only (km/h)&quot;</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-5" data-nodetype="declaration">
 
@@ -25715,13 +25718,13 @@ eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImVkaXQiOmZhbHNlLCJldmFsIjp0cnVlLCJmaWctaGVpZ2h0
 <p>Slide the effect down to 0.3 km/h, a change no driver would notice. <strong>Is it still statistically significant?</strong></p>
 </div>
 <div class="warn fragment">
-<p>Yes, p is about 0.03. With 1,200 roads even a trivial change passes the test. <strong>Statistically significant does not mean big, and it does not mean worth funding.</strong></p>
+<p>Yes, p is about 0.03. With 1,200 roads even a trivial change passes the test. Whether 0.3 km/h is worth paying for is a separate question, and the p-value cannot answer it.</p>
 </div>
 </section>
 <section id="word-4-the-warning-cuts-both-ways" class="slide level2">
 <h2>Word 4 · The warning cuts both ways</h2>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb6" data-startfrom="678" data-source-offset="0"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 677;"><span id="cb6-678"><a href></a>viewof roads_n <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">6</span><span class="op">,</span> <span class="dv">200</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="dv">20</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">&quot;Roads in the study&quot;</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb6" data-startfrom="681" data-source-offset="0"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 680;"><span id="cb6-681"><a href></a>viewof roads_n <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">6</span><span class="op">,</span> <span class="dv">200</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="dv">20</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">&quot;Roads in the study&quot;</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-6" data-nodetype="declaration">
 
@@ -25748,7 +25751,7 @@ eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImVkaXQiOmZhbHNlLCJldmFsIjp0cnVlLCJpbnB1dCI6WyJy
 <section id="word-5-confidence-interval" class="slide level2">
 <h2>Word 5 · Confidence interval</h2>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb7" data-startfrom="707" data-source-offset="0"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 706;"><span id="cb7-707"><a href></a>viewof run <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">button</span>(<span class="st">&quot;Run another 100 studies&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb7" data-startfrom="710" data-source-offset="0"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 709;"><span id="cb7-710"><a href></a>viewof run <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">button</span>(<span class="st">&quot;Run another 100 studies&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-7" data-nodetype="declaration">
 
@@ -25761,12 +25764,12 @@ eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImVkaXQiOmZhbHNlLCJldmFsIjp0cnVlLCJpbnB1dCI6WyJy
 
 </div>
 <script type="webr-12-contents">
-eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImVkaXQiOmZhbHNlLCJldmFsIjp0cnVlLCJmaWctaGVpZ2h0IjozLjMsImZpZy13aWR0aCI6MTAsImlucHV0IjpbInJ1biJdfSwiY29kZSI6Im1hbnlfc3R1ZGllcyhuID0gNDAsIHJ1bnMgPSAxMDAsIHNlZWQgPSBydW4gKyAxKSJ9
+eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImVkaXQiOmZhbHNlLCJldmFsIjp0cnVlLCJmaWctaGVpZ2h0IjoyLjQsImZpZy13aWR0aCI6MTAsImlucHV0IjpbInJ1biJdfSwiY29kZSI6Im1hbnlfc3R1ZGllcyhuID0gNDAsIHJ1bnMgPSAxMDAsIHNlZWQgPSBydW4gKyAxKSJ9
 </script>
 </div>
 </div>
-<div class="panel">
-<p>Each line is one study of 40 roads and its <strong>95% confidence interval</strong>: the range of values consistent with that study’s data. Wider means less certain, not a bigger effect.</p>
+<div class="ask">
+<p>Each line is one study of 40 roads and its <strong>95% confidence interval</strong>, the range of values consistent with its data. <strong>Out of 100, how many will miss the grey line?</strong> Guess before the next press.</p>
 </div>
 <aside class="notes">
 <p>About 95 of 100 lines cross the grey line (the all-roads value), and about 5 miss (red). That is what “95%” refers to: the method, over many studies, not the probability for any one interval. Press the button two or three times.</p>
@@ -25796,7 +25799,7 @@ display:block!important;
 <p>Which would you act on? What is your answer for each?</p>
 </div>
 <div class="panel fragment">
-<p>B is precise and below the bar: confidently not enough. A is too uncertain to call, and C more so. <strong>The interval decides, not the point estimate.</strong></p>
+<p>B is precise and below the bar: confidently not enough. A is too uncertain to call, and C more so. All three have the same estimate, so the intervals make the difference.</p>
 </div>
 <aside class="notes">
 <p>These three results are invented for this exercise; they are not the programme’s result, which Session 2 and Day 2 estimate from the data.</p>

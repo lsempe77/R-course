@@ -31,7 +31,7 @@ transl_findings <- data.frame(
   finding = c(
     "Fuel costs fell for participating operators",
     "The saving is real but smaller than the threshold",
-    "Operators passed some of the saving to customers",
+    "Freight rates fell slightly more for participating operators",
     "Two-thirds of eligible operators did not join",
     "The scheme's administration cost more than budgeted",
     "No measurable effect on vehicle maintenance or fleet renewal"

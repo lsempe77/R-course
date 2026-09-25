@@ -25416,8 +25416,8 @@ eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImVkaXQiOmZhbHNlLCJldmFsIjp0cnVlLCJmaWctaGVpZ2h0
 <h1>2 · From the picture to a number</h1>
 
 </section>
-<section id="regression-discontinuity-in-one-sentence" class="slide level2">
-<h2>Regression discontinuity in one sentence</h2>
+<section id="the-idea-behind-the-method" class="slide level2">
+<h2>The idea behind the method</h2>
 <div class="panel">
 <p>Compare businesses <strong>just below</strong> the cut-off, who got the programme, with businesses <strong>just above</strong> it, who did not.</p>
 </div>
@@ -25555,7 +25555,7 @@ display:block!important;
 <p>A business one point below 58 and one point above should be alike in every way except whether it got the programme. If something else also changes at 58, the jump is not only the programme.</p>
 </div>
 <div class="ask">
-<p>Yesterday’s assumption was that the groups moved in parallel. Today’s is that nothing else changes at the line. Neither can be proven; both can be checked.</p>
+<p>This morning’s difference-in-differences assumed the groups moved in parallel; this method assumes nothing else changes at the line. <strong>If something else did change at 58, where in the data would you see it?</strong></p>
 </div>
 <aside class="notes">
 <p>Paper (Oct13_session2_materials.docx): Hand out the four-checks scorecard (pack page 5, one per group). Groups mark each check as you run it, starting with check 0 (who is compared) from Section 1.</p>
@@ -25574,7 +25574,7 @@ display:block!important;
 <section id="check-1-does-the-jump-survive-a-different-window" class="slide level2">
 <h2>Check 1: does the jump survive a different window?</h2>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb2" data-startfrom="528" data-source-offset="0"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 527;"><span id="cb2-528"><a href></a>viewof width <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">1</span><span class="op">,</span> <span class="dv">10</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">&quot;Window either side of 58 (index points)&quot;</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb2" data-startfrom="529" data-source-offset="0"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 528;"><span id="cb2-529"><a href></a>viewof width <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">1</span><span class="op">,</span> <span class="dv">10</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">&quot;Window either side of 58 (index points)&quot;</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-2" data-nodetype="declaration">
 
@@ -25601,7 +25601,7 @@ eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImVkaXQiOmZhbHNlLCJldmFsIjp0cnVlLCJpbnB1dCI6WyJ3
 <section id="check-1-continued-a-jump-where-there-is-no-rule" class="slide level2">
 <h2>Check 1, continued: a jump where there is no rule?</h2>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb3" data-startfrom="555" data-source-offset="0"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 554;"><span id="cb3-555"><a href></a>viewof placebo <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">48</span><span class="op">,</span> <span class="dv">68</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="dv">62</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">&quot;Pretend the cut-off is at&quot;</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb3" data-startfrom="556" data-source-offset="0"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 555;"><span id="cb3-556"><a href></a>viewof placebo <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">48</span><span class="op">,</span> <span class="dv">68</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="dv">62</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">&quot;Pretend the cut-off is at&quot;</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-3" data-nodetype="declaration">
 
@@ -25641,13 +25641,13 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWUsImZpZy1oZWlnaHQiOjIuNiwiZmlnLXdpZHRo
 <p>If businesses could nudge their score to 58 or below to qualify, what would the bar just left of the line look like?</p>
 </div>
 <div class="panel fragment">
-<p>Taller than its neighbours, with a dip just right. The bars at the line are not out of pattern: no sign of a pile-up. Ask anyway; it is invisible unless someone looks.</p>
+<p>Taller than its neighbours, with a dip just right. The bars at the line are not out of pattern: no sign of a pile-up. Ask whether anyone drew this chart; a pile-up only shows if someone looks.</p>
 </div>
 </section>
 <section id="check-3-are-the-two-sides-alike" class="slide level2">
 <h2>Check 3: are the two sides alike?</h2>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb4" data-startfrom="600" data-source-offset="0"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 599;"><span id="cb4-600"><a href></a>viewof bwidth <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">1</span><span class="op">,</span> <span class="dv">8</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">&quot;Window (index points)&quot;</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb4" data-startfrom="601" data-source-offset="0"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 600;"><span id="cb4-601"><a href></a>viewof bwidth <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">1</span><span class="op">,</span> <span class="dv">8</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">&quot;Window (index points)&quot;</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-4" data-nodetype="declaration">
 
@@ -25840,7 +25840,7 @@ display:block!important;
   <div class="k">Today</div>    <div class="v">regression discontinuity: -791 near the line (-905 with covariates), against 1,000</div>
 </div>
 <div class="panel">
-<p>DiD buys a comparison by assuming parallel trends. RDD buys it from the rule and pays with <strong>reach</strong>: an estimate about a narrow group. Next session, matching reaches wider by assuming everything that matters was measured.</p>
+<p>DiD gets its comparison by assuming parallel trends. RDD gets it from the rule, and the estimate describes only the businesses near the line. Next session, matching covers more businesses by assuming everything that matters was measured.</p>
 </div>
 
 <script type="webr-data">
