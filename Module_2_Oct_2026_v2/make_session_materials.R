@@ -553,3 +553,34 @@ s11 <- new_pack() |>
 print(s11, target = "Oct15_session2_materials.docx")
 
 message("Wrote six session packs.")
+
+# ===========================================================================
+# Participant copies for the website (docs/handouts/)
+# ===========================================================================
+# The same packs without the facilitator key and without the "Print:" lines,
+# which are instructions for whoever prints them. The key starts at the page
+# break before its "Facilitator key" title and runs to the end of the pack.
+participant_copy <- function(src, dest) {
+  x    <- read_docx(src)
+  body <- xml2::xml_find_first(x$doc_obj$get(), "w:body")
+  kids <- xml2::xml_children(body)
+  text <- xml2::xml_text(kids)
+  k    <- which(text == "Facilitator key")[1]
+  stopifnot(!is.na(k))
+  breaks <- which(vapply(kids, function(n)
+    length(xml2::xml_find_all(n, ".//w:br[@w:type='page']")) > 0, logical(1)))
+  b    <- max(breaks[breaks < k])
+  keep_last <- xml2::xml_name(kids[length(kids)]) == "sectPr"
+  drop <- c(seq(b, length(kids) - keep_last), which(startsWith(text, "Print:")))
+  xml2::xml_remove(kids[unique(drop)])
+  print(x, target = dest)
+}
+
+dir.create("../docs/handouts", showWarnings = FALSE)
+for (s in c("Oct12_session1", "Oct12_session3", "Oct13_session2",
+            "Oct14_session1", "Oct14_session3", "Oct15_session2"))
+  participant_copy(paste0(s, "_materials.docx"), paste0("../docs/handouts/", s, "_handouts.docx"))
+# Handouts built elsewhere that participants keep, copied as they are.
+file.copy(c("Oct14_session3_qa_checklist.docx", "Oct15_session2_findings.docx",
+            "Oct15_session2_brief_template.docx"), "../docs/handouts/", overwrite = TRUE)
+message("Wrote participant copies to docs/handouts/.")
