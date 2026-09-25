@@ -197,6 +197,10 @@ to find and no number to distrust.
 So the difficulty is not whether to believe the evidence. What is it?
 :::
 
+::: {.notes}
+Paper (Oct15_session2_materials.docx): Hand out the findings pack (Oct15_session2_findings.docx), one per participant.
+:::
+
 ## Finding 1: the saving
 
 ::: {.excerpt}
@@ -367,6 +371,10 @@ kable(data.frame(Element = brief_elements$element, Length = brief_elements$lengt
 One side of A4. Decision-makers rarely read past the first page.
 :::
 
+::: {.notes}
+Paper (Oct15_session2_materials.docx): Hand out the brief template (Oct15_session2_brief_template.docx), one per pair.
+:::
+
 ## The headline sentence
 
 ::: {.ask}
@@ -492,6 +500,10 @@ Pairs, swap briefs. Read your partner's as the person deciding.
 Question 3 is the one most often skipped. Look for the omission, not the error.
 :::
 
+::: {.notes}
+Paper (Oct15_session2_materials.docx): Hand out the peer-critique sheet (pack page 1), one per pair.
+:::
+
 ## What to look for
 
 ```{r results='asis'}
@@ -605,6 +617,10 @@ entirely, which are not flagged.
 
 ::::::
 
+::: {.notes}
+Paper (Oct15_session2_materials.docx): Hand out the AI draft (pack page 2), one per group; they edit it on paper before you run the checker.
+:::
+
 ## The checks, run on the AI draft
 
 ```{webr}
@@ -709,6 +725,10 @@ html_out(paste(sprintf('<div class="panel"><b>%d.</b> %s</div>', seq_along(rules
 ::: {.ask .fragment}
 Which of the six is hardest to write when you already know the recommendation
 you want?
+:::
+
+::: {.notes}
+Paper (Oct15_session2_materials.docx): Hand out the take-away cards (pack page 3).
 :::
 
 ## Next session

@@ -317,8 +317,6 @@ else changed over time, the other compares groups that were never alike.
 ::: {.notes}
 ~3 min. Pure recall; do not re-teach. Take two answers, then reveal the panel.
 Open the deck a couple of minutes before the session starts: R and its statistics package take about a minute to load in the browser, after which every live cell runs in a few seconds.
-
-Paper (Oct12_session3_materials.docx): Hand out the session tracker (pack page 1, one per participant); they fill in each row as the number is rebuilt live.
 :::
 
 ## Today we open the box
@@ -585,10 +583,6 @@ Both problems have one root: **the two groups were not comparable.** After the
 break: a design that makes them comparable by construction.
 :::
 
-::: {.notes}
-Paper (Oct12_session3_materials.docx): Tracker check: every row should now say too big or too small, with a reason.
-:::
-
 # Break {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## Five-minute break
@@ -667,10 +661,6 @@ the programme looks successful before it has done anything.
 :::::
 
 ::::::
-
-::: {.notes}
-Paper (Oct12_session3_materials.docx): Tracker: record the largest gap after five draws, then the gap when officials pick.
-:::
 
 ## Two neighbourhoods or two hundred?
 
@@ -825,10 +815,6 @@ Counting neighbourhoods **widens** the interval: its least generous end moves fr
 where you randomised?"*
 :::
 
-::: {.notes}
-Paper (Oct12_session3_materials.docx): Tracker: record the interval counted by neighbourhood and whether it clears 1,000 AED.
-:::
-
 ## Which number is the impact?
 
 ```{r results='asis'}
@@ -963,10 +949,6 @@ monitored as the programme expands.
 
 ::::::
 
-::: {.notes}
-Paper (Oct12_session3_materials.docx): Hand out the AI handout (pack page 2, one per pair). The better prompt is printed below the flawed paragraph.
-:::
-
 ## Debrief: four errors
 
 :::::: {.columns}
@@ -1085,10 +1067,6 @@ anything it suggested was incorrect.
 ::: {.panel}
 Question 2 tells you whether the comparison is fair. Question 3 tells you
 whether the result is enough to act on.
-:::
-
-::: {.notes}
-Paper (Oct12_session3_materials.docx): Hand out the take-away cards (pack page 3).
 :::
 
 ## What today gives you

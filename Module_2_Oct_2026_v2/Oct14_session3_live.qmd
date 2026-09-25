@@ -362,6 +362,10 @@ html_out(paste0('<div class="excerpt">',
 Mark each one **S** or **W**. Then say what makes the S ones answerable.
 :::
 
+::: {.notes}
+Paper (Oct14_session3_materials.docx): Hand out the eight question slips (pack page 1, cut, one set per group) to sort into strong and weak.
+:::
+
 ## Which of those survived
 
 :::::: {.columns}
@@ -435,6 +439,8 @@ Five minutes to agree your three sharpest questions before the clinic opens.
 When a group asks one of the questions in section 4, jump to that slide and run
 it: the analyst answers with the data. Questions without a prepared slide get a
 spoken answer, or an honest "we did not check".
+
+Paper (Oct14_session3_materials.docx): Hand out the QA checklist (Oct14_session3_qa_checklist.docx) and one clinic record sheet per group (pack page 2).
 :::
 
 ## The answers that cost the analyst something
@@ -710,6 +716,10 @@ A common kind of prompt. Run it yourselves, then compare what you get with the
 example on the next slide and with your own questions.
 :::
 
+::: {.notes}
+Paper (Oct14_session3_materials.docx): Hand out the AI prompt card (pack page 3, one per group).
+:::
+
 ## What came back
 
 :::::: {.columns}
@@ -817,6 +827,10 @@ answer to it.
 ::: {.ask .fragment}
 Which of the three will you ask first next time, and does it depend on the
 method?
+:::
+
+::: {.notes}
+Paper (Oct14_session3_materials.docx): Hand out the take-away cards (pack page 4).
 :::
 
 ## Tomorrow

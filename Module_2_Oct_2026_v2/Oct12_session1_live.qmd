@@ -443,6 +443,10 @@ the mean up; the middle road (the **median**) has
 **Illustrative case, with invented figures.**
 :::
 
+::: {.notes}
+Paper (Oct12_session1_materials.docx): Hand out the ten-roads worksheet (pack page 1, one per participant; the speed table is on the back). Give two minutes before the reveal.
+:::
+
 ## Word 1 · What the mean hides
 
 ::::::: {.columns}
@@ -511,6 +515,10 @@ the camera roads' own change only because the other roads barely moved.
 
 ::: {.warn .note-ctr}
 **Illustrative case, with invented figures.**
+:::
+
+::: {.notes}
+Paper (Oct12_session1_materials.docx): Participants turn the worksheet over: part 2, the speed table. They fill the blank cells before you reveal them.
 :::
 
 ## Word 2 · The same number from 1,200 roads
@@ -748,6 +756,8 @@ call, and C more so. **The interval decides, not the point estimate.**
 ::: {.notes}
 These three results are invented for this exercise; they are not the
 programme's result, which Session 2 and Day 2 estimate from the data.
+
+Paper (Oct12_session1_materials.docx): Part 3 of the worksheet: everyone ticks act / do not act / cannot tell yet for A, B and C before the reveal.
 :::
 
 # 4 · Put AI to work {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
@@ -784,6 +794,10 @@ probably in that range. A narrower interval means a more precise estimate."
 :::::
 
 ::::::
+
+::: {.notes}
+Paper (Oct12_session1_materials.docx): Hand out one set of the four prompt cards per group (pack page 3, cut); each group takes one card.
+:::
 
 ## Debrief
 
@@ -840,6 +854,8 @@ On **excerpt 8**? They do not have the same answer.
 Target in excerpt 8 is invented for the exercise. Answers: 3 has significance
 and no bar or comparison; 8 has a comparison and a bar, and clears it.
 Excerpt 5 is the ten-road mean pulled up by one road; 6 is the small study.
+
+Paper (Oct12_session1_materials.docx): Hand out one bingo card per participant or pair (pack pages 4-7, eight different cards). Read the excerpts aloud from the slips (page 8).
 :::
 
 # 6 · Take this back to your desk {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
@@ -870,4 +886,6 @@ words. For example: "I make policy decisions using impact evaluations. How
 should I read a confidence interval when I compare an estimate with a decision
 threshold? Ask me questions first." Saying who you are and why you ask usually
 gets a more useful answer.
+
+Paper (Oct12_session1_materials.docx): Hand out the take-away cards (pack page 9).
 :::

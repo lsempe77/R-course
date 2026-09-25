@@ -408,6 +408,10 @@ rise with the index, so an average across the window mixes that slope into the
 gap.
 :::
 
+::: {.notes}
+Paper (Oct13_session2_materials.docx): Before pressing Run, hand out the jump card (pack page 1, one per pair). Pairs average each side and subtract (about -1,000), then compare with the live result.
+:::
+
 ## Running the regression
 
 ```{webr}
@@ -499,6 +503,10 @@ jump is not only the programme.
 ::: {.ask}
 Yesterday's assumption was that the groups moved in parallel. Today's is that
 nothing else changes at the line. Neither can be proven; both can be checked.
+:::
+
+::: {.notes}
+Paper (Oct13_session2_materials.docx): Hand out the four-checks scorecard (pack page 2, one per group). Groups mark each check as you run it, starting with check 0 (who is compared) from Section 1.
 :::
 
 ## Check 1: does the jump survive a different window?
@@ -681,6 +689,10 @@ efficiency]{.flag}.
 
 ::::::
 
+::: {.notes}
+Paper (Oct13_session2_materials.docx): Hand out the AI handout (pack page 3, one per group).
+:::
+
 ## Debrief: one error, three times
 
 :::::: {.columns}
@@ -771,6 +783,10 @@ AI missed, what it added that is worth keeping, and whether anything was wrong.
   <div class="k">5</div> <div class="v">Who is near the line, and does the estimate clear our rule for them?</div>
 </div>
 ```
+
+::: {.notes}
+Paper (Oct13_session2_materials.docx): Hand out the take-away cards (pack page 4).
+:::
 
 ## Where this sits
 

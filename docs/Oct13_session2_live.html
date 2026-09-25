@@ -25439,6 +25439,19 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoibmVhciA8LSBzdWJzZXQob2Zm
 <div class="panel">
 <p>Two averages, one subtraction. This is a starting point, not the answer: costs rise with the index, so an average across the window mixes that slope into the gap.</p>
 </div>
+<aside class="notes">
+<p>Paper (Oct13_session2_materials.docx): Before pressing Run, hand out the jump card (pack page 1, one per pair). Pairs average each side and subtract (about -1,000), then compare with the live result.</p>
+<style type="text/css">
+span.MJX_Assistive_MathML {
+position:absolute!important;
+clip: rect(1px, 1px, 1px, 1px);
+padding: 1px 0 0 0!important;
+border: 0!important;
+height: 1px!important;
+width: 1px!important;
+overflow: hidden!important;
+display:block!important;
+}</style></aside>
 </section>
 <section id="running-the-regression" class="slide level2">
 <h2>Running the regression</h2>
@@ -25527,11 +25540,24 @@ display:block!important;
 <div class="ask">
 <p>Yesterday’s assumption was that the groups moved in parallel. Today’s is that nothing else changes at the line. Neither can be proven; both can be checked.</p>
 </div>
+<aside class="notes">
+<p>Paper (Oct13_session2_materials.docx): Hand out the four-checks scorecard (pack page 2, one per group). Groups mark each check as you run it, starting with check 0 (who is compared) from Section 1.</p>
+<style type="text/css">
+span.MJX_Assistive_MathML {
+position:absolute!important;
+clip: rect(1px, 1px, 1px, 1px);
+padding: 1px 0 0 0!important;
+border: 0!important;
+height: 1px!important;
+width: 1px!important;
+overflow: hidden!important;
+display:block!important;
+}</style></aside>
 </section>
 <section id="check-1-does-the-jump-survive-a-different-window" class="slide level2">
 <h2>Check 1: does the jump survive a different window?</h2>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb2" data-startfrom="507" data-source-offset="0"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 506;"><span id="cb2-507"><a href></a>viewof width <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">1</span><span class="op">,</span> <span class="dv">10</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">&quot;Window either side of 58 (index points)&quot;</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb2" data-startfrom="515" data-source-offset="0"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 514;"><span id="cb2-515"><a href></a>viewof width <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">1</span><span class="op">,</span> <span class="dv">10</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">&quot;Window either side of 58 (index points)&quot;</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-2" data-nodetype="declaration">
 
@@ -25558,7 +25584,7 @@ eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImVkaXQiOmZhbHNlLCJldmFsIjp0cnVlLCJpbnB1dCI6WyJ3
 <section id="check-1-continued-a-jump-where-there-is-no-rule" class="slide level2">
 <h2>Check 1, continued: a jump where there is no rule?</h2>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb3" data-startfrom="534" data-source-offset="0"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 533;"><span id="cb3-534"><a href></a>viewof placebo <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">48</span><span class="op">,</span> <span class="dv">68</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="dv">62</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">&quot;Pretend the cut-off is at&quot;</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb3" data-startfrom="542" data-source-offset="0"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 541;"><span id="cb3-542"><a href></a>viewof placebo <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">48</span><span class="op">,</span> <span class="dv">68</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="dv">62</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">&quot;Pretend the cut-off is at&quot;</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-3" data-nodetype="declaration">
 
@@ -25604,7 +25630,7 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWUsImZpZy1oZWlnaHQiOjIuNiwiZmlnLXdpZHRo
 <section id="check-3-are-the-two-sides-alike" class="slide level2">
 <h2>Check 3: are the two sides alike?</h2>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb4" data-startfrom="579" data-source-offset="0"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 578;"><span id="cb4-579"><a href></a>viewof bwidth <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">1</span><span class="op">,</span> <span class="dv">8</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">&quot;Window (index points)&quot;</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb4" data-startfrom="587" data-source-offset="0"><pre class="sourceCode numberSource js number-lines code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 586;"><span id="cb4-587"><a href></a>viewof bwidth <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">1</span><span class="op">,</span> <span class="dv">8</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">&quot;Window (index points)&quot;</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-4" data-nodetype="declaration">
 
@@ -25685,6 +25711,19 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoibmVhciA8LSBhYnMob2ZmZXJl
 <p>This study found that the GreenWaste programme reduced costs by around <strong>790 AED</strong> for participating businesses. <span class="flag">Because the study uses a cut-off at an efficiency index of 58, the findings apply to all businesses in the programme</span>. <span class="flag">The cut-off design means the result generalises to the wider population of inefficient businesses</span>. The estimate is therefore a reasonable basis for <span class="flag">scaling the programme to every business below average efficiency</span>.</p>
 </div>
 </div></div>
+<aside class="notes">
+<p>Paper (Oct13_session2_materials.docx): Hand out the AI handout (pack page 3, one per group).</p>
+<style type="text/css">
+span.MJX_Assistive_MathML {
+position:absolute!important;
+clip: rect(1px, 1px, 1px, 1px);
+padding: 1px 0 0 0!important;
+border: 0!important;
+height: 1px!important;
+width: 1px!important;
+overflow: hidden!important;
+display:block!important;
+}</style></aside>
 </section>
 <section id="debrief-one-error-three-times" class="slide level2">
 <h2>Debrief: one error, three times</h2>
@@ -25761,6 +25800,19 @@ display:block!important;
   <div class="k">4</div> <div class="v">Does anything else jump at the line, such as manager age?</div>
   <div class="k">5</div> <div class="v">Who is near the line, and does the estimate clear our rule for them?</div>
 </div>
+<aside class="notes">
+<p>Paper (Oct13_session2_materials.docx): Hand out the take-away cards (pack page 4).</p>
+<style type="text/css">
+span.MJX_Assistive_MathML {
+position:absolute!important;
+clip: rect(1px, 1px, 1px, 1px);
+padding: 1px 0 0 0!important;
+border: 0!important;
+height: 1px!important;
+width: 1px!important;
+overflow: hidden!important;
+display:block!important;
+}</style></aside>
 </section>
 <section id="where-this-sits" class="slide level2">
 <h2>Where this sits</h2>

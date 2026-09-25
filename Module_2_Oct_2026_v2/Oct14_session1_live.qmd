@@ -311,6 +311,10 @@ Two rows are neither costs nor savings. They are **choices** made by the analyst
 The next twenty minutes are about those two rows.
 :::
 
+::: {.notes}
+Paper (Oct14_session1_materials.docx): Hand out "What went into the ratio" (pack page 1, one per group). Groups keep it: they paste the table into AI later.
+:::
+
 # 2 · Build the ratio yourself {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## A saving next year is worth less than one today
@@ -640,6 +644,8 @@ Cards for the partner to print (one per group): (1) businesses drift back to old
 habits, saving shrinks 30% a year; (2) set-up and admin add 600 AED per
 business; (3) the ministry of finance insists on 8%; (4) the saving lasts three
 years; (5) all of 1 and 2 together. About 10 minutes including report-back.
+
+Paper (Oct14_session1_materials.docx): Hand out the scenario cards (pack page 2, cut, one card per group) and a recording sheet per group (page 3). Ratios for each card are in the facilitator key.
 :::
 
 # 4 · Put AI to work {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
@@ -677,6 +683,10 @@ observed in infrastructure appraisal]{.flag}.
 :::::
 
 ::::::
+
+::: {.notes}
+Paper (Oct14_session1_materials.docx): Groups paste the table from their "What went into the ratio" handout; both prompts are printed on it.
+:::
 
 ## Debrief
 
@@ -801,6 +811,10 @@ The rule rests on a measurement. The ratio rests mostly on assumptions.
 ::: {.ask}
 The sentence to take to a meeting: **"What assumption would have to change for
 this ratio to fall below 1, and what is your evidence for it?"**
+:::
+
+::: {.notes}
+Paper (Oct14_session1_materials.docx): Hand out the take-away cards (pack page 4).
 :::
 
 ## Where this sits
