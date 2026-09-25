@@ -287,6 +287,8 @@ The `evaluation_data_GreenWaste_IV.csv` variant is **gone**: no `*_IV.csv` exist
 
 A partner helps us build the exercises and their materials (printed handouts and cards, Menti quizzes, worksheets). To brief them, we keep one running Word document, **`Module2_exercise_plan.docx`** in this folder, that lists every exercise across all sessions: the exercise, roughly when in the session it appears, its type (vote, hands-on, group work, handout, Menti quiz), the materials needed, and a description of what the partner should build.
 
+**Current version: `Module2_exercise_plan_v2.docx`** (25 Sep): Lucas's six sections rewritten for the live decks; Fiona's six unchanged. Print materials for Lucas's sessions come from `make_session_materials.R` (one `<deck>_materials.docx` pack per session); edit the script, not the Word files.
+
 **Standing task for every session:** when a session is drafted or revised, add or update its exercises in `Module2_exercise_plan.docx`. Where an exercise is not fully built into the slides, leave a clear placeholder on the slide (a short Menti quiz, or the exercise instructions) and describe in the doc what the partner needs to create for it. The slides carry the in-room instructions; the doc is the build brief for the partner.
 
 ---

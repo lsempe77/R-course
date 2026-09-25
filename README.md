@@ -75,6 +75,7 @@ by hand will be overwritten on the next render.**
 | `qa_rating.R` | The deep-dive deck, the fictitious report, and the rating sheet |
 | `qa_translation.R` | The translation deck, the findings pack, and the brief template |
 | `qa_design_update.R` | The final deck and the Evaluation Design Update template |
+| `make_session_materials.R` | One print pack per live session: `Oct12_session1_materials.docx`, `Oct12_session3_materials.docx`, `Oct13_session2_materials.docx`, `Oct14_session1_materials.docx`, `Oct14_session3_materials.docx`, `Oct15_session2_materials.docx` (worksheets, cards, record sheets, take-away cards, facilitator key) |
 
 | Handout (`.docx`) | What it is |
 |-------------------|------------|
