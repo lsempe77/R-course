@@ -37,21 +37,21 @@ In general, we should try to include some real examples of AI making mistakes wh
 
 ## Session Map
 
-Filenames follow `[Monthday]_session[#].qmd`. "Legacy source" is the file in `sessions_in_Abu_Dhabi` to adapt from — several sessions have no legacy source and are built from scratch.
+Filenames follow `[Monthday]_session[#].qmd`. **Lucas's six sessions (1, 3, 5, 7, 9, 11) now live in `[Monthday]_session[#]_live.qmd`**: those are the sources that publish, and the plain `.qmd` of the same session is retired (kept for reference, not published; its old URL forwards to the live deck). "Legacy source" is the file in `sessions_in_Abu_Dhabi` to adapt from — several sessions have no legacy source and are built from scratch.
 
 | Day | # | Filename | Topic (outline title) | Legacy source | Length |
 |---|---|---|---|---|---|
-| Oct 12 | 1 | `Oct12_session1.qmd` | Compared to What? — Know the Language First | — | 1.5h |
+| Oct 12 | 1 | **`Oct12_session1_live.qmd`** | Compared to What? — Know the Language First | — | 1.5h |
 | Oct 12 | 2 | `Oct12_session2.qmd` | What Do the Numbers Say? — Abu Dhabi Police | `session_5_updated.qmd` (partly) | 1.5h |
-| Oct 12 | 3 | `Oct12_session3.qmd` | Spot the Problem — Naive Comparisons and RCT Reading | `session_6_updated.qmd` | 2h |
+| Oct 12 | 3 | **`Oct12_session3_live.qmd`** | Spot the Problem — Naive Comparisons and RCT Reading | `session_6_updated.qmd` | 2h |
 | Oct 13 | 1 | `Oct13_session1.qmd` | Reading DiD Results — Abu Dhabi DOH | **`session_9_updated.qmd`** | 1.5h |
-| Oct 13 | 2 | `Oct13_session2.qmd` | Reading RDD Results — Abu Dhabi DCD | **`session_8_updated.qmd`** | 1.5h |
+| Oct 13 | 2 | **`Oct13_session2_live.qmd`** | Reading RDD Results — Abu Dhabi DCD | **`session_8_updated.qmd`** | 1.5h |
 | Oct 13 | 3 | `Oct13_session3.qmd` | Reading Matching Results — Two Case Studies | `session_10_updated.qmd`, `session_10_updated_CEM.qmd` | 2h |
-| Oct 14 | 1 | `Oct14_session1.qmd` | Was It Worth It? — Cost Analysis | — | 1.5h |
+| Oct 14 | 1 | **`Oct14_session1_live.qmd`** | Was It Worth It? — Cost Analysis | — | 1.5h |
 | Oct 14 | 2 | `Oct14_session2.qmd` | What Can You Read? What Might Be Wrong? — Data Visualisation | — | 1.5h |
-| Oct 14 | 3 | `Oct14_session3.qmd` | "Interrogate the Analyst" — QA Clinic | — | 2h |
+| Oct 14 | 3 | **`Oct14_session3_live.qmd`** | "Interrogate the Analyst" — QA Clinic | — | 2h |
 | Oct 15 | 1 | `Oct15_session1.qmd` | Is This Evidence Credible? — QA Deep Dive | — | 1.5h |
-| Oct 15 | 2 | `Oct15_session2.qmd` | From Findings to Policy — Evidence Translation | — | 1.5h |
+| Oct 15 | 2 | **`Oct15_session2_live.qmd`** | From Findings to Policy — Evidence Translation | — | 1.5h |
 | Oct 15 | 3 | `Oct15_session3.qmd` | Plan Your Own Evaluation — Building on Module 1 | — | 2h |
 
 **Note the easy mistake:** `session_8` is RDD and `session_9` is DiD. Day 2 runs DiD *first*, so the session numbers are crossed relative to the legacy files.
@@ -62,6 +62,9 @@ Filenames follow `[Monthday]_session[#].qmd`. "Legacy source" is the file in `se
 
 - **Formats:** `revealjs` (primary, for delivery) and `pptx` (secondary, lossy — see the pptx section below). Both declared in the YAML header of every session file.
 - **Theme:** `[theme_editorial.scss]`, in `Module_2_Oct_2026_v2/` alongside the session files. This is the theme every v2 deck actually loads: confirm it in the YAML `theme:` line before editing anything. It is self-contained and carries the type scale, the callout components (`.panel`, `.ask`, `.warn`, `.excerpt`, `.ai-output`), the `.dense` slide class and the palette. `clean.scss` and `module2.scss` also sit in the folder but are the earlier design and are NOT loaded by these decks: editing them changes nothing on screen. Edit `theme_editorial.scss` for any theme or callout change.
+- **Live decks (Lucas's sessions).** `format: live-revealjs` (quarto-live, in `_extensions/r-wasm/live`), theme `[theme_dge.scss, theme_live.scss]` (the DGE brand: Tech/Reliable/Light Blue, Noto Kufi Arabic, logo top-right via `logo:`, gradient dividers via `{background-gradient=...}` on each `#` heading). Live cells are `{webr}` chunks: a hidden `autorun` setup cell on the first content slide defines data and helpers; teaching cells do **not** autorun (the room predicts, then the trainer presses Run); only slider/button/switch cells autorun. `webr: render-df: kable` prints data frames as tables. The CSV a deck reads must sit next to the page in `docs/`. The setup cell warms up `estimatr`; even so, open a live deck a couple of minutes early, because R and its packages take about a minute to load. Avoid `kableExtra` in live decks (its JavaScript needs jQuery and throws "$ is not defined"). Keep base R in live cells: it loads faster than dplyr/ggplot2.
+- **One example per session** (Lucas's rule, 2026-09-24). Every slide, exercise and "your turn" uses the session's single case; a second case (such as an Abu Dhabi placeholder) is dropped rather than added.
+- **Writing rules.** Fiona's "AI pet peeves" list applies to all slide text and notes: no staged run-ups, "not X but Y", dramatic closers, inflated words, forced triads, stacked qualifiers, em dashes or chat residue.
 - **Slide size:** `width: 1280`, `height: 720` in the revealjs block.
 - **`embed-resources: true` — mandatory.** Without it, Quarto writes the deck as a small `.html` plus a `<name>_files/` folder holding every chart image *and* the entire reveal.js engine and compiled theme. Move or send the `.html` alone and it opens as an unstyled wall of text with no images. With it, everything is inlined into one portable file (~4.5 MB) that works on any machine with a browser and nothing else. Always deliver the embedded version.
 - **Data path:** relative — `./evaluation_data_GreenWaste.csv`. Keep all session files and data in the same folder so paths stay simple.
@@ -69,7 +72,7 @@ Filenames follow `[Monthday]_session[#].qmd`. "Legacy source" is the file in `se
 - **Author field:** 3ie (the legacy decks are authored "Dr. Lucas Sempé" — do not carry that over without asking).
 - **Slide budget:** roughly 22-28 slides for a 1.5h session, 30-36 for a 2h session. These sessions are discussion-heavy; slide count is low relative to a lecture.
 - **Speaker notes are fine; no separate facilitator guide.** `::: {.notes}` blocks may be used for presenter notes (they appear in revealjs presenter view, press S on the day). What Claude does not produce is a separate facilitator-guide document; facilitation prompts also live on the slides themselves as `.ask` / `.warn` callouts, and section-level timing goes in the section divider's speaker notes (e.g. "Section timing: about 15 minutes."). Do NOT put `.mins` timing badges on slides: Fiona removed them from the visible decks.
-- **Versioning:** none. Edit session files in place; git history is the record of changes. Do not create `_v1`/`_v2` copies.
+- **Versioning:** edit session files in place; git history is the record of changes. The one exception is the `_live.qmd` rebuild of Lucas's sessions (2026-09-25), made as new files under the organisation's rule to save a new copy before a substantial rewrite. Those are now the sources; do not create further copies.
 - **No em dashes.** Fiona's style preference for the training materials: do not use em dashes (—) in slides or in any prose meant for participants. Use a colon where the dash introduces an explanation, definition, or list; otherwise rephrase with a comma or split into two sentences. En dashes in numeric or time ranges (e.g. 0:00–0:03) are fine.
 
 ### Known formatting traps (found the hard way — do not repeat)
@@ -115,7 +118,8 @@ $r = Invoke-WebRequest https://sempe.dev/R-course/Oct12_session1.html -UseBasicP
 $r.StatusCode; $r.Content.Contains("a phrase only the new content has")
 ```
 
-- **Add every new deck to `docs/index.html`.** The landing page is hand-maintained and does not discover files; a deck that is published but unlinked is invisible.
+- **Add every new deck to `docs/index.html`.** The landing page is hand-maintained and does not discover files; a deck that is published but unlinked is invisible. Lucas's six sessions link to `docs/<deck>_live.html`; `docs/<deck>.html` for those six is a small page that forwards to the live deck, so old links keep working.
+- **Checking a live deck.** Serve it (`quarto preview`, or any local web server); a live cell does not run from a double-clicked file. After a render, check every slide still fits 1280x720 with all fragments shown, and open each Run-button slide on a fresh page to prove it runs on its own (the setup cell defines everything a later slide needs).
 
 ### Presenting — no R needed on the day
 
@@ -341,29 +345,24 @@ themselves; what remains is delivery readiness.
 
 ### Delivery readiness
 
-- [ ] **Session length. All four 2h sessions are short of the 30–36 slide budget.**
-      Oct12 S3 is 26, Oct13 S3 25, Oct14 S3 23 and Oct15 S3 18. The last of these is the
+- [ ] **Session length. The 2h sessions are short of the 30–36 slide budget.**
+      Oct12 S3 (live) is 29, Oct13 S3 32, Oct14 S3 (live) 29 and Oct15 S3 18. The last of these is the
       capstone and the largest gap. Counting sessions rather than slides hides this: the
       table above reads as twelve of twelve complete while a quarter of the delivery time
       is under-filled. Slide counts here are the published decks in `docs/`.
-- [ ] **Real case data, four decks.** Oct13 S1 (DOH), Oct13 S2 (DCD RDD), Oct13 S3
-      (DCD matching, Case 2) and Oct14 S1 (the cost-benefit case) carry visible
-      `[PLACEHOLDER]` slots. The structure is final, so the findings drop in.
-- [ ] **Menti.** `MENTI_CODE` is still the placeholder in every deck, so the published QR
-      codes point at a Menti that does not exist. Set a real code while the Menti is live.
-- [ ] **Publish the pending Oct12 edits.** `Oct12_session1/2/3.qmd` carry uncommitted
-      edits and `docs/` is behind them. Re-render and publish once those are settled.
+- [ ] **Real case data.** Fiona's Oct13 S1 (DOH) and Oct13 S3 (DCD matching, Case 2) carry
+      `[PLACEHOLDER]` slots. Lucas's live decks dropped theirs (one example per session).
+- [ ] **Polls.** `MENTI_CODE` is still the placeholder in every deck. For the live decks the
+      plan is a poll built into the slide (Firebase, QR code plus live bars); it needs a
+      Firebase project and its web config.
 - [ ] **Keep `Module2_exercise_plan.docx` current.** It is the partner's build brief for
-      every exercise, card and handout. Oct13 S1 is seeded.
+      every exercise, card and handout.
 - [ ] Fiona: run each session's AI tasks, capture real failures into `AI_failure_exs/`,
       and flag them for inclusion in the AI Failure Library.
-- [ ] Cross-session pass: the running Day 2 comparison slide reads consistently across
-      Oct13 S1–S3.
-- [ ] **Pending decision, `.dense`.** The uncommitted Oct12 edits delete the `.dense`
-      component from the theme and from every slide that used it. If that change lands,
-      the advice in the "Known formatting traps" table above and `SESSION_BUILD_GUIDE.md`
-      §5 has to go with it, or the next session will be told to use a class that no
-      longer exists.
+- [ ] **Day 2 numbers.** The retired `Oct13_session2.qmd` pooled all neighbourhoods and
+      reported -249 for the RDD; the live deck uses offered neighbourhoods only (-791 within
+      2 points; -1,119, or -905 with covariates, over the full range). Check Fiona's Day 2
+      comparison slides do not quote -249.
 
 ### Done
 
@@ -372,6 +371,10 @@ themselves; what remains is delivery readiness.
 - [x] Build all twelve decks
 - [x] Publish them, with one copy of each in `docs/`
 - [x] Resolve the theme fork, the author field, and the false Abu Dhabi Police attribution
+- [x] Rebuild Lucas's six sessions as live (webR) decks in the DGE theme, publish them and
+      link them from the landing page (2026-09-25)
+- [x] Settle the stale working copies of Oct12 S1–S3 and theme_editorial.scss (they were
+      identical to commit b30ce08; kept in a git stash) and the `.dense` question with them
 
 ---
 

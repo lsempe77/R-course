@@ -5,9 +5,11 @@ plus the older Module 1 materials they grew out of.
 
 **Live site:** https://sempe.dev/R-course/
 
-Each deck is a Quarto reveal.js file rendered to a single self-contained HTML file, so it runs
-offline from a USB stick with no network and no R installation. Everything published lives in
-`docs/`, which is what GitHub Pages serves.
+Each deck is a Quarto reveal.js file rendered to a single self-contained HTML file. Six decks
+(Lucas's sessions) are **live** decks: they run R in the browser through quarto-live and webR, so
+they need an internet connection on the day and about a minute to get ready after opening. The
+other six still run offline from a USB stick. Everything published lives in `docs/`, which is
+what GitHub Pages serves.
 
 ---
 
@@ -16,40 +18,45 @@ offline from a USB stick with no network and no R installation. Everything publi
 All current work is in **`Module_2_Oct_2026_v2/`**. The older `session_1/` … `session_4/` and
 `sessions_in_Abu_Dhabi/` folders are the Module 1 material and are kept for reference only.
 
-| Day | Session | Deck | Length | Slides | Status |
-|-----|---------|------|--------|--------|--------|
-| 1 · Mon 12 Oct | 1 · Compared to What? | `Oct12_session1.qmd` | 1.5 h | 23 | Built |
-| 1 · Mon 12 Oct | 2 · What Do the Numbers Say? | `Oct12_session2.qmd` | 1.5 h | 23 | Built |
-| 1 · Mon 12 Oct | 3 · Spot the Problem | `Oct12_session3.qmd` | 2 h | 26 | Built |
-| 2 · Tue 13 Oct | 1 · Reading DiD Results | `Oct13_session1.qmd` | 1.5 h | 22 | Built |
-| 2 · Tue 13 Oct | 2 · Reading RDD Results | `Oct13_session2.qmd` | 1.5 h | 22 | Built |
-| 2 · Tue 13 Oct | 3 · Reading Matching Results | `Oct13_session3.qmd` | 2 h | 25 | Built |
-| 3 · Wed 14 Oct | 1 · Was It Worth It? | `Oct14_session1.qmd` | 1.5 h | 25 | Built |
-| 3 · Wed 14 Oct | 2 · What Can You Read? | `Oct14_session2.qmd` | 1.5 h | 22 | Built |
-| 3 · Wed 14 Oct | 3 · Interrogate the Analyst | `Oct14_session3.qmd` | 2 h | 23 | Built |
-| 4 · Thu 15 Oct | 1 · Is This Evidence Credible? | `Oct15_session1.qmd` | 1.5 h | 23 | Built |
-| 4 · Thu 15 Oct | 2 · From Findings to Policy | `Oct15_session2.qmd` | 1.5 h | 24 | Built |
-| 4 · Thu 15 Oct | 3 · Plan Your Own Evaluation | `Oct15_session3.qmd` | 2 h | 18 | Built |
+| Day | Session | Owner | Source file | Length | Slides |
+|-----|---------|-------|-------------|--------|--------|
+| 1 · Mon 12 Oct | 1 · Compared to What? | Lucas | `Oct12_session1_live.qmd` (live) | 1.5 h | 23 |
+| 1 · Mon 12 Oct | 2 · What Do the Numbers Say? | Fiona | `Oct12_session2.qmd` | 1.5 h | 21 |
+| 1 · Mon 12 Oct | 3 · Spot the Problem | Lucas | `Oct12_session3_live.qmd` (live) | 2 h | 29 |
+| 2 · Tue 13 Oct | 1 · Reading DiD Results | Fiona | `Oct13_session1.qmd` | 1.5 h | 22 |
+| 2 · Tue 13 Oct | 2 · Reading RDD Results | Lucas | `Oct13_session2_live.qmd` (live) | 1.5 h | 25 |
+| 2 · Tue 13 Oct | 3 · Reading Matching Results | Fiona | `Oct13_session3.qmd` | 2 h | 32 |
+| 3 · Wed 14 Oct | 1 · Was It Worth It? | Lucas | `Oct14_session1_live.qmd` (live) | 1.5 h | 23 |
+| 3 · Wed 14 Oct | 2 · What Can You Read? | Fiona | `Oct14_session2.qmd` | 1.5 h | 22 |
+| 3 · Wed 14 Oct | 3 · Interrogate the Analyst | Lucas | `Oct14_session3_live.qmd` (live) | 2 h | 29 |
+| 4 · Thu 15 Oct | 1 · Is This Evidence Credible? | Fiona | `Oct15_session1.qmd` | 1.5 h | 23 |
+| 4 · Thu 15 Oct | 2 · From Findings to Policy | Lucas | `Oct15_session2_live.qmd` (live) | 1.5 h | 27 |
+| 4 · Thu 15 Oct | 3 · Plan Your Own Evaluation | Fiona | `Oct15_session3.qmd` | 2 h | 18 |
+
+**For Lucas's six sessions the `_live.qmd` file is the source.** The older `Oct12_session1.qmd`,
+`Oct12_session3.qmd`, `Oct13_session2.qmd`, `Oct14_session1.qmd`, `Oct14_session3.qmd` and
+`Oct15_session2.qmd` are retired: they stay in the folder for reference, but nothing publishes
+them, and their old URLs on the site forward to the live decks. Edit the `_live.qmd` files.
 
 Slide counts are those of the published decks in `docs/`, counted as `class="slide level2"`.
 Counting `##` in the `.qmd` gives a higher and wrong number, because a heading inside a
 speaker-notes block or a code chunk never becomes a slide.
 
-**All twelve sessions are built and published.** The build is finished, but the delivery is not
-evenly filled: all four 2-hour sessions (S3 of every day) sit below the 30–36 slide budget for
-that length, and Oct15 Session 3, the capstone, is the furthest short at 18.
+**All twelve sessions are built and published.** The four 2-hour sessions still sit below the
+30–36 slide budget, most of all Oct15 Session 3 (18). The live decks carry more time per slide
+than a static deck, because each live cell is run and discussed in the room.
 
 ### What is still open
 
-- **Real case data is still missing for four decks.** Oct13 Sessions 1, 2 and 3 and Oct14
-  Session 1 carry visible `[PLACEHOLDER]` slots where the Abu Dhabi DOH and DCD findings and
-  the cost-benefit case will go. The exercise structure around them is final, so the findings
-  drop in without a redesign, but four of the twelve sessions cannot be delivered as they
-  stand.
+- **Real case data.** Fiona's Oct13 Sessions 1 and 3 carry `[PLACEHOLDER]` slots for the Abu
+  Dhabi DOH and DCD findings. Lucas's live decks dropped their Abu Dhabi slots under the rule
+  that each session uses one example only.
 - **The Menti code is a placeholder** in all twelve decks, so the QR codes point at a Menti that
-  does not exist. See the note under Conventions below.
-- **Oct12 Sessions 1, 2 and 3 have edits that are not yet rendered.** The published copies in
-  `docs/` are behind their sources, so the live site is serving an older revision of those three.
+  does not exist. A poll built into the slides (Firebase) is planned for the live decks and needs
+  a Firebase project first.
+- **Fiona's retired `Oct13_session2.qmd` pools all neighbourhoods in its RDD** and reports -249.
+  The live deck uses the offered neighbourhoods only, as Module 1 did (-791 within 2 points;
+  -1,119, or -905 with covariates, over the full range). Anything still quoting -249 is stale.
 - **Day 4 Session 2's policy brief.** The task checklist records an open request to SCO for real
   policy briefs as examples of an ideal one. The exercise works without them, but a real example
   would sharpen the critique.
@@ -105,17 +112,23 @@ Prerequisites: **Quarto 1.7+** and **R 4.4**. R must be on `PATH` for the render
 ```powershell
 $env:PATH = "C:\Program Files\R\R-4.4.1\bin;" + $env:PATH
 cd Module_2_Oct_2026_v2
-quarto render Oct14_session1.qmd
+quarto render Oct14_session1_live.qmd
 ```
 
-Then publish by copying the HTML into `docs/` and pushing:
+Then move the HTML into `docs/` (only `docs/` is tracked; HTML beside the `.qmd` is ignored) and push:
 
 ```powershell
-Copy-Item Oct14_session1.html ..\docs\ -Force
-git add Oct14_session1.qmd Oct14_session1.html ..\docs\Oct14_session1.html
+Move-Item Oct14_session1_live.html ..\docs\ -Force
+git add Oct14_session1_live.qmd ..\docs\Oct14_session1_live.html
 git commit -m "…"
 git push origin main
 ```
+
+**Live decks** use `format: live-revealjs` (the quarto-live extension in `_extensions/`), the DGE
+theme `[theme_dge.scss, theme_live.scss]`, and read their CSV from next to the page, so the CSV
+must also be in `docs/`. A live cell does not run from a file opened by double-click; serve the
+folder (`quarto preview`) or use the published URL. The DGE brand kit in `DGE_theme/` is
+gitignored; the decks use only the two logos in `Module_2_Oct_2026_v2/assets/`.
 
 GitHub Pages rebuilds automatically from `main`. Confirm the build finished with:
 
@@ -130,10 +143,9 @@ generators that produce them are checked in so the numbers can be rebuilt from s
 
 | File | Built by | Used by |
 |------|----------|---------|
-| `evaluation_data_GreenWaste.csv` | (original corpus) | Days 1–3 |
-| `evaluation_data_GreenWaste_IV.csv` | (adds `intent_to_treat`, `enrolled_rp`) | Module 1 IV/matching decks |
-| `evaluation_data_TrafficCameras.csv` | `make_traffic_camera_data.R` | Day 1 S2, Day 2 S1, Day 2 S2 |
-| `evaluation_data_SchoolZoneRCT.csv` | `make_school_zone_rct_data.R` | Day 1 S3 |
+| `evaluation_data_GreenWaste.csv` | (original corpus) | Day 1 S3, Days 2–3 |
+| `evaluation_data_TrafficCameras.csv` | `make_traffic_camera_data.R` | Day 1 S1 (ten-road slice and speed), Day 1 S2 |
+| `evaluation_data_SchoolZoneRCT.csv` | `make_school_zone_rct_data.R` | only the retired `Oct12_session3.qmd` |
 
 `check_traffic_camera_data.R` re-verifies that the camera data still supports all four intended
 teaching uses, and should be run after any change to the generator.
