@@ -281,8 +281,8 @@ The `evaluation_data_GreenWaste_IV.csv` variant is **gone**: no `*_IV.csv` exist
 | Abu Dhabi DOH health evaluation findings | Oct13 S1 | Dropped 2026-09-25 (one example per session) |
 | Abu Dhabi DCD Social Protection RDD findings | Oct13 S2 | Dropped (one example per session) |
 | Abu Dhabi DCD matching case (imperfect matches) | Oct13 S3 | Dropped 2026-09-25; the traffic-camera case stands in |
-| Fictitious evaluation report (with planted flaws) | Oct14 S2, Oct15 S1 | To be written |
-| Evaluation Design Update template (from Module 1) | Oct15 S3 | Not in folder |
+| Fictitious evaluation report (with planted flaws) | Oct15 S1 | Written: `Oct15_session1_report.qmd`, rendered to `Oct15_session1_report.docx` |
+| Evaluation Design Update template (from Module 1) | Oct15 S3 | Built into `Oct15_session3_materials.docx`; recaps Module 1's eight conditions from `qa_design_update.R` |
 
 **Placeholder convention.** Where case data has not arrived, build the section with clearly marked dummy figures and a fixed slide structure, so the real findings drop in later without redesigning the session. Mark every placeholder with `<!-- PLACEHOLDER -->` and a visible `[PLACEHOLDER]` label on the slide itself, so nothing fake is ever presented by accident.
 
@@ -292,7 +292,9 @@ The `evaluation_data_GreenWaste_IV.csv` variant is **gone**: no `*_IV.csv` exist
 
 A partner helps us build the exercises and their materials (printed handouts and cards, Menti quizzes, worksheets). To brief them, we keep one running Word document, **`Module2_exercise_plan.docx`** in this folder, that lists every exercise across all sessions: the exercise, roughly when in the session it appears, its type (vote, hands-on, group work, handout, Menti quiz), the materials needed, and a description of what the partner should build.
 
-**Current version: `Module2_exercise_plan_v2.docx`** (25 Sep): Lucas's six sections rewritten for the live decks; Fiona's six unchanged. Print materials for Lucas's sessions come from `make_session_materials.R` (one `<deck>_materials.docx` pack per session); edit the script, not the Word files.
+**Current version: `Module2_exercise_plan_v2.docx`** (25 Sep): every section now points to its session's print pack; the Abu Dhabi DOH and DCD rows are gone. Print materials for all twelve sessions come from `make_session_materials.R` (one `<deck>_materials.docx` pack per session); edit the script, not the Word files.
+
+**Print packs.** Run `source("make_session_materials.R")` in RStudio after any change to a session's exercises. It writes the twelve `<deck>_materials.docx` packs (the trainer copy: print lines and a facilitator key) and the participant copies in `docs/handouts/<deck>_handouts.docx` (no key, no print lines), then copies the other handouts there. Every pack follows the same page order: exercise sheets, the AI Snapshot page, a take-away card, the facilitator key. Prompts, AI responses and closing questions are copied word for word from the deck, so change both together. Every AI page carries both habits (ask the AI to ask questions first; check its answer in a fresh chat). Numbers are computed from the CSVs, never typed. Oct12 S2 and Oct14 S2 print charts on their AI pages (ggplot2). Oct15 S1 and S3 read `qa_rating.R` and `qa_design_update.R`, which also feed their decks. `Oct15_session1_rating_sheet.qmd` and `Oct15_session3_design_template.qmd` are retired: their content lives in the packs. Link each participant copy under its deck in `docs/index.html`.
 
 **Standing task for every session:** when a session is drafted or revised, add or update its exercises in `Module2_exercise_plan.docx`. Where an exercise is not fully built into the slides, leave a clear placeholder on the slide (a short Menti quiz, or the exercise instructions) and describe in the doc what the partner needs to create for it. The slides carry the in-room instructions; the doc is the build brief for the partner.
 
@@ -370,8 +372,15 @@ themselves; what remains is delivery readiness.
       Oct15 S1 and Oct15 S3 all changed (DGE theme, kableExtra removal, Abu Dhabi sections
       removed, Oct14 S2 layout fixes and live cells, pet-peeve pass, Oct15 S3 trim). Oct14 S2
       is now a live deck: serve it (not a double-clicked file) to test the three Try it
-      slides, and check `docs/` has `evaluation_data_SchoolZoneRCT.csv` beside it. Also re-render
-      `Oct15_session1_rating_sheet.qmd`: `qa_rating.R` changed.
+      slides, and check `docs/` has `evaluation_data_SchoolZoneRCT.csv` beside it.
+- [ ] **Two hard-coded deck figures disagree with the data.** Oct14 S2's "Rule 5" slide and
+      its "Try it" notes say 4,082 and 3,366 (gap 716); the data gives 4,080 and 3,365
+      (gap 715). Oct13 S1 "Where this sits" and Oct13 S3 "The week so far" still describe
+      Day 1 S2 as "-1.13 against a 2.0 rule"; the Oct12 S2 deck now reports -2.53, which
+      clears the rule (and Oct13 S1's "none of them has cleared its bar" follows from it).
+- [ ] **Report text: eligibility direction.** `Oct15_session1_report.qmd` section 2 says
+      businesses "at or above 58" were eligible; in GreenWaste the eligible ones score 58 or
+      below. Not one of the planted flaws: fix it, or add it to the key as a planted one.
 
 ### Done
 
@@ -400,6 +409,11 @@ themselves; what remains is delivery readiness.
       pie has a fair partner ("The same collisions, as counts"), and three live cells
 - [x] Oct15 S3 trimmed from 19 to 17: "What today is not" folded into the opener, "Peer
       feedback on the day" folded into "Feedback from the room" (2026-09-25)
+- [x] Print packs for Fiona's six sessions, built in `make_session_materials.R` in the same
+      format as Lucas's, with participant copies linked on the landing page; Oct15 S1's
+      rating sheet and Oct15 S3's template moved into their packs; the report re-rendered
+      (the old .docx still carried the IV version); em dashes removed from `qa_rating.R`,
+      `qa_design_update.R` and the exercise plan (2026-09-25)
 
 ---
 

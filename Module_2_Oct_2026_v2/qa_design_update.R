@@ -1,5 +1,5 @@
 # ===========================================================================
-# The Evaluation Design Update template — Day 4 Session 3.
+# The Evaluation Design Update template, Day 4 Session 3.
 # ===========================================================================
 # Shared by:
 #   - Oct15_session3.qmd                (the deck)

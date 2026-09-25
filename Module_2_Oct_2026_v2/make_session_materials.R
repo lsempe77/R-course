@@ -1,12 +1,12 @@
 # ===========================================================================
-# Print materials for Lucas's six live sessions
+# Print materials for all twelve sessions
 # ===========================================================================
 #   source("make_session_materials.R")
 #
-# Writes one Word pack per session into this folder:
-#   Oct12_session1_materials.docx   Oct12_session3_materials.docx
-#   Oct13_session2_materials.docx   Oct14_session1_materials.docx
-#   Oct14_session3_materials.docx   Oct15_session2_materials.docx
+# Writes one Word pack per session into this folder, <deck>_materials.docx:
+#   Lucas's six live sessions first (Oct12 S1, Oct12 S3, Oct13 S2, Oct14 S1,
+#   Oct14 S3, Oct15 S2), then Fiona's six (Oct12 S2, Oct13 S1, Oct13 S3,
+#   Oct14 S2, Oct15 S1, Oct15 S3).
 #
 # Every number is computed here from the same CSVs the live decks read, so
 # the paper cannot disagree with the screen. Each item starts with a print
@@ -17,6 +17,10 @@
 # Materials that already exist and are generated elsewhere are not repeated:
 #   Oct14_session3_qa_checklist.docx (qa_checklist.R)
 #   Oct15_session2_findings.docx, Oct15_session2_brief_template.docx (qa_translation.R)
+#   Oct15_session1_report.docx (quarto render Oct15_session1_report.qmd)
+# Oct15 S1's rating sheet and Oct15 S3's design template now live in their
+# packs here, so Oct15_session1_rating_sheet.qmd and
+# Oct15_session3_design_template.qmd are retired.
 
 suppressPackageStartupMessages({
   library(officer)
@@ -555,6 +559,571 @@ print(s11, target = "Oct15_session2_materials.docx")
 message("Wrote six session packs.")
 
 # ===========================================================================
+# Fiona's six sessions
+# ===========================================================================
+# Same building blocks and the same page order as the six packs above: the
+# exercise sheets, the AI Snapshot page, the take-away card, then the
+# facilitator key. Prompts, AI responses and closing questions are copied from
+# each deck word for word, so the paper and the screen agree. Two packs carry a
+# chart (the AI Snapshot pages of Oct12 S2 and Oct14 S2), drawn with ggplot2
+# in the deck palette. Oct15 S1 and S3 read their content from qa_rating.R and
+# qa_design_update.R, which the decks also read.
+
+suppressPackageStartupMessages({
+  library(estimatr)
+  library(ggplot2)
+})
+source("qa_rating.R")
+source("qa_design_update.R")
+
+RULEBAR <- 1000
+HABITS  <- "Two habits: ask the AI to ask you questions before it answers, and paste its answer into a fresh chat to check it."
+
+# A small chart for the page, in the deck palette.
+theme_page <- function() {
+  theme_minimal(base_family = "sans", base_size = 11) +
+    theme(panel.grid.major.x = element_blank(), panel.grid.minor = element_blank(),
+          axis.text = element_text(colour = GREY), axis.title = element_text(colour = GREY),
+          plot.title = element_text(colour = DARK, face = "bold", size = 11),
+          legend.position = "none")
+}
+# Two charts side by side, drawn into one PNG with base R's grid package.
+side_by_side <- function(doc, p1, p2, w = 6.4, h = 2.6) {
+  f <- tempfile(fileext = ".png")
+  png(f, width = w, height = h, units = "in", res = 200, bg = "white")
+  grid::grid.newpage()
+  grid::pushViewport(grid::viewport(layout = grid::grid.layout(1, 2)))
+  print(p1, vp = grid::viewport(layout.pos.row = 1, layout.pos.col = 1))
+  print(p2, vp = grid::viewport(layout.pos.row = 1, layout.pos.col = 2))
+  dev.off()
+  body_add_img(doc, src = f, width = w, height = h, style = "Normal")
+}
+# Blank write-in rows for a table.
+tall_rows <- function(ft, h = 0.55) ft |> height_all(height = h, part = "body") |> hrule(rule = "atleast", part = "body")
+pfmt <- function(p) ifelse(p < 0.001, "<0.001", sprintf("%.3f", p))
+
+# ===========================================================================
+# Oct12 S2 · What Do the Numbers Say?
+# ===========================================================================
+S2 <- "Module 2 · Day 1, Session 2 · What Do the Numbers Say?"
+POL_RULE   <- 2.0
+cams       <- subset(tc, treated == 1)
+cam_before <- mean(cams$injury_collisions[cams$round == 0])
+cam_after  <- mean(cams$injury_collisions[cams$round == 1])
+cam_fall   <- cam_before - cam_after
+cam_pct    <- 100 * cam_fall / cam_before
+oth_before <- mean(tc$injury_collisions[tc$treated == 0 & tc$round == 0])
+oth_after  <- mean(tc$injury_collisions[tc$treated == 0 & tc$round == 1])
+oth_fall   <- oth_before - oth_after
+seg_w      <- reshape(cams[, c("segment_id", "round", "injury_collisions")],
+                      idvar = "segment_id", timevar = "round", direction = "wide")
+share_fell <- 100 * mean(seg_w$injury_collisions.1 - seg_w$injury_collisions.0 < 0)
+ba_fit     <- lm_robust(injury_collisions ~ round, data = cams, clusters = segment_id)
+ba_ci      <- sort(abs(confint(ba_fit)["round", ]))
+
+p_cam <- ggplot(data.frame(year = c("2019", "2021"), y = c(cam_before, cam_after)),
+                aes(year, y)) +
+  geom_col(fill = BLUE, width = 0.6) +
+  geom_text(aes(label = sprintf("%.1f", y)), vjust = -0.5, size = 4.2) +
+  scale_y_continuous(limits = c(0, 14), expand = c(0, 0)) +
+  labs(x = NULL, y = "Collisions per segment") + theme_page()
+
+s2 <- new_pack() |>
+  title_("Annotate this output", S2) |>
+  print_line("1 per participant") |>
+  p_("The before-and-after regression for the road segments that got speed cameras. Outcome: injury collisions per road segment, 2019 (round 0) and 2021 (round 1). Standard errors are clustered by road segment. The p-value is the column R printed as Pr(>|t|).") |>
+  body_add_flextable(plain_table(data.frame(
+    ` ` = c("(Intercept)", "round"),
+    Estimate = sprintf("%.3f", coef(ba_fit)), `Std. Error` = sprintf("%.3f", ba_fit$std.error),
+    `p-value` = sprintf("%.3f", ba_fit$p.value), `CI Lower` = sprintf("%.3f", ba_fit$conf.low),
+    `CI Upper` = sprintf("%.3f", ba_fit$conf.high), check.names = FALSE),
+    widths = c(1.2, 1.0, 1.1, 0.9, 1.0, 1.0))) |>
+  illustrative() |>
+  h2_("On the table above") |>
+  p_("1. Circle the before-and-after change.") |>
+  p_("2. Draw a box around its confidence interval.") |>
+  p_("3. Underline the 2019 average, and say in one line why it is not an effect.") |>
+  write_lines(2) |>
+  p_("4. Write the comparison you would ask the evaluator for.") |>
+  write_lines(2) |>
+  new_page() |>
+  title_("AI Snapshot: ask AI to read the chart", S2) |>
+  print_line("1 per pair") |>
+  p_("Average injury collisions per road segment in the sectors that got speed cameras.") |>
+  body_add_gg(p_cam, width = 3.6, height = 2.4) |>
+  illustrative() |>
+  p_("The prompt most people would type, with a picture of the chart:", bold = TRUE) |>
+  p_("\"What does this chart show? Did the cameras work?\"", italic = TRUE) |>
+  h2_("A response like this is possible") |>
+  p_("\"The chart shows a 22% reduction in injury collisions after speed cameras were installed, from 11.5 to 9.0 per road segment. This reduction is statistically significant (p < 0.001), confirming that the cameras caused the decline. The fall was consistent across all road types, which suggests the effect is robust. Given the size of the effect, the programme should be extended to the remaining sectors.\"") |>
+  p_("In pairs: mark every claim you can check against the chart. Which ones can the chart support?", bold = TRUE) |>
+  write_lines(3) |>
+  h2_("Then run this prompt instead, and compare") |>
+  p_("\"This chart shows average injury collisions per road segment in the sectors that got speed cameras, in 2019 and 2021. Describe only what the chart shows. Then list what else could explain the change, and what comparison you would need before saying the cameras caused it. Before you answer, ask me any questions you need.\"", italic = TRUE) |>
+  p_("Run both prompts on the same chart. What does the second answer include that the first left out? Then paste the second answer into a fresh chat and ask it to check for claims the chart cannot support.") |>
+  new_page() |> title_("Take-away card: three questions to ask the evaluator", S2) |>
+  print_line("1 per participant, cut into cards") |>
+  add_cards(rep(list(c("Three questions to ask the evaluator",
+                       "1. How big? In the units the decision is written in, not a percentage.",
+                       "2. How sure? Does the confidence interval clear the rule, not just zero?",
+                       "3. Compared to what? Which group, which period, and did it move too?",
+                       "", "On my desk, I will ask these about:", "______________________________")), 6),
+            min_height = 2.2) |>
+  new_page() |> title_("Facilitator key", S2) |> print_line("trainer only") |>
+  h2_("Annotate this output") |>
+  p_(sprintf("1. The change is the round row: %.2f collisions per segment. 2. Its interval runs from %.2f to %.2f. 3. The intercept, %.2f, is the 2019 average on camera roads. It is a starting level with nothing to compare it against, so it says nothing about what the cameras did. 4. Roads without cameras over the same two years. Their collisions fell too, by %.2f per segment (%.0f%%), so some of the %.2f would have happened anyway.",
+             coef(ba_fit)[["round"]], ba_fit$conf.low[["round"]], ba_fit$conf.high[["round"]],
+             coef(ba_fit)[["(Intercept)"]], oth_fall, 100 * oth_fall / oth_before, cam_fall)) |>
+  p_(sprintf("Against the rule of %.1f fewer collisions: the estimate (%.2f) and the whole interval (%.2f to %.2f) clear it. The camera result passes how big and how sure; compared to what is still open.",
+             POL_RULE, cam_fall, ba_ci[1], ba_ci[2])) |>
+  h2_("AI Snapshot") |>
+  p_(sprintf("Correct: \"22%% reduction, 11.5 to 9.0\" is on the chart (%.1f to %.1f, %.0f%%). Not on the chart: \"p < 0.001\"; the model supplied a p-value it was never given. \"Confirming that the cameras caused\": a before-and-after chart cannot show cause, and a small p-value says the fall is unlikely to be noise, not what caused it. \"Consistent across all road types\": invented; the chart has no road types, and %.0f%% of camera roads did not fall. \"Should be extended\": a recommendation with no rule and no comparison.",
+             cam_before, cam_after, cam_pct, 100 - share_fell)) |>
+  p_("With the second prompt, listen for answers that ask what happened on roads without cameras and whether traffic changed.")
+print(s2, target = "Oct12_session2_materials.docx")
+
+# ===========================================================================
+# Oct13 S1 · Reading DiD Results
+# ===========================================================================
+S4 <- "Module 2 · Day 2, Session 1 · Reading DiD Results"
+tn  <- subset(gw, treatment_neighborhood == 1)
+gvm <- function(e, r) mean(tn$waste_management_costs[tn$enrolled == e & tn$round == r])
+off_b <- gvm(1, 0); off_a <- gvm(1, 1); ctl_b <- gvm(0, 0); ctl_a <- gvm(0, 1)
+off_chg <- off_a - off_b; ctl_chg <- ctl_a - ctl_b; did_hand <- off_chg - ctl_chg
+fit_did <- lm_robust(waste_management_costs ~ round * enrolled, data = tn,
+                     clusters = neighborhood_identifier)
+did_ci  <- confint(fit_did)["round:enrolled", ]
+did_av  <- sort(abs(did_ci))
+did_rows <- data.frame(
+  ` ` = c("(Intercept)", "Round 2", "Enrolled", "Round 2 x Enrolled"),
+  Coefficient = gfmt(coef(fit_did)), `Std. error` = gfmt(fit_did$std.error),
+  p = pfmt(fit_did$p.value),
+  `95% CI` = sprintf("[%s, %s]", gfmt(fit_did$conf.low), gfmt(fit_did$conf.high)),
+  check.names = FALSE)
+
+s4 <- new_pack() |>
+  title_("By hand: four numbers", S4) |>
+  print_line("1 per participant (double-sided with the next page)") |>
+  p_("GreenWaste businesses in the neighbourhoods where the programme was offered. Average annual waste-management costs (AED), before and after. The bar for scale-up: at least 1,000 AED.") |>
+  body_add_flextable(plain_table(data.frame(
+    ` ` = c("Took part", "Did not take part", "Difference of the changes"),
+    Before = c(gfmt(off_b), gfmt(ctl_b), ""), After = c(gfmt(off_a), gfmt(ctl_a), ""),
+    Change = c("", "", ""), check.names = FALSE), widths = c(2.6, 1.2, 1.2, 1.4)) |> tall_rows(0.45)) |>
+  h2_("Two subtractions") |>
+  p_("First difference: each group's change over time. It removes fixed differences between the groups, and still contains the general time trend.") |>
+  p_("Change for \"took part\":  ________      Change for \"did not take part\":  ________") |>
+  p_("Second difference: the difference between those two changes. It removes the time trend and leaves the estimated effect.") |>
+  p_("Difference-in-differences = (change for \"took part\") minus (change for \"did not\") =  ________ AED") |>
+  p_("Does it clear 1,000 AED?   Yes  /  No") |>
+  new_page() |>
+  title_("Which row is the impact?", S4) |>
+  print_line("on the back of the four-numbers sheet") |>
+  p_("The same data as a regression, the way an evaluator would report it. Standard errors are clustered by neighbourhood.") |>
+  body_add_flextable(plain_table(did_rows, widths = c(1.8, 1.2, 1.0, 0.8, 1.9))) |>
+  p_("1. Circle the row that is the programme's effect. Is it the number you got by hand?") |>
+  p_("2. Two rows are often reported as the effect by mistake. What are they?") |>
+  p_("Round 2 is  ______________________      Enrolled is  ______________________") |>
+  p_("3. The least generous end of the effect's interval:  ________ AED.   Does it clear 1,000?   Yes  /  No") |>
+  p_("4. Costs were measured once before the programme and once after. What can this data not tell you about the two groups?") |>
+  write_lines(2) |>
+  new_page() |>
+  title_("AI Snapshot: explaining the table", S4) |>
+  print_line("1 per pair") |>
+  p_("Paste the regression table into an AI tool with this prompt:", bold = TRUE) |>
+  p_("\"Explain this regression table to a non-technical decision-maker, and say what should be checked before believing the result.\"", italic = TRUE) |>
+  h2_("A response like this is possible") |>
+  p_("The table reports a difference-in-differences estimate. The programme reduced costs by 816 AED, and the effect is highly statistically significant (p < 0.001), so the programme was a success. The confidence interval does not include zero, which confirms the finding is robust.") |>
+  p_("The parallel trends assumption has been satisfied. The result clears the 1,000 AED threshold required for scale-up.") |>
+  p_("Mark every sentence you can check against the table, and every sentence the table does not support.", bold = TRUE) |>
+  write_lines(3) |>
+  h2_("Then run this prompt instead, and compare") |>
+  p_("\"We have a difference-in-differences table. The data has two waves only, one before and one after, so no pre-trend test is possible. The decision rule is 1,000 AED. Explain what the table supports and, separately, list what it cannot tell us. Ask me questions before you answer.\"", italic = TRUE) |>
+  p_("Does the claim about parallel trends survive the second prompt? Then paste the second answer into a fresh chat and ask it to check for claims about tests that were never run.") |>
+  new_page() |> title_("Take-away card: three questions for a DiD result", S4) |>
+  print_line("1 per participant, cut into cards") |>
+  add_cards(rep(list(c("Three questions to ask any evaluator presenting DiD",
+                       "1. Which row is the estimate, and does its interval clear our rule, not just zero?",
+                       "2. How many periods before the programme, and were the groups already moving together?",
+                       "3. Which comparison group, chosen how, and how did it differ at baseline?",
+                       "", "On my desk, I will ask these about:", "______________________________")), 6),
+            min_height = 2.3) |>
+  new_page() |> title_("Facilitator key", S4) |> print_line("trainer only") |>
+  h2_("Four numbers") |>
+  p_(sprintf("Took part %s to %s: change %+.0f. Did not take part %s to %s: change %+.0f. Difference of the changes: %.0f AED. It does not clear 1,000. Watch the sign: the comparison group went up, so the effect is bigger than the %.0f fall in the top row.",
+             gfmt(off_b), gfmt(off_a), off_chg, gfmt(ctl_b), gfmt(ctl_a), ctl_chg, did_hand, abs(off_chg))) |>
+  h2_("Which row is the impact?") |>
+  p_(sprintf("1. Round 2 x Enrolled, %s AED: the same number as by hand. 2. Round 2 (%s) is the time trend, what happened to everyone; Enrolled (%s) is the baseline gap, how far apart the groups started. Many pick Enrolled because it is large and has the word in it. 3. %s AED; the interval is %s to %s, and even its most generous end (%s) is short of 1,000. 4. Whether the groups were already moving in parallel: a pre-trend check needs at least two periods before the programme.",
+             gfmt(coef(fit_did)[["round:enrolled"]]), gfmt(coef(fit_did)[["round"]]),
+             gfmt(coef(fit_did)[["enrolled"]]), gfmt(did_av[1]), gfmt(did_ci[1]), gfmt(did_ci[2]),
+             gfmt(did_av[2]))) |>
+  h2_("AI Snapshot") |>
+  p_("Supported by the table: the 816 AED estimate and p < 0.001. Not supported: \"so the programme was a success\" answers whether the effect is non-zero, not whether it clears 1,000. \"Does not include zero, which confirms the finding is robust\": not zero and big enough are different claims. \"The parallel trends assumption has been satisfied\" is the serious one: with one period before the programme it cannot be tested, so the model reported a test that was never run. \"Clears the 1,000 AED threshold\" is false.") |>
+  p_("With the second prompt, check whether the parallel-trends claim disappears. Supplying the constraint makes the error less likely; it does not rule it out.")
+print(s4, target = "Oct13_session1_materials.docx")
+
+# ===========================================================================
+# Oct13 S3 · Reading Matching Results
+# ===========================================================================
+S6 <- "Module 2 · Day 2, Session 3 · Reading Matching Results"
+CAM_RULE <- 2.0
+# The matcher from the deck: nearest neighbour on the score, with replacement.
+find_twins <- function(data, score, treat) {
+  took <- data[data[[treat]] == 1, ]; rest <- data[data[[treat]] == 0, ]
+  twin <- sapply(took[[score]], function(s) which.min(abs(s - rest[[score]])))
+  out <- rbind(took, rest[twin, ]); attr(out, "twin_rows") <- twin; out
+}
+chars <- c("efficiency_index", "age_manager", "educ_manager", "female_manager",
+           "foreign_owned", "staff_size", "advanced_filtration",
+           "water_treatment_system", "business_area", "recycling_center_distance")
+g0  <- gw[gw$round == 0, ]; g1 <- gw[gw$round == 1, ]
+biz <- data.frame(g0[, c("business_identifier", "neighborhood_identifier", "enrolled", chars)],
+                  y0 = g0$waste_management_costs,
+                  y1 = g1$waste_management_costs[match(g0$business_identifier, g1$business_identifier)])
+biz$dy <- biz$y1 - biz$y0
+std_diff <- function(d, v, ref, t = "enrolled")
+  (mean(d[[v]][d[[t]] == 1]) - mean(d[[v]][d[[t]] == 0])) / sd(ref[[v]])
+match_fit <- function(f, outcome) {
+  d <- biz; d$s <- fitted(glm(f, data = d, family = binomial))
+  m <- find_twins(d, "s", "enrolled")
+  r <- lm_robust(reformulate("enrolled", outcome), data = m, clusters = neighborhood_identifier)
+  list(m = m, est = coef(r)[["enrolled"]], lo = r$conf.low[["enrolled"]], hi = r$conf.high[["enrolled"]])
+}
+g_lev <- match_fit(reformulate(chars, "enrolled"), "y1")
+g_chg <- match_fit(reformulate(chars, "enrolled"), "dy")
+m1 <- g_lev$m
+biz$score <- fitted(glm(reformulate(chars, "enrolled"), data = biz, family = binomial))
+ps_c <- range(biz$score[biz$enrolled == 0])
+n_beyond <- sum(biz$score[biz$enrolled == 1] > ps_c[2] | biz$score[biz$enrolled == 1] < ps_c[1])
+avoid1 <- sort(abs(c(g_lev$lo, g_lev$hi)))
+g_worst <- max(abs(sapply(chars, function(v) std_diff(m1, v, biz))))
+
+tc0 <- subset(tc, round == 0); tc1 <- subset(tc, round == 1)
+d2 <- data.frame(segment_id = tc0$segment_id, cameras_installed = tc0$cameras_installed,
+                 y0 = tc0$injury_collisions, tc0[, c("baseline_speed_85th", "lanes", "road_length_km",
+                                                     "school_within_500m", "prior_collisions_3yr")],
+                 lighting_poor = as.integer(tc0$lighting_quality == "poor"))
+d2$y1 <- tc1$injury_collisions[match(d2$segment_id, tc1$segment_id)]
+d2$dy <- d2$y1 - d2$y0
+d2$score <- fitted(glm(cameras_installed ~ baseline_speed_85th + lanes + road_length_km +
+                         school_within_500m + prior_collisions_3yr + lighting_poor,
+                       data = d2, family = binomial))
+m2 <- find_twins(d2, "score", "cameras_installed")
+n_cam   <- sum(d2$cameras_installed == 1)
+c2_used <- length(unique(attr(m2, "twin_rows")))
+c2_ps_c <- range(d2$score[d2$cameras_installed == 0])
+c2_out  <- sum(d2$score[d2$cameras_installed == 1] < c2_ps_c[1] | d2$score[d2$cameras_installed == 1] > c2_ps_c[2])
+m2_t <- m2[m2$cameras_installed == 1, ]; m2_c <- m2[m2$cameras_installed == 0, ]
+c2_base_sd <- (mean(m2_t$y0) - mean(m2_c$y0)) / sd(d2$y0)
+c2_levels  <- -(mean(m2_t$y1) - mean(m2_c$y1))
+pair_chg   <- -(m2_t$dy - m2_c$dy)
+c2_changes <- mean(pair_chg)
+c2_ci      <- c2_changes + c(-1.96, 1.96) * sd(pair_chg) / sqrt(length(pair_chg))
+c2_worst   <- max(abs(sapply(c("baseline_speed_85th", "lanes", "road_length_km", "school_within_500m",
+                               "prior_collisions_3yr"),
+                             function(v) (mean(m2_t[[v]]) - mean(m2_c[[v]])) / sd(d2[[v]]))))
+
+compare_rows <- data.frame(
+  ` ` = c("Every treated unit had a real lookalike?", "Comparison units reused as twins",
+          "Characteristics balanced after matching?", "Outcome's own baseline balanced?",
+          "Estimate, follow-up levels", "Estimate, changes", "Least generous end vs the rule"),
+  `Case 1 · GreenWaste` = c(sprintf("yes, all but %d", n_beyond),
+                 sprintf("%s twins for %s businesses", gfmt(length(unique(attr(m1, "twin_rows")))),
+                         gfmt(sum(biz$enrolled == 1))),
+                 sprintf("yes (worst %.2f)", g_worst),
+                 sprintf("yes (gap %s AED)", gfmt(mean(m1$y0[m1$enrolled == 1]) - mean(m1$y0[m1$enrolled == 0]))),
+                 sprintf("%s AED", gfmt(g_lev$est)), sprintf("%s AED", gfmt(g_chg$est)),
+                 sprintf("%s against %s: short", gfmt(avoid1[1]), gfmt(RULEBAR))),
+  `Case 2 · Cameras` = c(sprintf("no, %d segments (%d%%) outside", c2_out, round(100 * c2_out / n_cam)),
+                 sprintf("%d twins for %d segments", c2_used, n_cam),
+                 sprintf("yes (worst %.2f)", c2_worst),
+                 sprintf("no (std. diff %.2f)", c2_base_sd),
+                 sprintf("%.2f avoided", c2_levels), sprintf("%.2f avoided", c2_changes),
+                 sprintf("%.2f against %.1f: short", min(c2_ci), CAM_RULE)),
+  check.names = FALSE)
+
+s6 <- new_pack() |>
+  title_("By hand: find the twins", S6) |>
+  print_line("1 per participant") |>
+  p_("Three businesses that enrolled in GreenWaste and four that did not. Pair each enrolled business with its closest twin, matching on who they are (manager age and size), not on their cost. Then take the average cost difference across the three pairs.") |>
+  p_("Enrolled", bold = TRUE, color = DARK) |>
+  body_add_flextable(plain_table(data.frame(` ` = c("A", "B", "C"), `Manager age` = c(45, 38, 52),
+    Size = c("small", "large", "small"), `Cost after (AED)` = c("900", "1,400", "700"), check.names = FALSE),
+    widths = c(0.6, 1.4, 1.2, 1.6))) |>
+  p_("Not enrolled", bold = TRUE, color = DARK) |>
+  body_add_flextable(plain_table(data.frame(` ` = c("1", "2", "3", "4"), `Manager age` = c(39, 46, 51, 29),
+    Size = c("large", "small", "small", "large"), `Cost after (AED)` = c("2,300", "1,900", "1,800", "2,600"),
+    check.names = FALSE), widths = c(0.6, 1.4, 1.2, 1.6))) |>
+  p_("These seven businesses are invented for the exercise.", 8.5, italic = TRUE, color = GREY) |>
+  h2_("Your pairs") |>
+  body_add_flextable(plain_table(data.frame(Enrolled = c("A", "B", "C"), `Its twin` = "",
+    `Cost difference (enrolled minus twin)` = "", check.names = FALSE), widths = c(1.2, 1.4, 3.0)) |> tall_rows(0.4)) |>
+  p_("Average difference across the three pairs:  ________ AED") |>
+  p_("One business is nobody's twin. Which one, and what happens to it?") |>
+  write_lines(2) |>
+  new_page() |>
+  title_("Which case would you trust?", S6) |>
+  print_line("1 per group") |>
+  p_(sprintf("Two matching studies, read side by side. The rules: GreenWaste must cut costs by at least %s AED; cameras must avoid at least %.1f injury collisions per segment.", gfmt(RULEBAR), CAM_RULE)) |>
+  body_add_flextable(plain_table(compare_rows, widths = c(2.4, 2.2, 2.2)) |>
+    bg(i = c(1, 4), bg = "#F8E9EA", part = "body")) |>
+  illustrative() |>
+  h2_("In your group, ten minutes") |>
+  p_("1. Which case gives you more confidence, and why?") |> write_lines(1) |>
+  p_("2. What would you ask Case 2's evaluator that Case 1 does not raise?") |> write_lines(1) |>
+  p_("3. Case 2 is the only one whose central estimate clears its rule. Does that change your answer?") |> write_lines(1) |>
+  p_("Our verdict on Case 1:   Act  /  Act with conditions  /  Send back") |>
+  p_("Our verdict on Case 2:   Act  /  Act with conditions  /  Send back") |>
+  new_page() |>
+  title_("AI Snapshot: comparing two studies", S6) |>
+  print_line("1 per group") |>
+  p_("The prompt, with the two-case table and both balance tables pasted in:", bold = TRUE) |>
+  p_("\"Summarise the key differences between these two studies and identify what a commissioner should flag.\"", italic = TRUE) |>
+  h2_("A response like this is possible") |>
+  p_("Case 1: Matching was highly effective, with every business matched and excellent covariate balance. The programme reduced costs by around 1,000 AED, with an interval that straddles the 1,000 AED threshold.") |>
+  p_("Case 2: Matching was similarly strong, with every segment matched and good balance. The matched estimate shows cameras avoided 2.10 collisions per segment, comfortably exceeding the 2.0 threshold, so this programme should be scaled.") |>
+  p_("Which sentences would you sign your name to? Underline them, and cross out the rest. Four minutes, in groups.", bold = TRUE) |>
+  write_lines(3) |>
+  h2_("Then run this prompt instead, and compare") |>
+  p_("\"Two matching studies. For each: how many treated units had no real lookalike; did the outcome's baseline balance; do levels and changes agree? Our decision rules are below. Ask me questions before you answer.\"", italic = TRUE) |>
+  p_("Run both, then compare: what did each get wrong, and what did each explain well? Then paste the second answer into a fresh chat and ask it to check for overstatement.") |>
+  new_page() |> title_("Take-away card: five questions for a matching result", S6) |>
+  print_line("1 per participant, cut into cards") |>
+  add_cards(rep(list(c("Five questions to ask any evaluator presenting matching",
+                       "1. What did you match on, and what was left out?",
+                       "2. How many treated units had no real lookalike, and what happened to them?",
+                       "3. Do the covariates balance, and does the outcome's baseline balance?",
+                       "4. Does the answer hold if you change what you matched on, or compare changes instead of levels?",
+                       "5. What else might differ that you could not measure?",
+                       "", "On my desk, I will ask these about:", "______________________________")), 6),
+            min_height = 2.6) |>
+  new_page() |> title_("Facilitator key", S6) |> print_line("trainer only") |>
+  h2_("Find the twins") |>
+  p_("A with 2, B with 1, C with 3. Differences of -1,000, -900 and -1,100: an average of -1,000 AED. Business 4 is nobody's twin, so it is set aside. Listen for anyone matching on cost: that is matching on the outcome, which builds the answer into the comparison.") |>
+  h2_("Which case would you trust?") |>
+  p_(sprintf("Case 1 is the more trustworthy study, and it cannot show it clears the rule: it estimates %s AED saved, and the least generous end is %s. Case 2 gives the more attractive answer and carries the unquantified risk: %d camera segments (%d%%) have no real lookalike, %d segments share %d twins, and the outcome's own baseline is out of balance (%.2f). Levels say %.2f avoided, changes say %.2f; the interval for changes runs down to %.2f, short of %.1f. Rows 1 and 4 separate the two cases, and neither appears in a typical results table.",
+             gfmt(abs(g_lev$est)), gfmt(avoid1[1]), c2_out, round(100 * c2_out / n_cam), n_cam, c2_used,
+             c2_base_sd, c2_levels, c2_changes, min(c2_ci), CAM_RULE)) |>
+  p_("For the question to Case 2's evaluator, the sharpest is: did the outcome's own baseline balance, and did you compare levels or changes?") |>
+  h2_("AI Snapshot") |>
+  p_(sprintf("Case 1 is reported accurately, including the interval that straddles the rule. Three false assurances in Case 2: \"similarly strong, every segment matched\" hides the %d segments with no real lookalike; \"comfortably exceeding\" holds only for the changes estimate, the levels estimate does not clear 2.0 and the interval dips to %.2f; \"should be scaled\" rests on the first two and is stated most confidently. The model repeated the study's own summary of itself, and that summary was the misleading part.",
+             c2_out, min(c2_ci)))
+print(s6, target = "Oct13_session3_materials.docx")
+
+# ===========================================================================
+# Oct14 S2 · What Can You Read? What Might Be Wrong?
+# ===========================================================================
+S8 <- "Module 2 · Day 3, Session 2 · What Can You Read? What Might Be Wrong?"
+base0 <- subset(gw, treatment_neighborhood == 1 & round == 0)
+enr <- base0$waste_management_costs[base0$enrolled == 1]
+non <- base0$waste_management_costs[base0$enrolled == 0]
+mean_enr <- mean(enr); mean_non <- mean(non); vgap <- mean_non - mean_enr
+sd_gap <- vgap / sd(c(enr, non))
+sz <- read.csv("evaluation_data_SchoolZoneRCT.csv")
+sc <- merge(setNames(subset(sz, round == 0, c(segment_id, child_collisions)), c("segment_id", "base")),
+            setNames(subset(sz, round == 1, c(segment_id, child_collisions)), c("segment_id", "follow")))
+pooled_pct  <- 100 * (sum(sc$follow) - sum(sc$base)) / sum(sc$base)
+has_base    <- sc$base > 0
+average_pct <- mean(100 * (sc$follow - sc$base)[has_base] / sc$base[has_base])
+cb_nom <- 816 * 5; cb_dis <- sum(816 / 1.05^(2:6))
+flip_rate <- uniroot(function(r) sum(816 / (1 + r)^(2:6)) - 1800, c(0, 1))$root
+sev <- c(minor = sum(sz$minor_collisions), injury = sum(sz$injury_collisions), child = sum(sz$child_collisions))
+
+bars <- data.frame(g = c("Enrolled", "Not enrolled"), y = c(mean_enr, mean_non))
+fig_axis <- function(floor, top, title) {
+  ggplot(bars) +
+    geom_rect(aes(xmin = as.numeric(factor(g)) - 0.3, xmax = as.numeric(factor(g)) + 0.3,
+                  ymin = floor, ymax = y, fill = g)) +
+    geom_text(aes(x = as.numeric(factor(g)), y = y, label = gfmt(y)), vjust = -0.5, size = 3.6) +
+    scale_fill_manual(values = c(BLUE, LIGHT)) +
+    scale_x_continuous(breaks = 1:2, labels = bars$g) +
+    scale_y_continuous(limits = c(floor, top), expand = c(0, 0), labels = function(v) gfmt(v)) +
+    labs(x = NULL, y = "Mean annual waste cost (AED)", title = title) + theme_page()
+}
+
+s8 <- new_pack() |>
+  title_("Six pairs tracker", S8) |>
+  print_line("1 per participant; filled in as the session runs") |>
+  p_("Each section of this session shows the same data drawn two ways. For every pair, in groups: what is this figure telling you, and what might be wrong or misleading?") |>
+  body_add_flextable(plain_table(data.frame(
+    Pair = c("1. The same gap, two axes", "2. A bar of means, then the distributions",
+             "3. Biggest wins: percentage, then number", "4. After only, then before and after",
+             "5. Savings added up, then discounted", "6. The pie, then the counts"),
+    `What is it telling you?` = "", `What might be wrong or misleading?` = "", check.names = FALSE),
+    widths = c(2.0, 2.4, 2.4)) |> tall_rows(0.85)) |>
+  h2_("Predict before the reveal") |>
+  p_("Share of enrolled businesses that paid more than the average non-enrolled business:  ________ %") |>
+  p_("The pooled change in child collisions and the average of each segment's change: close, or far apart?  ________") |>
+  p_("The discount rate at which five years of savings no longer cover the 1,800 AED cost:  ________ %") |>
+  new_page() |>
+  title_("AI Snapshot: the chart that cannot be wrong", S8) |>
+  print_line("1 per group") |>
+  p_("The two GreenWaste baseline figures: the same gap between enrolled and not-enrolled businesses, drawn twice.") |>
+  side_by_side(fig_axis(0, 2400, "Figure A"), fig_axis(1300, 2200, "Figure B")) |>
+  p_("Give the model both figures and this prompt:", bold = TRUE) |>
+  p_("\"Which of these two charts better represents the difference between the two groups, and why?\"", italic = TRUE) |>
+  h2_("A response like this is possible") |>
+  p_("Both charts present the same underlying data accurately. The truncated-axis chart is often preferable for a policy audience because it makes the difference visible, and a y-axis that starts at zero is not a requirement in professional data visualisation. On balance the truncated version communicates the finding more effectively, and a reader who wants the absolute values can consult the data labels.") |>
+  p_("Four minutes. Is it wrong? Is it right? Is it answering the question that was asked? What does it explain well?", bold = TRUE) |>
+  write_lines(3) |>
+  h2_("Then run this prompt instead, and compare") |>
+  p_("\"This chart will sit beside the claim 'the programme reduced costs substantially'. Is the axis appropriate for that claim, for a non-technical reader?\"", italic = TRUE) |>
+  p_(HABITS) |>
+  new_page() |> title_("Take-away card: five rules for any figure", S8) |>
+  print_line("1 per participant, cut into cards") |>
+  add_cards(rep(list(c("Five rules for any figure",
+                       "1. Read the axis before the shape.",
+                       "2. Ask what the bar is averaging over.",
+                       "3. Check the denominator.",
+                       "4. Compare changes, not levels.",
+                       "5. Discount the future in front of the reader.",
+                       "", "The fastest check: read the y-axis, then the sentence under the figure. Large compared to what?",
+                       "", "Questions I will bring to the clinic:", "______________________________", "______________________________")), 4),
+            min_height = 3.6) |>
+  new_page() |> title_("Facilitator key", S8) |> print_line("trainer only") |>
+  h2_("The six pairs") |>
+  p_(sprintf("1. The gap is %s AED in both figures (%.0f%% of the non-enrolled mean, %.2f standard deviations). The truncated axis starts at 1,300, so the gap fills the frame. Cover the bars, read the axis, uncover.", gfmt(vgap), 100 * vgap / mean_non, sd_gap)) |>
+  p_(sprintf("2. The two groups overlap very little: only %.1f%% of enrolled businesses paid more than the average non-enrolled business. A bar of means cannot show that.", 100 * mean(enr > mean_non))) |>
+  p_(sprintf("3. %d of the 400 school-zone segments had no child collisions at baseline, so a percentage change is undefined for them. The largest percentage cuts come from segments that started with two to four collisions; the two top-six lists answer different questions.", sum(sc$base == 0))) |>
+  p_(sprintf("4. After only, the gap is %s AED. The comparison group started %s AED worse off and its costs were rising anyway; the DiD estimate is %s AED.", gfmt(ctl_a - off_a), gfmt(ctl_b - off_b), gfmt(abs(did_hand)))) |>
+  p_(sprintf("5. Added up, five years of savings reach %s AED; discounted at 5%%, %s. The %s AED gap comes from the discount rate alone. Ratio %.2f.", gfmt(cb_nom), gfmt(cb_dis), gfmt(cb_nom - cb_dis), cb_dis / 1800)) |>
+  p_(sprintf("6. The slices overlap: every child collision is also an injury collision, so the percentages are wrong as drawn. The pie also pools both rounds and hides the counts (minor %s, injury %s, of which child %s).", gfmt(sev[["minor"]]), gfmt(sev[["injury"]]), gfmt(sev[["child"]]))) |>
+  h2_("Predictions") |>
+  p_(sprintf("%.1f%%. Pooled %.1f%% against an average of %.1f%% across the %d segments with a baseline: far apart, because the pooled figure weights segments by their collisions. About %.0f%%.",
+             100 * mean(enr > mean_non), pooled_pct, average_pct, sum(has_base), 100 * flip_rate)) |>
+  h2_("AI Snapshot") |>
+  p_(sprintf("Each sentence is accurate. The answer skips who is reading the figure and the sentence beside it: a truncated axis suits \"a difference exists\", not \"a large difference\". It never checks either picture against the number (%s AED, %.2f standard deviations), and it does not ask who the audience is. The better prompt names both.", gfmt(vgap), sd_gap))
+print(s8, target = "Oct14_session2_materials.docx")
+
+# ===========================================================================
+# Oct15 S1 · Is This Evidence Credible?
+# ===========================================================================
+S10 <- "Module 2 · Day 4, Session 1 · Is This Evidence Credible?"
+s10 <- new_pack() |>
+  title_("Credibility rating sheet", S10) |>
+  print_line("1 per participant, with the report") |>
+  p_("Work through the report one section at a time. Circle a colour for each section and write the one reason that decided it. Rate the executive summary first, on your own, before reading on.") |>
+  body_add_flextable(plain_table(setNames(rating_scale, c("Colour", "What it means")), widths = c(1.2, 5.6))) |>
+  p_("Section 2, The programme, describes the programme and is not rated.", 8.5, italic = TRUE, color = GREY) |>
+  body_add_flextable(plain_table(data.frame(
+    Section = rating_sections$section, Colour = "Green  /  Amber  /  Red",
+    `The reason that decided it` = "", `If amber or red: what would settle it` = "", check.names = FALSE),
+    widths = c(1.6, 1.3, 2.1, 1.8)) |> tall_rows(0.95)) |>
+  new_page() |>
+  title_("Your verdict", S10) |>
+  print_line("on the back of the rating sheet") |>
+  p_("Would you sign off on this evaluation for national scale-up?") |>
+  p_("Before reading:   Yes  /  No  /  Not without more answers") |>
+  p_("At the end:          Yes  /  No  /  Not without more answers") |>
+  p_("The single most important problem you found:") |> write_lines(2) |>
+  p_("The strongest thing in the report, and whether it rescues the recommendation:") |> write_lines(2) |>
+  p_("Compare your colour for the executive summary with your colour for the results section. If they differ, what did the summary lead you to believe?") |>
+  write_lines(3) |>
+  new_page() |>
+  title_("AI Snapshot: a credibility verdict", S10) |>
+  print_line("1 per group") |>
+  p_("The prompt, with the report pasted in:", bold = TRUE) |>
+  p_("\"Here is an evaluation report on a programme that subsidised waste-management technology for businesses. It found a cost reduction of approximately 1,000 AED per business per year and recommends national scale-up. Assess the credibility of this evidence and tell me whether the recommendation is sound.\"", italic = TRUE) |>
+  h2_("A response like this is possible") |>
+  p_("Assessment: the evidence is credible and the recommendation is sound. The report is unusually thorough for this kind of evaluation. Several points support its credibility:") |>
+  p_("Multiple methods. The use of four estimation approaches, all producing consistent results, is a strong indicator of robustness. When independent methods agree, the finding is unlikely to be an artefact of any single specification.") |>
+  p_("Large sample. With roughly 9,900 observations, the study is well powered and the estimates are precise.") |>
+  p_("Transparency. The report discloses a change in the survey instrument between rounds and notes that 12 per cent of businesses were lost to follow-up. This level of disclosure suggests a careful and honest evaluation team.") |>
+  p_("Appropriate limitations. The limitations section correctly identifies that the randomised comparison estimates the offer effect and that the RDD estimate is local to the cut-off.") |>
+  p_("Recommendation. The headline estimate of 1,014 AED exceeds the 1,000 AED threshold, so the programme meets the criterion for scale-up. The recommendation is supported by the evidence.") |>
+  p_("Underline the two claims the report does not support. Then find the larger problem the response never mentions. Compare with the answer your own AI gave.", bold = TRUE) |>
+  write_lines(3) |>
+  h2_("Then run this prompt instead, and compare") |>
+  p_("\"The same report claims a cost reduction of approximately 1,000 AED against a decision threshold of 1,000 AED. Do three things. First, list every estimate the report gives, with its confidence interval, and say for each one whether it clears the threshold. Second, identify any claim in the executive summary that is not supported by the results section, and quote both. Third, tell me what the report does not tell me that I would need in order to decide.\"", italic = TRUE) |>
+  p_(HABITS) |>
+  new_page() |> title_("Take-away card: three habits for reading a report", S10) |>
+  print_line("1 per participant, cut into cards") |>
+  add_cards(rep(list(c("Three habits for reading a report",
+                       "1. Tabulate the estimates yourself, with the threshold in its own column. Do not let the report choose which number you see first.",
+                       "2. Read the limitations section, then check whether it names the limitations in the data section. If it does not, the analysis stopped early.",
+                       "3. Find the preferred specification and check whether the headline is it. When they differ, ask why.",
+                       "", "On my desk, I will ask these about:", "______________________________")), 6),
+            min_height = 2.8) |>
+  new_page() |> title_("Facilitator key", S10) |> print_line("trainer only") |>
+  body_add_flextable(plain_table(data.frame(Section = rating_sections$section,
+    `What is genuinely good` = rating_sections$strength, `The planted problem` = rating_sections$weakness,
+    check.names = FALSE), widths = c(1.3, 2.7, 2.8)) |> fontsize(size = 9, part = "body")) |>
+  h2_("The most important problem") |>
+  p_(rating_decisive) |>
+  h2_("AI Snapshot") |>
+  p_("The two unsupported claims: \"the programme meets the criterion for scale-up\" and \"the recommendation is supported by the evidence\". The larger problem: the response reads \"approximately 1,000\" as if a method had produced 1,000, and never notices that the preferred specification is 816, which fails the threshold, or asks whether 1,014 was chosen as the headline because it clears the bar. It also treats disclosure of attrition as evidence of quality. What it did well: it found the real disclosures, described the offer-effect and locality limitations correctly, and reached a verdict. The better prompt asks for a comparison instead of a verdict, so the 816 is hard to miss.")
+print(s10, target = "Oct15_session1_materials.docx")
+
+# ===========================================================================
+# Oct15 S3 · Plan Your Own Evaluation
+# ===========================================================================
+S12 <- "Module 2 · Day 4, Session 3 · Plan Your Own Evaluation"
+s12 <- new_pack() |>
+  title_("Evaluation Design Update", S12) |>
+  print_line("1 per team") |>
+  p_("Team name:  ____________________________________________________________") |>
+  p_("Members:  ______________________________________________________________") |>
+  p_("The programme you are evaluating:  _______________________________________") |>
+  h2_("Part 1. Where your design stands (20 minutes)") |>
+  p_("You started this design in Module 1. Write it down as it stands now, against the eight conditions. If you do not have the Module 1 document, use the recap in each row: the conditions have not changed.") |>
+  body_add_flextable(plain_table(data.frame(
+    Condition = sprintf("%d. %s. %s", seq_len(nrow(design_conditions)), design_conditions$condition,
+                        design_conditions$recap),
+    `Your design` = "", check.names = FALSE), widths = c(2.9, 3.9)) |> tall_rows(0.85) |>
+    fontsize(j = 1, size = 9.5, part = "body")) |>
+  p_("Your counterfactual, in one sentence. You will read it out in the pitch:") |> write_lines(2) |>
+  new_page() |>
+  title_("Part 2. The four additions (30 minutes)", S12) |>
+  print_line("1 per team (continues the Design Update)")
+for (i in seq_len(nrow(design_additions))) {
+  s12 <- s12 |>
+    h2_(sprintf("%d. %s", i, design_additions$addition[i])) |>
+    p_(sprintf("From: %s", design_additions$from[i]), 9, italic = TRUE, color = GREY) |>
+    p_(design_additions$asks[i]) |>
+    write_lines(3)
+}
+s12 <- s12 |>
+  new_page() |>
+  title_("Part 3. Your five-minute pitch", S12) |>
+  print_line("1 per team (continues the Design Update)") |>
+  p_("Five minutes per team, then three minutes of feedback from the room. Say what your design cannot establish before you say what you want.") |>
+  body_add_flextable(plain_table(data.frame(Part = pitch_structure$part, Time = pitch_structure$minutes,
+    `What it says` = pitch_structure$says, `Our notes` = "", check.names = FALSE),
+    widths = c(1.4, 0.6, 2.4, 2.4)) |> tall_rows(1.0)) |>
+  new_page() |>
+  title_("Feedback slips", S12) |>
+  print_line("1 page per participant, cut into four slips; one slip per pitch you hear, handed to the team") |>
+  add_cards(rep(list(c("Feedback for team: ____________________",
+                       "1. What is the design? Say it back in one sentence.", "", "",
+                       "2. What would make it fail? The one assumption that would have to break.", "", "",
+                       "3. What is missing? One thing you would have wanted to hear.", "", "",
+                       "Aim it at the design, not at the team.")), 4),
+            min_height = 4.2) |>
+  new_page() |> title_("Take-away card: the one question", S12) |>
+  print_line("1 per participant, cut into cards") |>
+  add_cards(rep(list(c("The question behind every session this week",
+                       "What is being compared to what, and why should those two things be comparable?",
+                       "", "The first evaluation decision I will make back at my desk:",
+                       "______________________________", "______________________________")), 8),
+            min_height = 1.9) |>
+  new_page() |> title_("Facilitator key", S12) |> print_line("trainer only") |>
+  p_("There are no right answers to the template. Use this page while circulating.") |>
+  h2_("Timing") |>
+  p_("Part 1: twenty minutes. Part 2: thirty minutes, then a five-minute break. Pitches: five minutes each, then three minutes of feedback in the fixed order (say it back, what would make it fail, what is missing).") |>
+  h2_("Prompts on the slides") |>
+  p_("The one condition that decides the rest: the counterfactual. Every method this week was a way of making it operational: randomisation, a cut-off, a matched comparison, a parallel trend.") |>
+  p_("Hardest addition before any data: usually the cost-benefit framework, because the benefit per unit is the thing the evaluation has yet to estimate. Teams can still state the threshold, the horizon and the discount rate.") |>
+  h2_("What to check at each table") |>
+  p_("Part 1: can the team say its counterfactual in one sentence? If not, the design is not finished.") |>
+  p_("Addition 1: have they named the one number they will lead with, and what a reader must not conclude from it?") |>
+  p_("Addition 2: is the horizon written down? Five years against two moves the GreenWaste ratio from 1.87 to 0.80.") |>
+  p_("Addition 3: have they sketched the second version of the figure, and said what it hides?") |>
+  p_("Addition 4: does the headline sentence contain the number, and does the plan name something the evaluation did not establish?") |>
+  p_("Pitch: does the limit come before the ask?")
+print(s12, target = "Oct15_session3_materials.docx")
+
+message("Wrote Fiona's six session packs.")
+
+# ===========================================================================
 # Participant copies for the website (docs/handouts/)
 # ===========================================================================
 # The same packs without the facilitator key and without the "Print:" lines,
@@ -577,10 +1146,12 @@ participant_copy <- function(src, dest) {
 }
 
 dir.create("../docs/handouts", showWarnings = FALSE)
-for (s in c("Oct12_session1", "Oct12_session3", "Oct13_session2",
-            "Oct14_session1", "Oct14_session3", "Oct15_session2"))
+for (s in c("Oct12_session1", "Oct12_session2", "Oct12_session3", "Oct13_session1",
+            "Oct13_session2", "Oct13_session3", "Oct14_session1", "Oct14_session2",
+            "Oct14_session3", "Oct15_session1", "Oct15_session2", "Oct15_session3"))
   participant_copy(paste0(s, "_materials.docx"), paste0("../docs/handouts/", s, "_handouts.docx"))
 # Handouts built elsewhere that participants keep, copied as they are.
 file.copy(c("Oct14_session3_qa_checklist.docx", "Oct15_session2_findings.docx",
-            "Oct15_session2_brief_template.docx"), "../docs/handouts/", overwrite = TRUE)
+            "Oct15_session2_brief_template.docx", "Oct15_session1_report.docx"),
+          "../docs/handouts/", overwrite = TRUE)
 message("Wrote participant copies to docs/handouts/.")

@@ -45,7 +45,7 @@ rating_sections <- data.frame(
     "It asserts that parallel trends is \u201Csatisfied by construction\u201D because the neighbourhoods share an administrative area. That is not what the assumption requires, and no pre-trend test is reported.",
     "Twelve per cent attrition is disclosed and then dismissed as \u201Cnormal churn\u201D, with no comparison of leavers to stayers. The instrument change is called a refinement without any test that it did not shift the outcome.",
     "The headline result is the largest of the four estimates, chosen because of the population it covers rather than because the design is stronger. The preferred specification fails the threshold and the report does not say so.",
-    "All three are boilerplate that leave the conclusion intact. The two limitations that do threaten it \u2014 attrition and the instrument change \u2014 are in the data section and never carried through to here.",
+    "All three are boilerplate that leave the conclusion intact. The two limitations that do threaten it (attrition and the instrument change) are in the data section and never carried through to here.",
     "Recommendations 2 and 3 are not supported by anything in the evaluation: nothing was estimated about subsidy rates, and the cut-off finding is about a different population from the one being scaled up."
   ),
   stringsAsFactors = FALSE
