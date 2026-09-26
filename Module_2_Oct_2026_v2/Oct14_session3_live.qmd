@@ -255,8 +255,8 @@ and the other two fall short. None of this table shows an interval.
 
 ::::: {.column width="56%"}
 ::: {.panel}
-The claim reports a number no method produced, summarises a range that
-straddles the threshold, and treats the threshold as crossed.
+The claim echoes the one method that lands exactly on 1,000, summarises a range
+that straddles the threshold, and treats the threshold as crossed.
 :::
 
 ::: {.ask .fragment}
