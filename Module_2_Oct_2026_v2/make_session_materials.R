@@ -671,8 +671,8 @@ s2 <- new_pack() |>
             min_height = 2.2) |>
   new_page() |> title_("Facilitator key", S2) |> print_line("trainer only") |>
   h2_("Annotate this output") |>
-  p_(sprintf("1. The change is the round row: %.2f collisions per segment. 2. Its interval runs from %.2f to %.2f. 3. The intercept, %.2f, is the 2019 average on camera roads. It is a starting level with nothing to compare it against, so it says nothing about what the cameras did. 4. Roads without cameras over the same two years. Their collisions fell too, by %.2f per segment (%.0f%%), so some of the %.2f would have happened anyway.",
-             coef(ba_fit)[["round"]], ba_fit$conf.low[["round"]], ba_fit$conf.high[["round"]],
+  p_(sprintf("1. The change is the round row: %.3f collisions per segment (the slides round it to %.2f). 2. Its interval runs from %.3f to %.3f. 3. The intercept, %.3f, is the 2019 average on camera roads. It is a starting level with nothing to compare it against, so it says nothing about what the cameras did. 4. Roads without cameras over the same two years. Their collisions fell too, by %.2f per segment (%.0f%%), so some of the %.2f would have happened anyway.",
+             coef(ba_fit)[["round"]], -cam_fall, ba_fit$conf.low[["round"]], ba_fit$conf.high[["round"]],
              coef(ba_fit)[["(Intercept)"]], oth_fall, 100 * oth_fall / oth_before, cam_fall)) |>
   p_(sprintf("Against the rule of %.1f fewer collisions: the estimate (%.2f) and the whole interval (%.2f to %.2f) clear it. The camera result passes how big and how sure; compared to what is still open.",
              POL_RULE, cam_fall, ba_ci[1], ba_ci[2])) |>

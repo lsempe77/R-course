@@ -47,8 +47,8 @@ advanced filtration and water-treatment equipment, together with a contribution
 towards installation.
 
 Eligibility was determined by an efficiency index maintained by the authority.
-Businesses scoring at or above 58 on that index were eligible for the subsidy;
-businesses scoring below it were not. In treatment neighbourhoods, all eligible
+Businesses scoring at or below 58 on that index were eligible for the subsidy;
+businesses scoring above it were not. In treatment neighbourhoods, all eligible
 businesses were offered the programme and could choose whether to enrol. In
 control neighbourhoods, no businesses were offered it.
 
@@ -170,7 +170,7 @@ since the evaluation provides no evidence that a lower rate would be less
 effective.
 
 **Recommendation 3.** The eligibility cut-off should be reviewed, as the
-regression discontinuity results suggest that businesses just below the threshold
+regression discontinuity results suggest that businesses just above the threshold
 may also benefit.
 
 # Annex A: Survey instruments

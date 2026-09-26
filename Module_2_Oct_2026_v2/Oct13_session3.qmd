@@ -1575,7 +1575,7 @@ on its own.
 
 ```{=html}
 <div class="facts">
-  <div class="k">Day 1 S2</div> <div class="v">descriptive reading &middot; -1.13 against a 2.0 rule</div>
+  <div class="k">Day 1 S2</div> <div class="v">descriptive reading &middot; -2.53 against a 2.0 rule, with no comparison group</div>
   <div class="k">Day 1 S3</div> <div class="v">randomisation &middot; the comparison created by a lottery</div>
   <div class="k">Day 2 S1</div> <div class="v">DiD &middot; -816 against a 1,000 rule, and an assumption that could not be tested</div>
   <div class="k">Day 2 S2</div> <div class="v">RDD &middot; -791 against a 1,000 rule, and local to the line</div>

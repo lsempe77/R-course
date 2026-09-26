@@ -770,7 +770,7 @@ Predict: what discount rate would it take for the total to fall below the
 :::
 
 ::: {.notes}
-Run at 0.05 (3,366), then 0 (4,082: the undiscounted line), then 0.10. The
+Run at 0.05 (3,365), then 0 (4,080: the undiscounted line), then 0.10. The
 answer to the question is about 24%, the flip rate from this morning's session.
 :::
 
@@ -781,10 +781,10 @@ answer to the question is about 24%, the flip rate from this morning's session.
 ::::: {.column width="52%"}
 ```{=html}
 <div class="facts">
-  <div class="k">Five years, added up</div>  <div class="v">4,082 AED per business</div>
-  <div class="k">Five years, discounted</div><div class="v">3,366 AED per business</div>
-  <div class="k">The difference</div>        <div class="v">716 AED &middot; the discount rate, not the programme</div>
-  <div class="k">The ratio</div>             <div class="v">3,366 / 1,800 = 1.87</div>
+  <div class="k">Five years, added up</div>  <div class="v">4,080 AED per business</div>
+  <div class="k">Five years, discounted</div><div class="v">3,365 AED per business</div>
+  <div class="k">The difference</div>        <div class="v">715 AED &middot; the discount rate, not the programme</div>
+  <div class="k">The ratio</div>             <div class="v">3,365 / 1,800 = 1.87</div>
 </div>
 ```
 :::::

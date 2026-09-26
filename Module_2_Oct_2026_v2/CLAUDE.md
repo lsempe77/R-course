@@ -373,14 +373,23 @@ themselves; what remains is delivery readiness.
       removed, Oct14 S2 layout fixes and live cells, pet-peeve pass, Oct15 S3 trim). Oct14 S2
       is now a live deck: serve it (not a double-clicked file) to test the three Try it
       slides, and check `docs/` has `evaluation_data_SchoolZoneRCT.csv` beside it.
-- [ ] **Two hard-coded deck figures disagree with the data.** Oct14 S2's "Rule 5" slide and
-      its "Try it" notes say 4,082 and 3,366 (gap 716); the data gives 4,080 and 3,365
-      (gap 715). Oct13 S1 "Where this sits" and Oct13 S3 "The week so far" still describe
-      Day 1 S2 as "-1.13 against a 2.0 rule"; the Oct12 S2 deck now reports -2.53, which
-      clears the rule (and Oct13 S1's "none of them has cleared its bar" follows from it).
-- [ ] **Report text: eligibility direction.** `Oct15_session1_report.qmd` section 2 says
-      businesses "at or above 58" were eligible; in GreenWaste the eligible ones score 58 or
-      below. Not one of the planted flaws: fix it, or add it to the key as a planted one.
+- [ ] **Review the print packs for Fiona's six sessions** (built 2026-09-25). Check:
+      1. Writing space: the Oct15 S1 rating sheet and Part 1 of the Oct15 S3 template are
+         tables, not full-width lines. Print one and check there is room for real answers.
+      2. The two printed charts: Oct12 S2 (before-and-after bars) and Oct14 S2 (Figures A
+         and B). The AI exercise has participants give the AI a picture of the chart, so
+         they photograph the page or the screen. Confirm that works in the room.
+      3. Copy counts: every page's print line ("1 per pair", "1 per group") fits the
+         groupings you plan.
+      4. The flawed AI answers on paper carry no highlighting, on purpose: participants
+         find the errors. The slides show the flags in the debrief.
+      5. Wording lives in two places: prompts and AI answers are copied from the slides.
+         Edit a slide's prompt, then edit the same text in `make_session_materials.R` and
+         re-run it.
+      6. Two take-away cards end differently from "On my desk, I will ask these about":
+         Oct14 S2 (questions for the QA clinic) and Oct15 S3 (the first decision at your desk).
+      7. `Module2_exercise_plan_v2.docx`: the Status column rendered very narrow in
+         LibreOffice (the pre-edit file did too). Check it in Word.
 
 ### Done
 
@@ -414,6 +423,14 @@ themselves; what remains is delivery readiness.
       rating sheet and Oct15 S3's template moved into their packs; the report re-rendered
       (the old .docx still carried the IV version); em dashes removed from `qa_rating.R`,
       `qa_design_update.R` and the exercise plan (2026-09-25)
+- [x] Stale deck figures fixed (2026-09-25): Oct14 S2 Rule 5 now 4,080 / 3,365 / 715;
+      Oct13 S1 and S3 describe Day 1 S2 as -2.53 against the 2.0 rule with no comparison
+      group; Oct13 S1's "Session 1, Session 2" callbacks now point to Day 1. Re-render
+      Oct13 S1, Oct13 S3 and Oct14 S2.
+- [x] Report eligibility fixed (2026-09-25): section 2 now says businesses at or below 58
+      were eligible, matching GreenWaste; Recommendation 3 and the Oct15 S1 Conclusions
+      slide now say "just above" / "above the cut-off". Report .docx re-rendered;
+      re-render the Oct15 S1 deck.
 
 ---
 

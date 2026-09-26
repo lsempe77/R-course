@@ -334,7 +334,7 @@ Before we do the method, what do you already expect the answer to be?
 Sections 1 and 2 are the "remember" recap: aim for 5 to 10 minutes total. The
 room already met GreenWaste, the before-and-after and with-and-without numbers,
 and the idea of subtracting one group's change from the other's (on the traffic
-cameras in Day 1 Session 2). Move through the recall quickly. The new material
+cameras in Day 1 Session 1). Move through the recall quickly. The new material
 today is reading the table (Section 3) and the one assumption DiD rests on
 (Section 4): that is where the time should go.
 :::
@@ -761,10 +761,8 @@ reaches only `r gfmt(did_avoided_most)`. **It does not clear the bar.**
 :::
 
 ::: {.ask .fragment}
-Session 1: *statistically significant does not mean big enough.* Session 2: same
-verdict. Here it is a third time.
-
-Three sessions, three results that are real and not sufficient.
+Day 1: *statistically significant does not mean big enough.* Here is a result
+that is real and still not sufficient.
 :::
 
 # 4 · The one question {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
@@ -994,8 +992,8 @@ table does **not** support.
 ::::: {.column width="50%"}
 ::: {.warn}
 **1 · "So the programme was a success."** It answers *is the effect non-zero*,
-not *does it clear the 1,000 AED bar*. Session 1, Session 2, and now here: the
-same substitution, every time.
+not *does it clear the 1,000 AED bar*. Day 1 warned about the same
+substitution.
 :::
 
 ::: {.warn}
@@ -1105,15 +1103,16 @@ method, and they are the ones that decide whether the number means anything.
 ```{=html}
 <div class="facts">
   <div class="k">Day 1 S1</div> <div class="v">compared to what? &middot; the three questions</div>
-  <div class="k">Day 1 S2</div> <div class="v">reading a descriptive output &middot; -1.13 against a 2.0 rule</div>
+  <div class="k">Day 1 S2</div> <div class="v">reading a descriptive output &middot; -2.53 against a 2.0 rule, with no comparison group</div>
   <div class="k">Day 1 S3</div> <div class="v">naive comparisons and an RCT &middot; the design that removes the difference</div>
   <div class="k">Today</div>  <div class="v">DiD &middot; -816 against a 1,000 rule, with the assumption that could not be tested</div>
 </div>
 ```
 
 ::: {.ask}
-Notice the pattern across the week so far: every result has been real, and none
-of them has cleared its bar.
+Notice the pattern across the week so far: every result has been real. The one
+that cleared its bar, the camera roads, had no comparison group. The results with a comparison group have not yet shown that
+they clear theirs.
 
 Ask yourself what that means for the way evaluations get commissioned. Then
 bring it to the next session, where the identification comes from a **cut-off**
