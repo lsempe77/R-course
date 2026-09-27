@@ -8,6 +8,9 @@ always_allow_html: yes
 # carry live cells ("Try it"); the CSVs under webr: resources must sit next to
 # the published .html, and webR needs an internet connection on the day. The
 # plotly charts are baked at render time as before.
+# Two datasets, an exception to the one-example rule: GreenWaste is a cost per
+# business, so the denominator problem (section 3) and the overlapping pie
+# (section 6) need count data, which the school-zone RCT supplies.
 format:
   live-revealjs:
     theme: [theme_dge.scss, theme_live.scss]
@@ -176,18 +179,24 @@ cb_ratio     <- cb_dis_total / COST_PER_BUSINESS
 
 # ---- School-zone child collisions: the denominator problem -----------------
 sz <- read.csv("./evaluation_data_SchoolZoneRCT.csv")
-sc <- sz %>% group_by(segment_id, arm) %>%
+# Section 3 asks where the package worked, so it uses the package arm only
+# (200 of the 400 segments). The pie in section 6 uses both arms.
+sc <- sz %>% filter(arm == "Package") %>% group_by(segment_id) %>%
   summarise(base = child_collisions[round == 0],
             follow = child_collisions[round == 1], .groups = "drop")
+n_seg      <- nrow(sc)
 
 zero_base  <- sum(sc$base == 0)
 sc_pos     <- sc %>% filter(base > 0) %>%
   mutate(pct = 100 * (follow - base) / base, absolute = follow - base)
 
-# The two different "biggest wins", which do not contain the same segments.
+# The two different "biggest wins". Many segments tie at -100% (they fell to
+# zero); arrange() keeps segment order among ties.
 big_pct <- sc_pos %>% arrange(pct) %>% slice_head(n = 6)
 big_abs <- sc_pos %>% arrange(absolute) %>% slice_head(n = 6)
 overlap <- length(intersect(big_pct$segment_id, big_abs$segment_id))
+n_to_zero       <- sum(sc_pos$follow == 0)
+n_to_zero_small <- sum(sc_pos$follow == 0 & sc_pos$base <= 4)
 
 # The pooled percentage against the average of the percentages, which is the
 # difference between weighting by size and giving every segment equal say.
@@ -195,17 +204,6 @@ pooled_pct   <- 100 * (sum(sc$follow) - sum(sc$base)) / sum(sc$base)
 # Only segments with a non-zero baseline have a percentage change to average.
 average_pct  <- mean(sc_pos$pct)
 n_pct        <- nrow(sc_pos)
-
-# ---- Traffic cameras: total count against rate ----------------------------
-cam <- read.csv("./evaluation_data_TrafficCameras.csv")
-sect <- cam %>% group_by(sector_id) %>%
-  summarise(collisions = sum(injury_collisions),
-            km = sum(road_length_km), .groups = "drop") %>%
-  mutate(per_km = collisions / km)
-
-top_count <- sect %>% arrange(desc(collisions)) %>% slice_head(n = 5)
-top_rate  <- sect %>% arrange(desc(per_km))     %>% slice_head(n = 5)
-sect_overlap <- length(intersect(top_count$sector_id, top_rate$sector_id))
 
 # ---- The severity mix, for the pie ----------------------------------------
 sev <- c(minor = sum(sz$minor_collisions),
@@ -243,6 +241,7 @@ b0 <- subset(gw, treatment_neighborhood == 1 & round == 0)
 costs <- c(Enrolled       = mean(b0$waste_management_costs[b0$enrolled == 1]),
            "Not enrolled" = mean(b0$waste_management_costs[b0$enrolled == 0]))
 sz <- read.csv("evaluation_data_SchoolZoneRCT.csv")
+sz <- subset(sz, arm == "Package")   # section 3 uses the package segments only
 sc <- merge(subset(sz, round == 0, c(segment_id, child_collisions)),
             subset(sz, round == 1, c(segment_id, child_collisions)), by = "segment_id")
 names(sc) <- c("segment_id", "before", "after")
@@ -269,7 +268,7 @@ plot_payback <- function(today, cost = 1800) {
   <div class="k">Day 1</div>  <div class="v">is the number answering your question, and is it big enough?</div>
   <div class="k">Day 2</div>  <div class="v">which method produced it, and what does that method assume?</div>
   <div class="k">This morning</div> <div class="v">what is it worth, and which assumption decides that?</div>
-  <div class="k">Now</div>     <div class="v">the form the claim actually reaches a decision-maker in</div>
+  <div class="k">Now</div>     <div class="v">the chart a decision-maker actually sees</div>
 </div>
 ```
 
@@ -282,8 +281,8 @@ An assumption that is left out of the chart is hard to question.
 :::
 
 ::: {.ask}
-This session is about **reading charts as evidence**: the same interrogation
-you have practised all week, applied to the form evidence usually arrives in.
+This session is about **reading charts as evidence**. When a report reaches you,
+do you question its charts the way you have questioned its numbers this week?
 :::
 
 ## Six pairs, two questions
@@ -300,6 +299,12 @@ fair; the other invites a wrong reading, or cannot be read correctly at all.
 2. What might be wrong or misleading?
 :::
 
+::: {.notes}
+Paper (Oct14_session2_materials.docx): Hand out the six pairs tracker (pack page 1,
+one per participant). They fill in a row after each pair. The three predictions are
+at the bottom of the same sheet.
+:::
+
 ## The same data, two pictures
 
 ::: {.panel}
@@ -307,7 +312,8 @@ Among the businesses that were offered GreenWaste, the ones that enrolled paid *
 ones that did not paid **`r gfmt(mean_non)` AED**. A gap of
 **`r gfmt(gap)` AED**.
 
-The next two figures draw the same gap.
+Before the programme started, the businesses that enrolled were already paying
+less. Keep this `r gfmt(gap)` AED; it returns in section 4.
 :::
 
 ```{r fig.height=2.6, fig.width=5.6}
@@ -319,12 +325,11 @@ tibble(group = c("Enrolled", "Not enrolled"), cost = c(mean_enr, mean_non)) %>%
           hovertemplate = "%{x}: %{y:,.0f} AED<extra></extra>") %>%
   layout(xaxis = ax("", zeroline = FALSE),
          yaxis = ax("Mean annual waste cost (AED)", range = c(0, 2400))) %>%
-  pl_m2(width = PL_W, height = 250)
+  pl_m2(width = PL_W, height = 250, title = "Figure A")
 ```
 
 ::: {.ask}
-This figure is fair: the axis starts at zero and the values are labelled.
-Keep it in mind for the next slide.
+Is this figure fair? What would you check first?
 :::
 
 ## The same gap, drawn to fill the frame
@@ -339,7 +344,7 @@ tibble(group = c("Enrolled", "Not enrolled"), cost = c(mean_enr, mean_non)) %>%
   layout(xaxis = ax("", zeroline = FALSE),
          yaxis = ax("Mean annual waste cost (AED)",
                     range = c(1300, 2200), zeroline = FALSE)) %>%
-  pl_m2(width = PL_W, height = 250, t = 40)
+  pl_m2(width = PL_W, height = 250, t = 40, title = "Figure B")
 ```
 
 ::: {.warn}
@@ -355,9 +360,38 @@ most of the frame.
 minister? Which would you put in an annex? Is your answer the same for both?
 :::
 
+## `[MENTI PLACEHOLDER]` Which figure for the minister?
+
+:::::: {.columns}
+
+::::: {.column width="62%"}
+::: {.ask style="font-size: 120%;"}
+Briefing a minister: **figure A, figure B, or either with one sentence added?**
+
+A &nbsp;·&nbsp; B &nbsp;·&nbsp; Either, with one sentence added
+:::
+
+Figure A starts the axis at zero; figure B starts it at 1,300. Go to
+**menti.com** and enter code **`r MENTI_CODE`**, or scan the code on the right.
+:::::
+
+::::: {.column width="38%"}
+```{r out.width='330px', out.extra='style="display:block; margin:0 auto;"'}
+knitr::include_graphics(MENTI_QR)
+```
+:::::
+
+::::::
+
+::: {.notes}
+Take the vote, then ask one person from each answer what the sentence would say.
+:::
+
 ## Try it: where should the axis start?
 
 ```{webr}
+#| fig-width: 10
+#| fig-height: 3.2
 start <- 1300    # where the y-axis begins: try 0, then 1400
 clean_par()
 barplot(costs, ylim = c(start, 2300), xpd = FALSE, border = NA,
@@ -365,12 +399,11 @@ barplot(costs, ylim = c(start, 2300), xpd = FALSE, border = NA,
 ```
 
 ::: {.ask}
-Before each run, predict: what happens to the gap when the axis starts at 0? At
-1,400?
+Predict before each run: how big does the gap look from 0? From 1,400?
 :::
 
 ::: {.notes}
-Run it as written first: 1300 reproduces the previous slide. Then change `start`
+Run it as written first: 1300 reproduces figure B. Then change `start`
 to 0 and run, then 1400. The costs never change; only the frame around them does.
 :::
 
@@ -387,9 +420,8 @@ It misleads when the reader does not notice that the axis has been cut.
 :::
 
 ::: {.ask}
-The practical test, and you can do it in two seconds:
-
-**Cover the bars. Read the y-axis. Uncover.**
+Test: **cover the bars, read the y-axis, uncover.** Does the gap still look the
+same size?
 :::
 :::::
 
@@ -407,14 +439,18 @@ The practical test, and you can do it in two seconds:
 ::::::
 
 ::: {.ask}
-The third line **supports** the claim: a gap of `r sprintf("%.2f", sd_gap)`
-standard deviations is large by the usual conventions. The problem with the second
-figure is that it asks you to judge the gap from the drawing instead of the number.
+Here the number and the picture agree: `r sprintf("%.2f", sd_gap)` SD is a large
+gap. **If the gap really is large, what is still wrong with figure B?**
+:::
+
+::: {.notes}
+The answer: figure B asks the reader to judge the gap from the drawing instead of
+the number.
 :::
 
 # 2 · What the bar is hiding {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
-## A mean is not a group
+## What the bar of means leaves out
 
 ::: {.panel}
 The same comparison as a **bar chart of means**, one number per group. It is one
@@ -440,18 +476,25 @@ tibble(group = c("Enrolled", "Not enrolled"), cost = c(mean_enr, mean_non)) %>%
 paid **more** than the average non-enrolled business? Write a number down.
 :::
 
+::: {.notes}
+Paper (Oct14_session2_materials.docx): the first prediction on the tracker (pack
+page 1).
+:::
+
 ## The same comparison, as distributions
 
 ```{r fig.height=2.4, fig.width=11.4}
 tibble(cost = c(enr, non),
        group = c(rep("Enrolled", length(enr)), rep("Not enrolled", length(non)))) %>%
   plot_ly(x = ~cost, color = ~factor(group, levels = c("Enrolled", "Not enrolled")),
-          colors = c(ACCENT, ACCENT2), type = "histogram", nbinsx = 46,
-          opacity = 0.72, histnorm = "probability density",
+          colors = c(ACCENT, ACCENT2), type = "histogram",
+          # Same bins for both groups, so each bar is a comparable share.
+          xbins = list(start = 600, end = 3600, size = 65),
+          opacity = 0.72, histnorm = "probability",
           hovertemplate = "%{x:.0f} AED<extra></extra>") %>%
   layout(barmode = "overlay",
          xaxis = ax("Annual waste cost (AED)"),
-         yaxis = ax("Share of the group"),
+         yaxis = ax("Share of the group", tickformat = ".0%"),
          shapes = list(
            list(type = "line", y0 = 0, y1 = 1, yref = "paper",
                 x0 = mean_enr, x1 = mean_enr, line = list(color = ACCENT, width = 3)),
@@ -498,10 +541,10 @@ of the comparison group paid less than the enrolled average.
 
 ::: {.ask}
 This is the same instinct as Day 1's confidence interval and Day 2's baseline
-balance table. **Every summary leaves something out, so ask what.**
+balance table. **Ask what the summary leaves out.**
 
-Here the missing information supported the finding. That will not always be the
-case.
+Here the overlap agrees with the gap. What would you conclude if the two groups had
+overlapped heavily?
 :::
 
 # 3 · Check the denominator {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
@@ -509,11 +552,9 @@ case.
 ## The change nobody can compute
 
 ::: {.panel}
-The school-zone trial measured child collisions at 400 segments, before and
-after. An analyst wants to report **the percentage change in child collisions at
-the typical segment.**
-
-For some segments it cannot be calculated.
+The school-zone trial put its safety package on `r n_seg` of its 400 segments and
+counted child collisions before and after. An analyst wants to report **the
+percentage change in child collisions at the typical package segment.**
 :::
 
 ```{r}
@@ -523,16 +564,14 @@ sc %>%
   count(`Baseline child collisions`) %>%
   mutate(`Share of segments` = sprintf("%.1f%%", 100 * n / sum(n))) %>%
   select(-n) %>%
-  tbl(align = "rr", font_size = 15, hl = 1, hl_bg = HL_RED, hl_bold = TRUE)
+  tbl(align = "rr", font_size = 14, hl = 1, hl_bg = HL_RED, hl_bold = TRUE)
 ```
 
 ::: {.warn}
-**`r gfmt(zero_base)` of the 400 segments recorded no child collisions at
-baseline.** For those segments a percentage change is undefined, because it
-would mean dividing by zero.
-
-Any figure that reports a percentage change has dropped these
-`r gfmt(zero_base)` segments or handled them somehow. Check whether it says which.
+**`r gfmt(zero_base)` of the `r n_seg` package segments had no child collisions at
+baseline**, so their percentage change would mean dividing by zero. Any figure
+that reports one has dropped these segments or handled them somehow. Does it say
+which?
 :::
 
 ## Two charts, two different "biggest wins"
@@ -579,13 +618,15 @@ big_abs %>%
 
 ::: {.warn .fragment}
 **These two lists have `r if (overlap == 0) "no segments" else if (overlap == 1) "one segment" else paste(overlap, "segments")` in common.**
-Every segment on the left started with two to four child collisions. The segments
-on the right removed `r gfmt(-sum(big_abs$absolute))` between them.
+Every segment on the left fell to zero, a 100% cut. So did `r n_to_zero` package
+segments in all, `r n_to_zero_small` of them from four collisions or fewer. The
+segments on the right removed `r gfmt(-sum(big_abs$absolute))` between them.
 :::
 
 ::: {.ask .fragment}
-**Neither is wrong.** The left answers *where did it work best?*; the right,
-*where did it prevent the most harm?* Ask which question a report's chart answers.
+Both are correct. The left answers *where did the package work best?*; the right,
+*where did it prevent the most harm?* **Which question would a minister want a
+report's chart to answer?**
 :::
 
 ## Try it: one change, two averages
@@ -605,7 +646,11 @@ Predict before I run it: will the two answers be close?
 :::
 
 ::: {.notes}
-Expected: about -32.7% pooled and about -10.8% averaged. The next slide explains
+Paper (Oct14_session2_materials.docx): the second prediction on the tracker (pack
+page 1); everyone writes "close" or "far apart" before you run it.
+
+Expected: about `r sprintf("%.1f%%", pooled_pct)` pooled and about
+`r sprintf("%.1f%%", average_pct)` averaged. The next slide explains
 the gap: the pooled figure weights each segment by its collisions; the average
 gives every segment equal weight, so small bases pull it around.
 :::
@@ -622,13 +667,13 @@ gives every segment equal weight, so small bases pull it around.
 ```
 
 ::: {.ask}
-The pooled change across all 400 segments is
+The pooled change across all `r n_seg` package segments is
 `r sprintf("%.1f%%", pooled_pct)`. The average of the `r n_pct` percentage changes
 that can be computed is `r sprintf("%.1f%%", average_pct)`.
 
 **They differ by `r sprintf("%.0f", abs(average_pct - pooled_pct))` percentage
 points** because the pooled figure weights each segment by its collisions and the
-average gives every segment equal weight.
+average gives every segment equal weight. **Which one belongs in the headline?**
 :::
 
 # 4 · Levels or changes {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
@@ -636,7 +681,7 @@ average gives every segment equal weight.
 ## The figure that flatters the programme
 
 ::: {.panel}
-The headline claim from Day 2 Session 1, drawn as a chart. After the programme,
+Day 1 Session 3's with-and-without comparison, drawn as a chart. After the programme,
 the enrolled businesses paid **`r gfmt(gv(1, 1))` AED** and the comparison
 businesses paid **`r gfmt(gv(0, 1))` AED**.
 
@@ -685,12 +730,12 @@ tibble(
 **The comparison group started `r gfmt(gv(0, 0) - gv(1, 0))` AED worse off, and its
 costs were rising anyway.** The gap on the previous slide mixes the programme
 effect with that starting gap and with a trend unrelated to the programme. The
-DiD estimate is `r gfmt(did_est)` AED, not `r gfmt(gv(0, 1) - gv(1, 1))`.
+DiD estimate from Day 2 Session 1 is `r gfmt(did_est)` AED, not `r gfmt(gv(0, 1) - gv(1, 1))`.
 :::
 
 ::: {.ask .fragment}
-Day 1 showed this problem as a with-and-without comparison. Drawn as a bar chart,
-it looks more convincing.
+Day 1 showed this as a with-and-without comparison. **Why does the same comparison
+look more convincing as a bar chart?**
 :::
 
 ::: {.notes}
@@ -710,10 +755,11 @@ to draw.
 ```
 
 ::: {.ask}
-A four-number test, and you can run it on any before-and-after figure:
+Check for four numbers on any before-and-after figure: before and after, for
+both groups.
 
-**Do I have the before for both groups? If not, the chart cannot tell me the
-programme's effect, whatever it is titled.**
+**Does the figure show the before for both groups? If not, what can it tell you
+about the programme's effect?**
 :::
 
 # 5 · The assumption the picture hides {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
@@ -757,47 +803,41 @@ lower line discounts at 5% and reaches `r gfmt(cb_dis_total)`. The
 ## Try it: change the discount rate
 
 ```{webr}
+#| fig-width: 10
+#| fig-height: 3
 rate   <- 0.05                        # try 0, then 0.10
 saving <- c(0, rep(816, 5))           # nothing in year 1, then five years
 today  <- saving / (1 + rate)^(1:6)   # each year's saving in today's money
-round(sum(today))                     # the total, against a cost of 1,800
+cat("Total in today's money:", round(sum(today)), "AED; cost 1,800 AED\n")
 plot_payback(today)
 ```
 
 ::: {.ask}
-Predict: what discount rate would it take for the total to fall below the
-1,800 AED cost?
+Predict: what rate would push the total below the 1,800 AED cost?
 :::
 
 ::: {.notes}
-Run at 0.05 (3,365), then 0 (4,080: the undiscounted line), then 0.10. The
+Paper (Oct14_session2_materials.docx): the third prediction on the tracker (pack
+page 1).
+
+Run at 0.05 (`r gfmt(cb_dis_total)`), then 0 (`r gfmt(cb_nom_total)`: the
+undiscounted line), then 0.10 (`r gfmt(sum(816 / 1.10^(2:6)))`), then 0.24: the
+total falls to about `r gfmt(sum(816 / 1.24^(2:6)))`, level with the cost. The
 answer to the question is about 24%, the flip rate from this morning's session.
 :::
 
 ## Rule 5: discount in front of the reader
 
-:::::: {.columns}
+::: {.panel}
+**The ratio, discounted:** `r gfmt(cb_dis_total)` / `r gfmt(COST_PER_BUSINESS)` =
+**`r sprintf("%.2f", cb_ratio)`**.
+:::
 
-::::: {.column width="52%"}
-```{=html}
-<div class="facts">
-  <div class="k">Five years, added up</div>  <div class="v">4,080 AED per business</div>
-  <div class="k">Five years, discounted</div><div class="v">3,365 AED per business</div>
-  <div class="k">The difference</div>        <div class="v">715 AED &middot; the discount rate, not the programme</div>
-  <div class="k">The ratio</div>             <div class="v">3,365 / 1,800 = 1.87</div>
-</div>
-```
-:::::
-
-::::: {.column width="48%"}
 ::: {.ask}
 The undiscounted line is easier to explain and looks better. Leaving out the
-discount is still a choice, and it favours the programme, but nobody is asked to
-defend it the way they would defend a 5% rate.
+discount is a choice that favours the programme. **Would anyone in your review
+process ask the analyst to defend it, as they would a 5% rate?**
 :::
-:::::
-
-::::::
 
 ::: {.warn}
 The cost line is crossed in year
@@ -858,8 +898,8 @@ so the slices overlap and the percentages are wrong.
 
 ::: {.ask}
 The truncated axis and the level comparison were accurate charts that invited a
-wrong reading. **This chart is wrong as drawn.** Before asking what a figure shows,
-check that its parts add up.
+wrong reading. This chart's percentages are wrong. **Before you read what a
+figure shows, how would you check that its parts add up?**
 :::
 
 ## The same collisions, as counts
@@ -897,19 +937,15 @@ and there is no comparison between the arms.
 
 # 7 · Put AI to work {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
-## AI Snapshot: the chart that cannot be wrong
+## AI Snapshot: which chart is fairer?
 
 ::: {.panel}
-Groups: give the model the two GreenWaste baseline figures (the zero-axis one and the truncated one) and this prompt.
-
-**"Which of these two charts better represents the difference between the two
-groups, and why?"**
+Give the model figures A and B and this prompt: **"Which of these two charts
+better represents the difference between the two groups, and why?"**
 :::
 
 ::: {.ai-output}
 *A response like this is possible, especially with a short or leading prompt:*
-
-
 
 Both charts present the same underlying data accurately. [The truncated-axis
 chart is often preferable for a policy audience because it makes the difference
@@ -921,49 +957,38 @@ a reader who wants the absolute values can consult the data labels]{.flag}.
 :::
 
 ::: {.ask}
-**Four minutes.** Judge this answer against what you have just learned.
-
-Is it wrong? Is it right? Is it answering the question that was asked? What does it explain well?
+**Four minutes.** Is it right? Does it answer the question that was asked? What
+does it explain well?
 :::
 
-## Debrief: true statements, wrong question
-
-:::::: {.columns}
-
-::::: {.column width="50%"}
-::: {.panel}
-**Each sentence is accurate.** Truncated axes are common, data labels do give the
-values, and a zero baseline is not a strict rule.
+::: {.notes}
+Paper (Oct14_session2_materials.docx): Hand out the AI Snapshot sheet (pack page 2,
+one per group). It has both figures, the prompt and the response.
 :::
+
+## Debrief: what the answer skipped
 
 ::: {.warn}
-**It skips the two things that decide the answer:**
+**Each sentence is accurate. The answer skips what decides the question:**
 
 * **who is reading it**: a minister and an analyst need different figures;
-* **the sentence beside it**: a truncated axis suits "a difference exists", not
-  "a large difference".
+* **the sentence beside it**: a truncated axis suits "a difference exists", not "a large difference";
+* **the number**: `r gfmt(gap)` AED, `r sprintf("%.2f", sd_gap)` SD, answers "is it large?" without any chart.
 :::
-:::::
-
-::::: {.column width="50%"}
-::: {.panel}
-**It never checked either picture against the number.** The gap is
-`r gfmt(gap)` AED, `r sprintf("%.2f", sd_gap)` standard deviations. That answers
-"is it large?" without any chart.
-:::
-
-::: {.warn}
-**It did not ask who the audience was.** The question cannot be answered without
-that, and the model answered anyway. Check whether yours did better.
-:::
-:::::
-
-::::::
 
 ::: {.ask}
 **A better prompt** names the reader and the sentence: *"This chart will sit
 beside the claim 'the programme reduced costs substantially'. Is the axis
 appropriate for that claim, for a non-technical reader?"*
+
+**Two habits:** ask the AI to ask you questions before it answers, and paste its
+answer into a fresh chat to check it.
+:::
+
+::: {.notes}
+Paper (Oct14_session2_materials.docx): the better prompt and the two habits are at
+the bottom of the AI Snapshot sheet (pack page 2). Groups run the better prompt and
+compare.
 :::
 
 # 8 · The five rules {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
@@ -977,11 +1002,12 @@ fig_rules %>%
 ```
 
 ::: {.ask}
-None of the five needs software, and each takes a few seconds. **You have now
-run all five**, on data from earlier in the week.
+None of the five needs software, and you have now run all five on data from
+earlier in the week. **Which one would you find hardest to apply under time
+pressure?**
 :::
 
-## The one you will actually use
+## The fastest check
 
 ::: {.panel}
 The fastest of the five checks:
@@ -994,7 +1020,7 @@ whether they are describing the same thing.**
 <div class="facts">
   <div class="k">The axis says</div>      <div class="v">how big the difference is on the page</div>
   <div class="k">The sentence says</div>  <div class="v">how big the difference is in the world</div>
-  <div class="k">They can disagree</div> <div class="v">and that is where overclaiming happens</div>
+  <div class="k">They can disagree</div> <div class="v">when they do, the sentence overclaims</div>
   <div class="k">So ask</div>             <div class="v">"large compared to what?"</div>
 </div>
 ```
@@ -1016,9 +1042,15 @@ the same numbers. The difference came from choices about how to draw them.
 ```
 
 ::: {.ask}
-The next session is a clinic. The 3ie trainer plays the evaluator of a study you
-have not seen. You have the checklist you have been building since Day 1, and now
-the figure-reading questions as well.
+**Pick one chart from a report your team received this year. Which of the five
+rules does it fail?**
 
-**Start listing your questions now.**
+Next session the 3ie trainer plays the evaluator of a study you have not seen.
+Which questions from your checklist, and from today, will you ask first?
+:::
+
+::: {.notes}
+Paper (Oct14_session2_materials.docx): Hand out the take-away cards (pack page 3,
+one per participant, cut). Give a minute to write two questions for the clinic on
+the card.
 :::

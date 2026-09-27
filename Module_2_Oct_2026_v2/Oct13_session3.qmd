@@ -300,7 +300,8 @@ lab2 <- c(baseline_speed_85th = "85th percentile speed (km/h)",
           lanes = "Lanes",
           road_length_km = "Segment length (km)",
           school_within_500m = "School within 500 m",
-          prior_collisions_3yr = "Collisions, prior 3 years")
+          prior_collisions_3yr = "Collisions, prior 3 years",
+          lighting_poor = "Poor lighting")
 
 d2 <- tc0 %>%
   mutate(lighting_poor = as.integer(lighting_quality == "poor")) %>%
@@ -334,13 +335,40 @@ c2_ci      <- c2_changes + c(-1.96, 1.96) * sd(pair_chg) / sqrt(length(pair_chg)
 c2_did     <- -coef(lm_robust(injury_collisions ~ cameras_installed * round,
                               data = tc, clusters = segment_id))[["cameras_installed:round"]]
 
-c2_bal <- map_dfr(c(cov2, "y0"), function(v) {
+# Every characteristic in the score model (lighting included), then the
+# outcome's own baseline, which is not in the model.
+c2_bal <- map_dfr(c(cov2, "lighting_poor", "y0"), function(v) {
   tibble(Characteristic = if (v == "y0") "Collisions at baseline (the outcome)" else lab2[[v]],
          Before = (mean(d2[[v]][d2$cameras_installed == 1]) -
                    mean(d2[[v]][d2$cameras_installed == 0])) / sd(d2[[v]]),
          After  = (mean(m2_t[[v]]) - mean(m2_c[[v]])) / sd(d2[[v]]))
 })
-c2_worst_cov <- max(abs(c2_bal$After[c2_bal$Characteristic != "Collisions at baseline (the outcome)"]))
+c2_cov_bal   <- c2_bal %>% filter(Characteristic != "Collisions at baseline (the outcome)")
+c2_worst_cov <- max(abs(c2_cov_bal$After))
+c2_n_cov     <- nrow(c2_cov_bal)
+c2_over      <- c2_cov_bal %>% filter(abs(After) > 0.1) %>% arrange(desc(abs(After)))
+c2_n_over    <- nrow(c2_over)
+c2_over_txt  <- paste(sprintf("%s %.2f", tolower(c2_over$Characteristic), abs(c2_over$After)),
+                      collapse = ", ")
+# Honest balance cell: "yes" only when every characteristic is within 0.1.
+bal_cell <- function(worst, n_over, n_all) {
+  if (worst <= 0.1) sprintf("yes (worst %.2f)", worst)
+  else sprintf("partly: %d of %d over 0.1 (worst %.2f)", n_over, n_all, worst)
+}
+
+# Who has no lookalike: the camera segments scoring above every no-camera segment.
+c2_out_idx  <- d2$cameras_installed == 1 & d2$score > c2_ps_c[2]
+c2_in_idx   <- d2$cameras_installed == 1 & !c2_out_idx
+c2_spd_out  <- mean(d2$baseline_speed_85th[c2_out_idx])
+c2_spd_in   <- mean(d2$baseline_speed_85th[c2_in_idx])
+# How concentrated the reuse is: share of pairs using the ten most-used twins.
+top10_share <- function(tw) sum(sort(table(tw), decreasing = TRUE)[1:10]) / length(tw)
+c2_top10 <- top10_share(attr(m2, "twin_rows"))
+g_top10  <- top10_share(attr(m1, "twin_rows"))
+
+# How far each changes estimate clears its rule, as a share of the rule.
+g_clear_pct  <- 100 * (abs(s_change$est) - RULEBAR) / RULEBAR
+c2_clear_pct <- 100 * (c2_changes - CAM_RULE) / CAM_RULE
 
 # ---- The two-case comparison table ----------------------------------------
 compare_tbl <- tibble(
@@ -353,14 +381,14 @@ compare_tbl <- tibble(
                "Least generous end vs the rule"),
   GreenWaste = c(sprintf("yes, all but %d", n_beyond),
                  sprintf("%s twins for %s businesses", gfmt(twins_used), gfmt(n_took)),
-                 sprintf("yes (worst %.2f)", max(abs(bal1$After))),
+                 bal_cell(max(abs(bal1$After)), sum(abs(bal1$After) > 0.1), nrow(bal1)),
                  sprintf("yes (gap %s AED)", gfmt(mean(m1$y0[m1$enrolled == 1]) - mean(m1$y0[m1$enrolled == 0]))),
                  sprintf("%s AED", gfmt(s_full$est)),
                  sprintf("%s AED", gfmt(s_change$est)),
                  sprintf("%s against %s: short", gfmt(avoid1[1]), gfmt(RULEBAR))),
   Cameras = c(sprintf("no, %d segments (%d%%) outside", c2_outside, round(c2_pct_out)),
               sprintf("%d twins for %d segments", c2_used, n_cam),
-              sprintf("yes (worst %.2f)", c2_worst_cov),
+              bal_cell(c2_worst_cov, c2_n_over, c2_n_cov),
               sprintf("no (std. diff %.2f)", c2_base_sd),
               sprintf("%.2f avoided", c2_levels),
               sprintf("%.2f avoided", c2_changes),
@@ -462,16 +490,17 @@ theme_m2 <- function(base = 15) {
 ```
 
 ::: {.panel}
-Three methods, three ways of answering **compared to what?**
+Four methods, four ways of answering **compared to what?**
 
 - Randomisation **creates** a comparison group.
-- A cut-off **creates** one at the line.
+- DiD uses the same groups' **change over time** (-816 AED this morning).
+- A cut-off **creates** one at the line (-791 AED).
 - Matching **constructs** one, by finding lookalikes.
 :::
 
 ::: {.ask}
-Today is the most intuitive of the three, and the one that is easiest to get
-wrong without noticing. Keep that tension in mind.
+DiD said -816, RDD -791, both short of 1,000. Matching uses every business.
+Does it change the verdict?
 :::
 
 ::: {.notes}
@@ -529,8 +558,7 @@ the programme started.
 :::
 
 ::: {.ask}
-Say it back before we go on. If you can say this sentence, you can interrogate
-any matching study you are handed.
+Say it back to your neighbour.
 :::
 
 ## Your turn: find the twins
@@ -575,20 +603,22 @@ an average of **-1,000 AED**. Business 4 is nobody's twin, so it is set aside.
 :::
 
 ::: {.notes}
-Hand out the twins card (see the exercise plan). Genuine silence for ninety
-seconds. The point they should feel: matching is intuitive, they already know
-how to do it, and it quietly sets aside units that resemble nobody. That is
+Paper (Oct13_session3_materials.docx): Hand out the find-the-twins sheet (pack
+page 1, one per participant). Genuine silence for ninety seconds.
+
+The point they should feel: matching is intuitive, they already know how to
+do it, and it quietly sets aside units that resemble nobody. That is
 the common-support idea, which comes back in Section 2 and is the heart of
 Case 2.
 
 Circulate and listen for "but what if none of them really match?". That
-instinct is exactly Case 2. Also listen for anyone matching on cost: that is
+instinct leads to Case 2. Also listen for anyone matching on cost: that is
 matching on the outcome, which would build the answer into the comparison.
 :::
 
 ## What matching does, on real businesses
 
-```{r fig.height=3.6, fig.width=11.5}
+```{r fig.height=3.5, fig.width=11.5}
 # Three frames. Each trace is present in every frame, with the same number of
 # points, so the slider moves cleanly in both directions.
 steps <- c("1 · Everyone", "2 · Find each twin", "3 · Keep the pairs")
@@ -625,7 +655,7 @@ plot_ly() %>%
                    font = list(size = 12, color = INK), x = 0.08, len = 0.84) %>%
   layout(xaxis = ax("Efficiency index at baseline", range = c(20, 100), zeroline = FALSE),
          yaxis = ax("Manager age", range = c(15, 90), zeroline = FALSE)) %>%
-  pl_m2(height = 355, t = 34, b = 92,
+  pl_m2(height = 338, t = 34, b = 90,
         title = "&#9650; enrolled &nbsp;&nbsp; &#9679; not enrolled &nbsp;&nbsp; (71 real GreenWaste businesses, matched on two characteristics)")
 ```
 
@@ -649,6 +679,10 @@ comparison is now only between the pairs.
 
 # 2 · Implementing matching in R {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
+::: {.notes}
+About 25 minutes. Four live cells; keep syntax talk short.
+:::
+
 ## Remember: what matching needs from the data
 
 ::: {.panel}
@@ -663,10 +697,11 @@ comparison is now only between the pairs.
 :::
 
 ::: {.ask}
-Same habit as the last two sessions: ask AI *what data do I need for matching,
-and does my dataset have it?* Ask it to question you about how people ended up
-in the programme before it answers.
+Which of the five would you check first in your own data?
 :::
+
+Take home: ask AI *what data do I need for matching, and does my dataset have
+it?*, and have it question you about who took part before it answers.
 
 ::: {.notes}
 Items 3 and 4 are the ones that matter most. Item 3: a characteristic measured
@@ -805,8 +840,8 @@ c(enrolled   = nrow(took),
 
 ::::: {.column width="42%"}
 ::: {.ask}
-Press **Run**. Every enrolled business gets a twin. How many different
-businesses did it take?
+Guess first: `r gfmt(n_took)` different twins, or far fewer? Then press
+**Run**.
 :::
 
 ::: {.panel .fragment}
@@ -825,7 +860,7 @@ Business 4, `r gfmt(n_rest - twins_used)` times over.
 
 ::: {.notes}
 `f_all` is the list of ten characteristics from the previous slide. The
-`sapply` line is the whole of matching: for each enrolled business's score,
+`sapply` line does the matching: for each enrolled business's score,
 find the position of the closest score in the pool.
 
 Reusing a twin is allowed (analysts call it matching "with replacement"). It
@@ -865,8 +900,8 @@ Here the ranges overlap almost completely. Only
 :::
 
 ::: {.warn .fragment}
-**Drop many, and** the result is no longer about the programme, only its
-easy-to-match part. Case 2 shows this.
+What matters is **which** units have no match. If they are a particular kind,
+the result no longer covers that kind. Case 2 shows this.
 :::
 :::::
 
@@ -918,8 +953,8 @@ efficiency index?
 :::
 
 ::: {.notes}
-Orange dots: how far apart enrolled and not-enrolled businesses were before
-matching. Blue diamonds: how far apart the matched pairs are. Beyond about 0.1
+Light blue dots: how far apart enrolled and not-enrolled businesses were before
+matching. Dark blue diamonds: how far apart the matched pairs are. Beyond about 0.1
 is usually treated as a problem.
 
 The efficiency index was by far the worst (`r sprintf("%.2f", abs(bal1$Before[bal1$var == "efficiency_index"]))`),
@@ -948,7 +983,8 @@ res
 
 ::::: {.column width="42%"}
 ::: {.ask}
-Press **Run**. Two rows. Which one is the programme's effect?
+Two rows will appear. Guess first: which one is the programme's effect? Then
+press **Run**.
 :::
 
 ::: {.panel .fragment}
@@ -965,8 +1001,8 @@ twins' average cost, not an effect.
 ::::::
 
 ::: {.notes}
-Run the chunk live, then take a vote before clicking. Most will get it; the
-point is the habit of naming the row.
+Take a vote before pressing Run. Most will get it; the point is the habit of
+naming the row.
 
 Reminder of the vocabulary (Day 1 Session 1): the **coefficient** is the effect
 size in AED; the **confidence interval** (conf.low to conf.high) is the range of
@@ -994,20 +1030,23 @@ cat(sprintf('
 ```
 
 ::: {.panel}
-Matching took `r gfmt(abs(raw_gap) - abs(est1))` AED off the raw gap. That part
-was **who the businesses already were**, not the programme.
+Matching took `r gfmt(abs(raw_gap) - abs(est1))` AED off the raw gap: that
+part was **who the businesses already were**.
 :::
 
-::: {.ask .fragment}
-The estimate sits **right on the bar**, and the interval runs from
-`r gfmt(avoid1[1])` to `r gfmt(avoid1[2])` AED. We cannot show it clears
-`r gfmt(RULEBAR)`. A result this close to the line is decided by the analyst's
-choices, which is exactly what we test next.
+::: {.ask}
+Does the whole interval clear `r gfmt(RULEBAR)` AED?
+:::
+
+::: {.panel .fragment}
+**No.** The estimate sits right on the bar, and the interval runs from
+`r gfmt(avoid1[1])` to `r gfmt(avoid1[2])` AED. A result this close to the line
+turns on the analyst's choices, which we test next.
 :::
 
 ::: {.notes}
-Same reading as the last two sessions: not "is it significant?" but "does my
-decision change across this range?". It does: the optimistic end clears the
+Same reading as the last two sessions: does my decision change across this
+range? It does: the optimistic end clears the
 bar, the pessimistic end does not.
 
 Worth noting if asked: the randomised comparison on Day 1 gave -1,014. Matching
@@ -1023,6 +1062,10 @@ check how much that matters.
 :::
 
 # 3 · The one question, and how to check it {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+::: {.notes}
+About 20 minutes.
+:::
 
 ## What matching can and cannot see
 
@@ -1041,7 +1084,7 @@ business was about to invest anyway, unless somebody wrote it down.
 
 ::: {.warn}
 So the accurate claim for this method is: **we have made the two groups alike in
-every way we can observe.** The words doing the work are the last four.
+every way we can observe.**
 :::
 
 ::: {.notes}
@@ -1074,8 +1117,8 @@ m2 %>%
 
 ::::: {.column width="42%"}
 ::: {.ask}
-Press **Run**. The nine remaining characteristics still balance. Look at the
-index column.
+Press **Run**. The index is no longer in the recipe. Before you look: will the
+pairs still match on it?
 :::
 
 ::: {.panel .fragment}
@@ -1085,9 +1128,9 @@ across the bar.
 :::
 
 ::: {.warn .fragment}
-The balance check on the nine would still look perfect (worst
+The balance check on the nine would still pass (worst
 `r sprintf("%.2f", s_noindex$worst_other)`). **Nothing in the output would
-warn you.** That is what an unmeasured difference looks like.
+warn you.**
 :::
 :::::
 
@@ -1095,7 +1138,7 @@ warn you.** That is what an unmeasured difference looks like.
 
 ::: {.notes}
 This is the session's key demonstration. The efficiency index is the thing
-that decided who was eligible, so it is exactly the kind of characteristic that
+that decided who was eligible, so it is the kind of characteristic that
 drives both enrolment and costs. Here we have it, so we can see what leaving it
 out does. In a real evaluation, the missing characteristic is one nobody
 collected, so you never get to see this comparison.
@@ -1131,7 +1174,7 @@ plot_ly(sens_plot, x = ~est, y = ~spec, type = "scatter", mode = "markers+text",
 ```
 
 ::: {.warn}
-Same businesses, same method, four defensible choices. The estimates land on
+Same businesses, same method, four choices of list. The estimates land on
 **both sides of the bar**, and every interval crosses it.
 :::
 
@@ -1163,7 +1206,7 @@ For each business that enrolled, you found one that did not but looked the same.
 measure?**
 :::
 
-It cannot be answered from the table. That is the point of asking it.
+It cannot be answered from the table.
 :::::
 
 ::::: {.column width="48%"}
@@ -1187,11 +1230,15 @@ it was, just as leaving out the index did.
 
 ::: {.notes}
 Get the room to generate the hidden differences before revealing the panel.
-Owner motivation always comes up and it is the perfect example: unmeasured,
-plausible, and biased in the direction that flatters the programme.
+Owner motivation always comes up, and it is a good example: it is unmeasured
+and it flatters the programme.
 :::
 
-# 4 · Case 2: when the lookalikes run out {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+# 4 · Case 2: when the worst roads have no lookalike {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+::: {.notes}
+About 20 minutes.
+:::
 
 ## The cameras went where the roads were worst
 
@@ -1226,7 +1273,7 @@ purpose.
 
 ::: {.ask}
 Same four steps, same checks. Rule: at least **`r sprintf("%.1f", CAM_RULE)`
-fewer collisions** per segment per round. Watch which check fails.
+fewer collisions** per segment per round. Which check do you expect to fail?
 :::
 :::::
 
@@ -1234,8 +1281,8 @@ fewer collisions** per segment per round. Watch which check fails.
 
 ::: {.notes}
 Section 4 is the second case study the outline asks for: a matching study that
-is carried out correctly and still only half works: some treated units have no
-good match. Move at pace: the room
+is carried out correctly and still leaves gaps: the fastest camera roads have no
+good match, and the pairs do not start level. Move at pace: the room
 now knows the checks, so this section is about spotting which one fails.
 :::
 
@@ -1271,13 +1318,16 @@ no-camera segments thin out.
 
 ::: {.warn .fragment}
 **`r c2_outside` camera segments (`r round(c2_pct_out)`%) score higher than any
-segment without a camera.** They have no real lookalike, yet the software still
-paired them, with the least bad one.
+segment without a camera.** Few, but they are the **fastest** camera roads
+(`r round(c2_spd_out)` km/h against `r round(c2_spd_in)` for the rest), the
+ones the cameras were aimed at. The software still paired them, with the least
+bad one.
 :::
 
 ::: {.warn .fragment}
-And `r n_cam` camera segments share just **`r c2_used` twins**. A handful of
-roads are doing most of the comparing.
+And `r n_cam` camera segments share **`r c2_used` twins**. The ten most-used
+twins stand in for `r round(100 * c2_top10)`% of all pairs
+(GreenWaste: `r round(100 * g_top10)`%).
 :::
 :::::
 
@@ -1287,12 +1337,12 @@ roads are doing most of the comparing.
 Contrast with GreenWaste, where the curves overlapped almost completely and
 `r n_beyond` enrolled businesses sat outside. Here `r c2_outside` do. Nothing in
 a standard results table flags them: the match rate still reads 100%. The
-two reasonable options are to drop them (and say the result no longer covers the worst
+two reasonable options are to drop them (and say the result no longer covers the fastest
 roads) or to keep them and say the comparison for them is weak. Either way, the
 evaluator should tell you which.
 :::
 
-## Check: balanced, but not level
+## Check: mostly balanced, but not level
 
 :::::: {.columns}
 
@@ -1308,16 +1358,17 @@ c2_bal %>%
 
 ::::: {.column width="48%"}
 ::: {.panel}
-Every characteristic in the model balances. The **outcome itself**, measured
-before the cameras went in, does not:
+Most characteristics in the model are within 0.1; `r c2_n_over` are not
+(`r c2_over_txt`). The **outcome itself**, measured before the cameras went
+in, is furthest apart:
 **`r sprintf("%.2f", c2_base_t)`** collisions on camera segments against
 **`r sprintf("%.2f", c2_base_c)`** on their twins.
 :::
 
 ::: {.warn .fragment}
-Matching balanced what the model **contained**. Collisions in the baseline year
-were not in it, so they were free to differ, and they sit on the wrong side of
-0.1.
+Matching balanced most of what the model **contained**. Collisions in the
+baseline year were not in it, so they were free to differ, and they sit
+furthest over 0.1.
 :::
 :::::
 
@@ -1375,17 +1426,23 @@ compare_tbl %>%
 ```
 
 ::: {.ask}
-Read down the table. Case 1 passes every check. Case 2 passes the checks people
-usually report, and fails the two they usually do not.
+Read down the table. Which rows separate the two cases, and would you see them
+in a typical results table?
 :::
 
 ::: {.notes}
-Rows 1 and 4 are the two that separate the cases: real lookalikes for everyone,
+Case 1 passes every check. Case 2 comes close on the checks people usually
+report (worst `r sprintf("%.2f", c2_worst_cov)`) and fails the two they
+usually do not. Rows 1 and 4 are the two that separate the cases: real lookalikes for everyone,
 and the outcome's own baseline. Neither appears in a typical matching results
 table, which is why they are on the question card at the end.
 :::
 
 # 5 · Group exercise: which would you trust? {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+::: {.notes}
+About 15 minutes.
+:::
 
 ## Which case would you trust?
 
@@ -1394,19 +1451,22 @@ In your groups, ten minutes:
 
 1. Which case gives you **more confidence**, and why?
 2. What would you ask **Case 2's** evaluator that Case 1 does not raise?
-3. Case 2 is the only one whose central estimate clears its rule. Does that
+3. Case 2's changes estimate clears its rule by more than Case 1's does
+   (`r round(c2_clear_pct)`% against `r round(g_clear_pct)`%). Does that
    change your answer?
 :::
 
 ::: {.panel .fragment}
-The uncomfortable answer: **Case 1** is the more trustworthy study, and it
+Our read: **Case 1** is the more trustworthy study, and it
 cannot show it clears the rule. **Case 2** gives the more attractive answer,
 and it carries the unquantified risk.
-
-
 :::
 
 ::: {.notes}
+Paper (Oct13_session3_materials.docx): Hand out the "Which case would you
+trust?" sheet (pack page 2, one per group). Groups circle a verdict for each
+case before the reveal.
+
 Verdict round at the end: hands, not discussion. Push them past "Case 1 is
 cleaner" to why: overlap, the outcome's baseline, and who the result applies
 to. Ask whoever says "send it back" for the single question behind it.
@@ -1418,20 +1478,19 @@ to. Ask whoever says "send it back" for the single question behind it.
 <div class="facts">
   <div class="k">Ask</div> <div class="v">"What happened to the segments with no real lookalike, and does the answer change without them?"</div>
   <div class="k">Ask</div> <div class="v">"Did the outcome's own baseline balance, and did you compare levels or changes?"</div>
-  <div class="k">Ask</div> <div class="v">"What did you match on, and what was left out?"</div>
-  <div class="k">Ask</div> <div class="v">"What else might differ between matched pairs that you did not measure?"</div>
 </div>
 ```
 
-::: {.ask}
-None of these needs you to run anything. Each of them would change how much
-weight you give the headline.
-
-**Question two is the sharpest**, because it catches a real problem that a
-reported balance table would not reveal.
+::: {.notes}
+These are the two questions Case 1 does not raise. The full list of five is on
+the take-away card at the end.
 :::
 
 # 6 · Put AI to work {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+::: {.notes}
+About 10 minutes. The snapshot and its debrief only; the better prompt is a take-home.
+:::
 
 ## AI Snapshot: comparing two studies
 
@@ -1456,6 +1515,12 @@ segment, comfortably exceeding the 2.0 threshold]{.flag},
 
 ::: {.ask}
 Which sentences would you sign your name to? Four minutes, in groups.
+:::
+
+::: {.notes}
+Paper (Oct13_session3_materials.docx): Hand out the AI Snapshot sheet (pack
+page 3, one per group). Groups underline what they would sign and cross out
+the rest. Keep the better-prompt strip (page 4) back until after the debrief.
 :::
 
 ## Debrief: one clean read, three false assurances
@@ -1490,10 +1555,8 @@ on sentences 1 and 2, and it is stated most confidently of all.
 ::::::
 
 ::: {.panel}
-**The shape of this failure is new.** The model did not invent a number. It
-repeated the study's **own summary of itself**, and the summary was the
-misleading part. You have to compare the study's claims against the study's
-details, not against the world.
+The model did not invent a number. It had the details in front of it and
+still went with the headline. Check its summary against the table you gave it.
 :::
 
 ## The same question, a better prompt
@@ -1524,13 +1587,20 @@ The model may summarise the tables it was given and repeat their framing.
 
 ::::::
 
-::: {.ask}
-Run both, then compare: what did each get wrong, and what did each explain
-well? Then paste the second answer into a **fresh chat** and
-ask it to check for overstatement.
+**Take home:** run both after the session. What did each get wrong, and what
+did each explain well?
+
+::: {.notes}
+Paper (Oct13_session3_materials.docx): Hand out the better-prompt strip now
+(pack page 4, one per group, cut) as a take-home. It names the checks, so it
+goes out only after the debrief. Do not run the prompts in the session.
 :::
 
 # 7 · Close {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+::: {.notes}
+About 10 minutes. Skip the optional AI slide if short of time.
+:::
 
 ## Your turn: ask AI first
 
@@ -1545,8 +1615,8 @@ Three minutes. Then compare with our list on the next slide: what did it miss, w
 :::
 
 ::: {.notes}
-OPTIONAL. If time is short, skip this slide and go straight to the questions
-on the next one. If you run it: give three minutes, then reveal the list and
+Optional: skip if short of time, and go straight to the questions on the next
+one. If you run it: give three minutes, then reveal the list and
 ask what the AI missed, what it added that is worth keeping, and whether
 anything it suggested was incorrect.
 :::
@@ -1567,8 +1637,13 @@ anything it suggested was incorrect.
 Question 5 is the one that matters most, and it is the only one the evaluator
 cannot answer from their own output.
 
-That should tell you something about how much weight a matching study can carry
-on its own.
+So a matching study rarely settles a decision on its own.
+:::
+
+::: {.notes}
+Paper (Oct13_session3_materials.docx): Hand out the take-away cards (pack
+page 5, one per participant). Give a minute to fill in "On my desk" on the
+card, then take two or three examples from the room.
 :::
 
 ## The week so far
@@ -1576,7 +1651,7 @@ on its own.
 ```{=html}
 <div class="facts">
   <div class="k">Day 1 S2</div> <div class="v">descriptive reading &middot; -2.53 against a 2.0 rule, with no comparison group</div>
-  <div class="k">Day 1 S3</div> <div class="v">randomisation &middot; the comparison created by a lottery</div>
+  <div class="k">Day 1 S3</div> <div class="v">randomisation &middot; -1,014, interval spans 1,000</div>
   <div class="k">Day 2 S1</div> <div class="v">DiD &middot; -816 against a 1,000 rule, and an assumption that could not be tested</div>
   <div class="k">Day 2 S2</div> <div class="v">RDD &middot; -791 against a 1,000 rule, and local to the line</div>
   <div class="k">Today</div>  <div class="v">matching &middot; `r gfmt(est1)` against a 1,000 rule, and only as good as the list</div>
@@ -1584,14 +1659,13 @@ on its own.
 ```
 
 ::: {.ask}
-Each method bought credibility, and each paid for it:
+Each method rests on one assumption:
 
-**DiD** assumes parallel trends. **RDD** narrows the answer to a group near a
-line. **Matching** assumes everything that matters was measured.
+**DiD** assumes parallel trends. **RDD** assumes nothing else jumps at the
+cut-off, and answers only near it. **Matching** assumes everything that
+matters was measured.
 
-Those three sentences are the whole of Day 2. Tomorrow turns from reading
-results to **questioning them**: cost analysis, data visualisation, and then a
-clinic where you interrogate an analyst.
+Which of the three would you trust least, and why?
 :::
 
 ::: {.notes}

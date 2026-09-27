@@ -26,8 +26,16 @@ editor_options:
 
 ```{r setup}
 library(knitr)
-library(kableExtra)
-library(qrcode)
+
+# ---- Tables: plain knitr::kable, styled by theme_dge.scss -------------------
+# No kableExtra: its JavaScript needs jQuery, which revealjs does not load.
+# All columns left-aligned (text tables); font_size in px; table sits left.
+tbl <- function(df, ..., font_size = 16) {
+  h <- as.character(knitr::kable(df, format = "html", align = "l", ...))
+  h <- sub("<table", sprintf('<table style="margin-left:0; font-size:%dpx;"', font_size),
+           h, fixed = TRUE)
+  cat(h, "\n")
+}
 
 # ---- Palette (DGE theme; see theme_dge.scss) --------------------------------
 ACCENT  <- "#215a9e"; ACCENT2 <- "#7da1c4"; ALERT <- "#B8272C"
@@ -36,22 +44,13 @@ INK     <- "#111418"; MUTED <- "#545860"; RULE <- "#D5DEE8"
 # ---- The template ----------------------------------------------------------
 # Shared with the printable Evaluation Design Update template.
 source("qa_design_update.R")
-
-# ---- Live Menti poll -------------------------------------------------------
-MENTI_CODE <- "1234 5678"
-MENTI_JOIN <- paste0("https://www.menti.com/", gsub(" ", "", MENTI_CODE))
-
-menti_qr <- function(path = "menti_qr.png", url = MENTI_JOIN) {
-  png(path, width = 900, height = 900, res = 300, bg = "white")
-  on.exit(dev.off(), add = TRUE)
-  par(mar = c(0, 0, 0, 0))
-  plot(qr_code(url, ecl = "H"))
-  path
-}
-MENTI_QR <- menti_qr()
 ```
 
 # 0 · The last session {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+::: {.notes}
+About 5 minutes.
+:::
 
 ## Four days. One design.
 
@@ -60,9 +59,11 @@ On Monday you learned what a comparison is. Tuesday, three more ways of building
 Wednesday, what a result costs and what a figure hides. Thursday, how to tell
 whether evidence is credible and how to translate it.
 
-Today you point all of it at your own evaluation. Nothing new is taught: the
-template has three parts (where your design stands, the four additions, and your
-pitch), and most of the session is working time.
+Today you apply it to your own evaluation. By the end: one completed template
+per team and a five-minute pitch. Part 1, 20 minutes; Part 2, 30 minutes;
+pitches from about 85 minutes in.
+
+Pick one member's Module 1 design, the most developed one.
 :::
 
 ::: {.ask .fragment}
@@ -70,7 +71,15 @@ pitch), and most of the session is working time.
 Not started / rough outline / drafted / ready to pitch.
 :::
 
+::: {.notes}
+Timing for 120 minutes with three teams: opening 5, Part 1 30 (10 of slides, 20 of work), Part 2 45 (10 of slides, 30 of work, 5 of break), pitches 30 (5 of set-up, 3 teams at 8 minutes), close 10. More than three teams: cut each pitch to 3 minutes plus 2 of feedback, or Part 2 to 25 minutes.
+:::
+
 # 1 · Where your design stands {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+::: {.notes}
+About 30 minutes: 10 of slides, then 20 of working time.
+:::
 
 ## The eight conditions, from Module 1
 
@@ -81,22 +90,19 @@ tab <- data.frame(
   Condition = design_conditions$condition,
   check.names = FALSE
 )
-kable(tab, col.names = c("#", "Condition"),
-      caption = "The eight conditions for a credible impact evaluation") |>
-  kable_styling(c("striped", "condensed"), full_width = FALSE, position = "left",
-                font_size = 16)
+tbl(tab, col.names = c("#", "Condition"),
+    caption = "The eight conditions for a credible impact evaluation")
 ```
 
 ::: {.panel}
-Nothing here has changed since Module 1, and nothing this week contradicted it.
-Part 1 of the template asks you to write your design against these, so the new
+These are Module 1's eight conditions. Part 1 of the template asks you to write your design against these, so the new
 work has something to attach to.
 :::
 
 ## The one condition that decides the rest
 
 ::: {.ask}
-Of the eight, which one, if you get it wrong, makes the other seven irrelevant?
+Of the eight, which one matters most for a credible estimate?
 :::
 
 :::::: {.columns}
@@ -120,8 +126,8 @@ the design is not finished.
 ::::::
 
 ::: {.ask .fragment}
-Write your counterfactual sentence now, before we go on. One sentence. You will
-read it out in the pitch.
+What is your counterfactual, in one sentence? Write it now; you will read it out
+in the pitch.
 :::
 
 ## Working time
@@ -129,14 +135,16 @@ read it out in the pitch.
 ::: {.panel}
 **Twenty minutes.** Part 1 of the template: write your design as it stands,
 against the eight conditions.
+
+Roles: scribe, timekeeper, presenter.
 :::
 
 :::::: {.columns}
 
 ::::: {.column width="50%"}
 ::: {.ask}
-If you have the Module 1 document, work from it. If not, the recap on the previous
-slide is enough: write what you would do, not what you did.
+Which member's Module 1 design is most developed? Work from it. With no document
+to hand, the recap in each template row is enough: write what you would do.
 :::
 :::::
 
@@ -148,7 +156,15 @@ Do not polish. This is the foundation for Part 2, and Part 2 is what the pitch f
 
 ::::::
 
+::: {.notes}
+Paper (Oct15_session3_materials.docx): Hand out the Evaluation Design Update (pack pages 1 to 3), one per team. Teams start on Part 1 (pack page 1).
+:::
+
 # 2 · The four additions {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+::: {.notes}
+About 45 minutes: 10 of slides, 30 of working time, then the 5-minute break.
+:::
 
 ## What you are adding
 
@@ -159,15 +175,12 @@ tab <- data.frame(
   `From` = design_additions$from,
   check.names = FALSE
 )
-kable(tab, col.names = c("Addition", "From"),
-      caption = "The four additions, and where each came from") |>
-  kable_styling(c("striped", "condensed"), full_width = FALSE, position = "left",
-                font_size = 16)
+tbl(tab, col.names = c("Addition", "From"),
+    caption = "The four additions, and where each came from")
 ```
 
 ::: {.panel}
-Each of these is something this week taught you to demand of someone else's
-evaluation. Now you have to supply it for your own.
+Each addition applies one session from this week to your design.
 :::
 
 ::: {.ask .fragment}
@@ -205,8 +218,8 @@ and is that true?"
 ## Addition 2: cost-benefit framework
 
 ::: {.ask}
-Four things to state: the **threshold**, the **benefit per unit per year**, the
-**horizon**, and the **discount rate**.
+What are your **decision rule**, **benefit per unit per year**, **horizon** and
+**discount rate**? State which of those choices decides the answer.
 :::
 
 :::::: {.columns}
@@ -222,8 +235,8 @@ rate did, and reports often leave the horizon unstated.
 
 ::::: {.column width="50%"}
 ::: {.warn .fragment}
-Write your horizon down. If your benefit stream runs for five years and someone
-assumes two, your ratio moves from 1.87 to 0.80, which changes the decision.
+Write your horizon down. In GreenWaste, cutting the horizon from five years to
+two moved the ratio from 1.87 to 0.80.
 :::
 :::::
 
@@ -232,8 +245,8 @@ assumes two, your ratio moves from 1.87 to 0.80, which changes the decision.
 ## Addition 3: data visualisation sketch
 
 ::: {.ask}
-Sketch the figure that carries your headline result. Then sketch the **same data
-presented a second way**, and say what the second version hides.
+What figure carries your headline result? Sketch it, then sketch the **same data
+presented a second way**. What does the second version hide?
 :::
 
 :::::: {.columns}
@@ -242,8 +255,8 @@ presented a second way**, and say what the second version hides.
 ::: {.panel}
 **Wednesday's lesson**
 
-Every pair of figures showed identical numbers and different impressions. The
-truncated axis, the bar of means, the denominator, the levels-versus-changes, the
+Each pair of figures showed identical numbers and different impressions: the
+truncated axis, the bar of means, the denominator, levels versus changes,
 discounting.
 :::
 :::::
@@ -260,8 +273,8 @@ hides, expect it to come up in questions.
 ## Addition 4: evidence translation plan
 
 ::: {.ask}
-Write the **headline sentence** of your brief, with the number in it. Then name
-the one thing you will state plainly that your evaluation did **not** establish.
+What is the **headline sentence** of your brief, with the number in it? What is
+the one thing your evaluation did **not** establish, stated plainly?
 :::
 
 :::::: {.columns}
@@ -271,7 +284,7 @@ the one thing you will state plainly that your evaluation did **not** establish.
 **This morning's lesson**
 
 A brief that reports the estimate and omits the threshold leaves the reader to
-assume the target was met. The problem is what it leaves out.
+assume the target was met.
 :::
 :::::
 
@@ -289,27 +302,48 @@ credible.
 ::: {.panel}
 **Thirty minutes.** Part 2 of the template: all four additions.
 
-Work as a team. Split the four if that is faster, but every member should be able
-to speak to all four by the end.
+Work as a team. Draft all four; develop two in depth.
 :::
 
 :::::: {.columns}
 
 ::::: {.column width="50%"}
 ::: {.ask}
-Use the template's prompts. Each one is phrased as the question a commissioner
-would ask, because that is who you are pitching to.
+Which two additions will your team develop in depth?
 :::
 :::::
 
 ::::: {.column width="50%"}
 ::: {.warn}
-You will not finish all four to the same standard. That is expected. Decide as a
-team which two you will lead on.
+**Checkpoint at 15 minutes:** each team reads out its counterfactual sentence.
 :::
 :::::
 
 ::::::
+
+::: {.notes}
+Paper (Oct15_session3_materials.docx): Teams turn to Part 2 of the Design Update (pack page 2).
+
+At 15 minutes, stop the room for the checkpoint: each team reads out its counterfactual sentence. If a sentence does not name who the comparison group is, say so and move on.
+:::
+
+## Stress-test your design with AI
+
+::: {.panel}
+Type your Part 1 answers and your counterfactual sentence into the AI tool. Prompt:
+
+> "You are a sceptical commissioner. Ask me three questions about this design
+> before you comment. Then name the one assumption that, if it broke, would make
+> the estimate wrong."
+:::
+
+::: {.warn}
+Check its answer in a fresh chat.
+:::
+
+::: {.notes}
+Paper (Oct15_session3_materials.docx): Hand out the AI prompt cards (pack page 4), one per team. This runs inside the Part 2 working time; one team member runs it while the others keep drafting.
+:::
 
 ## Five-minute break
 
@@ -318,6 +352,10 @@ Back in five minutes. When we return: the pitches.
 :::
 
 # 3 · The pitch {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+::: {.notes}
+About 30 minutes: 5 of set-up, then three teams at 5 minutes of pitch and 3 of feedback.
+:::
 
 ## Five minutes, five parts
 
@@ -329,18 +367,19 @@ tab <- data.frame(
   `What it says` = pitch_structure$says,
   check.names = FALSE
 )
-kable(tab, col.names = c("Part", "Time", "What it says"),
-      caption = "The pitch structure") |>
-  kable_styling(c("striped", "condensed"), full_width = FALSE, position = "left",
-                font_size = 15)
+tbl(tab, col.names = c("Part", "Time", "What it says"),
+    caption = "The pitch structure", font_size = 15)
 ```
 
 ::: {.warn}
-Note the order. **The limit comes before the ask.** Most pitches put it after,
-if at all.
+Note the order. **The limit comes before the ask.**
 :::
 
-## Why the limit comes first
+::: {.notes}
+Paper (Oct15_session3_materials.docx): Teams turn to Part 3 of the Design Update (pack page 3) to plan the pitch.
+:::
+
+## Why the limit comes before the ask
 
 ::: {.ask}
 If you tell the room what your design cannot do, why would that make them more
@@ -351,9 +390,8 @@ likely to give you what you want?
 
 ::::: {.column width="50%"}
 ::: {.panel .fragment}
-Because it tells them **which parts you have already thought about**. A pitch that
-claims no limits is either naive or hiding something, and the room cannot tell
-which.
+Because it tells them **which parts you have already thought about**. A pitch with no
+stated limits leaves the room to guess them.
 :::
 :::::
 
@@ -370,13 +408,14 @@ evaluation".
 ## Feedback from the room
 
 ::: {.panel}
-Three minutes per team. The room gives feedback in this order, and the order
-matters:
+Three minutes per team. The room gives feedback in this order:
 
 1. **What is the design?** Say it back in one sentence. If you cannot, that is the
    feedback.
 2. **What would make it fail?** The one assumption that would have to break.
 3. **What is missing?** One thing you would have wanted to hear.
+4. **Which trap from this week could hit it?** Headline vs preferred estimate,
+   horizon, truncated axis, missing threshold.
 :::
 
 ::: {.warn}
@@ -385,17 +424,22 @@ matters:
 
 ::: {.notes}
 The first question is a check: if the room cannot say the design back in one
-sentence, the pitch did not land, and saying so is the most useful feedback a
-team can get. Better to learn that here than from a real commissioner.
+sentence, the pitch did not land. That is useful feedback.
+
+Paper (Oct15_session3_materials.docx): Hand out the feedback slips (pack page 5), one slip per participant for each other team. Call time at 5:00; feedback in the fixed order.
 :::
 
 # 4 · The week in one slide {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+::: {.notes}
+About 10 minutes.
+:::
 
 ## What you can now do
 
 ```{r}
 #| results: asis
-cat('<div class="panel"><b>1.</b> Say what a number is compared to, and why that comparison is the argument.</div>\n')
+cat('<div class="panel"><b>1.</b> Say what a number is compared to, and why that comparison matters.</div>\n')
 cat('<div class="panel"><b>2.</b> Read DiD, RDD and matching results, and name the assumption each rests on.</div>\n')
 cat('<div class="panel"><b>3.</b> Judge whether a benefit-cost ratio clears a threshold, and what decides it.</div>\n')
 cat('<div class="panel"><b>4.</b> See the same data drawn two ways, and say what each version hides.</div>\n')
@@ -418,15 +462,17 @@ The question behind every session this week:
 :::
 
 ::: {.ask .fragment}
-Each method this week answered it differently, and each can be wrong about it
-in its own way. The evaluations you commission will depend on it too.
+Which programme in your unit could you ask this about next week?
+:::
+
+::: {.notes}
+Paper (Oct15_session3_materials.docx): Hand out the take-away cards (pack page 6), one per participant. Give a minute to fill in the card's last line (the first evaluation decision at your desk), then take two or three examples on the thank-you slide.
 :::
 
 ## Thank you
 
 ::: {.panel}
-The slides stay available online, and every dataset and script is in the
-repository if you want to reproduce any of the analyses on your own programme.
+The slides and handouts stay available on the course website.
 :::
 
 ::: {.ask}

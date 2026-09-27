@@ -42,7 +42,7 @@ design_additions <- data.frame(
            "Day 3 Session 2", "Day 4 Session 2"),
   asks = c(
     "What will you show, to whom, and in what order? Name the one number you will lead with, and say what the reader must not be able to conclude from it.",
-    "What is the threshold, what is the estimated benefit per unit per year, over what horizon, and at what discount rate? State which of those choices decides the answer.",
+    "What is the decision rule, what is the estimated benefit per unit per year, over what horizon, and at what discount rate? State which of those choices decides the answer.",
     "Sketch the figure that carries your headline result. Then sketch the same data presented a second way, and say what the second version hides.",
     "Write the headline sentence of your brief, with the number in it, and name the one thing you will state plainly that your evaluation did not establish."
   ),
@@ -58,7 +58,7 @@ pitch_structure <- data.frame(
     "The decision this evaluation informs, and the counterfactual you will use.",
     "Why that design identifies the effect, in two sentences and no jargon.",
     "One minute on presentation and costing, one on the figure and the translation.",
-    "What your design cannot establish, said first rather than last.",
+    "What your design cannot establish, said before the ask.",
     "The specific decision or resource you are asking for."
   ),
   stringsAsFactors = FALSE

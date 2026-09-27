@@ -142,10 +142,11 @@ MENTI_QR <- menti_qr()
 pol  <- read.csv("./evaluation_data_TrafficCameras.csv")
 cams <- pol %>% filter(treated == 1)
 
-POL_RULE <- 2.0     # injury collisions avoided, per segment per round
+POL_RULE <- 2.0     # injury collisions avoided per segment, 2019 to 2021
 
 n_rows <- nrow(pol)
 n_seg  <- n_distinct(pol$segment_id)
+mean_2019 <- mean(pol$injury_collisions[pol$year == 2019])   # Word 1 ask
 
 cam_before <- mean(cams$injury_collisions[cams$round == 0])
 cam_after  <- mean(cams$injury_collisions[cams$round == 1])
@@ -239,12 +240,12 @@ plot_two_groups <- function(means) {
 :::::: {.columns}
 
 ::::: {.column width="52%"}
-In 2020 a roads authority began installing automated speed cameras. It started
-with twelve sectors and planned the rest for two years later.
+A roads authority is rolling out automated speed cameras. Twelve
+sectors got cameras in 2020; the other twelve were due in 2022.
 
-Before extending the programme, it set a bar: cameras had to cut injury
-collisions by at least **`r sprintf("%.1f", POL_RULE)` per road segment per
-round**. Below that, the money goes to other road safety work.
+Before extending the programme, it set a bar in the camera sectors: at least
+**`r sprintf("%.1f", POL_RULE)` fewer injury collisions per road segment between
+2019 and 2021**. Below that, the money goes to other road safety work.
 :::::
 
 ::::: {.column width="48%"}
@@ -253,14 +254,14 @@ round**. Below that, the money goes to other road safety work.
   <div class="k">Programme</div>   <div class="v">Automated speed enforcement</div>
   <div class="k">Rolled out</div>  <div class="v">12 sectors in 2020, 12 in 2022</div>
   <div class="k">Outcome</div>     <div class="v">Injury collisions</div>
-  <div class="k">Decision rule</div> <div class="v">2.0 fewer per segment per round</div>
+  <div class="k">Decision rule</div> <div class="v">2.0 fewer per segment, 2019 to 2021</div>
 </div>
 ```
 :::::
 
 ::: {.warn .note-ctr .fragment}
-**Illustrative case, with invented figures.** This is not a real programme and
-the numbers are generated for this training. Every number in this session comes
+**Illustrative case, with invented figures.** This is not a real programme; we
+generated the numbers for this training. Every number in this session comes
 from this fictional dataset.
 :::
 
@@ -270,7 +271,7 @@ from this fictional dataset.
 The live cells start loading in the background while you talk (about 10 s).
 :::
 
-## Today we answer two of Session 1's questions
+## Session 1's three questions, on the full data
 
 ```{=html}
 <div class="facts">
@@ -281,9 +282,8 @@ The live cells start loading in the background while you talk (about 10 s).
 ```
 
 ::: {.panel}
-We start from the raw data file, as an evaluator would, and build the numbers on
-screen: what is in the file, what it looks like on a chart, and how much
-collisions changed where cameras went.
+We start from the raw data file, as an evaluator would, and build every number
+on screen.
 :::
 
 ::: {.warn}
@@ -318,7 +318,7 @@ in that year.
 ::::: {.column width="50%"}
 ::: {.ask}
 The file has `r format(n_rows, big.mark = ",")` rows. How many **road
-segments**? Say a number before I show the next slide.
+segments** is that?
 :::
 
 ::: {.panel .fragment}
@@ -371,22 +371,24 @@ sectors with the worst safety record. Note it and move on: it matters for the
 ## Word 1 · The average
 
 ```{webr}
-summary(pol$injury_collisions)
+summary(pol$injury_collisions[pol$year == 2019])
 ```
 
 :::::: {.columns}
 
 ::::: {.column width="50%"}
 ::: {.panel}
-`summary()` gives six numbers for one column: the smallest, the largest, the
-middle road (**median**) and the **mean**.
+`summary()` gives six numbers for one column, here 2019: the smallest, the
+largest, the middle road (**median**), the **mean**, and the quartiles (a quarter
+of roads sit below **1st Qu.**, a quarter above **3rd Qu.**).
 :::
 :::::
 
 ::::: {.column width="50%"}
 ::: {.ask}
-The mean is about 9.5 collisions. Is a typical road segment close to 9.5?
-What do the minimum and maximum suggest?
+The mean is about `r sprintf("%.1f", mean_2019)` collisions. Is a typical road
+segment close to `r sprintf("%.1f", mean_2019)`? What do the minimum and maximum
+suggest?
 :::
 :::::
 
@@ -396,7 +398,7 @@ What do the minimum and maximum suggest?
 
 ```{webr}
 #| fig-width: 10
-#| fig-height: 3.1
+#| fig-height: 2.8
 before <- subset(pol, year == 2019)
 clean_par()
 hist(before$injury_collisions, breaks = 40, col = ACCENT, border = "white",
@@ -405,10 +407,9 @@ abline(v = mean(before$injury_collisions), col = ALERT, lwd = 3, lty = 2)
 ```
 
 ::: {.warn .fragment}
-About seven in ten segments had between 5 and 15 collisions in 2019, and nine
-had more than 30. Those few pull the mean (red line) above the median. Session 1 showed the
-same thing with ten camera roads: one busy ring road pulled the mean to 13.5 while the
-median stayed at 10.
+About seven in ten segments had 5 to 15 collisions in 2019, and nine had more
+than 30. Those few pull the mean (red line) above the median. In Session 1, one
+busy ring road pulled the mean of ten roads to 13.5; the median stayed at 10.
 :::
 
 <!-- Lucas, 2026-09-25: this line used to refer to "Programmes A and B", an example
@@ -444,7 +445,7 @@ it not show?
 
 ```{webr}
 #| fig-width: 10
-#| fig-height: 2.8
+#| fig-height: 1.9
 wide <- reshape(cams[, c("segment_id", "year", "injury_collisions")],
                 idvar = "segment_id", timevar = "year", direction = "wide")
 change <- wide$injury_collisions.2021 - wide$injury_collisions.2019
@@ -454,12 +455,22 @@ hist(change, breaks = 30, col = ACCENT, border = "white", main = "",
 abline(v = 0, col = ALERT, lwd = 3, lty = 2)
 ```
 
-::: {.panel .fragment}
-The average fell, but not on every road. About
-`r sprintf("%.0f", share_fell)`% of camera segments had fewer collisions in 2021;
-the rest stayed the same or went up. This is Word 1 again: an average change
-hides how much roads differ.
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.ask}
+Before I run it: out of ten camera roads, how many had fewer collisions in 2021?
 :::
+:::::
+
+::::: {.column width="50%"}
+::: {.panel .fragment}
+About six in ten (`r sprintf("%.0f", share_fell)`%); the rest stayed the same or
+went up. Word 1 again: an average change hides how much roads differ.
+:::
+:::::
+
+::::::
 
 ## Would you fund the extension?
 
@@ -516,9 +527,8 @@ segment**. Which of these numbers do you check against it?
 
 ::::: {.column width="50%"}
 ::: {.panel .fragment}
-The change, `r sprintf("%.2f", -cam_fall)`, which is in the same units as the
-rule. It clears 2.0. The `r sprintf("%.0f", cam_pct)`% is in different units
-and cannot be checked against the rule.
+The change, `r sprintf("%.2f", -cam_fall)`, is in the rule's units; the
+`r sprintf("%.0f", cam_pct)`% is not.
 :::
 :::::
 
@@ -562,17 +572,21 @@ fit <- lm_robust(injury_collisions ~ round, data = cams, clusters = segment_id)
 round(summary(fit)$coefficients[, c(1, 2, 4, 5, 6)], 3)
 ```
 
+::: {.ask}
+Before I press Run: will the whole interval sit above 2.0 fewer, or will it cross 2.0?
+:::
+
 :::::: {.columns}
 
 ::::: {.column width="50%"}
-::: {.panel}
-**Pr(>|t|)** is the p-value. Printed as 0, it means smaller than 0.001: a fall
-this size would be very unlikely if collisions had not really changed.
+::: {.panel .fragment}
+**Pr(>|t|)** is the p-value. Printed as 0, it means below 0.001: a fall this
+size would be very unlikely if nothing had changed.
 :::
 :::::
 
 ::::: {.column width="50%"}
-::: {.panel}
+::: {.panel .fragment}
 **CI Lower** and **CI Upper** are the 95% confidence interval: the fall is
 somewhere between `r sprintf("%.2f", ba_ci[1])` and
 `r sprintf("%.2f", ba_ci[2])` collisions per segment.
@@ -616,7 +630,7 @@ The estimate clears the rule, and so does the whole interval, just. On
 :::
 
 ::: {.ask .fragment}
-Which of Session 1's three questions have we not asked yet?
+Which question does this chart leave open?
 :::
 :::::
 
@@ -641,8 +655,8 @@ most people would type: **"What does this chart show? Did the cameras work?"**
 
 ::::: {.column width="45%"}
 ::: {.ask}
-In pairs: mark every claim you can check against the chart. Which ones can the
-chart support?
+In pairs: which of these claims can you check against the chart, and which
+does the chart support?
 :::
 :::::
 
@@ -659,12 +673,18 @@ Given the size of the effect, the programme should be extended to the remaining
 sectors."
 :::
 
+::: {.notes}
+Paper (Oct12_session2_materials.docx): Hand out the "AI Snapshot" sheet (pack
+page 2, one per pair). Pairs photograph the chart on the printed sheet and
+attach it to the prompt.
+:::
+
 ## Debrief: what the AI added
 
 ```{=html}
 <div class="facts">
   <div class="k">"22% reduction, 11.5 to 9.0"</div>
-  <div class="v">Correct. This is what the chart shows.</div>
+  <div class="v">Correct. The 22% can be worked out from the two bars.</div>
   <div class="k">"p &lt; 0.001"</div>
   <div class="v">Not on the chart. The model supplied a p-value it was never given.</div>
   <div class="k">"confirming that the cameras caused"</div>
@@ -695,8 +715,9 @@ need."**
 
 ::::: {.column width="50%"}
 ::: {.ask}
-Run both prompts on the same chart. What does the second answer include that the first left out? What did either
-explain especially well?
+Run both prompts on the same chart. What does the second answer include that
+the first left out? Paste the second answer into a fresh chat: which claims
+does it flag that the chart cannot support?
 :::
 :::::
 
@@ -710,6 +731,9 @@ a second chat review what the first one wrote.
 ::::::
 
 ::: {.notes}
+Pairs use the sheet from the AI Snapshot slide: they photograph the chart on
+the printed sheet and attach the photo to each prompt.
+
 ~7 min for groups to run both prompts, ~3 min to take answers. Listen for: the
 second answer asks what happened on roads without cameras, and whether traffic
 changed.
@@ -730,9 +754,9 @@ years.
 :::
 
 ::: {.ask}
-In your table, list two or three things apart from cameras that could have cut
-collisions in these sectors. Then say what you would compare the camera roads
-with to rule them out.
+At your table: what two or three things apart from cameras could have cut
+collisions in these sectors? What would you compare the camera roads with to
+rule them out?
 :::
 
 ::: {.notes}
@@ -757,7 +781,7 @@ plot_two_groups(means)
 
 ::::: {.column width="44%"}
 ::: {.ask}
-The twelve sectors still waiting for cameras. Which way did their collisions go?
+In the twelve sectors still waiting for cameras, which way did collisions go?
 :::
 
 ::: {.warn .fragment}
@@ -790,9 +814,13 @@ if (!grepl("PLACEHOLDER", MENTI_EMBED)) {
 ```
 
 ::: {.warn}
-You voted on a before-and-after chart. It answers "how big?" and "how sure?"
-well, and it still clears the rule. It cannot answer "compared to what?", and
-roads without cameras also improved.
+You voted on two before-and-after averages. They cannot answer "compared to
+what?".
+:::
+
+::: {.ask}
+Who would change their vote now? Can we hear one reason from someone who
+changed, and one from someone who did not?
 :::
 
 # 7 · Take this back to your desk {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
@@ -811,7 +839,8 @@ tibble(
   ` `       = c("(Intercept)", "round"),
   Estimate  = coef(ba_fit),
   `Std. Error` = ba_fit$std.error,
-  `Pr(>|t|)`   = ba_fit$p.value,
+  `Pr(>|t|)`   = ifelse(ba_fit$p.value < 0.001, "<0.001",
+                        sprintf("%.3f", ba_fit$p.value)),
   `CI Lower`   = ba_fit$conf.low,
   `CI Upper`   = ba_fit$conf.high
 ) %>%
@@ -829,18 +858,21 @@ the column R printed as Pr(>|t|).
 
 ::::: {.column width="42%"}
 ::: {.ask}
-On the printed copy in front of you:
+On your printed copy:
 
-**1.** Circle the before-and-after change.
+**1.** Which number is the before-and-after change? Circle it.
 
-**2.** Draw a box around its confidence interval.
+**2.** Where is its confidence interval? Draw a box around it.
 
-**3.** Underline the 2019 average, and say in one line why it is not an effect.
+**3.** Which number is the 2019 average? Underline it. Why is it not an effect?
 
-**4.** Write the comparison you would ask the evaluator for.
+**4.** What comparison would you ask the evaluator for?
 :::
 
 ::: {.notes}
+Paper (Oct12_session2_materials.docx): Hand out the "Annotate this output" sheet
+(pack page 1, one per participant).
+
 Four minutes. Question 4 carries into Session 3.
 :::
 :::::
@@ -858,7 +890,18 @@ Four minutes. Question 4 carries into Session 3.
 ```
 
 ::: {.panel}
-The camera result passes the first two questions. The third is still open: the
-roads without cameras improved as well, and Session 3 looks at how to account
-for that.
+The camera result passes the first two questions and clears the rule. The third
+is still open, and Session 3 takes it up.
+:::
+
+::: {.ask}
+The last figure you were sent: was it before-and-after? What would you compare
+it with?
+:::
+
+::: {.notes}
+Paper (Oct12_session2_materials.docx): Hand out the take-away cards (pack page 3,
+one per participant, cut into cards).
+
+Give one minute for everyone to fill in the "On my desk" line on their card.
 :::

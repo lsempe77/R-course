@@ -635,16 +635,16 @@ s2 <- new_pack() |>
   body_add_flextable(plain_table(data.frame(
     ` ` = c("(Intercept)", "round"),
     Estimate = sprintf("%.3f", coef(ba_fit)), `Std. Error` = sprintf("%.3f", ba_fit$std.error),
-    `p-value` = sprintf("%.3f", ba_fit$p.value), `CI Lower` = sprintf("%.3f", ba_fit$conf.low),
+    `p-value` = pfmt(ba_fit$p.value), `CI Lower` = sprintf("%.3f", ba_fit$conf.low),
     `CI Upper` = sprintf("%.3f", ba_fit$conf.high), check.names = FALSE),
     widths = c(1.2, 1.0, 1.1, 0.9, 1.0, 1.0))) |>
   illustrative() |>
   h2_("On the table above") |>
-  p_("1. Circle the before-and-after change.") |>
-  p_("2. Draw a box around its confidence interval.") |>
-  p_("3. Underline the 2019 average, and say in one line why it is not an effect.") |>
+  p_("1. Which number is the before-and-after change? Circle it.") |>
+  p_("2. Where is its confidence interval? Draw a box around it.") |>
+  p_("3. Which number is the 2019 average? Underline it. Why is it not an effect?") |>
   write_lines(2) |>
-  p_("4. Write the comparison you would ask the evaluator for.") |>
+  p_("4. What comparison would you ask the evaluator for?") |>
   write_lines(2) |>
   new_page() |>
   title_("AI Snapshot: ask AI to read the chart", S2) |>
@@ -652,22 +652,24 @@ s2 <- new_pack() |>
   p_("Average injury collisions per road segment in the sectors that got speed cameras.") |>
   body_add_gg(p_cam, width = 3.6, height = 2.4) |>
   illustrative() |>
+  p_("To give the AI the chart, photograph the chart on this sheet and attach the photo to your prompt.") |>
   p_("The prompt most people would type, with a picture of the chart:", bold = TRUE) |>
   p_("\"What does this chart show? Did the cameras work?\"", italic = TRUE) |>
   h2_("A response like this is possible") |>
   p_("\"The chart shows a 22% reduction in injury collisions after speed cameras were installed, from 11.5 to 9.0 per road segment. This reduction is statistically significant (p < 0.001), confirming that the cameras caused the decline. The fall was consistent across all road types, which suggests the effect is robust. Given the size of the effect, the programme should be extended to the remaining sectors.\"") |>
-  p_("In pairs: mark every claim you can check against the chart. Which ones can the chart support?", bold = TRUE) |>
+  p_("In pairs: which of these claims can you check against the chart, and which does the chart support?", bold = TRUE) |>
   write_lines(3) |>
   h2_("Then run this prompt instead, and compare") |>
   p_("\"This chart shows average injury collisions per road segment in the sectors that got speed cameras, in 2019 and 2021. Describe only what the chart shows. Then list what else could explain the change, and what comparison you would need before saying the cameras caused it. Before you answer, ask me any questions you need.\"", italic = TRUE) |>
-  p_("Run both prompts on the same chart. What does the second answer include that the first left out? Then paste the second answer into a fresh chat and ask it to check for claims the chart cannot support.") |>
+  p_("Run both prompts on the same chart. What does the second answer include that the first left out? Paste the second answer into a fresh chat: which claims does it flag that the chart cannot support?") |>
   new_page() |> title_("Take-away card: three questions to ask the evaluator", S2) |>
   print_line("1 per participant, cut into cards") |>
   add_cards(rep(list(c("Three questions to ask the evaluator",
                        "1. How big? In the units the decision is written in, not a percentage.",
                        "2. How sure? Does the confidence interval clear the rule, not just zero?",
                        "3. Compared to what? Which group, which period, and did it move too?",
-                       "", "On my desk, I will ask these about:", "______________________________")), 6),
+                       "", "On my desk: the last figure I was sent. Was it before-and-after? What would I compare it with?",
+                       "______________________________")), 6),
             min_height = 2.2) |>
   new_page() |> title_("Facilitator key", S2) |> print_line("trainer only") |>
   h2_("Annotate this output") |>
@@ -677,7 +679,7 @@ s2 <- new_pack() |>
   p_(sprintf("Against the rule of %.1f fewer collisions: the estimate (%.2f) and the whole interval (%.2f to %.2f) clear it. The camera result passes how big and how sure; compared to what is still open.",
              POL_RULE, cam_fall, ba_ci[1], ba_ci[2])) |>
   h2_("AI Snapshot") |>
-  p_(sprintf("Correct: \"22%% reduction, 11.5 to 9.0\" is on the chart (%.1f to %.1f, %.0f%%). Not on the chart: \"p < 0.001\"; the model supplied a p-value it was never given. \"Confirming that the cameras caused\": a before-and-after chart cannot show cause, and a small p-value says the fall is unlikely to be noise, not what caused it. \"Consistent across all road types\": invented; the chart has no road types, and %.0f%% of camera roads did not fall. \"Should be extended\": a recommendation with no rule and no comparison.",
+  p_(sprintf("Correct: \"22%% reduction, 11.5 to 9.0\". The bars show %.1f and %.1f; the %.0f%% can be worked out from them. Not on the chart: \"p < 0.001\"; the model supplied a p-value it was never given. \"Confirming that the cameras caused\": a before-and-after chart cannot show cause, and a small p-value says the fall is unlikely to be noise, not what caused it. \"Consistent across all road types\": invented; the chart has no road types, and %.0f%% of camera roads did not fall. \"Should be extended\": a recommendation with no rule and no comparison.",
              cam_before, cam_after, cam_pct, 100 - share_fell)) |>
   p_("With the second prompt, listen for answers that ask what happened on roads without cameras and whether traffic changed.")
 print(s2, target = "Oct12_session2_materials.docx")
@@ -695,7 +697,7 @@ fit_did <- lm_robust(waste_management_costs ~ round * enrolled, data = tn,
 did_ci  <- confint(fit_did)["round:enrolled", ]
 did_av  <- sort(abs(did_ci))
 did_rows <- data.frame(
-  ` ` = c("(Intercept)", "Round 2", "Enrolled", "Round 2 x Enrolled"),
+  ` ` = c("(Intercept)", "After (round 1)", "Enrolled", "After (round 1) x Enrolled"),
   Coefficient = gfmt(coef(fit_did)), `Std. error` = gfmt(fit_did$std.error),
   p = pfmt(fit_did$p.value),
   `95% CI` = sprintf("[%s, %s]", gfmt(fit_did$conf.low), gfmt(fit_did$conf.high)),
@@ -703,7 +705,7 @@ did_rows <- data.frame(
 
 s4 <- new_pack() |>
   title_("By hand: four numbers", S4) |>
-  print_line("1 per participant (double-sided with the next page)") |>
+  print_line("1 per participant, single-sided: the next sheet is handed out later") |>
   p_("GreenWaste businesses in the neighbourhoods where the programme was offered. Average annual waste-management costs (AED), before and after. The bar for scale-up: at least 1,000 AED.") |>
   body_add_flextable(plain_table(data.frame(
     ` ` = c("Took part", "Did not take part", "Difference of the changes"),
@@ -717,12 +719,12 @@ s4 <- new_pack() |>
   p_("Does it clear 1,000 AED?   Yes  /  No") |>
   new_page() |>
   title_("Which row is the impact?", S4) |>
-  print_line("on the back of the four-numbers sheet") |>
+  print_line("1 per participant, separate sheet; hand out at 'Running the regression', after the hand calculation") |>
   p_("The same data as a regression, the way an evaluator would report it. Standard errors are clustered by neighbourhood.") |>
-  body_add_flextable(plain_table(did_rows, widths = c(1.8, 1.2, 1.0, 0.8, 1.9))) |>
+  body_add_flextable(plain_table(did_rows, widths = c(2.3, 1.1, 1.0, 0.7, 1.6))) |>
   p_("1. Circle the row that is the programme's effect. Is it the number you got by hand?") |>
   p_("2. Two rows are often reported as the effect by mistake. What are they?") |>
-  p_("Round 2 is  ______________________      Enrolled is  ______________________") |>
+  p_("After (round 1) is  __________________      Enrolled is  __________________") |>
   p_("3. The least generous end of the effect's interval:  ________ AED.   Does it clear 1,000?   Yes  /  No") |>
   p_("4. Costs were measured once before the programme and once after. What can this data not tell you about the two groups?") |>
   write_lines(2) |>
@@ -734,11 +736,14 @@ s4 <- new_pack() |>
   h2_("A response like this is possible") |>
   p_("The table reports a difference-in-differences estimate. The programme reduced costs by 816 AED, and the effect is highly statistically significant (p < 0.001), so the programme was a success. The confidence interval does not include zero, which confirms the finding is robust.") |>
   p_("The parallel trends assumption has been satisfied. The result clears the 1,000 AED threshold required for scale-up.") |>
-  p_("Mark every sentence you can check against the table, and every sentence the table does not support.", bold = TRUE) |>
+  p_("Which sentences can you check against the table, and which does it not support?", bold = TRUE) |>
   write_lines(3) |>
   h2_("Then run this prompt instead, and compare") |>
   p_("\"We have a difference-in-differences table. The data has two waves only, one before and one after, so no pre-trend test is possible. The decision rule is 1,000 AED. Explain what the table supports and, separately, list what it cannot tell us. Ask me questions before you answer.\"", italic = TRUE) |>
   p_("Does the claim about parallel trends survive the second prompt? Then paste the second answer into a fresh chat and ask it to check for claims about tests that were never run.") |>
+  h2_("If time allows, a leading prompt") |>
+  p_("\"Our DiD shows an 816 AED cut in costs (p<0.001). Write two sentences for the minister recommending scale-up.\"", italic = TRUE) |>
+  p_("Does it mention the 1,000 AED rule or parallel trends without being asked?") |>
   new_page() |> title_("Take-away card: three questions for a DiD result", S4) |>
   print_line("1 per participant, cut into cards") |>
   add_cards(rep(list(c("Three questions to ask any evaluator presenting DiD",
@@ -752,12 +757,12 @@ s4 <- new_pack() |>
   p_(sprintf("Took part %s to %s: change %+.0f. Did not take part %s to %s: change %+.0f. Difference of the changes: %.0f AED. It does not clear 1,000. Watch the sign: the comparison group went up, so the effect is bigger than the %.0f fall in the top row.",
              gfmt(off_b), gfmt(off_a), off_chg, gfmt(ctl_b), gfmt(ctl_a), ctl_chg, did_hand, abs(off_chg))) |>
   h2_("Which row is the impact?") |>
-  p_(sprintf("1. Round 2 x Enrolled, %s AED: the same number as by hand. 2. Round 2 (%s) is the time trend, what happened to everyone; Enrolled (%s) is the baseline gap, how far apart the groups started. Many pick Enrolled because it is large and has the word in it. 3. %s AED; the interval is %s to %s, and even its most generous end (%s) is short of 1,000. 4. Whether the groups were already moving in parallel: a pre-trend check needs at least two periods before the programme.",
+  p_(sprintf("1. After (round 1) x Enrolled, %s AED: the same number as by hand. 2. After (round 1) (%s) is the time trend, what happened to everyone; Enrolled (%s) is the baseline gap, how far apart the groups started. Many pick Enrolled because it is large and has the word in it. 3. %s AED; the interval is %s to %s, and even its most generous end (%s) is short of 1,000. 4. Whether the groups were already moving in parallel: a pre-trend check needs at least two periods before the programme.",
              gfmt(coef(fit_did)[["round:enrolled"]]), gfmt(coef(fit_did)[["round"]]),
              gfmt(coef(fit_did)[["enrolled"]]), gfmt(did_av[1]), gfmt(did_ci[1]), gfmt(did_ci[2]),
              gfmt(did_av[2]))) |>
   h2_("AI Snapshot") |>
-  p_("Supported by the table: the 816 AED estimate and p < 0.001. Not supported: \"so the programme was a success\" answers whether the effect is non-zero, not whether it clears 1,000. \"Does not include zero, which confirms the finding is robust\": not zero and big enough are different claims. \"The parallel trends assumption has been satisfied\" is the serious one: with one period before the programme it cannot be tested, so the model reported a test that was never run. \"Clears the 1,000 AED threshold\" is false.") |>
+  p_(sprintf("Supported by the table: the 816 AED estimate and p < 0.001. Not supported: \"so the programme was a success\" answers whether the effect is non-zero, not whether it clears 1,000. \"Does not include zero, which confirms the finding is robust\": not zero and big enough are different claims. \"The parallel trends assumption has been satisfied\" is the serious one: with one period before the programme it cannot be tested, so the model reported a test that was never run. \"Clears the 1,000 AED threshold\" is false: even the interval's most generous end is %s AED.", gfmt(did_av[2]))) |>
   p_("With the second prompt, check whether the parallel-trends claim disappears. Supplying the constraint makes the error less likely; it does not rule it out.")
 print(s4, target = "Oct13_session1_materials.docx")
 
@@ -818,9 +823,19 @@ c2_levels  <- -(mean(m2_t$y1) - mean(m2_c$y1))
 pair_chg   <- -(m2_t$dy - m2_c$dy)
 c2_changes <- mean(pair_chg)
 c2_ci      <- c2_changes + c(-1.96, 1.96) * sd(pair_chg) / sqrt(length(pair_chg))
-c2_worst   <- max(abs(sapply(c("baseline_speed_85th", "lanes", "road_length_km", "school_within_500m",
-                               "prior_collisions_3yr"),
-                             function(v) (mean(m2_t[[v]]) - mean(m2_c[[v]])) / sd(d2[[v]]))))
+# Every characteristic in the score model, lighting included (as in the deck).
+c2_cov_sd  <- abs(sapply(c("baseline_speed_85th", "lanes", "road_length_km", "school_within_500m",
+                           "prior_collisions_3yr", "lighting_poor"),
+                         function(v) (mean(m2_t[[v]]) - mean(m2_c[[v]])) / sd(d2[[v]])))
+c2_worst   <- max(c2_cov_sd)
+# Honest balance cell: "yes" only when every characteristic is within 0.1.
+bal_cell <- function(sds) {
+  if (max(sds) <= 0.1) sprintf("yes (worst %.2f)", max(sds))
+  else sprintf("partly: %d of %d over 0.1 (worst %.2f)", sum(sds > 0.1), length(sds), max(sds))
+}
+g_sds <- abs(sapply(chars, function(v) std_diff(m1, v, biz)))
+g_clear_pct  <- 100 * (abs(g_chg$est) - RULEBAR) / RULEBAR
+c2_clear_pct <- 100 * (c2_changes - CAM_RULE) / CAM_RULE
 
 compare_rows <- data.frame(
   ` ` = c("Every treated unit had a real lookalike?", "Comparison units reused as twins",
@@ -829,13 +844,13 @@ compare_rows <- data.frame(
   `Case 1 · GreenWaste` = c(sprintf("yes, all but %d", n_beyond),
                  sprintf("%s twins for %s businesses", gfmt(length(unique(attr(m1, "twin_rows")))),
                          gfmt(sum(biz$enrolled == 1))),
-                 sprintf("yes (worst %.2f)", g_worst),
+                 bal_cell(g_sds),
                  sprintf("yes (gap %s AED)", gfmt(mean(m1$y0[m1$enrolled == 1]) - mean(m1$y0[m1$enrolled == 0]))),
                  sprintf("%s AED", gfmt(g_lev$est)), sprintf("%s AED", gfmt(g_chg$est)),
                  sprintf("%s against %s: short", gfmt(avoid1[1]), gfmt(RULEBAR))),
   `Case 2 · Cameras` = c(sprintf("no, %d segments (%d%%) outside", c2_out, round(100 * c2_out / n_cam)),
                  sprintf("%d twins for %d segments", c2_used, n_cam),
-                 sprintf("yes (worst %.2f)", c2_worst),
+                 bal_cell(c2_cov_sd),
                  sprintf("no (std. diff %.2f)", c2_base_sd),
                  sprintf("%.2f avoided", c2_levels), sprintf("%.2f avoided", c2_changes),
                  sprintf("%.2f against %.1f: short", min(c2_ci), CAM_RULE)),
@@ -870,7 +885,8 @@ s6 <- new_pack() |>
   h2_("In your group, ten minutes") |>
   p_("1. Which case gives you more confidence, and why?") |> write_lines(1) |>
   p_("2. What would you ask Case 2's evaluator that Case 1 does not raise?") |> write_lines(1) |>
-  p_("3. Case 2 is the only one whose central estimate clears its rule. Does that change your answer?") |> write_lines(1) |>
+  p_(sprintf("3. Case 2's changes estimate clears its rule by more than Case 1's does (%d%% against %d%%). Does that change your answer?",
+             round(c2_clear_pct), round(g_clear_pct))) |> write_lines(1) |>
   p_("Our verdict on Case 1:   Act  /  Act with conditions  /  Send back") |>
   p_("Our verdict on Case 2:   Act  /  Act with conditions  /  Send back") |>
   new_page() |>
@@ -883,9 +899,12 @@ s6 <- new_pack() |>
   p_("Case 2: Matching was similarly strong, with every segment matched and good balance. The matched estimate shows cameras avoided 2.10 collisions per segment, comfortably exceeding the 2.0 threshold, so this programme should be scaled.") |>
   p_("Which sentences would you sign your name to? Underline them, and cross out the rest. Four minutes, in groups.", bold = TRUE) |>
   write_lines(3) |>
-  h2_("Then run this prompt instead, and compare") |>
-  p_("\"Two matching studies. For each: how many treated units had no real lookalike; did the outcome's baseline balance; do levels and changes agree? Our decision rules are below. Ask me questions before you answer.\"", italic = TRUE) |>
-  p_("Run both, then compare: what did each get wrong, and what did each explain well? Then paste the second answer into a fresh chat and ask it to check for overstatement.") |>
+  new_page() |> title_("The same question, a better prompt", S6) |>
+  print_line("1 per group, cut into strips. Take-home: hand out after the debrief, since the prompt names the checks") |>
+  add_cards(rep(list(c("Take home: run this prompt too, and compare",
+                       "\"Two matching studies. For each: how many treated units had no real lookalike; did the outcome's baseline balance; do levels and changes agree? Our decision rules are below. Ask me questions before you answer.\"",
+                       "Run both, then compare: what did each get wrong, and what did each explain well? Then paste the second answer into a fresh chat and ask it to check for overstatement.")), 4),
+            ncol = 1, card_width = 6.8, min_height = 1.9) |>
   new_page() |> title_("Take-away card: five questions for a matching result", S6) |>
   print_line("1 per participant, cut into cards") |>
   add_cards(rep(list(c("Five questions to ask any evaluator presenting matching",
@@ -904,8 +923,11 @@ s6 <- new_pack() |>
              gfmt(abs(g_lev$est)), gfmt(avoid1[1]), c2_out, round(100 * c2_out / n_cam), n_cam, c2_used,
              c2_base_sd, c2_levels, c2_changes, min(c2_ci), CAM_RULE)) |>
   p_("For the question to Case 2's evaluator, the sharpest is: did the outcome's own baseline balance, and did you compare levels or changes?") |>
+  p_(sprintf("Question 3: both changes estimates clear their rule, Case 2's by %d%% and Case 1's by %d%%. The bigger margin does not rescue Case 2: its least generous end is short of the rule and its pairs did not start level.",
+             round(c2_clear_pct), round(g_clear_pct))) |>
+  p_("Suggested verdicts. Case 1: act with conditions (a sound study whose interval straddles the rule; ask whether the answer holds on a different list). Case 2: send back (ask what happens without the segments that have no lookalike, and for the outcome's baseline).") |>
   h2_("AI Snapshot") |>
-  p_(sprintf("Case 1 is reported accurately, including the interval that straddles the rule. Three false assurances in Case 2: \"similarly strong, every segment matched\" hides the %d segments with no real lookalike; \"comfortably exceeding\" holds only for the changes estimate, the levels estimate does not clear 2.0 and the interval dips to %.2f; \"should be scaled\" rests on the first two and is stated most confidently. The model repeated the study's own summary of itself, and that summary was the misleading part.",
+  p_(sprintf("Case 1 is reported accurately, including the interval that straddles the rule. Three false assurances in Case 2: \"similarly strong, every segment matched\" hides the %d segments with no real lookalike; \"comfortably exceeding\" holds only for the changes estimate, the levels estimate does not clear 2.0 and the interval dips to %.2f; \"should be scaled\" rests on the first two and is stated most confidently. The model had the details in front of it and still went with the headline. Check its summary against the table you gave it.",
              c2_out, min(c2_ci)))
 print(s6, target = "Oct13_session3_materials.docx")
 
@@ -919,10 +941,17 @@ non <- base0$waste_management_costs[base0$enrolled == 0]
 mean_enr <- mean(enr); mean_non <- mean(non); vgap <- mean_non - mean_enr
 sd_gap <- vgap / sd(c(enr, non))
 sz <- read.csv("evaluation_data_SchoolZoneRCT.csv")
-sc <- merge(setNames(subset(sz, round == 0, c(segment_id, child_collisions)), c("segment_id", "base")),
-            setNames(subset(sz, round == 1, c(segment_id, child_collisions)), c("segment_id", "follow")))
+szp <- subset(sz, arm == "Package")   # pair 3 uses the package segments only, as the deck does
+sc <- merge(setNames(subset(szp, round == 0, c(segment_id, child_collisions)), c("segment_id", "base")),
+            setNames(subset(szp, round == 1, c(segment_id, child_collisions)), c("segment_id", "follow")))
 pooled_pct  <- 100 * (sum(sc$follow) - sum(sc$base)) / sum(sc$base)
 has_base    <- sc$base > 0
+sc_pos      <- transform(sc[has_base, ], pct = 100 * (follow - base) / base, absolute = follow - base)
+big_pct     <- head(sc_pos[order(sc_pos$pct), ], 6)
+big_abs     <- head(sc_pos[order(sc_pos$absolute), ], 6)
+n_to_zero   <- sum(sc_pos$follow == 0)
+n_to_zero_small <- sum(sc_pos$follow == 0 & sc_pos$base <= 4)
+big_overlap <- length(intersect(big_pct$segment_id, big_abs$segment_id))
 average_pct <- mean(100 * (sc$follow - sc$base)[has_base] / sc$base[has_base])
 cb_nom <- 816 * 5; cb_dis <- sum(816 / 1.05^(2:6))
 flip_rate <- uniroot(function(r) sum(816 / (1 + r)^(2:6)) - 1800, c(0, 1))$root
@@ -946,7 +975,7 @@ s8 <- new_pack() |>
   p_("Each section of this session shows the same data drawn two ways. For every pair, in groups: what is this figure telling you, and what might be wrong or misleading?") |>
   body_add_flextable(plain_table(data.frame(
     Pair = c("1. The same gap, two axes", "2. A bar of means, then the distributions",
-             "3. Biggest wins: percentage, then number", "4. After only, then before and after",
+             "3. Percentages: zero bases, biggest wins, two averages", "4. After only, then before and after",
              "5. Savings added up, then discounted", "6. The pie, then the counts"),
     `What is it telling you?` = "", `What might be wrong or misleading?` = "", check.names = FALSE),
     widths = c(2.0, 2.4, 2.4)) |> tall_rows(0.85)) |>
@@ -955,7 +984,7 @@ s8 <- new_pack() |>
   p_("The pooled change in child collisions and the average of each segment's change: close, or far apart?  ________") |>
   p_("The discount rate at which five years of savings no longer cover the 1,800 AED cost:  ________ %") |>
   new_page() |>
-  title_("AI Snapshot: the chart that cannot be wrong", S8) |>
+  title_("AI Snapshot: which chart is fairer?", S8) |>
   print_line("1 per group") |>
   p_("The two GreenWaste baseline figures: the same gap between enrolled and not-enrolled businesses, drawn twice.") |>
   side_by_side(fig_axis(0, 2400, "Figure A"), fig_axis(1300, 2200, "Figure B")) |>
@@ -963,7 +992,7 @@ s8 <- new_pack() |>
   p_("\"Which of these two charts better represents the difference between the two groups, and why?\"", italic = TRUE) |>
   h2_("A response like this is possible") |>
   p_("Both charts present the same underlying data accurately. The truncated-axis chart is often preferable for a policy audience because it makes the difference visible, and a y-axis that starts at zero is not a requirement in professional data visualisation. On balance the truncated version communicates the finding more effectively, and a reader who wants the absolute values can consult the data labels.") |>
-  p_("Four minutes. Is it wrong? Is it right? Is it answering the question that was asked? What does it explain well?", bold = TRUE) |>
+  p_("Four minutes. Is it right? Does it answer the question that was asked? What does it explain well?", bold = TRUE) |>
   write_lines(3) |>
   h2_("Then run this prompt instead, and compare") |>
   p_("\"This chart will sit beside the claim 'the programme reduced costs substantially'. Is the axis appropriate for that claim, for a non-technical reader?\"", italic = TRUE) |>
@@ -983,12 +1012,14 @@ s8 <- new_pack() |>
   h2_("The six pairs") |>
   p_(sprintf("1. The gap is %s AED in both figures (%.0f%% of the non-enrolled mean, %.2f standard deviations). The truncated axis starts at 1,300, so the gap fills the frame. Cover the bars, read the axis, uncover.", gfmt(vgap), 100 * vgap / mean_non, sd_gap)) |>
   p_(sprintf("2. The two groups overlap very little: only %.1f%% of enrolled businesses paid more than the average non-enrolled business. A bar of means cannot show that.", 100 * mean(enr > mean_non))) |>
-  p_(sprintf("3. %d of the 400 school-zone segments had no child collisions at baseline, so a percentage change is undefined for them. The largest percentage cuts come from segments that started with two to four collisions; the two top-six lists answer different questions.", sum(sc$base == 0))) |>
+  p_(sprintf("3. %d of the %d package segments had no child collisions at baseline, so a percentage change is undefined for them. %d package segments fell to zero, a 100%% cut, %d of them from four collisions or fewer. The two top-six lists share %d segment%s and answer different questions: where the package worked best, and where it prevented the most harm (%d collisions removed).",
+             sum(sc$base == 0), nrow(sc), n_to_zero, n_to_zero_small, big_overlap,
+             if (big_overlap == 1) "" else "s", as.integer(-sum(big_abs$absolute)))) |>
   p_(sprintf("4. After only, the gap is %s AED. The comparison group started %s AED worse off and its costs were rising anyway; the DiD estimate is %s AED.", gfmt(ctl_a - off_a), gfmt(ctl_b - off_b), gfmt(abs(did_hand)))) |>
   p_(sprintf("5. Added up, five years of savings reach %s AED; discounted at 5%%, %s. The %s AED gap comes from the discount rate alone. Ratio %.2f.", gfmt(cb_nom), gfmt(cb_dis), gfmt(cb_nom - cb_dis), cb_dis / 1800)) |>
   p_(sprintf("6. The slices overlap: every child collision is also an injury collision, so the percentages are wrong as drawn. The pie also pools both rounds and hides the counts (minor %s, injury %s, of which child %s).", gfmt(sev[["minor"]]), gfmt(sev[["injury"]]), gfmt(sev[["child"]]))) |>
   h2_("Predictions") |>
-  p_(sprintf("%.1f%%. Pooled %.1f%% against an average of %.1f%% across the %d segments with a baseline: far apart, because the pooled figure weights segments by their collisions. About %.0f%%.",
+  p_(sprintf("%.1f%%. Pooled %.1f%% against an average of %.1f%% across the %d package segments with a baseline: far apart, because the pooled figure weights segments by their collisions. About %.0f%%.",
              100 * mean(enr > mean_non), pooled_pct, average_pct, sum(has_base), 100 * flip_rate)) |>
   h2_("AI Snapshot") |>
   p_(sprintf("Each sentence is accurate. The answer skips who is reading the figure and the sentence beside it: a truncated axis suits \"a difference exists\", not \"a large difference\". It never checks either picture against the number (%s AED, %.2f standard deviations), and it does not ask who the audience is. The better prompt names both.", gfmt(vgap), sd_gap))
@@ -1001,13 +1032,13 @@ S10 <- "Module 2 · Day 4, Session 1 · Is This Evidence Credible?"
 s10 <- new_pack() |>
   title_("Credibility rating sheet", S10) |>
   print_line("1 per participant, with the report") |>
-  p_("Work through the report one section at a time. Circle a colour for each section and write the one reason that decided it. Rate the executive summary first, on your own, before reading on.") |>
+  p_("Work through the report one section at a time. Circle a colour for each section and write the one reason that decided it. Rate the executive summary first, on your own, before reading on. Then rate Sections 3 to 7 in pairs. The second column names the area from yesterday's checklist to apply.") |>
   body_add_flextable(plain_table(setNames(rating_scale, c("Colour", "What it means")), widths = c(1.2, 5.6))) |>
   p_("Section 2, The programme, describes the programme and is not rated.", 8.5, italic = TRUE, color = GREY) |>
   body_add_flextable(plain_table(data.frame(
-    Section = rating_sections$section, Colour = "Green  /  Amber  /  Red",
+    Section = rating_sections$section, `Area to check` = rating_sections$area, Colour = "Green  /  Amber  /  Red",
     `The reason that decided it` = "", `If amber or red: what would settle it` = "", check.names = FALSE),
-    widths = c(1.6, 1.3, 2.1, 1.8)) |> tall_rows(0.95)) |>
+    widths = c(1.4, 1.1, 1.1, 1.8, 1.4)) |> tall_rows(0.95)) |>
   new_page() |>
   title_("Your verdict", S10) |>
   print_line("on the back of the rating sheet") |>
@@ -1021,13 +1052,14 @@ s10 <- new_pack() |>
   new_page() |>
   title_("AI Snapshot: a credibility verdict", S10) |>
   print_line("1 per group") |>
+  p_("The report is on the course website: download Oct15_session1_report.docx from the landing page.", 9, italic = TRUE, color = GREY) |>
   p_("The prompt, with the report pasted in:", bold = TRUE) |>
   p_("\"Here is an evaluation report on a programme that subsidised waste-management technology for businesses. It found a cost reduction of approximately 1,000 AED per business per year and recommends national scale-up. Assess the credibility of this evidence and tell me whether the recommendation is sound.\"", italic = TRUE) |>
   h2_("A response like this is possible") |>
   p_("Assessment: the evidence is credible and the recommendation is sound. The report is unusually thorough for this kind of evaluation. Several points support its credibility:") |>
   p_("Multiple methods. The use of four estimation approaches, all producing consistent results, is a strong indicator of robustness. When independent methods agree, the finding is unlikely to be an artefact of any single specification.") |>
   p_("Large sample. With roughly 9,900 observations, the study is well powered and the estimates are precise.") |>
-  p_("Transparency. The report discloses a change in the survey instrument between rounds and notes that 12 per cent of businesses were lost to follow-up. This level of disclosure suggests a careful and honest evaluation team.") |>
+  p_("Transparency. The report discloses a change in the survey instrument between rounds and notes the gaps in the recycling compliance data. This level of disclosure suggests a careful and honest evaluation team.") |>
   p_("Appropriate limitations. The limitations section correctly identifies that the randomised comparison estimates the offer effect and that the RDD estimate is local to the cut-off.") |>
   p_("Recommendation. The headline estimate of 1,014 AED exceeds the 1,000 AED threshold, so the programme meets the criterion for scale-up. The recommendation is supported by the evidence.") |>
   p_("Underline the two claims the report does not support. Then find the larger problem the response never mentions. Compare with the answer your own AI gave.", bold = TRUE) |>
@@ -1039,7 +1071,7 @@ s10 <- new_pack() |>
   print_line("1 per participant, cut into cards") |>
   add_cards(rep(list(c("Three habits for reading a report",
                        "1. Tabulate the estimates yourself, with the threshold in its own column. Do not let the report choose which number you see first.",
-                       "2. Read the limitations section, then check whether it names the limitations in the data section. If it does not, the analysis stopped early.",
+                       "2. Read the limitations section, then check whether it names the problems in the data section. If it does not, ask why they were dropped.",
                        "3. Find the preferred specification and check whether the headline is it. When they differ, ask why.",
                        "", "On my desk, I will ask these about:", "______________________________")), 6),
             min_height = 2.8) |>
@@ -1050,7 +1082,7 @@ s10 <- new_pack() |>
   h2_("The most important problem") |>
   p_(rating_decisive) |>
   h2_("AI Snapshot") |>
-  p_("The two unsupported claims: \"the programme meets the criterion for scale-up\" and \"the recommendation is supported by the evidence\". The larger problem: the response reads \"approximately 1,000\" as if a method had produced 1,000, and never notices that the preferred specification is 816, which fails the threshold, or asks whether 1,014 was chosen as the headline because it clears the bar. It also treats disclosure of attrition as evidence of quality. What it did well: it found the real disclosures, described the offer-effect and locality limitations correctly, and reached a verdict. The better prompt asks for a comparison instead of a verdict, so the 816 is hard to miss.")
+  p_("The two unsupported claims: \"the programme meets the criterion for scale-up\" and \"the recommendation is supported by the evidence\". The larger problem: the response reads \"approximately 1,000\" as if all four methods agreed (only the matched comparison gives 1,000), and never notices that the preferred specification is 816, which fails the threshold, or asks whether 1,014 was chosen as the headline because it clears the bar. It also treats the compliance gap as evidence of honesty instead of asking which businesses are missing. What it did well: it found the real disclosures, described the offer-effect and locality limitations correctly, and reached a verdict. The better prompt asks for a comparison instead of a verdict, so the 816 is hard to miss.")
 print(s10, target = "Oct15_session1_materials.docx")
 
 # ===========================================================================
@@ -1068,7 +1100,7 @@ s12 <- new_pack() |>
   body_add_flextable(plain_table(data.frame(
     Condition = sprintf("%d. %s. %s", seq_len(nrow(design_conditions)), design_conditions$condition,
                         design_conditions$recap),
-    `Your design` = "", check.names = FALSE), widths = c(2.9, 3.9)) |> tall_rows(0.85) |>
+    `Your design` = "", check.names = FALSE), widths = c(2.9, 3.9)) |> tall_rows(0.78) |>
     fontsize(j = 1, size = 9.5, part = "body")) |>
   p_("Your counterfactual, in one sentence. You will read it out in the pitch:") |> write_lines(2) |>
   new_page() |>
@@ -1078,8 +1110,17 @@ for (i in seq_len(nrow(design_additions))) {
   s12 <- s12 |>
     h2_(sprintf("%d. %s", i, design_additions$addition[i])) |>
     p_(sprintf("From: %s", design_additions$from[i]), 9, italic = TRUE, color = GREY) |>
-    p_(design_additions$asks[i]) |>
-    write_lines(3)
+    p_(design_additions$asks[i])
+  if (design_additions$id[i] == "figure") {
+    # Two blank drawing boxes, solid borders (not cut lines).
+    s12 <- s12 |> body_add_flextable(
+      card_grid(list("Figure A", "Figure B: what it hides"), ncol = 2,
+                card_width = 3.35, min_height = 1.9) |>
+        border_outer(border = thin_line) |> border_inner(border = thin_line),
+      align = "center")
+  } else {
+    s12 <- s12 |> write_lines(3)
+  }
 }
 s12 <- s12 |>
   new_page() |>
@@ -1090,12 +1131,21 @@ s12 <- s12 |>
     `What it says` = pitch_structure$says, `Our notes` = "", check.names = FALSE),
     widths = c(1.4, 0.6, 2.4, 2.4)) |> tall_rows(1.0)) |>
   new_page() |>
+  title_("AI prompt card: stress-test your design", S12) |>
+  print_line("1 card per team (four cards per page), cut along the dashed lines") |>
+  add_cards(rep(list(c("Stress-test your design with AI",
+                       "Type your Part 1 answers and your counterfactual sentence into the AI tool. Prompt:",
+                       "\"You are a sceptical commissioner. Ask me three questions about this design before you comment. Then name the one assumption that, if it broke, would make the estimate wrong.\"",
+                       "", "Check its answer in a fresh chat.")), 4),
+            min_height = 3.0) |>
+  new_page() |>
   title_("Feedback slips", S12) |>
-  print_line("1 page per participant, cut into four slips; one slip per pitch you hear, handed to the team") |>
+  print_line("One slip per participant for each other team (four slips per page); each slip goes to the team after its pitch") |>
   add_cards(rep(list(c("Feedback for team: ____________________",
                        "1. What is the design? Say it back in one sentence.", "", "",
                        "2. What would make it fail? The one assumption that would have to break.", "", "",
                        "3. What is missing? One thing you would have wanted to hear.", "", "",
+                       "4. Which trap from this week could hit it? (headline vs preferred estimate, horizon, truncated axis, missing threshold)", "", "",
                        "Aim it at the design, not at the team.")), 4),
             min_height = 4.2) |>
   new_page() |> title_("Take-away card: the one question", S12) |>
@@ -1108,10 +1158,13 @@ s12 <- s12 |>
   new_page() |> title_("Facilitator key", S12) |> print_line("trainer only") |>
   p_("There are no right answers to the template. Use this page while circulating.") |>
   h2_("Timing") |>
-  p_("Part 1: twenty minutes. Part 2: thirty minutes, then a five-minute break. Pitches: five minutes each, then three minutes of feedback in the fixed order (say it back, what would make it fail, what is missing).") |>
+  p_("Part 1: twenty minutes. Part 2: thirty minutes, with a checkpoint at 15 minutes (each team reads out its counterfactual sentence), then a five-minute break. Pitches from about 85 minutes in: five minutes each, then three minutes of feedback in the fixed order (say it back, what would make it fail, what is missing, which trap from this week could hit it).") |>
+  p_("This fits three teams. More than three: cut each pitch to 3 minutes plus 2 of feedback, or Part 2 to 25 minutes.") |>
+  h2_("Running the pitches") |>
+  p_("Call time at 5:00; feedback in the fixed order.") |>
   h2_("Prompts on the slides") |>
   p_("The one condition that decides the rest: the counterfactual. Every method this week was a way of making it operational: randomisation, a cut-off, a matched comparison, a parallel trend.") |>
-  p_("Hardest addition before any data: usually the cost-benefit framework, because the benefit per unit is the thing the evaluation has yet to estimate. Teams can still state the threshold, the horizon and the discount rate.") |>
+  p_("Hardest addition before any data: usually the cost-benefit framework, because the benefit per unit is the thing the evaluation has yet to estimate. Teams can still state the decision rule, the horizon and the discount rate.") |>
   h2_("What to check at each table") |>
   p_("Part 1: can the team say its counterfactual in one sentence? If not, the design is not finished.") |>
   p_("Addition 1: have they named the one number they will lead with, and what a reader must not conclude from it?") |>

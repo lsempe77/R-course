@@ -93,16 +93,18 @@ conditions.
 # 4. Data
 
 The evaluation uses the authority's administrative records, linked to two
-business surveys. The baseline round contains 9,919 businesses in treatment
-neighbourhoods and the follow-up round contains a comparable number. The sample
-is large by the standards of this literature, which gives us confidence in the
-precision of the estimates.
+business surveys. The full sample contains 9,913 businesses, each surveyed in
+both rounds. Of these, 4,959 are in treatment neighbourhoods, giving 9,918
+observations for the difference-in-differences analysis. The sample is large by
+the standards of this literature, which gives us confidence in the precision of
+the estimates.
 
 Outcome data were collected by enumerator visit, with a small number of
 observations obtained by telephone follow-up where a business had relocated.
 
-Of the businesses present in the baseline round, 12 per cent were not present in
-the follow-up round. This reflects the normal churn of the business register.
+Recycling compliance, recorded as a secondary indicator, is missing for 8,570 of
+the 19,826 observations. These gaps reflect the inspection schedule and do not
+affect the main outcome, which is complete for every business.
 
 One refinement should be noted. In the baseline round, businesses reported total
 waste-management expenditure. In the follow-up round, the survey instrument

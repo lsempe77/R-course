@@ -29,6 +29,15 @@ rating_sections <- data.frame(
     "6. Limitations",
     "7. Conclusions and recommendations"
   ),
+  # Which of yesterday's four checklist areas (qa_checklist.R) to apply.
+  area = c(
+    "Conclusions",
+    "Methodology; Assumptions",
+    "Data quality",
+    "Methodology; Conclusions",
+    "Assumptions; Data quality",
+    "Conclusions"
+  ),
   # What is genuinely good. Deliberately real, so the exercise is not "find the
   # errors" but "separate the good from the weak in the same document".
   strength = c(
@@ -37,15 +46,15 @@ rating_sections <- data.frame(
     "Names the outcome, gives sample sizes, and discloses that the survey instrument changed between rounds. Disclosure is the right instinct.",
     "A full table with confidence intervals for every method, plus an annex of robustness specifications. Nothing is hidden in a footnote.",
     "Three limitations stated plainly, and the offer-versus-enrolment and near-the-cut-off points are technically correct.",
-    "Recommendations are specific enough to act on, and the first follows from the stated threshold."
+    "Recommendations are specific enough to act on."
   ),
   # The planted defect. Each is answerable from the report itself.
   weakness = c(
-    "It claims the programme \u201Cmeets the threshold\u201D and reports \u201Capproximately 1,000\u201D, which is not an estimate any of the four methods produced. The preferred specification, stated later, is 816.",
-    "It asserts that parallel trends is \u201Csatisfied by construction\u201D because the neighbourhoods share an administrative area. That is not what the assumption requires, and no pre-trend test is reported.",
-    "Twelve per cent attrition is disclosed and then dismissed as \u201Cnormal churn\u201D, with no comparison of leavers to stayers. The instrument change is called a refinement without any test that it did not shift the outcome.",
+    "It claims the programme \u201Cmeets the threshold\u201D and reports \u201Capproximately 1,000\u201D as if all four methods agreed. Only the matched comparison gives 1,000, and the preferred specification gives 816.",
+    "It asserts that parallel trends is \u201Csatisfied by construction\u201D because the neighbourhoods share an administrative area. That is not what the assumption requires, and no pre-trend test is reported. The defence is also about the wrong groups: the DiD compares enrolled with non-enrolled businesses inside treatment neighbourhoods, but the argument is about treatment and control neighbourhoods.",
+    "Recycling compliance is missing for 8,570 of 19,826 observations, and the gap is put down to \u201Cthe inspection schedule\u201D without saying which businesses are missing. (In the data, it is every ineligible business.) The instrument change is called a refinement without any test that it did not shift the outcome.",
     "The headline result is the largest of the four estimates, chosen because of the population it covers rather than because the design is stronger. The preferred specification fails the threshold and the report does not say so.",
-    "All three are boilerplate that leave the conclusion intact. The two limitations that do threaten it (attrition and the instrument change) are in the data section and never carried through to here.",
+    "All three are boilerplate that leave the conclusion intact. The problems raised in the data section (the instrument change and the unexplained gap in the compliance data) are never carried through to here.",
     "Recommendations 2 and 3 are not supported by anything in the evaluation: nothing was estimated about subsidy rates, and the cut-off finding is about a different population from the one being scaled up."
   ),
   stringsAsFactors = FALSE
@@ -53,9 +62,9 @@ rating_sections <- data.frame(
 
 # The single most important defect, for the closing reveal.
 rating_decisive <- paste0(
-  "The results section. Everything else in the report is a symptom of it. ",
-  "The headline estimate was selected because it clears the threshold, and the ",
-  "one number that fails the threshold is described as the preferred specification ",
-  "four sections later. A reader who stops after the executive summary would ",
+  "The results section. ",
+  "The headline is the one estimate that clears the threshold, and the report ",
+  "never says that its own preferred specification, named in Section 3, does not. ",
+  "A reader who stops after the executive summary would ",
   "conclude the programme pays for itself. It does not, on the evidence reported here."
 )
