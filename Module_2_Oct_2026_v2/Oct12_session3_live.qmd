@@ -26,6 +26,7 @@ webr:
   render-df: kable
   resources:
     - evaluation_data_GreenWaste.csv
+    - gw_lab.R
 knitr:
   opts_chunk:
     echo: false
@@ -177,6 +178,7 @@ rule_chart <- function(est, least, most, rule, xlab, xmax, digits = 0) {
 # Runs once, in the browser, when the deck opens. Everything the live cells
 # below use is defined here, so each cell on a slide stays two or three lines.
 gw <- read.csv("evaluation_data_GreenWaste.csv")
+source("gw_lab.R")   # the GreenWaste lab: an invented world where the true effect is known
 library(estimatr)
 RULE <- 1000
 ACCENT <- "#215a9e"; ACCENT2 <- "#7da1c4"; ALERT <- "#B8272C"; MUTED <- "#545860"
@@ -589,6 +591,55 @@ at a design that makes them comparable by construction.
 Paper (Oct12_session3_materials.docx): Tracker check: every row should now say too big or too small, with a reason.
 :::
 
+## The GreenWaste lab
+
+:::::: {.columns}
+
+::::: {.column width="46%"}
+```{ojs}
+//| echo: false
+viewof lab_trend  = Inputs.range([0, 600], {value: 0, step: 50, label: "Costs rise for everyone anyway (AED)"})
+viewof lab_size   = Inputs.range([0, 800], {value: 0, step: 100, label: "Joiners are smaller businesses (AED)"})
+viewof lab_hidden = Inputs.range([0, 800], {value: 0, step: 100, label: "Joiners differ in something nobody measured (AED)"})
+```
+:::::
+
+::::: {.column width="54%"}
+::: {.panel}
+An invented GreenWaste of 20,000 businesses where we know the truth: taking
+part cuts costs by **900 AED**. Each slider switches on one problem.
+:::
+
+::: {.ask}
+Before each move: **which estimate will that slider pull away from the truth,
+and which way?**
+:::
+:::::
+
+::::::
+
+```{webr}
+#| input:
+#|   - lab_trend
+#|   - lab_size
+#|   - lab_hidden
+#| autorun: true
+#| edit: false
+#| fig-width: 10
+#| fig-height: 2.5
+lab(c("before_after", "with_without"), lab_trend, lab_size, lab_hidden)
+```
+
+::: {.notes}
+About 5 minutes. With every slider at zero both estimates sit on the truth: a
+naive comparison is only wrong when the world has these problems, and the real
+GreenWaste had them. Move one slider at a time and take a call first. "Costs
+rise anyway" moves only before-and-after (towards zero, as in the real data,
+where costs rose about 150 AED). The two "joiners differ" sliders move only
+with-and-without, and make it look bigger than the truth, as the 1,447 did.
+Leave the sliders where the room ends up; the lab comes back after the lottery.
+:::
+
 # Break {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## Five-minute break
@@ -727,6 +778,53 @@ for the balance table.
 This asks the room to apply what the two lottery slides showed to a result
 they might be handed. Expect a split between
 A and B; let one person from each argue before revealing.
+:::
+
+## The lab again: add the lottery
+
+:::::: {.columns}
+
+::::: {.column width="46%"}
+```{ojs}
+//| echo: false
+viewof lab2_trend  = Inputs.range([0, 600], {value: 300, step: 50, label: "Costs rise for everyone anyway (AED)"})
+viewof lab2_size   = Inputs.range([0, 800], {value: 400, step: 100, label: "Joiners are smaller businesses (AED)"})
+viewof lab2_hidden = Inputs.range([0, 800], {value: 400, step: 100, label: "Joiners differ in something nobody measured (AED)"})
+```
+:::::
+
+::::: {.column width="54%"}
+::: {.ask}
+Move any slider as far as you like. **Which estimate never moves, and why
+not?**
+:::
+
+::: {.panel .fragment}
+The randomised one. The lottery decides who is offered, so every problem lands
+equally on both sides of the comparison and cancels out.
+:::
+:::::
+
+::::::
+
+```{webr}
+#| input:
+#|   - lab2_trend
+#|   - lab2_size
+#|   - lab2_hidden
+#| autorun: true
+#| edit: false
+#| fig-width: 10
+#| fig-height: 2.8
+lab(c("before_after", "with_without", "randomised"), lab2_trend, lab2_size, lab2_hidden)
+```
+
+::: {.notes}
+About 3 minutes. The sliders start with all three problems switched on. This
+chart comes back in every method session with one more method added:
+difference-in-differences tomorrow morning, then regression discontinuity, then
+matching. Each new method will survive some sliders and not others; only the
+lottery survives them all.
 :::
 
 # 5 · Reading the randomised result {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
