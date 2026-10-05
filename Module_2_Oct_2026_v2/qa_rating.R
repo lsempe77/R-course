@@ -11,9 +11,9 @@
 rating_scale <- data.frame(
   light = c("Green", "Amber", "Red"),
   meaning = c(
-    "Credible as it stands. You would rely on this section without further work.",
-    "Credible with a specific caveat. Name the caveat and say what would settle it.",
-    "Not credible. The problem undermines a claim made in this section."
+    "Credible as it stands. You can trust this section without asking for more information.",
+    "Credible, but with one specific concern. Name the concern and say what information would remove that concern.",
+    "Not credible. A problem in this section means you cannot trust a claim the section makes."
   ),
   stringsAsFactors = FALSE
 )

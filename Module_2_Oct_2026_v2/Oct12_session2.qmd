@@ -655,8 +655,8 @@ most people would type: **"What does this chart show? Did the cameras work?"**
 
 ::::: {.column width="45%"}
 ::: {.ask}
-In pairs: which of these claims can you check against the chart, and which
-does the chart support?
+In pairs: underline each claim in the response that you can see in the chart.
+Cross out each claim that the chart does not show.
 :::
 :::::
 
@@ -715,9 +715,9 @@ need."**
 
 ::::: {.column width="50%"}
 ::: {.ask}
-Run both prompts on the same chart. What does the second answer include that
-the first left out? Paste the second answer into a fresh chat: which claims
-does it flag that the chart cannot support?
+Run both prompts with the same chart. What does the second answer include that
+the first answer left out? Paste the second answer into a new chat and ask which
+claims the chart does not support.
 :::
 :::::
 
@@ -860,13 +860,13 @@ the column R printed as Pr(>|t|).
 ::: {.ask}
 On your printed copy:
 
-**1.** Which number is the before-and-after change? Circle it.
+**1.** Which number is the before-and-after change? Circle that number.
 
-**2.** Where is its confidence interval? Draw a box around it.
+**2.** Where is the confidence interval for that change? Draw a box around the interval.
 
-**3.** Which number is the 2019 average? Underline it. Why is it not an effect?
+**3.** Which number is the 2019 average? Underline that number. Why is the 2019 average not the effect of the cameras?
 
-**4.** What comparison would you ask the evaluator for?
+**4.** To know whether the cameras caused the change, what would you compare these roads with?
 :::
 
 ::: {.notes}
@@ -884,8 +884,8 @@ Four minutes. Question 4 carries into Session 3.
 ```{=html}
 <div class="facts">
   <div class="k">How big?</div>          <div class="v">In the units the decision is written in, not a percentage</div>
-  <div class="k">How sure?</div>         <div class="v">Does the confidence interval clear the rule, not just zero?</div>
-  <div class="k">Compared to what?</div> <div class="v">Which group, which period, and did it move too?</div>
+  <div class="k">How sure?</div>         <div class="v">Does the whole confidence interval meet the decision rule, not just exclude zero?</div>
+  <div class="k">Compared to what?</div> <div class="v">Which group, which period, and did that group change too?</div>
 </div>
 ```
 
@@ -895,13 +895,13 @@ is still open, and Session 3 takes it up.
 :::
 
 ::: {.ask}
-The last figure you were sent: was it before-and-after? What would you compare
-it with?
+Think of the last figure you received at work. Was it a before-and-after
+comparison? What would you compare it with?
 :::
 
 ::: {.notes}
 Paper (Oct12_session2_materials.docx): Hand out the take-away cards (pack page 3,
 one per participant, cut into cards).
 
-Give one minute for everyone to fill in the "On my desk" line on their card.
+Give one minute for everyone to fill in the "Back at work" line on their card.
 :::

@@ -216,13 +216,13 @@ fig_rules <- tribble(
   ~n, ~Rule, ~Why,
   "1", "Read the axis before the shape",
        "A truncated axis makes a real gap look decisive. The gap is the same number either way; only your impression of it changes.",
-  "2", "Ask what the bar is averaging over",
+  "2", "Ask what each bar is an average of",
        "A mean can sit between two groups that barely overlap. It summarises the group and may describe nobody in it.",
-  "3", "Check the denominator",
+  "3", "Check what each percentage is a percentage of",
        "A percentage needs a base. Where the base is zero or tiny, the biggest percentage change belongs to the smallest number.",
   "4", "Compare changes, not levels",
        "Levels carry whatever the two groups already differed by. The comparison the chart invites is often not the one that answers the question.",
-  "5", "Discount the future in front of the reader",
+  "5", "Show future savings at today's value (discounted)",
        "Undiscounted sums look bigger and are easier to draw. The gap between the two lines comes from the discount rate."
 )
 ```
@@ -528,7 +528,7 @@ them sit somewhere else. The reverse figure: `r sprintf("%.1f%%", 100 * mean(non
 of the comparison group paid less than the enrolled average.
 :::
 
-## Rule 2: ask what the bar is averaging over
+## Rule 2: ask what each bar is an average of
 
 ```{=html}
 <div class="facts">
@@ -547,7 +547,7 @@ Here the overlap agrees with the gap. What would you conclude if the two groups 
 overlapped heavily?
 :::
 
-# 3 · Check the denominator {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+# 3 · A percentage of what? {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## The change nobody can compute
 
@@ -655,7 +655,7 @@ the gap: the pooled figure weights each segment by its collisions; the average
 gives every segment equal weight, so small bases pull it around.
 :::
 
-## Rule 3: check the denominator
+## Rule 3: check what each percentage is a percentage of
 
 ```{=html}
 <div class="facts">
@@ -826,7 +826,7 @@ total falls to about `r gfmt(sum(816 / 1.24^(2:6)))`, level with the cost. The
 answer to the question is about 24%, the flip rate from this morning's session.
 :::
 
-## Rule 5: discount in front of the reader
+## Rule 5: show future savings at today's value
 
 ::: {.panel}
 **The ratio, discounted:** `r gfmt(cb_dis_total)` / `r gfmt(COST_PER_BUSINESS)` =
@@ -981,8 +981,8 @@ one per group). It has both figures, the prompt and the response.
 beside the claim 'the programme reduced costs substantially'. Is the axis
 appropriate for that claim, for a non-technical reader?"*
 
-**Two habits:** ask the AI to ask you questions before it answers, and paste its
-answer into a fresh chat to check it.
+**Two habits:** ask the AI to ask you questions before it answers, and paste the
+AI's answer into a new chat and ask the AI to check that answer.
 :::
 
 ::: {.notes}

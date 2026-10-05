@@ -397,7 +397,7 @@ facts.
 ::::::
 
 ::: {.ask .fragment}
-A weak question can be answered with "yes"; a strong one needs a fact. **Pick a
+A weak question can be answered with one word, such as "yes". A strong question needs a fact or a number. **Pick a
 weak question from your own work and rewrite it so it needs a fact.**
 :::
 
@@ -679,9 +679,9 @@ got an admission?
 ```{=html}
 <div class="facts">
   <div class="k">Answered</div>     <div class="v">The fact exists and was produced</div>
-  <div class="k">Admitted</div>     <div class="v">"We didn't check that"</div>
-  <div class="k">Deflected</div>    <div class="v">Answered a different question</div>
-  <div class="k">Unanswerable</div> <div class="v">The design cannot settle it</div>
+  <div class="k">Admitted</div>     <div class="v">Said they do not know: "We didn't check that"</div>
+  <div class="k">Avoided</div>      <div class="v">Avoided the question and answered a different one</div>
+  <div class="k">Cannot answer</div> <div class="v">This data or design cannot answer the question</div>
 </div>
 ```
 :::::
@@ -696,15 +696,15 @@ weaker than it looked?
 ::::::
 
 ::: {.warn .fragment}
-A deflection is worse than an admission. An admission shows where the evidence
-stops. A deflection suggests the analyst may not know either.
+Avoiding the question is worse than admitting it. An admission shows where the
+evidence stops. Avoiding the question suggests the analyst may not know either.
 :::
 
 ## Which unanswered question changes the decision
 
 ::: {.ask}
-Of everything the analyst could not answer, which **one** would change your
-sign-off if it came back the wrong way?
+Of everything the analyst could not answer, which **one** question matters most?
+If the answer to that question were bad news, would it change your decision?
 :::
 
 :::::: {.columns}
@@ -862,7 +862,7 @@ limit instead of writing around it.
 **From memory, no notes**
 
 1. What is the comparison, and how was it chosen?
-2. What has to be true for this to be causal, and did you test it?
+2. What has to be true for this to be causal, and did you test that assumption?
 3. Does the conclusion follow, or does it go beyond the evidence?
 :::
 :::::
@@ -882,7 +882,7 @@ method?
 :::
 
 ::: {.notes}
-Paper (Oct14_session3_materials.docx): Hand out the take-away cards (pack page 4). Give a minute to fill in "On my desk" on the card, then take two or three examples from the room.
+Paper (Oct14_session3_materials.docx): Hand out the take-away cards (pack page 4). Give a minute to fill in "Back at work" on the card, then take two or three examples from the room.
 :::
 
 ## Tomorrow

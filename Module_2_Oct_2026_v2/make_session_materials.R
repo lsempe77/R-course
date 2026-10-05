@@ -140,7 +140,7 @@ s1 <- new_pack() |>
   p_("The median (the middle road when they are in order):  ________") |>
   h2_("2. Remove the busiest road") |>
   p_("New mean:  ________      New median:  ________") |>
-  p_("Which moved more, and what does that tell you about a reported average?") |>
+  p_("Which changed more, the mean or the median? What does this tell you about an average in a report?") |>
   write_lines(2) |>
   new_page() |>
   title_("By hand: the speed table", S1) |>
@@ -152,12 +152,12 @@ s1 <- new_pack() |>
     `2021` = c(gfmt(sp["c1"], 2), gfmt(sp["o1"], 2), ""),
     Change = c("", "", ""), check.names = FALSE), widths = c(2.4, 1.2, 1.2, 1.2))) |>
   illustrative() |>
-  p_("Three numbers describe this result. Write each one and say what it is:") |>
+  p_("Copy these three numbers from your table:") |>
   p_("The change on camera roads:  ________     The gap in 2021:  ________     The gap in 2019:  ________") |>
-  p_("Which is the effect of the cameras on speed, and why not the other two?") |>
+  p_("Which of these three numbers is the effect of the cameras on speed? Why are the other two numbers not the effect?") |>
   write_lines(2) |>
-  h2_("3. Which one would you act on?") |>
-  p_("Three evaluations each report 1.8 fewer injury collisions per road. The bar is 2.0. Tick one for each.") |>
+  h2_("3. Which report would you act on?") |>
+  p_("Three evaluations each report 1.8 fewer injury collisions per road. The decision rule: act only if the cameras prevent at least 2.0 injury collisions per road. For each report, tick one box.") |>
   body_add_flextable(plain_table(data.frame(
     Report = c("A", "B", "C"), `95% interval` = c("0.4 to 3.2", "1.6 to 2.0", "-0.9 to 4.5"),
     Act = c("[   ]", "[   ]", "[   ]"), `Do not act` = c("[   ]", "[   ]", "[   ]"),
@@ -170,27 +170,27 @@ s1 <- new_pack() |>
   add_cards(list(
     c("Card 1", "Paste into your AI tool:",
       "\"Explain a 95% confidence interval, in one paragraph, for someone who is not a statistician.\"",
-      "", "What did it get wrong or overstate?", "", "", ""),
+      "", "Did the AI's answer contain mistakes, or claim more than is true?", "", "", ""),
     c("Card 2", "Paste into your AI tool:", "\"Explain what a p-value means.\"",
-      "", "What did it get wrong or overstate?", "", "", ""),
+      "", "Did the AI's answer contain mistakes, or claim more than is true?", "", "", ""),
     c("Card 3", "Paste into your AI tool:",
       "\"Fatal collisions on our camera roads fell 32%. Is that a good result?\"",
-      "", "Did it ask what the 32% was compared with?", "", "", ""),
+      "", "Did the AI ask what the 32% was compared with?", "", "", ""),
     c("Card 4", "Paste into your AI tool:",
       "\"The coefficient on school_within_500m is -0.37. What should I do about it?\"",
-      "", "Did it give you advice about schools?", "", "", "")), min_height = 3.2)
+      "", "Did the AI give you advice about schools?", "", "", "")), min_height = 3.2)
 
 s1 <- s1 |> new_page() |> title_("Triage the claims", S1) |>
   print_line("1 per group, with one set of the excerpt slips (next page)") |>
-  p_("You are the commissioner. Eight sentences from reports on the camera programme land on your desk. For each one: which of the three questions does it leave unanswered, and what do you do with it?") |>
+  p_("You are the commissioner. You receive eight sentences from reports on the camera programme. For each sentence: which of the three questions (compared to what? how big? how sure?) does the sentence not answer? Would you act on the sentence, not act, or ask a question first?") |>
   body_add_flextable(plain_table(data.frame(
     Excerpt = 1:8,
-    `Unanswered: compared to what? / how big? / how sure? / none` = rep("", 8),
+    `Question the sentence does not answer: compared to what? / how big? / how sure? / none` = rep("", 8),
     `Act / do not act / ask first` = rep("", 8),
-    `The question you would send back` = rep("", 8), check.names = FALSE),
+    `The question you would ask the evaluator` = rep("", 8), check.names = FALSE),
     widths = c(0.8, 2.3, 1.4, 2.4)) |> height_all(height = 0.55, part = "body") |>
     hrule(rule = "atleast", part = "body")) |>
-  p_("Then pick the one excerpt you would be most tempted to act on, and say what would have to be true first.") |>
+  p_("Which excerpt would you most want to act on? What would you need to know before acting on that excerpt?") |>
   write_lines(2) |>
   new_page() |> title_("Triage the claims: the excerpts", S1) |>
   print_line("1 set per group; cut into slips") |>
@@ -200,8 +200,8 @@ s1 <- s1 |> new_page() |> title_("Triage the claims", S1) |>
   new_page() |> title_("Take-away card: three questions for any number", S1) |>
   print_line("1 per participant, cut into cards") |>
   add_cards(rep(list(c("Three questions for any number", "1. Compared to what?",
-                       "2. How big is it, in units that matter to the decision?",
-                       "3. How sure are we?", "", "On my desk, I will ask these about:", "______________________________")), 8), min_height = 1.8) |>
+                       "2. How big is the number, in units that matter to the decision?",
+                       "3. How sure are we?", "", "Back at work, I will ask these questions about:", "______________________________")), 8), min_height = 1.8) |>
   new_page() |> title_("Facilitator key", S1) |> print_line("trainer only") |>
   h2_("Ten roads") |>
   p_(sprintf("Mean %s; %d of the ten roads are below it; median %s. Without the busiest road (%d collisions): mean %s, median %s. One road moved the mean further than the median.",
@@ -250,21 +250,21 @@ rct <- mean(fu$waste_management_costs[fu$treatment_neighborhood == 1]) -
 s3 <- new_pack() |>
   title_("Session tracker", S3) |>
   print_line("1 per participant; filled in as the session runs") |>
-  p_("Module 1 gave you three GreenWaste numbers. Today you rebuild each one from the data and decide what is wrong with it. The bar for national scale-up: at least 1,000 AED.") |>
+  p_("In Module 1 you saw three GreenWaste numbers. Today the trainer recalculates each number from the data. Your task: decide what is wrong with each number. The decision rule for national scale-up: the programme must save at least 1,000 AED per business.") |>
   body_add_flextable(plain_table(data.frame(
     Comparison = c("Before and after", "Enrolled vs not enrolled", "Randomised (drawn neighbourhoods)"),
     `Module 1 said` = c(gfmt(ba), gfmt(ww), gfmt(rct)),
-    `We got` = c("", "", ""),
-    `Too big / too small / fair?` = c("", "", ""),
+    `Today's number` = c("", "", ""),
+    `Too big, too small, or about right?` = c("", "", ""),
     `Why?` = c("", "", ""), check.names = FALSE), widths = c(1.8, 1.0, 0.9, 1.5, 1.8)) |>
     height_all(height = 0.55, part = "body") |> hrule(rule = "atleast", part = "body")) |>
   h2_("The lottery") |>
-  p_("Gap between offered and not-offered neighbourhoods before the programme, after five random draws: largest gap ________ AED") |>
-  p_("The same gap when officials pick the neighbourhoods:  ________ AED") |>
-  p_("With 4 neighbourhoods in the lottery, 95% of draws start within ± ________ AED. With 196: ± ________ AED.") |>
+  p_("The trainer draws the offered neighbourhoods at random five times. Each time, look at the difference in costs before the programme between offered and not-offered neighbourhoods. Write the largest difference:  ________ AED") |>
+  p_("The same difference when officials choose the neighbourhoods instead:  ________ AED") |>
+  p_("With 4 neighbourhoods in the lottery, in 95 out of 100 draws the starting difference is smaller than ± ________ AED. With 196 neighbourhoods: ± ________ AED.") |>
   h2_("Reading the randomised result") |>
-  p_("The effect: ________ AED.   Its 95% interval, counted by neighbourhood: ________ to ________") |>
-  p_("Does it clear 1,000 AED at its least generous end?   Yes  /  No") |>
+  p_("The effect of the programme: ________ AED.   The 95% confidence interval for the effect (standard errors clustered by neighbourhood): ________ to ________") |>
+  p_("Look at the end of the interval with the smallest saving. Is that saving at least 1,000 AED?   Yes  /  No") |>
   p_("One question I would ask the evaluator:") |> write_lines(2) |>
   new_page() |>
   title_("AI Snapshot: a paragraph for the minister", S3) |>
@@ -273,17 +273,17 @@ s3 <- new_pack() |>
   p_("\"Our pilot cut waste costs by 665 AED per business (costs before vs after, p < 0.001). Write a short paragraph for the minister on what this shows.\"", italic = TRUE) |>
   h2_("A response like this is possible") |>
   p_("The GreenWaste pilot produced a clear result: waste-management costs fell by 665 AED per business, and with p < 0.001 we can be confident the programme caused this reduction. Because the same businesses were measured before and after, differences between businesses are already accounted for, so the 665 AED saving can be attributed to the programme. This makes a strong case for national scale-up. As with any pilot, results should be monitored as the programme expands.") |>
-  p_("Underline every claim the evidence does not support. Then run the same prompt yourselves: did your AI write something similar?", bold = TRUE) |>
+  p_("Underline every claim in the response that the evidence does not support. Then run the same prompt yourselves: did your AI write something similar?", bold = TRUE) |>
   write_lines(3) |>
   h2_("Then run this prompt instead, and compare") |>
   p_("\"Costs for participating businesses were 665 AED lower after the pilot than before (p < 0.001). We also have businesses that did not take part and a randomised comparison. The scale-up rule is at least 1,000 AED. Before writing anything, tell me what this before-and-after number can and cannot show. Ask me questions before you answer.\"", italic = TRUE) |>
-  p_("Which answer questions the 665 before writing the paragraph? Paste the better answer into a fresh chat and ask it to check for errors.") |>
+  p_("Which answer checks whether 665 AED is a fair measure of the effect before writing the paragraph? Paste the better answer into a new chat and ask the AI to check that answer for errors.") |>
   new_page() |> title_("Take-away card: three questions for an RCT", S3) |>
   print_line("1 per participant, cut into cards") |>
   add_cards(rep(list(c("Three questions to ask the evaluator",
                        "1. Compared to what? Before-and-after, with-and-without, or a fair comparison?",
                        "2. Show me the balance table. How do you know the groups started out alike?",
-                       "3. Were errors clustered where you randomised, and does the interval clear our rule?", "", "On my desk, I will ask these about:", "______________________________")), 6),
+                       "3. Were standard errors clustered at the level you randomised? Does the whole confidence interval meet our decision rule?", "", "Back at work, I will ask these questions about:", "______________________________")), 6),
             min_height = 2.2) |>
   new_page() |> title_("Facilitator key", S3) |> print_line("trainer only") |>
   h2_("Session tracker") |>
@@ -323,45 +323,47 @@ for (k in names(cards5)) {
     body_add_flextable(plain_table(cards5[[k]]$rows, widths = c(1.8, 1.3, 1.9, 1.3))) |>
     h2_("Work it out") |>
     p_("Average cost just below the line:  ________      Average cost just above:  ________") |>
-    p_("The jump (below minus above):  ________ AED.   Write it on the flipchart when the trainer asks.") |>
-    p_("Your neighbours had different businesses. Why do the jumps differ, and what would you need to trust one number?") |>
+    p_("The jump (below minus above):  ________ AED.   Write the jump on the flipchart when the trainer asks.") |>
+    p_("The pair next to you had a card with different businesses, and found a different jump. Why are the jumps different? What would you need before you trusted one jump as the effect of the programme?") |>
     write_lines(2) |>
     new_page()
 }
 s5 <- s5 |>
-  title_("Four checks scorecard", S5) |>
+  title_("Scorecard: can we trust the jump at 58?", S5) |>
   print_line("1 per group; mark each check as the trainer runs it") |>
+  p_("The trainer runs each check on screen. For each check, write pass, fail or unclear, and add a short note.") |>
   body_add_flextable(plain_table(data.frame(
-    Check = c("0. Who is compared?", "1. A different window", "1b. Placebo cut-offs",
-              "2. Bending the rule", "3. Are the two sides alike?", "4. Who does it apply to?"),
-    `What to look for` = c("Only businesses that could have been offered it",
-                           "Does the verdict against 1,000 AED change?",
-                           "No jump where there is no rule",
-                           "No pile-up of businesses just below 58",
-                           "No characteristic jumps at the line",
-                           "Who sits near the line, and who the roll-out would reach"),
+    Check = c("0. Who is compared?", "1. A different window around 58", "1b. Placebo (fake) cut-offs",
+              "2. Bending the rule", "3. Are the two sides alike?", "4. Who does the result apply to?"),
+    `What to look for` = c("Only businesses in neighbourhoods where the programme was offered",
+                           "Does the decision against 1,000 AED change when the window is wider or narrower?",
+                           "No jump at other cut-offs, where no rule applies",
+                           "No unusual crowding of businesses just below 58 (a sign that businesses changed their score to qualify)",
+                           "Characteristics such as size and manager age do not jump at 58",
+                           "Are the businesses near 58 like the businesses the roll-out would reach?"),
     `Pass / fail / unclear` = rep("", 6), Note = rep("", 6), check.names = FALSE),
     widths = c(1.6, 2.6, 1.0, 1.7)) |> height_all(height = 0.55, part = "body") |> hrule(rule = "atleast", part = "body")) |>
-  p_("Overall: would you act on this estimate?   Act  /  Act with conditions  /  Send back") |>
-  p_("The one question for the evaluator:") |> write_lines(2) |>
+  p_("Overall: would you act on this estimate?   Act  /  Act with conditions  /  Send back to the evaluator") |>
+  p_("One question you would ask the evaluator:") |> write_lines(2) |>
   new_page() |>
   title_("AI Snapshot: who does this apply to?", S5) |>
   print_line("1 per group") |>
   p_("The prompt: \"Explain, without jargon, who this result actually applies to.\"", bold = TRUE) |>
   h2_("A response like this is possible") |>
   p_("This study found that the GreenWaste programme reduced costs by around 790 AED for participating businesses. Because the study uses a cut-off at an efficiency index of 58, the findings apply to all businesses in the programme. The cut-off design means the result generalises to the wider population of inefficient businesses. The estimate is therefore a reasonable basis for scaling the programme to every business below average efficiency.") |>
-  p_("Underline every claim the study supports and cross out every one it does not. What did it leave out?", bold = TRUE) |>
+  p_("Underline every claim that the study supports. Cross out every claim that the study does not support. What important information did the AI's answer leave out?", bold = TRUE) |>
   write_lines(3) |>
-  h2_("Then run this prompt instead") |>
+  h2_("Then run this prompt instead, and compare") |>
   p_("\"This is a regression discontinuity result with the cut-off at an efficiency index of 58, estimated within 2 points either side. The businesses near the line are smaller than average, and manager age differs across the line. Name which businesses the estimate describes and what it cannot tell us. Ask me questions before you answer.\"", italic = TRUE) |>
+  p_("Run this prompt. Which businesses does the new answer say the result applies to? Then paste the answer into a new chat and ask the AI to check that answer for claims the study does not support.") |>
   new_page() |> title_("Take-away card: five questions for an RDD result", S5) |>
   print_line("1 per participant, cut into cards") |>
   add_cards(rep(list(c("Five questions for an RDD result",
                        "1. Where is the cut-off, which side is eligible, and exactly which units are compared?",
-                       "2. Does the jump survive other windows, and is there none at placebo cut-offs?",
-                       "3. Is the number of units smooth at the line?",
-                       "4. Does anything else jump at the line?",
-                       "5. Who is near the line, and does the estimate clear our rule for them?", "", "On my desk, I will ask these about:", "______________________________")), 6),
+                       "2. Does the jump stay when the window is wider or narrower? Is there no jump at placebo (fake) cut-offs?",
+                       "3. Are there about the same number of units just above and just below the cut-off?",
+                       "4. Do other characteristics (such as size or manager age) change suddenly at the cut-off?",
+                       "5. Who is near the cut-off, and does the estimate meet our decision rule for them?", "", "Back at work, I will ask these questions about:", "______________________________")), 6),
             min_height = 2.5) |>
   new_page() |> title_("Facilitator key", S5) |> print_line("trainer only") |>
   h2_("The jump by hand") |>
@@ -409,41 +411,41 @@ s7 <- new_pack() |>
     Step = c("Cost per business", "Annual saving", "Years of saving assumed", "Discount rate assumed",
              "Savings, in today's money", "Benefit-cost ratio"),
     Value = c("1,800 AED", "816 AED", "5, starting in year 2", "5% a year",
-              gfmt(816 * pv(0.05, 5)), sprintf("%s / 1,800 = %.2f", gfmt(816 * pv(0.05, 5)), ratio())),
+              paste(gfmt(816 * pv(0.05, 5)), "AED"), sprintf("%s / 1,800 = %.2f", gfmt(816 * pv(0.05, 5)), ratio())),
     Source = c("programme records", "measured (Day 2 difference-in-differences)", "ASSUMED", "ASSUMED",
                "calculated", "calculated")), widths = c(2.2, 2.4, 2.3))) |>
   h2_("AI prompt, version 1") |>
   p_("\"Generate one plausible scenario in which this programme's benefit-cost ratio falls below 1. Then tell me whether that scenario is realistic.\"", italic = TRUE) |>
   h2_("AI prompt, version 2") |>
   p_("\"Here is a cost-benefit model. The cost and annual saving are measured; the discount rate and the number of benefit years are assumptions. Tell me which single assumption moves the ratio most, give the ratio under a realistic alternative, and say whether a government agency would normally make that assumption. Ask me questions before you answer.\"", italic = TRUE) |>
-  p_("Run both. Which one ranks the assumptions before choosing one? Which one gives you a number you can act on?") |>
+  p_("Run both prompts. Which answer compares all the assumptions before picking one? Which answer gives you a number you could use to make a decision?") |>
   new_page() |>
   title_("Stress-test scenario cards", S7) |>
   print_line("1 set, cut; each group takes one card") |>
   add_cards(lapply(seq_len(nrow(scen)), function(i)
     c(sprintf("Card %d · %s", scen$card[i], scen$name[i]), scen$story[i], "",
       paste("Tell the trainer:", scen$settings[i]), "",
-      "Is this plausible for a waste-cost programme?", "Your verdict:")),
+      "Could this realistically happen in a programme like GreenWaste?", "Your verdict: does the programme still pay for itself (ratio above 1)?")),
     min_height = 2.2) |>
   new_page() |>
   title_("Group recording sheet", S7) |>
   print_line("1 per group") |>
   body_add_flextable(plain_table(data.frame(
-    ` ` = c("Our card", "Settings we called", "Ratio on the screen", "Plausible? Why?",
-            "Verdict: pays for itself?", "One question for the evaluator"),
+    ` ` = c("Our card", "Settings we gave the trainer", "Benefit-cost ratio shown on screen", "Realistic? Why or why not?",
+            "Does the programme still pay for itself (ratio above 1)?", "One question for the evaluator"),
     Answer = rep("", 6), check.names = FALSE), widths = c(2.3, 4.6)) |>
     height_all(height = 0.7, part = "body") |> hrule(rule = "atleast", part = "body")) |>
   h2_("The three questions, for GreenWaste") |>
-  p_("1. Are the benefits plausible?  Measured  /  Modelled  /  Assumed") |>
+  p_("1. Are the benefits realistic? Circle where the benefit figure comes from:  Measured  /  Modelled  /  Assumed") |>
   p_("2. Are all the costs included?  What is missing?") |> write_lines(1) |>
-  p_("3. What would flip the result?") |> write_lines(1) |>
+  p_("3. What change would make the benefit-cost ratio fall below 1?") |> write_lines(1) |>
   new_page() |> title_("Take-away card: judging a cost-benefit claim", S7) |>
   print_line("1 per participant, cut into cards") |>
   add_cards(rep(list(c("Three questions for any cost-benefit ratio",
-                       "1. Are the benefits plausible? Measured, modelled or assumed?",
+                       "1. Are the benefits realistic? Were they measured, modelled or assumed?",
                        "2. Are all the costs included? What was left out?",
-                       "3. What would flip the result? Which assumption, and by how much?",
-                       "", "Ask: \"What assumption would have to change for this ratio to fall below 1, and what is your evidence for it?\"", "", "On my desk, I will ask these about:", "______________________________")), 6),
+                       "3. What would make the ratio fall below 1? Which assumption, and by how much?",
+                       "", "Ask: \"What assumption would have to change for this ratio to fall below 1, and what is your evidence for it?\"", "", "Back at work, I will ask these questions about:", "______________________________")), 6),
             min_height = 2.5) |>
   new_page() |> title_("Facilitator key", S7) |> print_line("trainer only") |>
   body_add_flextable(plain_table(data.frame(
@@ -470,7 +472,7 @@ cands <- c("Did the programme work?",
 s9 <- new_pack() |>
   title_("Sort these: strong or weak?", S9) |>
   print_line("1 set per group, cut into slips") |>
-  p_("Mark each slip S (strong: needs a fact to answer) or W (weak: can be answered with a word). Then sort them into two piles.") |>
+  p_("Mark each question S or W. Strong (S): the analyst must give a fact or a number to answer the question. Weak (W): the analyst can answer with one word, such as \"yes\". Then sort the slips into two piles.") |>
   add_cards(lapply(seq_along(cands), function(i) c(sprintf("%d", i), cands[i], "", "S   /   W")),
             min_height = 1.1) |>
   new_page() |>
@@ -480,27 +482,27 @@ s9 <- new_pack() |>
   body_add_flextable(plain_table(data.frame(
     `Our question` = c("1.", "2.", "3.", "Follow-up:"),
     `What the analyst said` = rep("", 4),
-    `Answered / admitted / deflected / unanswerable` = rep("", 4), check.names = FALSE),
+    `Answered / Admitted they do not know / Avoided the question / Cannot be answered with this data` = rep("", 4), check.names = FALSE),
     widths = c(2.4, 2.8, 1.8)) |> height_all(height = 1.0, part = "body") |> hrule(rule = "atleast", part = "body")) |>
   h2_("After the clinic") |>
-  p_("Which unanswered question would change your sign-off if it came back the wrong way?") |> write_lines(2) |>
-  p_("Your vote before the clinic:  Yes / No / Not without more answers.     After:  Yes / No / Not without more answers.") |>
+  p_("Which unanswered question matters most? If the answer to that question were bad news, would it change your decision?") |> write_lines(2) |>
+  p_("Would you approve scale-up?   Before the clinic:  Yes / No / Not without more answers.     After the clinic:  Yes / No / Not without more answers.") |>
   new_page() |>
   title_("AI prompt card", S9) |>
   print_line("1 per group") |>
   add_cards(list(
     c("Prompt A (the one people type)",
       "\"I have an evaluation of a programme that subsidised waste-management technology for businesses. It used difference-in-differences, regression discontinuity, a randomised comparison and matching. All four methods found a cost reduction of roughly 1,000 AED per business per year. List the critical questions a commissioner should ask before acting on this result.\"",
-      "", "How many of its questions would pass the S/W sort as strong?"),
+      "", "How many of the AI's questions are strong (S) questions?"),
     c("Prompt B (better)",
       "\"I am advising on whether to scale up a programme nationally. An evaluator reports a cost reduction of about 1,000 AED per business per year from difference-in-differences, with a decision threshold of 1,000 AED. First, tell me which single assumption this design rests on. Second, tell me what evidence would show that assumption holds, and what it would look like if it failed. Third, tell me what you cannot determine from the information I have given you.\"",
-      "", "What did it tell you it cannot determine?")), ncol = 1, card_width = 6.8, min_height = 2.3) |>
+      "", "What did the AI say it cannot know from the information you gave?")), ncol = 1, card_width = 6.8, min_height = 2.3) |>
   new_page() |> title_("Take-away card: three questions for any analyst", S9) |>
   print_line("1 per participant, cut into cards") |>
   add_cards(rep(list(c("The three you will use",
                        "1. What is the comparison, and how was it chosen?",
-                       "2. What has to be true for this to be causal, and did you test it?",
-                       "3. Does the conclusion follow, or does it go beyond the evidence?", "", "On my desk, I will ask these about:", "______________________________")), 8),
+                       "2. What has to be true for this to be causal, and did you test that assumption?",
+                       "3. Does the conclusion follow, or does it go beyond the evidence?", "", "Back at work, I will ask these questions about:", "______________________________")), 8),
             min_height = 1.9) |>
   new_page() |> title_("Facilitator key", S9) |> print_line("trainer only") |>
   p_("Strong: 2, 4, 6, 8. Weak: 1, 3, 5, 7.") |>
@@ -515,23 +517,23 @@ S11 <- "Module 2 · Day 4, Session 2 · From Findings to Policy"
 s11 <- new_pack() |>
   title_("Peer critique sheet", S11) |>
   print_line("1 per pair, used when briefs are swapped") |>
-  p_("Read your partner's brief as the person deciding. Answer in this order.") |>
+  p_("Read your partner's brief as if you were the person making the decision. Answer these three questions in order.") |>
   p_("1. What does this brief want me to do?") |> write_lines(1) |>
-  p_("2. What is its strongest claim, and does the findings pack support it?") |> write_lines(1) |>
-  p_("3. What has it left out that I would have wanted to know?") |> write_lines(1) |>
+  p_("2. What is the brief's strongest claim? Does the findings pack support that claim?") |> write_lines(1) |>
+  p_("3. What has the brief left out that I would have wanted to know?") |> write_lines(1) |>
   h2_("The six checks") |>
   body_add_flextable(plain_table(data.frame(
     Check = c("The headline sentence contains the number (743)",
-              "It states the 900 AED threshold",
-              "It does not claim customers benefited from the pass-through",
-              "It gives the enrolment figure (34%) without explaining why",
-              "It mentions the 22% cost overrun",
-              "It does not turn the null finding into 'no effect'"),
+              "The brief states the 900 AED threshold",
+              "The brief does not claim customers benefited from lower freight rates (Finding 3)",
+              "The brief gives the enrolment figure (34%) and does not guess why operators did not join",
+              "The brief mentions the 22% overrun in administration costs",
+              "The brief does not say Finding 6 shows 'no effect'"),
     `Yes / No` = rep("", 6), check.names = FALSE), widths = c(5.6, 1.2)) |>
     height_all(height = 0.45, part = "body") |> hrule(rule = "atleast", part = "body")) |>
   p_("Illustrative case (Tariff Shield), with invented figures.", 8.5, italic = TRUE, color = GREY) |>
   new_page() |>
-  title_("The AI draft: edit it as a team", S11) |>
+  title_("The AI draft: edit the draft as a team", S11) |>
   print_line("1 per group") |>
   p_("The prompt: \"Here are six findings from an evaluation of a fuel-price stabilisation scheme for small freight operators. Write a one-page policy brief for the commissioning authority with a headline finding, key implications, a recommendation, and one risk to flag.\"", italic = TRUE) |>
   h2_("A response like this is possible") |>
@@ -539,17 +541,17 @@ s11 <- new_pack() |>
   p_("Key implications. Operators passed part of the saving on to customers, with freight rates falling by 1.8%, suggesting a wider economic benefit. Some operators chose not to enrol, which may indicate a need for better communication.") |>
   p_("Recommendation. Roll the scheme out more widely, with targeted outreach to operators who did not participate.") |>
   p_("Risk to flag. Results from a pilot may not generalise to a full rollout.") |>
-  p_("Edit it on this page. Find four problems in what it says, then the two things it leaves out entirely.", bold = TRUE) |>
+  p_("Correct the AI draft on this page. Find four problems in what the draft says. Then find two important things that the draft does not mention at all.", bold = TRUE) |>
   write_lines(4) |>
   new_page() |> title_("Take-away card: a brief you can trust", S11) |>
   print_line("1 per participant, cut into cards") |>
   add_cards(rep(list(c("What makes a brief trustworthy",
                        "1. The number is in the headline sentence.",
                        "2. The threshold is stated, even when it is missed.",
-                       "3. Findings against the recommendation are named.",
+                       "3. Findings that do not support the recommendation are mentioned.",
                        "4. The recommendation is an action the reader can take or refuse.",
-                       "5. The risk can happen and can be watched.",
-                       "6. What was not established is stated plainly.", "", "On my desk, I will ask these about:", "______________________________")), 6),
+                       "5. The risk could really happen, and it can be monitored.",
+                       "6. What was not established is stated plainly.", "", "Back at work, I will ask these questions about:", "______________________________")), 6),
             min_height = 2.5) |>
   new_page() |> title_("Facilitator key", S11) |> print_line("trainer only") |>
   p_("The AI draft: says what the scheme did and drops the threshold (743 against 900 is never mentioned); calls a non-significant pass-through (p = 0.11) a wider benefit; turns 34% enrolment into 'some operators chose not to'; recommends outreach as if it explained non-participation. Left out: the 900 AED threshold and the 22% cost overrun. The risk named is a caveat that cannot be watched.") |>
@@ -577,7 +579,7 @@ source("qa_rating.R")
 source("qa_design_update.R")
 
 RULEBAR <- 1000
-HABITS  <- "Two habits: ask the AI to ask you questions before it answers, and paste its answer into a fresh chat to check it."
+HABITS  <- "Two habits: ask the AI to ask you questions before it answers, and paste the AI's answer into a new chat and ask the AI to check that answer."
 
 # A small chart for the page, in the deck palette.
 theme_page <- function() {
@@ -640,11 +642,11 @@ s2 <- new_pack() |>
     widths = c(1.2, 1.0, 1.1, 0.9, 1.0, 1.0))) |>
   illustrative() |>
   h2_("On the table above") |>
-  p_("1. Which number is the before-and-after change? Circle it.") |>
-  p_("2. Where is its confidence interval? Draw a box around it.") |>
-  p_("3. Which number is the 2019 average? Underline it. Why is it not an effect?") |>
+  p_("1. Which number is the before-and-after change? Circle that number.") |>
+  p_("2. Where is the confidence interval for that change? Draw a box around the interval.") |>
+  p_("3. Which number is the 2019 average? Underline that number. Why is the 2019 average not the effect of the cameras?") |>
   write_lines(2) |>
-  p_("4. What comparison would you ask the evaluator for?") |>
+  p_("4. To know whether the cameras caused the change, what would you compare these roads with? Write the question you would ask the evaluator.") |>
   write_lines(2) |>
   new_page() |>
   title_("AI Snapshot: ask AI to read the chart", S2) |>
@@ -657,18 +659,20 @@ s2 <- new_pack() |>
   p_("\"What does this chart show? Did the cameras work?\"", italic = TRUE) |>
   h2_("A response like this is possible") |>
   p_("\"The chart shows a 22% reduction in injury collisions after speed cameras were installed, from 11.5 to 9.0 per road segment. This reduction is statistically significant (p < 0.001), confirming that the cameras caused the decline. The fall was consistent across all road types, which suggests the effect is robust. Given the size of the effect, the programme should be extended to the remaining sectors.\"") |>
-  p_("In pairs: which of these claims can you check against the chart, and which does the chart support?", bold = TRUE) |>
+  p_("In pairs: underline each claim in the response that you can see in the chart. Cross out each claim that the chart does not show.", bold = TRUE) |>
   write_lines(3) |>
   h2_("Then run this prompt instead, and compare") |>
   p_("\"This chart shows average injury collisions per road segment in the sectors that got speed cameras, in 2019 and 2021. Describe only what the chart shows. Then list what else could explain the change, and what comparison you would need before saying the cameras caused it. Before you answer, ask me any questions you need.\"", italic = TRUE) |>
-  p_("Run both prompts on the same chart. What does the second answer include that the first left out? Paste the second answer into a fresh chat: which claims does it flag that the chart cannot support?") |>
+  p_("1. Run both prompts with the same chart.") |>
+  p_("2. What does the second answer include that the first answer left out?") |>
+  p_("3. Paste the second answer into a new chat and ask: which of these claims does the chart not support? Which claims does the new chat find?") |>
   new_page() |> title_("Take-away card: three questions to ask the evaluator", S2) |>
   print_line("1 per participant, cut into cards") |>
   add_cards(rep(list(c("Three questions to ask the evaluator",
                        "1. How big? In the units the decision is written in, not a percentage.",
-                       "2. How sure? Does the confidence interval clear the rule, not just zero?",
-                       "3. Compared to what? Which group, which period, and did it move too?",
-                       "", "On my desk: the last figure I was sent. Was it before-and-after? What would I compare it with?",
+                       "2. How sure? Does the whole confidence interval meet the decision rule, not just exclude zero?",
+                       "3. Compared to what? Which group, which period, and did that group change too?",
+                       "", "Back at work: think of the last figure you received. Was it a before-and-after comparison? What would you compare it with?",
                        "______________________________")), 6),
             min_height = 2.2) |>
   new_page() |> title_("Facilitator key", S2) |> print_line("trainer only") |>
@@ -706,27 +710,27 @@ did_rows <- data.frame(
 s4 <- new_pack() |>
   title_("By hand: four numbers", S4) |>
   print_line("1 per participant, single-sided: the next sheet is handed out later") |>
-  p_("GreenWaste businesses in the neighbourhoods where the programme was offered. Average annual waste-management costs (AED), before and after. The bar for scale-up: at least 1,000 AED.") |>
+  p_("GreenWaste businesses in the neighbourhoods where the programme was offered. Average annual waste-management costs (AED), before and after. The decision rule for scale-up: the programme must save at least 1,000 AED per business.") |>
   body_add_flextable(plain_table(data.frame(
     ` ` = c("Took part", "Did not take part", "Difference of the changes"),
     Before = c(gfmt(off_b), gfmt(ctl_b), ""), After = c(gfmt(off_a), gfmt(ctl_a), ""),
     Change = c("", "", ""), check.names = FALSE), widths = c(2.6, 1.2, 1.2, 1.4)) |> tall_rows(0.45)) |>
   h2_("Two subtractions") |>
-  p_("First difference: each group's change over time. It removes fixed differences between the groups, and still contains the general time trend.") |>
+  p_("First difference: each group's change over time. This change removes fixed differences between the groups, but it still contains the general time trend.") |>
   p_("Change for \"took part\":  ________      Change for \"did not take part\":  ________") |>
-  p_("Second difference: the difference between those two changes. It removes the time trend and leaves the estimated effect.") |>
+  p_("Second difference: the difference between those two changes. This second subtraction removes the time trend and leaves the estimated effect.") |>
   p_("Difference-in-differences = (change for \"took part\") minus (change for \"did not\") =  ________ AED") |>
-  p_("Does it clear 1,000 AED?   Yes  /  No") |>
+  p_("Is the saving at least 1,000 AED?   Yes  /  No") |>
   new_page() |>
   title_("Which row is the impact?", S4) |>
   print_line("1 per participant, separate sheet; hand out at 'Running the regression', after the hand calculation") |>
   p_("The same data as a regression, the way an evaluator would report it. Standard errors are clustered by neighbourhood.") |>
   body_add_flextable(plain_table(did_rows, widths = c(2.3, 1.1, 1.0, 0.7, 1.6))) |>
-  p_("1. Circle the row that is the programme's effect. Is it the number you got by hand?") |>
-  p_("2. Two rows are often reported as the effect by mistake. What are they?") |>
-  p_("After (round 1) is  __________________      Enrolled is  __________________") |>
-  p_("3. The least generous end of the effect's interval:  ________ AED.   Does it clear 1,000?   Yes  /  No") |>
-  p_("4. Costs were measured once before the programme and once after. What can this data not tell you about the two groups?") |>
+  p_("1. Circle the row that is the programme's effect. Is that row's coefficient the same number you got by hand?") |>
+  p_("2. Two other rows are often reported as the effect by mistake. What does each of these two rows actually measure?") |>
+  p_("After (round 1) measures  __________________      Enrolled measures  __________________") |>
+  p_("3. Look at the end of the effect's confidence interval with the smallest saving:  ________ AED.   Is that saving at least 1,000 AED?   Yes  /  No") |>
+  p_("4. Costs were measured only once before the programme and once after. Because of this, what can you not check about the two groups before the programme started?") |>
   write_lines(2) |>
   new_page() |>
   title_("AI Snapshot: explaining the table", S4) |>
@@ -736,21 +740,21 @@ s4 <- new_pack() |>
   h2_("A response like this is possible") |>
   p_("The table reports a difference-in-differences estimate. The programme reduced costs by 816 AED, and the effect is highly statistically significant (p < 0.001), so the programme was a success. The confidence interval does not include zero, which confirms the finding is robust.") |>
   p_("The parallel trends assumption has been satisfied. The result clears the 1,000 AED threshold required for scale-up.") |>
-  p_("Which sentences can you check against the table, and which does it not support?", bold = TRUE) |>
+  p_("Underline the sentences that the table supports. Cross out the sentences that the table does not support.", bold = TRUE) |>
   write_lines(3) |>
   h2_("Then run this prompt instead, and compare") |>
   p_("\"We have a difference-in-differences table. The data has two waves only, one before and one after, so no pre-trend test is possible. The decision rule is 1,000 AED. Explain what the table supports and, separately, list what it cannot tell us. Ask me questions before you answer.\"", italic = TRUE) |>
-  p_("Does the claim about parallel trends survive the second prompt? Then paste the second answer into a fresh chat and ask it to check for claims about tests that were never run.") |>
-  h2_("If time allows, a leading prompt") |>
+  p_("With the second prompt, does the AI still claim that parallel trends were satisfied? Then paste the second answer into a new chat and ask the AI to check that answer for claims about tests that were never run.") |>
+  h2_("If you have time: a prompt that pushes the AI towards an answer") |>
   p_("\"Our DiD shows an 816 AED cut in costs (p<0.001). Write two sentences for the minister recommending scale-up.\"", italic = TRUE) |>
-  p_("Does it mention the 1,000 AED rule or parallel trends without being asked?") |>
+  p_("Does the AI mention the 1,000 AED rule or parallel trends without being asked?") |>
   new_page() |> title_("Take-away card: three questions for a DiD result", S4) |>
   print_line("1 per participant, cut into cards") |>
   add_cards(rep(list(c("Three questions to ask any evaluator presenting DiD",
-                       "1. Which row is the estimate, and does its interval clear our rule, not just zero?",
-                       "2. How many periods before the programme, and were the groups already moving together?",
-                       "3. Which comparison group, chosen how, and how did it differ at baseline?",
-                       "", "On my desk, I will ask these about:", "______________________________")), 6),
+                       "1. Which row is the estimate? Does its whole confidence interval meet our decision rule, not just exclude zero?",
+                       "2. How many periods of data before the programme? Were the two groups changing in the same way before the programme?",
+                       "3. Which comparison group was used, how was it chosen, and how did it differ before the programme?",
+                       "", "Back at work, I will ask these questions about:", "______________________________")), 6),
             min_height = 2.3) |>
   new_page() |> title_("Facilitator key", S4) |> print_line("trainer only") |>
   h2_("Four numbers") |>
@@ -830,30 +834,30 @@ c2_cov_sd  <- abs(sapply(c("baseline_speed_85th", "lanes", "road_length_km", "sc
 c2_worst   <- max(c2_cov_sd)
 # Honest balance cell: "yes" only when every characteristic is within 0.1.
 bal_cell <- function(sds) {
-  if (max(sds) <= 0.1) sprintf("yes (worst %.2f)", max(sds))
-  else sprintf("partly: %d of %d over 0.1 (worst %.2f)", sum(sds > 0.1), length(sds), max(sds))
+  if (max(sds) <= 0.1) sprintf("yes (largest difference %.2f)", max(sds))
+  else sprintf("partly: %d of %d over 0.1 (largest difference %.2f)", sum(sds > 0.1), length(sds), max(sds))
 }
 g_sds <- abs(sapply(chars, function(v) std_diff(m1, v, biz)))
 g_clear_pct  <- 100 * (abs(g_chg$est) - RULEBAR) / RULEBAR
 c2_clear_pct <- 100 * (c2_changes - CAM_RULE) / CAM_RULE
 
 compare_rows <- data.frame(
-  ` ` = c("Every treated unit had a real lookalike?", "Comparison units reused as twins",
-          "Characteristics balanced after matching?", "Outcome's own baseline balanced?",
-          "Estimate, follow-up levels", "Estimate, changes", "Least generous end vs the rule"),
+  ` ` = c("Did every treated unit find a close match?", "Comparison units used as twins (some used more than once)",
+          "Characteristics balanced after matching?", "Was the outcome similar before the programme?",
+          "Estimate comparing outcomes after the programme", "Estimate comparing changes (after minus before)", "Smallest effect in the 95% interval, against the rule"),
   `Case 1 · GreenWaste` = c(sprintf("yes, all but %d", n_beyond),
                  sprintf("%s twins for %s businesses", gfmt(length(unique(attr(m1, "twin_rows")))),
                          gfmt(sum(biz$enrolled == 1))),
                  bal_cell(g_sds),
                  sprintf("yes (gap %s AED)", gfmt(mean(m1$y0[m1$enrolled == 1]) - mean(m1$y0[m1$enrolled == 0]))),
                  sprintf("%s AED", gfmt(g_lev$est)), sprintf("%s AED", gfmt(g_chg$est)),
-                 sprintf("%s against %s: short", gfmt(avoid1[1]), gfmt(RULEBAR))),
+                 sprintf("%s against %s: below the rule", gfmt(avoid1[1]), gfmt(RULEBAR))),
   `Case 2 · Cameras` = c(sprintf("no, %d segments (%d%%) outside", c2_out, round(100 * c2_out / n_cam)),
                  sprintf("%d twins for %d segments", c2_used, n_cam),
                  bal_cell(c2_cov_sd),
-                 sprintf("no (std. diff %.2f)", c2_base_sd),
+                 sprintf("no (standardised difference %.2f)", c2_base_sd),
                  sprintf("%.2f avoided", c2_levels), sprintf("%.2f avoided", c2_changes),
-                 sprintf("%.2f against %.1f: short", min(c2_ci), CAM_RULE)),
+                 sprintf("%.2f against %.1f: below the rule", min(c2_ci), CAM_RULE)),
   check.names = FALSE)
 
 s6 <- new_pack() |>
@@ -873,22 +877,22 @@ s6 <- new_pack() |>
   body_add_flextable(plain_table(data.frame(Enrolled = c("A", "B", "C"), `Its twin` = "",
     `Cost difference (enrolled minus twin)` = "", check.names = FALSE), widths = c(1.2, 1.4, 3.0)) |> tall_rows(0.4)) |>
   p_("Average difference across the three pairs:  ________ AED") |>
-  p_("One business is nobody's twin. Which one, and what happens to it?") |>
+  p_("One business that did not enrol is nobody's twin. Which business? What happens to that business in the analysis?") |>
   write_lines(2) |>
   new_page() |>
   title_("Which case would you trust?", S6) |>
   print_line("1 per group") |>
-  p_(sprintf("Two matching studies, read side by side. The rules: GreenWaste must cut costs by at least %s AED; cameras must avoid at least %.1f injury collisions per segment.", gfmt(RULEBAR), CAM_RULE)) |>
+  p_(sprintf("Two matching studies, side by side. The decision rules: GreenWaste must cut costs by at least %s AED; cameras must avoid at least %.1f injury collisions per segment.", gfmt(RULEBAR), CAM_RULE)) |>
   body_add_flextable(plain_table(compare_rows, widths = c(2.4, 2.2, 2.2)) |>
     bg(i = c(1, 4), bg = "#F8E9EA", part = "body")) |>
   illustrative() |>
   h2_("In your group, ten minutes") |>
   p_("1. Which case gives you more confidence, and why?") |> write_lines(1) |>
   p_("2. What would you ask Case 2's evaluator that Case 1 does not raise?") |> write_lines(1) |>
-  p_(sprintf("3. Case 2's changes estimate clears its rule by more than Case 1's does (%d%% against %d%%). Does that change your answer?",
+  p_(sprintf("3. Using changes, Case 2's estimate is %d%% above its decision rule; Case 1's estimate is only %d%% above its rule. Does that change your answer?",
              round(c2_clear_pct), round(g_clear_pct))) |> write_lines(1) |>
-  p_("Our verdict on Case 1:   Act  /  Act with conditions  /  Send back") |>
-  p_("Our verdict on Case 2:   Act  /  Act with conditions  /  Send back") |>
+  p_("Our verdict on Case 1:   Act  /  Act with conditions  /  Send back to the evaluator") |>
+  p_("Our verdict on Case 2:   Act  /  Act with conditions  /  Send back to the evaluator") |>
   new_page() |>
   title_("AI Snapshot: comparing two studies", S6) |>
   print_line("1 per group") |>
@@ -897,23 +901,23 @@ s6 <- new_pack() |>
   h2_("A response like this is possible") |>
   p_("Case 1: Matching was highly effective, with every business matched and excellent covariate balance. The programme reduced costs by around 1,000 AED, with an interval that straddles the 1,000 AED threshold.") |>
   p_("Case 2: Matching was similarly strong, with every segment matched and good balance. The matched estimate shows cameras avoided 2.10 collisions per segment, comfortably exceeding the 2.0 threshold, so this programme should be scaled.") |>
-  p_("Which sentences would you sign your name to? Underline them, and cross out the rest. Four minutes, in groups.", bold = TRUE) |>
+  p_("In groups (four minutes): underline each sentence you agree is correct. Cross out each sentence that is wrong or claims too much.", bold = TRUE) |>
   write_lines(3) |>
   new_page() |> title_("The same question, a better prompt", S6) |>
   print_line("1 per group, cut into strips. Take-home: hand out after the debrief, since the prompt names the checks") |>
   add_cards(rep(list(c("Take home: run this prompt too, and compare",
                        "\"Two matching studies. For each: how many treated units had no real lookalike; did the outcome's baseline balance; do levels and changes agree? Our decision rules are below. Ask me questions before you answer.\"",
-                       "Run both, then compare: what did each get wrong, and what did each explain well? Then paste the second answer into a fresh chat and ask it to check for overstatement.")), 4),
+                       "Run both prompts, then compare: what did each answer get wrong, and what did each answer explain well? Then paste the second answer into a new chat and ask the AI to check that answer for claims that go further than the evidence.")), 4),
             ncol = 1, card_width = 6.8, min_height = 1.9) |>
   new_page() |> title_("Take-away card: five questions for a matching result", S6) |>
   print_line("1 per participant, cut into cards") |>
   add_cards(rep(list(c("Five questions to ask any evaluator presenting matching",
                        "1. What did you match on, and what was left out?",
-                       "2. How many treated units had no real lookalike, and what happened to them?",
-                       "3. Do the covariates balance, and does the outcome's baseline balance?",
+                       "2. How many treated units had no close match, and what happened to those units?",
+                       "3. Are the matched groups similar on their characteristics? Was the outcome itself similar before the programme?",
                        "4. Does the answer hold if you change what you matched on, or compare changes instead of levels?",
                        "5. What else might differ that you could not measure?",
-                       "", "On my desk, I will ask these about:", "______________________________")), 6),
+                       "", "Back at work, I will ask these questions about:", "______________________________")), 6),
             min_height = 2.6) |>
   new_page() |> title_("Facilitator key", S6) |> print_line("trainer only") |>
   h2_("Find the twins") |>
@@ -972,16 +976,16 @@ fig_axis <- function(floor, top, title) {
 s8 <- new_pack() |>
   title_("Six pairs tracker", S8) |>
   print_line("1 per participant; filled in as the session runs") |>
-  p_("Each section of this session shows the same data drawn two ways. For every pair, in groups: what is this figure telling you, and what might be wrong or misleading?") |>
+  p_("Each section of this session shows the same data drawn two ways. For every pair, discuss in groups: what is the figure telling you, and what might be wrong or misleading about the figure?") |>
   body_add_flextable(plain_table(data.frame(
     Pair = c("1. The same gap, two axes", "2. A bar of means, then the distributions",
              "3. Percentages: zero bases, biggest wins, two averages", "4. After only, then before and after",
              "5. Savings added up, then discounted", "6. The pie, then the counts"),
-    `What is it telling you?` = "", `What might be wrong or misleading?` = "", check.names = FALSE),
+    `What is the figure telling you?` = "", `What might be wrong or misleading?` = "", check.names = FALSE),
     widths = c(2.0, 2.4, 2.4)) |> tall_rows(0.85)) |>
   h2_("Predict before the reveal") |>
   p_("Share of enrolled businesses that paid more than the average non-enrolled business:  ________ %") |>
-  p_("The pooled change in child collisions and the average of each segment's change: close, or far apart?  ________") |>
+  p_("The percentage change in child collisions with all segments added together, and the average of each segment's own percentage change: are these two numbers close, or far apart?  ________") |>
   p_("The discount rate at which five years of savings no longer cover the 1,800 AED cost:  ________ %") |>
   new_page() |>
   title_("AI Snapshot: which chart is fairer?", S8) |>
@@ -992,21 +996,22 @@ s8 <- new_pack() |>
   p_("\"Which of these two charts better represents the difference between the two groups, and why?\"", italic = TRUE) |>
   h2_("A response like this is possible") |>
   p_("Both charts present the same underlying data accurately. The truncated-axis chart is often preferable for a policy audience because it makes the difference visible, and a y-axis that starts at zero is not a requirement in professional data visualisation. On balance the truncated version communicates the finding more effectively, and a reader who wants the absolute values can consult the data labels.") |>
-  p_("Four minutes. Is it right? Does it answer the question that was asked? What does it explain well?", bold = TRUE) |>
+  p_("Four minutes. Is the AI's answer correct? Does the answer respond to the question that was asked? What does the answer explain well?", bold = TRUE) |>
   write_lines(3) |>
   h2_("Then run this prompt instead, and compare") |>
   p_("\"This chart will sit beside the claim 'the programme reduced costs substantially'. Is the axis appropriate for that claim, for a non-technical reader?\"", italic = TRUE) |>
+  p_("What changes in the AI's answer with this prompt?") |>
   p_(HABITS) |>
   new_page() |> title_("Take-away card: five rules for any figure", S8) |>
   print_line("1 per participant, cut into cards") |>
   add_cards(rep(list(c("Five rules for any figure",
                        "1. Read the axis before the shape.",
-                       "2. Ask what the bar is averaging over.",
-                       "3. Check the denominator.",
+                       "2. Ask what each bar is an average of.",
+                       "3. Check what each percentage is a percentage of.",
                        "4. Compare changes, not levels.",
-                       "5. Discount the future in front of the reader.",
+                       "5. Show future savings at today's value (discounted).",
                        "", "The fastest check: read the y-axis, then the sentence under the figure. Large compared to what?",
-                       "", "Questions I will bring to the clinic:", "______________________________", "______________________________")), 4),
+                       "", "Questions I will bring to the next session (the QA clinic):", "______________________________", "______________________________")), 4),
             min_height = 3.6) |>
   new_page() |> title_("Facilitator key", S8) |> print_line("trainer only") |>
   h2_("The six pairs") |>
@@ -1032,21 +1037,21 @@ S10 <- "Module 2 · Day 4, Session 1 · Is This Evidence Credible?"
 s10 <- new_pack() |>
   title_("Credibility rating sheet", S10) |>
   print_line("1 per participant, with the report") |>
-  p_("Work through the report one section at a time. Circle a colour for each section and write the one reason that decided it. Rate the executive summary first, on your own, before reading on. Then rate Sections 3 to 7 in pairs. The second column names the area from yesterday's checklist to apply.") |>
+  p_("Work through the report one section at a time. For each section, circle a colour and write the main reason for your colour. Rate the executive summary first, on your own, before reading the rest of the report. Then rate Sections 3 to 7 in pairs. The Area to check column tells you which part of yesterday's QA checklist to use.") |>
   body_add_flextable(plain_table(setNames(rating_scale, c("Colour", "What it means")), widths = c(1.2, 5.6))) |>
   p_("Section 2, The programme, describes the programme and is not rated.", 8.5, italic = TRUE, color = GREY) |>
   body_add_flextable(plain_table(data.frame(
     Section = rating_sections$section, `Area to check` = rating_sections$area, Colour = "Green  /  Amber  /  Red",
-    `The reason that decided it` = "", `If amber or red: what would settle it` = "", check.names = FALSE),
+    `Your reason for selecting this colour` = "", `If amber or red: what would be needed to shift the colour to green?` = "", check.names = FALSE),
     widths = c(1.4, 1.1, 1.1, 1.8, 1.4)) |> tall_rows(0.95)) |>
   new_page() |>
   title_("Your verdict", S10) |>
   print_line("on the back of the rating sheet") |>
-  p_("Would you sign off on this evaluation for national scale-up?") |>
-  p_("Before reading:   Yes  /  No  /  Not without more answers") |>
-  p_("At the end:          Yes  /  No  /  Not without more answers") |>
+  p_("Based on this evaluation, would you approve national scale-up?") |>
+  p_("Before reading the report:   Yes  /  No  /  Not without more answers") |>
+  p_("After reading the report:     Yes  /  No  /  Not without more answers") |>
   p_("The single most important problem you found:") |> write_lines(2) |>
-  p_("The strongest thing in the report, and whether it rescues the recommendation:") |> write_lines(2) |>
+  p_("The strongest part of the report. Is that part strong enough to support the recommendation, despite the problems you found?") |> write_lines(2) |>
   p_("Compare your colour for the executive summary with your colour for the results section. If they differ, what did the summary lead you to believe?") |>
   write_lines(3) |>
   new_page() |>
@@ -1062,7 +1067,9 @@ s10 <- new_pack() |>
   p_("Transparency. The report discloses a change in the survey instrument between rounds and notes the gaps in the recycling compliance data. This level of disclosure suggests a careful and honest evaluation team.") |>
   p_("Appropriate limitations. The limitations section correctly identifies that the randomised comparison estimates the offer effect and that the RDD estimate is local to the cut-off.") |>
   p_("Recommendation. The headline estimate of 1,014 AED exceeds the 1,000 AED threshold, so the programme meets the criterion for scale-up. The recommendation is supported by the evidence.") |>
-  p_("Underline the two claims the report does not support. Then find the larger problem the response never mentions. Compare with the answer your own AI gave.", bold = TRUE) |>
+  p_("1. Underline the two claims in the AI's response that the report does not support.", bold = TRUE) |>
+  p_("2. There is a bigger problem that the response never mentions. What is that problem?", bold = TRUE) |>
+  p_("3. Compare this response with the answer your own AI gave.", bold = TRUE) |>
   write_lines(3) |>
   h2_("Then run this prompt instead, and compare") |>
   p_("\"The same report claims a cost reduction of approximately 1,000 AED against a decision threshold of 1,000 AED. Do three things. First, list every estimate the report gives, with its confidence interval, and say for each one whether it clears the threshold. Second, identify any claim in the executive summary that is not supported by the results section, and quote both. Third, tell me what the report does not tell me that I would need in order to decide.\"", italic = TRUE) |>
@@ -1071,9 +1078,9 @@ s10 <- new_pack() |>
   print_line("1 per participant, cut into cards") |>
   add_cards(rep(list(c("Three habits for reading a report",
                        "1. Tabulate the estimates yourself, with the threshold in its own column. Do not let the report choose which number you see first.",
-                       "2. Read the limitations section, then check whether it names the problems in the data section. If it does not, ask why they were dropped.",
-                       "3. Find the preferred specification and check whether the headline is it. When they differ, ask why.",
-                       "", "On my desk, I will ask these about:", "______________________________")), 6),
+                       "2. Read the limitations section, then check whether the limitations section names the problems in the data section. If those problems are missing, ask why they were left out.",
+                       "3. Find the preferred specification (the estimate the evaluators trust most). Check whether the headline number is that estimate. When the two differ, ask why.",
+                       "", "Back at work, I will ask these questions about:", "______________________________")), 6),
             min_height = 2.8) |>
   new_page() |> title_("Facilitator key", S10) |> print_line("trainer only") |>
   body_add_flextable(plain_table(data.frame(Section = rating_sections$section,
@@ -1096,25 +1103,25 @@ s12 <- new_pack() |>
   p_("Members:  ______________________________________________________________") |>
   p_("The programme you are evaluating:  _______________________________________") |>
   h2_("Part 1. Where your design stands (20 minutes)") |>
-  p_("You started this design in Module 1. Write it down as it stands now, against the eight conditions. If you do not have the Module 1 document, use the recap in each row: the conditions have not changed.") |>
+  p_("You started this design in Module 1. Write your design as it is now, one row for each of the eight conditions. If you do not have your Module 1 document, use the short description in each row: the conditions are the same as in Module 1.") |>
   body_add_flextable(plain_table(data.frame(
     Condition = sprintf("%d. %s. %s", seq_len(nrow(design_conditions)), design_conditions$condition,
                         design_conditions$recap),
     `Your design` = "", check.names = FALSE), widths = c(2.9, 3.9)) |> tall_rows(0.78) |>
     fontsize(j = 1, size = 9.5, part = "body")) |>
-  p_("Your counterfactual, in one sentence. You will read it out in the pitch:") |> write_lines(2) |>
+  p_("Your counterfactual (what would have happened without the programme), in one sentence. You will read this sentence out in the pitch:") |> write_lines(2) |>
   new_page() |>
   title_("Part 2. The four additions (30 minutes)", S12) |>
   print_line("1 per team (continues the Design Update)")
 for (i in seq_len(nrow(design_additions))) {
   s12 <- s12 |>
     h2_(sprintf("%d. %s", i, design_additions$addition[i])) |>
-    p_(sprintf("From: %s", design_additions$from[i]), 9, italic = TRUE, color = GREY) |>
+    p_(sprintf("Uses what you learned in: %s", design_additions$from[i]), 9, italic = TRUE, color = GREY) |>
     p_(design_additions$asks[i])
   if (design_additions$id[i] == "figure") {
     # Two blank drawing boxes, solid borders (not cut lines).
     s12 <- s12 |> body_add_flextable(
-      card_grid(list("Figure A", "Figure B: what it hides"), ncol = 2,
+      card_grid(list("Figure A", "Figure B: what this version hides"), ncol = 2,
                 card_width = 3.35, min_height = 1.9) |>
         border_outer(border = thin_line) |> border_inner(border = thin_line),
       align = "center")
@@ -1126,9 +1133,9 @@ s12 <- s12 |>
   new_page() |>
   title_("Part 3. Your five-minute pitch", S12) |>
   print_line("1 per team (continues the Design Update)") |>
-  p_("Five minutes per team, then three minutes of feedback from the room. Say what your design cannot establish before you say what you want.") |>
+  p_("Five minutes per team, then three minutes of feedback from the room. Explain what your design cannot show before you make your request.") |>
   body_add_flextable(plain_table(data.frame(Part = pitch_structure$part, Time = pitch_structure$minutes,
-    `What it says` = pitch_structure$says, `Our notes` = "", check.names = FALSE),
+    `What this part covers` = pitch_structure$says, `Our notes` = "", check.names = FALSE),
     widths = c(1.4, 0.6, 2.4, 2.4)) |> tall_rows(1.0)) |>
   new_page() |>
   title_("AI prompt card: stress-test your design", S12) |>
@@ -1136,23 +1143,23 @@ s12 <- s12 |>
   add_cards(rep(list(c("Stress-test your design with AI",
                        "Type your Part 1 answers and your counterfactual sentence into the AI tool. Prompt:",
                        "\"You are a sceptical commissioner. Ask me three questions about this design before you comment. Then name the one assumption that, if it broke, would make the estimate wrong.\"",
-                       "", "Check its answer in a fresh chat.")), 4),
+                       "", "Paste the AI's answer into a new chat and ask the AI to check that answer.")), 4),
             min_height = 3.0) |>
   new_page() |>
   title_("Feedback slips", S12) |>
   print_line("One slip per participant for each other team (four slips per page); each slip goes to the team after its pitch") |>
   add_cards(rep(list(c("Feedback for team: ____________________",
                        "1. What is the design? Say it back in one sentence.", "", "",
-                       "2. What would make it fail? The one assumption that would have to break.", "", "",
+                       "2. What would make the design fail? Name the one assumption that would have to break.", "", "",
                        "3. What is missing? One thing you would have wanted to hear.", "", "",
-                       "4. Which trap from this week could hit it? (headline vs preferred estimate, horizon, truncated axis, missing threshold)", "", "",
-                       "Aim it at the design, not at the team.")), 4),
+                       "4. Which mistake from this week could affect this design? (for example: headline vs preferred estimate, time horizon, truncated axis, missing threshold)", "", "",
+                       "Comment on the design, not on the people.")), 4),
             min_height = 4.2) |>
   new_page() |> title_("Take-away card: the one question", S12) |>
   print_line("1 per participant, cut into cards") |>
   add_cards(rep(list(c("The question behind every session this week",
                        "What is being compared to what, and why should those two things be comparable?",
-                       "", "The first evaluation decision I will make back at my desk:",
+                       "", "The first evaluation decision I will make back at work:",
                        "______________________________", "______________________________")), 8),
             min_height = 1.9) |>
   new_page() |> title_("Facilitator key", S12) |> print_line("trainer only") |>

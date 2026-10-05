@@ -353,8 +353,8 @@ c2_over_txt  <- paste(sprintf("%s %.2f", tolower(c2_over$Characteristic), abs(c2
                       collapse = ", ")
 # Honest balance cell: "yes" only when every characteristic is within 0.1.
 bal_cell <- function(worst, n_over, n_all) {
-  if (worst <= 0.1) sprintf("yes (worst %.2f)", worst)
-  else sprintf("partly: %d of %d over 0.1 (worst %.2f)", n_over, n_all, worst)
+  if (worst <= 0.1) sprintf("yes (largest difference %.2f)", worst)
+  else sprintf("partly: %d of %d over 0.1 (largest difference %.2f)", n_over, n_all, worst)
 }
 
 # Who has no lookalike: the camera segments scoring above every no-camera segment.
@@ -373,27 +373,27 @@ c2_clear_pct <- 100 * (c2_changes - CAM_RULE) / CAM_RULE
 
 # ---- The two-case comparison table ----------------------------------------
 compare_tbl <- tibble(
-  Question = c("Every treated unit had a real lookalike?",
-               "Comparison units reused as twins",
+  Question = c("Did every treated unit find a close match?",
+               "Comparison units used as twins (some used more than once)",
                "Characteristics balanced after matching?",
-               "Outcome's own baseline balanced?",
-               "Estimate, follow-up levels",
-               "Estimate, changes",
-               "Least generous end vs the rule"),
+               "Was the outcome similar before the programme?",
+               "Estimate comparing outcomes after the programme",
+               "Estimate comparing changes (after minus before)",
+               "Smallest effect in the 95% interval, against the rule"),
   GreenWaste = c(sprintf("yes, all but %d", n_beyond),
                  sprintf("%s twins for %s businesses", gfmt(twins_used), gfmt(n_took)),
                  bal_cell(max(abs(bal1$After)), sum(abs(bal1$After) > 0.1), nrow(bal1)),
                  sprintf("yes (gap %s AED)", gfmt(mean(m1$y0[m1$enrolled == 1]) - mean(m1$y0[m1$enrolled == 0]))),
                  sprintf("%s AED", gfmt(s_full$est)),
                  sprintf("%s AED", gfmt(s_change$est)),
-                 sprintf("%s against %s: short", gfmt(avoid1[1]), gfmt(RULEBAR))),
+                 sprintf("%s against %s: below the rule", gfmt(avoid1[1]), gfmt(RULEBAR))),
   Cameras = c(sprintf("no, %d segments (%d%%) outside", c2_outside, round(c2_pct_out)),
               sprintf("%d twins for %d segments", c2_used, n_cam),
               bal_cell(c2_worst_cov, c2_n_over, c2_n_cov),
-              sprintf("no (std. diff %.2f)", c2_base_sd),
+              sprintf("no (standardised difference %.2f)", c2_base_sd),
               sprintf("%.2f avoided", c2_levels),
               sprintf("%.2f avoided", c2_changes),
-              sprintf("%.2f against %.1f: short", min(c2_ci), CAM_RULE))
+              sprintf("%.2f against %.1f: below the rule", min(c2_ci), CAM_RULE))
 )
 ```
 
@@ -1501,9 +1501,9 @@ In your groups, ten minutes:
 
 1. Which case gives you **more confidence**, and why?
 2. What would you ask **Case 2's** evaluator that Case 1 does not raise?
-3. Case 2's changes estimate clears its rule by more than Case 1's does
-   (`r round(c2_clear_pct)`% against `r round(g_clear_pct)`%). Does that
-   change your answer?
+3. Using changes, Case 2's estimate is `r round(c2_clear_pct)`% above its
+   decision rule; Case 1's estimate is only `r round(g_clear_pct)`% above its
+   rule. Does that change your answer?
 :::
 
 ::: {.panel .fragment}
@@ -1564,7 +1564,8 @@ segment, comfortably exceeding the 2.0 threshold]{.flag},
 :::
 
 ::: {.ask}
-Which sentences would you sign your name to? Four minutes, in groups.
+In groups (four minutes): underline each sentence you agree is correct. Cross
+out each sentence that is wrong or claims too much.
 :::
 
 ::: {.notes}
@@ -1676,8 +1677,8 @@ anything it suggested was incorrect.
 ```{=html}
 <div class="facts">
   <div class="k">1</div> <div class="v">What did you match on, and what was left out?</div>
-  <div class="k">2</div> <div class="v">How many treated units had no real lookalike, and what happened to them?</div>
-  <div class="k">3</div> <div class="v">Do the covariates balance, and does the outcome's baseline balance?</div>
+  <div class="k">2</div> <div class="v">How many treated units had no close match, and what happened to those units?</div>
+  <div class="k">3</div> <div class="v">Are the matched groups similar on their characteristics? Was the outcome itself similar before the programme?</div>
   <div class="k">4</div> <div class="v">Does the answer hold if you change what you matched on, or compare changes instead of levels?</div>
   <div class="k">5</div> <div class="v">What else might differ that you could not measure?</div>
 </div>
@@ -1692,7 +1693,7 @@ So a matching study rarely settles a decision on its own.
 
 ::: {.notes}
 Paper (Oct13_session3_materials.docx): Hand out the take-away cards (pack
-page 5, one per participant). Give a minute to fill in "On my desk" on the
+page 5, one per participant). Give a minute to fill in "Back at work" on the
 card, then take two or three examples from the room.
 :::
 

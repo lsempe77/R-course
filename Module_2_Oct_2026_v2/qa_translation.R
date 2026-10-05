@@ -38,7 +38,7 @@ transl_findings <- data.frame(
   ),
   numbers = c(
     "Net saving of 743 AED per vehicle per year (95% CI: 690 to 796). Statistically significant at conventional levels.",
-    "The commissioning authority set a threshold of 900 AED per vehicle per year. The upper bound of the confidence interval, 796 AED, lies below it.",
+    "The commissioning authority set a threshold of 900 AED per vehicle per year. The upper bound of the confidence interval, 796 AED, lies below the threshold.",
     "Freight rates charged by participating operators fell by an average of 1.8%, against 0.4% among non-participants. The difference is not statistically significant (p = 0.11).",
     "34% of eligible operators enrolled. Non-participants were more likely to be small fleets and to operate on fixed public-sector contracts.",
     "Administration ran 22% over budget. The overrun is concentrated in verification of fuel purchase records, which required manual inspection in 41% of cases.",
@@ -50,7 +50,7 @@ transl_findings <- data.frame(
     "The direction is suggestive, but the estimate is not distinguishable from zero.",
     "A measured participation rate with a described pattern. The evaluation reports it; it does not explain it.",
     "A cost figure from the scheme's own accounts, not an estimate.",
-    "A null result with wide intervals. Absence of evidence, and the evaluation says so."
+    "A null result with wide intervals: the evaluation found no evidence either way, and says so."
   ),
   does_not_license = c(
     "\u201CThe scheme works.\u201D A saving below the threshold is still below the threshold.",
@@ -67,10 +67,10 @@ transl_findings <- data.frame(
 brief_elements <- data.frame(
   element = c("Headline finding", "Key implications", "Recommendation", "One risk"),
   asks = c(
-    "One sentence, with the number in it, that a non-specialist would understand and would not misread.",
-    "Two or three sentences. What follows for the commissioning authority, given what the evaluation did and did not establish.",
-    "One specific action. It must be something the authority can actually decide.",
-    "The one thing most likely to make this recommendation wrong, stated so that it can be watched."
+    "One sentence that includes the main number. A non-specialist should understand the sentence and not misread it.",
+    "Two or three sentences. What do the findings mean for the commissioning authority? Include what the evaluation showed and what the evaluation did not show.",
+    "One specific action that the authority can say yes or no to.",
+    "The one thing most likely to make your recommendation wrong. Write the risk so that the authority can monitor it."
   ),
   length_guide = c("1 sentence", "2\u20133 sentences", "1 sentence", "1\u20132 sentences"),
   stringsAsFactors = FALSE
