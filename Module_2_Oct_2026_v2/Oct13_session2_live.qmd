@@ -31,6 +31,7 @@ webr:
   render-df: kable
   resources:
     - evaluation_data_GreenWaste.csv
+    - gw_lab.R
 knitr:
   opts_chunk:
     echo: false
@@ -109,6 +110,7 @@ pooled2 <- at(all1, 2)
 # below use is defined here, so each cell on a slide stays a few lines long.
 gw <- read.csv("evaluation_data_GreenWaste.csv")
 library(estimatr)
+source("gw_lab.R")   # the GreenWaste lab: an invented world where the true effect is known
 ACCENT <- "#215a9e"; ACCENT2 <- "#7da1c4"; ALERT <- "#B8272C"; MUTED <- "#545860"
 options(width = 100, scipen = 6)
 # Warm up estimatr now: its first call in the browser is slow, later ones fast.
@@ -521,6 +523,55 @@ change at 58, where in the data would you see it?**
 
 ::: {.notes}
 Paper (Oct13_session2_materials.docx): Hand out the four-checks scorecard (pack page 5, one per group). Groups mark each check as you run it, starting with check 0 (who is compared) from Section 1.
+:::
+
+## The GreenWaste lab: add RDD
+
+:::::: {.columns}
+
+::::: {.column width="46%"}
+```{ojs}
+//| echo: false
+viewof rdd_hidden = Inputs.range([0, 800], {value: 0, step: 100, label: "Joiners differ in something nobody measured (AED)"})
+viewof rdd_diverge = Inputs.range([0, 600], {value: 0, step: 50, label: "Joiners' costs were already falling faster (AED)"})
+viewof rdd_jump = Inputs.range([0, 600], {value: 0, step: 50, label: "Something else changes at 58 (AED)"})
+```
+:::::
+
+::::: {.column width="54%"}
+::: {.ask}
+RDD joins the lab, with one new problem: the last slider. **Which slider breaks
+RDD, and which of DiD's problems does it survive?**
+:::
+
+::: {.panel .fragment}
+Only a jump at 58 breaks it. Differences that change smoothly along the index
+leave the step at the line alone.
+:::
+:::::
+
+::::::
+
+```{webr}
+#| input:
+#|   - rdd_hidden
+#|   - rdd_diverge
+#|   - rdd_jump
+#| autorun: true
+#| edit: false
+#| echo: false
+#| fig-width: 10
+#| fig-height: 3.2
+lab(c("before_after", "with_without", "randomised", "did", "rdd"),
+    hidden = rdd_hidden, diverge = rdd_diverge, jump = rdd_jump)
+```
+
+::: {.notes}
+About 5 minutes, before the four checks. The first two sliders break
+with-and-without, and the middle one breaks DiD; RDD stays on -900 for both,
+because neither changes suddenly at 58. The last slider is this method's one
+assumption: if something else changes at the cut-off, the jump is not only the
+programme. Check 3 finds exactly that in the real data: manager age jumps at 58.
 :::
 
 ## Check 1: does the jump survive a different window?

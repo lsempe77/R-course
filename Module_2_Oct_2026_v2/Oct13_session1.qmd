@@ -24,6 +24,7 @@ format:
 engine: knitr
 resources:
   - evaluation_data_GreenWaste.csv
+  - gw_lab.R
 webr:
   packages:
     - dplyr
@@ -259,6 +260,7 @@ library(broom)
 
 gw <- read.csv("evaluation_data_GreenWaste.csv")
 tn <- gw %>% filter(treatment_neighborhood == 1)
+source("gw_lab.R")   # the GreenWaste lab: an invented world where the true effect is known
 
 gw_means <- tn %>%
   group_by(enrolled, round) %>%
@@ -598,6 +600,58 @@ did_plot()     # the two groups, and the dotted line: where "took part" would ha
 The dotted line's rise (`r sprintf("%+.0f", ctl_chg)`) is the time trend. The gap
 between its end and where "took part" actually finished is the programme:
 `r gfmt(abs(did_hand))` AED.
+:::
+
+## The GreenWaste lab: add DiD
+
+:::::: {.columns}
+
+::::: {.column width="46%"}
+```{ojs}
+//| echo: false
+viewof did_trend = Inputs.range([0, 600], {value: 0, step: 50, label: "Costs rise for everyone anyway (AED)"})
+viewof did_size_gap = Inputs.range([0, 800], {value: 0, step: 100, label: "Joiners are smaller businesses (AED)"})
+viewof did_hidden = Inputs.range([0, 800], {value: 0, step: 100, label: "Joiners differ in something nobody measured (AED)"})
+viewof did_diverge = Inputs.range([0, 600], {value: 0, step: 50, label: "Joiners' costs were already falling faster (AED)"})
+```
+:::::
+
+::::: {.column width="54%"}
+::: {.ask}
+DiD joins the lab, with one new problem: the last slider. **Which sliders will
+DiD survive, and which one breaks it?**
+:::
+
+::: {.panel .fragment}
+It survives the first three. The fourth breaks it: DiD assumes the two groups
+would have moved in parallel.
+:::
+:::::
+
+::::::
+
+```{webr}
+#| input:
+#|   - did_trend
+#|   - did_size_gap
+#|   - did_hidden
+#|   - did_diverge
+#| autorun: true
+#| edit: false
+#| echo: false
+#| fig-width: 10
+#| fig-height: 2.9
+lab(c("before_after", "with_without", "randomised", "did"),
+    trend = did_trend, size_gap = did_size_gap, hidden = did_hidden, diverge = did_diverge)
+```
+
+::: {.notes}
+About 5 minutes. All sliders start at zero, where every method sits on the
+truth. Take a prediction for each slider before moving it. Costs rising anyway
+moves only before-and-after; the two "joiners differ" sliders move only
+with-and-without; DiD stays on -900 for all three. The last slider (joiners'
+costs already falling faster) pulls DiD away: that is the parallel-trends
+assumption, in one slider. The randomised comparison survives all four.
 :::
 
 # 3 · Implementing DiD in R {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}

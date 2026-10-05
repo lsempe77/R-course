@@ -625,6 +625,7 @@ and which way?**
 #|   - lab_hidden
 #| autorun: true
 #| edit: false
+#| echo: false
 #| fig-width: 10
 #| fig-height: 2.5
 lab(c("before_after", "with_without"), lab_trend, lab_size, lab_hidden)
@@ -814,6 +815,7 @@ equally on both sides of the comparison and cancels out.
 #|   - lab2_hidden
 #| autorun: true
 #| edit: false
+#| echo: false
 #| fig-width: 10
 #| fig-height: 2.8
 lab(c("before_after", "with_without", "randomised"), lab2_trend, lab2_size, lab2_hidden)

@@ -28,6 +28,7 @@ webr:
   render-df: kable
   resources:
     - evaluation_data_GreenWaste.csv
+    - gw_lab.R
 knitr:
   opts_chunk:
     echo: false
@@ -75,6 +76,7 @@ MENTI_QR <- menti_qr()
 # section 4 use what is defined here.
 gw <- read.csv("evaluation_data_GreenWaste.csv")
 library(estimatr)
+source("gw_lab.R")   # the GreenWaste lab: an invented world where the true effect is known
 ACCENT <- "#215a9e"; ACCENT2 <- "#7da1c4"; ALERT <- "#B8272C"; MUTED <- "#545860"
 options(width = 100, scipen = 6)
 
@@ -489,6 +491,57 @@ participants before the programme began: because it was drawn by lot, sat just
 past a cut-off, was matched on what was measured, or was trending in parallel.
 Those are four different reasons, and each can fail in its own way. The analyst
 should be able to say, in one sentence, which one applies here.
+:::
+
+## The GreenWaste lab: every method, every problem
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+```{ojs}
+//| echo: false
+viewof qa_trend = Inputs.range([0, 600], {value: 0, step: 50, label: "Costs rise for everyone anyway (AED)"})
+viewof qa_size_gap = Inputs.range([0, 800], {value: 0, step: 100, label: "Joiners are smaller businesses (AED)"})
+viewof qa_hidden = Inputs.range([0, 800], {value: 0, step: 100, label: "Joiners differ in something nobody measured (AED)"})
+```
+:::::
+
+::::: {.column width="50%"}
+```{ojs}
+//| echo: false
+viewof qa_diverge = Inputs.range([0, 600], {value: 0, step: 50, label: "Joiners' costs were already falling faster (AED)"})
+viewof qa_jump = Inputs.range([0, 600], {value: 0, step: 50, label: "Something else changes at 58 (AED)"})
+```
+
+::: {.ask}
+One problem at a time: **which methods survive all five?**
+:::
+:::::
+
+::::::
+
+```{webr}
+#| input:
+#|   - qa_trend
+#|   - qa_size_gap
+#|   - qa_hidden
+#|   - qa_diverge
+#|   - qa_jump
+#| autorun: true
+#| edit: false
+#| echo: false
+#| fig-width: 10
+#| fig-height: 3.6
+lab(c("before_after", "with_without", "randomised", "did", "rdd", "matching"),
+    trend = qa_trend, size_gap = qa_size_gap, hidden = qa_hidden, diverge = qa_diverge, jump = qa_jump)
+```
+
+::: {.notes}
+About 5 minutes, as the bridge into the analyst's answers. Only the randomised
+comparison survives all five. Every other method is as good as the assumption
+behind one slider, which is why the clinic keeps asking which assumption would
+flip the result. Ask the room which slider the GreenWaste evaluation is most
+exposed to; the next slides show what the data can and cannot say.
 :::
 
 # 4 · The analyst answers with the data {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}

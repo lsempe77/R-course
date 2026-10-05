@@ -25,6 +25,7 @@ format:
 engine: knitr
 resources:
   - evaluation_data_GreenWaste.csv
+  - gw_lab.R
 webr:
   packages:
     - dplyr
@@ -419,6 +420,7 @@ library(estimatr)
 library(broom)
 
 gw <- read.csv("evaluation_data_GreenWaste.csv")
+source("gw_lab.R")   # the GreenWaste lab: an invented world where the true effect is known
 
 # One row per business: baseline characteristics, costs before (y0) and after (y1)
 biz <- gw %>% filter(round == 0) %>%
@@ -675,6 +677,54 @@ groups are different crowds. Frame 2: each triangle is joined to its nearest
 circle. Some circles are the twin of more than one triangle: that is allowed.
 Frame 3: circles that nobody picked fade out. They are set aside, and the
 comparison is now only between the pairs.
+:::
+
+## The GreenWaste lab: add matching
+
+:::::: {.columns}
+
+::::: {.column width="46%"}
+```{ojs}
+//| echo: false
+viewof mat_size_gap = Inputs.range([0, 800], {value: 0, step: 100, label: "Joiners are smaller businesses (AED)"})
+viewof mat_hidden = Inputs.range([0, 800], {value: 0, step: 100, label: "Joiners differ in something nobody measured (AED)"})
+```
+:::::
+
+::::: {.column width="54%"}
+::: {.ask}
+Matching joins the lab. Move the measured slider, then the unmeasured one.
+**What does matching fix, and what can it not see?**
+:::
+
+::: {.panel .fragment}
+It removes the measured difference. The unmeasured one moves it as far as
+with-and-without, while its balance table still looks perfect.
+:::
+:::::
+
+::::::
+
+```{webr}
+#| input:
+#|   - mat_size_gap
+#|   - mat_hidden
+#| autorun: true
+#| edit: false
+#| echo: false
+#| fig-width: 10
+#| fig-height: 3.5
+lab(c("before_after", "with_without", "randomised", "did", "rdd", "matching"),
+    size_gap = mat_size_gap, hidden = mat_hidden)
+```
+
+::: {.notes}
+About 5 minutes. The first slider (joiners smaller, which we measured) breaks
+with-and-without; matching stays on -900 because it pairs on size. The second
+(joiners differ in something nobody measured) moves matching by the same amount
+as with-and-without. DiD, RDD and the randomised comparison survive it, because
+none of them relies on measuring the difference. Section 3 returns to this as
+"the one question".
 :::
 
 # 2 · Implementing matching in R {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}

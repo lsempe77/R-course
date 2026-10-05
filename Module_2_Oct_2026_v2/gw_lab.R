@@ -107,7 +107,7 @@ lab <- function(models, trend = 0, size_gap = 0, hidden = 0, diverge = 0, jump =
   segments(LAB_TRUTH, y, x, y, col = ifelse(bad, alert, accent), lwd = 3)
   points(x, y, pch = 19, cex = 2.2, col = ifelse(bad, alert, accent))
   text(x, y, format(round(e), big.mark = ","),
-       pos = ifelse(bad, 3, 4), offset = ifelse(bad, 0.8, 1.1), cex = 0.95,
+       pos = ifelse(bad & e < LAB_TRUTH, 2, 4), offset = 1.1, cex = 0.95,
        col = ifelse(bad, alert, muted), xpd = NA)
   invisible(e)
 }
