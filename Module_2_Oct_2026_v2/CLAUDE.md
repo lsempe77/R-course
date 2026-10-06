@@ -354,6 +354,12 @@ GreenWaste introduction, first item below); otherwise what remains is delivery r
 
 ### Delivery readiness
 
+- [ ] **Simple GreenWaste (in progress, branch `simple-greenwaste`, 2026-10-06).** The case is
+      being moved to a one-level dataset (`evaluation_data_GreenWaste_simple.csv`: a lottery in
+      the pilot district, a score rule at 58 in the rest of the city) with a city-map
+      introduction in every GreenWaste deck. This also resolves the reminder below. Plan, words
+      to use and retire, and the per-session changes: `SIMPLE_GREENWASTE_PLAN.md`. Do not edit
+      the eight affected decks on `main` while the branch is under review.
 - [ ] **REMINDER (added 2026-10-05) · Introduce GreenWaste in Module 2; drop "Module 1 said"
       references to its numbers.** Participants met GreenWaste in Module 1 only through a Theory
       of Change exercise; they have **never seen any GreenWaste numbers**. Several decks assume
