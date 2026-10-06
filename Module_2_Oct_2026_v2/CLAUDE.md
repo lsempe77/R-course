@@ -292,7 +292,11 @@ The `evaluation_data_GreenWaste_IV.csv` variant is **gone**: no `*_IV.csv` exist
 
 A partner helps us build the exercises and their materials (printed handouts and cards, Menti quizzes, worksheets). To brief them, we keep one running Word document, **`Module2_exercise_plan.docx`** in this folder, that lists every exercise across all sessions: the exercise, roughly when in the session it appears, its type (vote, hands-on, group work, handout, Menti quiz), the materials needed, and a description of what the partner should build.
 
-**Current version: `Module2_exercise_plan_v2.docx`** (25 Sep): every section now points to its session's print pack; the Abu Dhabi DOH and DCD rows are gone. Print materials for all twelve sessions come from `make_session_materials.R` (one `<deck>_materials.docx` pack per session); edit the script, not the Word files.
+**Current version: `Module2_exercise_plan_v3.docx`** (6 Oct): adds a "Print, make or bring" column (copies assume 8 groups and up to 40 participants), a room kit for the week, and the wall-board exercises. It was generated from v2's content by a script, so edit v3 directly from now on. v2 (25 Sep) is kept for reference.
+
+**Wall boards and movement (6 Oct, commit 786ee9c).** Seven exercises let groups post answers on a wall instead of voting in front of the room: Oct12 S3 and Oct13 S1 (AI Snapshot claim strips: groups mark each numbered claim green / yellow / red at the table, then put one dot per strip; the exercise slide no longer flags the claims, the debrief does), Oct13 S2 (eight jump cards A-H, one per group, on a -2,000 to +500 AED number line; scorecard and AI page are now pack pages 9 and 10), Oct14 S1 (ratio wall: each group predicts, then places its card at the real ratio), Oct15 S1 (credibility grid: section columns by Green / Amber / Red rows; the debrief reads the wall instead of a show of colours), and two optional ones beside the worksheet: Oct12 S1 (triage now uses excerpts 1 to 4 only, with a wall matrix and one marker colour per group) and Oct13 S3 (find the twins done per group, with a set of seven profile cards per group on pack page 2 and a walking version; later pack pages moved up by one). `board_pieces()` in `make_session_materials.R` prints the strips, signs and matrix labels after each pack's facilitator key, so participant copies leave them out; each key has a setup paragraph. Run the script in a UTF-8 locale, or the middle dots in the headers print as `<c2><b7>`.
+
+Print materials for all twelve sessions come from `make_session_materials.R` (one `<deck>_materials.docx` pack per session); edit the script, not the Word files.
 
 **Print packs.** Run `source("make_session_materials.R")` in RStudio after any change to a session's exercises. It writes the twelve `<deck>_materials.docx` packs (the trainer copy: print lines and a facilitator key) and the participant copies in `docs/handouts/<deck>_handouts.docx` (no key, no print lines), then copies the other handouts there. Every pack follows the same page order: exercise sheets, the AI Snapshot page, a take-away card, the facilitator key. Prompts, AI responses and closing questions are copied word for word from the deck, so change both together. Every AI page carries both habits (ask the AI to ask questions first; check its answer in a fresh chat). Numbers are computed from the CSVs, never typed. Oct12 S2 and Oct14 S2 print charts on their AI pages (ggplot2). Oct15 S1 and S3 read `qa_rating.R` and `qa_design_update.R`, which also feed their decks. `Oct15_session1_rating_sheet.qmd` and `Oct15_session3_design_template.qmd` are retired: their content lives in the packs. Link each participant copy under its deck in `docs/index.html`.
 
@@ -360,6 +364,13 @@ GreenWaste introduction, first item below); otherwise what remains is delivery r
       introduction in every GreenWaste deck. This also resolves the reminder below. Plan, words
       to use and retire, and the per-session changes: `SIMPLE_GREENWASTE_PLAN.md`. Do not edit
       the eight affected decks on `main` while the branch is under review.
+      Note (6 Oct): the wall-board edits above landed on `main` in six of the eight decks
+      (Oct12 S3, Oct13 S1, S2, S3, Oct14 S1, Oct15 S1) and in `make_session_materials.R`,
+      before the branch converted any deck. Merge `main` into the branch before converting. The
+      board material quotes old-data numbers that the conversion must carry over: the claim
+      strips (665, p < 0.001; 816, the 1,000 rule), the eight RDD jump cards (drawn from the old
+      CSV) and the -791 / -1,084 to -498 regression line in the Oct13 S2 key, and the ratio wall
+      signs (headline 1.87).
 - [ ] **REMINDER (added 2026-10-05) · Introduce GreenWaste in Module 2; drop "Module 1 said"
       references to its numbers.** Participants met GreenWaste in Module 1 only through a Theory
       of Change exercise; they have **never seen any GreenWaste numbers**. Several decks assume
