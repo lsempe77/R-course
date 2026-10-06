@@ -1,3 +1,5 @@
+> All eleven course-owned sessions are approved, rebuilt and checked as of 6 October 2026. [Current whole-week review](review_2026_10_06/week_ready.qmd) and [Day 4 review](review_2026_10_06/day4_review.qmd). Days 1-3: 60/60/75 minutes; Day 4: 60/60. Former Day 4 S3 is excluded for the other provider's simulation. The default print generator now builds all eleven current sessions. Earlier status and proposed work below are historical where superseded.
+
 > Day 3 approved and rebuilt 6 October 2026. Days 1 to 3 are complete: shortened decks, two-sided worksheets, trainer keys and shared computed figures. [Day 3 review](review_2026_10_06/day3_review.qmd); [Day 4 tables](review_2026_10_06/day4_plan.qmd) are the next daily approval. Two 60-minute sessions remain; the former final slot is excluded. Earlier status and build proposals below are historical where superseded.
 
 > Day 2 approved and rebuilt 6 October 2026. The eight score-58 records are corrected; the current table below uses that CSV and robust RDD intervals. Earlier completion notes are historical. Next tables: `review_2026_10_06/day3_plan.qmd`.

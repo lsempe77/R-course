@@ -1,639 +1,197 @@
 ---
-title: "Is This Evidence Credible?"
-subtitle: "Module 2 · Day 4, Session 1: A Quality-Assurance Deep Dive"
+title: "Judge a report section by section"
+subtitle: "Module 2 | Day 4 | Session 1"
 author: "3ie"
-always_allow_html: yes
+always_allow_html: true
 format:
   revealjs:
-    theme: [theme_dge.scss]
+    theme: [theme_dge.scss, theme_reader.scss]
     logo: assets/dge_logo_horizontal.svg
     slide-number: true
     width: 1280
     height: 720
-    fig-align: center
     slide-level: 2
     embed-resources: true
+    include-after-body: _reader_interactions.html
 knitr:
   opts_chunk:
     echo: false
     warning: false
     message: false
-    dev: "png"
-    dpi: 96
-editor_options:
-  chunk_output_type: console
 ---
 
-```{r setup}
-library(knitr)
-library(qrcode)
-
-# ---- Palette (DGE theme; see theme_dge.scss) --------------------------------
-ACCENT  <- "#215a9e"; ACCENT2 <- "#7da1c4"; ALERT <- "#B8272C"
-INK     <- "#111418"; MUTED <- "#545860"; RULE <- "#D5DEE8"
-
-# ---- The report and the rating scale --------------------------------------
-# Shared with the printable rating sheet and the report itself, so the deck
-# cannot disagree with the paper the room is holding.
-source("qa_checklist.R")
-source("qa_rating.R")
-
-# Traffic-light colours for the on-screen reveal.
-LIGHT_COL <- c(Green = "#2E7D4F", Amber = "#A9561F", Red = ALERT)
-
-# Plain HTML tables (no kableExtra, whose JavaScript needs jQuery), left-aligned
-# and styled by the theme.
-tbl <- function(df, ...) {
-  h <- as.character(knitr::kable(df, format = "html", ...))
-  knitr::asis_output(sub("<table", '<table style="margin-left:0;"', h, fixed = TRUE))
-}
-
-# ---- Live Menti poll -------------------------------------------------------
-MENTI_CODE <- "1234 5678"
-MENTI_JOIN <- paste0("https://www.menti.com/", gsub(" ", "", MENTI_CODE))
-
-menti_qr <- function(path = "menti_qr.png", url = MENTI_JOIN) {
-  png(path, width = 900, height = 900, res = 300, bg = "white")
-  on.exit(dev.off(), add = TRUE)
-  par(mar = c(0, 0, 0, 0))
-  plot(qr_code(url, ecl = "H"))
-  path
-}
-MENTI_QR <- menti_qr()
+```{r setup, include=FALSE}
+source('day4_case.R')
 ```
 
-# 0 · Sign-off {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+## Read independently {.reader-slide}
+
+Read **Pages 1 and 3** of the report.
+
+Answer the five questions on **Sheet 1**. Work alone.
+
+Use the report as your source. Save discussion for afterwards.
+
+::: {.ask}
+What does the evidence support?
+:::
+
 
 ::: {.notes}
-Timing: 5 minutes (0:00 to 0:05). Hook and first vote.
+8 minutes. Collect a name or identifier on the individual reading task. No AI or group discussion. Use the unfamiliar report presentation; this is the same GreenWaste case, not a different-programme transfer test. The fictional exercise contains planted overclaims, labelled on the report. Explain its design after this task. Score five abilities 0 to 2 from the trainer key; do not score room votes.
 :::
 
-## From the analyst to the report
+## Give your initial judgement {.reader-slide}
 
-::: {.panel}
-Yesterday the analyst admitted things out loud. This is the written report that
-goes to the minister.
-:::
-
-::: {.ask .fragment}
-**Does it say what the analyst admitted?**
-:::
-
-## Before you open it
-
-:::::: {.columns}
-
-::::: {.column width="60%"}
 ```{=html}
-<div class="hero">
-  <div class="value">1,000</div>
-  <div class="label">AED per business per year &middot; the authority's bar</div>
-</div>
+<div data-choices><button data-choice aria-pressed="false">Sign off</button><button data-choice aria-pressed="false">With conditions</button><button data-choice aria-pressed="false">Request evidence</button><p role="status" class="feedback"></p></div>
 ```
-:::::
-
-::::: {.column width="40%"}
-```{r out.width='210px', out.extra='style="display:block; margin:0 auto;"'}
-knitr::include_graphics(MENTI_QR)
-```
-:::::
-
-::::::
-
 ::: {.ask}
-**Would you sign off on this report, as written, for national scale-up?**
-Yes / No / Not without more answers. Vote now, before reading.
+Would you sign off on this report as written?
 :::
-
-::: {.panel}
-Four pages, confident and well written, with real strengths. Does it support its
-own claim?
-:::
+Write a source-based reason before comparing choices.
 
 ::: {.notes}
-Paper (Oct15_session1_materials.docx): Hand out the rating sheet (pack pages 1 and 2, printed back to back, one per participant). Everyone circles a "Before reading" vote on the back as well as voting on Menti.
+4 minutes. After eight minutes explain the intentional strengths and faults. Require a section or sentence. Optional course room poll Before phase: hide totals until close; labelled cards work too. Decisions are provisional, not a test with one required vote.
 :::
 
-# 1 · The report {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+## Use the rating scale {.reader-slide}
 
-::: {.notes}
-Timing: 10 minutes (0:05 to 0:15). Everyone reads and rates the executive summary alone.
-:::
-
-## What is in front of you
-
-```{r}
-tbl(data.frame(Section = c("1. Executive summary", "2. The programme", "3. Evaluation design",
-                           "4. Data", "5. Results", "6. Limitations",
-                           "7. Conclusions and recommendations", "Annexes A and B")),
-    col.names = "Section", caption = "The report, section by section", align = "l")
-```
-
-::: {.ask}
-Read only the executive summary for now. Do not read ahead.
-:::
-
-::: {.notes}
-Paper: Hand out the report (Oct15_session1_report.docx, one per participant). Ask everyone to keep it face down until you say go.
-:::
-
-## What the report claims
-
-::: {.excerpt}
-This evaluation finds that the programme reduced waste-management costs by
-**approximately 1,000 AED per business per year**, and that the estimate is
-statistically significant. The finding is robust across four independent
-estimation methods… The programme therefore meets the threshold for scale-up.
-:::
-
-::: {.panel .fragment}
-Four claims in three sentences. Note each one, because you will rate them
-separately:
-
-- a **number**, described as approximately 1,000
-- a claim of **statistical significance**
-- a claim of **robustness** across four methods
-- a claim that the **threshold is met**
-:::
-
-## Read the summary and rate it
-
-::: {.ask}
-On your rating sheet: **the executive summary**.
-
-Circle a colour. Then write your reason for selecting this colour. If you rate
-the summary amber or red, write what would be needed to shift the colour to green.
-Then put a sticky note with your reason on the wall grid, in your colour's row.
-:::
-
-:::::: {.columns}
-
-::::: {.column width="50%"}
-::: {.panel}
-**Five minutes.** Work alone. The point is your own reading, before anyone
-else's.
-:::
-:::::
-
-::::: {.column width="50%"}
-::: {.warn .fragment}
-If you found nothing wrong, say so. Hold your colour and we will come back to it.
-:::
-:::::
-
-::::::
-
-# 2 · The four areas, applied {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
-
-::: {.notes}
-Timing: 5 minutes (0:15 to 0:20). Recap of yesterday's checklist and the rating scale; keep it brisk.
-:::
-
-## The checklist, on paper this time
-
-```{r}
-tbl(data.frame(Area = qa_domains,
-               `What you are testing` = unname(qa_purpose[qa_domains]),
-               check.names = FALSE),
-    caption = "The four areas from yesterday", align = "ll")
-```
-
-::: {.panel}
-Yesterday the analyst answered these out loud. Today the report has to answer
-them. Your rating sheet names the area to check for each section.
-:::
-
-::: {.ask .fragment}
-Which of the four areas can a report make look strong without actually being
-strong?
-:::
-
-## The five questions, and what a report can hide
-
-```{r}
-#| results: asis
-for (i in seq_along(qa_headline)) {
-  cat(sprintf('<div class="panel"><b>%d.</b> %s</div>\n', i, qa_headline[i]))
-}
-```
-
-::: {.warn .fragment}
-None of the five asks whether the report sounds convincing.
-:::
-
-## What the rating means
-
-```{r}
-#| results: asis
-for (i in seq_len(nrow(rating_scale))) {
-  cat(sprintf('<div class="panel"><b style="color:%s">%s.</b> %s</div>\n',
-              LIGHT_COL[[rating_scale$light[i]]], rating_scale$light[i],
-              rating_scale$meaning[i]))
-}
-```
-
-::: {.ask .fragment}
-What single fact would move your amber to green or red?
-:::
-
-# 3 · Section by section {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
-
-::: {.notes}
-Timing: 40 minutes (0:20 to 1:00). 20 minutes of reading in pairs, then 20 minutes of debrief, about 3 minutes per slide. In the debrief, read the section's column on the wall grid before each reveal (no show of colours needed). The grid is two A1 sheets (print Oct15_session1_board_A1.pdf): the executive summary on its own, then Sections 3 to 7; rows Green, Amber, Red. Use small sticky notes.
-:::
-
-## Your turn: rate the rest
-
-::: {.ask}
-**20 minutes in pairs:** rate Sections 3 to 7 from the report itself, on the
-rating sheet. Do not wait for the slides.
-:::
-
-::: {.panel}
-For each section: a colour, your reason for selecting this colour, and, if amber
-or red, what would be needed to shift the colour to green. The Area to check
-column tells you which part of yesterday's QA checklist to use. **One sticky note
-per pair per section on the wall grid.**
-:::
-
-::: {.notes}
-Walk the room. At 15 minutes, give a five-minute warning. Pairs who finish early compare their executive-summary colour with their Results colour.
-:::
-
-## Evaluation design
-
-::: {.excerpt}
-The parallel trends assumption underlying the difference-in-differences design is
-the standard assumption in this literature and is satisfied by construction in
-programmes of this type, since treatment and control neighbourhoods were selected
-from the same administrative area and are subject to the same economic conditions.
-:::
-
-::: {.ask}
-Read the Section 3 column on the wall. What does parallel trends actually require?
-:::
-
-::: {.warn .fragment}
-That the two groups **would have moved in parallel without the programme**.
-Sharing an area makes a common shock likely. It does not show the groups were on
-the same path, and no pre-trend test is reported.
-
-The groups are also the wrong ones: the DiD compares enrolled with non-enrolled
-businesses inside treatment neighbourhoods.
-:::
-
-## Data
-
-::: {.excerpt}
-Recycling compliance… is missing for 8,570 of the 19,826 observations. These gaps
-reflect the inspection schedule…
-
-…the survey instrument separated expenditure on collection from expenditure on
-treatment… This change improves the precision of the measure…
-:::
-
-::: {.ask}
-Read the Section 4 column on the wall. Two disclosures: which is handled well?
-:::
-
-:::::: {.columns}
-
-::::: {.column width="50%"}
-::: {.panel .fragment}
-**Handled well:** the instrument change is *disclosed*. Many reports would not
-mention it.
-:::
-:::::
-
-::::: {.column width="50%"}
-::: {.warn .fragment}
-**Not handled:** the change is never tested for its effect on the outcome, and
-the report never says which businesses lack compliance data.
-:::
-:::::
-
-::::::
-
-## Results
-
-::: {.excerpt}
-All four estimates are negative and statistically significant… The largest
-estimate, from the randomised comparison, indicates a cost reduction of
-1,014 AED per business per year. The randomised comparison is our headline
-result.
-:::
-
-::: {.ask}
-Read the Section 5 column on the wall. Four estimates are given. Why is this one the
-headline?
-:::
-
-::: {.warn .fragment}
-The report's reason: the randomised comparison covers all eligible businesses,
-the population that would be scaled up. That reason is defensible. It is also
-the largest estimate, and the only one above 1,000.
-:::
-
-## The table you should look at twice
-
-```{r}
-tbl(data.frame(
-  Method = c("Difference-in-differences", "Regression discontinuity",
-             "Randomised comparison", "Matched comparison"),
-  Estimate = c("-816", "-905", "-1,014", "-1,000"),
-  CI = c("[-879, -753]", "[-992, -818]", "[-1,093, -935]", "[-1,072, -927]"),
-  Point = c("No", "No", "Yes", "Yes, exactly"),
-  Whole = c("No", "No", "No", "No")),
-  col.names = c("Method", "Estimate (AED)", "95% CI",
-                "Point estimate reaches 1,000?", "Whole interval reaches 1,000?"),
-  caption = "Table 1 of the report, with two columns added", align = "lrrrr")
-```
-
-::: {.warn .fragment}
-At the point estimate, two of the four reach 1,000. At the cautious end of the interval, none does. The preferred specification, named in Section 3, is 816.
-:::
-
-::: {.notes}
-Before the click, ask the room to read each row with its interval. Point out that 1,014 and 1,000 reach the bar only at the point estimate; the RCT interval runs down to 935. Then reveal. Ask: which rule should the authority use, the point estimate or the whole interval?
-:::
-
-## Limitations
-
-::: {.excerpt}
-We note three limitations. First, the randomised comparison estimates the effect
-of being offered the programme, not of enrolling… Second, the regression
-discontinuity estimate is local to the eligibility cut-off… Third,
-self-reported expenditure may be subject to recall error…
-:::
-
-::: {.ask}
-Read the Section 6 column on the wall. Are these the right three?
-:::
-
-::: {.warn .fragment}
-All three are correct, and none of them threatens the conclusion.
-
-The problems raised in Section 4 (the change in the survey instrument and the
-unexplained gap in the compliance data) are never mentioned again.
-:::
-
-## Conclusions
-
-::: {.excerpt}
-**Recommendation 2.** The subsidy rate should be maintained at its current level,
-since the evaluation provides no evidence that a lower rate would be less
-effective.
-
-**Recommendation 3.** The eligibility cut-off should be reviewed, as the
-regression discontinuity results suggest that businesses just above the threshold
-may also benefit.
-:::
-
-::: {.ask}
-Read the Section 7 column on the wall. What was estimated about subsidy rates, and about
-businesses above the cut-off?
-:::
-
-::: {.warn .fragment}
-Nothing on either. Recommendation 2 turns an absence of evidence into a
-recommendation to do nothing. Recommendation 3 rests on a result about businesses
-*near* the cut-off, and even there the estimate was 905, below the threshold.
-:::
-
-# 4 · The verdict {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
-
-::: {.notes}
-Timing: 10 minutes (1:00 to 1:10). Second vote, the decisive problem, the strengths.
-:::
-
-## The same question
-
-:::::: {.columns}
-
-::::: {.column width="58%"}
 ```{=html}
-<div class="hero">
-  <div class="value">1,000</div>
-  <div class="label">The bar, and the one estimate the summary chose to echo</div>
-</div>
+<div class="rating-options"><div><h3>Supported</h3><p>Source supports the claim within its limits.</p></div><div><h3>Concern</h3><p>Name the uncertainty or missing check.</p></div><div><h3>Unsupported</h3><p>Claim exceeds or contradicts the source.</p></div></div>
+```
+::: {.ask}
+Which passage supports your rating?
+:::
+
+
+::: {.notes}
+4 minutes. Use words as well as Green/Amber/Red. Rate claims rather than a whole method or person. A section can have strengths and an unsupported conclusion. Record both; justify the overall rating for the claim being discussed.
+:::
+
+## Check the executive summary {.reader-slide}
+
+```{r, results='asis'}
+html_out(sprintf('<p class="lead">The matched saving is %s AED. Four independent methods confirm the programme caused the saving. Nationwide expansion meets the standard.</p>%s',fmt(-match_A$est),fiction))
+```
+::: {.ask}
+Which statement most needs checking against the rest of the report?
+:::
+Mark one strength and one concern on **Sheet 2**.
+
+::: {.notes}
+6 minutes. This is a shortened excerpt from the intentionally flawed Section 1. Everybody rates the summary independently before posting. Naming the rule and outcome is a strength. Trace the headline, independence, causal reach and model claims rather than objecting to every sentence.
+:::
+
+## Investigate your report section {.reader-slide}
+
+Groups read their assigned section: **3, 4, 5, 6 or 7**.
+
+Find one strength and one important concern.
+
+Cite the passage. Name evidence that could change your judgement.
+
+::: {.ask}
+Which claim can you support, and which needs attention?
+:::
+
+
+::: {.notes}
+10 minutes. For eight groups assign Sections 3/4/5/6/7/3/5/7. All participants have the same report and two-sided sheet. Groups work on a claim, not a colour competition. Section 6 offers real disclosures that should earn a supported rating. Protect the reading time.
+:::
+
+## Post evidence on the wall {.reader-slide}
+
+Use the **two-sheet credibility grid**.
+
+Post your executive-summary rating on Sheet 1 of the wall.
+
+Post your group section rating on Sheet 2.
+
+Each note names a section and gives a reason.
+
+::: {.ask}
+Could another reader locate the evidence behind your note?
+:::
+
+
+::: {.notes}
+7 minutes. Retain Fiona's dedicated summary grid and five-section grid. About four small sticky notes per person, plus spares. Everyone posts the summary; pairs or groups post the assigned section. Words Supported/Concern/Unsupported match Green/Amber/Red. No names on the wall.
+:::
+
+## Compare the ratings {.reader-slide}
+
+Choose a disagreement on the wall.
+
+Explain each rating using a source passage.
+
+::: {.ask}
+What evidence could resolve the disagreement?
+:::
+```{=html}
+<button data-open="rating-feedback" data-closed="Open an example" data-opened="Hide feedback" aria-controls="rating-feedback" aria-expanded="false">Open an example</button><div id="rating-feedback" class="feedback" hidden>Section 6 discloses meaningful limits. That disclosure is supported; it does not resolve the limits or validate Section 7.</div>
 ```
 
-Would you sign off on this report, as written? Vote again.
-:::::
-
-::::: {.column width="42%"}
-```{r}
-#| fig.height: 3.4
-#| fig.width: 3.4
-#| fig.align: center
-knitr::include_graphics(MENTI_QR)
-```
-:::::
-
-::::::
-
-::: {.ask .fragment}
-If your vote moved, name the section that moved it.
-:::
 
 ::: {.notes}
-Paper (Oct15_session1_materials.docx): Participants circle their "At the end" vote and answer the three questions on the back of the rating sheet (pack page 2).
-
-Wall grid: point to the executive-summary column and the Results column side by side. If the summary leans green and Results leans amber or red, ask what the summary led people to believe.
+7 minutes. Use the trainer section key. Accept different overall ratings when the specific claim and reason are clear. Do not treat colour consensus as proof. Bring out a supported disclosure as well as the unsupported summary or recommendation.
 :::
 
-## The most important problem
+## Follow the headline to its source {.reader-slide}
 
-```{r}
-#| results: asis
-cat(sprintf('<div class="warn">%s</div>\n', rating_decisive))
+```{r, results='asis'}
+html_out(html_table(method_rows[c(2,4),],compact=TRUE))
+```
+::: {.ask}
+Does selecting the largest point estimate settle the saving rule?
+:::
+```{=html}
+<button data-open="headline-feedback" data-closed="Open the source check" data-opened="Hide feedback" aria-controls="headline-feedback" aria-expanded="false">Open the source check</button><div id="headline-feedback" class="feedback" hidden>The selected matching interval spans 1,000. The preferred city interval falls short. City methods share records and have different assumptions.</div>
 ```
 
-::: {.ask .fragment}
-Which sections did you rate green, and why do they still hold?
-:::
-
-## The strengths are real
-
-::: {.panel}
-Before we close, the report's genuine merits:
-
-- It **states the threshold up front**, so the reader knows the standard being applied.
-- It **reports four methods** with their different populations named, rather than one number.
-- It **discloses** the survey instrument change, which most reports would bury.
-- It gives **confidence intervals for every estimate**, and an annex of robustness specifications.
-- Its **limitations are technically correct**, even though they are the wrong ones.
-:::
-
-::: {.ask .fragment}
-Does any of that rescue the recommendation?
-:::
-
-# 5 · Put AI to work {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ::: {.notes}
-Timing: 15 minutes (1:10 to 1:25). Groups run the prompt, compare with the example, then see the better prompt.
+5 minutes. Section 5 has all four rows; this screen selects the preferred city analysis and the headline for direct comparison. Positive numbers denote annual saving in AED. Do not count methods as independent votes; do not confuse the saving rule with full value for money. A point estimate above the rule does not guarantee the underlying saving clears it.
 :::
 
-## The prompt
+## Repair an AI verdict {.reader-slide}
 
-::: {.excerpt}
-Here is an evaluation report on a programme that subsidised waste-management
-technology for businesses. It found a cost reduction of approximately 1,000 AED
-per business per year and recommends national scale-up. Assess the credibility of
-this evidence and tell me whether the recommendation is sound.
+```{r, results='asis'}
+html_out(paste0('<p>',ai_verdict,'</p>'))
+```
+::: {.ask}
+Which claims would you correct against the report?
 :::
-
-::: {.panel}
-You have just done this by hand, section by section. Run the prompt on the
-report yourselves, then compare the AI's verdict, and the example on the next
-slides, with yours. The report is on the course website: download
-Oct15_session1_report.docx from the landing page.
-:::
-
-::: {.notes}
-Paper (Oct15_session1_materials.docx): Hand out the AI Snapshot (pack page 3, one per group). Groups paste the downloaded report into their AI tool with the prompt.
-:::
-
-## What came back
-
-::: {.ai-output}
-*A response like this is possible, especially with a short or leading prompt:*
-
-**Assessment: the evidence is credible and the recommendation is sound.**
-
-The report is unusually thorough for this kind of evaluation. Several points
-support its credibility:
-
-**Multiple methods.** The use of four estimation approaches, all producing
-consistent results, is a strong indicator of robustness. When independent methods
-agree, the finding is unlikely to be an artefact of any single specification.
-
-**Large sample.** With roughly 9,900 observations, the study is well powered and
-the estimates are precise.
-:::
-
-## What came back, continued
-
-::: {.ai-output}
-**Transparency.** The report discloses a change in the survey instrument between
-rounds and notes the gaps in the recycling compliance data. This level
-of disclosure suggests a careful and honest evaluation team.
-
-**Appropriate limitations.** The limitations section correctly identifies that the
-randomised comparison estimates the offer effect and that the RDD estimate is local to the cut-off.
-
-**Recommendation.** The headline estimate of 1,014 AED exceeds the 1,000 AED
-threshold, so [the programme meets the criterion for scale-up]{.fragment .highlight-red fragment-index=2}. The
-recommendation is [supported by the evidence]{.fragment .highlight-red fragment-index=2}.
-:::
-
-::: {.ask .fragment fragment-index=1}
-Underline the two claims in the AI's response that the report does not support.
-Then name the bigger problem that the response never mentions. What did your own
-AI get right, and what did your AI miss?
-:::
-
-## What AI got, and what it could not get
-
-:::::: {.columns}
-
-::::: {.column width="50%"}
-::: {.panel}
-**What it did well**
-
-- Found the real disclosures and called them transparency
-- Correctly described the offer-effect and locality limitations
-- Reached a verdict, which is what was asked
-:::
-:::::
-
-::::: {.column width="50%"}
-::: {.warn .fragment}
-**What it missed**
-
-- It read "approximately 1,000" as if all four methods agreed. Only the matched comparison gives 1,000.
-- It never noticed that the preferred specification, 816, fails the threshold.
-- It treated the compliance gap as evidence of honesty.
-- It did not ask why 1,014 is the headline.
-:::
-:::::
-
-::::::
-
-::: {.ask .fragment}
-Which of the four would slip past you in practice?
-:::
-
-## The same task, a better prompt
-
-::: {.excerpt}
-The same report claims a cost reduction of approximately 1,000 AED against a
-decision threshold of 1,000 AED. Do three things.
-
-First, list every estimate the report gives, with its confidence interval, and say
-for each one whether it clears the threshold.
-
-Second, identify any claim in the executive summary that is not supported by the
-results section, and quote both.
-
-Third, tell me what the report does not tell me that I would need in order to
-decide.
-:::
-
-::: {.ask .fragment}
-What do the three instructions have in common?
-:::
-
-::: {.panel .fragment}
-Each asks for a comparison: estimates against the threshold, the summary against
-the results, the report against what a decision needs.
-:::
-
-## Two checks on any AI answer
-
-::: {.panel}
-**1.** Ask the AI to ask you questions before it answers. It then has to find out
-what it does not know, such as which estimate is the preferred specification.
-:::
-
-::: {.panel}
-**2.** Paste its answer into a fresh chat and ask what is wrong with it. A new chat
-has not committed to the first verdict.
-:::
-
-# 6 · Take this back to your desk {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
-
-::: {.notes}
-Timing: 5 minutes (1:25 to 1:30). Take-away card and the "On my desk" minute.
-:::
-
-## Three habits for reading a report
-
-```{r}
-#| results: asis
-cat('<div class="panel"><b>1.</b> Tabulate the estimates yourself, with the threshold in its own column. Do not let the report choose which number you see first.</div>\n')
-cat('<div class="panel"><b>2.</b> Read the limitations section, then check whether the limitations section names the problems in the data section. If those problems are missing, ask why they were left out.</div>\n')
-cat('<div class="panel"><b>3.</b> Find the preferred specification (the estimate the evaluators trust most). Check whether the headline number is that estimate. When the two differ, ask why.</div>\n')
+```{=html}
+<button data-open="rating-ai" data-closed="Open feedback" data-opened="Hide feedback" aria-controls="rating-ai" aria-expanded="false">Open feedback</button><div id="rating-ai" class="feedback" hidden>Complete generated rows do not prove fieldwork quality. City methods share records. A matched point estimate above the rule cannot justify nationwide approval.</div>
 ```
 
-::: {.ask .fragment}
-Which of the three would have caught the most important problem in this report?
-:::
 
 ::: {.notes}
-Paper (Oct15_session1_materials.docx): Hand out the take-away cards (pack page 4, cut). Give a minute to fill in "Back at work" on the card, then take two or three examples from the room.
+4 minutes. Authored AI draft; no account required. Cross out and repair on Sheet 2 before the reveal. The report already discloses the relevant evidence. Accuracy of one number does not make the verdict sound.
 :::
 
-## Next session
+## Revisit sign-off {.reader-slide}
 
-::: {.panel}
-This week you have practised reading other people's evidence critically. In the
-next session you write your own: a policy brief, from findings to
-recommendation.
+```{=html}
+<div data-choices><button data-choice aria-pressed="false">Sign off</button><button data-choice aria-pressed="false">With conditions</button><button data-choice aria-pressed="false">Request evidence</button><p role="status" class="feedback"></p></div>
+```
+::: {.ask}
+Which evidence changed your reason or kept it the same?
+:::
+Write your final judgement and any evidence still needed.
+
+::: {.notes}
+3 minutes. Optional After phase of the room poll, closed before totals. Discuss reasons rather than the winning vote. A conditional proposal must state its limits. Assess the independent reading responses, not a colour or vote change.
 :::
 
-::: {.panel .fragment}
-Bring the ratings you gave today. You will apply the same judgements to your own
-draft.
+## Your question from memory {.reader-slide}
+
+::: {.ask}
+What would you ask the evaluator next, and why?
+:::
+Close the report. Write a specific request independently.
+
+::: {.notes}
+2 minutes. Collect the five-item reading task and the final request. Score 0 missing/wrong, 1 partial, 2 accurate with evidence. Provisional target 8/10 with no causal claim based solely on before/after or significance. Give feedback and a short targeted retry in Session 2. Total 60 minutes.
 :::

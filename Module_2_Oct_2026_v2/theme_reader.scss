@@ -48,3 +48,8 @@
 .reveal .reader-slide .percentage-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
 .reveal .reader-slide .percentage-pair h3 { font-size: 27px; margin: 0; }
 .reveal .reader-slide .percentage-pair p { font-size: 48px; color: #063360; font-weight: 700; margin: 8px 0; }
+
+.reveal .reader-slide .rating-options, .reveal .reader-slide .decision-checks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.reveal .reader-slide .rating-options > div, .reveal .reader-slide .decision-checks > div { padding: 22px; background: #f4f7fb; border-radius: 12px; }
+.reveal .reader-slide .rating-options h3, .reveal .reader-slide .decision-checks h3 { font-size: 28px; margin: 0; }
+.reveal .reader-slide .sample-brief { font-size: 25px; line-height: 1.35; }

@@ -70,3 +70,16 @@ ignored by Git. Reproduce the browser checks with `verify_day1.py`,
 - Backup and QA artifacts remain ignored. Main publication contains unlinked previews only; live teaching pages stay unchanged. Day 4 tables are a proposal for the remaining two sessions.
 
 - Preview copy hashes matched for all 18 files; Day 3 hub has 18 valid relative links, Day 4 plan 2. Source push 2019e52 and main preview push 7120980 succeeded. Unauthenticated URLs returned 403; online content was not inspected.
+
+
+## Day 4 and complete-week checkpoint
+
+- Approved Day 4 route: 11/9 content screens, 60/60 minutes. Native browser controls, no participant coding or new model lab. All 22 slides including titles walked sequentially with feedback open. Maximum lower overflow -52/-79 px, right overflow 0, no logo collision, browser errors []. Final keyboard choice/reveal/close checks passed (three S1 reveals, one S2 reveal).
+- Independent five-ability reading assessment before AI/discussion, 0..2 each; provisional target 8/10 with no before/after or significance causal overclaim. Trainer keys accept defensible conditional actions and cited concerns, provide targeted retry and distinguish initial from revised score. No validated certification or transfer claim.
+- Word fallback: report 4 pages, participant sheets 2/2, rating duplicate 2, trainer packs 7/3, corrected findings 1, optional template 1; exercise brief 9 landscape pages. Every final page rendered and inspected. Both A1 landscape sheets inspected after regeneration; labels, headers and grid fit.
+- Screen and paper share day4_case.R, derived from corrected Day 1..3 objects. Planted report claims are distinguished from corrected writing evidence. Preferred city extra change 812, selected matching 1,029 with interval 859..1,200; pilot 1,014 interval 862..1,167; provisional model ratio 1.86 under fictional assumptions. No independent confirmation or real fieldwork assurance inferred from generated rows.
+- Full default material generator ran successfully in isolated qa/week_generator/Module. Eleven trainer packs and eleven participant sheets; no Oct15 S3 output. No prior-day committed outputs rewritten during this verification.
+- Room poll two-browser regression passed: replacement votes, totals hidden until close, Before/After [2,1], unauthorized/cross-origin 403, closed/stale 400, text-safe reasons, QR, configuration refresh and 320/375/1280 viewports. Venue LAN access remains untested.
+- Combined bundle: 50 files, 11 decks, 11 participant sheets, 11 trainer packs, 4 poster PDFs/5 A1 sheets, references, classroom brief and room tool. Every zip entry matched its source hash; excluded slot absent. External webR runtime requires internet and venue rehearsal.
+- Day 4 and whole-week hubs checked at 1280/375 widths; mobile table overflow repaired with a scroll container. Eighteen publication copies hash-verified; relative hub links resolve locally (Day 4 18, whole week 42, Day 3 18, Day 4 plan 3, historical week review 4).
+- Unlinked previews only. Production teaching pages unchanged. No additional daily approval is pending.

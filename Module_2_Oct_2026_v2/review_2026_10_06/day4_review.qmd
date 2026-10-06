@@ -1,0 +1,46 @@
+---
+title: "Day 4 review"
+subtitle: "Read the report, then defend a recommendation"
+format:
+  html:
+    embed-resources: true
+    theme: cosmo
+    toc: false
+---
+
+<style>
+.table-responsive table { min-width: 760px; }
+.table-responsive a { white-space: nowrap; }
+</style>
+
+
+Both approved 60-minute sessions are built. Participants first read independently, then judge claims against the report and write a brief using corrected evidence. The former final session is excluded for the other provider's simulation.
+
+::: {.table-responsive}
+
+| Session | Content screens | Deck | Participant sheet | Trainer pack |
+|---|---:|---|---|---|
+| Judge a report section by section | 11 | [Open](Oct15_session1.html) | [Two sides](Oct15_session1_handouts.docx) | [Key and retry](Oct15_session1_materials.docx) |
+| Write a defensible recommendation | 9 | [Open](Oct15_session2_live.html) | [Two sides](Oct15_session2_handouts.docx) | [Example and feedback](Oct15_session2_materials.docx) |
+
+:::
+
+Print the [four-page report](Oct15_session1_report.docx) two-sided for Session 1, and the [one-page corrected findings](Oct15_session2_findings.docx) for Session 2. The report is an intentionally flawed fictional exercise: its claims are for scrutiny. The findings reference is the corrected source for writing.
+
+## Activities and evidence
+
+The first eight minutes are an individual reading check before AI or discussion. Five abilities cover outcome and scope, comparison fairness, estimate and interval, a cited concern, and a defensible action with an evaluator question. The trainer scores each 0 to 2 and gives a targeted retry in Session 2. The suggested 8/10 readiness target is a teaching check, not validated certification. Record revised scores separately.
+
+Fiona's [two-sheet A1 credibility wall](Oct15_session1_board_A1.pdf) retains a dedicated summary panel and Sections 3 to 7. Supported / Concern / Unsupported labels accompany colours. Participants cite a source and identify strengths as well as concerns. Native choices and evidence reveals help compare reasons before and after discussion.
+
+Session 2 protects twelve minutes for a first draft and eight for peer review. A brief of at most 150 words connects a finding and source, recommendation and condition, important limit, and next evidence with its purpose. Other defensible conditional actions are accepted. Authored AI drafts provide source-checking practice without an external account.
+
+The [rating sheet](Oct15_session1_rating_sheet.docx) duplicates the two-sided worksheet; the [brief template](Oct15_session2_brief_template.docx) duplicates Session 2 Sheet 1. These are optional references, not additional required printing.
+
+## Checks and classroom setup
+
+Both decks were walked at 1280 by 720 with feedback open: no clipping, heading/logo overlap or browser errors. Keyboard choices and reveal/close controls passed. Every print page and both A1 sheets were rendered and inspected: participant sheets 2/2 pages, trainer packs 7/3, report 4, corrected findings 1. The [exercise brief](Module2_exercise_plan_v3.docx) now covers all eleven built sessions.
+
+For shared votes use the [course-owned room tool](GreenWaste_room_poll.zip) and [instructions](ROOM_POLL_README.md). Two-browser and phone-width checks passed; classroom network reachability still needs rehearsal. Labelled cards are the fallback.
+
+[Whole-week materials and review](week_ready.html) | [Day 3](day3_review.html) | [Day 2](day2_review.html) | [Day 1](day1_review.html)

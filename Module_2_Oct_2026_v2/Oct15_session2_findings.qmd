@@ -1,51 +1,17 @@
 ---
-title: "Tariff Shield: Evaluation Findings"
-subtitle: "The findings set for the evidence-translation exercise · Module 2, Day 4 Session 2"
-author: "3ie"
+title: "Corrected GreenWaste evidence for a brief"
 format:
   docx:
+    reference-doc: reader_template.docx
     toc: false
-    number-sections: false
-editor_options:
-  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
-source("qa_translation.R")
+source('day4_case.R')
 ```
 
 ```{r, results='asis', echo=FALSE}
-cat("This is the evaluation you are translating. It is a **fictitious programme**, written for\n")
-cat("teaching. The numbers are invented.\n\n")
-
-cat(sprintf("**Programme.** %s: %s.\n\n", transl_programme$name, transl_programme$what))
-cat(sprintf("**Where and when.** %s, %s.\n\n", transl_programme$where, transl_programme$when))
-cat(sprintf("**The decision rule.** %s\n\n", transl_programme$rule))
-
-cat("The evaluation was randomised and is methodologically sound. Read the six findings below,\n")
-cat("then turn to the brief template. Do not start writing until you have read all six: the\n")
-cat("decision depends on all six findings together, not on any one finding.\n\n")
-
-cat("# The findings\n\n")
-for (i in seq_len(nrow(transl_findings))) {
-  f <- transl_findings[i, ]
-  cat(sprintf("## Finding %d. %s\n\n", i, f$finding))
-  cat(sprintf("%s\n\n", f$numbers))
-  cat(sprintf("*What this finding can support.* %s\n\n", f$bears))
-}
-
-cat("\\newpage\n\n")
-cat("# What each finding does not support\n\n")
-cat("A good brief is judged by what it does not claim, as well as by what it claims. Below are\n")
-cat("claims that each finding might tempt you to make, but that the finding cannot support.\n\n")
-for (i in seq_len(nrow(transl_findings))) {
-  cat(sprintf("- **Finding %d** (%s) does not support the claim: %s\n",
-              i, transl_findings$finding[i], transl_findings$does_not_license[i]))
-}
-cat("\n")
-cat("# The threshold\n\n")
-cat(sprintf("The commissioning authority will decide on one number: **%s**. The evaluation's\n", "900 AED per vehicle per year"))
-cat("headline estimate is 743 AED, with an upper confidence bound of 796 AED.\n\n")
-cat("Nothing in the six findings is hidden or ambiguous. The difficulty of this exercise is\n")
-cat("deciding what the evidence supports, not working out what the evidence says.\n")
+for(i in 1:4)cat('## ',i,' ',finding_titles[i],'\n\n',finding_text[i],'\n\n',sep='')
 ```
+
+The styled print copy is built by `Rscript make_session_materials.R --day4`.

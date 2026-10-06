@@ -15,7 +15,10 @@ execute:
   message: false
 ---
 
-> Days 1 to 3 are approved and rebuilt. [Day 3 review](day3_review.html). [Day 4 tables](day4_plan.html) cover the two remaining course-owned sessions. Earlier proposals below are historical where superseded.
+All eleven sessions are now built. [Open the current whole-week materials](week_ready.html). Earlier diagnoses and proposals below are historical.
+
+
+> All eleven sessions are approved and rebuilt. [Day 4 review](day4_review.html). Earlier proposals below are historical where superseded.
 
 
 ```{r}
@@ -36,7 +39,7 @@ Use **60, 60 and 75 minutes** on Days 1–3, and **60 and 60 minutes** for our t
 
 The proposed changes cover **12–15 October**, the four days specified in the project files. This is a review proposal. The current decks, data and published site have not been rewritten.
 
-Open the [interactive activity preview](activity_preview.html) to try the proposed choice, evidence reveal and report mark-up. It also includes an A4 worksheet preview.
+Open the [completed teaching materials](week_ready.html) for the built activities, interactive decks and print sheets. The local activity prototype is retained as design history.
 
 ## What I checked
 

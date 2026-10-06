@@ -3,24 +3,14 @@
 # ===========================================================================
 #   source("make_session_materials.R")
 #
-# Writes one Word pack per session into this folder, <deck>_materials.docx:
-#   Lucas's six live sessions first (Oct12 S1, Oct12 S3, Oct13 S2, Oct14 S1,
-#   Oct14 S3, Oct15 S2), then Fiona's six (Oct12 S2, Oct13 S1, Oct13 S3,
-#   Oct14 S2, Oct15 S1, Oct15 S3).
-#
-# Every number is computed here from the same CSVs the live decks read, so
-# the paper cannot disagree with the screen. Each item starts with a print
-# line (how many copies, cut or not). The facilitator key is the last item of
-# each pack; print it for the trainer only.
-#
-# Editing a .docx by hand is overwritten on the next run: change this file.
-# Materials that already exist and are generated elsewhere are not repeated:
-#   Oct14_session3_qa_checklist.docx (qa_checklist.R)
-#   Oct15_session2_findings.docx, Oct15_session2_brief_template.docx (qa_translation.R)
-#   Oct15_session1_report.docx (quarto render Oct15_session1_report.qmd)
-# Oct15 S1's rating sheet and Oct15 S3's design template now live in their
-# packs here, so Oct15_session1_rating_sheet.qmd and
-# Oct15_session3_design_template.qmd are retired.
+# Current route: make_day1_materials.R through make_day4_materials.R.
+# Default builds all eleven sessions; --day1 / --day2 / --day3 / --day4
+# limits generation to the approved day. Each participant sheet is two A4
+# pages; separate trainer packs include keys and distribution materials.
+# Computed values come from day1_case.R through day4_case.R and the shared
+# corrected CSV. Change these builders rather than editing saved Word files.
+# The old implementation below is retained inside if (FALSE) for reference.
+# Former Oct15 S3 is excluded for the other provider's simulation.
 
 suppressPackageStartupMessages({
   library(officer)
@@ -190,9 +180,18 @@ if ('--day3' %in% commandArgs(trailingOnly=TRUE)) {
   source('make_day3_materials.R',encoding='UTF-8')
   quit(save='no')
 }
+if ('--day4' %in% commandArgs(trailingOnly=TRUE)) {
+  source('make_day4_materials.R',encoding='UTF-8')
+  quit(save='no')
+}
 source('make_day1_materials.R', encoding='UTF-8')
 source('make_day2_materials.R', encoding='UTF-8')
 source('make_day3_materials.R',encoding='UTF-8')
+source('make_day4_materials.R',encoding='UTF-8')
+
+# All eleven sessions now use the current builders above. Preserve the legacy
+# implementation below as historical reference; it cannot rewrite current packs.
+if (FALSE) {
 # The later-day packets retain their existing defaults until their rebuild.
 set_flextable_defaults(font.family = FONT, font.size = 10.5, padding = 4,
                        border.color = "#9AA8B8")
@@ -1465,3 +1464,5 @@ file.copy(c("Oct14_session3_qa_checklist.docx", "Oct15_session2_findings.docx",
             "Oct15_session2_brief_template.docx", "Oct15_session1_report.docx"),
           "../docs/handouts/", overwrite = TRUE)
 message("Wrote participant copies to docs/handouts/.")
+
+}

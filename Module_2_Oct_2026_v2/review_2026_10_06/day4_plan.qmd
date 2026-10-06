@@ -1,5 +1,5 @@
 ---
-title: "Day 4 proposed slide tables"
+title: "Day 4 approved slide tables"
 subtitle: "Read a report, then make a defensible recommendation"
 format:
   html:
@@ -8,7 +8,10 @@ format:
     toc: true
 ---
 
-Days 1 to 3 are built. The remaining course-owned route is **two 60-minute sessions**. The former final session is excluded; another provider prepares its evaluation simulation. The tables below are the next daily approval boundary in `HANDOFF.md`.
+Approved and built on 6 October 2026. [Open the built Day 4 review](day4_review.html). The tables below record the approved design; no daily approval remains pending.
+
+
+All eleven sessions are built. Day 4 has **two 60-minute sessions**. The former final session is excluded; another provider prepares its evaluation simulation. The tables below record the approved design.
 
 ## Session 1 Judge a report section by section
 

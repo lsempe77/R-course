@@ -30,8 +30,8 @@ AI examples are authored drafts for checking against the source, usable without 
 
 ## Review and print checks
 
-All three decks were walked at presentation size, with feedback open and trainer outputs checked. Native keyboard choices, the axis toggle and evidence reveals were exercised. Every print page was rendered through Word and inspected: participant sheets 2/2/2 pages, trainer packs 9/3/5, QA reference 1. Screen and paper read shared computed objects. The [exercise brief](Module2_exercise_plan_v3.docx) covers the built Days 1 to 3; Day 4 rows are clearly historical.
+All three decks were walked at presentation size, with feedback open and trainer outputs checked. Native keyboard choices, the axis toggle and evidence reveals were exercised. Every print page was rendered through Word and inspected: participant sheets 2/2/2 pages, trainer packs 9/3/5, QA reference 1. Screen and paper read shared computed objects. The [exercise brief](Module2_exercise_plan_v3.docx) covers all eleven built sessions.
 
-[Day 4 slide tables](day4_plan.html) are ready for review: two 60-minute sessions for report judgement and a defensible short recommendation. The other provider's final simulation is outside this rebuild.
+[Day 4 is built](day4_review.html): two 60-minute sessions for report judgement and a defensible short recommendation. The other provider's final simulation is outside this rebuild.
 
-[Day 2 review](day2_review.html) | [Day 1 review](day1_review.html) | [Whole-week review](week_review.html)
+[Day 2 review](day2_review.html) | [Day 1 review](day1_review.html) | [Whole-week materials](week_ready.html)

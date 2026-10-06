@@ -1,5 +1,23 @@
 # Handoff: moving Module 2 to the simple GreenWaste case
 
+## Current checkpoint: all eleven sessions built, 6 October 2026
+
+Lucas approved Day 4. All four daily rebuilds are complete. The historical notes below are superseded where they describe pending approval, twelve sessions, old figures or retired teaching tasks.
+
+- Day 4: two 60-minute sessions, 11 and 9 content screens, no participant coding or new model lab. Former Oct15 S3 remains excluded for the other provider's simulation; retain its historical files.
+- `day4_case.R` supplies the intentionally flawed fictional report, section keys, corrected writing evidence and authored AI drafts. Session 1 begins with eight minutes of independent reading before discussion or AI. Five abilities score 0 to 2: outcome/scope, fair comparison, estimate/interval/rule, cited concern, and action with evaluator question. Suggested readiness target 8/10 with no false causal claim from before/after or significance. This is a teaching check, not validated certification. Give a targeted retry in Session 2 and record revised scores separately.
+- Session 1 retains Fiona's two-sheet A1 credibility grid, now labelled Supported / Concern / Unsupported alongside colours. Section 6 provides genuinely useful disclosure; do not reward unsupported fault finding. Participant sheet 2 pages, trainer pack 7, report 4. Rating reference duplicates the participant sheet.
+- Session 2 uses the corrected one-page findings, not the planted report's assurances. Protect twelve minutes for a first draft and eight for peer review. At most 150 words: finding/source, recommendation/condition, important risk/limit, next evidence/purpose. Accept another defensible conditional action. Participant sheet 2 pages, trainer pack 3; optional one-page template duplicates Sheet 1.
+- `Rscript make_session_materials.R --day4` rebuilds this day only. The default now calls all four current builders and writes eleven trainer packs plus eleven participant sheets. Legacy implementation is retained inside `if (FALSE)` and cannot overwrite current packs. Full build passed in an isolated copy. Styled reference DOCX files come from the scoped builder; reference QMDs mirror the content but should not overwrite the checked print layouts.
+- Exercise brief: all eleven sessions, 9 landscape pages. Day 4 backup: `backups/day4_2026_10_06_approved/`. All final print pages and both A1 sheets rendered and inspected. Deck walks, open feedback, keyboard choices/reveals and room-tool regression passed. Browser errors [], no slide overflow or logo collisions. Review hubs checked at desktop and phone widths.
+- Whole-week download includes 11 decks, 11 participant sheets, 11 trainer packs, references, four poster files/five A1 sheets, classroom brief and room tool. File bytes and local links checked. Browser R still needs internet; rehearse trainer decks early and use printed output as fallback. Classroom phone access requires venue rehearsal.
+
+Current reviews: https://3ie.academy/preview/week_ready.html and https://3ie.academy/preview/day4_review.html
+Source remains `simple-greenwaste`; only unlinked `docs/preview/` assets are updated on main. Live teaching pages remain unchanged. No further daily build approval is pending. Production replacement requires a separate final review and instruction.
+
+Use `.preview_day2_publish` for main previews. Retain ignored worktree residue; do not retry the previously rejected cleanup. The site password gate applies; unauthenticated remote content verification is unavailable.
+
+
 ## Day 3 approved and built on 6 October 2026
 
 Lucas approved the Day 3 slide tables. Three active decks now have 11, 10 and 13 content screens, 60/60/75 minutes. One trainer calculation per session, no participant coding. Keep predictions before reveals and the clinic's five-minute break.

@@ -1,0 +1,61 @@
+---
+title: "Whole-week materials"
+subtitle: "Eleven sessions for readers of evaluation reports"
+format:
+  html:
+    embed-resources: true
+    theme: cosmo
+    toc: false
+---
+
+<style>
+.table-responsive table { min-width: 760px; }
+.table-responsive a { white-space: nowrap; }
+</style>
+
+
+All eleven course-owned sessions are rebuilt and checked. Days 1 to 3 run for 60, 60 and 75 minutes; Day 4 has two 60-minute sessions. The other provider prepares the final evaluation simulation.
+
+[Download the complete teaching pack](GreenWaste_week_materials.zip){.btn .btn-primary} [Print and classroom brief](Module2_exercise_plan_v3.docx){.btn .btn-outline-primary}
+
+Short explanations lead into individual predictions, source checks, practical group activities and decisions. Technical terms remain where readers need them. Participants read evaluation evidence; trainer calculations illustrate it without participant coding.
+
+::: {.table-responsive}
+
+| Day | Session | Minutes | Deck | Participant sheet | Trainer pack |
+|---|---|---:|---|---|---|
+| 1 | Question a claim | 60 | [Open](Oct12_session1_live.html) | [Two sides](Oct12_session1_handouts.docx) | [Key and materials](Oct12_session1_materials.docx) |
+| 1 | Read a reported result | 60 | [Open](Oct12_session2.html) | [Two sides](Oct12_session2_handouts.docx) | [Key and materials](Oct12_session2_materials.docx) |
+| 1 | Judge a fair comparison | 75 | [Open](Oct12_session3_live.html) | [Two sides](Oct12_session3_handouts.docx) | [Key and materials](Oct12_session3_materials.docx) |
+| 2 | Read the extra change | 60 | [Open](Oct13_session1.html) | [Two sides](Oct13_session1_handouts.docx) | [Key and materials](Oct13_session1_materials.docx) |
+| 2 | Read the jump at a score rule | 60 | [Open](Oct13_session2_live.html) | [Two sides](Oct13_session2_handouts.docx) | [Key and materials](Oct13_session2_materials.docx) |
+| 2 | Read a matched comparison | 75 | [Open](Oct13_session3.html) | [Two sides](Oct13_session3_handouts.docx) | [Key and materials](Oct13_session3_materials.docx) |
+| 3 | Judge a value for money claim | 60 | [Open](Oct14_session1_live.html) | [Two sides](Oct14_session1_handouts.docx) | [Key and materials](Oct14_session1_materials.docx) |
+| 3 | Read a chart before trusting its story | 60 | [Open](Oct14_session2.html) | [Two sides](Oct14_session2_handouts.docx) | [Key and materials](Oct14_session2_materials.docx) |
+| 3 | Question the analyst | 75 | [Open](Oct14_session3_live.html) | [Two sides](Oct14_session3_handouts.docx) | [Key and materials](Oct14_session3_materials.docx) |
+| 4 | Judge a report section by section | 60 | [Open](Oct15_session1.html) | [Two sides](Oct15_session1_handouts.docx) | [Key and materials](Oct15_session1_materials.docx) |
+| 4 | Write a defensible recommendation | 60 | [Open](Oct15_session2_live.html) | [Two sides](Oct15_session2_handouts.docx) | [Key and materials](Oct15_session2_materials.docx) |
+
+:::
+
+Print each participant sheet double-sided, one per person. Trainer packs hold separate keys and distribution cards. The [exercise brief](Module2_exercise_plan_v3.docx) specifies copies, cutting, posters and group allocations. All figures describe a fictional training case.
+
+## Progress towards independent reading
+
+Day 1 builds outcome, units, interval and comparison reading. Day 2 questions the assumptions behind city comparisons. Day 3 separates cost-model assumptions from evidence, repairs charts and practises evaluator questions. Day 4 assesses five reading abilities independently, provides feedback and a targeted retry, then asks for a short defensible recommendation. This classroom check measures the taught abilities; it does not establish proficiency on all future reports.
+
+[Day 1 activities and checks](day1_review.html) | [Day 2](day2_review.html) | [Day 3](day3_review.html) | [Day 4](day4_review.html)
+
+## Interactive visuals and room voting
+
+Native choices, evidence reveals, intervals, trend pictures, axis toggles and distributions require a prediction or source check. Fiona's claim cards, eight different score-rule cards, seven matching profiles, scenario wall and two-sheet credibility grid are retained. AI examples are authored source-checking drafts, with no external AI account required.
+
+[Room voting download](GreenWaste_room_poll.zip) | [Classroom instructions](ROOM_POLL_README.md)
+
+The course-owned tool provides anonymous Before/After votes, QR entry and totals hidden until voting closes. It runs on the facilitator's machine. Rehearse venue phone access; labelled cards remain the fallback. Open webR trainer decks early and rehearse the calculation on the teaching network; printed results provide a fallback.
+
+The complete zip includes eleven decks, participant sheets, trainer packs, references, four poster files (five A1 sheets), the classroom brief and room tool. Browser R needs internet; the zip does not bundle the external R runtime. The former Day 4 Session 3 and historical cases are excluded.
+
+## Review status
+
+All eleven decks were walked at presentation size with revealed feedback and relevant trainer output checked. Print pages were rendered and visually inspected. Screen and paper use shared computed objects. The full eleven-session print build was checked in an isolated copy. Local review links and published copy hashes are checked. These are unlinked previews; live teaching pages remain unchanged.
