@@ -1,32 +1,19 @@
 ---
-title: "What Do the Numbers Say? Reading an Evaluation Output"
-subtitle: "Module 2 · Day 1, Session 2: Descriptive Analysis, Live"
+title: "Read the result"
+subtitle: "Module 2 · Day 1 · Session 2"
 author: "3ie"
-always_allow_html: yes
-# live-revealjs: the quarto-live extension (_extensions/r-wasm/live) runs R in
-# the browser through webR, the same set-up as Oct12_session3_live.qmd. The live
-# cells need an internet connection on the day (webR loads from a CDN), and the
-# CSV listed under webr: resources must sit next to the published .html.
-# Static knitr chunks (the rule chart, the Menti QR, the printed table) work as
-# before. revealjs only: pandoc cannot carry live cells or htmlwidgets into pptx.
-#
-# The simple GreenWaste case (SIMPLE_GREENWASTE_PLAN.md): one row per business;
-# a lottery in the pilot district, a score rule at 58 in the rest of the city.
-# This session builds the before-and-after number on costs for the city
-# businesses that took part. Every number the static slides quote comes from
-# greenwaste_case.R or is computed in the setup chunk below.
+always_allow_html: true
 format:
   live-revealjs:
-    theme: [theme_dge.scss, theme_live.scss]
+    theme: [theme_dge.scss, theme_live.scss, theme_reader.scss]
     logo: assets/dge_logo_horizontal.svg
     slide-number: true
     width: 1280
     height: 720
-    fig-align: center
     slide-level: 2
     embed-resources: true
+    include-after-body: _reader_interactions.html
 webr:
-  packages: [estimatr]
   render-df: kable
   resources:
     - evaluation_data_GreenWaste_simple.csv
@@ -35,1018 +22,216 @@ knitr:
     echo: false
     warning: false
     message: false
-    dev: "png"
-    # dpi 96 is deliberate: knitr sizes htmlwidgets as fig.width * dpi.
-    dpi: 96
-editor_options:
-  chunk_output_type: console
 ---
 
 {{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
 
-```{r setup}
-library(tidyverse)
-library(plotly)
-library(knitr)
-library(estimatr)   # lm_robust, errors clustered by business
-library(qrcode)     # live poll QR, generated below so it cannot drift
-
-# ---- Palette (DGE theme; see theme_dge.scss) --------------------------------
-ACCENT  <- "#215a9e"; ACCENT2 <- "#7da1c4"; ALERT <- "#B8272C"
-INK     <- "#111418"; MUTED <- "#545860"; RULE <- "#D5DEE8"
-CHART_FONT <- "Noto Kufi Arabic, Segoe UI, Arial, sans-serif"
-
-# ---- Tables: plain knitr::kable, styled by theme_dge.scss -------------------
-# No kableExtra: its JavaScript needs jQuery, which live-revealjs does not load.
-# font_size in px; hl = rows to shade (hl_bold to bold them); note = a line
-# under the table. The table is centred, as kable_styling(full_width = FALSE) did.
-HL_BLUE <- "#E4EBF3"; HL_RED <- "#F8E9EA"
-tbl <- function(df, ..., font_size = NULL, hl = NULL, hl_bg = HL_BLUE,
-                hl_bold = FALSE, note = NULL) {
-  h <- as.character(knitr::kable(df, format = "html", ...))
-  fs <- if (is.null(font_size)) "" else sprintf(" font-size:%dpx;", font_size)
-  h <- sub("<table", sprintf('<table style="margin-left:auto; margin-right:auto;%s"', fs),
-           h, fixed = TRUE)
-  if (length(hl)) {
-    parts <- strsplit(h, "<tbody>", fixed = TRUE)[[1]]
-    rows  <- strsplit(parts[2], "<tr>", fixed = TRUE)[[1]]
-    st <- sprintf("background:%s;%s", hl_bg, if (hl_bold) " font-weight:700;" else "")
-    for (i in hl) {
-      rows[i + 1] <- gsub('<td style="', paste0('<td style="', st, " "), rows[i + 1], fixed = TRUE)
-      rows[i + 1] <- gsub("<td>", paste0('<td style="', st, '">'), rows[i + 1], fixed = TRUE)
-    }
-    h <- paste0(parts[1], "<tbody>", paste(rows, collapse = "<tr>"))
-  }
-  if (!is.null(note))
-    h <- paste0(h, sprintf('\n<p style="text-align:center; font-size:0.75em; color:%s; margin-top:0.3em;">%s</p>',
-                           MUTED, note))
-  fence <- strrep("`", 3)
-  knitr::asis_output(paste0("\n", fence, "{=html}\n", h, "\n", fence, "\n"))
-}
-
-PL_W <- 1100; PL_WC <- 520
-
-pl_m2 <- function(p, width = PL_W, height = 290, t = 30, b = 54) {
-  p %>%
-    layout(
-      width = width, height = height,
-      font = list(family = CHART_FONT, size = 13, color = INK),
-      paper_bgcolor = "rgba(0,0,0,0)", plot_bgcolor = "rgba(0,0,0,0)",
-      margin = list(l = 70, r = 24, t = t, b = b),
-      hoverlabel = list(bgcolor = "white", bordercolor = RULE,
-                        font = list(color = INK, size = 12))
-    ) %>%
-    config(displayModeBar = FALSE)
-}
-
-ax <- function(title = "", ...) {
-  modifyList(list(
-    title = list(text = title, font = list(size = 12, color = MUTED)),
-    gridcolor = RULE, zerolinecolor = RULE, linecolor = RULE,
-    tickfont = list(size = 12, color = MUTED)
-  ), list(...))
-}
-
-gfmt <- function(x) format(round(x), big.mark = ",")
-
-# Emit an HTML snippet as a raw block. Plain cat() leaves it to pandoc, which
-# reads indented lines inside a multi-line <div> as a code block.
-FENCE <- strrep("`", 3)   # built, not typed: a literal fence would end the chunk
-html_out <- function(x) cat("\n", FENCE, "{=html}\n", x, "\n", FENCE, "\n", sep = "")
-
-# ---- Live Menti poll -------------------------------------------------------
-# ONE place to set the join code. The QR and printed link on the vote slide
-# and the results iframe on the look-back slide all read from here.
-# MENTI_CODE is the short JOIN code participants type at menti.com, NOT the
-# long ID in the editor URL.
-MENTI_CODE  <- "1234 5678"   # <!-- PLACEHOLDER: this session's join code -->
-MENTI_JOIN  <- paste0("https://www.menti.com/", gsub(" ", "", MENTI_CODE))
-# The results embed: the SLIDES view for a webpage. Long ID from the editor URL.
-MENTI_EMBED <- "https://www.mentimeter.com/app/presentation/PLACEHOLDER/embed"  # <!-- PLACEHOLDER -->
-
-# Distinct filename so this QR never overwrites Session 1's menti_qr.png.
-menti_qr <- function(path = "menti_qr_s2.png", url = MENTI_JOIN) {
-  png(path, width = 900, height = 900, res = 300, bg = "white")
-  on.exit(dev.off(), add = TRUE)
-  par(mar = c(0, 0, 0, 0))
-  plot(qr_code(url, ecl = "H"))
-  path
-}
-MENTI_QR <- menti_qr()
-
-RULEBAR <- 1000    # costs must fall by at least this many AED per business per year
-
-# ---- The numbers the static slides quote -----------------------------------
-# greenwaste_case.R computes every headline number once. It is sourced into its
-# own environment because it defines RULE (1,000), which here is a colour.
-case_env <- new.env()
-case_env$gw <- read.csv("./evaluation_data_GreenWaste_simple.csv")
-sys.source("greenwaste_case.R", envir = case_env)
-case <- case_env$case
-city <- case_env$city
-took <- case_env$took
-tp   <- city[took, ]                         # city businesses that took part
-
-# Word 1: costs before the programme, the whole rest of the city.
-city_mean   <- mean(city$cost_before)
-city_median <- median(city$cost_before)
-share_mid   <- 100 * mean(city$cost_before >= 1000 & city$cost_before <= 3000)
-n_large     <- sum(city$cost_before > 4000)
-# Session 1's ten businesses (Oct12_session1_live.qmd, `ten`): landfill before, tonnes.
-S1_TEN <- c("B02136", "B00755", "B03791", "B05600", "B01274", "B07507", "B01673",
-            "B04954", "B08013", "B03836")
-s1_ten <- subset(city, business %in% S1_TEN)$landfill_before
-
-# Before and after, for the businesses that took part.
-ba_before <- mean(tp$cost_before)
-ba_after  <- mean(tp$cost_after)
-ba_change <- case$before_after               # after minus before
-ba_pct    <- 100 * ba_change / ba_before
-n_tp      <- nrow(tp)
-n_up      <- sum(tp$change > 0)              # ended with higher costs
-share_up  <- 100 * n_up / n_tp
-
-# The regression: each business twice (after = 0, then 1), errors clustered by
-# business because each one appears twice. Same estimate as the subtraction.
-stack_periods <- function(d) data.frame(
-  business = rep(d$business, 2), after = rep(0:1, each = nrow(d)),
-  cost = c(d$cost_before, d$cost_after))
-ba_long <- stack_periods(tp)
-ba_fit  <- lm_robust(cost ~ after, data = ba_long, clusters = business, se_type = "stata")
-ba_ci   <- sort(abs(confint(ba_fit)["after", ]))   # [1] = the smaller fall
-ba_short <- RULEBAR - ba_ci[2]                     # how far the largest fall is from the rule
-
-# City businesses that did not take part (all scored above 58).
-oth_before <- mean(city$cost_before[!took])
-oth_after  <- mean(city$cost_after[!took])
-oth_rise   <- mean(city$change[!took])
-
-# Estimate, interval and rule on one axis.
-rule_plot <- function(height = 200, b = 46) {
-  est <- abs(ba_change); lo <- ba_ci[1]; hi <- ba_ci[2]
-  plot_ly() %>%
-    add_segments(x = lo, xend = hi, y = 1, yend = 1, showlegend = FALSE,
-                 line = list(color = ACCENT, width = 6), hoverinfo = "skip") %>%
-    add_markers(x = c(lo, hi), y = c(1, 1), showlegend = FALSE, hoverinfo = "skip",
-                marker = list(color = ACCENT, size = 18, symbol = "line-ns-open",
-                              line = list(color = ACCENT, width = 3))) %>%
-    add_markers(x = est, y = 1, showlegend = FALSE,
-                marker = list(color = ACCENT, size = 16),
-                hovertemplate = "estimate: costs %{x:,.0f} AED lower<extra></extra>") %>%
-    layout(
-      shapes = list(list(type = "line", x0 = RULEBAR, x1 = RULEBAR,
-                         y0 = 0.4, y1 = 1.6, xref = "x", yref = "y",
-                         line = list(color = ALERT, width = 3, dash = "dash"))),
-      annotations = list(
-        list(x = RULEBAR, y = 1.72, xref = "x", yref = "y", showarrow = FALSE,
-             text = sprintf("Decision rule: %s AED", gfmt(RULEBAR)),
-             font = list(color = ALERT, size = 14)),
-        list(x = est, y = 0.62, xref = "x", yref = "y", showarrow = FALSE,
-             text = sprintf("estimate %s AED", gfmt(est)),
-             font = list(color = INK, size = 13))),
-      xaxis = ax("Fall in waste costs, AED per business per year",
-                 range = c(0, 1250)),
-      yaxis = list(range = c(0.4, 1.9), showticklabels = FALSE,
-                   showgrid = FALSE, zeroline = FALSE)) %>%
-    pl_m2(height = height, b = b)
-}
-
-# ---- The case reminder: one illustrative city (as in Oct12_session3_live) ----
-# Shop position, efficiency score, and whether it joined. Inside the pilot
-# district every score is below 58 and a lottery decided; everywhere else a
-# score of 58 or below meant joining. Illustrative, not the real counts.
-SHOP_BLUE <- "#215a9e"; SHOP_GREY <- "#c9d6e6"
-pilot_shops <- data.frame(x = c(70, 165, 260, 70, 165, 260), y = c(98, 98, 98, 186, 186, 186),
-                          score = c(41, 52, 37, 48, 33, 55), joined = c(1, 0, 1, 0, 0, 1))
-city_shops  <- data.frame(
-  x = c(415, 525, 635, 745, 415, 525, 635, 745, 70, 180, 290, 415, 525, 635, 745),
-  y = c(80, 80, 80, 80, 195, 195, 195, 195, 330, 330, 330, 330, 330, 330, 330),
-  score = c(72, 45, 88, 39, 56, 63, 29, 91, 47, 77, 52, 68, 35, 84, 58))
-city_shops$joined <- as.integer(city_shops$score <= 58)
-shop_svg <- function(d) paste(sprintf(
-  '<use href="#shop" x="%d" y="%d" width="62" height="58" color="%s"/><text x="%d" y="%d" font-size="19" text-anchor="middle" fill="%s" font-weight="%s">%d</text>',
-  d$x, d$y, ifelse(d$joined == 1, SHOP_BLUE, SHOP_GREY), d$x + 31, d$y + 80,
-  ifelse(d$joined == 1, "#063360", "#545860"), ifelse(d$joined == 1, "700", "400"), d$score), collapse = "\n")
+```{r setup, include=FALSE}
+source('day1_case.R')
 ```
 
-# 1 · The case {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
-::: {.notes}
-Section timing: about 8 minutes.
-:::
-
-## GreenWaste, once more
+## One question from memory {.reader-slide}
 
 ```{webr}
+#| context: setup
 #| autorun: true
+#| echo: false
 #| include: false
-# Runs once, in the browser, when the deck opens. Everything the live cells
-# below use is defined here, so each cell on a slide stays a few lines long.
-gw    <- read.csv("evaluation_data_GreenWaste_simple.csv")
-pilot <- subset(gw, setting == "pilot")    # the lottery
-city  <- subset(gw, setting == "city")     # the score rule
-took  <- subset(city, took_part == 1)      # city businesses that took part
-library(estimatr)
-RULE <- 1000
-ACCENT <- "#215a9e"; ACCENT2 <- "#7da1c4"; ALERT <- "#B8272C"; MUTED <- "#545860"
-options(width = 100, scipen = 6)
-
-# Warm up estimatr now, while the opening slides are talked through: its first
-# call in the browser takes about 10 seconds, every later one is instant.
-invisible(estimatr::lm_robust(y ~ x, data = data.frame(y = c(1, 3, 2, 5), x = c(0, 1, 0, 1)),
-                              clusters = c(1, 1, 2, 2)))
-
-clean_par <- function() par(mar = c(4.2, 5.5, 1, 1), family = "sans", las = 1,
-                            col.axis = MUTED, col.lab = MUTED, fg = MUTED, cex = 1.25)
-aed <- function(x) format(round(x), big.mark = ",")
-
-# A histogram in the deck's colours.
-hist_m2 <- function(x, xlab) {
-  clean_par()
-  hist(x, breaks = 50, col = ACCENT, border = "white", main = "", xlab = xlab, ylab = "Businesses")
-}
-# The mean (red) and the median (dashed grey) on the chart just drawn.
-mean_and_median <- function(x) {
-  abline(v = mean(x), col = ALERT, lwd = 3)
-  abline(v = median(x), col = MUTED, lwd = 3, lty = 2)
-}
-
-# Bar chart of a few averages, value printed on each bar:
-#   bars(Before = before, After = after)
-bars <- function(..., col = ACCENT) {
-  v <- c(...)
-  clean_par()
-  par(mar = c(2.5, 1, 2, 1))               # no y axis: the value sits on each bar
-  b <- barplot(v, col = col, border = NA, ylim = c(0, max(v) * 1.15), axes = FALSE)
-  text(b, v, paste(aed(v), "AED"), pos = 3, cex = 1.2, xpd = NA)
-}
-
-# Each business twice: after = 0 (costs before), then after = 1 (costs after).
-stack_periods <- function(d) data.frame(
-  business = rep(d$business, 2), after = rep(0:1, each = nrow(d)),
-  cost = c(d$cost_before, d$cost_after))
-
-# Defined here as well as on the slide that teaches it, so a later slide still
-# runs if an earlier one was skipped or the page was reloaded mid-deck.
-before <- mean(took$cost_before); after <- mean(took$cost_after)
-long   <- stack_periods(took)
-
-# Before-and-after lines for the two groups in the rest of the city.
-plot_two_lines <- function() {
-  t1 <- city$took_part == 1
-  tk  <- c(mean(city$cost_before[t1]),  mean(city$cost_after[t1]))
-  oth <- c(mean(city$cost_before[!t1]), mean(city$cost_after[!t1]))
-  clean_par()
-  plot(0:1, tk, type = "b", pch = 19, lwd = 4, col = ACCENT, bty = "n",
-       ylim = c(0, 2700), xlim = c(-0.1, 1.6), xaxt = "n",
-       xlab = "", ylab = "Waste costs, AED")
-  lines(0:1, oth, type = "b", pch = 19, lwd = 4, col = ACCENT2)
-  axis(1, at = 0:1, labels = c("Before", "After"))
-  text(1.06, tk[2],  paste("Took part", aed(tk[2])), col = ACCENT, adj = 0)
-  text(1.06, oth[2], paste("Did not", aed(oth[2])),  col = ACCENT2, adj = 0)
-}
+gw <- read.csv('evaluation_data_GreenWaste_simple.csv')
+tp <- subset(gw, setting == 'city' & took_part == 1)
 ```
 
-:::::: {.columns}
-
-::::: {.column width="60%"}
-```{r city-map, results='asis'}
-html_out(paste0('
-<svg viewBox="0 0 860 470" width="100%" role="img"
-     aria-label="A city map. In the pilot district a lottery chose which shops joined. In the rest of the city, shops with an efficiency score of 58 or below joined."
-     style="font-family: \'Noto Kufi Arabic\', \'Segoe UI\', Arial, sans-serif;">
-  <defs>
-    <symbol id="shop" viewBox="0 0 60 56">
-      <path d="M4 14 L10 2 H50 L56 14 Z" fill="currentColor"/>
-      <path d="M4 14 q5 7 10 0 q5 7 10 0 q5 7 10 0 q5 7 10 0 q5 7 12 0" fill="currentColor"/>
-      <rect x="8" y="20" width="44" height="34" rx="2" fill="currentColor"/>
-      <rect x="14" y="30" width="12" height="24" fill="#fff" opacity="0.85"/>
-      <rect x="32" y="28" width="14" height="12" fill="#fff" opacity="0.85"/>
-    </symbol>
-  </defs>
-  <rect x="20" y="20" width="820" height="440" rx="18" fill="#f4f7fb" stroke="#D5DEE8" stroke-width="2"/>
-  <path d="M370 20 V460 M20 300 H840" stroke="#e3e9f1" stroke-width="10"/>
-  <text x="820" y="450" font-size="22" font-weight="700" fill="#7f97b5" text-anchor="end">THE CITY</text>
-  <rect x="45" y="45" width="305" height="245" rx="14" fill="#e3ebf5" stroke="#215a9e" stroke-width="3" stroke-dasharray="12 8"/>
-  <text x="62" y="80" font-size="22" font-weight="700" fill="#063360">Pilot district</text>
-  <g transform="translate(300,55)">
-    <rect width="38" height="38" rx="7" fill="#fff" stroke="#063360" stroke-width="2.5"/>
-    <circle cx="11" cy="11" r="3.5" fill="#063360"/><circle cx="27" cy="11" r="3.5" fill="#063360"/>
-    <circle cx="19" cy="19" r="3.5" fill="#063360"/>
-    <circle cx="11" cy="27" r="3.5" fill="#063360"/><circle cx="27" cy="27" r="3.5" fill="#063360"/>
-  </g>
-', shop_svg(pilot_shops), '
-', shop_svg(city_shops), '
-</svg>'))
-```
-:::::
-
-::::: {.column width="40%"}
-::: {.panel}
-GreenWaste helps businesses cut their waste costs.
-
-**Pilot district:** a lottery chose which businesses took part.
-
-**The rest of the city:** every business with an efficiency score of 58 or below
-took part.
+::: {.ask}
+What would you ask before turning a fall into a claim of impact?
 :::
 
-::: {.panel}
-Session 1 looked at landfill. Today we look at **waste costs**: the outcome the
-decision rests on.
-:::
-:::::
-
-::::::
+Tell a partner. Keep the cards closed.
 
 ::: {.notes}
-About 2 minutes. A reminder, not a second introduction: Session 1 gave the full
-map. Blue shops took part, grey shops did not; the number under each shop is its
-efficiency score. The map is illustrative; the real counts come in section 2.
-
-The live cells start loading in the background while you talk (about 10 s).
+3 minutes. Retrieve the previous session’s question. Do not reteach the whole session. Hidden webR setup belongs beneath this heading to avoid a blank slide. Open the deck early for webR; its trainer demo is optional, with the same static result on paper.
 :::
 
-## The bar GreenWaste must clear
+## What decision is required? {.reader-slide}
 
-:::::: {.columns}
-
-::::: {.column width="50%"}
-The authority will scale GreenWaste up nationally only if it cuts waste costs
-by **at least `r gfmt(RULEBAR)` AED per business per year**. Below that, the
-money goes to other waste work.
-
-Every business's costs were measured before the programme and 12 months after.
-:::::
-
-::::: {.column width="50%"}
-```{=html}
-<div class="facts">
-  <div class="k">Programme</div>     <div class="v">GreenWaste: help for businesses to cut waste</div>
-  <div class="k">Outcome</div>       <div class="v">Waste costs, AED per business per year</div>
-  <div class="k">Measured</div>      <div class="v">Before the programme and 12 months after</div>
-  <div class="k">Decision rule</div> <div class="v">Costs fall by at least 1,000 AED per business per year</div>
-</div>
-```
-:::::
-
-::: {.warn .note-ctr .fragment}
-**Illustrative case, with invented figures.** This is not a real programme; we
-generated the numbers for this training. Every number in this session comes
-from this fictional dataset.
+::: {.big-number}
+`r fmt(decision_rule)` AED
 :::
 
-::::::
+The course’s decision rule: an annual saving of at least this amount **per business**, measured **12 months later**.
+
+::: {.ask}
+What units and time period must the result use?
+:::
+
+Fictional GreenWaste case · invented decision rule
 
 ::: {.notes}
-Read the rule aloud and leave it on screen for a moment: every number today is
-checked against it.
+3 minutes. Distinguish a minimum saving from a value-for-money judgement. Programme costs, reach and implementation matter later. This rule alone is not a complete scale-up decision. It is not a real government policy.
 :::
 
-## Session 1's three questions, on the full data
+## Read this extract {.reader-slide}
 
-```{=html}
-<div class="facts">
-  <div class="k">How big?</div>          <div class="v">In the units the decision is written in: AED per business per year</div>
-  <div class="k">How sure?</div>         <div class="v">The p-value and the confidence interval</div>
-  <div class="k">Compared to what?</div> <div class="v">We come back to this at the end</div>
-</div>
+```{r extract, results='asis'}
+html_out(reading_table())
 ```
 
-::: {.panel}
-We start from the raw data file, as an evaluator would, and build every number
-on screen.
+::: {.ask}
+Which number answers “how much did costs change”?
 :::
 
-::: {.warn}
-You will not write any code. You call the numbers; I type and press **Run**. The
-grey boxes are real R, running in this page.
-:::
-
-# 2 · Meet the data {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+Read **Sheet 1** alone before discussing it.
 
 ::: {.notes}
-Section timing: about 15 minutes.
+5 minutes. Wait for reading. Ask participants to circle a number and underline the comparison words. Do not explain every column immediately. The extract is a before/after regression with business-clustered standard errors. The statistical method is in the trainer key, not a participant prerequisite.
 :::
 
-## One row, one business
+## Circle the change {.reader-slide}
 
+```{r cost-pair, results='asis'}
+html_out(sprintf('<div class="evidence-pair"><div class="evidence"><h3>Before</h3><p class="big-number">%s</p></div><div class="evidence"><h3>12 months later</h3><p class="big-number">%s</p></div></div><p class="caption">Annual waste cost, AED per city business that took part</p>%s',fmt(ba_mean['before']),fmt(ba_mean['after']),fiction))
+```
+
+::: {.ask}
+What does the negative sign on `r fmt(case$before_after)` mean here?
+:::
+
+::: {.fragment}
+Costs were `r fmt(abs(case$before_after))` AED lower. This is a change over time.
+:::
+
+::: {.notes}
+5 minutes. The difference uses unrounded values, so subtracting displayed rounded means may differ by one AED. Distinguish lower costs from a harmful outcome. Ask for the time period and group in the spoken answer. Do not call the change the programme’s causal effect.
+:::
+
+## Find its row {.reader-slide}
+
+**Coefficient**: the number beside a named result row.
+
+::: {.ask}
+Will this calculation give a rise or a fall?
+:::
+
+:::: {.columns}
+::: {.column width="48%"}
 ```{webr}
-head(gw[, c("business", "setting", "score", "took_part", "cost_before", "cost_after")], 4)
+#| echo: true
+change <- tp$cost_after - tp$cost_before
+data.frame(Result = 'After minus before',
+           AED = round(mean(change)))
 ```
-
-:::::: {.columns}
-
-::::: {.column width="50%"}
-::: {.panel}
-**setting**: the pilot district or the rest of the city. **score**: efficiency,
-0 to 100. **took_part** 1: the business took part. **cost_before**,
-**cost_after**: waste costs in AED.
 :::
-:::::
-
-::::: {.column width="50%"}
-::: {.ask}
-Which column tells you **how** a business came to take part?
+::: {.column width="52%"}
+```{r highlighted, results='asis'}
+html_out(sprintf('<div class="evidence"><h3>After GreenWaste</h3><p class="big-number">%s</p><p>Coefficient, AED</p></div>%s',fmt(case$before_after),fiction))
+```
 :::
-
-::: {.panel .fragment}
-**setting**. In the pilot district a lottery decided; in the rest of the city the
-score did. **took_part** records the result.
-:::
-:::::
-
-::::::
+::::
 
 ::: {.notes}
-`head()` shows the first rows of a data file. Read one row aloud in plain words:
-"business `r case_env$gw$business[1]`, in the pilot district, efficiency score
-`r case_env$gw$score[1]`, did not take part; its waste costs were
-`r gfmt(case_env$gw$cost_before[1])` AED before and
-`r gfmt(case_env$gw$cost_after[1])` AED after."
+5 minutes. Predict, then trainer Run. Participants read the output, not the code. The arithmetic produces the same coefficient as the before/after regression shown in the extract. The row’s name is essential: a different coefficient answers a different question. Use the printed coefficient if webR is unavailable. Never ask participants to fix code.
 :::
 
-## Who took part, where?
+## What does the interval add? {.reader-slide}
 
-```{webr}
-groups <- aggregate(score ~ setting + took_part, data = gw, FUN = length)
-names(groups)[3] <- "businesses"
-groups$highest_score <- aggregate(score ~ setting + took_part, data = gw, FUN = max)$score
-groups <- groups[order(groups$setting), ]; rownames(groups) <- NULL
-groups
-```
+::: {.lead}
+95% confidence interval: `r fmt(ba_ci[1])` to `r fmt(ba_ci[2])` AED
+:::
+
+A range compatible with the data and statistical model. It shows uncertainty around the estimate.
 
 ::: {.ask}
-**Who took part in the rest of the city?** And in the pilot district?
+Does a narrow interval fix a poor comparison?
 :::
 
-::: {.warn .fragment}
-In the rest of the city, **every business scoring 58 or below took part, and no
-other did.** So there "did not take part" means "scored above 58": a different
-kind of business. In the pilot district, half took part, all scoring below 58:
-the lottery decided.
+::: {.fragment}
+It does not account for every source of bias.
 :::
+
+Fictional GreenWaste case · invented figures
 
 ::: {.notes}
-Today we use the rest of the city only: the businesses there that took part,
-before and after. Session 3 brings in the businesses that did not take part and
-the pilot district's lottery.
+6 minutes. Box the interval on the worksheet. It is not a range of individual business savings or a 95% chance statement about this fixed interval. If needed: repeating the procedure under its assumptions yields intervals covering the true model quantity about 95% of the time. Do not teach repeated-sampling machinery. Precision cannot tell us what else changed over time.
 :::
 
-## Word 1 · The average
+## Compare it with the rule {.reader-slide}
 
-```{webr}
-summary(city$cost_before)
-```
-
-:::::: {.columns}
-
-::::: {.column width="50%"}
-::: {.panel}
-`summary()` gives six numbers for one column, here costs before the programme
-in the rest of the city: the smallest, the largest, the middle business
-(**median**), the **mean**, and the quartiles (a quarter of businesses sit below
-**1st Qu.**, a quarter above **3rd Qu.**).
-:::
-:::::
-
-::::: {.column width="50%"}
-::: {.ask}
-The mean is about `r gfmt(city_mean)` AED a year. Is a typical business close to
-`r gfmt(city_mean)` AED? What do the minimum and maximum suggest?
-:::
-:::::
-
-::::::
-
-## Word 1 · What the average hides
-
-```{webr}
-#| fig-width: 10
-#| fig-height: 2.2
-hist_m2(city$cost_before, "Waste costs before the programme, AED per year")
-mean_and_median(city$cost_before)
+```{r before-rule, results='asis'}
+html_out(interval_svg())
 ```
 
 ::: {.ask}
-Before I press Run: will the mean sit to the left or to the right of the median?
+Does this reported change reach the rule?
 :::
 
-::: {.warn .fragment}
-`r sprintf("%.0f", share_mid)`% of businesses spent 1,000 to 3,000 AED a year;
-`r n_large` spent more than 4,000. Those few pull the mean (red) about
-`r gfmt(city_mean - city_median)` AED above the median (dashed). Session 1's ten
-businesses: landfill mean `r format(round(mean(s1_ten), 1))`, median
-`r format(round(median(s1_ten), 1))` tonnes.
+::: {.fragment}
+The interval is below the rule. The comparison still does not establish what GreenWaste caused.
 :::
-
-# 3 · Graph it {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ::: {.notes}
-Section timing: about 12 minutes.
+6 minutes. Orient to the saving scale, which is positive here: it is the magnitude of the negative cost change in the table. Participants trace the estimate, interval and rule with a finger. Even a precise before/after change cannot settle a causal decision. Avoid concluding that the programme does not work.
 :::
 
-## Before and after, where GreenWaste went
+## Significant enough to act? {.reader-slide}
 
-```{webr}
-#| fig-width: 6
-#| fig-height: 2.5
-before <- mean(took$cost_before)
-after  <- mean(took$cost_after)
-bars(Before = before, After = after)
+The **p-value** for this change is **less than 0.001**.
+
+“Statistically significant” asks how unusual the result would be under a no-change model and its assumptions.
+
+::: {.ask}
+Does that tell us GreenWaste caused enough saving to extend it?
+:::
+
+::: {.fragment}
+A small p-value establishes neither cause nor a large enough saving. A non-significant result does not prove no effect.
+:::
+
+Fictional GreenWaste case · invented figures
+
+::: {.notes}
+5 minutes. Recognise the term when reading reports. The p-value concerns the null tested by the analysis; here the before/after change, not a causal effect. It is not the probability that the programme works or that the result is due to chance. Do not introduce a hypothesis-testing lecture.
+:::
+
+## Finish the mark up {.reader-slide}
+
+On **Sheet 1**:
+
+Circle the estimate. Box its interval. Underline the comparison.
+
+Write the units and period, then a decision sentence.
+
+::: {.ask}
+Which part of the scale-up decision does this extract leave unanswered?
+:::
+
+::: {.notes}
+10 minutes. Five minutes alone, three in pairs, two for feedback. Every reader locates the result before discussing. Use the answer space on Sheet 1. The causal comparison is missing. Invite a threshold reading plus the limitation; do not accept “significant therefore extend”.
+:::
+
+## Repair an AI summary {.reader-slide data-correct="The second sentence is unsupported. The extract measures a change over time; it does not isolate what GreenWaste caused."}
+
+Select every unsupported claim in this illustrative AI draft.
+
+```{r ai-summary, results='asis'}
+html_out(sprintf('<div class="claim-list"><button data-claim="supported" aria-pressed="false">City participants&#39; annual costs fell by %s AED.</button><button data-claim="unsupported" aria-pressed="false">GreenWaste caused that saving, so scale-up is justified.</button></div><button data-check>Check against the extract</button><p data-feedback class="feedback" role="status"></p>%s',fmt(abs(case$before_after)),fiction))
 ```
 
 ::: {.ask}
-Before I press Run: what were average costs before, and after, for the
-`r gfmt(n_tp)` city businesses that took part?
+How would you rewrite the second sentence using only this source?
 :::
-
-::: {.ask .fragment}
-This is the chart a press release would use. What does it show, and what does
-it not show?
-:::
-
-## Did every business's costs fall?
-
-```{webr}
-#| fig-width: 10
-#| fig-height: 1.9
-change <- took$cost_after - took$cost_before
-hist_m2(change, "Change in waste costs per business, AED (after minus before)")
-abline(v = 0, col = ALERT, lwd = 3, lty = 2)
-```
-
-:::::: {.columns}
-
-::::: {.column width="50%"}
-::: {.ask}
-Before I run it: out of ten businesses that took part, how many ended with
-**higher** costs?
-:::
-:::::
-
-::::: {.column width="50%"}
-::: {.panel .fragment}
-About one in ten (`r sprintf("%.0f", share_up)`%, `r gfmt(n_up)` of
-`r gfmt(n_tp)`): the bars to the right of the red line. Word 1 again: an average
-change hides how much businesses differ.
-:::
-:::::
-
-::::::
-
-## Would you fund the scale-up?
-
-:::::: {.columns}
-
-::::: {.column width="62%"}
-::: {.ask style="font-size: 120%;"}
-Waste costs fell from `r gfmt(ba_before)` to `r gfmt(ba_after)` AED per business
-where GreenWaste went.
-**Would you commit the money to scale it up nationally?**
-
-Yes &nbsp;·&nbsp; No &nbsp;·&nbsp; Not on this alone
-:::
-
-Go to **menti.com** and enter code **`r MENTI_CODE`**, or scan the code on the
-right.
-:::::
-
-::::: {.column width="38%"}
-```{r out.width='330px', out.extra='style="display:block; margin:0 auto;"'}
-knitr::include_graphics(MENTI_QR)
-```
-:::::
-
-::::::
 
 ::: {.notes}
-Leave the vote open. We look at the results again at the end of the session.
+7 minutes. Use Sheet 2. Example rewrite: the observed fall is below the rule, but the extract cannot isolate the programme’s effect. Ask an AI to identify the comparison, quote the supporting result row and ask for missing information before recommending. Check its answer against the source yourselves. A second AI review is assistance, not verification. The draft is an authored example.
 :::
 
-# 4 · How big, and how sure? {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
-
-::: {.notes}
-Section timing: about 20 minutes.
-:::
-
-## How big? Work it out from the averages
-
-```{webr}
-before <- mean(took$cost_before)
-after  <- mean(took$cost_after)
-round(data.frame(before, after, change = after - before,
-                 percent = 100 * (after - before) / before))
-```
-
-:::::: {.columns}
-
-::::: {.column width="50%"}
-::: {.ask}
-The rule asks for costs **at least `r gfmt(RULEBAR)` AED lower per business per
-year**. Which of these numbers do you check against it?
-:::
-:::::
-
-::::: {.column width="50%"}
-::: {.panel .fragment}
-The change, `r gfmt(ba_change)` AED, is in the rule's units; the
-`r sprintf("%.0f", abs(ba_pct))`% is not.
-:::
-:::::
-
-::::::
-
-## Word 3 · The regression gives the same number
-
-```{webr}
-long <- stack_periods(took)    # each business twice: after = 0, then after = 1
-fit  <- lm(cost ~ after, data = long)
-coef(fit)
-```
-
-:::::: {.columns}
-
-::::: {.column width="50%"}
-::: {.panel}
-**after** is 0 for costs before the programme and 1 for costs 12 months later.
-The table an evaluator hands you comes from a line like this one.
-:::
+## Write the decision sentence {.reader-slide}
 
 ::: {.ask}
-Which number is the average before, and which is the change?
-:::
-:::::
-
-::::: {.column width="50%"}
-::: {.warn .fragment}
-**(Intercept)** is the average before, `r gfmt(ba_before)` AED.
-**after** is the change, `r gfmt(ba_change)` AED: the same number we got by
-subtracting two averages. Session 1's Word 3: a coefficient is a gap between two
-groups. Here the two groups are the same businesses at two times.
-:::
-:::::
-
-::::::
-
-## Words 4 and 5 · How sure?
-
-```{webr}
-fit <- lm_robust(cost ~ after, data = long, clusters = business, se_type = "stata")
-round(summary(fit)$coefficients[, c(1, 2, 4, 5, 6)], 1)
-```
-
-::: {.ask}
-Before I press Run: will the whole interval reach a fall of 1,000 AED, cross it,
-or stop short of it?
+What can you say confidently, and what would you ask next?
 :::
 
-:::::: {.columns}
-
-::::: {.column width="50%"}
-::: {.panel .fragment}
-**Pr(>|t|)** is the p-value. Printed as 0, it means below 0.001: a fall this
-size would be very unlikely if nothing had changed.
-:::
-:::::
-
-::::: {.column width="50%"}
-::: {.panel .fragment}
-**CI Lower** and **CI Upper** are the 95% confidence interval: costs fell by
-somewhere between `r gfmt(ba_ci[1])` and `r gfmt(ba_ci[2])` AED per business.
-:::
-:::::
-
-::::::
+Write a result with its units, one limit, and your next question. Use the extract.
 
 ::: {.notes}
-`lm_robust` with `clusters = business` counts each business once rather than
-twice, because the same business appears before and after (`se_type = "stata"`
-is a standard version of this that runs quickly in the browser). Vocabulary recap
-from Session 1: the **standard error** is how much the estimate would move from
-sample to sample; the **p-value** is how surprising the result would be if
-nothing had changed; the **confidence interval** is the range of plausible
-values.
-:::
-
-## Does it clear the rule?
-
-```{r fig.height=2.2, fig.width=11.5}
-rule_plot(height = 200)
-```
-
-:::::: {.columns}
-
-::::: {.column width="50%"}
-```{r results='asis'}
-html_out(sprintf('
-<div class="facts">
-  <div class="k">Decision rule</div>           <div class="v">%s AED lower</div>
-  <div class="k">The change</div>              <div class="v">%s AED lower</div>
-  <div class="k">95%% confidence interval</div> <div class="v">%s to %s AED lower</div>
-</div>', gfmt(RULEBAR), gfmt(abs(ba_change)), gfmt(ba_ci[1]), gfmt(ba_ci[2])))
-```
-:::::
-
-::::: {.column width="50%"}
-::: {.panel .fragment}
-No. The estimate falls short of the rule, and so does the whole interval: even
-its largest fall is `r gfmt(ba_short)` AED short. We can be sure of the number,
-and the number says do not scale up.
-:::
-
-::: {.ask .fragment}
-Which question does this result leave open?
-:::
-:::::
-
-::::::
-
-::: {.notes}
-A narrow interval means the estimate is precise, not that it is the effect of
-the programme. Take answers to the question; steer towards "compared to what?",
-which section 6 takes up.
-:::
-
-# 5 · Put AI to work {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
-
-::: {.notes}
-Section timing: about 15 minutes.
-:::
-
-## AI Snapshot: ask AI to read the chart
-
-:::::: {.columns}
-
-::::: {.column width="55%"}
-::: {.panel}
-Give a picture of the before-and-after bar chart to an AI tool with the prompt
-most people would type: **"What does this chart show? Did GreenWaste work?"**
-:::
-:::::
-
-::::: {.column width="45%"}
-::: {.ask}
-In pairs: underline each claim in the response that you can see in the chart.
-Cross out each claim that the chart does not show.
-:::
-:::::
-
-::::::
-
-::: {.ai-output}
-*Illustrative response. A response like this is possible, especially with a short or leading prompt:*
-
-"The chart shows a `r sprintf("%.0f", abs(ba_pct))`% reduction in waste costs
-after businesses joined GreenWaste, from `r gfmt(ba_before)` to
-`r gfmt(ba_after)` AED per business. This reduction is statistically
-significant (p < 0.001), confirming that the programme caused the decline. The
-fall was consistent across all types of business, which suggests the effect is
-robust. Given the size of the effect, the programme should be scaled up
-nationally."
-:::
-
-::: {.notes}
-Paper (Oct12_session2_materials.docx): Hand out the "AI Snapshot" sheet (pack
-page 2, one per pair). Pairs photograph the chart on the printed sheet and
-attach it to the prompt.
-:::
-
-## Debrief: what the AI added
-
-```{r results='asis'}
-html_out(sprintf('
-<div class="facts">
-  <div class="k">"%s%% reduction, %s to %s"</div>
-  <div class="v">Correct. The %s%% can be worked out from the two bars.</div>
-  <div class="k">"p &lt; 0.001"</div>
-  <div class="v">Not on the chart. The model supplied a p-value it was never given.</div>
-  <div class="k">"confirming that the programme caused"</div>
-  <div class="v">A before-and-after chart cannot show cause. A small p-value says the fall is unlikely to be noise, not what caused it.</div>
-  <div class="k">"consistent across all types of business"</div>
-  <div class="v">Invented. The chart has no types of business, and about one in ten businesses that took part ended with higher costs.</div>
-  <div class="k">"should be scaled up nationally"</div>
-  <div class="v">A recommendation with no rule and no comparison. The rule asks for %s AED; the bars show a fall of %s.</div>
-</div>', sprintf("%.0f", abs(ba_pct)), gfmt(ba_before), gfmt(ba_after), sprintf("%.0f", abs(ba_pct)),
-   gfmt(RULEBAR), gfmt(abs(ba_change))))
-```
-
-::: {.warn .fragment}
-Only the first sentence comes from the chart. Everything after it is the model filling gaps with what often follows a chart
-like this. Check whether yours did the same.
-:::
-
-## A better prompt
-
-::: {.panel}
-**"This chart shows average waste costs per business, before the GreenWaste
-programme and 12 months after, for the city businesses that took part. The rule
-for scaling up is a fall of at least 1,000 AED per business per year. Describe
-only what the chart shows. Then list what else could explain the change, and
-what comparison you would need before saying the programme caused it. Before you
-answer, ask me any questions you need."**
-:::
-
-:::::: {.columns}
-
-::::: {.column width="50%"}
-::: {.ask}
-Run both prompts with the same chart. What does the second answer include that
-the first answer left out? Paste the second answer into a new chat and ask which
-claims the chart does not support.
-:::
-:::::
-
-::::: {.column width="50%"}
-::: {.warn}
-Two habits for every session: ask the AI to **ask you questions first**, and have
-a second chat review what the first one wrote.
-:::
-:::::
-
-::::::
-
-::: {.notes}
-Pairs use the sheet from the AI Snapshot slide: they photograph the chart on
-the printed sheet and attach the photo to each prompt.
-
-~7 min for groups to run both prompts, ~3 min to take answers. Listen for: the
-second answer checks the fall against the 1,000 AED rule, asks what happened to
-businesses that did not take part, and asks whether prices or waste fees
-changed.
-:::
-
-# 6 · Compared to what? {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
-
-::: {.notes}
-Section timing: about 10 minutes.
-:::
-
-## What else changed between before and after?
-
-::: {.panel}
-So far we have compared the businesses that took part with **their own past**.
-The fall of `r gfmt(abs(ba_change))` AED includes anything else that changed
-over those 12 months.
-:::
-
-::: {.ask}
-At your table: what two or three things apart from GreenWaste could have
-changed these businesses' waste costs? Would each push costs up or down? What
-would you compare these businesses with to rule them out?
-:::
-
-::: {.notes}
-Likely answers: prices of supplies and services, waste collection fees, the
-economy (more trade means more waste), new regulations, a business growing or
-shrinking. For comparisons, steer the room towards "businesses that did not take
-part, over the same 12 months".
-:::
-
-## One comparison: businesses that did not take part
-
-:::::: {.columns}
-
-::::: {.column width="56%"}
-```{webr}
-#| fig-width: 6.2
-#| fig-height: 4
-plot_two_lines()
-```
-:::::
-
-::::: {.column width="44%"}
-::: {.ask}
-In the rest of the city, which way did costs go for the businesses that did not
-take part?
-:::
-
-::: {.warn .fragment}
-Up, by `r gfmt(oth_rise)` AED per business, with no programme. If costs were
-rising anyway, the fall of `r gfmt(abs(ba_change))` AED **understates** what
-GreenWaste did.
-:::
-
-::: {.panel .fragment}
-By how much, and whether businesses that all scored above 58 are a fair
-comparison, is the subject of Session 3.
-:::
-:::::
-
-::::::
-
-::: {.notes}
-Do not compute a new estimate here. The point is the direction: the comparison
-group's costs rose, so the before-and-after number is likely too small, and the
-"do not scale up" reading from section 4 is not the last word.
-:::
-
-## Look back at your vote
-
-```{r results='asis'}
-# Shows the live Menti results once this session's Menti exists. Until
-# MENTI_EMBED is set, a marked placeholder box renders instead.
-if (!grepl("PLACEHOLDER", MENTI_EMBED)) {
-  html_out(sprintf('
-<iframe data-external="1" allowfullscreen="true" allowtransparency="true"
-        frameborder="0" src="%s"
-        style="width:100%%; height:66%%; border:none;"></iframe>', MENTI_EMBED))
-} else {
-  html_out('<div class="panel note-ctr"><strong>[PLACEHOLDER] Live Menti results.</strong> Set <code>MENTI_EMBED</code> in the setup chunk to show the room vote here.</div>')
-}
-```
-
-::: {.warn}
-You voted on two before-and-after averages. They cannot answer "compared to
-what?".
-:::
-
-::: {.ask}
-Who would change their vote now? Can we hear one reason from someone who
-changed, and one from someone who did not?
-:::
-
-# 7 · Take this back to your desk {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
-
-::: {.notes}
-Section timing: about 10 minutes.
-:::
-
-## Annotate this output
-
-:::::: {.columns}
-
-::::: {.column width="58%"}
-```{r}
-tibble(
-  ` `       = c("(Intercept)", "after"),
-  Estimate  = coef(ba_fit),
-  `Std. Error` = ba_fit$std.error,
-  `Pr(>|t|)`   = ifelse(ba_fit$p.value < 0.001, "<0.001",
-                        sprintf("%.3f", ba_fit$p.value)),
-  `CI Lower`   = ba_fit$conf.low,
-  `CI Upper`   = ba_fit$conf.high
-) %>%
-  tbl(align = "lrrrrr", digits = 1,
-        col.names = c("", "Estimate", "Std. Error", "p-value",
-                      "CI Lower", "CI Upper"), font_size = 16)
-```
-
-::: {.panel}
-Outcome: waste costs in AED per business per year, city businesses that took
-part, before the programme (after = 0) and 12 months later (after = 1).
-Standard errors clustered by business. The p-value is the column R printed as
-Pr(>|t|).
-:::
-:::::
-
-::::: {.column width="42%"}
-::: {.ask}
-On your printed copy:
-
-**1.** Which number is the before-and-after change? Circle that number.
-
-**2.** Where is the confidence interval for that change? Draw a box around the interval.
-
-**3.** Which number is the average before the programme? Underline that number. Why is it not the effect of GreenWaste?
-
-**4.** To know whether GreenWaste caused the change, what would you compare these businesses with?
-:::
-
-::: {.notes}
-Paper (Oct12_session2_materials.docx): Hand out the "Annotate this output" sheet
-(pack page 1, one per participant).
-
-Four minutes. Question 4 carries into Session 3.
-:::
-:::::
-
-::::::
-
-## Three questions to ask the evaluator
-
-```{=html}
-<div class="facts">
-  <div class="k">How big?</div>          <div class="v">In the units the decision is written in, not a percentage</div>
-  <div class="k">How sure?</div>         <div class="v">Does the whole confidence interval meet the decision rule, not just exclude zero?</div>
-  <div class="k">Compared to what?</div> <div class="v">Which group, which period, and did that group change too?</div>
-</div>
-```
-
-::: {.panel}
-The before-and-after result answers the first two: a fall of about
-`r gfmt(abs(ba_change))` AED, precisely measured, short of the rule. The third
-is still open, and Session 3 takes it up.
-:::
-
-::: {.ask}
-Think of the last figure you received at work. Was it a before-and-after
-comparison? What would you compare it with?
-:::
-
-::: {.notes}
-Paper (Oct12_session2_materials.docx): Hand out the take-away cards (pack page 3,
-one per participant, cut into cards).
-
-Give one minute for everyone to fill in the "Back at work" line on their card.
+5 minutes. Individual close. Accept plain wording: participants’ annual costs fell about the estimated amount after 12 months; the change is below the 1,000 AED rule; we need a credible estimate of what happened without the programme. Do not turn this into a definitive rejection of GreenWaste. Total 60 minutes.
 :::

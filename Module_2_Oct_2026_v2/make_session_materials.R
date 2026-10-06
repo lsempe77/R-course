@@ -1,5 +1,5 @@
 # ===========================================================================
-# Print materials for all twelve sessions
+# Print materials for eleven course-owned sessions
 # ===========================================================================
 #   source("make_session_materials.R")
 #
@@ -177,10 +177,22 @@ line_board <- function(title, sub, lim, major, minor, fmt, marks, lane_up, lane_
 
 gfmt <- function(x, d = 0) formatC(x, format = "f", digits = d, big.mark = ",")
 
+# Scoped builds avoid touching the other days' approved print files.
+if ('--day1' %in% commandArgs(trailingOnly = TRUE)) {
+  source('make_day1_materials.R', encoding='UTF-8')
+  quit(save = 'no')
+}
+source('make_day1_materials.R', encoding='UTF-8')
+# The later-day packets retain their existing defaults until their rebuild.
+set_flextable_defaults(font.family = FONT, font.size = 10.5, padding = 4,
+                       border.color = "#9AA8B8")
+
 # ---- data --------------------------------------------------------------------
 tc <- read.csv("evaluation_data_TrafficCameras.csv")
 gw <- read.csv("evaluation_data_GreenWaste.csv")
 
+# Retained previous Day 1 implementation for reference; current build above.
+if (FALSE) {
 # ===========================================================================
 # Oct12 S1 · Compared to What?
 # ===========================================================================
@@ -346,6 +358,10 @@ s1 <- s1 |> new_page() |> title_("Triage the claims", S1) |>
   add_board_page("Oct12_session1", board1, S1, "triage the claims (A1)")
 print(s1, target = "Oct12_session1_materials.docx")
 
+}
+
+# Retained previous Day 1 implementation for reference; current build above.
+if (FALSE) {
 # ===========================================================================
 # Oct12 S3 · Spot the Problem
 # ===========================================================================
@@ -417,6 +433,8 @@ s3 <- new_pack() |>
   h2_("AI Snapshot: four errors") |>
   p_(sprintf("1. Significant is not causal: p < 0.001 says the fall is unlikely to be chance, not what caused it. 2. Half right: following the same businesses removes fixed differences but not what changed for everyone. 3. It reports %s as the effect; the randomised estimate is about %s. 4. It recommends scale-up without asking what bar the programme must clear.", gfmt(abs(ba)), gfmt(abs(rct))))
 print(s3, target = "Oct12_session3_materials.docx")
+
+}
 
 # ===========================================================================
 # Oct13 S2 · Reading RDD Results
@@ -787,6 +805,8 @@ side_by_side <- function(doc, p1, p2, w = 6.4, h = 2.6) {
 tall_rows <- function(ft, h = 0.55) ft |> height_all(height = h, part = "body") |> hrule(rule = "atleast", part = "body")
 pfmt <- function(p) ifelse(p < 0.001, "<0.001", sprintf("%.3f", p))
 
+# Retained previous Day 1 implementation for reference; current build above.
+if (FALSE) {
 # ===========================================================================
 # Oct12 S2 · What Do the Numbers Say?
 # ===========================================================================
@@ -883,6 +903,8 @@ s2 <- new_pack() |>
              gfmt(RULEBAR), gfmt(abs(s2_change)))) |>
   p_("With the second prompt, listen for answers that check the fall against the 1,000 AED rule, ask what happened to businesses that did not take part, and ask whether prices or waste fees changed.")
 print(s2, target = "Oct12_session2_materials.docx")
+
+}
 
 # ===========================================================================
 # Oct13 S1 · Reading DiD Results
@@ -1290,6 +1312,8 @@ board10 <- make_board("Oct15_session1", list(
 s10 <- s10 |> add_board_page("Oct15_session1", board10, S10, "the credibility grid (A1, two sheets)")
 print(s10, target = "Oct15_session1_materials.docx")
 
+# Former Day 4 Session 3 is owned by another provider; keep this historical source inactive.
+if (FALSE) {
 # ===========================================================================
 # Oct15 S3 · Plan Your Own Evaluation
 # ===========================================================================
@@ -1379,7 +1403,9 @@ s12 <- s12 |>
   p_("Pitch: does the limit come before the ask?")
 print(s12, target = "Oct15_session3_materials.docx")
 
-message("Wrote Fiona's six session packs.")
+}
+
+message("Wrote the active Fiona session packs.")
 
 # ===========================================================================
 # Participant copies for the website (docs/handouts/)
@@ -1404,9 +1430,9 @@ participant_copy <- function(src, dest) {
 }
 
 dir.create("../docs/handouts", showWarnings = FALSE)
-for (s in c("Oct12_session1", "Oct12_session2", "Oct12_session3", "Oct13_session1",
+for (s in c("Oct13_session1",
             "Oct13_session2", "Oct13_session3", "Oct14_session1", "Oct14_session2",
-            "Oct14_session3", "Oct15_session1", "Oct15_session2", "Oct15_session3"))
+            "Oct14_session3", "Oct15_session1", "Oct15_session2"))
   participant_copy(paste0(s, "_materials.docx"), paste0("../docs/handouts/", s, "_handouts.docx"))
 # Handouts built elsewhere that participants keep, copied as they are.
 file.copy(c("Oct14_session3_qa_checklist.docx", "Oct15_session2_findings.docx",

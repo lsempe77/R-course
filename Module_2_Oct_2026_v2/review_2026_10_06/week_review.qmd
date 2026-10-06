@@ -1,0 +1,250 @@
+---
+title: "Module 2 teaching review"
+subtitle: "Shorter sessions and stronger report reading practice | 6 October 2026"
+author: "3ie"
+format:
+  html:
+    embed-resources: true
+    toc: true
+    toc-depth: 2
+    number-sections: false
+    theme: flatly
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+case_env <- new.env()
+case_env$gw <- read.csv("../evaluation_data_GreenWaste_simple.csv")
+sys.source("../greenwaste_case.R", envir = case_env)
+case <- case_env$case
+fmt <- function(x) formatC(x, digits = 0, format = "f", big.mark = ",")
+```
+
+## Recommendation
+
+Rebuild the four days around the work officials need to do when an evaluation report reaches their desk. Every session should end with a piece of evidence they have read, a judgement they can explain, and a useful question for the evaluator.
+
+Use **60, 60 and 75 minutes** on Days 1–3, and **60 and 60 minutes** for our two sessions on Day 4. This reduces our eleven sessions from **18 hours to 11 hours 45 minutes**, a cut of about 35%. Remove material to make that possible. Protect individual reading, pair work and feedback. Keep the existing start times provisionally; the sessions would finish at 10:00, 12:00 and, on Days 1–3, 14:45. Venue arrangements and the communicated timetable still need to reflect the change.
+
+**Scope correction from Lucas:** drop our former Day 4 Session 3 from the rebuild. Its slot will be replaced by an evaluation simulation prepared by someone else. Our plan covers eleven sessions. The simulation's length and content are not included in the totals above.
+
+The proposed changes cover **12–15 October**, the four days specified in the project files. This is a review proposal. The current decks, data and published site have not been rewritten.
+
+Open the [interactive activity preview](activity_preview.html) to try the proposed choice, evidence reveal and report mark-up. It also includes an A4 worksheet preview.
+
+## What I checked
+
+I read `HANDOFF.md`, `SIMPLE_GREENWASTE_PLAN.md`, `CLAUDE.md`, the build guide, the workbook outline, all twelve active deck sources, the exercise-plan text, the pack generator, sample pack contents, the shared case calculations and the lab. Source inspection covers the whole programme; visual inspection samples the decks and wall boards. This is not a completed browser walk of all twelve decks or a Word layout check of every pack.
+
+The active sources contain **308 content slides**, **82 section dividers** and **12 title slides**: about **402 slides** altogether. They also contain **86 webR chunks**, including hidden setup and interactive cells. These counts describe the sources, not 86 separate teaching demonstrations. The counts help explain the burden, but the stronger evidence is what participants are being asked to follow.
+
+### Branches and activities
+
+The working branch is `simple-greenwaste`, at `2993d01`. I fetched the remote references and checked `origin/main` and `origin/gh-pages`. `main` is at `2d39536`; its newer branch-specific commits update previews. `gh-pages` contains an initialisation commit. No additional remote activity branch was present at the time of this check.
+
+Fiona's activity changes in `786ee9c` and A1 additions in `217858a` are ancestors of the working branch. Keep these activities:
+
+| Existing activity | What to preserve | What to improve |
+|---|---|---|
+| Day 1 claim triage | Four claims, a decision and a reason | Give each claim its own card; use the wall to discuss two disagreements |
+| Day 2 RDD number line | Different groups see different estimates | Preprint group averages; make the task about judging a jump, rather than adding twelve values |
+| Day 2 matching cards | Finding lookalikes physically | Hide cost on the reverse until pairs have chosen their matches |
+| Day 3 ratio wall | Predict, check, explain what changed | Use three scenario types: fewer years, higher costs, smaller savings |
+| Day 4 credibility grid | Independent judgement before discussion | Require a quotation or table reference beside every rating; include sound evidence too |
+
+The two proposed AI wall boards were reverted in the existing history. Do not restore them accidentally while keeping the other wall activities.
+
+### Problems that matter
+
+**The first morning is carrying too much.** Day 1 Session 1 includes a mean and median exercise, two comparison calculations, regression interpretation, shuffling labels, small effects, small studies, interval coverage, AI prompt cards and claim triage. Session 2 then revisits averages, distributions, regression and uncertainty. Move terms to the first report-reading task where they are needed and remove repeated explanations.
+
+**Method sessions spend too long producing results.** Day 2 includes data requirements, implementation steps, regressions, labs, checks, AI exercises and closing question lists. Keep one short trainer demonstration per method. Participants should spend most of the session reading the output and deciding what evidence would make its comparison credible.
+
+**AI has become a second curriculum.** Several decks repeat a flawed answer, a long debrief, two prompts to run, a second-chat check and an additional AI-generated question list. Retain AI in every session, as the project requires, but use a short claim-checking task in most sessions. Reserve a fuller live exercise for the report and brief. A second AI answer is another opinion to check against the source, not independent verification.
+
+**Activity instructions sometimes compete with the activity.** Three-column worksheets and long prompt paragraphs require participants to read an explanation before starting. Put one action first: circle, pair, choose, underline or rewrite. Then ask for one reason. More detailed instructions belong in the trainer notes.
+
+**Layout needs content cuts as well as styling.** Browser samples at 1280 × 720 reproduced the two known Day 2 DiD overflows: 16 pixels on “AI Snapshot: explaining the table” and 25 pixels on “The same question, a better prompt”. These are sampled checks of the existing HTML, not a whole-course clearance. The wall boards give participants useful space; the denser projected AI paragraphs are a more immediate problem.
+
+**The support files disagree.** `Module2_exercise_plan_v3.docx` still describes traffic-camera tasks, Menti and earlier numbers. The build guide still recommends an older theme and Menti setup. The handoff and active deck YAML establish the current DGE theme. The exercise brief and build guidance must be reconciled with the revised programme.
+
+**Some teaching claims are too certain.** For example, Day 2's DiD answer says “You have just estimated a causal effect” before the comparison assumption is examined. The RDD introduction says the two businesses “are almost identical”, even though manager age later jumps at the cut-off. Introduce both as proposed comparisons, then examine the evidence. A precise estimate can still be biased.
+
+## What proficient reading should mean
+
+By Thursday, each participant should be able to read an unfamiliar presentation of findings and:
+
+1. Identify the programme, outcome, units, period and people described.
+2. Explain what is compared with what and why that comparison might be fair.
+3. Find the relevant estimate and confidence interval and compare them with the decision rule.
+4. Identify one consequential weakness or missing piece of evidence, with a reference to the report.
+5. Write a proportionate recommendation and a specific question for the evaluator.
+
+Recognising method names helps the reader locate the relevant assumption. Reproducing the estimator is optional reference material. Participants continue to see a short trainer-run analysis; they do not have to read, write or debug code.
+
+### Check learning individually
+
+Use a brief entry task on Monday and a parallel individual task at the start of **Thursday's report session**. Give the Thursday task **before AI or group discussion**. Use report excerpts and a table that participants have not already marked up, even if they use the same GreenWaste case. This checks independent reading of a new presentation; it does not establish transfer to a different programme. The separately prepared simulation may offer additional evidence of transfer, but this review does not assume its design or scoring.
+
+Score the five abilities above from 0 to 2: missing or wrong, partly correct, accurate with evidence. A provisional readiness standard is **8/10**, with no claim of causality based solely on a before-and-after change or statistical significance. This is a proposed teaching standard, not a validated certification threshold. Anyone below it gets feedback and a shorter retry. A genuinely new-case transfer task would need an agreed exception to the one-case rule.
+
+Collect the entry task, one short exit response per day and the final task. Group votes show where discussion is needed; they do not demonstrate that every individual can read a report.
+
+## Proposed whole programme
+
+All session lengths below replace the old lengths. The topics remain recognisable so the owners can review the changes against the outline.
+
+| Session | Minutes | Reader's task | Main activity and evidence of learning | Remove from the teaching sequence |
+|---|---:|---|---|---|
+| Oct12 S1: compared to what? | 60 | Challenge a convincing headline | Entry task; reveal the missing comparison; four claim cards; write one question | Regression table tour, shuffling, interval-coverage simulation, repeated arithmetic |
+| Oct12 S2: read the result | 60 | Find the estimate, interval and decision rule | Annotate a report extract; compare the change with the rule; repair one AI sentence | Raw-data tour, quartiles, second mean/median lesson, repeated chart builds |
+| Oct12 S3: fair comparisons and the lottery | 75 | Explain why two comparisons mislead and read a trial result | Compare three result cards; one lottery demo; interval against the rule; decision note | Two full lab visits, repeated regressions, extended sample-size simulation |
+| Oct13 S1: difference-in-differences | 60 | Read two changes and question their comparison | Complete a four-number grid; read the result row; request evidence about trends | Data reshaping, implementation section, long baseline-table tour, repeated prompt sequence |
+| Oct13 S2: the cut-off | 60 | Find the jump and state who it describes | Retain the number-line wall; reveal manager age; choose the next question | Twelve-value sums, slope-coefficient tour, separate teaching of every window and placebo |
+| Oct13 S3: matching | 75 | Judge how convincing the lookalikes are | Retain profile cards; reveal cost after matching; compare evaluators A and B; individual verdict | Standardisation mechanics, four implementation steps, multiple runs with different lists |
+| Oct14 S1: was it worth the cost? | 60 | Read a ratio and test the assumption that matters | Retain ratio wall; change years or costs; label measured values and assumptions | Discount formula derivation, extreme-rate search, repeated calculator slides |
+| Oct14 S2: read the picture | 60 | Check a chart against its caption | Three GreenWaste chart pairs: axis, starting difference, hidden variation; revise a caption | Six separate chart lessons, school-zone data, a second discounting lesson |
+| Oct14 S3: question the evaluator | 75 | Ask for evidence and judge the reply | Retain analyst role play; ask, follow up, record; update the decision | Twenty-question memory burden, repeated method lab, five pre-scripted reruns |
+| Oct15 S1: review the report | 60 | Read independently and check whether the summary follows from the findings | Individual reading check first; retain credibility wall for discussion; identify sound evidence and revise the recommendation | Long section-by-section trainer lecture, repeated checklist definitions |
+| Oct15 S2: write the brief | 60 | Write accurately for a decision | GreenWaste findings sheet; draft, swap, improve; check one AI version | Six finding slides, Tariff Shield, a keyword checker treated as a credibility test |
+
+The former Oct15 S3 design workshop is excluded. Keep its existing files as historical material; remove it from the revised delivery menu and print order when the new programme is approved. The externally prepared simulation needs its own delivery link and materials from its owner.
+
+For Thursday's report session, reserve 5 minutes to orient, 20 for independent reading, 15 for pair discussion and the credibility wall, 8 to compare an AI verdict with cited report evidence, and 12 for feedback and a corrected decision sentence. Thursday's brief session then uses that judgement. Neither task depends on our former final session.
+
+### Timing that protects practice
+
+For a **60-minute session**: 5 minutes to orient and retrieve, 10 to show one idea, 20 for guided reading, 10 to discuss and correct, 8 for a short AI claim-check, 7 for an individual response and close. A definition should interrupt the reading only when it is needed.
+
+For a **75-minute session**: 5 minutes to orient, 10 to demonstrate, 20 for the first task, 5 for a break, 20 for the main judgement or role play, 10 for feedback including AI, 5 for an individual close. Adapt the allocation for the final assessment. Protect the break rather than using it to recover lecture time.
+
+## Build update after approval
+
+Lucas approved the shortened timetable and Day 1 tables on 6 October. The
+three Day 1 decks have been rebuilt, with 11/11/13 content screens, two-sided
+participant sheets, separate trainer keys and a course-owned room poll. The
+existing four-claim activity and optional A1 board are retained. The case CSV
+has not been changed. Later days still require their daily slide-table review;
+[the Day 2 plan](day2_plan.html) is now ready.
+
+## Approved Day 1 plan
+
+These tables name the proposed teaching screens, excluding a title slide. Timing belongs in the notes, not on participant-facing screens. Short section dividers can be used only where they help orientation.
+
+### Session 1 at 60 minutes
+
+| Screen | Purpose and participant action | Minutes |
+|---|---|---:|
+| 1. A report has reached your desk | Answer the short entry task individually | 7 |
+| 2. Meet GreenWaste | Use the existing city picture and case card; name the outcome | 3 |
+| 3. Would you extend it? | Choose before the comparison is revealed | 3 |
+| 4. What is missing? | Ask one question about the headline | 4 |
+| 5. Open the comparison | Explain what else might account for the change | 5 |
+| 6. Compared to what? | Name the comparison in a short report sentence | 5 |
+| 7. What does an average hide? | Spot the large business in the existing ten-business display | 5 |
+| 8. Try four claims | Place Fiona's four claim cards on the triage sheet or wall | 12 |
+| 9. Defend one choice | Discuss two disagreements, using the evidence | 6 |
+| 10. Check the AI sentence | Mark a claim it cannot support; ask it for the missing context | 6 |
+| 11. Your next question | Write a useful question without looking at the list | 4 |
+
+Landfill remains the outcome, so this session does not reveal later cost findings. Keep counterfactual and mean as terms, each with a plain explanation. Introduce the other three terms in Session 2, attached to an output the participants need to read.
+
+### Session 2 at 60 minutes
+
+| Screen | Purpose and participant action | Minutes |
+|---|---|---:|
+| 1. One question from memory | Retrieve the comparison question | 3 |
+| 2. What decision is required? | State the rule, units and period | 3 |
+| 3. Read this extract | Read the participant worksheet before the trainer explains it | 5 |
+| 4. Circle the change | Find the estimate; explain a negative sign as lower costs | 5 |
+| 5. Find its row | Introduce coefficient as the number beside a named result row | 5 |
+| 6. What does the interval add? | Box the interval and explain uncertainty | 6 |
+| 7. Compare it with the rule | Use a labelled number line; state what the comparison does not establish | 6 |
+| 8. Significant: enough to act? | Keep p-value and significance recognition, with two warnings | 5 |
+| 9. Finish the mark-up | Annotate individually, then compare answers in pairs | 10 |
+| 10. Repair an AI summary | Remove a causal claim the source does not support | 7 |
+| 11. Write the decision sentence | State the result, its limit and the next question | 5 |
+
+The three warnings are attached to the output: statistical significance does not establish causality, does not mean the effect is big enough, and a non-significant result does not prove there is no effect. Avoid a statistical-testing lecture.
+
+### Session 3 at 75 minutes
+
+| Screen | Purpose and participant action | Minutes |
+|---|---|---:|
+| 1. Two estimates, one programme | Recall the rule; compare the two claims | 4 |
+| 2. Which comparison is fair? | Commit to a choice and give a reason | 4 |
+| 3. See where they started | Find the starting difference | 5 |
+| 4. What else changed? | Name a possible change over time | 4 |
+| 5. How the lottery helps | Use the pilot picture; predict what a lottery changes | 5 |
+| 6. Draw once, draw again | One trainer demo; explain why a small draw need not balance | 7 |
+| 7. Read the trial result | Identify the comparison and result row | 6 |
+| 8. Break | Five-minute break | 5 |
+| 9. Open the uncertainty | Put the trial interval against the decision rule | 6 |
+| 10. Would you extend it now? | Discuss a provisional decision and its limit | 6 |
+| 11. Write a decision note | Work in pairs; support each claim with the result card | 10 |
+| 12. Check an AI note | Correct one unsupported conclusion, using the result card | 8 |
+| 13. Your question for the evaluator | Answer individually and close the day | 5 |
+
+## Slides, handouts and interaction
+
+### A participant-facing design standard
+
+Use the current DGE palette and logo. Give a slide one main visual and one short question. Put explanation and references in notes. Use direct labels, units and a visible fictional-case marker. Aim for about 35–45 words of teaching prose; real report excerpts may be longer when reading that excerpt is the task. Do not meet the budget by shrinking text.
+
+Use a stable layout for tasks: **the evidence**, **the question**, and space for **your reason**. Make the relevant number or chart the largest element. Technical terms remain available, with a short explanation beside their first use. Code belongs in a trainer demonstration or optional detail, while participants' task remains the output.
+
+| Current wording or task | Proposed participant wording |
+|---|---|
+| Counterfactual | What would have happened without GreenWaste? This is the counterfactual. |
+| Baseline balance | Were the groups already different before the programme? |
+| Parallel trends | Without the programme, would costs have changed in the same way? This is the parallel trends assumption. |
+| Bandwidth | How close to the cut-off did the evaluator look? The technical term is bandwidth. |
+| Covariates | Characteristics measured before the programme |
+| Robustness | Does the answer change when the evaluator makes a reasonable different choice? |
+| Preferred specification | The analysis the evaluator said they would rely on |
+| Confidence interval | The reported range of estimates compatible with the data and the statistical model; it does not include every source of bias. |
+
+### Attractive activity materials
+
+Give participants one two-sided A4 worksheet in most sessions, with separate cards only when handling them improves the task. Use at least 12-point body type, left-aligned questions, generous spacing and a clear place to write a reason. Cards need a large identifier and one short task. Keep print quantities, cutting directions and answer keys in the trainer pack.
+
+The current RDD trainer pack has 13 explicitly separated sections because it contains all eight group cards. That does **not** mean every participant receives thirteen pages. Preserve the distribution logic; simplify what appears on each group's card. Confirm actual pagination in Word before printing.
+
+For matching, present characteristics first and put outcomes on the back. For claim triage, use words and symbols as well as colour. For the credibility wall, require a source reference on the sticky note. Good evidence should earn a green rating so participants practise recognising strengths as well as finding faults.
+
+### Replace Menti with a course-owned tool
+
+The preview provides a working local choice-and-reveal interaction and sentence mark-up. It records one person's choice in the open page. It is **not** a shared room poll.
+
+The production replacement should provide a facilitator screen, a phone-friendly join page, a QR code, open/close voting, hidden results until discussion, anonymous responses and a before/after view. The useful question is “Which piece of evidence changed your mind?” rather than who answered fastest.
+
+The site currently has a password gate and static assets; it has no shared vote store. Choose a shared service or a venue-tested local server before implementing phone voting. A local server can avoid Firebase and external accounts but needs reachable classroom networking. Do not present local browser storage as an aggregate of the room. Keep the existing card and wall activities as the working fallback.
+
+Make charts interactive where the action changes the evidence the reader can inspect: reveal the starting difference, change one assumption, show who is near the cut-off, or reveal a matched pair's costs. Hover values alone are a minor convenience. Every interaction needs a prediction and a short explanation after the reveal.
+
+## Corrections to carry into the rebuild
+
+1. **Cut-off rule:** eight city records printed with score 58 did not take part. I reproduced the mismatch from the CSV. The generator uses the unrounded score for participation. Agree the correction before regeneration; recalculate outcomes consistently for those records, then refresh every affected number and export.
+2. **Case drift:** Days 3 and 4 still use old numbers, old columns and Tariff Shield or school-zone material. Converting only the decks will leave the report, findings, QA responses and handouts inconsistent.
+3. **Lab drift:** `gw_lab.R` still describes neighbourhoods, enrolment and a fixed effect of 900 AED. A scalar rename would not make that simulated world match the pilot-and-city case with varying effects. Simplify or replace the lab structure; use it sparingly in the main teaching route.
+4. **Intervals:** the handoff and plan quote different RDD interval endpoints. Check whether they use ordinary or robust standard errors, choose the intended analysis and share the computed outputs between screen and paper.
+5. **Causal wording:** use “the estimated difference” until the comparison assumptions have been examined. A pilot waiting group can inform the city comparison, but treating it as the city's untreated path also requires comparability across settings.
+6. **Decision wording:** keep observed change, causal credibility, uncertainty, the threshold and value for money distinct. “Not enough evidence to approve scale-up” is different from “the programme does not work”.
+7. **AI checks:** a number-matching script or second chat can assist review; neither proves a brief is faithful to the source. Participants must point to the report evidence themselves.
+
+Current computed values for reference: before and after `r fmt(case$before_after)` AED; with and without `r fmt(case$with_without)` AED; pilot lottery `r fmt(case$rct)` AED; DiD `r fmt(case$did)` AED; RDD near the cut-off `r fmt(case$rdd2[["estimate"]])` AED; matching `r fmt(case$matching)` AED. These remain estimates from the current, uncorrected dataset.
+
+## Build sequence for the remaining days
+
+The shorter timetable and Day 1 plan are approved and built. Review the next daily tables, then rebuild each day as one package: decks, activity sheets, trainer keys, boards where used, the exercise brief and local preview. Save a versioned backup before substantial edits, as required by the handoff. Preserve the working branch and reconcile any newer owner edits before changes.
+
+Render each changed deck, run its live cells, inspect all slides at presentation size, and check every participant sheet in Word. The handoff requires walks one deck at a time. Check numbers, fictional-case labels, questions before reveals, keyboard use and the paper fallback. Update exports and the materials zip only after content review.
+
+The review boundary comes from `HANDOFF.md`: “for each day, propose one plan table (slide by slide), wait for approval, build”. Day 1's tables above make that approval concrete. Subsequent days should use the agreed design standard and the same daily review rhythm.
+
+## Basis for the design
+
+Practice tied to objectives, feedback, relevant problems and individual assessment are consistent with the [CDC Quality Training Standards](https://www.cdc.gov/training-development/php/qts/). Organising information around readers' questions follows the [Digital.gov plain-language guidance](https://digital.gov/guides/plain-language/principles/organize). The specific timings, slide budgets and readiness score above are my design proposals for this course; those sources do not prescribe them.

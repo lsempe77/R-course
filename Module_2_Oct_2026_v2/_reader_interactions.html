@@ -1,0 +1,32 @@
+<script>
+document.addEventListener('click', function (event) {
+  const button = event.target.closest('button');
+  if (!button) return;
+  const slide = button.closest('section');
+  if (button.hasAttribute('data-open')) {
+    const target = document.getElementById(button.dataset.open);
+    const wasHidden = target.hasAttribute('hidden');
+    target.toggleAttribute('hidden', !wasHidden);
+    button.setAttribute('aria-expanded', String(wasHidden));
+    button.textContent = wasHidden ? button.dataset.opened : button.dataset.closed;
+    if (window.Reveal) Reveal.layout();
+  }
+  if (button.hasAttribute('data-choice')) {
+    const group = button.closest('[data-choices]');
+    group.querySelectorAll('[data-choice]').forEach(b => b.setAttribute('aria-pressed', String(b === button)));
+    group.querySelector('[role="status"]').textContent = 'Your choice: ' + button.textContent + '. Give one reason to your partner.';
+  }
+  if (button.hasAttribute('data-claim')) {
+    button.setAttribute('aria-pressed', String(button.getAttribute('aria-pressed') !== 'true'));
+    slide.querySelector('[data-feedback]').textContent = '';
+  }
+  if (button.hasAttribute('data-check')) {
+    const claims = [...slide.querySelectorAll('[data-claim]')];
+    const correct = claims.every(b => (b.getAttribute('aria-pressed') === 'true') === (b.dataset.claim === 'unsupported'));
+    slide.querySelector('[data-feedback]').textContent = correct ? slide.dataset.correct : 'Recheck each sentence against the evidence. Select every claim the extract cannot support.';
+  }
+});
+document.addEventListener('keydown', function(event) {
+  if (event.target.closest('button, input, textarea, select') && ['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' '].includes(event.key)) event.stopPropagation();
+}, true);
+</script>

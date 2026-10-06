@@ -1,5 +1,54 @@
 # Handoff: moving Module 2 to the simple GreenWaste case
 
+## Latest direction from Lucas (6 October 2026)
+
+- Review and revise the whole programme for officials with little evaluation
+  knowledge, prioritising proficient reading of evaluation reports. Shorten the
+  sessions themselves, reduce technical explanation, improve the activity sheets
+  and visuals, and replace Menti with a course-owned interaction.
+- **Exclude our former Oct15 Session 3 from the rebuild.** Someone else will
+  prepare an evaluation simulation for that slot. Retain its files as historical
+  material; the remaining scope is eleven course-owned sessions.
+- The other-branch check is complete: Fiona's activity changes (`786ee9c`) and
+  A1 boards (`217858a`) are already merged into `simple-greenwaste`. Preserve
+  claim triage, the RDD number line, matching cards, the ratio wall and the
+  credibility grid. The exercise-plan document still needs reconciliation.
+- Lucas approved the shortened timetable and Day 1 slide tables on 6 October.
+  Days 1-3 are 60/60/75 minutes; Day 4 is 60/60. The Day 1 rebuild is complete:
+  11, 11 and 13 content screens, with two-sided participant sheets, trainer keys
+  and the existing four-claim cards and optional A1 triage board.
+- Day 1 sources: `Oct12_session1_live.qmd`, `Oct12_session2.qmd`,
+  `Oct12_session3_live.qmd`. S1 now uses ordinary revealjs and native browser
+  interactions; S2 and S3 keep one trainer-run webR demonstration each. The
+  active filenames and DGE branding are retained. No participant coding.
+- `day1_case.R` supplies computed figures to screen and paper. Build Day 1 packs
+  with `Rscript make_session_materials.R --day1`; the scoped path changes no
+  other session's outputs. `make_day1_materials.R` writes participant sheets
+  directly, keeping cards and keys out of participant copies. The full build
+  skips the old Day 1 sections and former Oct15 S3; their code is retained.
+- `room_poll.py` and `room_poll.html` replace Day 1 Menti: anonymous browser
+  votes, Before/After phases, QR, hidden totals until close and private reasons.
+  See `ROOM_POLL_README.md`. HTTP and two-browser checks passed, including
+  320/375-pixel phones. Classroom Wi-Fi reachability still needs a venue test.
+  Native choices in the deck record one page's choice, not aggregate votes.
+- The three decks have been rendered and walked sequentially. Slide fit,
+  revealed feedback, keyboard choices and both trainer outputs were checked.
+  All participant sheets are two A4 pages; trainer packs are 4/3/3 pages.
+  Word's native renderer was used after the packaged renderer reported missing
+  LibreOffice. All print pages were inspected. Local QA is in the review folder.
+- Backups are in `backups/day1_2026_10_06_approved/`, ignored by Git. The shared
+  CSV is unchanged; the score-rounding correction below remains pending.
+- `Module2_exercise_plan_v3.docx` now describes the Day 1 rebuild and shorter
+  scope. The former Oct15 S3 section is removed. Later-day descriptions are
+  explicitly historical pending their daily rebuild, including old Menti rows.
+- The whole-week review is `review_2026_10_06/week_review.qmd`. The next concrete
+  Day 2 slide tables are in `review_2026_10_06/day2_plan.qmd`, pending review.
+  Day 1 previews are refreshed under the existing unlinked `docs/preview/`
+  workflow; live teaching pages and the landing page are unchanged.
+
+The state and conversion notes below describe the earlier plan. The latest
+scope direction above supersedes references to rebuilding Oct15 Session 3.
+
 State on 2026-10-06, end of session. Read this first, then `SIMPLE_GREENWASTE_PLAN.md`
 (the plan Lucas approved) and the memory files. Delivery starts **2026-10-12**; if the
 branch is not reviewed by **2026-10-09**, deliver with `main` and merge after.

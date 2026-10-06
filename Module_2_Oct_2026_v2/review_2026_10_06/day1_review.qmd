@@ -1,0 +1,79 @@
+---
+title: "Day 1 review"
+subtitle: "Shorter sessions and practice in reading evaluation reports"
+format:
+  html:
+    embed-resources: true
+    theme: cosmo
+    toc: false
+---
+
+The approved Day 1 route is built. Participants practise questioning a claim,
+finding a reported result and judging a fair comparison. Each session has one
+two-sided worksheet. The trainer packs keep printing directions, cards and
+answer keys separate from those participant sheets.
+
+## Open the sessions
+
+| Session | Length | Content screens | Deck | Participant sheet | Trainer pack |
+|---|---:|---:|---|---|---|
+| Question a claim | 60 minutes | 11 | [Open](Oct12_session1_live.html) | [Two sides](Oct12_session1_handouts.docx) | [Cards and key](Oct12_session1_materials.docx) |
+| Read the result | 60 minutes | 11 | [Open](Oct12_session2.html) | [Two sides](Oct12_session2_handouts.docx) | [Key](Oct12_session2_materials.docx) |
+| Choose a fair comparison | 75 minutes | 13 | [Open](Oct12_session3_live.html) | [Two sides](Oct12_session3_handouts.docx) | [Key](Oct12_session3_materials.docx) |
+
+Screen counts exclude the title. Session 3 includes a five-minute break.
+Landfill stays in Session 1; costs enter in Session 2. Technical terms are
+introduced beside the result readers need to interpret. Only Sessions 2 and 3
+have a trainer-run R demonstration. Participants do not write or debug code.
+
+Fiona's four-claim triage is retained, with the [existing optional A1 board](Oct12_session1_board_A1.pdf).
+The RDD number line, matching cards, ratio wall and credibility grid from the
+other branch are already present and will be preserved in later daily rebuilds.
+
+## Try the interactions
+
+Use a choice before revealing comparison evidence. In Session 3, open the trial
+interval after reading the point estimate. In each session, select unsupported
+AI claims and check them against the extract. These native deck controls work
+in the open page; they do not display room totals.
+
+The course-owned room poll replaces the Day 1 Menti activity. It has a phone
+join page and QR, a facilitator page, hidden totals until voting closes, short
+anonymous reasons and Before/After phases. [Download the room tool](GreenWaste_room_poll.zip)
+and read its [classroom instructions](ROOM_POLL_README.md). This is a local
+classroom server; phones must be able to reach the trainer computer. Test the
+venue network before delivery. Labelled cards remain the working fallback.
+
+## What has been checked
+
+The three decks were rendered and walked sequentially at presentation size.
+Both trainer outputs, evidence reveals, correct and incorrect AI checks and
+keyboard choices were exercised. The slide count is 12/12/14 including titles,
+with no slide overflow or browser errors in the checks. The lottery can be
+drawn twice and its output names manager age.
+
+Word rendered all participant and trainer pages for visual inspection. Each
+participant sheet is two A4 pages; trainer packs are four, three and three
+pages. The room poll was checked with two browsers, narrow phone layouts,
+changed votes, closed and stale submissions, private facilitator control,
+escaped reasons and a working QR.
+
+These checks establish that the materials and interactions work in the tested
+environment. Classroom phone access still needs a venue test, and the reading
+tasks need feedback from the actual room. The participant tasks provide
+individual evidence of reading; a shift in poll totals alone does not.
+
+## What is next
+
+[The Day 2 slide tables](day2_plan.html) are ready for the next daily review.
+They shorten DiD and RDD to 60 minutes and matching to 75 minutes, while
+preserving Fiona's physical activities. `HANDOFF.md` requires a slide-table
+review and approval before each daily build.
+
+The shared case CSV is unchanged. Eight rounded-score records need a decision
+before the score-rule lesson is rebuilt; the Day 2 plan explains the correction
+and the need to refresh affected figures. Days 2–4 have not yet been rebuilt to
+the shortened route. Day 4's former final workshop is excluded; another
+provider will prepare the replacement simulation.
+
+[Whole-week review](week_review.html) · [Updated partner exercise brief](Module2_exercise_plan_v3.docx)

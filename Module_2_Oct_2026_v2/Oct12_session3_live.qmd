@@ -1,1160 +1,262 @@
 ---
-title: "Spot the Problem: Naive Comparisons and Reading an RCT"
-subtitle: "Module 2 · Day 1, Session 3: Two Numbers Someone Might Report, and a Lottery"
+title: "Choose a fair comparison"
+subtitle: "Module 2 · Day 1 · Session 3"
 author: "3ie"
-always_allow_html: yes
-title-slide-attributes:
-  data-state: title-slide-state
-# live-revealjs: the quarto-live extension (_extensions/r-wasm/live) runs R in
-# the browser through webR. The live cells need an internet connection on the
-# day (webR loads from a CDN) and the CSV listed under webr: resources
-# must sit next to the published .html. Static knitr chunks work as before.
-#
-# The simple GreenWaste case (SIMPLE_GREENWASTE_PLAN.md): one row per business;
-# a lottery in the pilot district, a score rule at 58 in the rest of the city.
-# Every number the static slides quote comes from greenwaste_case.R.
+always_allow_html: true
 format:
   live-revealjs:
-    theme: [theme_dge.scss, theme_live.scss]
+    theme: [theme_dge.scss, theme_live.scss, theme_reader.scss]
     logo: assets/dge_logo_horizontal.svg
     slide-number: true
     width: 1280
     height: 720
-    fig-align: center
     slide-level: 2
     embed-resources: true
+    include-after-body: _reader_interactions.html
 webr:
-  packages: [estimatr]
-  # Data frames print as HTML tables (styled in theme_live.scss) instead of
-  # console text. knitr is already loaded by quarto-live, so this costs nothing.
   render-df: kable
   resources:
     - evaluation_data_GreenWaste_simple.csv
-    - gw_lab.R
 knitr:
   opts_chunk:
     echo: false
     warning: false
     message: false
-    dev: "png"
-    # dpi 96 is deliberate: knitr sizes htmlwidgets as fig.width * dpi.
-    dpi: 96
-editor_options:
-  chunk_output_type: console
 ---
 
 {{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
 
-```{r setup}
-library(tidyverse)
-library(plotly)
-library(knitr)
-library(estimatr)
-library(qrcode)
-
-# ---- Palette (DGE theme; see theme_dge.scss) --------------------------------
-ACCENT  <- "#215a9e"; ACCENT2 <- "#7da1c4"; ALERT <- "#B8272C"   # Tech / Light Blue
-INK     <- "#111418"; MUTED <- "#545860"; RULE <- "#D5DEE8"
-CHART_FONT <- "Noto Kufi Arabic, Segoe UI, Arial, sans-serif"
-
-PL_W <- 1100; PL_WC <- 520; PL_WT <- 340
-
-pl_m2 <- function(p, width = PL_W, height = 290, t = 30, b = 54,
-                  title = NULL, legend_y = 1.02) {
-  p <- p %>%
-    layout(
-      width = width, height = height,
-      font = list(family = CHART_FONT, size = 13, color = INK),
-      paper_bgcolor = "rgba(0,0,0,0)",
-      plot_bgcolor  = "rgba(0,0,0,0)",
-      margin = list(l = 70, r = 24, t = t, b = b),
-      legend = list(orientation = "h", x = 0.5, xanchor = "center",
-                    y = legend_y, yanchor = "bottom", title = list(text = "")),
-      hoverlabel = list(bgcolor = "white", bordercolor = RULE,
-                        font = list(color = INK, size = 12))
-    )
-  if (!is.null(title)) {
-    p <- p %>% layout(title = list(text = title, x = 0, xanchor = "left",
-                                   font = list(size = 12, color = MUTED)))
-  }
-  p %>% config(displayModeBar = FALSE)
-}
-
-ax <- function(title = "", ...) {
-  modifyList(list(
-    title = list(text = title, font = list(size = 12, color = MUTED)),
-    gridcolor = RULE, zerolinecolor = RULE, linecolor = RULE,
-    tickfont = list(size = 12, color = MUTED)
-  ), list(...))
-}
-
-gfmt <- function(x) format(round(x), big.mark = ",")
-
-# Emit an HTML snippet as a raw block. Plain cat() leaves it to pandoc, which
-# reads indented lines inside a multi-line <div> as a code block and prints the
-# tags on the slide.
-FENCE <- strrep("`", 3)   # built, not typed: a literal fence would end the chunk
-html_out <- function(x) cat("\n", FENCE, "{=html}\n", x, "\n", FENCE, "\n", sep = "")
-
-# ---- Live Menti poll -------------------------------------------------------
-MENTI_CODE <- "1234 5678"
-MENTI_JOIN <- paste0("https://www.menti.com/", gsub(" ", "", MENTI_CODE))
-
-menti_qr <- function(path = "menti_qr.png", url = MENTI_JOIN) {
-  png(path, width = 900, height = 900, res = 300, bg = "white")
-  on.exit(dev.off(), add = TRUE)
-  par(mar = c(0, 0, 0, 0))
-  plot(qr_code(url, ecl = "H"))
-  path
-}
-MENTI_QR <- menti_qr()
-
-RULEBAR <- 1000    # must cut costs by at least this many AED
-
-# ---- The numbers the static slides quote -----------------------------------
-# greenwaste_case.R computes every headline number once. It is sourced into its
-# own environment because it defines RULE (1,000), which here is a colour.
-case_env <- new.env()
-case_env$gw <- read.csv("./evaluation_data_GreenWaste_simple.csv")
-sys.source("greenwaste_case.R", envir = case_env)
-case   <- case_env$case
-pilot  <- case_env$pilot
-city   <- case_env$city
-took   <- case_env$took
-
-ba_change <- case$before_after                  # city, took part: after minus before
-ww_gap    <- case$with_without                  # city, took part vs not, after
-ww_gap0   <- case$gap_before                    # the same gap, before the programme
-city_rise <- mean(city$change[!took])           # costs of city businesses that did not take part
-age_gap   <- mean(city$manager_age[!took]) - mean(city$manager_age[took])
-
-rct_fit     <- lm(cost_after ~ took_part, data = pilot)
-rct_est     <- coef(rct_fit)[["took_part"]]
-rct_control <- coef(rct_fit)[["(Intercept)"]]
-rct_ci      <- confint(rct_fit)["took_part", ]
-# SIGN TRAP: sort the absolute values so [1] is always the end closest to zero.
-rct_avoided       <- sort(abs(rct_ci))
-rct_avoided_least <- rct_avoided[1]
-rct_avoided_most  <- rct_avoided[2]
-
-# The same smaller-trial draw as the live slider (same seed, same rule), so the
-# text quotes what the slider shows.
-small_trial_ci <- function(k) {
-  set.seed(11)
-  keep <- c(sample(which(pilot$took_part == 1), k / 2), sample(which(pilot$took_part == 0), k / 2))
-  f <- lm_robust(cost_after ~ took_part, data = pilot[keep, ])
-  sort(-confint(f)["took_part", ])
-}
-st20 <- small_trial_ci(20)
-
-# How far apart a 4-business lottery can start: 95% of 1,000 draws fall within this.
-crowd_q <- function(k, draws = 1000) {
-  set.seed(7)
-  quantile(abs(replicate(draws, { s <- sample(nrow(pilot), k)
-    mean(pilot$cost_before[s[seq_len(k / 2)]]) - mean(pilot$cost_before[s[-seq_len(k / 2)]]) })), 0.95)
-}
-q4 <- crowd_q(4)
-
-# Estimate, interval and rule on one axis.
-rule_chart <- function(est, least, most, rule, xlab, xmax, digits = 0) {
-  fmt <- paste0("avoids %{x:,.", digits, "f}<extra></extra>")
-  tibble(
-    what = factor(c("The estimate", "95% interval", "Decision rule"),
-                  levels = c("Decision rule", "95% interval", "The estimate")),
-    lo = c(abs(est), least, rule), hi = c(abs(est), most, rule),
-    col = c(ACCENT, ACCENT, ALERT)
-  ) %>%
-    plot_ly() %>%
-    add_segments(x = ~lo, xend = ~hi, y = ~what, yend = ~what,
-                 line = list(color = ~col, width = 5), showlegend = FALSE,
-                 hovertemplate = fmt) %>%
-    add_markers(x = ~lo, y = ~what, marker = list(color = ~col, size = 11),
-                showlegend = FALSE, hovertemplate = fmt) %>%
-    layout(xaxis = ax(xlab, range = c(0, xmax)),
-           yaxis = ax("", zeroline = FALSE)) %>%
-    pl_m2(width = PL_WC, height = 250)
-}
-
-# ---- The case introduction: one illustrative city -----------------------------
-# Shop position, efficiency score, and whether it joined. Inside the pilot
-# district every score is below 58 and a lottery decided; everywhere else a
-# score of 58 or below meant joining. Illustrative, not the real counts.
-SHOP_BLUE <- "#215a9e"; SHOP_GREY <- "#c9d6e6"
-pilot_shops <- data.frame(x = c(70, 165, 260, 70, 165, 260), y = c(98, 98, 98, 186, 186, 186),
-                          score = c(41, 52, 37, 48, 33, 55), joined = c(1, 0, 1, 0, 0, 1))
-city_shops  <- data.frame(
-  x = c(415, 525, 635, 745, 415, 525, 635, 745, 70, 180, 290, 415, 525, 635, 745),
-  y = c(80, 80, 80, 80, 195, 195, 195, 195, 330, 330, 330, 330, 330, 330, 330),
-  score = c(72, 45, 88, 39, 56, 63, 29, 91, 47, 77, 52, 68, 35, 84, 58))
-city_shops$joined <- as.integer(city_shops$score <= 58)
-shop_svg <- function(d) paste(sprintf(
-  '<use href="#shop" x="%d" y="%d" width="62" height="58" color="%s"/><text x="%d" y="%d" font-size="19" text-anchor="middle" fill="%s" font-weight="%s">%d</text>',
-  d$x, d$y, ifelse(d$joined == 1, SHOP_BLUE, SHOP_GREY), d$x + 31, d$y + 80,
-  ifelse(d$joined == 1, "#063360", "#545860"), ifelse(d$joined == 1, "700", "400"), d$score), collapse = "\n")
+```{r setup, include=FALSE}
+source('day1_case.R')
 ```
 
-# 0 · The GreenWaste case {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
-## The GreenWaste programme
+## Two estimates one programme {.reader-slide}
 
 ```{webr}
+#| context: setup
 #| autorun: true
+#| echo: false
 #| include: false
-# Runs once, in the browser, when the deck opens. Everything the live cells
-# below use is defined here, so each cell on a slide stays two or three lines.
-gw    <- read.csv("evaluation_data_GreenWaste_simple.csv")
-pilot <- subset(gw, setting == "pilot")    # the lottery
-city  <- subset(gw, setting == "city")     # the score rule
-source("gw_lab.R")   # the GreenWaste lab: an invented world where the true effect is known
-library(estimatr)
-RULE <- 1000
-ACCENT <- "#215a9e"; ACCENT2 <- "#7da1c4"; ALERT <- "#B8272C"; MUTED <- "#545860"
-options(width = 100, scipen = 6)
-
-# Warm up estimatr now, while the opening slides are talked through: its first
-# call in the browser takes about 10 seconds, every later one is instant.
-invisible(estimatr::lm_robust(y ~ x, data = data.frame(y = c(1, 3, 2, 5), x = c(0, 1, 0, 1))))
-
-# Defined here as well as on the slide that teaches it, so a later slide still
-# runs if an earlier one was skipped or the page was reloaded mid-deck.
-fit <- lm(cost_after ~ took_part, data = pilot)
-
-clean_par <- function() par(mar = c(3, 5.5, 1, 1), family = "sans", las = 1,
-                            col.axis = MUTED, col.lab = MUTED, fg = MUTED, cex = 1.25)
-aed <- function(x) format(round(x), big.mark = ",")
-
-# Bar chart of a few averages, value printed on each bar:
-#   bars(Before = before, After = after)
-bars <- function(..., col = ACCENT) {
-  v <- c(...)
-  clean_par()
-  par(mar = c(2.5, 1, 2, 1))               # no y axis: the value sits on each bar
-  b <- barplot(v, col = col, border = NA, ylim = c(0, max(v) * 1.15), axes = FALSE)
-  text(b, v, paste(aed(v), "AED"), pos = 3, cex = 1.2, xpd = NA)
-}
-
-# Before-and-after lines for the two groups in the rest of the city.
-plot_two_lines <- function() {
-  t1 <- city$took_part == 1
-  took <- c(mean(city$cost_before[t1]),  mean(city$cost_after[t1]))
-  oth  <- c(mean(city$cost_before[!t1]), mean(city$cost_after[!t1]))
-  clean_par()
-  plot(0:1, took, type = "b", pch = 19, lwd = 4, col = ACCENT, bty = "n",
-       ylim = c(0, 2700), xlim = c(-0.1, 1.6), xaxt = "n",
-       xlab = "", ylab = "Waste costs, AED")
-  lines(0:1, oth, type = "b", pch = 19, lwd = 4, col = ACCENT2)
-  axis(1, at = 0:1, labels = c("Before", "After"))
-  text(1.06, took[2], paste("Took part", aed(took[2])), col = ACCENT, adj = 0)
-  text(1.06, oth[2],  paste("Did not", aed(oth[2])),    col = ACCENT2, adj = 0)
-}
-
-# Draw the pilot lottery again (or let officials pick the cheapest-to-run 200)
-# and compare the two groups' costs BEFORE the programme.
-draw_lottery <- function(how, seed) {
-  set.seed(seed)
-  picked <- if (how == "Random draw") sample(nrow(pilot), nrow(pilot) / 2) else
-            order(pilot$cost_before)[seq_len(nrow(pilot) / 2)]
-  m <- c(Chosen = mean(pilot$cost_before[picked]),
-         `Not chosen` = mean(pilot$cost_before[-picked]))
-  clean_par()
-  b <- barplot(m, col = c(ACCENT, ACCENT2), border = NA, ylim = c(0, 2000),
-               ylab = "Costs before, AED")
-  text(b, m + 110, aed(m), cex = 1.3)
-  cat(sprintf("Gap BEFORE the programme started: %+.0f AED\n", m[1] - m[2]))
-}
-
-# One thousand lotteries among k businesses: how far apart can the halves start?
-crowd_gaps <- function(k, draws = 1000) {
-  set.seed(7)
-  gaps <- replicate(draws, {
-    s <- sample(nrow(pilot), k)
-    mean(pilot$cost_before[s[seq_len(k / 2)]]) - mean(pilot$cost_before[s[-seq_len(k / 2)]])
-  })
-  clean_par()
-  hist(gaps, breaks = seq(-2000, 2000, by = 50), col = ACCENT, border = "white",
-       main = "", xlab = "Gap in costs before the programme, AED", ylab = "Draws",
-       xlim = c(-1200, 1200))
-  abline(v = 0, col = ALERT, lwd = 2, lty = 2)
-  cat(sprintf("%d businesses: in 95%% of %d lotteries the groups start within +/- %.0f AED\n",
-              k, draws, quantile(abs(gaps), 0.95)))
-}
-
-# Re-estimate on k pilot businesses (half chosen, half not): a smaller trial.
-small_trial <- function(k) {
-  set.seed(11)
-  keep <- c(sample(which(pilot$took_part == 1), k / 2), sample(which(pilot$took_part == 0), k / 2))
-  f   <- lm_robust(cost_after ~ took_part, data = pilot[keep, ])
-  est <- -coef(f)[["took_part"]]
-  ci  <- sort(-confint(f)["took_part", ])
-  clean_par()
-  plot(NA, xlim = c(0, 2000), ylim = c(0.5, 1.5), yaxt = "n", bty = "n",
-       xlab = "AED avoided per business", ylab = "")
-  abline(v = RULE, col = ALERT, lwd = 3, lty = 2)
-  segments(ci[1], 1, ci[2], 1, col = ACCENT, lwd = 8)
-  points(est, 1, pch = 19, cex = 2.5, col = ACCENT)
-  text(RULE, 1.4, "the rule", col = ALERT, pos = 4)
-  cat(sprintf("%d businesses: avoids %.0f AED, interval %.0f to %.0f\n", k, est, ci[1], ci[2]))
+gw <- read.csv('evaluation_data_GreenWaste_simple.csv')
+pilot <- subset(gw, setting == 'pilot')
+ages <- pilot$manager_age[1:20]
+draw <- 0
+group_ages <- function(groups) {
+  out <- aggregate(ages, list(Group = groups), function(x) round(mean(x), 1))
+  names(out)[2] <- 'Manager age'
+  out
 }
 ```
 
-<p style="font-size:0.85em; margin: 0 0 4px; max-width: none;">GreenWaste helps businesses cut their waste costs. Here is how it reached them.</p>
-
-```{r city-map, results='asis'}
-html_out(paste0('
-<svg viewBox="0 0 1200 470" width="100%" role="img"
-     aria-label="A city map. In the pilot district a lottery chose which shops joined. In the rest of the city, shops with an efficiency score of 58 or below joined."
-     style="font-family: \'Noto Kufi Arabic\', \'Segoe UI\', Arial, sans-serif;">
-  <defs>
-    <symbol id="shop" viewBox="0 0 60 56">
-      <path d="M4 14 L10 2 H50 L56 14 Z" fill="currentColor"/>
-      <path d="M4 14 q5 7 10 0 q5 7 10 0 q5 7 10 0 q5 7 10 0 q5 7 12 0" fill="currentColor"/>
-      <rect x="8" y="20" width="44" height="34" rx="2" fill="currentColor"/>
-      <rect x="14" y="30" width="12" height="24" fill="#fff" opacity="0.85"/>
-      <rect x="32" y="28" width="14" height="12" fill="#fff" opacity="0.85"/>
-    </symbol>
-  </defs>
-  <rect x="20" y="20" width="820" height="440" rx="18" fill="#f4f7fb" stroke="#D5DEE8" stroke-width="2"/>
-  <path d="M370 20 V460 M20 300 H840" stroke="#e3e9f1" stroke-width="10"/>
-  <text x="820" y="450" font-size="22" font-weight="700" fill="#7f97b5" text-anchor="end">THE CITY</text>
-  <rect x="45" y="45" width="305" height="245" rx="14" fill="#e3ebf5" stroke="#215a9e" stroke-width="3" stroke-dasharray="12 8"/>
-  <text x="62" y="80" font-size="22" font-weight="700" fill="#063360">Pilot district</text>
-  <g transform="translate(300,55)">
-    <rect width="38" height="38" rx="7" fill="#fff" stroke="#063360" stroke-width="2.5"/>
-    <circle cx="11" cy="11" r="3.5" fill="#063360"/><circle cx="27" cy="11" r="3.5" fill="#063360"/>
-    <circle cx="19" cy="19" r="3.5" fill="#063360"/>
-    <circle cx="11" cy="27" r="3.5" fill="#063360"/><circle cx="27" cy="27" r="3.5" fill="#063360"/>
-  </g>
-', shop_svg(pilot_shops), '
-', shop_svg(city_shops), '
-  <g font-size="21" fill="#111418">
-    <rect x="875" y="40" width="300" height="150" rx="12" fill="#fff" stroke="#215a9e" stroke-width="3" stroke-dasharray="12 8"/>
-    <text x="895" y="82" font-weight="700" fill="#063360">In the pilot district</text>
-    <text x="895" y="118">a <tspan font-weight="700">lottery</tspan> chose which</text>
-    <text x="895" y="148">shops joined</text>
-    <rect x="875" y="215" width="300" height="178" rx="12" fill="#fff" stroke="#D5DEE8" stroke-width="2"/>
-    <text x="895" y="257" font-weight="700" fill="#063360">Everywhere else</text>
-    <text x="895" y="293">shops scoring <tspan font-weight="700">58 or below</tspan></text>
-    <text x="895" y="323">joined</text>
-    <text x="895" y="356" font-size="16" fill="#545860">the number under each shop</text>
-    <text x="895" y="377" font-size="16" fill="#545860">is its efficiency score</text>
-  </g>
-  <g font-size="19" fill="#111418">
-    <use href="#shop" x="878" y="404" width="30" height="28" color="', SHOP_BLUE, '"/><text x="918" y="425">joined GreenWaste</text>
-    <use href="#shop" x="878" y="436" width="30" height="28" color="', SHOP_GREY, '"/><text x="918" y="457">did not join</text>
-  </g>
-</svg>'))
+```{r two-estimates, results='asis'}
+html_out(sprintf('<div class="evidence-pair"><div class="evidence"><h3>Same businesses over time</h3><p class="big-number">%s</p><p>AED lower after 12 months</p></div><div class="evidence"><h3>Two groups afterwards</h3><p class="big-number">%s</p><p>AED lower among participants</p></div></div>%s',fmt(abs(case$before_after)),fmt(abs(case$with_without)),fiction))
 ```
 
-::: {.notes}
-About 1 minute: a reminder of the case from Session 1. Point at the pilot
-district (a lottery decided) and the rest of the city (the score decided).
-Session 2 worked in the rest of the city; today ends in the pilot district.
-
-Open the deck a couple of minutes before the session starts: R and its statistics package take about a minute to load in the browser, after which every live cell runs in a few seconds.
-
-Paper (Oct12_session3_materials.docx): Hand out the session tracker (pack page 1, one per participant); they fill in each row as the numbers appear.
+::: {.ask}
+Which comparison could support an extension decision?
 :::
 
-## Today
+::: {.notes}
+4 minutes. Recall the 1,000 AED rule. The first is before/after city participants; the second compares city participants with non-participants after. Both are observational summaries. Do not endorse the larger number because it passes the threshold. Hidden webR setup belongs under this first heading. Open early; there is one optional trainer demo.
+:::
 
-::: {.panel}
-The authority will scale GreenWaste up nationally only if it cuts waste costs by
-at least **`r gfmt(RULEBAR)` AED** per business per year. Every business's costs
-were measured before the programme and 12 months after.
+## Which comparison is fair? {.reader-slide}
+
+::: {.lead}
+“Participants had lower costs than businesses that did not take part.”
 :::
 
 ```{=html}
-<div class="facts">
-  <div class="k">1</div> <div class="v">Where Session 2 left us: one number, and why it is too small</div>
-  <div class="k">2</div> <div class="v">A second number someone might report, and what is wrong with it</div>
-  <div class="k">3</div> <div class="v">Run the lottery ourselves, and see why it works</div>
-  <div class="k">4</div> <div class="v">Read the randomised result against the 1,000 AED rule</div>
+<div data-choices>
+<button data-choice aria-pressed="false">A fair comparison</button>
+<button data-choice aria-pressed="false">I need their starting costs</button>
+<p role="status" class="feedback"></p>
 </div>
 ```
 
-::: {.warn}
-You will not write any code. You will call the numbers; I will type them in and
-press **Run**. The grey boxes are real R, running in this page.
-:::
-
-# 1 · Where Session 2 left us {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
-
-## Where Session 2 left us
-
-:::::: {.columns}
-
-::::: {.column width="52%"}
-```{r results='asis'}
-html_out(sprintf('
-<div class="facts">
-  <div class="k">Who took part</div>     <div class="v">in the rest of the city, every business scoring 58 or below</div>
-  <div class="k">Before and after</div>  <div class="v">%s AED, for the businesses that took part</div>
-  <div class="k">The rule</div>          <div class="v">at least %s AED</div>
-</div>', gfmt(ba_change), gfmt(RULEBAR)))
-```
-:::::
-
-::::: {.column width="48%"}
 ::: {.ask}
-From Session 2: is `r gfmt(abs(ba_change))` too big or too small? What did the
-businesses that did not take part show?
-:::
-
-::: {.panel .fragment}
-Too small. Their costs rose by about `r gfmt(city_rise)` AED with no programme at
-all, so before-and-after hides part of what the programme did.
-:::
-:::::
-
-::::::
-
-::: {.notes}
-About 3 minutes, recall only. Then: if before-and-after is too small, could we
-compare the businesses that took part with the ones that did not, after the
-programme? That is the second number.
-:::
-
-# 2 · A second number someone might report {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
-
-## With and without
-
-```{webr}
-#| fig-width: 6
-#| fig-height: 2.5
-took  <- mean(city$cost_after[city$took_part == 1])
-didnt <- mean(city$cost_after[city$took_part == 0])
-round(data.frame(took_part = took, did_not = didnt, gap = took - didnt))
-bars("Took part" = took, "Did not" = didnt, col = c(ACCENT, ACCENT2))
-```
-
-::: {.warn}
-Same city, after the programme. Two readings of one programme,
-**`r gfmt(ba_change)`** and **`r gfmt(ww_gap)`**: one misses the 1,000 AED bar,
-one clears it.
-:::
-
-## `[MENTI PLACEHOLDER]` Too big or too small?
-
-:::::: {.columns}
-
-::::: {.column width="62%"}
-::: {.ask style="font-size: 115%;"}
-Session 2 showed that `r gfmt(abs(ba_change))` is too small. This number comes
-from a real comparison too, and it is also biased.
-
-**Is `r gfmt(abs(ww_gap))` too big or too small?**
-:::
-
-Go to **menti.com** and enter code **`r MENTI_CODE`**, or scan the code.
-:::::
-
-::::: {.column width="38%"}
-```{r out.width='330px', out.extra='style="display:block; margin:0 auto;"'}
-knitr::include_graphics(MENTI_QR)
-```
-:::::
-
-::::::
-
-::: {.notes}
-~3 min. Do not settle it. The next two slides answer it from the data.
-:::
-
-# 3 · Catch it out, in the data {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
-
-## The same gap, before the programme existed
-
-:::::: {.columns}
-
-::::: {.column width="42%"}
-```{ojs}
-//| echo: false
-viewof when = Inputs.radio(["After the programme", "Before the programme"],
-  {value: "After the programme"})
-```
-:::::
-
-::::: {.column width="58%"}
-::: {.ask}
-Before the programme, nobody had received anything. **What gap should we see?**
-:::
-:::::
-
-::::::
-
-```{webr}
-#| input:
-#|   - when
-#| autorun: true
-#| fig-width: 6
-#| fig-height: 1.8
-cost  <- if (when == "Before the programme") city$cost_before else city$cost_after
-took  <- mean(cost[city$took_part == 1])
-didnt <- mean(cost[city$took_part == 0])
-round(data.frame(took_part = took, did_not = didnt, gap = took - didnt))
-bars("Took part" = took, "Did not" = didnt, col = c(ACCENT, ACCENT2))
-```
-
-
-::: {.warn .fragment}
-It should be zero. It is **`r gfmt(ww_gap0)`** AED: a head start, so the
-`r gfmt(abs(ww_gap))` gap **overstates** the effect.
-:::
-
-## Why they were already different
-
-```{webr}
-round(aggregate(cbind(manager_age, staff, area, filtration) ~ took_part,
-                data = city, FUN = mean), 1)
-```
-
-:::::: {.columns}
-
-::::: {.column width="50%"}
-::: {.panel}
-The rest of the city, **before** the programme. Took part (1) vs not (0) on four
-things we measured.
-:::
-:::::
-
-::::: {.column width="50%"}
-::: {.warn}
-Managers about `r round(age_gap)` years younger, fewer staff, smaller premises.
-The two groups were different kinds of business, and in a real evaluation **some
-of the ways they differ would not be measured at all.**
-:::
-:::::
-
-::::::
-
-## Two biases, opposite directions
-
-```{r results='asis'}
-html_out(sprintf('
-<div class="facts">
-  <div class="k">Before and after</div>
-  <div class="v">%s AED &middot; folds in the rising costs everyone faced &middot; UNDERSTATES</div>
-  <div class="k">With and without</div>
-  <div class="v">%s AED &middot; folds in a %s AED head start &middot; OVERSTATES</div>
-  <div class="k">So the truth</div>
-  <div class="v">sits somewhere between the two, and neither comparison can say where</div>
-</div>', gfmt(ba_change), gfmt(ww_gap), gfmt(abs(ww_gap0))))
-```
-
-::: {.ask}
-Check your Menti answer. What would it take to land on the truth
-**deliberately**, instead of guessing between two wrong numbers?
-:::
-
-::: {.warn}
-In both cases **the two groups were not comparable.** After the break we look
-at a design that makes them comparable by construction.
+Why might the two groups already have different costs?
 :::
 
 ::: {.notes}
-Paper (Oct12_session3_materials.docx): Tracker check: every row should now say too big or too small, with a reason.
+4 minutes. Commit before opening baseline. Invite a reason related to size, management or the score rule. Use the same local choice controls or room poll with a custom question and two choices. No national inference yet.
 :::
 
-## The GreenWaste lab
+## See where they started {.reader-slide}
 
-:::::: {.columns}
-
-::::: {.column width="46%"}
-```{ojs}
-//| echo: false
-viewof lab_trend  = Inputs.range([0, 600], {value: 0, step: 50, label: "Costs rise for everyone anyway (AED)"})
-viewof lab_size   = Inputs.range([0, 800], {value: 0, step: 100, label: "Joiners are smaller businesses (AED)"})
-viewof lab_hidden = Inputs.range([0, 800], {value: 0, step: 100, label: "Joiners differ in something nobody measured (AED)"})
-```
-:::::
-
-::::: {.column width="54%"}
-::: {.panel}
-An invented GreenWaste of 20,000 businesses where we know the truth: taking
-part cuts costs by **900 AED**. Each slider switches on one problem.
-:::
-
-::: {.ask}
-Before each move: **which estimate will that slider pull away from the truth,
-and which way?**
-:::
-:::::
-
-::::::
-
-```{webr}
-#| input:
-#|   - lab_trend
-#|   - lab_size
-#|   - lab_hidden
-#| autorun: true
-#| edit: false
-#| echo: false
-#| fig-width: 10
-#| fig-height: 2.5
-lab(c("before_after", "with_without"), lab_trend, lab_size, lab_hidden)
-```
-
-::: {.notes}
-About 5 minutes. With every slider at zero both estimates sit on the truth: a
-naive comparison is only wrong when the world has these problems, and GreenWaste
-had them. Move one slider at a time and take a call first. "Costs rise anyway"
-moves only before-and-after (towards zero, as in the GreenWaste data, where the
-other businesses' costs rose about `r gfmt(city_rise)` AED). The two "joiners
-differ" sliders move only with-and-without, and make it look bigger than the
-truth, as the `r gfmt(abs(ww_gap))` did. Leave the sliders where the room ends
-up; the lab comes back after the lottery.
-:::
-
-# Break {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
-
-## Five-minute break
-
-::: {.panel}
-Back in five minutes. When we return, we run the lottery ourselves.
-:::
-
-# 4 · Run the lottery yourself {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
-
-## What the lottery buys you
-
-:::::: {.columns}
-
-::::: {.column width="50%"}
-::: {.panel}
-In the **pilot district** every business scored below 58, so every one could have
-joined. A **lottery** picked `r sum(pilot$took_part)` of the `r nrow(pilot)`.
-
-So the randomised comparison is: the businesses the lottery picked vs the ones it
-did not.
-:::
-:::::
-
-::::: {.column width="50%"}
-::: {.panel}
-The claim is that a draw makes the two groups **alike on average**, on what we
-measured *and* on what we did not.
-:::
-
-::: {.ask}
-If the claim holds, what should the gap in costs **before the programme** between
-the two groups look like?
-:::
-:::::
-
-::::::
-
-## Draw the lottery again
-
-```{ojs}
-//| echo: false
-viewof how = Inputs.radio(["Random draw", "Officials pick"],
-  {value: "Random draw", label: "How the 200 are chosen"})
-viewof draw = Inputs.button("Draw again")
-```
-
-:::::: {.columns}
-
-::::: {.column width="55%"}
-```{webr}
-#| input:
-#|   - how
-#|   - draw
-#| autorun: true
-#| edit: false
-#| fig-width: 5.6
-#| fig-height: 3.4
-draw_lottery(how, seed = draw)
-```
-:::::
-
-::::: {.column width="45%"}
-::: {.panel}
-Bars show costs **before** the programme, for the 400 pilot businesses.
-:::
-
-::: {.ask}
-Press **Draw again** five times. How big does the gap get? Then let officials
-pick.
-:::
-
-::: {.warn .fragment}
-When officials pick the cheapest to run, the chosen businesses start hundreds of
-AED ahead, so the programme looks successful before it has done anything.
-:::
-:::::
-
-::::::
-
-::: {.notes}
-Paper (Oct12_session3_materials.docx): Tracker: record the largest gap after five draws, then the gap when officials pick.
-:::
-
-## Four businesses or four hundred?
-
-```{ojs}
-//| echo: false
-viewof k = Inputs.range([4, 400], {value: 4, step: 2, label: "Businesses in the lottery"})
-```
-
-```{webr}
-#| input:
-#|   - k
-#| autorun: true
-#| edit: false
-#| fig-width: 10
-#| fig-height: 3.3
-crowd_gaps(k)
+```{r starting-gap, results='asis'}
+html_out(sprintf('<button data-open="starting-costs" data-closed="Open starting costs" data-opened="Hide starting costs" aria-controls="starting-costs" aria-expanded="false">Open starting costs</button><div id="starting-costs" hidden><div class="evidence-pair"><div class="evidence"><h3>Took part</h3><p class="big-number">%s</p></div><div class="evidence"><h3>Did not take part</h3><p class="big-number">%s</p></div></div><p class="caption">Annual waste cost before GreenWaste, AED per business</p></div>%s',fmt(mean(city$cost_before[took])),fmt(mean(city$cost_before[!took])),fiction))
 ```
 
 ::: {.ask}
-One thousand lotteries at each size. Start at 4 businesses, then slide up.
-**At what size would you trust a single draw?**
+Can the entire later gap be credited to GreenWaste?
 :::
 
 ::: {.notes}
-At 4 the gaps run to hundreds of AED either way; at 400 almost every draw starts
-within a few dozen. This is "two people versus two crowds" from Module 1, seen in
-the data. The same holds for characteristics nobody measured.
+5 minutes. Predict who started cheaper, then open. Participants already had lower costs. The later gap includes a starting difference. This is a warning about selection; no need to add a regression slide. Invite someone to state both the evidence and its implication.
 :::
 
-## `[MENTI PLACEHOLDER]` Would you trust this draw?
+## What else changed? {.reader-slide}
 
-::: {.panel}
-Suppose GreenWaste had run its lottery among only **6 businesses**, 3 picked and
-3 not. Before the programme the picked three already had costs **300 AED lower**.
-Afterwards they are **900 AED lower**.
+::: {.lead}
+Costs can change while a programme is running.
 :::
 
 ::: {.ask}
-What do you conclude? **A** The effect is 900: it was randomised. **B** About 600:
-take off the head start. **C** Too few businesses to trust either number.
-**D** I need to see something else first. Vote, then say what you would need.
+What might have changed costs without GreenWaste?
 :::
 
-::: {.panel .fragment}
-C, with D's instinct. A draw makes groups alike **on average over many draws**,
-not in every draw: with a handful of units a 300 AED head start is ordinary (the
-slider showed about ±`r gfmt(q4)` AED at 4 businesses). B looks careful but assumes the
-head start would have stayed the same. Ask how many units were randomised, and
-for the balance table.
-:::
+Compare your idea with a partner’s. Say what evidence would help check it.
 
 ::: {.notes}
-This asks the room to apply what the two lottery slides showed to a result
-they might be handed. Expect a split between
-A and B; let one person from each argue before revealing.
+4 minutes. Possible ideas: waste charges, supply prices, business activity, another waste policy. These are hypotheses, not facts about the invented data. Before/after confounds programme effects with other changes. Day 2 will examine how a comparison of changes helps, with assumptions. Do not teach DiD now.
 :::
 
-## The lab again: add the lottery
-
-:::::: {.columns}
-
-::::: {.column width="46%"}
-```{ojs}
-//| echo: false
-viewof lab2_trend  = Inputs.range([0, 600], {value: 300, step: 50, label: "Costs rise for everyone anyway (AED)"})
-viewof lab2_size   = Inputs.range([0, 800], {value: 400, step: 100, label: "Joiners are smaller businesses (AED)"})
-viewof lab2_hidden = Inputs.range([0, 800], {value: 400, step: 100, label: "Joiners differ in something nobody measured (AED)"})
-```
-:::::
-
-::::: {.column width="54%"}
-::: {.ask}
-Move any slider as far as you like. **Which estimate never moves, and why
-not?**
-:::
-
-::: {.panel .fragment}
-The randomised one. The lottery decides who takes part, so every problem lands
-equally on both sides of the comparison and cancels out.
-:::
-:::::
-
-::::::
-
-```{webr}
-#| input:
-#|   - lab2_trend
-#|   - lab2_size
-#|   - lab2_hidden
-#| autorun: true
-#| edit: false
-#| echo: false
-#| fig-width: 10
-#| fig-height: 2.8
-lab(c("before_after", "with_without", "randomised"), lab2_trend, lab2_size, lab2_hidden)
-```
-
-::: {.notes}
-About 3 minutes. The sliders start with all three problems switched on. This
-chart comes back in every method session with one more method added:
-difference-in-differences tomorrow morning, then regression discontinuity, then
-matching. Each new method will survive some sliders and not others; only the
-lottery survives them all.
-:::
-
-# 5 · Reading the randomised result {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
-
-## First check: did the real draw work?
-
-```{webr}
-round(aggregate(cbind(cost_before, manager_age, staff, area) ~ took_part,
-                data = pilot, FUN = mean), 1)
-```
-
-:::::: {.columns}
-
-::::: {.column width="50%"}
-::: {.panel}
-Same check as three slides ago, but now the two groups are the businesses the
-lottery picked (1) and the ones it did not (0), in the pilot district.
-:::
-:::::
-
-::::: {.column width="50%"}
-::: {.warn}
-Compare with the rest of the city: there, managers differed by about
-`r round(age_gap)` years. Here, the groups look alike **before** the programme.
-That is what a balance table is for.
-:::
-:::::
-
-::::::
-
-## The effect is a difference of two averages
-
-::: {.ask}
-Three lines of averages, in the pilot district. **Before I press Run: will the
-gap be bigger or smaller than 1,000 AED?**
-:::
-
-```{webr}
-#| fig-width: 6
-#| fig-height: 1.8
-picked     <- mean(pilot$cost_after[pilot$took_part == 1])
-not_picked <- mean(pilot$cost_after[pilot$took_part == 0])
-round(data.frame(picked, not_picked, effect = picked - not_picked))
-bars(Picked = picked, "Not picked" = not_picked, col = c(ACCENT, ACCENT2))
-```
-
-::: {.panel .fragment}
-`r gfmt(rct_est)` AED. The draw made the groups alike, so the gap between the two
-averages **is the effect**, with no adjustment.
-:::
-
-## The regression gives the same number
-
-```{webr}
-fit <- lm(cost_after ~ took_part, data = pilot)
-round(data.frame(coefficient = coef(fit)))
-```
-
-:::::: {.columns}
-
-::::: {.column width="50%"}
-::: {.panel}
-The table an evaluator hands you comes from a line like this one.
-
-**(Intercept)** is the average for the businesses the lottery did not pick.
-**took_part** is the gap between the groups.
-:::
-:::::
-
-::::: {.column width="50%"}
-::: {.ask}
-Which of these two numbers is the impact? And what is the other one?
-:::
-
-::: {.warn .fragment}
-The coefficient is the difference you just computed by hand. The intercept is
-where the comparison group sits: **not an effect**. Reading it as one is a
-common mistake, by people and by AI.
-:::
-:::::
-
-::::::
-
-## Which number is the impact?
-
-```{r results='asis'}
-html_out(sprintf('
-<div class="facts">
-  <div class="k">The impact</div>
-  <div class="v">the took_part coefficient: %s AED &middot; the difference the programme made</div>
-  <div class="k">Not the impact</div>
-  <div class="v">the intercept, %s AED &middot; where the comparison group sat</div>
-  <div class="k">Not sufficient either</div>
-  <div class="v">the p-value &middot; it says the effect is unlikely to be zero, not that it is big enough</div>
-</div>', gfmt(rct_est), gfmt(rct_control)))
-```
-
-::: {.ask}
-A summary reads: *"highly significant, so the programme works and should be
-scaled."* Which line of this table does it misuse?
-:::
-
-## Does it clear the rule?
-
-:::::: {.columns}
-
-::::: {.column width="52%"}
-```{r fig.height=2.5, fig.width=6}
-rule_chart(rct_est, rct_avoided_least, rct_avoided_most, RULEBAR,
-           "AED avoided per business", 1350)
-```
-:::::
-
-::::: {.column width="48%"}
-```{r results='asis'}
-html_out(sprintf('
-<div class="hero">
-  <div class="value">-%s</div>
-  <div class="label">AED, the randomised estimate</div>
-</div>
-<div class="stat-row">
-  <div><span class="n">%s</span><span class="k">The rule</span></div>
-  <div><span class="n">%s</span><span class="k">Least it could be</span></div>
-</div>', gfmt(abs(rct_est)), gfmt(RULEBAR), gfmt(rct_avoided_least)))
-```
-
-::: {.warn}
-The estimate clears the bar. The 95% interval **spans** it: at its least generous
-the programme avoids `r gfmt(rct_avoided_least)` AED, short of
-`r gfmt(RULEBAR)`.
-:::
-:::::
-
-::::::
-
-::: {.ask .fragment}
-Would you sign a national roll-out on this? Commit, then we ask what a smaller
-trial would have told us.
-:::
-
-::: {.notes}
-Paper (Oct12_session3_materials.docx): Tracker: record the interval and whether all of it clears 1,000 AED.
-:::
-
-## What if the trial had been smaller?
-
-```{ojs}
-//| echo: false
-viewof kt = Inputs.range([20, 400], {value: 400, step: 10, label: "Businesses in the trial"})
-```
-
-```{webr}
-#| input:
-#|   - kt
-#| autorun: true
-#| edit: false
-#| fig-width: 10
-#| fig-height: 1.8
-small_trial(kt)
-```
-
-:::::: {.columns}
-
-::::: {.column width="50%"}
-::: {.ask}
-Slide down to 20. **What happens to the estimate, and to the interval?**
-:::
-:::::
-
-::::: {.column width="50%"}
-::: {.warn .fragment}
-The estimate moves a little, but the interval widens to about
-`r gfmt(st20[1])` to `r gfmt(st20[2])` AED. At that size the trial cannot tell you
-whether the bar is cleared.
-:::
-:::::
-
-::::::
-
-::: {.notes}
-Same seed each time, so the businesses kept at a given size are stable while you
-talk. Link back to Session 1: a study that is too small may fail to find a real
-effect.
-:::
-
-# 6 · Put AI to work {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
-
-## AI Snapshot: a paragraph for the minister
-
-:::::: {.columns}
-
-::::: {.column width="42%"}
-::: {.panel}
-Groups, paste this prompt, written the way a busy official might write it:
-
-**"Our pilot cut waste costs by `r gfmt(abs(ba_change))` AED per business (costs before vs after,
-p < 0.001). Write a short paragraph for the minister on what this shows."**
-:::
-
-::: {.ask}
-Mark anything the evidence does not support. Three minutes, in your groups. Then
-run the same prompt yourselves: did your AI write something similar?
-:::
-:::::
-
-::::: {.column width="58%"}
-::: {.ai-output}
-*A response like this is possible, especially with a short or leading prompt:*
-
-The GreenWaste pilot produced a clear result: waste-management costs fell by `r gfmt(abs(ba_change))`
-AED per business, and [with p < 0.001 we can be confident the programme caused
-this reduction]{.flag}. [Because the same businesses were measured before and
-after, differences between businesses are already accounted for]{.flag}, so
-[the `r gfmt(abs(ba_change))` AED saving can be attributed to the programme]{.flag}. [This makes a
-strong case for national scale-up]{.flag}. As with any pilot, results should be
-monitored as the programme expands.
-:::
-:::::
-
-::::::
-
-::: {.notes}
-Paper (Oct12_session3_materials.docx): Hand out the AI handout (pack page 2, one per pair). The better prompt is printed below the flawed paragraph.
-:::
-
-## Debrief: four errors
-
-:::::: {.columns}
-
-::::: {.column width="50%"}
-::: {.warn}
-**1 · Significant is not causal.** p < 0.001 says the fall is unlikely to be
-chance. It says nothing about *what* caused it.
-:::
-
-::: {.warn}
-**2 · Half right.** Following the same businesses
-removes fixed differences between them. It does not remove what changed for
-everyone: costs for businesses that did not take part rose by about `r gfmt(city_rise)` AED.
-:::
-:::::
-
-::::: {.column width="50%"}
-::: {.warn}
-**3 · It reported `r gfmt(abs(ba_change))` as the effect.** That is the naive figure. The randomised
-estimate is `r gfmt(abs(rct_est))` AED, and the prompt gave the model no way to
-know that.
-:::
-
-::: {.warn}
-**4 · It recommended scale-up without asking** what bar the programme has to
-clear, or what `r gfmt(abs(ba_change))` was compared to. The closing caveat is generic.
-:::
-:::::
-
-::::::
-
-::: {.panel}
-**The prompt steered the answer.** It supplied a p-value, the word "cut" and
-a request for the minister, so a model may write a confident summary instead of
-questioning the design. People asked for a quick paragraph for a minister often
-do the same.
-:::
-
-## The same question, a better prompt
-
-:::::: {.columns}
-
-::::: {.column width="50%"}
-::: {.panel}
-**What people actually type**
-
-> Our pilot cut waste costs by `r gfmt(abs(ba_change))` AED per business (before vs after,
-> p < 0.001). Write a short paragraph for the minister.
-
-The prompt frames the fall as the programme's doing, and the model may follow
-that framing.
-:::
-:::::
-
-::::: {.column width="50%"}
-::: {.panel}
-**What to type instead**
-
-> Costs for participating businesses were `r gfmt(abs(ba_change))` AED lower after the pilot than
-> before (p < 0.001). We also have businesses that did not take part and a
-> randomised comparison. The scale-up rule is at least 1,000 AED. Before writing
-> anything, tell me what this before-and-after number can and cannot show.
-> **Ask me questions before you answer.**
-:::
-:::::
-
-::::::
-
-::: {.ask}
-Run both prompts. Which answer checks whether `r gfmt(abs(ba_change))` AED is a fair measure of the
-effect before writing the paragraph? What did each answer explain well?
-
-Two habits: make the AI **ask you questions first**, and have a **second chat**
-review the first one's answer.
-:::
-
-::: {.notes}
-If someone asks why we did not simply ask the AI to explain before-and-after
-bias: current models answer that general question well. The short prompt is
-closer to what people type when they are busy.
-:::
-
-# 7 · Close {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
-
-## Your turn: ask AI first
-
-::: {.ask style="font-size: 110%;"}
-Before we show our list of questions to ask someone presenting an RCT, ask an AI tool:
-
-**"I am a commissioner about to hear an evaluator present a randomised controlled trial (RCT) result. What are the key questions I should ask?"**
-:::
-
-::: {.panel}
-Three minutes. Then compare with our list on the next slide: what did it miss, what did it add, and is anything incorrect?
-:::
-
-::: {.notes}
-OPTIONAL. If time is short, skip this slide and go straight to the questions
-on the next one. If you run it: give three minutes, then reveal the list and
-ask what the AI missed, what it added that is worth keeping, and whether
-anything it suggested was incorrect.
-:::
-
-## Three questions to ask the evaluator
+## How the lottery helps {.reader-slide}
 
 ```{=html}
-<div class="facts">
-  <div class="k">1</div> <div class="v">Compared to what? Before-and-after, with-and-without, or a fair comparison?</div>
-  <div class="k">2</div> <div class="v">Show me the balance table. How do you know the groups started out alike?</div>
-  <div class="k">3</div> <div class="v">How many units were randomised? Does the whole confidence interval meet our decision rule?</div>
+<div class="evidence-pair">
+<div class="evidence"><h3>Chosen by lottery</h3><p>Joined GreenWaste</p></div>
+<div class="evidence"><h3>Waiting group</h3><p>Did not join during the study</p></div>
 </div>
 ```
 
-::: {.panel}
-Question 2 tells you whether the comparison is fair. Question 3 tells you
-whether the result is enough to act on.
+::: {.ask}
+Why does chance help make these groups comparable?
+:::
+
+Fictional pilot district · `r fmt(nrow(pilot))` businesses · roughly half in each group
+
+::: {.notes}
+5 minutes. The pilot picture is already on the case card. Random assignment, an RCT, prevents systematic selection into the two groups on average across possible lotteries. It need not make any one draw perfectly balanced. In this invented pilot, assignment equals participation; real reports require checking follow-up, take-up and effects on the waiting group. Keep the estimand explanation in notes.
+:::
+
+## Draw once draw again {.reader-slide}
+
+::: {.ask}
+Will a small lottery make the groups exactly alike?
+:::
+
+:::: {.columns}
+::: {.column width="50%"}
+```{webr}
+#| echo: true
+draw <- draw + 1
+set.seed(draw)
+group <- sample(rep(c('Join', 'Wait'), each = 10))
+group_ages(group)
+```
+:::
+::: {.column width="50%"}
+Twenty businesses. Ten places.
+
+The output compares **manager age before the programme**.
+
+Fictional case · demonstration only
+:::
+::::
+
+::: {.notes}
+7 minutes. Predict first; trainer Run, then Run once more. The input is the first 20 pilot businesses’ actual pre-programme manager ages. This redraw is a demonstration of chance balance, not a reanalysis of the trial or an effect estimate. Rename output x orally as average manager age. Each run uses a new fixed seed. Paper fallback: draw ten of twenty numbered slips from the age list in the trainer pack and compare means. Avoid adding a sample-size slider or a sampling theory lecture.
+:::
+
+## Read the trial result {.reader-slide}
+
+```{r trial-table, results='asis'}
+html_out(reading_table('trial', TRUE))
+```
+
+::: {.ask}
+Which comparison does this coefficient describe?
 :::
 
 ::: {.notes}
-Paper (Oct12_session3_materials.docx): Hand out the take-away cards (pack page 3). Give a minute to fill in "Back at work" on the card, then take two or three examples from the room.
-
-Paper: hand out the GreenWaste case sheet (GreenWaste_case_brief.docx, one per participant) to keep for the rest of the week. It summarises the case and the four groups; hand it out now, not earlier, because it shows the averages the session asked the room to predict.
+6 minutes. Read Sheet 1. The result is the after-period difference between randomly assigned pilot groups. Assignment equals participation in this fictional pilot. Show that the comparison is different from both city estimates. Ask learners to state a saving in AED per business per year, observed 12 months later. The interval is from the canonical ordinary least-squares pilot model in greenwaste_case.R, matching the printed table.
 :::
 
-## What today gives you
+## Break {.reader-slide}
+
+Pause here. Leave the result sheet on the table.
+
+::: {.notes}
+5 minutes. Protect the break. Do not use it to add further slides or a lab.
+:::
+
+## Open the uncertainty {.reader-slide}
+
+```{r trial-interval, results='asis'}
+html_out(interval_svg('trial', TRUE))
+html_out('<button data-open="interval-trial" data-closed="Open the 95% interval" data-opened="Hide the interval" aria-controls="interval-trial" aria-expanded="false">Open the 95% interval</button>')
+```
+
+::: {.ask}
+Does the trial settle whether saving reaches the rule?
+:::
+
+::: {.notes}
+6 minutes. Point estimate first, interval second. The interval spans the 1,000 AED threshold: uncertainty remains about meeting it. On the saving scale, both ends are positive; uncertainty about a threshold is different from uncertainty about any saving. The interval relies on statistical assumptions and does not capture all design failures. The pilot result may not generalise to the whole city.
+:::
+
+## Would you extend it now? {.reader-slide}
 
 ```{=html}
-<div class="facts">
-  <div class="k">Before-and-after</div> <div class="v">folds in everything else that changed &middot; here it understated</div>
-  <div class="k">With-and-without</div>  <div class="v">compares groups that already differed &middot; here it overstated</div>
-  <div class="k">A lottery</div>         <div class="v">makes groups alike on average, and more so the more units it draws</div>
-  <div class="k">Reading the result</div><div class="v">a difference of two averages; judge its interval against the rule</div>
+<div data-choices>
+<button data-choice aria-pressed="false">Extend</button>
+<button data-choice aria-pressed="false">Do not extend</button>
+<button data-choice aria-pressed="false">Ask first</button>
+<p role="status" class="feedback"></p>
 </div>
 ```
 
-::: {.panel}
-Tomorrow: the rest of the city, where no lottery decided. If the groups were not
-drawn, **were their costs at least moving in parallel before the programme
-started?**
+::: {.ask}
+What evidence supports your decision, and what still limits it?
+:::
+
+Use the trial’s comparison, interval and decision rule.
+
+::: {.notes}
+6 minutes. A provisional judgement may differ with costs, risks and the next evidence opportunity. Require a reason; do not award “ask first” automatically. The interval spans the rule; the pilot covers one district. If using room polling, capture After and compare with Before; invite which evidence changed a mind, without identifying voters.
+:::
+
+## Write a decision note {.reader-slide}
+
+Use **Sheet 2** with a partner.
+
+State the trial result and comparison. Explain the limit on your recommendation.
+
+::: {.ask}
+What would a director need to know before approving scale-up?
+:::
+
+Keep your note to three or four sentences. Point to the evidence for each claim.
+
+::: {.notes}
+10 minutes. Six to write, two to exchange notes, two for feedback. The note should contain the randomised pilot comparison, annual saving, uncertainty about the threshold and limits on reach/implementation. Do not require every possible caveat or formula. Programme costs are not supplied, so value for money is not settled.
+:::
+
+## Check an AI note {.reader-slide data-correct="The pilot estimate is supported. The threshold is still uncertain, and nationwide value for money is not established."}
+
+Select every unsupported conclusion in this illustrative AI draft.
+
+```{r ai-trial, results='asis'}
+html_out(sprintf('<div class="claim-list"><button data-claim="supported" aria-pressed="false">The pilot trial estimated an annual saving of %s AED per business.</button><button data-claim="unsupported" aria-pressed="false">The trial proves the minimum saving is met.</button><button data-claim="unsupported" aria-pressed="false">Nationwide rollout is good value for money.</button></div><button data-check>Check against the result sheet</button><p data-feedback class="feedback" role="status"></p>%s',fmt(abs(case$rct)),fiction))
+```
+
+::: {.notes}
+8 minutes. Find two unsupported conclusions, then rewrite them using the source. Ask AI, if used, to quote the evidence behind each conclusion and list unanswered questions. Participants check the quotations, units and comparisons themselves. This authored draft is not a real saved chat. Avoid presenting agreement between two AIs as proof.
+:::
+
+## Your question for the evaluator {.reader-slide}
+
+Close the result sheet.
+
+::: {.ask}
+What is your most useful question before this pilot becomes a citywide programme?
+:::
+
+Write your question and say how its answer could change your recommendation.
+
+::: {.notes}
+5 minutes. Individual retrieval, no AI. Accept specific questions about whether the trial was implemented fairly, who was followed up, how the pilot differs from the city, cost, uncertainty about the rule, or the next feasible evidence. Require the reason, not the term. Total 75 minutes. No full lab or additional simulation.
 :::

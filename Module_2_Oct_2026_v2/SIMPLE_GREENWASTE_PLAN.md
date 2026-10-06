@@ -1,5 +1,22 @@
 # Simple GreenWaste: what is being done and what is next
 
+## Scope update from Lucas (6 October 2026)
+
+The rebuild now covers **eleven course-owned sessions**. Drop the former Day 4
+Session 3 design workshop from the delivery plan; its slot will be an evaluation
+simulation prepared by someone else. Keep the existing files for reference.
+The original row for Oct15 S3 below is superseded.
+
+Lucas also asked for shorter sessions, less information and technical prose,
+appealing activity materials, better interactive visuals and a course-owned
+replacement for Menti. The review and proposed daily teaching plan are in
+`review_2026_10_06/week_review.qmd`, with a rendered HTML review and a local
+activity preview in the same folder. Lucas approved the 60/60/75-minute
+schedule for Days 1-3, 60/60 for Day 4, and the Day 1 slide tables on 6 October.
+The shorter Day 1 decks and screen/paper materials are now built and checked.
+Day 2 slide tables are in `review_2026_10_06/day2_plan.qmd`, pending daily review.
+The case CSV remains unchanged; its score-rounding correction is still pending.
+
 Status 2026-10-06 (updated the same day). Owner: Lucas, agreed with Fiona. Work happens on the branch
 `simple-greenwaste`; `main` and the live site stay as they are until the branch
 is reviewed and merged.

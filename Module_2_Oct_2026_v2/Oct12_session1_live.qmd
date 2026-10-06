@@ -1,980 +1,216 @@
 ---
-title: "Compared to What? Know the Language First"
-subtitle: "Module 2 · Day 1, Session 1: Five Words for Reading Any Result"
+title: "Compared to what"
+subtitle: "Module 2 · Day 1 · Session 1"
 author: "3ie"
-always_allow_html: yes
-title-slide-attributes:
-  data-state: title-slide-state
-# live-revealjs: the quarto-live extension (_extensions/r-wasm/live) runs R in
-# the browser through webR. The live cells need an internet connection on the
-# day (webR loads from a CDN) and the CSV listed under webr: resources must sit
-# next to the published .html. Static knitr chunks work as before.
-#
-# The simple GreenWaste case (SIMPLE_GREENWASTE_PLAN.md), the one case of the
-# whole module. This session introduces it and practises the five words on
-# LANDFILL (tonnes per business per year, the rest of the city), so it does not
-# give away the cost results of Sessions 2 and 3. Costs are not shown here.
+always_allow_html: true
 format:
-  live-revealjs:
-    theme: [theme_dge.scss, theme_live.scss]
+  revealjs:
+    theme: [theme_dge.scss, theme_live.scss, theme_reader.scss]
     logo: assets/dge_logo_horizontal.svg
     slide-number: true
     width: 1280
     height: 720
-    fig-align: center
     slide-level: 2
     embed-resources: true
-webr:
-  render-df: kable
-  resources:
-    - evaluation_data_GreenWaste_simple.csv
+    include-after-body: _reader_interactions.html
 knitr:
   opts_chunk:
     echo: false
     warning: false
     message: false
-    dev: "png"
-    dpi: 96
-editor_options:
-  chunk_output_type: console
 ---
 
-{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
 
-```{r setup}
-library(knitr)
-library(qrcode)
 
-gfmt  <- function(x, d = 0) formatC(x, format = "f", digits = d, big.mark = ",")
-FENCE <- strrep("`", 3)   # built, not typed: a literal fence would end the chunk
-html_out <- function(x) cat("\n", FENCE, "{=html}\n", x, "\n", FENCE, "\n", sep = "")
-
-# ---- Live Menti poll (placeholder until the in-slide poll is built) --------
-MENTI_CODE <- "1234 5678"
-MENTI_JOIN <- paste0("https://www.menti.com/", gsub(" ", "", MENTI_CODE))
-menti_qr <- function(path = "menti_qr_s1.png", url = MENTI_JOIN) {
-  png(path, width = 900, height = 900, res = 300, bg = "white")
-  on.exit(dev.off(), add = TRUE)
-  par(mar = c(0, 0, 0, 0))
-  plot(qr_code(url, ecl = "H"))
-  path
-}
-MENTI_QR <- menti_qr()
-
-# ---- The numbers the static slides quote -----------------------------------
-# greenwaste_case.R is sourced into its own environment (it defines RULE).
-# This session uses only the rest of the city and its landfill columns.
-case_env <- new.env()
-case_env$gw <- read.csv("./evaluation_data_GreenWaste_simple.csv")
-sys.source("greenwaste_case.R", envir = case_env)
-city <- case_env$city
-took <- case_env$took
-city$change <- city$landfill_after - city$landfill_before   # landfill, tonnes (case_env keeps costs)
-
-# The headline: businesses that took part, before and after.
-lf_before <- mean(city$landfill_before[took])
-lf_after  <- mean(city$landfill_after[took])
-lf_pct    <- 100 * (lf_after / lf_before - 1)
-rest_pct  <- 100 * (mean(city$landfill_after[!took]) / mean(city$landfill_before[!took]) - 1)
-
-# Ten businesses from the rest of the city, chosen once by ID so the room can
-# do the arithmetic by hand (whole tonnes; mean 10 with the large one, 6
-# without). The last one is a large business that pulls the mean above the
-# median. The same ten are on the worksheet (make_session_materials.R).
-TEN <- c("B02136", "B00755", "B03791", "B05600", "B01274",
-         "B07507", "B01673", "B04954", "B08013", "B03836")
-ten <- subset(city, business %in% TEN)
-ten <- ten[order(ten$landfill_before), ]
-ten_x <- ten$landfill_before
-stopifnot(nrow(ten) == 10, ten$business[10] == "B03836", mean(ten_x) > median(ten_x))
-
-# The 2x2 for Word 2: average landfill, took part or not, before and after.
-r2 <- function(x) round(x, 2)   # two decimals keep the hand arithmetic exact
-lf_t0 <- r2(mean(city$landfill_before[took]));  lf_t1 <- r2(mean(city$landfill_after[took]))
-lf_o0 <- r2(mean(city$landfill_before[!took])); lf_o1 <- r2(mean(city$landfill_after[!took]))
-lf_effect <- (lf_t1 - lf_t0) - (lf_o1 - lf_o0)
-
-# Word 3: the regression on every business.
-fit   <- lm(change ~ took_part, data = city)
-fit_b <- coef(fit)[["took_part"]]
-fit_ci <- confint(fit)["took_part", ]
-fit2  <- lm(change ~ took_part + staff + area, data = city)
-area_b <- coef(fit2)[["area"]]
-
-# Word 4: the same draws as the live cells (same seeds, same code).
-study <- function(n, seed = 2) {
-  set.seed(seed)
-  city[c(sample(which(city$took_part == 1), n / 2), sample(which(city$took_part == 0), n / 2)), ]
-}
-gap <- function(d) mean(d$change[d$took_part == 1]) - mean(d$change[d$took_part == 0])
-small <- study(20)
-set.seed(1)
-small_sh <- replicate(1000, { e <- small; e$took_part <- sample(small$took_part); gap(e) })
-small_p  <- mean(abs(small_sh) >= abs(gap(small)))
-
-tiny <- city
-tiny$change <- tiny$change + tiny$took_part * (-gap(city) - 0.1)
-tiny_p <- format.pval(summary(lm(change ~ took_part, data = tiny))$coefficients["took_part", 4],
-                      digits = 2, eps = 0.001)
-
-detect_share <- function(n) {
-  set.seed(3)
-  mean(replicate(200, t.test(change ~ took_part, data = study(n, seed = sample(1e6, 1)))$p.value) < 0.05)
-}
-det20 <- detect_share(20); det6 <- detect_share(6)
-
-# ---- The case introduction: one illustrative city -----------------------------
-# Shop position, efficiency score, and whether it joined. Inside the pilot
-# district every score is below 58 and a lottery decided; everywhere else a
-# score of 58 or below meant joining. Illustrative, not the real counts.
-SHOP_BLUE <- "#215a9e"; SHOP_GREY <- "#c9d6e6"
-pilot_shops <- data.frame(x = c(70, 165, 260, 70, 165, 260), y = c(98, 98, 98, 186, 186, 186),
-                          score = c(41, 52, 37, 48, 33, 55), joined = c(1, 0, 1, 0, 0, 1))
-city_shops  <- data.frame(
-  x = c(415, 525, 635, 745, 415, 525, 635, 745, 70, 180, 290, 415, 525, 635, 745),
-  y = c(80, 80, 80, 80, 195, 195, 195, 195, 330, 330, 330, 330, 330, 330, 330),
-  score = c(72, 45, 88, 39, 56, 63, 29, 91, 47, 77, 52, 68, 35, 84, 58))
-city_shops$joined <- as.integer(city_shops$score <= 58)
-shop_svg <- function(d) paste(sprintf(
-  '<use href="#shop" x="%d" y="%d" width="62" height="58" color="%s"/><text x="%d" y="%d" font-size="19" text-anchor="middle" fill="%s" font-weight="%s">%d</text>',
-  d$x, d$y, ifelse(d$joined == 1, SHOP_BLUE, SHOP_GREY), d$x + 31, d$y + 80,
-  ifelse(d$joined == 1, "#063360", "#545860"), ifelse(d$joined == 1, "700", "400"), d$score), collapse = "\n")
+```{r setup, include=FALSE}
+source('day1_case.R')
 ```
 
-# 0 · Where Module 1 left us {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
-## The word Module 1 was built on
+## A report has reached your desk {.reader-slide}
 
-```{webr}
-#| autorun: true
-#| include: false
-# Runs once, in the browser, when the deck opens. Every live cell below uses
-# what is defined here, so each one on a slide stays two or three lines long.
-gw   <- read.csv("evaluation_data_GreenWaste_simple.csv")
-city <- subset(gw, setting == "city")                        # the rest of the city
-city$change <- city$landfill_after - city$landfill_before    # landfill, tonnes per year
-ACCENT <- "#215a9e"; ACCENT2 <- "#7da1c4"; ALERT <- "#B8272C"; MUTED <- "#545860"
-options(width = 100, scipen = 6)
-
-clean_par <- function() par(mar = c(4.2, 5.5, 1, 1), family = "sans", las = 1,
-                            col.axis = MUTED, col.lab = MUTED, fg = MUTED, cex = 1.25)
-
-TEN <- c("B02136", "B00755", "B03791", "B05600", "B01274",
-         "B07507", "B01673", "B04954", "B08013", "B03836")
-ten <- subset(city, business %in% TEN)
-
-# Bars with the value printed on each (handles negative values).
-bars <- function(v, col = c(ACCENT, ACCENT2, ALERT)) {
-  clean_par(); par(mar = c(2.5, 1, 1.5, 1))
-  b <- barplot(v, col = col, border = NA, axes = FALSE,
-               ylim = range(c(0, v)) + c(-1.2, 1.2))
-  abline(h = 0, col = MUTED)
-  text(b, v, sprintf("%.2f t", v), pos = ifelse(v < 0, 1, 3), cex = 1.2, xpd = NA)
-}
-
-# Dots for a handful of values, with the mean (red) and the median (dashed).
-dots <- function(x) {
-  clean_par()
-  stripchart(x, method = "stack", pch = 19, cex = 2.2, col = ACCENT, offset = 0.7,
-             xlim = c(0, 50), xlab = "Landfill before, tonnes per year", at = 0.2, ylim = c(0, 1.2))
-  abline(v = mean(x), col = ALERT, lwd = 3)
-  abline(v = median(x), col = MUTED, lwd = 3, lty = 2)
-  text(mean(x), 0.95, paste("mean", round(mean(x), 1)), col = ALERT, pos = 4)
-  text(median(x), 0.95, paste("median", median(x)), col = MUTED, pos = 2)
-}
-
-# A study of n businesses (half took part), always the same draw for a given n.
-study <- function(n, seed = 2) {
-  set.seed(seed)
-  city[c(sample(which(city$took_part == 1), n / 2), sample(which(city$took_part == 0), n / 2)), ]
-}
-gap <- function(d) mean(d$change[d$took_part == 1]) - mean(d$change[d$took_part == 0])
-
-# Shuffle the took_part labels k times and count how often chance alone beats
-# the gap we measured.
-shuffle_plot <- function(d, k) {
-  real <- gap(d)
-  set.seed(1)
-  sh <- replicate(max(k, 1), { e <- d; e$took_part <- sample(d$took_part); gap(e) })
-  if (k == 0) sh <- numeric(0)
-  h <- hist(sh, breaks = seq(-8, 8, by = 0.2), plot = FALSE)
-  clean_par()
-  hist(sh, breaks = seq(-8, 8, by = 0.2), col = ACCENT2, border = "white",
-       main = "", xlab = "Gap in landfill change, shuffled labels (tonnes)",
-       ylab = "Shuffles", xlim = c(-3, 3), ylim = c(0, max(12, h$counts)))
-  abline(v = c(real, -real), col = ALERT, lwd = 3, lty = c(1, 2))
-  cat(sprintf("Measured gap: %.2f tonnes.  Shuffles: %d.  As far from zero by chance: %d  ->  p = %s\n",
-              real, k, sum(abs(sh) >= abs(real)),
-              if (k == 0) "?" else format(round(mean(abs(sh) >= abs(real)), 3))))
-}
-
-# Estimate and 95% interval against zero, one line.
-one_interval <- function(est, lo, hi, xlim = c(-3.5, 0.5)) {
-  clean_par()
-  plot(NA, xlim = xlim, ylim = c(0.5, 1.5), yaxt = "n", bty = "n",
-       xlab = "Effect on landfill (tonnes per business per year)", ylab = "")
-  abline(v = 0, col = MUTED, lwd = 2, lty = 2)
-  segments(lo, 1, hi, 1, col = ACCENT, lwd = 8)
-  points(est, 1, pch = 19, cex = 2.5, col = ACCENT)
-}
-
-# "Suppose GreenWaste had cut landfill by only `cut_by` tonnes": shift the
-# changes of the businesses that took part so the effect is exactly that, keep
-# every business, re-test.
-significance_demo <- function(cut_by) {
-  what_if <- city
-  what_if$change <- what_if$change + what_if$took_part * (-gap(city) - cut_by)
-  f  <- lm(change ~ took_part, data = what_if)
-  ci <- confint(f)["took_part", ]
-  p  <- summary(f)$coefficients["took_part", 4]
-  cat(sprintf("All %s businesses. Effect %.2f tonnes, 95%% interval %.2f to %.2f, p = %s\n",
-              format(nrow(city), big.mark = ","), coef(f)[["took_part"]], ci[1], ci[2],
-              format.pval(p, digits = 2, eps = 0.001)))
-  one_interval(coef(f)[["took_part"]], ci[1], ci[2])
-}
-
-# 100 studies of n businesses each, with their intervals. Red: misses the value
-# we get from every business in the rest of the city.
-many_studies <- function(n = 40, runs = 100, seed = 1) {
-  truth <- gap(city)
-  set.seed(seed)
-  res <- t(replicate(runs, {
-    d <- city[c(sample(which(city$took_part == 1), n / 2), sample(which(city$took_part == 0), n / 2)), ]
-    f <- lm(change ~ took_part, data = d)
-    c(coef(f)[["took_part"]], confint(f)["took_part", ])
-  }))
-  res  <- res[order(res[, 1]), ]
-  miss <- res[, 2] > truth | res[, 3] < truth
-  clean_par()
-  plot(NA, xlim = c(-6, 1), ylim = c(1, runs), yaxt = "n", bty = "n",
-       xlab = "Effect on landfill (tonnes per business), one line per study", ylab = "")
-  segments(res[, 2], 1:runs, res[, 3], 1:runs, col = ifelse(miss, ALERT, ACCENT2), lwd = 2)
-  points(res[, 1], 1:runs, pch = 19, cex = 0.5, col = ifelse(miss, ALERT, ACCENT))
-  abline(v = truth, col = MUTED, lwd = 2)
-  cat(sprintf("%d studies of %d businesses. %d intervals contain the all-businesses value (%.2f); %d miss it.\n",
-              runs, n, sum(!miss), truth, sum(miss)))
-}
-```
+::: {.lead}
+“Landfill waste from businesses in GreenWaste fell `r fmt(landfill_fall)`% in a year.”
+:::
 
 ::: {.ask}
-From Module 1: what is a **counterfactual**?
+Would this sentence justify extending the programme?
 :::
 
-::: {.panel .fragment}
-What would have happened to the same people, over the same period, without the
-programme. We never observe it. Every evaluation method estimates it with a
-**comparison**, and a result can only be read once you know what that
-comparison was.
-:::
+Write your decision and one question on **Sheet 1**. Work alone first.
 
-::: {.panel .fragment}
-Today we attach five words to that idea, using one programme and its data from
-start to finish.
-:::
+Fictional GreenWaste case · invented figures
 
 ::: {.notes}
-About 3 minutes. Recall only; Module 1 taught this. Open the deck a couple of minutes before the session starts: R takes about a minute to load in the browser, after which every live cell runs in a few seconds.
+7 minutes. This is the entry task, not a lecture. Do not define terms or correct answers yet. Collect a few decisions and questions. Keep the sheets so participants can compare their own reading at the end of the week. No AI for this task.
 :::
 
-# 1 · What are we comparing? {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+## Meet GreenWaste {.reader-slide}
 
-## The GreenWaste programme
+{{< include _case_map.qmd >}}
 
-<p style="font-size:0.85em; margin: 0 0 4px; max-width: none;">GreenWaste helps businesses cut their waste costs. Here is how it reached them.</p>
-
-```{r city-map, results='asis'}
-html_out(paste0('
-<svg viewBox="0 0 1200 470" width="100%" role="img"
-     aria-label="A city map. In the pilot district a lottery chose which shops joined. In the rest of the city, shops with an efficiency score of 58 or below joined."
-     style="font-family: \'Noto Kufi Arabic\', \'Segoe UI\', Arial, sans-serif;">
-  <defs>
-    <symbol id="shop" viewBox="0 0 60 56">
-      <path d="M4 14 L10 2 H50 L56 14 Z" fill="currentColor"/>
-      <path d="M4 14 q5 7 10 0 q5 7 10 0 q5 7 10 0 q5 7 10 0 q5 7 12 0" fill="currentColor"/>
-      <rect x="8" y="20" width="44" height="34" rx="2" fill="currentColor"/>
-      <rect x="14" y="30" width="12" height="24" fill="#fff" opacity="0.85"/>
-      <rect x="32" y="28" width="14" height="12" fill="#fff" opacity="0.85"/>
-    </symbol>
-  </defs>
-  <rect x="20" y="20" width="820" height="440" rx="18" fill="#f4f7fb" stroke="#D5DEE8" stroke-width="2"/>
-  <path d="M370 20 V460 M20 300 H840" stroke="#e3e9f1" stroke-width="10"/>
-  <text x="820" y="450" font-size="22" font-weight="700" fill="#7f97b5" text-anchor="end">THE CITY</text>
-  <rect x="45" y="45" width="305" height="245" rx="14" fill="#e3ebf5" stroke="#215a9e" stroke-width="3" stroke-dasharray="12 8"/>
-  <text x="62" y="80" font-size="22" font-weight="700" fill="#063360">Pilot district</text>
-  <g transform="translate(300,55)">
-    <rect width="38" height="38" rx="7" fill="#fff" stroke="#063360" stroke-width="2.5"/>
-    <circle cx="11" cy="11" r="3.5" fill="#063360"/><circle cx="27" cy="11" r="3.5" fill="#063360"/>
-    <circle cx="19" cy="19" r="3.5" fill="#063360"/>
-    <circle cx="11" cy="27" r="3.5" fill="#063360"/><circle cx="27" cy="27" r="3.5" fill="#063360"/>
-  </g>
-', shop_svg(pilot_shops), '
-', shop_svg(city_shops), '
-  <g font-size="21" fill="#111418">
-    <rect x="875" y="40" width="300" height="150" rx="12" fill="#fff" stroke="#215a9e" stroke-width="3" stroke-dasharray="12 8"/>
-    <text x="895" y="82" font-weight="700" fill="#063360">In the pilot district</text>
-    <text x="895" y="118">a <tspan font-weight="700">lottery</tspan> chose which</text>
-    <text x="895" y="148">shops joined</text>
-    <rect x="875" y="215" width="300" height="178" rx="12" fill="#fff" stroke="#D5DEE8" stroke-width="2"/>
-    <text x="895" y="257" font-weight="700" fill="#063360">Everywhere else</text>
-    <text x="895" y="293">shops scoring <tspan font-weight="700">58 or below</tspan></text>
-    <text x="895" y="323">joined</text>
-    <text x="895" y="356" font-size="16" fill="#545860">the number under each shop</text>
-    <text x="895" y="377" font-size="16" fill="#545860">is its efficiency score</text>
-  </g>
-  <g font-size="19" fill="#111418">
-    <use href="#shop" x="878" y="404" width="30" height="28" color="', SHOP_BLUE, '"/><text x="918" y="425">joined GreenWaste</text>
-    <use href="#shop" x="878" y="436" width="30" height="28" color="', SHOP_GREY, '"/><text x="918" y="457">did not join</text>
-  </g>
-</svg>'))
-```
+Fictional case · today we read **waste sent to landfill**, in tonnes per business per year.
 
 ::: {.notes}
-About 3 minutes. One city; the pilot district is part of it. Point at the pilot
-district: every shop there scores below 58, yet only some joined, because a
-lottery decided. Then the rest of the city: the number under each shop decided.
-Ask: "Where would it be fairer to compare shops that joined with shops that did
-not: inside the pilot district or in the rest of the city? Why?" Take answers;
-do not resolve it yet. Session 3 comes back to it. The map is illustrative, and
-the case is invented for this training.
-
-Today stays in the rest of the city and looks at one thing GreenWaste changed:
-the tonnes of waste each business sends to landfill in a year. The waste costs,
-on which the decision rests, open in Session 2.
-
-Paper: hand out the GreenWaste picture card (GreenWaste_case_card.docx, one per participant).
+3 minutes. Use the existing case picture/card. GreenWaste advises businesses and helps them improve waste handling. One pilot used a lottery; the rest of the city used a score rule. Do not teach either method yet or reveal cost findings. The map shows an illustrative arrangement, not actual counts. The existing data contain eight rounded score-58 exceptions; do not claim that every displayed score follows the rule without exception.
 :::
 
-## The headline
+## Would you extend it? {.reader-slide}
 
-```{r results='asis'}
-html_out(sprintf('
-<div class="hero">
-  <div class="value">%s%%</div>
-  <div class="label">Landfill waste, businesses that took part, before to 12 months after</div>
-</div>
-<div class="stat-row">
-  <div><span class="n">%s</span><span class="k">Tonnes per business, before</span></div>
-  <div><span class="n">%s</span><span class="k">Tonnes per business, after</span></div>
-</div>', gfmt(lf_pct), gfmt(lf_before, 1), gfmt(lf_after, 1)))
-```
-
-:::::: {.columns}
-
-::::: {.column width="62%"}
-::: {.ask}
-**`[MENTI PLACEHOLDER]`** On this number alone, would you extend GreenWaste?
-
-Go to **menti.com**, code **`r MENTI_CODE`**, or scan the code.
-:::
-:::::
-
-::::: {.column width="38%"}
-```{r out.width='230px', out.extra='style="display:block; margin:0 auto;"'}
-knitr::include_graphics(MENTI_QR)
-```
-:::::
-
-::::::
-
-::: {.warn .note-ctr}
-**Illustrative case, with invented figures.**
+::: {.big-number}
+`r fmt(landfill_fall)`% lower
 :::
 
-## What if every business cut its landfill anyway?
-
-```{ojs}
-//| echo: false
-viewof anyway = Inputs.range([0, 60], {value: 0, step: 5, label: "Every business cut its landfill anyway (%)"})
-```
-
-```{webr}
-#| input:
-#|   - anyway
-#| autorun: true
-#| edit: false
-before <- mean(city$landfill_before[city$took_part == 1])
-after  <- mean(city$landfill_after[city$took_part == 1])
-without <- before * (1 - anyway / 100)    # where they would have ended without GreenWaste
-round(data.frame(before, without, after, fall_left_for_GreenWaste_pct = 100 * (after / without - 1)), 1)
-```
-
-::: {.ask}
-Landfill fell `r gfmt(abs(lf_pct))`%. Slide "anyway" up to `r gfmt(round(abs(lf_pct) / 5) * 5)`%.
-**How much of the fall is left for GreenWaste?**
-:::
-
-::: {.panel .fragment}
-Almost none. If every business cut its landfill that much anyway, the headline
-would look the same with or without GreenWaste. The headline alone cannot tell
-the two apart.
-:::
-
-## The businesses that did not take part
-
-```{webr}
-lf <- aggregate(cbind(landfill_before, landfill_after) ~ took_part, data = city, FUN = mean)
-lf$change_pct <- 100 * (lf$landfill_after / lf$landfill_before - 1)
-round(lf, 1)
-```
-
-::: {.panel}
-Businesses in the rest of the city that did **not** take part cut their landfill
-by `r gfmt(abs(rest_pct))`% too, without GreenWaste. Part of the fall would have
-happened anyway.
-:::
-
-::: {.ask .fragment}
-Those businesses all scored above 58. Is their `r gfmt(abs(rest_pct))`% what
-would have happened to the businesses that took part? What would you want to
-know first?
-:::
-
-::: {.notes}
-Ask for a prediction before pressing Run: did landfill fall for the businesses
-that did not take part, and by how much? Then take answers to the question. If
-someone says they are different businesses (more efficient, larger), say that
-is exactly where Session 3 goes, and leave it there. Then a show of hands: who
-would now change their vote from the headline slide? Take one reason from
-someone who changed and one from someone who did not.
-:::
-
-## "Compared to what?"
-
-::: {.panel}
-Every result is a comparison. A before-and-after number compares the programme
-with **its own past**. What else changed over the same period (prices, rules on
-waste, a city campaign) is inside that number, and it can push the answer
-either way.
-:::
-
-::: {.ask}
-Think of a figure you reported, or were sent, this year. **What was it compared
-to?** If nobody said, what would you have picked?
-:::
-
-# 2 · Three questions for any number {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
-
-## One idea, three questions
-
-::: {.panel}
-The five words that follow each answer one of three questions you can ask of
-any number an evaluator hands you.
-:::
+Landfill among businesses that took part, one year later.
 
 ```{=html}
-<div class="facts">
-  <div class="k">Compared to what?</div>             <div class="v">Comparison group, counterfactual</div>
-  <div class="k">How big, in units that matter?</div> <div class="v">Mean · treatment effect · coefficient</div>
-  <div class="k">How sure are we?</div>              <div class="v">p-value · confidence interval</div>
+<div data-choices>
+  <button data-choice aria-pressed="false">Extend</button>
+  <button data-choice aria-pressed="false">Do not extend</button>
+  <button data-choice aria-pressed="false">Ask first</button>
+  <p role="status" class="feedback"></p>
 </div>
 ```
 
-::: {.panel}
-We come back to this list at the end of the session, and on every day of the
-week.
+Fictional GreenWaste case · invented figures
+
+::: {.notes}
+3 minutes. Individual choice, then a reason. Buttons record only the choice in this open page. For shared phone voting use room_poll.py and its facilitator page; the room poll is separate from this local interaction. Keep results hidden until voting closes. Paper fallback: three labelled cards or a show of hands. Revisit the same question after opening the comparison.
 :::
 
-# 3 · The five words {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+## What is missing? {.reader-slide}
 
-## Word 1 · Mean: ten businesses, by hand
+::: {.lead}
+“Landfill fell after GreenWaste.”
+:::
 
-:::::: {.columns}
-
-::::: {.column width="42%"}
-```{r}
-data.frame(Business = ten$business, Staff = ten$staff,
-           `Landfill (tonnes)` = ten_x, check.names = FALSE) |>
-  kable(align = "lrr", row.names = FALSE)
-```
-:::::
-
-::::: {.column width="58%"}
 ::: {.ask}
-Ten businesses in the rest of the city, before the programme. With pen and
-paper: **what is the average landfill per business?** Then: is a typical
-business close to it?
+What would you need to know before saying GreenWaste caused the fall?
 :::
 
-::: {.panel .fragment}
-The mean is **`r gfmt(mean(ten_x), 1)`** tonnes.
-`r sum(ten_x < mean(ten_x))` of the ten businesses are below it. One business
-with `r ten$staff[10]` staff sends `r max(ten_x)` tonnes and pulls the mean up;
-the middle business (the **median**) sends `r median(ten_x)`.
+Write one question. Compare it with a partner’s.
+
+::: {.notes}
+4 minutes. Invite concrete questions, not a list of technical terms. Prompt only if needed: what else changed, what happened elsewhere, how businesses were selected? Keep the next slide hidden until participants have committed.
 :::
-:::::
 
-::::::
+## Open the comparison {.reader-slide}
 
-::: {.warn .note-ctr}
-**Illustrative case, with invented figures.**
+```{r landfill-comparison, results='asis'}
+html_out(sprintf('<div class="evidence-pair"><div class="evidence"><h3>Took part</h3><p class="big-number">%s &rarr; %s</p><p>Before &rarr; one year later</p></div><div class="evidence"><h3>Did not take part</h3><button data-open="other-landfill" data-closed="Open their result" data-opened="Hide their result" aria-controls="other-landfill" aria-expanded="false">Open their result</button><div id="other-landfill" hidden><p class="big-number">%s &rarr; %s</p><p>Before &rarr; one year later</p></div></div></div><p class="caption">Landfill, tonnes per business per year</p>%s', fmt(landfill['before'],1), fmt(landfill['after'],1), fmt(landfill['other_before'],1), fmt(landfill['other_after'],1), fiction))
+```
+
+::: {.ask}
+What can the first fall tell us on its own?
 :::
 
 ::: {.notes}
-Paper (Oct12_session1_materials.docx): Hand out the ten-businesses worksheet (pack page 1, one per participant; the landfill table is on the back). Give two minutes before the reveal.
+5 minutes. Ask participants to predict the other group’s direction before opening it. The other group also improved. This weakens a causal reading of before/after; it does not prove that these groups are a valid causal comparison. They started at different levels. Ask the same extension question again using the room poll’s After phase or cards. Invite a changed reason, not a winning answer.
 :::
 
-## Word 1 · What the mean hides
+## Compared to what? {.reader-slide}
 
-::::::: {.columns}
-
-:::::: {.column width="45%"}
-```{ojs}
-//| echo: false
-viewof keep = Inputs.radio(["All ten businesses", "Without the largest"], {value: "All ten businesses"})
-```
-::::::
-
-:::::: {.column width="55%"}
-::: {.ask}
-Remove one business. How far does the mean move, and how far does the median
-move?
-:::
-::::::
-
-:::::::
-
-```{webr}
-#| input:
-#|   - keep
-#| autorun: true
-#| fig-width: 10
-#| fig-height: 1.9
-tonnes <- ten$landfill_before
-if (keep == "Without the largest") tonnes <- tonnes[tonnes < max(tonnes)]
-dots(tonnes)
-```
-
-::: {.panel .fragment}
-The mean drops from `r gfmt(mean(ten_x), 1)` to `r gfmt(mean(ten_x[-10]), 1)`;
-the median from `r median(ten_x)` to `r median(ten_x[-10])`. One business moved
-the mean further than the median. When an evaluator reports an average, ask what
-the spread looks like and whether a few cases drive it.
+::: {.lead}
+“Waste was lower **than it had been before**.”
 :::
 
-## Word 2 · Treatment effect
-
-```{r results='asis'}
-html_out(sprintf('
-<table>
-  <thead><tr><th>Average landfill (tonnes per year)</th><th>Before</th><th>After</th><th>Change</th></tr></thead>
-  <tbody>
-    <tr><td>Took part</td><td>%.2f</td><td>%.2f</td><td class="fragment" data-fragment-index="1">%.2f</td></tr>
-    <tr><td>Did not take part</td><td>%.2f</td><td>%.2f</td><td class="fragment" data-fragment-index="1">%.2f</td></tr>
-    <tr class="fragment" data-fragment-index="1"><td><strong>Difference</strong></td><td>%.2f</td><td>%.2f</td><td><strong>%.2f</strong></td></tr>
-  </tbody>
-</table>',
-  lf_t0, lf_t1, lf_t1 - lf_t0, lf_o0, lf_o1, lf_o1 - lf_o0,
-  lf_t0 - lf_o0, lf_t1 - lf_o1, lf_effect))
-```
+The **counterfactual** is what would have happened without GreenWaste.
 
 ::: {.ask}
-Three numbers describe this result: **`r sprintf("%.2f", lf_t1 - lf_t0)`**,
-**`r sprintf("%.2f", lf_t1 - lf_o1)`** and **`r sprintf("%.2f", lf_t0 - lf_o0)`**.
-Work out what each one is, then decide which is the effect of GreenWaste on landfill.
+Does this sentence tell us what would have happened without it?
 :::
 
-::: {.panel .fragment fragment-index=2}
-**`r sprintf("%.2f", lf_t0 - lf_o0)`** is the head start: the businesses that took
-part sent less to landfill before anything happened, and
-**`r sprintf("%.2f", lf_t1 - lf_o1)`** still carries it. The **treatment effect**
-is the change for those that took part minus the change for the rest:
-**`r sprintf("%.2f", lf_effect)`** tonnes. It is smaller than their own fall
-because the rest fell too.
-:::
-
-::: {.warn .note-ctr}
-**Illustrative case, with invented figures.**
+::: {.fragment}
+Ask how the evaluator estimated that missing outcome.
 :::
 
 ::: {.notes}
-Paper (Oct12_session1_materials.docx): Participants turn the worksheet over: part 2, the landfill table. They fill the blank cells before you reveal them.
+5 minutes. Point to the comparison words. Explain counterfactual once in plain language. We cannot observe the same business, at the same time, both with and without the programme. A comparison can help estimate the missing outcome if its assumptions are credible. Avoid launching a methods survey. Have pairs add comparison words to one claim.
 :::
 
-## Word 2 · The same number from `r gfmt(nrow(city))` businesses
+## What does an average hide? {.reader-slide}
 
-```{webr}
-took   <- mean(city$change[city$took_part == 1])
-others <- mean(city$change[city$took_part == 0])
-round(data.frame(took_part = took, did_not = others, effect = took - others), 2)
-```
+Landfill before GreenWaste, tonnes per year, for ten businesses:
 
-::: {.panel}
-`city` holds one row per business in the rest of the city; `change` is its
-landfill after minus before. The three lines are the arithmetic you just did,
-on every business.
-:::
-
-## Word 2 · The effect depends on the comparison
-
-```{ojs}
-//| echo: false
-viewof other = Inputs.range([-4, 1], {value: 0, step: 0.1, label: "Landfill change, businesses that did not take part (tonnes)"})
-```
-
-```{webr}
-#| input:
-#|   - other
-#| autorun: true
-#| edit: false
-#| fig-width: 7
-#| fig-height: 2.6
-took <- mean(city$change[city$took_part == 1])
-bars(c("Took part" = took, "Did not" = other, "Effect" = took - other))
+```{r ten-businesses, results='asis'}
+html_out(paste0('<div class="ten-businesses">', paste(sprintf('<span>%s</span>', fmt(ten$landfill_before)), collapse=''), '</div>', fiction))
 ```
 
 ::: {.ask}
-The businesses that took part are fixed at `r sprintf("%.1f", lf_t1 - lf_t0)`.
-Move the others. **Which value makes the effect zero, and what would that mean
-in plain words?**
+Would one number describe these businesses well?
 :::
 
-## Word 3 · Coefficient
-
-```{webr}
-fit <- lm(change ~ took_part, data = city)
-round(data.frame(coefficient = coef(fit)), 2)
-```
-
-:::::: {.columns}
-
-::::: {.column width="50%"}
-::: {.panel}
-`took_part` is 1 for businesses that took part, 0 for the rest. A
-**coefficient** says how much the outcome moves per one unit of the row. Here
-one unit is "took part".
-:::
-:::::
-
-::::: {.column width="50%"}
-::: {.ask}
-Which of the two numbers is the effect? What is the other one?
-:::
-
-::: {.panel .fragment}
-`took_part` is **`r sprintf("%.2f", fit_b)`**, the effect you worked out by hand.
-`(Intercept)` is the average change for businesses that did not take part. It is
-not an effect.
-:::
-:::::
-
-::::::
-
-## Word 3 · The other rows of a table
-
-```{webr}
-fit2 <- lm(change ~ took_part + staff + area, data = city)
-round(as.data.frame(summary(fit2)$coefficients), 3)
-```
-
-:::::: {.columns}
-
-::::: {.column width="50%"}
-::: {.panel}
-**Std. Error** is how much the estimate would move from one sample of
-businesses to another. Small relative to the estimate means a steady estimate.
-:::
-:::::
-
-::::: {.column width="50%"}
-::: {.warn .fragment}
-The other rows adjust the comparison. `area` is premises in 100 m²: each extra
-100 m² goes with a change of `r sprintf("%.2f", area_b)` tonnes. That is not
-advice to move businesses into different premises.
-:::
-:::::
-
-::::::
-
-## Word 4 · p-value: shuffle the labels
-
-```{ojs}
-//| echo: false
-viewof k = Inputs.range([0, 1000], {value: 0, step: 50, label: "Times we shuffle the took_part labels"})
-```
-
-```{webr}
-#| input:
-#|   - k
-#| autorun: true
-#| edit: false
-#| fig-width: 10
-#| fig-height: 1.7
-small <- study(20)          # a study of 20 businesses: 10 took part, 10 did not
-shuffle_plot(small, k)
-```
-
-::: {.ask}
-If GreenWaste did nothing, the labels would be arbitrary, so we shuffle them.
-**How often does chance alone give a gap as large as the red line?** Guess first.
-:::
-
-::: {.panel .fragment}
-That share is the **p-value**: here `r small_p`, `r round(small_p * 1000)` shuffles
-in a thousand.
+::: {.fragment}
+The **mean** is the total divided by ten: `r fmt(mean(ten$landfill_before),1)` tonnes. Nine businesses are below it.
 :::
 
 ::: {.notes}
-Start at 0 shuffles; the red line is this 20-business study's gap
-(`r sprintf("%.2f", gap(small))` tonnes; all `r gfmt(nrow(city))` businesses give
-`r sprintf("%.2f", fit_b)`). Slide up. At 1,000 shuffles p is `r small_p`. The
-next slide asks whether a small p means a big effect.
+5 minutes. Participants point to the large business before revealing the mean. No long arithmetic exercise. A mean can answer a useful total-related question, but it does not describe every business. Ask which extra information they would want about the spread. Do not introduce quartiles or a second lesson on medians.
 :::
 
-## Word 4 · Significant is not the same as big
+## Try four claims {.reader-slide}
 
-```{ojs}
-//| echo: false
-viewof cut_by = Inputs.range([0.05, 2.7], {value: 2.7, step: 0.05, label: "Suppose GreenWaste cut landfill by only (tonnes)"})
-```
+Read the four claim cards. For each, choose:
 
-```{webr}
-#| input:
-#|   - cut_by
-#| autorun: true
-#| edit: false
-#| fig-width: 10
-#| fig-height: 1.7
-significance_demo(cut_by)
-```
+**Act · Ask first · Do not act**
+
+Then name what is missing:
+
+**Compared to what? · How big? · How sure?**
 
 ::: {.ask}
-Slide the effect down to 0.1 tonnes: 100 kg a year, about 2 kg a week. **Is it
-still statistically significant?**
-:::
-
-::: {.warn .fragment}
-Yes, p is `r tiny_p`. With `r gfmt(nrow(city))` businesses even a trivial change
-passes the test. Whether 100 kg a year is worth paying for is a separate
-question, and the p-value cannot answer it.
-:::
-
-## Word 4 · The warning cuts both ways
-
-```{ojs}
-//| echo: false
-viewof biz_n = Inputs.range([6, 200], {value: 20, step: 2, label: "Businesses in the study"})
-```
-
-```{webr}
-#| input:
-#|   - biz_n
-#| autorun: true
-#| edit: false
-set.seed(3)
-p <- replicate(200, t.test(change ~ took_part, data = study(biz_n, seed = sample(1e6, 1)))$p.value)
-data.frame(businesses_in_study = biz_n, share_of_studies_that_detect_it = round(mean(p < 0.05), 2))
-```
-
-::: {.ask}
-The real effect never changes. Slide down to 6 businesses: **what share detect it?**
-:::
-
-::: {.panel .fragment}
-At 20 businesses, `r round(100 * det20)` studies in 100 detect it; at 6, only `r round(100 * det6)`.
-:::
-
-::: {.ask .fragment}
-An evaluator reports "no significant effect". Ask: **how many businesses were in
-the study, and what is the smallest effect it could detect?**
-:::
-
-## Word 5 · Confidence interval
-
-```{ojs}
-//| echo: false
-viewof run = Inputs.button("Run another 100 studies")
-```
-
-```{webr}
-#| input:
-#|   - run
-#| autorun: true
-#| edit: false
-#| fig-width: 10
-#| fig-height: 2.4
-many_studies(n = 40, runs = 100, seed = run + 1)
-```
-
-::: {.ask}
-Each line is one study of 40 businesses and its **95% confidence interval**, the
-range of values consistent with its data. **Out of 100, how many will miss the
-grey line?** Guess before the next press.
+What question would move your decision forward?
 :::
 
 ::: {.notes}
-About 95 of 100 lines cross the grey line (the value from every business in the
-rest of the city), and about 5 miss (red). That is what "95%" refers to: the
-method, over many studies, not the probability for any one interval. Press the
-button two or three times.
+12 minutes. Preserve Fiona’s four cards and triage activity. Give one card set per group and use Sheet 2. Optional A1 board: one group-coloured marker per group; write card numbers into its question/decision grid. No extra AI wall board. Card 2’s causal wording is intentionally open to challenge. Technical terms on cards can be glossed briefly; the full uncertainty lesson comes next session. Protect time for groups to write their reasons.
 :::
 
-## Word 5 · Which one would you act on?
+## Defend one choice {.reader-slide}
 
-::: {.panel}
-Suppose three evaluations of GreenWaste each reported **1.8 tonnes less landfill
-per business per year**, and the city's target is **2.0 tonnes**. Only the
-intervals differ.
+Choose a card that two groups placed differently.
+
+::: {.ask}
+Which words or numbers support your choice?
 :::
+
+Explain one missing piece of evidence that could change it.
+
+::: {.notes}
+6 minutes. Discuss two disagreements, not a tour through every group. Expected primary placements: card 1 compared to what/ask first; card 2 how big/ask first (it concerns landfill, not the cost rule; also ask about the causal comparison); card 3 do not act on the nationwide recommendation; card 4 how sure/ask first. More than one missing question can be justified. Do not treat grid placement as a single-answer test.
+:::
+
+## Check the AI sentence {.reader-slide data-correct="The second sentence claims a cause the headline has not established. Ask what happened without GreenWaste."}
+
+An illustrative AI draft. Select the unsupported sentence.
 
 ```{=html}
-<div class="facts">
-  <div class="k">A</div> <div class="v">1.8 tonnes less, 95% interval 0.4 to 3.2</div>
-  <div class="k">B</div> <div class="v">1.8 tonnes less, 95% interval 1.6 to 2.0</div>
-  <div class="k">C</div> <div class="v">1.8 tonnes less, 95% interval -0.9 to 4.5</div>
+<div class="claim-list">
+<button data-claim="supported" aria-pressed="false">Landfill fell among businesses that took part.</button>
+<button data-claim="unsupported" aria-pressed="false">GreenWaste caused the entire fall.</button>
 </div>
+<button data-check>Check against the evidence</button>
+<p data-feedback class="feedback" role="status"></p>
 ```
 
 ::: {.ask}
-Which would you act on? What is your answer for each?
-:::
-
-::: {.panel .fragment}
-B is precise and below the target: confidently not enough. A is too uncertain
-to call, and C more so. All three have the same estimate, so the intervals make
-the difference.
+What should the AI ask before writing that conclusion?
 :::
 
 ::: {.notes}
-These three results and the 2.0-tonne target are invented for this exercise;
-they are not the programme's result. GreenWaste's own decision rests on waste
-costs, which the rest of the week estimates from the data.
-
-Paper (Oct12_session1_materials.docx): Part 3 of the worksheet: everyone ticks act / do not act / cannot tell yet for A, B and C before the reveal.
+6 minutes. This is an authored example of a possible AI error, not a transcript of a verified tool response. Participants must point to source evidence. Optional live AI: provide only the headline and ask it to list the missing information before offering a conclusion. Review its questions yourselves. No AI account is required to complete the activity.
 :::
 
-# 4 · Put AI to work {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+## Your next question {.reader-slide}
 
-## AI prompt cards
-
-:::::: {.columns}
-
-::::: {.column width="45%"}
-::: {.panel}
-Each group takes one card. Paste its prompt into your AI tool, read the answer
-together, and mark anything it gets wrong or overstates.
-:::
-
-```{r results='asis'}
-html_out(sprintf('
-<div class="facts">
-  <div class="k">Card 1</div> <div class="v">"Explain a 95%% confidence interval, in one paragraph, for someone who is not a statistician."</div>
-  <div class="k">Card 2</div> <div class="v">"Explain what a p-value means."</div>
-  <div class="k">Card 3</div> <div class="v">"Landfill waste from businesses in our programme fell %s%%. Is that a good result?"</div>
-  <div class="k">Card 4</div> <div class="v">"The coefficient on area is %s. What should I do about it?"</div>
-</div>', gfmt(abs(lf_pct)), sprintf("%.2f", area_b)))
-```
-:::::
-
-::::: {.column width="55%"}
-::: {.ai-output}
-*Card 1. A response like this is possible:*
-
-"A 95% confidence interval is the range in which the true value is likely to
-fall. [There is a 95% probability that the true effect lies inside this
-interval]{.flag}, so if the interval is `r sprintf("%.2f", fit_ci[1])` to
-`r sprintf("%.2f", fit_ci[2])` tonnes the true effect is probably in that range.
-A narrower interval means a more precise estimate."
-:::
-:::::
-
-::::::
-
-::: {.notes}
-Paper (Oct12_session1_materials.docx): Hand out one set of the four prompt cards per group (pack page 3, cut); each group takes one card.
-:::
-
-## Debrief
-
-:::::: {.columns}
-
-::::: {.column width="50%"}
-::: {.warn}
-**Card 1.** The flagged sentence is the common error. "95%" describes the method:
-over many studies, 95 of 100 intervals catch the true value, as the chart of 100
-studies showed. It is not a probability for this one interval.
-:::
-
-::: {.warn}
-**Card 3.** Did the AI ask what the `r gfmt(abs(lf_pct))`% was compared with, or
-what happened to businesses outside the programme? The prompt gave it neither.
-:::
-:::::
-
-::::: {.column width="50%"}
-::: {.warn}
-**Card 4.** Look for advice about premises. The row adjusts the comparison; it is
-not a policy lever.
-:::
-
-::: {.panel}
-Two habits: ask the AI to **ask you questions before it answers**, and put its
-answer through a second chat to check it. Also note what it explained well.
-:::
-:::::
-
-::::::
-
-# 5 · Triage the claims {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
-
-## Triage the claims
-
-::: {.excerpt}
-**1.** "Landfill waste from businesses in GreenWaste fell `r gfmt(abs(lf_pct))`% in a year." \
-**2.** "The effect of GreenWaste on landfill is `r sprintf("%.2f", fit_b)` tonnes per business, 95% confidence interval `r sprintf("%.2f", fit_ci[1])` to `r sprintf("%.2f", fit_ci[2])`." \
-**3.** "The fall in landfill is statistically significant (p < 0.001), so every business in the country should join GreenWaste." \
-**4.** "Landfill fell `r sprintf("%.1f", abs(lf_t1 - lf_t0))` tonnes per business among those that took part and `r sprintf("%.1f", abs(lf_o1 - lf_o0))` tonnes among those that did not."
-:::
+Close the cards and turn over the sheet.
 
 ::: {.ask}
-In groups: for each excerpt, **which of the three questions does the excerpt not
-answer? Would you act, not act, or ask a question first?** Four minutes. Then:
-which excerpt would you most want to act on?
+What would you ask the evaluator before acting on a claim of improvement?
 :::
+
+Write one question and explain why the answer matters.
 
 ::: {.notes}
-Key: 1 compared to what (ask first; the businesses that did not take part fell
-`r gfmt(abs(rest_pct))`% too); 2 how big in units that matter, landfill not the
-waste costs the decision rests on (ask first); 3 significance is not a decision
-rule (do not act); 4 how sure, no interval (ask first). Groups usually split on
-2 and 4: take one group's reasoning for each. None of the four earns "act": ask
-what an excerpt would need to get there (a comparison, an effect and a target,
-as in "Landfill fell `r sprintf("%.1f", abs(lf_effect))` tonnes per business
-more than among businesses that did not take part; the target was at least 2
-tonnes").
-
-Paper (Oct12_session1_materials.docx): Hand out the triage sheet (pack page 4, one per group) and one set of the four excerpt slips per group (page 5, cut).
-
-Optional wall board (print Oct12_session1_board_A1.pdf at A1 and tape it up beforehand): columns Act / Ask first / Do not act, rows Compared to what? / How big? / How sure? / None. Each group has its own marker colour and, after filling in the sheet, writes the four excerpt numbers in the matching cells. Ask two groups that put the same excerpt in different cells to explain.
-:::
-
-# 6 · Take this back to your desk {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
-
-## The three questions
-
-::: {.panel}
-From memory, before you look: what are the three questions you can ask of any
-number?
-:::
-
-```{=html}
-<div class="facts">
-  <div class="k">1</div> <div class="v">Compared to what?</div>
-  <div class="k">2</div> <div class="v">How big is the number, in units that matter to the decision?</div>
-  <div class="k">3</div> <div class="v">How sure are we?</div>
-</div>
-```
-
-::: {.panel}
-Next session opens the waste-cost data and asks these three questions of the
-costs.
-:::
-
-::: {.notes}
-If there is time: ask the room for a better way to ask AI about one of today's
-words. For example: "I make policy decisions using impact evaluations. How
-should I read a confidence interval when I compare an estimate with a decision
-threshold? Ask me questions first." Saying who you are and why you ask usually
-gets a more useful answer.
-
-Paper (Oct12_session1_materials.docx): Hand out the take-away cards (pack page 6). Give a minute to fill in "Back at work" on the card, then take two or three examples from the room.
+4 minutes. Individual retrieval, no list or AI. Look for a concrete comparison/counterfactual question, a decision-relevant size question or a useful uncertainty question, with a reason. Collect two answers. Session total 60 minutes. Do not add a summary lecture.
 :::

@@ -1,0 +1,33 @@
+/*-- scss:rules --*/
+// Day 1 reading layouts extend, rather than replace, the DGE theme.
+.reveal .slides section.reader-slide { font-size: 28px; line-height: 1.4; }
+.reveal .slides section.reader-slide h2 { font-size: 1.4em; margin-bottom: 24px; }
+.reveal .reader-slide p { max-width: 1100px; margin: 16px 0; }
+.reveal .reader-slide .lead { font-size: 1.23em; line-height: 1.45; }
+.reveal .reader-slide .fiction, .reveal .reader-slide .caption { font-size: 19px; color: #545860; line-height: 1.45; }
+.reveal .reader-slide .fiction { margin-top: 16px; }
+.reveal .reader-slide .ask { font-size: 29px; padding: 16px 22px; margin-top: 22px; }
+.reveal .reader-slide .big-number { font-size: 78px; color: #063360; font-weight: 700; line-height: 1.15; }
+.reveal .reader-slide .evidence-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.reveal .reader-slide .evidence { padding: 22px; background: #f4f7fb; border-radius: 12px; }
+.reveal .reader-slide .evidence h3 { font-size: 27px; margin: 0 0 14px; }
+.reveal .reader-slide .reading-table { width: 100%; font-size: 25px; margin: 18px 0; }
+.reveal .reader-slide .reading-table th, .reveal .reader-slide .reading-table td { padding: 16px; border-bottom: 2px solid #d5dee8; }
+.reveal .reader-slide .reading-table thead { background: #063360; color: white; }
+.reveal .reader-slide .reading-table thead th { color: white; }
+.reveal .reader-slide .result-row { background: #e3ebf5; }
+.reveal .reader-slide button, .reveal .reader-slide .room-link { font: inherit; font-size: 25px; padding: 12px 18px; border: 2px solid #215a9e; border-radius: 9px; background: white; color: #063360; cursor: pointer; margin: 6px 10px 6px 0; display: inline-block; }
+.reveal .reader-slide button[aria-pressed="true"] { background: #063360; color: white; }
+.reveal .reader-slide button:focus-visible, .reveal .reader-slide a:focus-visible { outline: 4px solid #B8272C; outline-offset: 4px; }
+.reveal .reader-slide [hidden] { display: none !important; }
+.reveal .reader-slide .interval-visual { width: 100%; max-height: 250px; }
+.reveal .reader-slide .claim-list { display: grid; gap: 8px; }
+.reveal .reader-slide .claim-list button { text-align: left; margin: 0; padding: 14px 20px; width: 100%; font-size: 27px; }
+.reveal .reader-slide .feedback { color: #063360; font-size: 23px; min-height: 38px; }
+.reveal .reader-slide .ten-businesses { display: grid; grid-template-columns: repeat(10, 1fr); gap: 10px; margin-top: 25px; }
+.reveal .reader-slide .ten-businesses span { padding: 28px 8px; text-align: center; background: #e3ebf5; font-weight: bold; }
+.reveal .reader-slide .ten-businesses span:last-child { background: #063360; color: white; }
+.reveal .reader-slide .term { color: #215a9e; font-weight: 700; }
+.reveal .reader-slide .cell { font-size: 19px; }
+.reveal .reader-slide .cell-output-webr { font-size: 20px; }
+.reveal .reader-slide .quarto-layout-panel { margin-bottom: 8px; }
