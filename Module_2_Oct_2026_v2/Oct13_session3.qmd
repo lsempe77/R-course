@@ -594,9 +594,9 @@ tibble(
 ::::::
 
 ::: {.ask}
-Pair each enrolled business with its closest twin, matching on **who they
-are**, not on their cost. Then take the average cost difference across the
-three pairs. Ninety seconds.
+In your group: pair each enrolled business with its closest twin, matching on
+**who they are**, not on their cost. Then take the average cost difference
+across the three pairs. Two minutes, one answer per group.
 :::
 
 ::: {.panel .fragment}
@@ -606,7 +606,11 @@ an average of **-1,000 AED**. Business 4 is nobody's twin, so it is set aside.
 
 ::: {.notes}
 Paper (Oct13_session3_materials.docx): Hand out the find-the-twins sheet (pack
-page 1, one per participant). Genuine silence for ninety seconds.
+page 1, one per group) and a set of profile cards per group (page 2, cut).
+Decide on the day: groups use the sheet, pair the cards on the table, or both.
+Walking alternative: one volunteer per group takes a card (seven groups; the
+eighth checks the matches). A, B and C walk to their twin and their groups
+explain the match; business 4 is left standing alone. Ask what happens to it.
 
 The point they should feel: matching is intuitive, they already know how to
 do it, and it quietly sets aside units that resemble nobody. That is
@@ -1514,7 +1518,7 @@ and it carries the unquantified risk.
 
 ::: {.notes}
 Paper (Oct13_session3_materials.docx): Hand out the "Which case would you
-trust?" sheet (pack page 2, one per group). Groups circle a verdict for each
+trust?" sheet (pack page 3, one per group). Groups circle a verdict for each
 case before the reveal.
 
 Verdict round at the end: hands, not discussion. Push them past "Case 1 is
@@ -1570,8 +1574,8 @@ out each sentence that is wrong or claims too much.
 
 ::: {.notes}
 Paper (Oct13_session3_materials.docx): Hand out the AI Snapshot sheet (pack
-page 3, one per group). Groups underline what they would sign and cross out
-the rest. Keep the better-prompt strip (page 4) back until after the debrief.
+page 4, one per group). Groups underline what they would sign and cross out
+the rest. Keep the better-prompt strip (page 5) back until after the debrief.
 :::
 
 ## Debrief: one clean read, three false assurances
@@ -1643,7 +1647,7 @@ did each explain well?
 
 ::: {.notes}
 Paper (Oct13_session3_materials.docx): Hand out the better-prompt strip now
-(pack page 4, one per group, cut) as a take-home. It names the checks, so it
+(pack page 5, one per group, cut) as a take-home. It names the checks, so it
 goes out only after the debrief. Do not run the prompts in the session.
 :::
 
@@ -1693,7 +1697,7 @@ So a matching study rarely settles a decision on its own.
 
 ::: {.notes}
 Paper (Oct13_session3_materials.docx): Hand out the take-away cards (pack
-page 5, one per participant). Give a minute to fill in "Back at work" on the
+page 6, one per participant). Give a minute to fill in "Back at work" on the
 card, then take two or three examples from the room.
 :::
 

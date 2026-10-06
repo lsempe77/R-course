@@ -413,8 +413,8 @@ round(data.frame(eligible_side, other_side, gap = eligible_side - other_side))
 ```
 
 ::: {.ask}
-Each pair: call out the jump on your card. **Why are they so different?** Then
-Run: the same subtraction on every business within 2 points.
+Each group: put your jump on the number line on the wall. **Why are the jumps
+so different?** Then Run: the same subtraction on every business within 2 points.
 :::
 
 ::: {.panel .fragment}
@@ -424,7 +424,7 @@ with both.
 :::
 
 ::: {.notes}
-Paper (Oct13_session2_materials.docx): Before pressing Run, hand out the jump cards (pack pages 1-4, four different cards A-D; neighbouring pairs get different cards). Pairs average six businesses on each side and subtract. Write every pair's jump on the flipchart (they range from about -170 to -1,260), ask why they differ, then press Run: the regression uses the 773 businesses within two points.
+Paper (Oct13_session2_materials.docx): Before pressing Run, hand out the jump cards (pack pages 1-8, eight different cards A-H, one per group). Groups average six businesses on each side, subtract, and put a sticky note with their jump and card letter on the wall number line (set up beforehand: -2,000 to +500 AED, the rule marked in red at -1,000; setup in the facilitator key). The jumps run from about -1,740 to +15. Ask why they differ, then press Run: the regression uses the 773 businesses within two points.
 :::
 
 ## Running the regression
@@ -497,6 +497,10 @@ A real effect, clearly not zero. The interval runs from `r gfmt(w2_least)` to
 ::: {.notes}
 The interval is wide because only 773 businesses sit within 2 points. Check 1
 shows how the answer moves with that choice.
+
+Wall: add the regression to the number line now, a star at the estimate and a
+strip of coloured tape along its interval. How many group notes fall inside the
+interval? Which side of the red rule line is most of the interval on?
 :::
 
 # 3 · Can we trust the jump at 58? {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
@@ -522,7 +526,7 @@ change at 58, where in the data would you see it?**
 :::
 
 ::: {.notes}
-Paper (Oct13_session2_materials.docx): Hand out the checks scorecard ("Can we trust the jump at 58?") (pack page 5, one per group). Groups mark each check as you run it, starting with check 0 (who is compared) from Section 1.
+Paper (Oct13_session2_materials.docx): Hand out the checks scorecard ("Can we trust the jump at 58?") (pack page 9, one per group). Groups mark each check as you run it, starting with check 0 (who is compared) from Section 1.
 :::
 
 ## The GreenWaste lab: add RDD
@@ -850,7 +854,7 @@ AI missed, what it added that is worth keeping, and whether anything was wrong.
 ```
 
 ::: {.notes}
-Paper (Oct13_session2_materials.docx): Hand out the take-away cards (pack page 7). Give a minute to fill in "Back at work" on the card, then take two or three examples from the room.
+Paper (Oct13_session2_materials.docx): Hand out the take-away cards (pack page 11). Give a minute to fill in "Back at work" on the card, then take two or three examples from the room.
 :::
 
 ## Where this sits

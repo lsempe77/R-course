@@ -163,6 +163,7 @@ On your rating sheet: **the executive summary**.
 
 Circle a colour. Then write your reason for selecting this colour. If you rate
 the summary amber or red, write what would be needed to shift the colour to green.
+Then put a sticky note with your reason on the wall grid, in your colour's row.
 :::
 
 :::::: {.columns}
@@ -238,7 +239,7 @@ What single fact would move your amber to green or red?
 # 3 · Section by section {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ::: {.notes}
-Timing: 40 minutes (0:20 to 1:00). 20 minutes of reading in pairs, then 20 minutes of debrief, about 3 minutes per slide. In the debrief, ask for a show of colours before each reveal.
+Timing: 40 minutes (0:20 to 1:00). 20 minutes of reading in pairs, then 20 minutes of debrief, about 3 minutes per slide. In the debrief, read the section's column on the wall grid before each reveal (no show of colours needed). Grid setup is in the facilitator key: six section columns, rows Green, Amber, Red.
 :::
 
 ## Your turn: rate the rest
@@ -251,7 +252,8 @@ rating sheet. Do not wait for the slides.
 ::: {.panel}
 For each section: a colour, your reason for selecting this colour, and, if amber
 or red, what would be needed to shift the colour to green. The Area to check
-column tells you which part of yesterday's QA checklist to use.
+column tells you which part of yesterday's QA checklist to use. **One sticky note
+per pair per section on the wall grid.**
 :::
 
 ::: {.notes}
@@ -268,7 +270,7 @@ from the same administrative area and are subject to the same economic condition
 :::
 
 ::: {.ask}
-Your colour for Section 3? What does parallel trends actually require?
+Read the Section 3 column on the wall. What does parallel trends actually require?
 :::
 
 ::: {.warn .fragment}
@@ -291,7 +293,7 @@ treatment… This change improves the precision of the measure…
 :::
 
 ::: {.ask}
-Your colour for Section 4? Two disclosures: which is handled well?
+Read the Section 4 column on the wall. Two disclosures: which is handled well?
 :::
 
 :::::: {.columns}
@@ -322,7 +324,7 @@ result.
 :::
 
 ::: {.ask}
-Your colour for Section 5? Four estimates are given. Why is this one the
+Read the Section 5 column on the wall. Four estimates are given. Why is this one the
 headline?
 :::
 
@@ -365,7 +367,7 @@ self-reported expenditure may be subject to recall error…
 :::
 
 ::: {.ask}
-Your colour for Section 6? Are these the right three?
+Read the Section 6 column on the wall. Are these the right three?
 :::
 
 ::: {.warn .fragment}
@@ -388,7 +390,7 @@ may also benefit.
 :::
 
 ::: {.ask}
-Your colour for Section 7? What was estimated about subsidy rates, and about
+Read the Section 7 column on the wall. What was estimated about subsidy rates, and about
 businesses above the cut-off?
 :::
 
@@ -436,6 +438,8 @@ If your vote moved, name the section that moved it.
 
 ::: {.notes}
 Paper (Oct15_session1_materials.docx): Participants circle their "At the end" vote and answer the three questions on the back of the rating sheet (pack page 2).
+
+Wall grid: point to the executive-summary column and the Results column side by side. If the summary leans green and Results leans amber or red, ask what the summary led people to believe.
 :::
 
 ## The most important problem
