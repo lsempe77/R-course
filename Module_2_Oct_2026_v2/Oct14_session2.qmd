@@ -1,6 +1,6 @@
 ---
-title: "Read a chart before trusting its story"
-subtitle: "Module 2 | Day 3 | Session 2"
+title: "Same numbers. Different story."
+subtitle: "Day 3 | Session 2: Charts, averages and the story behind the picture"
 author: "3ie"
 always_allow_html: true
 format:
@@ -30,7 +30,7 @@ knitr:
 source('day3_case.R')
 ```
 
-## Which picture would you use? {.reader-slide}
+## Which chart would you show the director? {.reader-slide}
 
 ```{webr}
 #| context: setup
@@ -52,7 +52,7 @@ Can you choose responsibly without the labels?
 4 minutes. Retrieve source and comparison questions. These are deliberately incomplete drafts; accepting either shape alone is premature. Commit a reason. No room poll needed; pairs or local cards. Next screen supplies values and scales.
 :::
 
-## Same values different axes {.reader-slide}
+## Same values. A different impression. {.reader-slide}
 
 ```{r, results='asis'}
 html_out(paste0('<div id="axis-charts"><div data-variant>',bar_svg(700),'</div><div data-variant hidden>',bar_svg(0),'</div></div><button data-swap="axis-charts">Change the axis start</button>',fiction))
@@ -66,7 +66,7 @@ Which impression changes, and which recorded values stay the same?
 6 minutes. Predict before toggle. Truncated bar baseline starts at 700 versus 0; true mean values identical. Bars should ordinarily start at 0; a truncated axis needs explicit disclosure and a reason. This is descriptive before/after, not a causal effect chart. Keyboard button must not advance deck.
 :::
 
-## Mark up the chart {.reader-slide}
+## Where does the axis start? {.reader-slide}
 
 Use the printed chart on **Sheet 1**. Work alone first.
 
@@ -83,7 +83,7 @@ What can this chart support on its own?
 7 minutes. Chart is full axis, participant before/after. Ask for source, annual AED, period 12 months and no causal comparison. Distribution and uncertainty absent, so do not infer everyone gained. The worksheet also includes its descriptive source caption.
 :::
 
-## What an average hides {.reader-slide}
+## Does anyone look like the average? {.reader-slide}
 
 ```{r, results='asis'}
 html_out(sprintf('<p class="distribution-mean">Mean: %s tonnes</p><button data-open="distribution" data-closed="Open the individual values" data-opened="Hide the individual values" aria-controls="distribution" aria-expanded="false">Open the individual values</button><div id="distribution" hidden>%s</div>%s',fmt(mean(ten$landfill_before),1),distribution_svg(),fiction))
@@ -97,7 +97,7 @@ Does the mean describe most of these ten businesses?
 6 minutes. Predict before revealing Day 1 ten actual landfill records. Nine below the mean; one at 46 tonnes. Dot stacking makes repeated values visible. This is a small teaching selection, not a representative city distribution or a programme effect.
 :::
 
-## A percentage of what? {.reader-slide}
+## 49.5% or 58.6%? Both can be right. {.reader-slide}
 
 ```{r, results='asis'}
 html_out(sprintf('<div class="percentage-pair"><div><h3>Change in total tonnes</h3><p>%s%%</p></div><div><h3>Mean business percentage</h3><p>%s%%</p></div></div>%s',fmt(percent_total,1),fmt(percent_average,1),fiction))
@@ -120,7 +120,7 @@ Why can these percentages differ for the same businesses?
 7 minutes. One trainer demo after prediction. Total percentage weights businesses by their starting tonnes; mean business percentage gives each business equal weight. All before tonnes are positive. Two valid different summaries; neither alone establishes cause. Shorten variableline if editorclips. No school-zone or pie-chart case.
 :::
 
-## Read an estimate and its interval {.reader-slide}
+## Does this interval settle the decision? {.reader-slide}
 
 ```{r, results='asis'}
 html_out(interval_svg('trial',reveal=TRUE))
@@ -137,7 +137,7 @@ Does the pilot chart settle the minimum saving rule?
 6 minutes. Predict before interval opens. Pilot lottery after 12 months, annual AED saving. Interval crosses 1000. Teach units, compared population and reported uncertainty; intervals do not account for every bias. Use the existing computed SVG, not a new hand-coded result.
 :::
 
-## Choose and repair {.reader-slide}
+## Write the caption the chart deserves. {.reader-slide}
 
 Pairs work on **Sheet 2**.
 
@@ -154,7 +154,7 @@ Would a decision-maker understand what the chart actually shows?
 10 minutes. Protect repair task. Accept explicit source title and reference to worksheetfigure. No drawing software or code. Repairing caption alone cannot supply missing causal comparison; say so.
 :::
 
-## Check an AI caption {.reader-slide}
+## The AI sees cause. Can you? {.reader-slide}
 
 Illustrative AI draft:
 
@@ -172,7 +172,7 @@ Which words would you keep, qualify or remove?
 6 minutes. Authored example applies to the total landfill result, not the cost bars. Participants verify source and denominator. Optional AI prompt asks it to describe visible evidence and missing context before recommending. No account required.
 :::
 
-## Defend your chart choice {.reader-slide}
+## Defend your chart. Defend its limit. {.reader-slide}
 
 ::: {.ask}
 What can your repaired caption help a reader conclude?
@@ -185,7 +185,7 @@ Point to the chart evidence while explaining.
 4 minutes. Pairs share a short defence. Require the actual values, comparison and denominator; accept different captions when faithful.
 :::
 
-## Your question from memory {.reader-slide}
+## Before trusting a chart, check what? {.reader-slide}
 
 ::: {.ask}
 What would you check first in a chart from an evaluation report?

@@ -1,6 +1,6 @@
 ---
-title: "Choose a fair comparison"
-subtitle: "Module 2 · Day 1 · Session 3"
+title: "Did the programme make the difference?"
+subtitle: "Day 1 | Session 3: A pilot lottery and the limits of its results"
 author: "3ie"
 always_allow_html: true
 format:
@@ -31,7 +31,7 @@ source('day1_case.R')
 ```
 
 
-## Two estimates one programme {.reader-slide}
+## Two savings. Two weak comparisons. {.reader-slide}
 
 ```{webr}
 #| context: setup
@@ -83,7 +83,7 @@ Why might the two groups already have different costs?
 4 minutes. Commit before opening baseline. Invite a reason related to size, management or the score rule. Use the same local choice controls or room poll with a custom question and two choices. No national inference yet.
 :::
 
-## See where they started {.reader-slide}
+## How different were they at the start? {.reader-slide}
 
 ```{r starting-gap, results='asis'}
 html_out(sprintf('<button data-open="starting-costs" data-closed="Open starting costs" data-opened="Hide starting costs" aria-controls="starting-costs" aria-expanded="false">Open starting costs</button><div id="starting-costs" hidden><div class="evidence-pair"><div class="evidence"><h3>Took part</h3><p class="big-number">%s</p></div><div class="evidence"><h3>Did not take part</h3><p class="big-number">%s</p></div></div><p class="caption">Annual waste cost before GreenWaste, AED per business</p></div>%s',fmt(mean(city$cost_before[took])),fmt(mean(city$cost_before[!took])),fiction))
@@ -97,7 +97,7 @@ Can the entire later gap be credited to GreenWaste?
 5 minutes. Predict who started cheaper, then open. Participants already had lower costs. The later gap includes a starting difference. This is a warning about selection; no need to add a regression slide. Invite someone to state both the evidence and its implication.
 :::
 
-## What else changed? {.reader-slide}
+## Could something else explain the fall? {.reader-slide}
 
 ::: {.lead}
 Costs can change while a programme is running.
@@ -113,7 +113,7 @@ Compare your idea with a partner’s. Say what evidence would help check it.
 4 minutes. Possible ideas: waste charges, supply prices, business activity, another waste policy. These are hypotheses, not facts about the invented data. Before/after confounds programme effects with other changes. Day 2 will examine how a comparison of changes helps, with assumptions. Do not teach DiD now.
 :::
 
-## How the lottery helps {.reader-slide}
+## What does the lottery protect us from? {.reader-slide}
 
 ```{=html}
 <div class="evidence-pair">
@@ -132,7 +132,7 @@ Fictional pilot district · `r fmt(nrow(pilot))` businesses · roughly half in e
 5 minutes. The pilot picture is already on the case card. Random assignment, an RCT, prevents systematic selection into the two groups on average across possible lotteries. It need not make any one draw perfectly balanced. In this invented pilot, assignment equals participation; real reports require checking follow-up, take-up and effects on the waiting group. Keep the estimand explanation in notes.
 :::
 
-## Draw once draw again {.reader-slide}
+## A lottery. Perfectly balanced groups? {.reader-slide}
 
 20 businesses, 10 places. Compare **pre-programme manager ages**.
 
@@ -155,7 +155,7 @@ Will a small lottery make the groups exactly alike?
 7 minutes. Predict first; trainer Run, then Run once more. The input is the first 20 pilot businesses’ actual pre-programme manager ages. This redraw is a demonstration of chance balance, not a reanalysis of the trial or an effect estimate. Rename output x orally as average manager age. Each run uses a new fixed seed. Paper fallback: draw ten of twenty numbered slips from the age list in the trainer pack and compare means. Avoid adding a sample-size slider or a sampling theory lecture.
 :::
 
-## Read the trial result {.reader-slide}
+## What did the pilot actually find? {.reader-slide}
 
 ```{r trial-table, results='asis'}
 html_out(reading_table('trial', TRUE))
@@ -177,7 +177,7 @@ Pause here. Leave the result sheet on the table.
 5 minutes. Protect the break. Do not use it to add further slides or a lab.
 :::
 
-## Open the uncertainty {.reader-slide}
+## Does the interval clear our saving rule? {.reader-slide}
 
 ```{r trial-interval, results='asis'}
 html_out(interval_svg('trial', TRUE))
@@ -213,7 +213,7 @@ Use the trial’s comparison, interval and decision rule.
 6 minutes. A provisional judgement may differ with costs, risks and the next evidence opportunity. Require a reason; do not award “ask first” automatically. The interval spans the rule; the pilot covers one district. If using room polling, capture After and compare with Before; invite which evidence changed a mind, without identifying voters.
 :::
 
-## Write a decision note {.reader-slide}
+## Your recommendation in three sentences {.reader-slide}
 
 Use **Sheet 2** with a partner.
 
@@ -229,7 +229,7 @@ Keep your note to three or four sentences. Point to the evidence for each claim.
 10 minutes. Six to write, two to exchange notes, two for feedback. The note should contain the randomised pilot comparison, annual saving, uncertainty about the threshold and limits on reach/implementation. Do not require every possible caveat or formula. Programme costs are not supplied, so value for money is not settled.
 :::
 
-## Check an AI note {.reader-slide data-correct="The pilot estimate is supported. The threshold is still uncertain, and nationwide value for money is not established."}
+## The AI wants to expand. What is missing? {.reader-slide data-correct="The pilot estimate is supported. The threshold is still uncertain, and nationwide value for money is not established."}
 
 Select every unsupported conclusion in this illustrative AI draft.
 
@@ -241,7 +241,7 @@ html_out(sprintf('<div class="claim-list"><button data-claim="supported" aria-pr
 8 minutes. Find two unsupported conclusions, then rewrite them using the source. Ask AI, if used, to quote the evidence behind each conclusion and list unanswered questions. Participants check the quotations, units and comparisons themselves. This authored draft is not a real saved chat. Avoid presenting agreement between two AIs as proof.
 :::
 
-## Your question for the evaluator {.reader-slide}
+## Which question could change your decision? {.reader-slide}
 
 Close the result sheet.
 

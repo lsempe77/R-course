@@ -1,6 +1,6 @@
 ---
-title: "Read the jump at a score rule"
-subtitle: "Module 2 | Day 2 | Session 2"
+title: "What changes at the cutoff?"
+subtitle: "Day 2 | Session 2: Regression discontinuity: inspect the score rule"
 author: "3ie"
 always_allow_html: true
 format:
@@ -30,7 +30,7 @@ knitr:
 source('day2_case.R')
 ```
 
-## Who is compared? {.reader-slide}
+## Same city. Either side of the rule. {.reader-slide}
 
 ```{webr}
 #| context: setup
@@ -57,7 +57,7 @@ Why might neighbours either side make a useful comparison?
 4 minutes. Name the score rule and nearby comparison. Regression discontinuity, or RDD, is the report term. The corrected fictional data now follow the displayed rule exactly. Avoid claiming proximity alone makes assignment random.
 :::
 
-## Predict the jump {.reader-slide}
+## What do you expect at score 58? {.reader-slide}
 
 ::: {.ask}
 Would costs be lower just below 58? By how much?
@@ -71,7 +71,7 @@ Commit before opening the group card.
 4 minutes. Local choices only; use course-owned room poll for room totals or labelled cards. No estimate on this screen. Explain below-minus-above sign if needed.
 :::
 
-## Read your six businesses on each side {.reader-slide}
+## Twelve nearby businesses. What do they show? {.reader-slide}
 
 Each group has a different **Card A to H**.
 
@@ -90,7 +90,7 @@ What does your small sample suggest?
 10 minutes. Preserve Fiona's seeds A4 B11 C37 D22 E9 F21 G33 H5. Each has six businesses per side, costs rounded to ten AED. Give one different card per group and calculators. A small-sample gap is a rough exercise result, not the regression jump.
 :::
 
-## Place your result on the wall {.reader-slide}
+## Why did our groups get different jumps? {.reader-slide}
 
 Put your sticky note on the **A1 number line**.
 
@@ -105,7 +105,7 @@ Why did the groups reach different answers?
 6 minutes. One reporter per group. Cards sample different businesses, so costs and slopes vary. H may point in the other direction; use the generated key rather than memorised values. Draw the regression estimate and interval below the line on the next screen.
 :::
 
-## Read the reported jump {.reader-slide}
+## Is the jump large enough to matter? {.reader-slide}
 
 ```{r, results='asis'}
 html_out(paste0(as.character(knitr::kable(report_row('rdd'),format='html',row.names=FALSE,table.attr='class="reading-table"')),fiction))
@@ -128,7 +128,7 @@ Which businesses does this result describe?
 5 minutes. One trainer demo after prediction. OLS and robust regression coefficients agree; the printed 95% interval uses estimatr HC2, consistently from greenwaste_case.R. Regression allows a slope on each side. Estimate is local near 58, not the whole city. Mark estimate/interval on wall and compare the saving rule.
 :::
 
-## How close did they look? {.reader-slide}
+## Change the window. Change the answer? {.reader-slide}
 
 ```{r, results='asis'}
 html_out(sprintf('<div class="evidence-pair"><div class="evidence"><h3>Within 2 points</h3><p class="big-number">%s</p><p>AED estimated jump</p></div><div class="evidence"><h3>Within 5 points</h3><button data-open="wider-window" data-closed="Open wider result" data-opened="Hide wider result" aria-controls="wider-window" aria-expanded="false">Open wider result</button><div id="wider-window" hidden><p class="big-number">%s</p><p>AED estimated jump</p></div></div></div>%s',fmt(rdd[1]),fmt(case$rdd5[1]),fiction))
@@ -142,7 +142,7 @@ Does a wider window change the decision against the rule?
 5 minutes. Predict before opening. Bandwidth means how far either side the evaluator looked. Both displayed point estimates are below the rule. Stability alone does not remove other discontinuities; omit full sweep, placebo lab and sliders.
 :::
 
-## Something else jumps {.reader-slide}
+## Waste costs jump. Manager age does too. {.reader-slide}
 
 ::: {.ask}
 What if managers just below the line are younger?
@@ -156,7 +156,7 @@ html_out(sprintf('<button data-open="age-jump" data-closed="Open the age check" 
 7 minutes. Prediction, then reveal. Pre-programme manager age jumps at the same line. It offers another possible explanation for a cost jump. Adjusting for age does not automatically rescue the causal interpretation. Ask the evaluator to investigate how the score rule and age discontinuity arose.
 :::
 
-## A short credibility check {.reader-slide}
+## Does this cutoff make a fair comparison? {.reader-slide}
 
 On **Sheet 2**, mark each check as supported, concern or unknown.
 
@@ -174,7 +174,7 @@ Which check would most affect your decision?
 9 minutes. Rule followed in generated data, width two points disclosed, manager-age discontinuity is a concern, result local. Sorting/manipulation checks have not been supplied in this shortened extract: ask for them, do not invent a pass. Work alone then in pairs.
 :::
 
-## Check the AI recommendation {.reader-slide}
+## Local evidence. A citywide recommendation? {.reader-slide}
 
 Illustrative AI draft:
 
@@ -192,7 +192,7 @@ Where does this recommendation go beyond the evidence?
 6 minutes. Repair on paper, verify locally. Optional AI prompt: name the compared businesses, another possible explanation and the missing evidence; ask me questions first. Do not use an AI verdict as the credibility check.
 :::
 
-## Your next question {.reader-slide}
+## Which check is missing? {.reader-slide}
 
 ::: {.ask}
 What would you ask before accepting this jump as an effect?

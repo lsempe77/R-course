@@ -3,6 +3,7 @@ from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from trainer_code import annotate_deck
+from reader_titles import apply_titles
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -486,5 +487,5 @@ Write your question and say how its answer could change your recommendation.
 for name, text in [('Oct12_session1_live.qmd', header('Read a regression table',1,True)+s2),
                    ('Oct12_session2.qmd', header('Question a claim',2)+s1),
                    ('Oct12_session3_live.qmd', header('Choose a fair comparison',3,True)+s3)]:
-    (ROOT/name).write_text(annotate_deck(text).strip()+'\n', encoding='utf-8')
+    (ROOT/name).write_text(apply_titles(annotate_deck(text),name).strip()+'\n', encoding='utf-8')
     print(name, 'content screens:', sum(line.startswith('## ') for line in text.splitlines()))

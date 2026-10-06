@@ -1,25 +1,17 @@
 ﻿"""Promote the checked week and build its working course hub. Run from any cwd."""
 from pathlib import Path
 from html import escape
+import sys
+sys.path.insert(0,str(Path(__file__).resolve().parent))
+from reader_titles import CATALOG
 import hashlib,json,shutil
 ROOT=Path(__file__).resolve().parents[2]
 MODULE=ROOT/'Module_2_Oct_2026_v2'
 DOCS=ROOT/'docs'
 PREVIEW=DOCS/'preview'
 BACKUP=MODULE/'backups/live_2026_10_06'
-ROWS=[
- (1,1,60,'Oct12_session1_live','Read a regression table','Read mean, treatment effect, coefficient, p-value and confidence interval.'),
- (1,2,60,'Oct12_session2','Question a claim','Apply the five terms and find the missing comparison.'),
- (1,3,75,'Oct12_session3_live','Judge a fair comparison','Compare groups and read evidence from a lottery.'),
- (2,1,60,'Oct13_session1','Read the extra change','Ask whether the groups would have changed together.'),
- (2,2,60,'Oct13_session2_live','Read the jump at a score rule','Check the nearby comparison and what else changes.'),
- (2,3,75,'Oct13_session3','Read a matched comparison','Judge similar businesses and the differences that remain.'),
- (3,1,60,'Oct14_session1_live','Judge a value for money claim','Test the costs, timing and assumptions behind the ratio.'),
- (3,2,60,'Oct14_session2','Read a chart before trusting its story','Inspect axes, averages and the people behind the picture.'),
- (3,3,75,'Oct14_session3_live','Question the analyst','Request evidence that could change your decision.'),
- (4,1,60,'Oct15_session1','Judge a report section by section','Read independently, then support your judgement with a source.'),
- (4,2,60,'Oct15_session2_live','Write a defensible recommendation','Connect the finding, action, limit and next evidence.')]
-DAYS={1:('Monday 12 October','Read the numbers and the claim'),2:('Tuesday 13 October','Question how the comparison was made'),3:('Wednesday 14 October','Test the story and ask for evidence'),4:('Thursday 15 October','Read independently and make a recommendation')}
+ROWS=[(s['day'],s['session'],s['minutes'],s['deck'],s['title'],s['description']) for s in CATALOG['sessions']]
+DAYS={d['day']:(d['date'],d['title']) for d in CATALOG['days']}
 COPIES=[]
 def protect(dest):
  if dest.exists():

@@ -1,6 +1,6 @@
 ---
-title: "Judge a value for money claim"
-subtitle: "Module 2 | Day 3 | Session 1"
+title: "Worth the money?"
+subtitle: "Day 3 | Session 1: Costs, savings and the assumptions between them"
 author: "3ie"
 always_allow_html: true
 format:
@@ -30,7 +30,7 @@ knitr:
 source('day3_case.R')
 ```
 
-## A saving is not the whole decision {.reader-slide}
+## A saving is only half the question. {.reader-slide}
 
 ```{webr}
 #| context: setup
@@ -54,7 +54,7 @@ Recall the comparison and its limits. Add one cost you would want included.
 4 minutes. No new method lecture. Retrieve the city DiD result; its causal interpretation remains uncertain. All costs and future-saving inputs today are fictional course assumptions. One trainer demo only, no participant coding.
 :::
 
-## Read the ratio claim {.reader-slide}
+## Benefits beat costs. Should we approve? {.reader-slide}
 
 ```{r, results='asis'}
 html_out(sprintf('<p class="big-number">%.2f</p><p>Benefits divided by costs, under the model assumptions.</p>%s',ratio(),fiction))
@@ -71,7 +71,7 @@ Would this ratio justify approval?
 4 minutes. Commit before opening assumptions. Local controls only; for room totals use course room poll configured to this question, hidden until close, or cards. A ratio above 1 means modelled benefits exceed included costs; it is not proof of cause or a complete approval rule.
 :::
 
-## Open what went into it {.reader-slide}
+## What is inside the headline ratio? {.reader-slide}
 
 ```{r, results='asis'}
 html_out(html_table(assumptions))
@@ -85,7 +85,7 @@ Which inputs need evidence before we rely on them?
 5 minutes. Each input has a source/status. The annual saving is an estimated extra change, not a guaranteed causal benefit. Cost 1800, five years, lag one year and rate 5% are assumptions, not programme records. This corrects the old model calling invented costs facts.
 :::
 
-## Read benefits and costs {.reader-slide}
+## Benefits of 3,350. Against which costs? {.reader-slide}
 
 ```{r, results='asis'}
 html_out(sprintf('<div class="evidence-pair"><div class="evidence"><h3>Modelled benefits</h3><p class="big-number">%s</p></div><div class="evidence"><h3>Included cost</h3><p class="big-number">%s</p></div></div><p class="caption">AED per business, at today&apos;s value. Fictional assumptions.</p>',fmt(model$saving*pv_factor()),fmt(model$cost)))
@@ -106,7 +106,7 @@ What does a ratio above 1 tell us about this model?
 5 minutes. Predict before Run. Code divides the modelled benefit stream by cost. Benefits discounted over years 2 to 6 at 5%; no benefits year 1. Printed values rounded, actual calculation unrounded. Explain benefit-cost ratio in plain language; ask about source uncertainty separately.
 :::
 
-## A saving next year {.reader-slide}
+## Worth less if the saving arrives later? {.reader-slide}
 
 ```{r, results='asis'}
 html_out(sprintf('<div class="evidence-pair"><div class="evidence"><h3>Next year</h3><p class="big-number">%s</p><p>AED saving assumed</p></div><div class="evidence"><h3>At today&apos;s value</h3><button data-open="discount" data-closed="Open today&apos;s value" data-opened="Hide today&apos;s value" aria-controls="discount" aria-expanded="false">Open today&apos;s value</button><div id="discount" hidden><p class="big-number">%s</p><p>AED, at a 5%% discount rate</p></div></div></div>%s',fmt(model$saving),fmt(model$saving/1.05),fiction))
@@ -120,7 +120,7 @@ Why might a later saving count for less today?
 5 minutes. This illustrates one year, not the first modelled benefit (year 2). Explain timing, opportunity cost and uncertainty without a finance lesson. Discount rate is the rate used to express future amounts at today's value. Negative/alternative rates are outside this task.
 :::
 
-## What costs were left out? {.reader-slide}
+## Whose costs are missing? {.reader-slide}
 
 The headline includes equipment delivery. A reviewer asks about:
 
@@ -135,7 +135,7 @@ Mark the missing costs on **Sheet 1**.
 6 minutes. Fictional excerpt. Avoid double counting: ask what was included already, whose costs the study counts, amounts and timing. Adding costs can change the ratio even if the saving estimate stays fixed.
 :::
 
-## Predict your scenario {.reader-slide}
+## One changed assumption. Your prediction? {.reader-slide}
 
 Each group receives one **scenario card**.
 
@@ -152,7 +152,7 @@ What evidence would show whether your scenario is plausible?
 8 minutes. Preserve cards 1 to 5 and eight allocations 1,2,3,4,5,1,2,3. One different setting per card. No repeated live code: all five results are computed from the same model and revealed next. Protect group prediction and reasons; calculators optional.
 :::
 
-## Put it on the ratio wall {.reader-slide}
+## Where does your scenario land? {.reader-slide}
 
 ```{r, results='asis'}
 html_out(paste0('<button data-open="scenario-results" data-closed="Open scenario results" data-opened="Hide scenario results" aria-controls="scenario-results" aria-expanded="false">Open scenario results</button><div id="scenario-results" hidden>',html_table(data.frame(Card=scenarios$card,Scenario=scenarios$name,Ratio=fmt(scenarios$value,2)),compact=TRUE),'</div>'))
@@ -166,7 +166,7 @@ Which cards fall below 1?
 7 minutes. Groups put cards in the lower lane at the actual ratio, leaving predictions above. Retain Fiona's A1 design, regenerate headline marker with corrected model. Values below 1 are scenario conclusions under assumptions, not observed programme failures.
 :::
 
-## What could flip the decision? {.reader-slide}
+## Which assumption changes the verdict? {.reader-slide}
 
 Use **Sheet 2**. Write the assumption you would investigate first.
 
@@ -181,7 +181,7 @@ Does the headline depend on a plausible saving lasting long enough?
 6 minutes. Individual then pairs. Duration and decay matter, costs may be missing, benefit attribution unresolved. Ratio sensitivity helps find missing evidence; it cannot establish a scenario is realistic.
 :::
 
-## Repair an AI recommendation {.reader-slide}
+## The ratio is above 1. Case closed? {.reader-slide}
 
 Illustrative AI draft:
 
@@ -199,7 +199,7 @@ Which assurances go beyond the source?
 6 minutes. Authored AI draft. Mark and repair on paper before reveal. Optional prompt asks for input sources, omitted costs and assumptions before a recommendation. No AI account required; verify claims against source.
 :::
 
-## Your question from memory {.reader-slide}
+## Which missing fact matters most? {.reader-slide}
 
 ::: {.ask}
 What would you ask before accepting a value for money claim?

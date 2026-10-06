@@ -1,6 +1,6 @@
 ---
-title: "Read a regression table"
-subtitle: "Module 2 · Day 1 · Session 1"
+title: "What do the numbers actually say?"
+subtitle: "Day 1 | Session 1: Five terms for reading a regression table"
 author: "3ie"
 always_allow_html: true
 format:
@@ -30,7 +30,7 @@ knitr:
 source('day1_case.R')
 ```
 
-## A table has reached your desk {.reader-slide}
+## An impressive result lands on your desk {.reader-slide}
 
 
 ```{webr}
@@ -54,7 +54,7 @@ Which of these terms could you explain to a director?
 4 minutes. Individual entry check, no AI. Ask for meanings rather than confidence alone. Five terms are essential reading vocabulary. Use the same fictional GreenWaste case; two-sided worksheet includes the regression table. One trainer Run later; no participant coding.
 :::
 
-## Mean: one number for many businesses {.reader-slide}
+## Mean: who looks like the average? {.reader-slide}
 
 ```{r, results='asis'}
 html_out(paste0('<div class="ten-businesses">',paste(sprintf('<span>%s</span>',fmt(ten$landfill_before)),collapse=''),'</div><p class="caption">Waste sent to landfill by ten selected businesses, tonnes in one year</p>'))
@@ -72,7 +72,7 @@ Does 10 tonnes describe every business?
 7 minutes. Participants add the displayed ten actual records and divide by ten before checking 100/10. Nine records are below 10 and one is 46. This is a selected teaching set, not a representative city sample. Ask how an unusual business moves the mean. We switch outcome explicitly to annual waste COST in AED for the regression table.
 :::
 
-## Treatment effect: compared with what? {.reader-slide}
+## Treatment effect: what did GreenWaste cause? {.reader-slide}
 
 **Treatment effect**: the change the programme caused.
 
@@ -90,7 +90,7 @@ Would a fall after GreenWaste, on its own, establish its effect?
 6 minutes. Use plain counterfactual words, no estimator lecture. Observed change and programme effect are different quantities. The effect is estimated rather than directly observed for the same business in both states. Session 2 applies this distinction to claims, Session 3 uses the pilot lottery.
 :::
 
-## Coefficient: find the named row {.reader-slide}
+## Coefficient: which row is the change? {.reader-slide}
 
 ```{r, results='asis'}
 html_out(regression_table())
@@ -104,7 +104,7 @@ Which row describes the starting mean, and which describes the change?
 6 minutes. Table is an actual before/after regression of annual cost on after, clustering by business. Intercept labelled Before GreenWaste estimates the starting mean; after row is the change. Read named row, sign and units, not any number at random. 1432 baseline, -669 change, about 763 after. Negative means lower COST, not automatically a harmful outcome. A coefficient becomes an effect estimate only when the design supports causal interpretation.
 :::
 
-## Read and check the change {.reader-slide}
+## A minus sign. Good news or bad? {.reader-slide}
 
 ```{webr}
 #| echo: true
@@ -123,7 +123,7 @@ Predict the sign before the trainer runs the calculation.
 4 minutes. One short trainer arithmetic demonstration reproduces the regression change coefficient -669, using unrounded costs. Ask one participant to read the result with units and comparison. No participant coding. Printed table is the fallback.
 :::
 
-## Confidence interval: read the uncertainty {.reader-slide}
+## Confidence interval: how sure are we? {.reader-slide}
 
 
 **95% confidence interval**: `r fmt(ba_ci[1])` to `r fmt(ba_ci[2])` AED for the change.
@@ -142,7 +142,7 @@ Is this the range of savings for individual businesses?
 7 minutes. Participants box the after-row interval and state its units. Do not interpret it as a 95% probability statement about this fixed interval. If asked: under assumptions, repeated intervals from this procedure cover the true model quantity about 95% of the time. No machinery lecture. Precision does not repair a weak comparison.
 :::
 
-## P-value: significant enough to act? {.reader-slide}
+## P-value: does small mean important? {.reader-slide}
 
 **p-value < 0.001** for the reported change.
 
@@ -160,7 +160,7 @@ Does a small p-value establish cause or enough saving?
 6 minutes. Find the p-value on the after row. Distinguish evidence against the tested null from causal credibility and policy importance. Do not call it the probability that the result is due to chance. No shuffle simulation or hypothesis-testing lecture.
 :::
 
-## Compare the result with the decision rule {.reader-slide}
+## A lower cost. Enough of a saving? {.reader-slide}
 
 ```{r, results='asis'}
 html_out(interval_svg())
@@ -174,7 +174,7 @@ Does the reported change reach an annual saving of 1,000 AED per business?
 5 minutes. Read the same change on a positive SAVING scale. Estimate and interval fall below the invented rule. A statistically clear fall can still be below a policy minimum, and the comparison still does not isolate cause. Do not conclude the programme has no effect.
 :::
 
-## Read the table independently {.reader-slide}
+## Your turn: what does the table say? {.reader-slide}
 
 On **Sheet 1**, circle the change coefficient, box its interval and find its p-value.
 
@@ -189,7 +189,7 @@ What can you say about the result, and what remains unanswered?
 10 minutes. Five minutes independently, three minutes paired source check, two minutes feedback. Require mean as total/count, treatment effect as causal quantity needing no-programme comparison, coefficient as named row with units/sign, p-value not probability programme works, interval for estimate not individuals. Accept accurate plain words. This is core reading practice, not optional vocabulary.
 :::
 
-## Repair the conclusion {.reader-slide}
+## A correct number. A wrong conclusion. {.reader-slide}
 
 ```{r, results='asis'}
 html_out(sprintf('<p class="lead">Annual costs fell by %s AED. The tiny p-value proves GreenWaste caused enough saving to expand.</p>',fmt(abs(case$before_after))))
@@ -206,7 +206,7 @@ Which parts can the table support?
 3 minutes. Authored AI draft; no external account. Participants repair one sentence. A correct number can accompany an unsupported causal or policy conclusion.
 :::
 
-## Your reading check {.reader-slide}
+## What would you tell the director? {.reader-slide}
 
 Close the term explanations. Keep the regression table open.
 

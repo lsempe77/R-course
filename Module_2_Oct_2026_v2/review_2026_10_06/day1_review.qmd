@@ -17,9 +17,9 @@ answer keys separate from those participant sheets.
 
 | Session | Length | Content screens | Deck | Participant sheet | Trainer pack |
 |---|---:|---:|---|---|---|
-| Read a regression table | 60 minutes | 11 | [Open](Oct12_session1_live.html) | [Two sides](Oct12_session1_handouts.docx) | [Five-term key](Oct12_session1_materials.docx) |
-| Question a claim | 60 minutes | 11 | [Open](Oct12_session2.html) | [Two sides](Oct12_session2_handouts.docx) | [Cards and key](Oct12_session2_materials.docx) |
-| Choose a fair comparison | 75 minutes | 13 | [Open](Oct12_session3_live.html) | [Two sides](Oct12_session3_handouts.docx) | [Key](Oct12_session3_materials.docx) |
+| What do the numbers actually say? | 60 minutes | 11 | [Open](Oct12_session1_live.html) | [Two sides](Oct12_session1_handouts.docx) | [Five-term key](Oct12_session1_materials.docx) |
+| Good news. Enough to act? | 60 minutes | 11 | [Open](Oct12_session2.html) | [Two sides](Oct12_session2_handouts.docx) | [Cards and key](Oct12_session2_materials.docx) |
+| Did the programme make the difference? | 75 minutes | 13 | [Open](Oct12_session3_live.html) | [Two sides](Oct12_session3_handouts.docx) | [Key](Oct12_session3_materials.docx) |
 
 Screen counts exclude the title. Session 3 includes a five-minute break.
 Session 1 teaches mean, treatment effect, coefficient, p-value and confidence interval explicitly. It uses ten landfill records for the mean and a two-row annual-cost regression table for reading. Session 2 applies these terms to claims. Only Sessions 1 and 3

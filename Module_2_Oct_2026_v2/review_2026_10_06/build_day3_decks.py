@@ -3,6 +3,7 @@ from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from trainer_code import annotate_deck
+from reader_titles import apply_titles
 import re
 from build_day2_decks import header,slide,ask,chunk,raw,hidden,demo,open_answer
 ROOT=Path(__file__).resolve().parents[1]
@@ -66,4 +67,4 @@ clinic_notes=[
 iterator=iter(clinic_notes)
 s3=re.sub(r'::: \{\.notes\}\n(\d+ minutes\.).*?\n:::',lambda m:'::: {.notes}\n'+m[1]+' '+next(iterator)+'\n:::',s3,flags=re.S)
 for name,text in [('Oct14_session1_live.qmd',s1),('Oct14_session2.qmd',s2),('Oct14_session3_live.qmd',s3)]:
-    (ROOT/name).write_text(annotate_deck(text).rstrip()+'\n',encoding='utf-8');print(name,text.count('## '),'content screens')
+    (ROOT/name).write_text(apply_titles(annotate_deck(text),name).rstrip()+'\n',encoding='utf-8');print(name,text.count('## '),'content screens')

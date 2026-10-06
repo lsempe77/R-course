@@ -15,9 +15,9 @@ in each session. The explanation is shorter; guided practice takes most of the t
 
 | Session | Content screens | Deck | Participant sheet | Trainer pack |
 |---|---:|---|---|---|
-| Read the extra change | 10 | [Open](Oct13_session1.html) | [Two sides](Oct13_session1_handouts.docx) | [Key](Oct13_session1_materials.docx) |
-| Read the jump at a score rule | 10 | [Open](Oct13_session2_live.html) | [Two sides](Oct13_session2_handouts.docx) | [Eight cards and key](Oct13_session2_materials.docx) |
-| Read a matched comparison | 13 | [Open](Oct13_session3.html) | [Two sides](Oct13_session3_handouts.docx) | [Profiles, cost slips and key](Oct13_session3_materials.docx) |
+| What would have happened anyway? | 10 | [Open](Oct13_session1.html) | [Two sides](Oct13_session1_handouts.docx) | [Key](Oct13_session1_materials.docx) |
+| What changes at the cutoff? | 10 | [Open](Oct13_session2_live.html) | [Two sides](Oct13_session2_handouts.docx) | [Eight cards and key](Oct13_session2_materials.docx) |
+| How similar is similar enough? | 13 | [Open](Oct13_session3.html) | [Two sides](Oct13_session3_handouts.docx) | [Profiles, cost slips and key](Oct13_session3_materials.docx) |
 
 Counts exclude the title. Matching includes a five-minute break. Each session
 has one short trainer-run calculation, with a prediction first. Participants

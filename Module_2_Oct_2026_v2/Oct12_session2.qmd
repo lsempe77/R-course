@@ -1,6 +1,6 @@
 ---
-title: "Question a claim"
-subtitle: "Module 2 · Day 1 · Session 2"
+title: "Good news. Enough to act?"
+subtitle: "Day 1 | Session 2: Four claims. What evidence is missing?"
 author: "3ie"
 always_allow_html: true
 format:
@@ -27,7 +27,7 @@ source('day1_case.R')
 ```
 
 
-## A report has reached your desk {.reader-slide}
+## That headline lands on your desk {.reader-slide}
 
 ::: {.lead}
 “Landfill waste from businesses in GreenWaste fell `r fmt(landfill_fall)`% in a year.”
@@ -44,7 +44,7 @@ Use the five terms from Session 1. Write your decision and one question on **She
 7 minutes. This is the entry task, not a lecture. Do not define terms or correct answers yet. Collect a few decisions and questions. Keep the sheets so participants can compare their own reading at the end of the week. No AI for this task.
 :::
 
-## Meet GreenWaste {.reader-slide}
+## What did GreenWaste actually do? {.reader-slide}
 
 {{< include _case_map.qmd >}}
 
@@ -76,7 +76,7 @@ Landfill among businesses that took part, one year later.
 3 minutes. Individual choice, then a reason. Buttons record only the choice in this open page. For shared phone voting use room_poll.py and its facilitator page; the room poll is separate from this local interaction. Keep results hidden until voting closes. Paper fallback: three labelled cards or a show of hands. Revisit the same question after opening the comparison.
 :::
 
-## What is missing? {.reader-slide}
+## What does the headline leave out? {.reader-slide}
 
 ::: {.lead}
 “Landfill fell after GreenWaste.”
@@ -92,7 +92,7 @@ Write one question. Compare it with a partner’s.
 4 minutes. Invite concrete questions, not a list of technical terms. Prompt only if needed: what else changed, what happened elsewhere, how businesses were selected? Keep the next slide hidden until participants have committed.
 :::
 
-## Open the comparison {.reader-slide}
+## Who else saw waste fall? {.reader-slide}
 
 ```{r landfill-comparison, results='asis'}
 html_out(sprintf('<div class="evidence-pair"><div class="evidence"><h3>Took part</h3><p class="big-number">%s &rarr; %s</p><p>Before &rarr; one year later</p></div><div class="evidence"><h3>Did not take part</h3><button data-open="other-landfill" data-closed="Open their result" data-opened="Hide their result" aria-controls="other-landfill" aria-expanded="false">Open their result</button><div id="other-landfill" hidden><p class="big-number">%s &rarr; %s</p><p>Before &rarr; one year later</p></div></div></div><p class="caption">Landfill, tonnes per business per year</p>%s', fmt(landfill['before'],1), fmt(landfill['after'],1), fmt(landfill['other_before'],1), fmt(landfill['other_after'],1), fiction))
@@ -106,7 +106,7 @@ What can the first fall tell us on its own?
 5 minutes. Ask participants to predict the other group’s direction before opening it. The other group also improved. This weakens a causal reading of before/after; it does not prove that these groups are a valid causal comparison. They started at different levels. Ask the same extension question again using the room poll’s After phase or cards. Invite a changed reason, not a winning answer.
 :::
 
-## Compared to what? {.reader-slide}
+## Better than before. Better than without? {.reader-slide}
 
 ::: {.lead}
 “Waste was lower **than it had been before**.”
@@ -126,7 +126,7 @@ Ask how the evaluator estimated that missing outcome.
 5 minutes. Point to the comparison words. Explain counterfactual once in plain language. We cannot observe the same business, at the same time, both with and without the programme. A comparison can help estimate the missing outcome if its assumptions are credible. Avoid launching a methods survey. Have pairs add comparison words to one claim.
 :::
 
-## What does an average hide? {.reader-slide}
+## Who is hidden by the average? {.reader-slide}
 
 Landfill before GreenWaste, tonnes per year, for ten businesses:
 
@@ -146,7 +146,7 @@ The **mean** is the total divided by ten: `r fmt(mean(ten$landfill_before),1)` t
 5 minutes. Participants point to the large business before revealing the mean. No long arithmetic exercise. A mean can answer a useful total-related question, but it does not describe every business. Ask which extra information they would want about the spread. Do not introduce quartiles or a second lesson on medians.
 :::
 
-## Try four claims {.reader-slide}
+## Four claims. Which would you act on? {.reader-slide}
 
 Read the four claim cards. For each, choose:
 
@@ -164,7 +164,7 @@ What question would move your decision forward?
 12 minutes. Preserve Fiona’s four cards and triage activity. Give one card set per group and use Sheet 2. Optional A1 board: one group-coloured marker per group; write card numbers into its question/decision grid. No extra AI wall board. Card 2’s causal wording is intentionally open to challenge. Technical terms on cards can be glossed briefly; the full uncertainty lesson comes next session. Protect time for groups to write their reasons.
 :::
 
-## Defend one choice {.reader-slide}
+## Which evidence supports your choice? {.reader-slide}
 
 Choose a card that two groups placed differently.
 
@@ -178,7 +178,7 @@ Explain one missing piece of evidence that could change it.
 6 minutes. Discuss two disagreements, not a tour through every group. Expected primary placements: card 1 compared to what/ask first; card 2 how big/ask first (it concerns landfill, not the cost rule; also ask about the causal comparison); card 3 do not act on the nationwide recommendation; card 4 how sure/ask first. More than one missing question can be justified. Do not treat grid placement as a single-answer test.
 :::
 
-## Check the AI sentence {.reader-slide data-correct="The second sentence claims a cause the headline has not established. Ask what happened without GreenWaste."}
+## Would you accept the AI explanation? {.reader-slide data-correct="The second sentence claims a cause the headline has not established. Ask what happened without GreenWaste."}
 
 An illustrative AI draft. Select the unsupported sentence.
 
@@ -199,7 +199,7 @@ What should the AI ask before writing that conclusion?
 6 minutes. This is an authored example of a possible AI error, not a transcript of a verified tool response. Participants must point to source evidence. Optional live AI: provide only the headline and ask it to list the missing information before offering a conclusion. Review its questions yourselves. No AI account is required to complete the activity.
 :::
 
-## Your next question {.reader-slide}
+## Which answer do you need before acting? {.reader-slide}
 
 Close the cards and turn over the sheet.
 

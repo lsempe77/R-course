@@ -1,6 +1,6 @@
 ---
-title: "Read the extra change"
-subtitle: "Module 2 | Day 2 | Session 1"
+title: "What would have happened anyway?"
+subtitle: "Day 2 | Session 1: Difference-in-differences: find the extra change"
 author: "3ie"
 always_allow_html: true
 format:
@@ -30,7 +30,7 @@ knitr:
 source('day2_case.R')
 ```
 
-## A question from yesterday {.reader-slide}
+## Yesterday's saving. Today's question. {.reader-slide}
 
 ```{webr}
 #| context: setup
@@ -51,7 +51,7 @@ Tell a partner. Today we compare **changes in two groups**.
 3 minutes. Retrieve yesterday's question. No AI or definitions first. GreenWaste is fictional; city participants score 58 or below. Warm up webR before class. No participant coding.
 :::
 
-## Two groups over time {.reader-slide}
+## Both groups changed. What was extra? {.reader-slide}
 
 ```{r, results='asis'}
 html_out(sprintf('<div class="evidence-pair"><div class="evidence"><h3>Took part</h3><p class="big-number">%s &rarr; %s</p></div><div class="evidence"><h3>Did not take part</h3><p class="big-number">%s &rarr; %s</p></div></div><p class="caption">Mean annual waste cost, AED. Before &rarr; 12 months later.</p>%s',fmt(means[1]),fmt(means[2]),fmt(means[3]),fmt(means[4]),fiction))
@@ -65,7 +65,7 @@ Which change should we subtract from which?
 4 minutes. Take predictions before showing the calculation. Different starting levels alone do not rule out DiD; different untreated trends do.
 :::
 
-## Complete the four numbers {.reader-slide}
+## Four numbers. What is the extra change? {.reader-slide}
 
 Use **Sheet 1**. Work alone, then compare with your group.
 
@@ -82,7 +82,7 @@ Use **Sheet 1**. Work alone, then compare with your group.
 8 minutes. Fiona's four-number task remains. Collect signs and units before feedback. Printed means are rounded; a one-AED discrepancy is acceptable. Use actual values for the final estimate.
 :::
 
-## Read the result row {.reader-slide}
+## What does the extra change tell us? {.reader-slide}
 
 ```{r, results='asis'}
 html_out(paste0(as.character(knitr::kable(report_row('did'),format='html',row.names=FALSE,table.attr='class="reading-table"')),fiction))
@@ -103,7 +103,7 @@ round(mean(change[joined]) - mean(change[!joined]))
 5 minutes. One trainer calculation, prediction before Run. Output is the same coefficient as the regression in the printed extract. 95% interval uses business-clustered robust standard errors. The estimate and interval are short of the rule. This does not yet settle causal credibility.
 :::
 
-## What has to be true? {.reader-slide}
+## What must we assume about the groups? {.reader-slide}
 
 <div class="lead">Without GreenWaste, the two groups would have changed in similar ways.</div>
 
@@ -118,7 +118,7 @@ Suggest one concrete reason.
 6 minutes. Examples: different price shocks, business mix changing, another policy affecting one group. The assumption concerns unobserved change without the programme; it does not require identical levels.
 :::
 
-## Would you trust these pictures? {.reader-slide}
+## Which trend would make you hesitate? {.reader-slide}
 
 ```{r, results='asis'}
 html_out(paste0('<div class="trend-options"><div><h3>A</h3>',trend_svg(1),'</div><div><h3>B</h3>',trend_svg(2),'</div></div><p class="caption">Hypothetical pictures before a programme. These are not extra GreenWaste data.</p>'))
@@ -135,7 +135,7 @@ Which picture raises more concern? What if the comparison group changes?
 8 minutes. Give each pair a picture to explain. Both axes use the same invented scale. Picture A shows similar changes at different levels; B shows diverging changes. Ask about a comparator losing its larger businesses. No significance test establishes the assumption.
 :::
 
-## What cannot be checked here? {.reader-slide}
+## Can one 'before' show a trend? {.reader-slide}
 
 <div class="big-number">One before period</div>
 
@@ -153,7 +153,7 @@ Can this file show whether earlier trends were similar?
 5 minutes. The earlier pre-trend test was misleading with only one before period. State the data limit explicitly. Even several earlier periods cannot prove the unobserved post-programme trend.
 :::
 
-## Mark up the report extract {.reader-slide}
+## Does the report go beyond its evidence? {.reader-slide}
 
 Open **Sheet 2**. Read alone before comparing with a partner.
 
@@ -172,7 +172,7 @@ What does the extract support, and what remains uncertain?
 10 minutes. Protect the reading time. Ask participants to distinguish the estimated extra fall from an established causal saving. The printed extract names two periods and the parallel-trends assumption, and admits earlier trends cannot be checked.
 :::
 
-## Repair an AI claim {.reader-slide}
+## The AI says cause. Does the comparison? {.reader-slide}
 
 <div class="lead">Illustrative AI draft</div>
 
@@ -190,7 +190,7 @@ Which claims can you support from the extract?
 7 minutes. Authored example, not a captured live AI response. Participants cross out unsupported claims on Sheet 2 and rewrite. Optional prompt: identify the comparison, assumption and missing evidence; ask me questions before concluding. Check any AI response against the source yourselves.
 :::
 
-## Your question for the evaluator {.reader-slide}
+## What would you ask for next? {.reader-slide}
 
 ::: {.ask}
 What would you ask, and how could the answer change your decision?

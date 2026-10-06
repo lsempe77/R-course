@@ -20,8 +20,8 @@ Both approved 60-minute sessions are built. Participants first read independentl
 
 | Session | Content screens | Deck | Participant sheet | Trainer pack |
 |---|---:|---|---|---|
-| Judge a report section by section | 11 | [Open](Oct15_session1.html) | [Two sides](Oct15_session1_handouts.docx) | [Key and retry](Oct15_session1_materials.docx) |
-| Write a defensible recommendation | 9 | [Open](Oct15_session2_live.html) | [Two sides](Oct15_session2_handouts.docx) | [Example and feedback](Oct15_session2_materials.docx) |
+| Would you trust this report? | 11 | [Open](Oct15_session1.html) | [Two sides](Oct15_session1_handouts.docx) | [Key and retry](Oct15_session1_materials.docx) |
+| What should the director do next? | 9 | [Open](Oct15_session2_live.html) | [Two sides](Oct15_session2_handouts.docx) | [Example and feedback](Oct15_session2_materials.docx) |
 
 :::
 

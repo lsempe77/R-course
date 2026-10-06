@@ -1,6 +1,6 @@
 ---
-title: "Read a matched comparison"
-subtitle: "Module 2 | Day 2 | Session 3"
+title: "How similar is similar enough?"
+subtitle: "Day 2 | Session 3: Matching: similar records can hide differences"
 author: "3ie"
 always_allow_html: true
 format:
@@ -30,7 +30,7 @@ knitr:
 source('day2_case.R')
 ```
 
-## What would make a fair comparison? {.reader-slide}
+## Who would you choose as the comparison? {.reader-slide}
 
 ```{webr}
 #| context: setup
@@ -58,7 +58,7 @@ Choose on characteristics recorded **before GreenWaste**.
 4 minutes. Retrieve comparison question. Matching creates a comparison from observed characteristics; it does not create random assignment. No coding by participants; hidden helper prepares short trainer demonstration.
 :::
 
-## Read the profiles {.reader-slide}
+## What can you tell before seeing costs? {.reader-slide}
 
 ```{=html}
 <div class="evidence-pair"><div class="evidence"><h3>Business A</h3><p>Manager age: 45<br>Size: small<br>Took part</p></div><div class="evidence"><h3>Business 2</h3><p>Manager age: 46<br>Size: small<br>Did not take part</p></div></div>
@@ -91,7 +91,7 @@ Which comparison business is left over?
 12 minutes. Preserve Fiona's A45small B38large C52small; 1=39large 2=46small 3=51small 4=29large. Cost slips separately held until next screen. Optional walking version: seven volunteers, eighth group checks. Intended A2 B1 C3; 4 unused. This toy activity differs from full-data matching which allows reuse and matches every participant.
 :::
 
-## Open the costs {.reader-slide}
+## Now open the costs. Still convinced? {.reader-slide}
 
 Keep your pairs. The trainer now hands out the **cost slips**.
 
@@ -108,7 +108,7 @@ Does this small exercise establish what GreenWaste caused?
 5 minutes. Toy differences -1000,-900,-1100, average -1000. Invented exercise, not the full-city estimate. Unmeasured differences could explain some gap. Do not let groups rematch based on outcomes. Business4 unused in toy; this is not an excluded participant.
 :::
 
-## Read the matched result {.reader-slide}
+## Near the rule. Enough certainty? {.reader-slide}
 
 ```{r, results='asis'}
 html_out(paste0(as.character(knitr::kable(report_row('match'),format='html',row.names=FALSE,table.attr='class="reading-table"')),fiction))
@@ -125,7 +125,7 @@ Does finding a match for everyone make every match convincing?
 6 minutes. Full estimator: one nearest neighbour per participant, standardised characteristics, with replacement, no caliper or exclusions. Interval clusters by original business ID to allow reused controls, treating selected matches as given; it does not account fully for the match-selection procedure. Teach reported uncertainty and bias separately. All participants matched is true; closeness/support remains a question.
 :::
 
-## What was used to match? {.reader-slide}
+## Four characteristics. Still different? {.reader-slide}
 
 **Manager age, staff, premises area and filtration**, measured before the programme.
 
@@ -155,7 +155,7 @@ We return to one question: **what might matching have missed?**
 5 minutes. Protect five-minute break. Keep outputs hidden until participants return.
 :::
 
-## Leave out manager age {.reader-slide}
+## Drop one characteristic. A new answer? {.reader-slide}
 
 ```{r, results='asis'}
 html_out(sprintf('<div class="evidence-pair"><div class="evidence"><h3>Four characteristics</h3><p class="big-number">%s</p><p>AED matched difference</p></div><div class="evidence"><h3>Age left out</h3><button data-open="omit-age" data-closed="Open the result" data-opened="Hide the result" aria-controls="omit-age" aria-expanded="false">Open the result</button><div id="omit-age" hidden><p class="big-number">%s</p><p>AED matched difference</p></div></div></div>%s',fmt(match_A$est),fmt(match_B$est),fiction))
@@ -169,7 +169,7 @@ Why could leaving one characteristic out change the answer?
 6 minutes. Predict direction before reveal. Same city, same algorithm, age excluded. The result is sensitive to information available. The three-feature match can look balanced on its own variables while ages and pre-programme costs differ. No repeated live runs.
 :::
 
-## What has not been measured? {.reader-slide}
+## What if motivation is missing? {.reader-slide}
 
 ::: {.ask}
 Could motivation affect both joining and waste costs?
@@ -185,7 +185,7 @@ A matched comparison can miss influences absent from its records.
 5 minutes. Motivation is a hypothetical omitted influence, not an observed column or established cause here. Balance concerns measured features; no balance table establishes absence of all bias.
 :::
 
-## Mark up the report extract {.reader-slide}
+## What does 'everyone matched' prove? {.reader-slide}
 
 Read **Sheet 2** alone, then with a partner.
 
@@ -204,7 +204,7 @@ Which part of the conclusion needs more evidence?
 8 minutes. Extract accurately discloses all participants matched, reuse, no maximum acceptable distance, and missing unmeasured-influence evidence. Ask for distances and poor support, baseline outcomes and sensitivity. Avoid saying all observed variables are perfectly balanced; manager age remains somewhat imbalanced.
 :::
 
-## Make a provisional judgement {.reader-slide}
+## Act now, add conditions or ask first? {.reader-slide}
 
 ::: {.ask}
 Would you act, act with conditions or request more evidence?
@@ -217,7 +217,7 @@ Compare with a partner. Different decisions need clear support.
 6 minutes. Protect individual judgement before discussion. Matching point estimate near rule, interval straddles rule. Causal credibility and programme costs still uncertain. Compare to pilot only if needed, no second case.
 :::
 
-## Check an AI assurance {.reader-slide}
+## The AI promises no bias. Where is the proof? {.reader-slide}
 
 Illustrative AI draft:
 
@@ -235,7 +235,7 @@ What would you keep, cross out and rewrite?
 5 minutes. All participants matched is true in this algorithm. Unsupported inference is bias removed and threshold guaranteed. Optional AI prompt asks for claims and source evidence plus missing checks; ask questions before concluding. Verify with extract, no external AI required.
 :::
 
-## A question from memory {.reader-slide}
+## Close the sheet. What would you ask? {.reader-slide}
 
 ::: {.ask}
 What would you ask the evaluator about these matches?

@@ -1,6 +1,6 @@
 ---
-title: "Write a defensible recommendation"
-subtitle: "Module 2 | Day 4 | Session 2"
+title: "What should the director do next?"
+subtitle: "Day 4 | Session 2: A recommendation with evidence and conditions"
 author: "3ie"
 always_allow_html: true
 format:
@@ -24,7 +24,7 @@ knitr:
 source('day4_case.R')
 ```
 
-## Start from corrected evidence {.reader-slide}
+## The corrected findings are on your desk. {.reader-slide}
 
 Open the **corrected findings reference**.
 
@@ -41,7 +41,7 @@ Which evidence would most affect the proposed action?
 5 minutes. The reference corrects the exercise report's planted claims. Four anchors replace the long six-findings tour and Tariff Shield case. Use the current GreenWaste figures; do not treat yesterday's flawed report as an unquestioned source. No coding or model demonstration.
 :::
 
-## What does the decision require? {.reader-slide}
+## What does the director need to decide? {.reader-slide}
 
 ```{=html}
 <div class="decision-checks"><div><h3>Saving rule</h3><p>Estimate and interval against 1,000 AED.</p></div><div><h3>Cause and reach</h3><p>Fair comparison and people described.</p></div><div><h3>Value for money</h3><p>Evidence about costs and duration.</p></div></div>
@@ -55,7 +55,7 @@ Which question remains unanswered for nationwide expansion?
 5 minutes. These are separate decision considerations. Passing a numerical rule would not establish transportability or costs. Use familiar technical terms only as needed and explain them in ordinary language. Do not add a new method catalogue.
 :::
 
-## Read a useful short brief {.reader-slide}
+## What makes this brief useful? {.reader-slide}
 
 ```{r, results='asis'}
 html_out(paste0('<div class="sample-brief">',paste(sprintf('<p>%s</p>',example_brief),collapse=''),'</div>'))
@@ -69,7 +69,7 @@ Where are the finding, recommendation, risk and evidence request?
 5 minutes. Read the model as one possible conditional judgement, not the correct vote. Mark its four parts on the source reference. It is under 150 words and names the interval and reach. The request explains how the answer affects scale and budget.
 :::
 
-## Draft your brief {.reader-slide}
+## 150 words. What should happen next? {.reader-slide}
 
 Write **at most 150 words** for a director.
 
@@ -86,7 +86,7 @@ Can the director see what you recommend and why?
 12 minutes. Individuals draft their own brief, then may discuss with a partner. Protect twelve minutes. One proportionate action with an explicit condition is enough. Each factual and causal claim must have a source. No AI in the first draft; do not demand jargon or estimator details.
 :::
 
-## Swap and verify {.reader-slide}
+## Would you sign your partner's brief? {.reader-slide}
 
 A partner reviews your brief using **Sheet 2**.
 
@@ -103,7 +103,7 @@ What important limit would the director otherwise miss?
 8 minutes. Reviewer cites the finding anchor, not just a tick or a numerical match. Treat unsupported claims and material omissions as review issues. Give one concrete suggested repair. The author retains responsibility for the recommendation.
 :::
 
-## Repair what the review found {.reader-slide}
+## Which sentence needs changing? {.reader-slide}
 
 Revise one important sentence.
 
@@ -120,7 +120,7 @@ Does the revised action follow from the source?
 7 minutes. Accept different defensible choices. Check that a condition is meaningful, not a generic caveat. A recommendation to gather evidence needs a specific request and purpose. No automated word or number matching can prove faithful interpretation.
 :::
 
-## Check an AI draft {.reader-slide}
+## Which claim did the AI add? {.reader-slide}
 
 ```{r, results='asis'}
 html_out(paste0('<p>',ai_brief,'</p>'))
@@ -137,7 +137,7 @@ How can an accurate number accompany an unsupported action?
 6 minutes. Authored draft includes accurate point and ratio but false threshold, reach and cost conclusions. Mark and repair on Sheet 2 before revealing feedback. No external AI account or script needed. Compare each assertion with a source and a limit.
 :::
 
-## Defend one recommendation {.reader-slide}
+## Defend the action and its conditions. {.reader-slide}
 
 Share the action and its condition.
 
@@ -154,7 +154,7 @@ Would your recommendation still make sense if that answer changed?
 6 minutes. Invite two or three short defences. Discuss evidence and proportionality rather than persuasive tone. Help participants recognise useful positive evidence as well as reasons to request more. Do not score agreement with the trainer's preferred action.
 :::
 
-## Make your final request {.reader-slide}
+## Ask for the next piece of evidence. {.reader-slide}
 
 ::: {.ask}
 What specific evidence should the evaluator send, and how would you use it?

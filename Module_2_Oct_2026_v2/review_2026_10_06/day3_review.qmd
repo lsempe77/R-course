@@ -12,9 +12,9 @@ The approved Day 3 route is built: 60 minutes for value for money, 60 for chart 
 
 | Session | Content screens | Deck | Participant sheet | Trainer pack |
 |---|---:|---|---|---|
-| Judge a value for money claim | 11 | [Open](Oct14_session1_live.html) | [Two sides](Oct14_session1_handouts.docx) | [Scenario cards and key](Oct14_session1_materials.docx) |
-| Read a chart before trusting its story | 10 | [Open](Oct14_session2.html) | [Two sides](Oct14_session2_handouts.docx) | [Key](Oct14_session2_materials.docx) |
-| Question the analyst | 13 | [Open](Oct14_session3_live.html) | [Two sides](Oct14_session3_handouts.docx) | [Answer bank and key](Oct14_session3_materials.docx) |
+| Worth the money? | 11 | [Open](Oct14_session1_live.html) | [Two sides](Oct14_session1_handouts.docx) | [Scenario cards and key](Oct14_session1_materials.docx) |
+| Same numbers. Different story. | 10 | [Open](Oct14_session2.html) | [Two sides](Oct14_session2_handouts.docx) | [Key](Oct14_session2_materials.docx) |
+| The analyst is in the room | 13 | [Open](Oct14_session3_live.html) | [Two sides](Oct14_session3_handouts.docx) | [Answer bank and key](Oct14_session3_materials.docx) |
 
 Counts exclude the title. The clinic includes a five-minute break. Each session has one short trainer calculation, with a prediction first. Print participant pages 1 and 2 double-sided; the longer trainer packs contain materials for distribution and the keys.
 

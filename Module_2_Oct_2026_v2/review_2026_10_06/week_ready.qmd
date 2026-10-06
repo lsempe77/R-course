@@ -24,17 +24,17 @@ Short explanations lead into individual predictions, source checks, practical gr
 
 | Day | Session | Minutes | Deck | Participant sheet | Trainer pack |
 |---|---|---:|---|---|---|
-| 1 | Read a regression table | 60 | [Open](Oct12_session1_live.html) | [Two sides](Oct12_session1_handouts.docx) | [Key and materials](Oct12_session1_materials.docx) |
-| 1 | Question a claim | 60 | [Open](Oct12_session2.html) | [Two sides](Oct12_session2_handouts.docx) | [Key and materials](Oct12_session2_materials.docx) |
-| 1 | Judge a fair comparison | 75 | [Open](Oct12_session3_live.html) | [Two sides](Oct12_session3_handouts.docx) | [Key and materials](Oct12_session3_materials.docx) |
-| 2 | Read the extra change | 60 | [Open](Oct13_session1.html) | [Two sides](Oct13_session1_handouts.docx) | [Key and materials](Oct13_session1_materials.docx) |
-| 2 | Read the jump at a score rule | 60 | [Open](Oct13_session2_live.html) | [Two sides](Oct13_session2_handouts.docx) | [Key and materials](Oct13_session2_materials.docx) |
-| 2 | Read a matched comparison | 75 | [Open](Oct13_session3.html) | [Two sides](Oct13_session3_handouts.docx) | [Key and materials](Oct13_session3_materials.docx) |
-| 3 | Judge a value for money claim | 60 | [Open](Oct14_session1_live.html) | [Two sides](Oct14_session1_handouts.docx) | [Key and materials](Oct14_session1_materials.docx) |
-| 3 | Read a chart before trusting its story | 60 | [Open](Oct14_session2.html) | [Two sides](Oct14_session2_handouts.docx) | [Key and materials](Oct14_session2_materials.docx) |
-| 3 | Question the analyst | 75 | [Open](Oct14_session3_live.html) | [Two sides](Oct14_session3_handouts.docx) | [Key and materials](Oct14_session3_materials.docx) |
-| 4 | Judge a report section by section | 60 | [Open](Oct15_session1.html) | [Two sides](Oct15_session1_handouts.docx) | [Key and materials](Oct15_session1_materials.docx) |
-| 4 | Write a defensible recommendation | 60 | [Open](Oct15_session2_live.html) | [Two sides](Oct15_session2_handouts.docx) | [Key and materials](Oct15_session2_materials.docx) |
+| 1 | What do the numbers actually say? | 60 | [Open](Oct12_session1_live.html) | [Two sides](Oct12_session1_handouts.docx) | [Key and materials](Oct12_session1_materials.docx) |
+| 1 | Good news. Enough to act? | 60 | [Open](Oct12_session2.html) | [Two sides](Oct12_session2_handouts.docx) | [Key and materials](Oct12_session2_materials.docx) |
+| 1 | Did the programme make the difference? | 75 | [Open](Oct12_session3_live.html) | [Two sides](Oct12_session3_handouts.docx) | [Key and materials](Oct12_session3_materials.docx) |
+| 2 | What would have happened anyway? | 60 | [Open](Oct13_session1.html) | [Two sides](Oct13_session1_handouts.docx) | [Key and materials](Oct13_session1_materials.docx) |
+| 2 | What changes at the cutoff? | 60 | [Open](Oct13_session2_live.html) | [Two sides](Oct13_session2_handouts.docx) | [Key and materials](Oct13_session2_materials.docx) |
+| 2 | How similar is similar enough? | 75 | [Open](Oct13_session3.html) | [Two sides](Oct13_session3_handouts.docx) | [Key and materials](Oct13_session3_materials.docx) |
+| 3 | Worth the money? | 60 | [Open](Oct14_session1_live.html) | [Two sides](Oct14_session1_handouts.docx) | [Key and materials](Oct14_session1_materials.docx) |
+| 3 | Same numbers. Different story. | 60 | [Open](Oct14_session2.html) | [Two sides](Oct14_session2_handouts.docx) | [Key and materials](Oct14_session2_materials.docx) |
+| 3 | The analyst is in the room | 75 | [Open](Oct14_session3_live.html) | [Two sides](Oct14_session3_handouts.docx) | [Key and materials](Oct14_session3_materials.docx) |
+| 4 | Would you trust this report? | 60 | [Open](Oct15_session1.html) | [Two sides](Oct15_session1_handouts.docx) | [Key and materials](Oct15_session1_materials.docx) |
+| 4 | What should the director do next? | 60 | [Open](Oct15_session2_live.html) | [Two sides](Oct15_session2_handouts.docx) | [Key and materials](Oct15_session2_materials.docx) |
 
 :::
 

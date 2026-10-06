@@ -1,3 +1,11 @@
+## Reader-facing headings rewritten, 6 October 2026
+
+The landing day themes, eleven session titles and card descriptions, deck subtitles and 122 content-slide headings now pose concrete questions or decisions. Examples: What do the numbers actually say?; Good news. Enough to act?; How similar is similar enough?; What should the director do next? Named technical terms remain in subtitles, explanations and the five-term opening lesson. Day themes: Good news needs good questions; Compared with what?; Would you approve it?; Make the call. Show the evidence.
+
+`review_2026_10_06/reader_titles.json` is the shared catalog. `reader_titles.py` applies it to deck metadata and headings; all four builders and the hub generator use it. Twelve deck sources, including the Day 4 alias, reproduced exactly in an isolated build. Compared with backups/reader_titles_2026_10_06/, teaching bodies, calculations and speaker notes are unchanged. Printed worksheet headings remain direct activity instructions; session numbers link them to the renamed decks. The current daily and whole-week reviews use the new session names. Landing durations remain removed and facilitator preparation stays in the collapsed trainer area.
+
+`verify_reader_titles.py` checked all 133 title/content screens across eleven decks, with fragments and feedback open and all eight visible trainer calculations executed. Browser errors empty; no slide overflow or heading/logo collisions. Title pages and dense screens visually inspected. The pilot heading explicitly calls 1,014 AED an estimate. Hub checks passed all 49 links, keyboard filters and four phone/desktop widths. Updated preview, live-root bytes and deck archives are hash-verified, below 25 MiB.
+
 ## Trainer R boxes improved, 6 October 2026
 
 All eight visible trainer calculations now include short plain-language comments explaining their comparison, units and output. Shared styles use 22px code, clear comments, a framed editor and a "Trainer calculation - R" header. The duplicate echoed source underneath is hidden; results remain visible. The lottery demonstration now uses the full slide width. Participant coding and session durations are unchanged.

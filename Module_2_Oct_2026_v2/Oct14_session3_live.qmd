@@ -1,6 +1,6 @@
 ---
-title: "Question the analyst"
-subtitle: "Module 2 | Day 3 | Session 3"
+title: "The analyst is in the room"
+subtitle: "Day 3 | Session 3: Ask for evidence that could change your answer"
 author: "3ie"
 always_allow_html: true
 format:
@@ -52,7 +52,7 @@ html_out(paste0('<p class="lead">',qa_note,'</p>',fiction))
 4 minutes. The fictional note intentionally overclaims. Record the opening decision and reason before feedback. Optional course room poll with Before phase and hidden totals; no AI for this task.
 :::
 
-## Locate its evidence {.reader-slide}
+## Follow each claim back to its evidence. {.reader-slide}
 
 ```{r, results='asis'}
 html_out(html_table(method_rows))
@@ -66,7 +66,7 @@ Which result did the note choose, and who does each result describe?
 5 minutes. Savings are positive and interval endpoints sorted. Pilot and matching intervals span the rule; DiD and RDD fall short. City methods share records and describe different comparisons. Four estimates are not four votes.
 :::
 
-## Choose three useful questions {.reader-slide}
+## Only three questions. Which ones? {.reader-slide}
 
 ```{r, results='asis'}
 html_out(paste0('<ol>',paste(sprintf('<li>%s</li>',read_questions),collapse=''),'</ol>'))
@@ -80,7 +80,7 @@ Which three questions would most affect your sign-off decision?
 6 minutes. Use the five-question QA sheet. Each question must request specific evidence. Individuals choose first, then groups. The full historical question battery is outside the teaching route.
 :::
 
-## Improve a vague question {.reader-slide}
+## Will 'is it reliable?' get a useful answer? {.reader-slide}
 
 A reviewer asks: **"Is the evidence robust?"**
 
@@ -98,7 +98,7 @@ What answer would help you decide, and what would count as evidence?
 5 minutes. Ask for a result or check that could change the decision. The example requests the planned analysis; it does not establish that a documented plan exists here.
 :::
 
-## Prepare for the clinic {.reader-slide}
+## Choose before the analyst arrives. {.reader-slide}
 
 Groups rank their questions. Choose a spokesperson.
 
@@ -125,7 +125,7 @@ The trainer returns as the analyst.
 5 minutes. Protect the five-minute break. Keep the questions ready and do not add extra analyses.
 :::
 
-## Ask the analyst {.reader-slide}
+## The analyst is here. What will you ask? {.reader-slide}
 
 Ask one specific question per group.
 
@@ -142,7 +142,7 @@ Did the answer address the question you asked?
 14 minutes. Allow one question and follow-up per group, about ninety seconds each. Answer briefly from the source bank. Ask which evidence is still missing; never invent fieldwork documentation.
 :::
 
-## Open one requested result {.reader-slide}
+## Pilot estimate: 1,014. Enough to act? {.reader-slide}
 
 A reviewer asks whether the pilot settles the saving rule.
 
@@ -167,7 +167,7 @@ How does this answer change the recommendation?
 6 minutes. One trainer demonstration. Output gives the lower and upper 95% interval limits for annual saving in AED. This answers the threshold question; paper answers serve other questions. The pilot cannot establish nationwide reach or full value for money.
 :::
 
-## Score the answers {.reader-slide}
+## An answer, a partial answer or no answer? {.reader-slide}
 
 For each answer choose:
 
@@ -184,7 +184,7 @@ Which answer deserves a supported rating?
 6 minutes. Recognise strengths as well as missing evidence. The stated pilot comparison and interval are supported; fieldwork quality remains unanswered. Transparent disclosure does not itself resolve the concern.
 :::
 
-## Identify what remains {.reader-slide}
+## What still stands between you and approval? {.reader-slide}
 
 ::: {.ask}
 Which unresolved issue could most change your decision?
@@ -197,7 +197,7 @@ Avoid an undirected list of concerns.
 5 minutes. Work alone then in pairs. Choose a concrete evidence request and explain its decision relevance. Complete generated rows do not establish complete real-world follow-up.
 :::
 
-## Revisit sign-off {.reader-slide}
+## Now would you sign? {.reader-slide}
 
 ```{=html}
 <div data-choices><button data-choice aria-pressed="false">Sign off</button><button data-choice aria-pressed="false">With conditions</button><button data-choice aria-pressed="false">Request evidence</button><p role="status" class="feedback"></p></div>
@@ -211,7 +211,7 @@ Write your final decision before comparing with your opening choice.
 5 minutes. Optional room poll After phase: close before showing totals. Compare reasons, not a winning vote. Assess written evidence of reading. Different provisional decisions need clear limits.
 :::
 
-## Check an AI review {.reader-slide}
+## The AI says four studies agree. Do they? {.reader-slide}
 
 Illustrative AI draft:
 
@@ -229,7 +229,7 @@ Which statements would you correct using the source?
 4 minutes. Authored AI draft, not a captured response. Correct claims using the result table and answer sources. No external AI account is required.
 :::
 
-## Your request to the evaluator {.reader-slide}
+## Ask for evidence you would actually use. {.reader-slide}
 
 ::: {.ask}
 What specific evidence should the evaluator send next?
