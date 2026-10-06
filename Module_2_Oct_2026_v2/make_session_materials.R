@@ -422,23 +422,45 @@ print(s3, target = "Oct12_session3_materials.docx")
 # Oct13 S2 · Reading RDD Results
 # ===========================================================================
 S5 <- "Module 2 · Day 2, Session 2 · Reading RDD Results"
-off <- subset(gw, round == 1 & treatment_neighborhood == 1)
+# The simple GreenWaste case: the rest of the city, where businesses scoring
+# 58 or below took part. Numbers from greenwaste_case.R, in its own environment.
+s5_env <- new.env()
+s5_env$gw <- read.csv("evaluation_data_GreenWaste_simple.csv")
+sys.source("greenwaste_case.R", envir = s5_env)
+s5_city <- s5_env$city
+s5_city$distance <- s5_city$score - 58; s5_city$below <- as.integer(s5_city$score <= 58)
+s5_at <- function(width, cut = 58, adjust = FALSE) {
+  d <- s5_city; d$distance <- d$score - cut; d$below <- as.integer(d$score <= cut)
+  d <- subset(d, abs(distance) <= width)
+  f <- estimatr::lm_robust(if (adjust) cost_after ~ below * distance + manager_age
+                 else cost_after ~ below * distance, data = d)
+  list(est = coef(f)[["below"]], ci = confint(f)["below", ], n = nrow(d))
+}
+s5_w2 <- s5_at(2); s5_w2_age <- s5_at(2, adjust = TRUE)
+s5_win <- abs(sapply(1:10, function(w) s5_at(w)$est))
+s5_best <- max(sapply(1:10, function(w) max(abs(s5_at(w)$ci))))
+s5_age <- abs(sapply(1:8, function(w) {
+  d <- subset(s5_city, abs(distance) <= w)
+  coef(lm(manager_age ~ below * distance, data = d))[["below"]]
+}))
+s5_tp <- s5_city[s5_city$took_part == 1, ]
+s5_tp_near <- abs(s5_tp$distance) <= 2
 # Eight cards (A-H), one per group, each with a different random six businesses
 # on each side of the line. Groups put their jumps on a number line on the
-# wall; the spread is the lesson. A-D are the original four; E-H were chosen to
-# widen the spread (one of them, H, even goes the wrong way).
+# wall; the spread is the lesson. The seeds were chosen to give a wide spread
+# (one card, H, even goes the wrong way).
 jump_card <- function(seed) {
   set.seed(seed)
-  b <- off[sample(which(off$efficiency_index > 57 & off$efficiency_index <= 58), 6), ]
-  a <- off[sample(which(off$efficiency_index > 58 & off$efficiency_index <= 59), 6), ]
-  list(rows = data.frame(`Just below 58 (offered): index` = gfmt(b$efficiency_index, 2),
-                         `Waste cost (AED)` = gfmt(round(b$waste_management_costs, -1)),
-                         `Just above 58 (not offered): index` = gfmt(a$efficiency_index, 2),
-                         `Waste cost (AED) ` = gfmt(round(a$waste_management_costs, -1)),
+  b <- s5_city[sample(which(s5_city$score > 57 & s5_city$score <= 58), 6), ]
+  a <- s5_city[sample(which(s5_city$score > 58 & s5_city$score <= 59), 6), ]
+  list(rows = data.frame(`Just below 58 (took part): score` = gfmt(b$score, 1),
+                         `Waste cost after (AED)` = gfmt(round(b$cost_after, -1)),
+                         `Just above 58 (did not): score` = gfmt(a$score, 1),
+                         `Waste cost after (AED) ` = gfmt(round(a$cost_after, -1)),
                          check.names = FALSE),
-       below = mean(round(b$waste_management_costs, -1)), above = mean(round(a$waste_management_costs, -1)))
+       below = mean(round(b$cost_after, -1)), above = mean(round(a$cost_after, -1)))
 }
-cards5 <- lapply(c(A = 1, B = 4, C = 3, D = 6, E = 2, F = 10, G = 7, H = 12), jump_card)
+cards5 <- lapply(c(A = 4, B = 11, C = 37, D = 22, E = 9, F = 21, G = 33, H = 5), jump_card)
 jumps5 <- sapply(cards5, function(x) x$below - x$above)
 board5 <- make_board("Oct13_session2", list(line_board(
   "The jump at the line: what did your group find?",
@@ -455,7 +477,7 @@ for (k in names(cards5)) {
   s5 <- s5 |>
     title_(sprintf("By hand: the jump at the line (card %s)", k), S5) |>
     print_line("eight different cards (A-H); one card per group, so every group holds a different card") |>
-    p_("Twelve GreenWaste businesses in the offered neighbourhoods, all within one index point of the cut-off at 58. Businesses at 58 or below got the programme. Costs are rounded to the nearest 10 AED.") |>
+    p_("Twelve GreenWaste businesses in the rest of the city, all within one point of the cut-off at 58. Businesses scoring 58 or below took part. Costs after the programme, rounded to the nearest 10 AED.") |>
     body_add_flextable(plain_table(cards5[[k]]$rows, widths = c(1.8, 1.3, 1.9, 1.3))) |>
     h2_("Work it out") |>
     p_("Average cost just below the line:  ________      Average cost just above:  ________") |>
@@ -470,15 +492,14 @@ s5 <- s5 |>
   print_line("1 per group; mark each check as the trainer runs it") |>
   p_("The trainer runs each check on screen. For each check, write pass, fail or unclear, and add a short note.") |>
   body_add_flextable(plain_table(data.frame(
-    Check = c("0. Who is compared?", "1. A different window around 58", "1b. Placebo (fake) cut-offs",
+    Check = c("1. A different window around 58", "1b. Placebo (fake) cut-offs",
               "2. Bending the rule", "3. Are the two sides alike?", "4. Who does the result apply to?"),
-    `What to look for` = c("Only businesses in neighbourhoods where the programme was offered",
-                           "Does the decision against 1,000 AED change when the window is wider or narrower?",
+    `What to look for` = c("Does the decision against 1,000 AED change when the window is wider or narrower?",
                            "No jump at other cut-offs, where no rule applies",
                            "No unusual crowding of businesses just below 58 (a sign that businesses changed their score to qualify)",
                            "Characteristics such as size and manager age do not jump at 58",
                            "Are the businesses near 58 like the businesses the roll-out would reach?"),
-    `Pass / fail / unclear` = rep("", 6), Note = rep("", 6), check.names = FALSE),
+    `Pass / fail / unclear` = rep("", 5), Note = rep("", 5), check.names = FALSE),
     widths = c(1.6, 2.6, 1.0, 1.7)) |> height_all(height = 0.55, part = "body") |> hrule(rule = "atleast", part = "body")) |>
   p_("Overall: would you act on this estimate?   Act  /  Act with conditions  /  Send back to the evaluator") |>
   p_("One question you would ask the evaluator:") |> write_lines(2) |>
@@ -487,11 +508,11 @@ s5 <- s5 |>
   print_line("1 per group") |>
   p_("The prompt: \"Explain, without jargon, who this result actually applies to.\"", bold = TRUE) |>
   h2_("A response like this is possible") |>
-  p_("This study found that the GreenWaste programme reduced costs by around 790 AED for participating businesses. Because the study uses a cut-off at an efficiency index of 58, the findings apply to all businesses in the programme. The cut-off design means the result generalises to the wider population of inefficient businesses. The estimate is therefore a reasonable basis for scaling the programme to every business below average efficiency.") |>
+  p_(sprintf("This study found that the GreenWaste programme reduced costs by around %s AED for participating businesses. Because the study uses a cut-off at an efficiency score of 58, the findings apply to all businesses in the programme. The cut-off design means the result generalises to the wider population of inefficient businesses. The estimate is therefore a reasonable basis for scaling the programme to every business below average efficiency.", gfmt(abs(s5_w2$est)))) |>
   p_("Underline every claim that the study supports. Cross out every claim that the study does not support. What important information did the AI's answer leave out?", bold = TRUE) |>
   write_lines(3) |>
   h2_("Then run this prompt instead, and compare") |>
-  p_("\"This is a regression discontinuity result with the cut-off at an efficiency index of 58, estimated within 2 points either side. The businesses near the line are smaller than average, and manager age differs across the line. Name which businesses the estimate describes and what it cannot tell us. Ask me questions before you answer.\"", italic = TRUE) |>
+  p_("\"This is a regression discontinuity result with the cut-off at an efficiency score of 58, estimated within 2 points either side. Most participants score well below 58, and manager age differs across the line. Name which businesses the estimate describes and what it cannot tell us. Ask me questions before you answer.\"", italic = TRUE) |>
   p_("Run this prompt. Which businesses does the new answer say the result applies to? Then paste the answer into a new chat and ask the AI to check that answer for claims the study does not support.") |>
   new_page() |> title_("Take-away card: five questions for an RDD result", S5) |>
   print_line("1 per participant, cut into cards") |>
@@ -510,13 +531,17 @@ s5 <- s5 |>
     `Above (AED)` = sapply(cards5, function(x) gfmt(x$above)),
     Jump = sapply(cards5, function(x) gfmt(x$below - x$above)), check.names = FALSE),
     widths = c(0.8, 1.4, 1.4, 1.2))) |>
-  p_("Groups put their jumps on the wall number line. They spread widely because six businesses a side is too few; the regression uses the 773 businesses within two points and reports an interval (-791, from -1,084 to -498). The rough gap is also inflated by the slope of costs along the index, which the regression removes.") |>
+  p_(sprintf("Groups put their jumps on the wall number line. They spread widely because six businesses a side is too few; the regression uses the %s businesses within two points and reports an interval (%s, from %s to %s). The rough gap is also inflated by the slope of costs along the score, which the regression removes.",
+             gfmt(s5_w2$n), gfmt(s5_w2$est), gfmt(s5_w2$ci[1]), gfmt(s5_w2$ci[2]))) |>
   h2_("Number line board") |>
   p_(sprintf("Setup, before the session: print Oct13_session2_board_A1.pdf at A1 and tape it to the wall (preview at the end of this pack). It is a number line from -2,000 to +500 AED with the 1,000 AED rule marked in red, space above the line for the groups' sticky notes and empty space below it, where you draw the regression after Run. Each group needs one sticky note and a marker. The eight jumps run from %s to %s; their average is %s.",
              gfmt(min(jumps5)), gfmt(max(jumps5)), gfmt(mean(jumps5)))) |>
-  p_("After the groups have posted, press Run. Then draw the regression below the line: a star at -791 and a line (or a strip of coloured tape) from -1,084 to -498 for its interval. Ask: how many of the sticky notes fall inside the interval? Which side of the rule is most of the interval on? Card H goes the wrong way: six businesses a side can point anywhere.") |>
+  p_(sprintf("After the groups have posted, press Run. Then draw the regression below the line: a star at %s and a line (or a strip of coloured tape) from %s to %s for its interval. Ask: how many of the sticky notes fall inside the interval? Which side of the rule is most of the interval on? Card H goes the wrong way: six businesses a side can point anywhere.", gfmt(s5_w2$est), gfmt(s5_w2$ci[1]), gfmt(s5_w2$ci[2]))) |>
   h2_("Scorecard") |>
-  p_("0: pass only with the offered neighbourhoods (pooling every neighbourhood waters the jump down to about -249). 1: the estimate moves between about 790 and 1,120; the least generous end never reaches 1,000 (verdict: does not clear). 1b: pass. 2: pass. 3: FAIL, manager age is 5 to 9 years younger just below the line at every window. 4: the 773 businesses near the line are smaller than the rest.") |>
+  p_(sprintf("1: the estimate moves between about %s and %s, always short of 1,000; even the most generous end of the interval reaches only about %s (verdict: does not clear). 1b: pass, no jump at 50, 54, 62 or 66. 2: pass. 3: FAIL, managers are %d to %d years younger just below the line at every window; adjusting for manager age moves the jump from %s to %s. 4: of the %s businesses that took part, only %s score within 2 points of 58 (average score %.0f against %.0f for the rest); the pilot lottery, over scores 20 to 58, found %s.",
+             gfmt(min(s5_win)), gfmt(max(s5_win)), gfmt(s5_best), floor(min(s5_age)), ceiling(max(s5_age)),
+             gfmt(s5_w2$est), gfmt(s5_w2_age$est), gfmt(nrow(s5_tp)), gfmt(sum(s5_tp_near)),
+             mean(s5_tp$score[s5_tp_near]), mean(s5_tp$score[!s5_tp_near]), gfmt(s5_env$case$rct))) |>
   h2_("AI Snapshot") |>
   p_("Wrong: 'applies to all businesses', 'generalises to the wider population', 'basis for scaling to every business'. The estimate is local to the line. Left out: the manager-age jump, and the 1,000 AED rule.") |>
   add_board_page("Oct13_session2", board5, S5, "the jump at the line (A1)")
@@ -863,16 +888,26 @@ print(s2, target = "Oct12_session2_materials.docx")
 # Oct13 S1 · Reading DiD Results
 # ===========================================================================
 S4 <- "Module 2 · Day 2, Session 1 · Reading DiD Results"
-tn  <- subset(gw, treatment_neighborhood == 1)
-gvm <- function(e, r) mean(tn$waste_management_costs[tn$enrolled == e & tn$round == r])
-off_b <- gvm(1, 0); off_a <- gvm(1, 1); ctl_b <- gvm(0, 0); ctl_a <- gvm(0, 1)
+# The simple GreenWaste case: the rest of the city, where businesses scoring
+# 58 or below took part. Numbers from greenwaste_case.R, in its own environment.
+s4_env <- new.env()
+s4_env$gw <- read.csv("evaluation_data_GreenWaste_simple.csv")
+sys.source("greenwaste_case.R", envir = s4_env)
+s4_city <- s4_env$city; s4_took <- s4_env$took; s4_pilot <- s4_env$pilot
+off_b <- mean(s4_city$cost_before[s4_took]);  off_a <- mean(s4_city$cost_after[s4_took])
+ctl_b <- mean(s4_city$cost_before[!s4_took]); ctl_a <- mean(s4_city$cost_after[!s4_took])
 off_chg <- off_a - off_b; ctl_chg <- ctl_a - ctl_b; did_hand <- off_chg - ctl_chg
-fit_did <- lm_robust(waste_management_costs ~ round * enrolled, data = tn,
-                     clusters = neighborhood_identifier)
-did_ci  <- confint(fit_did)["round:enrolled", ]
+s4_long <- data.frame(business = rep(s4_city$business, 2), after = rep(0:1, each = nrow(s4_city)),
+                      took_part = rep(s4_city$took_part, 2),
+                      cost = c(s4_city$cost_before, s4_city$cost_after))
+fit_did <- lm_robust(cost ~ after * took_part, data = s4_long,
+                     clusters = business, se_type = "stata")
+did_ci  <- confint(fit_did)["after:took_part", ]
 did_av  <- sort(abs(did_ci))
+s4_wait <- s4_pilot[s4_pilot$took_part == 0, ]
+wait_chg <- mean(s4_wait$cost_after - s4_wait$cost_before)
 did_rows <- data.frame(
-  ` ` = c("(Intercept)", "After (round 1)", "Enrolled", "After (round 1) x Enrolled"),
+  ` ` = c("(Intercept)", "After", "Took part", "After x Took part"),
   Coefficient = gfmt(coef(fit_did)), `Std. error` = gfmt(fit_did$std.error),
   p = pfmt(fit_did$p.value),
   `95% CI` = sprintf("[%s, %s]", gfmt(fit_did$conf.low), gfmt(fit_did$conf.high)),
@@ -881,7 +916,7 @@ did_rows <- data.frame(
 s4 <- new_pack() |>
   title_("By hand: four numbers", S4) |>
   print_line("1 per participant, single-sided: the next sheet is handed out later") |>
-  p_("GreenWaste businesses in the neighbourhoods where the programme was offered. Average annual waste-management costs (AED), before and after. The decision rule for scale-up: the programme must save at least 1,000 AED per business.") |>
+  p_("GreenWaste businesses in the rest of the city: those scoring 58 or below took part, the rest did not. Average annual waste costs (AED), before and after. The decision rule for scale-up: the programme must save at least 1,000 AED per business.") |>
   body_add_flextable(plain_table(data.frame(
     ` ` = c("Took part", "Did not take part", "Difference of the changes"),
     Before = c(gfmt(off_b), gfmt(ctl_b), ""), After = c(gfmt(off_a), gfmt(ctl_a), ""),
@@ -895,11 +930,11 @@ s4 <- new_pack() |>
   new_page() |>
   title_("Which row is the impact?", S4) |>
   print_line("1 per participant, separate sheet; hand out at 'Running the regression', after the hand calculation") |>
-  p_("The same data as a regression, the way an evaluator would report it. Standard errors are clustered by neighbourhood.") |>
+  p_("The same data as a regression, the way an evaluator would report it. Each business appears twice (before and after), so standard errors are clustered by business.") |>
   body_add_flextable(plain_table(did_rows, widths = c(2.3, 1.1, 1.0, 0.7, 1.6))) |>
   p_("1. Circle the row that is the programme's effect. Is that row's coefficient the same number you got by hand?") |>
   p_("2. Two other rows are often reported as the effect by mistake. What does each of these two rows actually measure?") |>
-  p_("After (round 1) measures  __________________      Enrolled measures  __________________") |>
+  p_("After measures  __________________      Took part measures  __________________") |>
   p_("3. Look at the end of the effect's confidence interval with the smallest saving:  ________ AED.   Is that saving at least 1,000 AED?   Yes  /  No") |>
   p_("4. Costs were measured only once before the programme and once after. Because of this, what can you not check about the two groups before the programme started?") |>
   write_lines(2) |>
@@ -909,7 +944,7 @@ s4 <- new_pack() |>
   p_("Paste the regression table into an AI tool with this prompt:", bold = TRUE) |>
   p_("\"Explain this regression table to a non-technical decision-maker, and say what should be checked before believing the result.\"", italic = TRUE) |>
   h2_("A response like this is possible") |>
-  p_("The table reports a difference-in-differences estimate. The programme reduced costs by 816 AED, and the effect is highly statistically significant (p < 0.001), so the programme was a success. The confidence interval does not include zero, which confirms the finding is robust.") |>
+  p_(sprintf("The table reports a difference-in-differences estimate. The programme reduced costs by %s AED, and the effect is highly statistically significant (p < 0.001), so the programme was a success. The confidence interval does not include zero, which confirms the finding is robust.", gfmt(abs(did_hand)))) |>
   p_("The parallel trends assumption has been satisfied. The result clears the 1,000 AED threshold required for scale-up.") |>
   p_("Underline the sentences that the table supports. Cross out the sentences that the table does not support.", bold = TRUE) |>
   write_lines(3) |>
@@ -917,7 +952,7 @@ s4 <- new_pack() |>
   p_("\"We have a difference-in-differences table. The data has two waves only, one before and one after, so no pre-trend test is possible. The decision rule is 1,000 AED. Explain what the table supports and, separately, list what it cannot tell us. Ask me questions before you answer.\"", italic = TRUE) |>
   p_("With the second prompt, does the AI still claim that parallel trends were satisfied? Then paste the second answer into a new chat and ask the AI to check that answer for claims about tests that were never run.") |>
   h2_("If you have time: a prompt that pushes the AI towards an answer") |>
-  p_("\"Our DiD shows an 816 AED cut in costs (p<0.001). Write two sentences for the minister recommending scale-up.\"", italic = TRUE) |>
+  p_(sprintf("\"Our DiD shows an %s AED cut in costs (p<0.001). Write two sentences for the minister recommending scale-up.\"", gfmt(abs(did_hand))), italic = TRUE) |>
   p_("Does the AI mention the 1,000 AED rule or parallel trends without being asked?") |>
   new_page() |> title_("Take-away card: three questions for a DiD result", S4) |>
   print_line("1 per participant, cut into cards") |>
@@ -932,12 +967,12 @@ s4 <- new_pack() |>
   p_(sprintf("Took part %s to %s: change %+.0f. Did not take part %s to %s: change %+.0f. Difference of the changes: %.0f AED. It does not clear 1,000. Watch the sign: the comparison group went up, so the effect is bigger than the %.0f fall in the top row.",
              gfmt(off_b), gfmt(off_a), off_chg, gfmt(ctl_b), gfmt(ctl_a), ctl_chg, did_hand, abs(off_chg))) |>
   h2_("Which row is the impact?") |>
-  p_(sprintf("1. After (round 1) x Enrolled, %s AED: the same number as by hand. 2. After (round 1) (%s) is the time trend, what happened to everyone; Enrolled (%s) is the baseline gap, how far apart the groups started. Many pick Enrolled because it is large and has the word in it. 3. %s AED; the interval is %s to %s, and even its most generous end (%s) is short of 1,000. 4. Whether the groups were already moving in parallel: a pre-trend check needs at least two periods before the programme.",
-             gfmt(coef(fit_did)[["round:enrolled"]]), gfmt(coef(fit_did)[["round"]]),
-             gfmt(coef(fit_did)[["enrolled"]]), gfmt(did_av[1]), gfmt(did_ci[1]), gfmt(did_ci[2]),
-             gfmt(did_av[2]))) |>
+  p_(sprintf("1. After x Took part, %s AED: the same number as by hand. 2. After (%s) is the time trend, what happened to everyone; Took part (%s) is the baseline gap, how far apart the groups started. Many pick Took part because it is large and has the words in it. 3. %s AED; the interval is %s to %s, and even its most generous end (%s) is short of 1,000. 4. Whether the groups were already moving in parallel: a pre-trend check needs at least two periods before the programme. In the deck, the pilot's waiting businesses (score 58 or below, no programme) give a partial check: their costs rose %s AED against %s for the city businesses that did not take part, so the DiD understates the effect.",
+             gfmt(coef(fit_did)[["after:took_part"]]), gfmt(coef(fit_did)[["after"]]),
+             gfmt(coef(fit_did)[["took_part"]]), gfmt(did_av[1]), gfmt(did_ci[1]), gfmt(did_ci[2]),
+             gfmt(did_av[2]), gfmt(wait_chg), gfmt(ctl_chg))) |>
   h2_("AI Snapshot") |>
-  p_(sprintf("Supported by the table: the 816 AED estimate and p < 0.001. Not supported: \"so the programme was a success\" answers whether the effect is non-zero, not whether it clears 1,000. \"Does not include zero, which confirms the finding is robust\": not zero and big enough are different claims. \"The parallel trends assumption has been satisfied\" is the serious one: with one period before the programme it cannot be tested, so the model reported a test that was never run. \"Clears the 1,000 AED threshold\" is false: even the interval's most generous end is %s AED.", gfmt(did_av[2]))) |>
+  p_(sprintf("Supported by the table: the %s AED estimate and p < 0.001. Not supported: \"so the programme was a success\" answers whether the effect is non-zero, not whether it clears 1,000. \"Does not include zero, which confirms the finding is robust\": not zero and big enough are different claims. \"The parallel trends assumption has been satisfied\" is the serious one: with one period before the programme it cannot be tested, so the model reported a test that was never run, and the pilot's waiting businesses suggest it fails. \"Clears the 1,000 AED threshold\" is false: even the interval's most generous end is %s AED.", gfmt(abs(did_hand)), gfmt(did_av[2]))) |>
   p_("With the second prompt, check whether the parallel-trends claim disappears. Supplying the constraint makes the error less likely; it does not rule it out.")
 print(s4, target = "Oct13_session1_materials.docx")
 
@@ -945,178 +980,142 @@ print(s4, target = "Oct13_session1_materials.docx")
 # Oct13 S3 · Reading Matching Results
 # ===========================================================================
 S6 <- "Module 2 · Day 2, Session 3 · Reading Matching Results"
-CAM_RULE <- 2.0
-# The matcher from the deck: nearest neighbour on the score, with replacement.
-find_twins <- function(data, score, treat) {
-  took <- data[data[[treat]] == 1, ]; rest <- data[data[[treat]] == 0, ]
-  twin <- sapply(took[[score]], function(s) which.min(abs(s - rest[[score]])))
-  out <- rbind(took, rest[twin, ]); attr(out, "twin_rows") <- twin; out
+# The simple GreenWaste case: the rest of the city. Evaluator A matches on four
+# characteristics; evaluator B never measured manager age. The same matcher as
+# the deck (nearest neighbour on standardised characteristics, with
+# replacement), so the numbers agree with greenwaste_case.R's match_on().
+s6_env <- new.env()
+s6_env$gw <- read.csv("evaluation_data_GreenWaste_simple.csv")
+sys.source("greenwaste_case.R", envir = s6_env)
+s6_city <- s6_env$city; s6_took <- s6_city$took_part == 1
+S6_VARS <- c("manager_age", "staff", "area", "filtration")
+s6_match <- function(vars) {
+  X  <- scale(s6_city[, vars, drop = FALSE])
+  t  <- which(s6_took); co <- which(!s6_took)
+  Xc <- t(X[co, , drop = FALSE])
+  tw <- co[vapply(t, function(i) which.min(colSums((Xc - X[i, ])^2)), 1L)]
+  m  <- rbind(s6_city[t, ], s6_city[tw, ])
+  r  <- lm_robust(cost_after ~ took_part, data = m, clusters = business)
+  sdv <- function(v) (mean(s6_city[[v]][t]) - mean(s6_city[[v]][tw])) / sd(s6_city[[v]])
+  list(est = coef(r)[["took_part"]], ci = c(r$conf.low[["took_part"]], r$conf.high[["took_part"]]),
+       used = length(unique(tw)), sd = sapply(vars, sdv),
+       age_gap = abs(mean(s6_city$manager_age[t]) - mean(s6_city$manager_age[tw])),
+       base_gap = abs(mean(s6_city$cost_before[t]) - mean(s6_city$cost_before[tw])))
 }
-chars <- c("efficiency_index", "age_manager", "educ_manager", "female_manager",
-           "foreign_owned", "staff_size", "advanced_filtration",
-           "water_treatment_system", "business_area", "recycling_center_distance")
-g0  <- gw[gw$round == 0, ]; g1 <- gw[gw$round == 1, ]
-biz <- data.frame(g0[, c("business_identifier", "neighborhood_identifier", "enrolled", chars)],
-                  y0 = g0$waste_management_costs,
-                  y1 = g1$waste_management_costs[match(g0$business_identifier, g1$business_identifier)])
-biz$dy <- biz$y1 - biz$y0
-std_diff <- function(d, v, ref, t = "enrolled")
-  (mean(d[[v]][d[[t]] == 1]) - mean(d[[v]][d[[t]] == 0])) / sd(ref[[v]])
-match_fit <- function(f, outcome) {
-  d <- biz; d$s <- fitted(glm(f, data = d, family = binomial))
-  m <- find_twins(d, "s", "enrolled")
-  r <- lm_robust(reformulate("enrolled", outcome), data = m, clusters = neighborhood_identifier)
-  list(m = m, est = coef(r)[["enrolled"]], lo = r$conf.low[["enrolled"]], hi = r$conf.high[["enrolled"]])
-}
-g_lev <- match_fit(reformulate(chars, "enrolled"), "y1")
-g_chg <- match_fit(reformulate(chars, "enrolled"), "dy")
-m1 <- g_lev$m
-biz$score <- fitted(glm(reformulate(chars, "enrolled"), data = biz, family = binomial))
-ps_c <- range(biz$score[biz$enrolled == 0])
-n_beyond <- sum(biz$score[biz$enrolled == 1] > ps_c[2] | biz$score[biz$enrolled == 1] < ps_c[1])
-avoid1 <- sort(abs(c(g_lev$lo, g_lev$hi)))
-g_worst <- max(abs(sapply(chars, function(v) std_diff(m1, v, biz))))
-
-tc0 <- subset(tc, round == 0); tc1 <- subset(tc, round == 1)
-d2 <- data.frame(segment_id = tc0$segment_id, cameras_installed = tc0$cameras_installed,
-                 y0 = tc0$injury_collisions, tc0[, c("baseline_speed_85th", "lanes", "road_length_km",
-                                                     "school_within_500m", "prior_collisions_3yr")],
-                 lighting_poor = as.integer(tc0$lighting_quality == "poor"))
-d2$y1 <- tc1$injury_collisions[match(d2$segment_id, tc1$segment_id)]
-d2$dy <- d2$y1 - d2$y0
-d2$score <- fitted(glm(cameras_installed ~ baseline_speed_85th + lanes + road_length_km +
-                         school_within_500m + prior_collisions_3yr + lighting_poor,
-                       data = d2, family = binomial))
-m2 <- find_twins(d2, "score", "cameras_installed")
-n_cam   <- sum(d2$cameras_installed == 1)
-c2_used <- length(unique(attr(m2, "twin_rows")))
-c2_ps_c <- range(d2$score[d2$cameras_installed == 0])
-c2_out  <- sum(d2$score[d2$cameras_installed == 1] < c2_ps_c[1] | d2$score[d2$cameras_installed == 1] > c2_ps_c[2])
-m2_t <- m2[m2$cameras_installed == 1, ]; m2_c <- m2[m2$cameras_installed == 0, ]
-c2_base_sd <- (mean(m2_t$y0) - mean(m2_c$y0)) / sd(d2$y0)
-c2_levels  <- -(mean(m2_t$y1) - mean(m2_c$y1))
-pair_chg   <- -(m2_t$dy - m2_c$dy)
-c2_changes <- mean(pair_chg)
-c2_ci      <- c2_changes + c(-1.96, 1.96) * sd(pair_chg) / sqrt(length(pair_chg))
-# Every characteristic in the score model, lighting included (as in the deck).
-c2_cov_sd  <- abs(sapply(c("baseline_speed_85th", "lanes", "road_length_km", "school_within_500m",
-                           "prior_collisions_3yr", "lighting_poor"),
-                         function(v) (mean(m2_t[[v]]) - mean(m2_c[[v]])) / sd(d2[[v]])))
-c2_worst   <- max(c2_cov_sd)
-# Honest balance cell: "yes" only when every characteristic is within 0.1.
+s6_A <- s6_match(S6_VARS)
+s6_B <- s6_match(setdiff(S6_VARS, "manager_age"))
+stopifnot(abs(s6_A$est - s6_env$case$matching) < 1e-6, abs(s6_B$est - s6_env$case$matching_no_age) < 1e-6)
+s6_avA <- sort(abs(s6_A$ci)); s6_avB <- sort(abs(s6_B$ci))
+s6_n <- sum(s6_took)
+# Honest balance cell: "yes" only when every matched characteristic is within 0.1.
 bal_cell <- function(sds) {
+  sds <- abs(sds)
   if (max(sds) <= 0.1) sprintf("yes (largest difference %.2f)", max(sds))
   else sprintf("partly: %d of %d over 0.1 (largest difference %.2f)", sum(sds > 0.1), length(sds), max(sds))
 }
-g_sds <- abs(sapply(chars, function(v) std_diff(m1, v, biz)))
-g_clear_pct  <- 100 * (abs(g_chg$est) - RULEBAR) / RULEBAR
-c2_clear_pct <- 100 * (c2_changes - CAM_RULE) / CAM_RULE
+verdict <- function(av) sprintf("%s against %s: %s", gfmt(av[1]), gfmt(RULEBAR),
+                                if (av[1] >= RULEBAR) "clears" else "below the rule")
 
 compare_rows <- data.frame(
-  ` ` = c("Did every treated unit find a close match?", "Comparison units used as twins (some used more than once)",
-          "Characteristics balanced after matching?", "Was the outcome similar before the programme?",
-          "Estimate comparing outcomes after the programme", "Estimate comparing changes (after minus before)", "Smallest effect in the 95% interval, against the rule"),
-  `Case 1 · GreenWaste` = c(sprintf("yes, all but %d", n_beyond),
-                 sprintf("%s twins for %s businesses", gfmt(length(unique(attr(m1, "twin_rows")))),
-                         gfmt(sum(biz$enrolled == 1))),
-                 bal_cell(g_sds),
-                 sprintf("yes (gap %s AED)", gfmt(mean(m1$y0[m1$enrolled == 1]) - mean(m1$y0[m1$enrolled == 0]))),
-                 sprintf("%s AED", gfmt(g_lev$est)), sprintf("%s AED", gfmt(g_chg$est)),
-                 sprintf("%s against %s: below the rule", gfmt(avoid1[1]), gfmt(RULEBAR))),
-  `Case 2 · Cameras` = c(sprintf("no, %d segments (%d%%) outside", c2_out, round(100 * c2_out / n_cam)),
-                 sprintf("%d twins for %d segments", c2_used, n_cam),
-                 bal_cell(c2_cov_sd),
-                 sprintf("no (standardised difference %.2f)", c2_base_sd),
-                 sprintf("%.2f avoided", c2_levels), sprintf("%.2f avoided", c2_changes),
-                 sprintf("%.2f against %.1f: below the rule", min(c2_ci), CAM_RULE)),
+  ` ` = c("Matched on", "Comparison businesses used as twins (some more than once)",
+          "Balanced on what they matched on?", "Manager age after matching (not in B's table)",
+          "Was the outcome similar before the programme?", "Estimate, costs after the programme",
+          "Least generous end of the 95% interval, against the rule"),
+  `Evaluator A` = c("manager age, staff, premises, filtration",
+                    sprintf("%s twins for %s businesses", gfmt(s6_A$used), gfmt(s6_n)),
+                    bal_cell(s6_A$sd), sprintf("%.0f years apart", s6_A$age_gap),
+                    sprintf("close (%s AED apart)", gfmt(s6_A$base_gap)),
+                    sprintf("%s AED", gfmt(s6_A$est)), verdict(s6_avA)),
+  `Evaluator B` = c("staff, premises, filtration",
+                    sprintf("%s twins for %s businesses", gfmt(s6_B$used), gfmt(s6_n)),
+                    bal_cell(s6_B$sd), sprintf("%.0f years apart", s6_B$age_gap),
+                    sprintf("no (%s AED apart)", gfmt(s6_B$base_gap)),
+                    sprintf("%s AED", gfmt(s6_B$est)), verdict(s6_avB)),
   check.names = FALSE)
 
 s6 <- new_pack() |>
   title_("By hand: find the twins", S6) |>
   print_line("1 per group (8); the profile cards on the next page are for the card or walking version") |>
-  p_("As a group: three businesses that enrolled in GreenWaste and four that did not. Pair each enrolled business with its closest twin, matching on who they are (manager age and size), not on their cost. Then take the average cost difference across the three pairs. Your group reports one answer: the three pairs, the average, and the business that is nobody's twin.") |>
-  p_("Enrolled", bold = TRUE, color = DARK) |>
+  p_("As a group: three businesses that took part in GreenWaste and four that did not. Pair each business that took part with its closest twin, matching on who they are (manager age and size), not on their cost. Then take the average cost difference across the three pairs. Your group reports one answer: the three pairs, the average, and the business that is nobody's twin.") |>
+  p_("Took part", bold = TRUE, color = DARK) |>
   body_add_flextable(plain_table(data.frame(` ` = c("A", "B", "C"), `Manager age` = c(45, 38, 52),
     Size = c("small", "large", "small"), `Cost after (AED)` = c("900", "1,400", "700"), check.names = FALSE),
     widths = c(0.6, 1.4, 1.2, 1.6))) |>
-  p_("Not enrolled", bold = TRUE, color = DARK) |>
+  p_("Did not take part", bold = TRUE, color = DARK) |>
   body_add_flextable(plain_table(data.frame(` ` = c("1", "2", "3", "4"), `Manager age` = c(39, 46, 51, 29),
     Size = c("large", "small", "small", "large"), `Cost after (AED)` = c("2,300", "1,900", "1,800", "2,600"),
     check.names = FALSE), widths = c(0.6, 1.4, 1.2, 1.6))) |>
   p_("These seven businesses are invented for the exercise.", 8.5, italic = TRUE, color = GREY) |>
   h2_("Your pairs") |>
-  body_add_flextable(plain_table(data.frame(Enrolled = c("A", "B", "C"), `Its twin` = "",
-    `Cost difference (enrolled minus twin)` = "", check.names = FALSE), widths = c(1.2, 1.4, 3.0)) |> tall_rows(0.4)) |>
+  body_add_flextable(plain_table(data.frame(`Took part` = c("A", "B", "C"), `Its twin` = "",
+    `Cost difference (took part minus twin)` = "", check.names = FALSE), widths = c(1.2, 1.4, 3.0)) |> tall_rows(0.4)) |>
   p_("Average difference across the three pairs:  ________ AED") |>
-  p_("One business that did not enrol is nobody's twin. Which business? What happens to that business in the analysis?") |>
+  p_("One business that did not take part is nobody's twin. Which business? What happens to that business in the analysis?") |>
   write_lines(2) |>
   new_page() |>
   title_("Find the twins: profile cards", S6) |>
   print_line("1 set of seven cards per group (8 sets), cut. Groups can pair the cards on the table, or the trainer runs the walking version with one set") |>
   add_cards(c(
-    lapply(1:3, function(i) c(sprintf("%s  ·  Enrolled", c("A", "B", "C")[i]),
+    lapply(1:3, function(i) c(sprintf("%s  ·  Took part", c("A", "B", "C")[i]),
       sprintf("Manager age: %d", c(45, 38, 52)[i]), sprintf("Size: %s", c("small", "large", "small")[i]),
       sprintf("Cost after: %s AED", c("900", "1,400", "700")[i]), "", "Find your closest twin. Match on who you are, not on cost.")),
-    lapply(1:4, function(i) c(sprintf("%d  ·  Did not enrol", i),
+    lapply(1:4, function(i) c(sprintf("%d  ·  Did not take part", i),
       sprintf("Manager age: %d", c(39, 46, 51, 29)[i]), sprintf("Size: %s", c("large", "small", "small", "large")[i]),
       sprintf("Cost after: %s AED", c("2,300", "1,900", "1,800", "2,600")[i]), "", "Wait to be chosen as someone's twin."))),
     ncol = 2, min_height = 2.25, title_size = 20, body_size = 15) |>
   p_("These seven businesses are invented for the exercise.", 8.5, italic = TRUE, color = GREY) |>
   new_page() |>
-  title_("Which case would you trust?", S6) |>
+  title_("Which evaluator would you trust?", S6) |>
   print_line("1 per group") |>
-  p_(sprintf("Two matching studies, side by side. The decision rules: GreenWaste must cut costs by at least %s AED; cameras must avoid at least %.1f injury collisions per segment.", gfmt(RULEBAR), CAM_RULE)) |>
+  p_(sprintf("Two matching studies of the same GreenWaste businesses. Evaluator A matched on manager age, staff, premises and filtration. Evaluator B used a survey that never asked the manager's age. The decision rule: GreenWaste must cut costs by at least %s AED.", gfmt(RULEBAR))) |>
   body_add_flextable(plain_table(compare_rows, widths = c(2.4, 2.2, 2.2)) |>
-    bg(i = c(1, 4), bg = "#F8E9EA", part = "body")) |>
-  illustrative() |>
+    bg(i = c(4, 5), bg = "#F8E9EA", part = "body")) |>
   h2_("In your group, ten minutes") |>
-  p_("1. Which case gives you more confidence, and why?") |> write_lines(1) |>
-  p_("2. What would you ask Case 2's evaluator that Case 1 does not raise?") |> write_lines(1) |>
-  p_(sprintf("3. Using changes, Case 2's estimate is %d%% above its decision rule; Case 1's estimate is only %d%% above its rule. Does that change your answer?",
-             round(c2_clear_pct), round(g_clear_pct))) |> write_lines(1) |>
-  p_("Our verdict on Case 1:   Act  /  Act with conditions  /  Send back to the evaluator") |>
-  p_("Our verdict on Case 2:   Act  /  Act with conditions  /  Send back to the evaluator") |>
+  p_("1. Which evaluator gives you more confidence, and why?") |> write_lines(1) |>
+  p_("2. What would you ask evaluator B that A does not raise?") |> write_lines(1) |>
+  p_("3. B's whole interval clears the rule; A's straddles it. Does that change your answer?") |> write_lines(1) |>
+  p_("Our verdict on A:   Act  /  Act with conditions  /  Send back to the evaluator") |>
+  p_("Our verdict on B:   Act  /  Act with conditions  /  Send back to the evaluator") |>
   new_page() |>
   title_("AI Snapshot: comparing two studies", S6) |>
   print_line("1 per group") |>
-  p_("The prompt, with the two-case table and both balance tables pasted in:", bold = TRUE) |>
+  p_("The prompt, with the side-by-side table and both balance tables pasted in:", bold = TRUE) |>
   p_("\"Summarise the key differences between these two studies and identify what a commissioner should flag.\"", italic = TRUE) |>
   h2_("A response like this is possible") |>
-  p_("Case 1: Matching was highly effective, with every business matched and excellent covariate balance. The programme reduced costs by around 1,000 AED, with an interval that straddles the 1,000 AED threshold.") |>
-  p_("Case 2: Matching was similarly strong, with every segment matched and good balance. The matched estimate shows cameras avoided 2.10 collisions per segment, comfortably exceeding the 2.0 threshold, so this programme should be scaled.") |>
+  p_(sprintf("Evaluator A: Manager age remains somewhat imbalanced. The programme reduced costs by around %s AED, with an interval that straddles the 1,000 AED threshold.", gfmt(round(abs(s6_A$est), -1)))) |>
+  p_(sprintf("Evaluator B: Matching was even stronger, with near-perfect balance on every characteristic. The matched estimate shows a cut of %s AED, comfortably exceeding the 1,000 AED threshold, so the programme should be scaled.", gfmt(abs(s6_B$est)))) |>
   p_("In groups (four minutes): underline each sentence you agree is correct. Cross out each sentence that is wrong or claims too much.", bold = TRUE) |>
   write_lines(3) |>
   new_page() |> title_("The same question, a better prompt", S6) |>
   print_line("1 per group, cut into strips. Take-home: hand out after the debrief, since the prompt names the checks") |>
   add_cards(rep(list(c("Take home: run this prompt too, and compare",
-                       "\"Two matching studies. For each: how many treated units had no real lookalike; did the outcome's baseline balance; do levels and changes agree? Our decision rules are below. Ask me questions before you answer.\"",
+                       "\"Two matching studies of the same businesses. For each: what was left off the list; were the pairs' costs similar before the programme; how far apart are characteristics that were not matched on? Our decision rule is below. Ask me questions before you answer.\"",
                        "Run both prompts, then compare: what did each answer get wrong, and what did each answer explain well? Then paste the second answer into a new chat and ask the AI to check that answer for claims that go further than the evidence.")), 4),
             ncol = 1, card_width = 6.8, min_height = 1.9) |>
   new_page() |> title_("Take-away card: five questions for a matching result", S6) |>
   print_line("1 per participant, cut into cards") |>
   add_cards(rep(list(c("Five questions to ask any evaluator presenting matching",
                        "1. What did you match on, and what was left out?",
-                       "2. How many treated units had no close match, and what happened to those units?",
+                       "2. How many treated units had no close match, and how often was each twin reused?",
                        "3. Are the matched groups similar on their characteristics? Was the outcome itself similar before the programme?",
-                       "4. Does the answer hold if you change what you matched on, or compare changes instead of levels?",
+                       "4. Does the answer hold if you change what you matched on?",
                        "5. What else might differ that you could not measure?",
                        "", "Back at work, I will ask these questions about:", "______________________________")), 6),
             min_height = 2.6) |>
   new_page() |> title_("Facilitator key", S6) |> print_line("trainer only") |>
   h2_("Find the twins") |>
   p_("A with 2, B with 1, C with 3. Differences of -1,000, -900 and -1,100: an average of -1,000 AED. Business 4 is nobody's twin, so it is set aside. Listen for anyone matching on cost: that is matching on the outcome, which builds the answer into the comparison.") |>
-  p_("Three ways to run it; decide on the day. (1) Worksheet: each group works through the sheet together and reports one answer. (2) Cards on the table: each group lays out its seven profile cards and pairs them physically, then fills in the sheet. (3) Walking version: take one set of cards and give one card to a volunteer from each of seven groups; the eighth group checks the matches. A, B and C walk to the person they think is their twin; their own groups explain the match. Business 4 is left standing alone: ask the room what happens to it in the analysis (it is set aside, the common-support idea that returns in Case 2). Few people walk, and each group reports through its volunteer.") |>
-  h2_("Which case would you trust?") |>
-  p_(sprintf("Case 1 is the more trustworthy study, and it cannot show it clears the rule: it estimates %s AED saved, and the least generous end is %s. Case 2 gives the more attractive answer and carries the unquantified risk: %d camera segments (%d%%) have no real lookalike, %d segments share %d twins, and the outcome's own baseline is out of balance (%.2f). Levels say %.2f avoided, changes say %.2f; the interval for changes runs down to %.2f, short of %.1f. Rows 1 and 4 separate the two cases, and neither appears in a typical results table.",
-             gfmt(abs(g_lev$est)), gfmt(avoid1[1]), c2_out, round(100 * c2_out / n_cam), n_cam, c2_used,
-             c2_base_sd, c2_levels, c2_changes, min(c2_ci), CAM_RULE)) |>
-  p_("For the question to Case 2's evaluator, the sharpest is: did the outcome's own baseline balance, and did you compare levels or changes?") |>
-  p_(sprintf("Question 3: both changes estimates clear their rule, Case 2's by %d%% and Case 1's by %d%%. The bigger margin does not rescue Case 2: its least generous end is short of the rule and its pairs did not start level.",
-             round(c2_clear_pct), round(g_clear_pct))) |>
-  p_("Suggested verdicts. Case 1: act with conditions (a sound study whose interval straddles the rule; ask whether the answer holds on a different list). Case 2: send back (ask what happens without the segments that have no lookalike, and for the outcome's baseline).") |>
+  p_("Three ways to run it; decide on the day. (1) Worksheet: each group works through the sheet together and reports one answer. (2) Cards on the table: each group lays out its seven profile cards and pairs them physically, then fills in the sheet. (3) Walking version: take one set of cards and give one card to a volunteer from each of seven groups; the eighth group checks the matches. A, B and C walk to the person they think is their twin; their own groups explain the match. Business 4 is left standing alone: ask the room what happens to it in the analysis (it is set aside, the overlap idea that returns in Section 2). Few people walk, and each group reports through its volunteer.") |>
+  h2_("Which evaluator would you trust?") |>
+  p_(sprintf("A is the more trustworthy study, and it cannot show it clears the rule: it estimates %s AED, and the least generous end is %s. B gives the more attractive answer (%s AED, least generous end %s) because it left out manager age, which went with the efficiency score that decided who took part: B's pairs have managers %.0f years apart and costs already %s AED apart before the programme. The lottery in the pilot district found %s, close to A. Rows 4 and 5 separate the two studies, and neither appears in a typical results table.",
+             gfmt(s6_A$est), gfmt(s6_avA[1]), gfmt(s6_B$est), gfmt(s6_avB[1]), s6_B$age_gap,
+             gfmt(s6_B$base_gap), gfmt(s6_env$case$rct))) |>
+  p_("For the question to evaluator B, the sharpest is: what decided who took part, and is all of it on your list? A close second: were the pairs' costs similar before the programme?") |>
+  p_("Question 3: B's interval clears the rule only because B's pairs differ in something B did not measure. A clean-looking interval does not rescue a comparison that is not like with like.") |>
+  p_("Suggested verdicts. A: act with conditions (a sound study whose interval straddles the rule; ask whether the answer holds on a different list). B: send back (ask for manager age, or for the pairs' costs before the programme).") |>
   h2_("AI Snapshot") |>
-  p_(sprintf("Case 1 is reported accurately, including the interval that straddles the rule. Three false assurances in Case 2: \"similarly strong, every segment matched\" hides the %d segments with no real lookalike; \"comfortably exceeding\" holds only for the changes estimate, the levels estimate does not clear 2.0 and the interval dips to %.2f; \"should be scaled\" rests on the first two and is stated most confidently. The model had the details in front of it and still went with the headline. Check its summary against the table you gave it.",
-             c2_out, min(c2_ci)))
+  p_(sprintf("A is reported accurately, including the interval that straddles the rule. Three false assurances about B: \"near-perfect balance on every characteristic\" holds only for the three it matched on, and the pairs' managers are %.0f years apart; \"comfortably exceeding\" ignores that the pairs were already %s AED apart before the programme; \"should be scaled\" rests on the first two and is stated most confidently. The model had the details in front of it and still went with the headline. Check its summary against the table you gave it.",
+             s6_B$age_gap, gfmt(s6_B$base_gap)))
 print(s6, target = "Oct13_session3_materials.docx")
 
 # ===========================================================================

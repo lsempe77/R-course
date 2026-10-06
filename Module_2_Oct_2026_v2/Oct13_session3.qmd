@@ -1,11 +1,11 @@
 ---
 title: "Reading Matching Results"
-subtitle: "Module 2 · Day 2, Session 3: Two Case Studies, One Clean and One Not"
+subtitle: "Module 2 · Day 2, Session 3: Two Evaluators, One Dataset"
 author: "3ie"
 always_allow_html: yes
 # live-revealjs (quarto-live): the baked plotly/kable charts still render at knit time;
-# the teaching code cells (checking the data, building the score and finding the twins,
-# common support, running the comparison, and the "never measured" check) are {webr}
+# the teaching code cells (checking the data, finding the twins, the overlap check,
+# running the comparison, and the "never measured" check) are {webr}
 # cells that run live in the browser via WebAssembly. Needs internet at presentation
 # time to load webR. Export to PDF for a portable copy (live cells then show their
 # code but do not run).
@@ -24,7 +24,7 @@ format:
     embed-resources: true
 engine: knitr
 resources:
-  - evaluation_data_GreenWaste.csv
+  - evaluation_data_GreenWaste_simple.csv
   - gw_lab.R
 webr:
   packages:
@@ -142,258 +142,138 @@ menti_qr <- function(path = "menti_qr.png", url = MENTI_JOIN) {
 }
 MENTI_QR <- menti_qr()
 
-RULEBAR  <- 1000    # GreenWaste bar, in AED
-CAM_RULE <- 2.0     # camera bar, in collisions avoided per segment per round
+RULEBAR <- 1000    # GreenWaste bar, in AED
+
+# ===========================================================================
+# The simple GreenWaste case (SIMPLE_GREENWASTE_PLAN.md): the rest of the city,
+# where every business scoring 58 or below took part. Matching pairs each
+# business that took part with the business that did not that looks most like
+# it on four characteristics measured before the programme. The efficiency
+# score is not on the list: it decided who took part completely, so no
+# business above 58 could be a twin on it. greenwaste_case.R is sourced into
+# its own environment because it defines RULE (here a colour).
+# ===========================================================================
+case_env <- new.env()
+case_env$gw <- read.csv("./evaluation_data_GreenWaste_simple.csv")
+sys.source("greenwaste_case.R", envir = case_env)
+case <- case_env$case
+city <- case_env$city
+took <- city$took_part == 1
+
+VARS <- c("manager_age", "staff", "area", "filtration")
+lab_vars <- c(manager_age = "Manager age", staff = "Staff", area = "Premises",
+              filtration = "Advanced filtration",
+              cost_before = "Waste costs before (the outcome)")
 
 # ---- The matcher -----------------------------------------------------------
-# Nearest neighbour on the likelihood score, with replacement. The SAME
-# function runs in the live (webR) cells, so the numbers on the baked slides
-# and the numbers the trainer produces live are identical. Written out rather
-# than called from a package, because the session's job is to show what
-# matching actually does: for each treated unit, take the untreated unit with
-# the closest score, then compare.
-find_twins <- function(data, score, treat = "enrolled") {
-  took <- data[data[[treat]] == 1, ]
-  rest <- data[data[[treat]] == 0, ]
-  twin <- sapply(took[[score]], function(s) which.min(abs(s - rest[[score]])))
-  out  <- bind_rows(took, rest[twin, ])
-  attr(out, "twin_rows") <- twin
-  out
+# Nearest neighbour on the standardised characteristics, with replacement: the
+# same rule as greenwaste_case.R's match_on(), and the SAME function runs in
+# the live (webR) cells, so the baked slides and the live cells agree. Written
+# out rather than called from a package, because the session's job is to show
+# what matching does: for each business that took part, take the business that
+# did not with the closest characteristics, then compare.
+twins_of <- function(data, vars) {
+  X  <- scale(data[, vars, drop = FALSE])
+  t  <- which(data$took_part == 1); co <- which(data$took_part == 0)
+  Xc <- t(X[co, , drop = FALSE])
+  co[vapply(t, function(i) which.min(colSums((Xc - X[i, ])^2)), 1L)]
+}
+std_gap <- function(v, tw) (mean(city[[v]][took]) - mean(city[[v]][tw])) / sd(city[[v]])
+match_fit <- function(vars) {
+  tw <- twins_of(city, vars)
+  m  <- rbind(city[took, ], city[tw, ])
+  r  <- lm_robust(cost_after ~ took_part, data = m, clusters = business)
+  list(tw = tw, fit = r, est = coef(r)[["took_part"]],
+       ci = c(r$conf.low[["took_part"]], r$conf.high[["took_part"]]),
+       used = length(unique(tw)),
+       sd = sapply(c(VARS, "cost_before"), std_gap, tw = tw),
+       age_gap  = mean(city$manager_age[took]) - mean(city$manager_age[tw]),
+       base_gap = mean(city$cost_before[took]) - mean(city$cost_before[tw]))
 }
 
-# ===========================================================================
-# CASE 1: GreenWaste. Every business, enrolled against not enrolled.
-#
-# Why the whole sample and not just the eligible businesses: within programme
-# neighbourhoods EVERY eligible business enrolled, so the "not enrolled"
-# eligible businesses are all in neighbourhoods that were never offered the
-# programme. Restricting to eligible businesses therefore reproduces the
-# randomised comparison (raw gap -1,014, the RCT number) and leaves matching
-# nothing to do. The whole-sample comparison has real selection in it (the
-# enrolled businesses had lower costs before the programme started, and all
-# sit below the efficiency cut-off), which is what matching is for.
-# ===========================================================================
-gw  <- read.csv("./evaluation_data_GreenWaste.csv")
-
-biz <- gw %>% filter(round == 0) %>%
-  select(business_identifier, neighborhood_identifier, enrolled,
-         efficiency_index, age_manager, educ_manager, female_manager,
-         foreign_owned, staff_size, advanced_filtration,
-         water_treatment_system, business_area, recycling_center_distance,
-         y0 = waste_management_costs) %>%
-  left_join(gw %>% filter(round == 1) %>%
-              select(business_identifier, y1 = waste_management_costs),
-            by = "business_identifier") %>%
-  mutate(dy = y1 - y0)
-
-chars <- c("efficiency_index", "age_manager", "educ_manager", "female_manager",
-           "foreign_owned", "staff_size", "advanced_filtration",
-           "water_treatment_system", "business_area",
-           "recycling_center_distance")
-lab_chars <- c(efficiency_index = "Efficiency index",
-               age_manager = "Manager age",
-               educ_manager = "Manager education",
-               female_manager = "Female manager",
-               foreign_owned = "Foreign owned",
-               staff_size = "Staff size",
-               advanced_filtration = "Advanced filtration",
-               water_treatment_system = "Water treatment system",
-               business_area = "Business area",
-               recycling_center_distance = "Distance to recycling centre")
-
-f_all      <- reformulate(chars, "enrolled")
-f_no_index <- reformulate(setdiff(chars, "efficiency_index"), "enrolled")
-f_thin     <- enrolled ~ age_manager + educ_manager
+# Evaluator A matches on all four; evaluator B never measured manager age.
+A <- match_fit(VARS)
+B <- match_fit(setdiff(VARS, "manager_age"))
+stopifnot(abs(A$est - case$matching) < 1e-6, abs(B$est - case$matching_no_age) < 1e-6)
+s_age <- match_fit("manager_age")
+s_sa  <- match_fit(c("staff", "area"))
 
 # Before matching: the raw comparison and the baseline gap.
-n_took   <- sum(biz$enrolled == 1)
-n_rest   <- sum(biz$enrolled == 0)
-raw_t1   <- mean(biz$y1[biz$enrolled == 1]); raw_c1 <- mean(biz$y1[biz$enrolled == 0])
-raw_t0   <- mean(biz$y0[biz$enrolled == 1]); raw_c0 <- mean(biz$y0[biz$enrolled == 0])
-raw_gap  <- raw_t1 - raw_c1
+n_took  <- sum(took); n_rest <- sum(!took)
+raw_t1  <- mean(city$cost_after[took]);  raw_c1 <- mean(city$cost_after[!took])
+raw_t0  <- mean(city$cost_before[took]); raw_c0 <- mean(city$cost_before[!took])
+raw_gap <- raw_t1 - raw_c1
 
-# Steps 1 and 2: the score, then the twins.
-biz$score <- fitted(glm(f_all, data = biz, family = binomial))
-m1        <- find_twins(biz, "score")
-twins_used <- length(unique(attr(m1, "twin_rows")))
-
-# Common support: enrolled businesses scoring beyond anything in the pool.
-ps_t <- range(biz$score[biz$enrolled == 1])
-ps_c <- range(biz$score[biz$enrolled == 0])
-n_beyond <- sum(biz$score[biz$enrolled == 1] > ps_c[2] |
-                biz$score[biz$enrolled == 1] < ps_c[1])
-
-# Step 3: balance, before and after, as standardised differences.
-std_diff <- function(d, v) {
-  (mean(d[[v]][d$enrolled == 1]) - mean(d[[v]][d$enrolled == 0])) / sd(biz[[v]])
-}
-bal1 <- tibble(var = chars,
-               Characteristic = unname(lab_chars[chars]),
-               Before = map_dbl(chars, ~ std_diff(biz, .x)),
-               After  = map_dbl(chars, ~ std_diff(m1,  .x)))
-
-# Step 4: the comparison on the matched sample.
-fit1   <- lm_robust(y1 ~ enrolled, data = m1, clusters = neighborhood_identifier)
-est1   <- coef(fit1)[["enrolled"]]
-ci1    <- c(fit1$conf.low[["enrolled"]], fit1$conf.high[["enrolled"]])
+est1 <- A$est; ci1 <- A$ci; fit1 <- A$fit
 # Sign trap: the estimate is negative, so the end of the interval closest to
 # zero is the LEAST generous one. Sort the absolute values: [1] is that end.
-avoid1 <- sort(abs(ci1))
-tbl1   <- tidy(fit1) %>% select(term, estimate, std.error, conf.low, conf.high)
+avoid1 <- sort(abs(ci1)); avoidB <- sort(abs(B$ci))
 
-# ---- Sensitivity: change what you match on, and how you compare -----------
-sens_fit <- function(f, outcome = "y1") {
-  d <- biz; d$s <- fitted(glm(f, data = d, family = binomial))
-  m <- find_twins(d, "s")
-  r <- lm_robust(reformulate("enrolled", outcome), data = m,
-                 clusters = neighborhood_identifier)
-  list(est = coef(r)[["enrolled"]],
-       lo = r$conf.low[["enrolled"]], hi = r$conf.high[["enrolled"]],
-       index_gap = mean(m$efficiency_index[m$enrolled == 1]) -
-                   mean(m$efficiency_index[m$enrolled == 0]),
-       worst_other = max(abs(map_dbl(setdiff(chars, "efficiency_index"),
-                                     ~ std_diff(m, .x)))))
-}
-s_full    <- sens_fit(f_all)
-s_change  <- sens_fit(f_all, "dy")
-s_noindex <- sens_fit(f_no_index)
-s_thin    <- sens_fit(f_thin)
+# Balance, before and after, as standardised differences.
+before_sd <- sapply(c(VARS, "cost_before"), function(v)
+  (mean(city[[v]][took]) - mean(city[[v]][!took])) / sd(city[[v]]))
+bal1 <- tibble(var = c(VARS, "cost_before"),
+               Characteristic = unname(lab_vars[c(VARS, "cost_before")]),
+               Before = before_sd, After = A$sd)
 
+# How hard the reuse leans on a few twins.
+max_use <- max(table(A$tw))
+top10   <- sum(sort(table(A$tw), decreasing = TRUE)[1:10]) / length(A$tw)
+
+# ---- Sensitivity: change what you match on --------------------------------
 sens_tbl <- tibble(
-  spec = c("All 10 characteristics",
-           "All 10, compared as changes",
-           "Without the efficiency index",
-           "Manager age and education only"),
-  est = c(s_full$est, s_change$est, s_noindex$est, s_thin$est),
-  lo  = c(s_full$lo,  s_change$lo,  s_noindex$lo,  s_thin$lo),
-  hi  = c(s_full$hi,  s_change$hi,  s_noindex$hi,  s_thin$hi))
+  spec = c("All four characteristics", "Manager age only",
+           "Staff and premises only", "Without manager age"),
+  est = c(A$est, s_age$est, s_sa$est, B$est),
+  lo  = c(A$ci[1], s_age$ci[1], s_sa$ci[1], B$ci[1]),
+  hi  = c(A$ci[2], s_age$ci[2], s_sa$ci[2], B$ci[2]))
 
 # ---- The picture of what matching does (illustration on real businesses) --
 # A small sample, matched on TWO characteristics only so that the pairs can be
-# drawn on a flat chart. The real analysis above uses all ten.
+# drawn on a flat chart. The real analysis uses four.
 set.seed(2026)
 pic <- bind_rows(
-  biz %>% filter(enrolled == 1) %>% slice_sample(n = 16),
-  biz %>% filter(enrolled == 0) %>% slice_sample(n = 55)) %>%
-  mutate(zx = (efficiency_index - mean(biz$efficiency_index)) / sd(biz$efficiency_index),
-         zy = (age_manager - mean(biz$age_manager)) / sd(biz$age_manager))
-pic_t <- pic %>% filter(enrolled == 1)
-pic_c <- pic %>% filter(enrolled == 0)
+  city %>% filter(took_part == 1) %>% slice_sample(n = 16),
+  city %>% filter(took_part == 0) %>% slice_sample(n = 55)) %>%
+  mutate(zx = (manager_age - mean(city$manager_age)) / sd(city$manager_age),
+         zy = (area - mean(city$area)) / sd(city$area))
+pic_t <- pic %>% filter(took_part == 1)
+pic_c <- pic %>% filter(took_part == 0)
 pic_j <- sapply(seq_len(nrow(pic_t)), function(k)
   which.min((pic_c$zx - pic_t$zx[k])^2 + (pic_c$zy - pic_t$zy[k])^2))
 pic_c$used <- seq_len(nrow(pic_c)) %in% pic_j
 
-# ===========================================================================
-# CASE 2: traffic cameras (the roads-authority data from Day 1 Session 2,
-# FICTIONAL, generated for this training). Cameras went where the roads were
-# worst, not at random. Here matching is harder: some camera segments have no
-# lookalike at all, and the matched pairs still start apart on the outcome.
-# All quantities below are in "collisions AVOIDED", so a bigger number is a
-# bigger benefit and the rule (2.0) reads the same way for every row.
-# ===========================================================================
-tc  <- read.csv("./evaluation_data_TrafficCameras.csv")
-tc0 <- tc %>% filter(round == 0)
-tc1 <- tc %>% filter(round == 1)
-
-cov2 <- c("baseline_speed_85th", "lanes", "road_length_km",
-          "school_within_500m", "prior_collisions_3yr")
-lab2 <- c(baseline_speed_85th = "85th percentile speed (km/h)",
-          lanes = "Lanes",
-          road_length_km = "Segment length (km)",
-          school_within_500m = "School within 500 m",
-          prior_collisions_3yr = "Collisions, prior 3 years",
-          lighting_poor = "Poor lighting")
-
-d2 <- tc0 %>%
-  mutate(lighting_poor = as.integer(lighting_quality == "poor")) %>%
-  select(segment_id, cameras_installed, y0 = injury_collisions,
-         all_of(cov2), lighting_poor) %>%
-  left_join(tc1 %>% select(segment_id, y1 = injury_collisions), by = "segment_id") %>%
-  mutate(dy = y1 - y0)
-d2$score <- fitted(glm(cameras_installed ~ baseline_speed_85th + lanes +
-                         road_length_km + school_within_500m +
-                         prior_collisions_3yr + lighting_poor,
-                       data = d2, family = binomial))
-m2 <- find_twins(d2, "score", treat = "cameras_installed")
-
-n_cam      <- sum(d2$cameras_installed == 1)
-n_nocam    <- sum(d2$cameras_installed == 0)
-c2_used    <- length(unique(attr(m2, "twin_rows")))
-c2_ps_c    <- range(d2$score[d2$cameras_installed == 0])
-c2_outside <- sum(d2$score[d2$cameras_installed == 1] < c2_ps_c[1] |
-                  d2$score[d2$cameras_installed == 1] > c2_ps_c[2])
-c2_pct_out <- 100 * c2_outside / n_cam
-
-m2_t <- m2 %>% filter(cameras_installed == 1)
-m2_c <- m2 %>% filter(cameras_installed == 0)
-c2_base_t <- mean(m2_t$y0); c2_base_c <- mean(m2_c$y0)
-c2_base_sd <- (c2_base_t - c2_base_c) / sd(d2$y0)
-
-c2_levels  <- -(mean(m2_t$y1) - mean(m2_c$y1))        # avoided, follow-up levels
-pair_chg   <- -(m2_t$dy - m2_c$dy)                     # avoided, change per pair
-c2_changes <- mean(pair_chg)
-c2_ci      <- c2_changes + c(-1.96, 1.96) * sd(pair_chg) / sqrt(length(pair_chg))
-c2_did     <- -coef(lm_robust(injury_collisions ~ cameras_installed * round,
-                              data = tc, clusters = segment_id))[["cameras_installed:round"]]
-
-# Every characteristic in the score model (lighting included), then the
-# outcome's own baseline, which is not in the model.
-c2_bal <- map_dfr(c(cov2, "lighting_poor", "y0"), function(v) {
-  tibble(Characteristic = if (v == "y0") "Collisions at baseline (the outcome)" else lab2[[v]],
-         Before = (mean(d2[[v]][d2$cameras_installed == 1]) -
-                   mean(d2[[v]][d2$cameras_installed == 0])) / sd(d2[[v]]),
-         After  = (mean(m2_t[[v]]) - mean(m2_c[[v]])) / sd(d2[[v]]))
-})
-c2_cov_bal   <- c2_bal %>% filter(Characteristic != "Collisions at baseline (the outcome)")
-c2_worst_cov <- max(abs(c2_cov_bal$After))
-c2_n_cov     <- nrow(c2_cov_bal)
-c2_over      <- c2_cov_bal %>% filter(abs(After) > 0.1) %>% arrange(desc(abs(After)))
-c2_n_over    <- nrow(c2_over)
-c2_over_txt  <- paste(sprintf("%s %.2f", tolower(c2_over$Characteristic), abs(c2_over$After)),
-                      collapse = ", ")
-# Honest balance cell: "yes" only when every characteristic is within 0.1.
-bal_cell <- function(worst, n_over, n_all) {
-  if (worst <= 0.1) sprintf("yes (largest difference %.2f)", worst)
-  else sprintf("partly: %d of %d over 0.1 (largest difference %.2f)", n_over, n_all, worst)
+# ---- The two evaluators, side by side ---------------------------------------
+# Honest balance cell: "yes" only when every matched characteristic is within 0.1.
+bal_cell <- function(sds) {
+  sds <- abs(sds)
+  if (max(sds) <= 0.1) sprintf("yes (largest difference %.2f)", max(sds))
+  else sprintf("partly: %d of %d over 0.1 (largest difference %.2f)", sum(sds > 0.1), length(sds), max(sds))
 }
-
-# Who has no lookalike: the camera segments scoring above every no-camera segment.
-c2_out_idx  <- d2$cameras_installed == 1 & d2$score > c2_ps_c[2]
-c2_in_idx   <- d2$cameras_installed == 1 & !c2_out_idx
-c2_spd_out  <- mean(d2$baseline_speed_85th[c2_out_idx])
-c2_spd_in   <- mean(d2$baseline_speed_85th[c2_in_idx])
-# How concentrated the reuse is: share of pairs using the ten most-used twins.
-top10_share <- function(tw) sum(sort(table(tw), decreasing = TRUE)[1:10]) / length(tw)
-c2_top10 <- top10_share(attr(m2, "twin_rows"))
-g_top10  <- top10_share(attr(m1, "twin_rows"))
-
-# How far each changes estimate clears its rule, as a share of the rule.
-g_clear_pct  <- 100 * (abs(s_change$est) - RULEBAR) / RULEBAR
-c2_clear_pct <- 100 * (c2_changes - CAM_RULE) / CAM_RULE
-
-# ---- The two-case comparison table ----------------------------------------
 compare_tbl <- tibble(
-  Question = c("Did every treated unit find a close match?",
-               "Comparison units used as twins (some used more than once)",
-               "Characteristics balanced after matching?",
+  Question = c("Matched on",
+               "Comparison businesses used as twins (some more than once)",
+               "Balanced on what they matched on?",
+               "Manager age after matching (not in B's table)",
                "Was the outcome similar before the programme?",
-               "Estimate comparing outcomes after the programme",
-               "Estimate comparing changes (after minus before)",
-               "Smallest effect in the 95% interval, against the rule"),
-  GreenWaste = c(sprintf("yes, all but %d", n_beyond),
-                 sprintf("%s twins for %s businesses", gfmt(twins_used), gfmt(n_took)),
-                 bal_cell(max(abs(bal1$After)), sum(abs(bal1$After) > 0.1), nrow(bal1)),
-                 sprintf("yes (gap %s AED)", gfmt(mean(m1$y0[m1$enrolled == 1]) - mean(m1$y0[m1$enrolled == 0]))),
-                 sprintf("%s AED", gfmt(s_full$est)),
-                 sprintf("%s AED", gfmt(s_change$est)),
-                 sprintf("%s against %s: below the rule", gfmt(avoid1[1]), gfmt(RULEBAR))),
-  Cameras = c(sprintf("no, %d segments (%d%%) outside", c2_outside, round(c2_pct_out)),
-              sprintf("%d twins for %d segments", c2_used, n_cam),
-              bal_cell(c2_worst_cov, c2_n_over, c2_n_cov),
-              sprintf("no (standardised difference %.2f)", c2_base_sd),
-              sprintf("%.2f avoided", c2_levels),
-              sprintf("%.2f avoided", c2_changes),
-              sprintf("%.2f against %.1f: below the rule", min(c2_ci), CAM_RULE))
+               "Estimate, costs after the programme",
+               "Least generous end of the 95% interval, against the rule"),
+  A = c("manager age, staff, premises, filtration",
+        sprintf("%s twins for %s businesses", gfmt(A$used), gfmt(n_took)),
+        bal_cell(A$sd[VARS]),
+        sprintf("%.0f years apart", abs(A$age_gap)),
+        sprintf("close (%s AED apart)", gfmt(abs(A$base_gap))),
+        sprintf("%s AED", gfmt(A$est)),
+        sprintf("%s against %s: %s", gfmt(avoid1[1]), gfmt(RULEBAR),
+                if (avoid1[1] >= RULEBAR) "clears" else "below the rule")),
+  B = c("staff, premises, filtration",
+        sprintf("%s twins for %s businesses", gfmt(B$used), gfmt(n_took)),
+        bal_cell(B$sd[setdiff(VARS, "manager_age")]),
+        sprintf("%.0f years apart", abs(B$age_gap)),
+        sprintf("no (%s AED apart)", gfmt(abs(B$base_gap))),
+        sprintf("%s AED", gfmt(B$est)),
+        sprintf("%s against %s: %s", gfmt(avoidB[1]), gfmt(RULEBAR),
+                if (avoidB[1] >= RULEBAR) "clears" else "below the rule"))
 )
 ```
 
@@ -419,38 +299,37 @@ library(ggplot2)
 library(estimatr)
 library(broom)
 
-gw <- read.csv("evaluation_data_GreenWaste.csv")
+gw <- read.csv("evaluation_data_GreenWaste_simple.csv")
 source("gw_lab.R")   # the GreenWaste lab: an invented world where the true effect is known
+city <- subset(gw, setting == "city")   # the score rule: 58 or below took part
 
-# One row per business: baseline characteristics, costs before (y0) and after (y1)
-biz <- gw %>% filter(round == 0) %>%
-  select(business_identifier, neighborhood_identifier, enrolled,
-         efficiency_index, age_manager, educ_manager, female_manager,
-         foreign_owned, staff_size, advanced_filtration,
-         water_treatment_system, business_area, recycling_center_distance,
-         y0 = waste_management_costs) %>%
-  left_join(gw %>% filter(round == 1) %>%
-              select(business_identifier, y1 = waste_management_costs),
-            by = "business_identifier")
-
-f_all <- enrolled ~ efficiency_index + age_manager + educ_manager +
-  female_manager + foreign_owned + staff_size + advanced_filtration +
-  water_treatment_system + business_area + recycling_center_distance
-f_no_index <- update(f_all, . ~ . - efficiency_index)
-
-find_twins <- function(data, score) {
-  took <- data[data$enrolled == 1, ]
-  rest <- data[data$enrolled == 0, ]
-  twin <- sapply(took[[score]], function(s) which.min(abs(s - rest[[score]])))
-  bind_rows(took, rest[twin, ])
+twins_of <- function(data, vars) {
+  X  <- scale(data[, vars, drop = FALSE])
+  t  <- which(data$took_part == 1); co <- which(data$took_part == 0)
+  Xc <- t(X[co, , drop = FALSE])
+  co[vapply(t, function(i) which.min(colSums((Xc - X[i, ])^2)), 1L)]
 }
-
-biz$score <- fitted(glm(f_all, data = biz, family = binomial))
-matched   <- find_twins(biz, "score")
+# Remembers each list it has matched on, so a slide that re-runs a match it
+# has already done answers at once. Both lists are matched here, on opening.
+find_twins <- local({
+  done <- list()
+  function(data, vars) {
+    key <- paste(vars, collapse = " + ")
+    if (is.null(done[[key]])) {
+      tw <- twins_of(data, vars)
+      m  <- rbind(data[data$took_part == 1, ], data[tw, ])
+      attr(m, "twins") <- tw
+      done[[key]] <<- m
+    }
+    done[[key]]
+  }
+})
+matched  <- find_twins(city, c("manager_age", "staff", "area", "filtration"))
+matched2 <- find_twins(city, c("staff", "area", "filtration"))
 
 ACCENT  <- "#215a9e"; ACCENT2 <- "#7da1c4"; ALERT <- "#B8272C"
 INK <- "#111418"; MUTED <- "#545860"; RULE <- "#D5DEE8"
-grp_cols <- c("Enrolled" = ACCENT, "Not enrolled" = ACCENT2)
+grp_cols <- c("Took part" = ACCENT, "Did not take part" = ACCENT2)
 
 theme_m2 <- function(base = 15) {
   theme_minimal(base_size = base) +
@@ -480,12 +359,22 @@ theme_m2 <- function(base = 15) {
 </style>
 ```
 
+## The GreenWaste case
+
+{{< include _case_map.qmd >}}
+
+::: {.notes}
+About 1 minute: a reminder of the case. Point at the rest of the city, where the
+score decided. This session works there: matching looks for businesses that did
+not take part but look like the ones that did.
+:::
+
 ## Where we are
 
 ```{=html}
 <div class="facts">
   <div class="k">Day 1 S3</div> <div class="v">randomisation &middot; the comparison chosen by a lottery</div>
-  <div class="k">Day 2 S1</div> <div class="v">difference-in-differences &middot; and an assumption that could not be tested</div>
+  <div class="k">Day 2 S1</div> <div class="v">difference-in-differences &middot; and an assumption the waiting list showed failing</div>
   <div class="k">Day 2 S2</div> <div class="v">regression discontinuity &middot; the comparison the rule creates</div>
   <div class="k">Today</div>     <div class="v">matching &middot; the comparison you build yourself</div>
 </div>
@@ -495,14 +384,14 @@ theme_m2 <- function(base = 15) {
 Four methods, four ways of answering **compared to what?**
 
 - Randomisation **creates** a comparison group.
-- DiD uses the same groups' **change over time** (-816 AED this morning).
-- A cut-off **creates** one at the line (-791 AED).
+- DiD uses the same groups' **change over time** (`r gfmt(case$did)` AED this morning).
+- A cut-off **creates** one at the line (`r gfmt(case$rdd2[["estimate"]])` AED).
 - Matching **constructs** one, by finding lookalikes.
 :::
 
 ::: {.ask}
-DiD said -816, RDD -791, both short of 1,000. Matching uses every business.
-Does it change the verdict?
+DiD said `r gfmt(case$did)`, RDD `r gfmt(case$rdd2[["estimate"]])`, both short of
+1,000. Matching uses every business. Does it change the verdict?
 :::
 
 ::: {.notes}
@@ -519,8 +408,8 @@ is how matching builds a comparison (Section 2) and what it cannot see
 
 ::::: {.column width="62%"}
 ::: {.ask style="font-size: 115%;"}
-Two businesses, one enrolled and one did not. They are the same size, the same
-age, the same area, in the same kind of neighbourhood.
+Two businesses: one took part and one did not. They have the same number of
+staff, the same size of premises and the same equipment.
 
 **Is comparing them fair?**
 :::
@@ -575,7 +464,7 @@ tibble(
   Size = c("small", "large", "small"),
   `Cost after` = c("900", "1,400", "700")
 ) %>%
-  tbl(align = "lccr", caption = "Enrolled", font_size = 19)
+  tbl(align = "lccr", caption = "Took part", font_size = 19)
 ```
 :::::
 
@@ -587,16 +476,16 @@ tibble(
   Size = c("large", "small", "small", "large"),
   `Cost after` = c("2,300", "1,900", "1,800", "2,600")
 ) %>%
-  tbl(align = "lccr", caption = "Not enrolled", font_size = 19)
+  tbl(align = "lccr", caption = "Did not take part", font_size = 19)
 ```
 :::::
 
 ::::::
 
 ::: {.ask}
-In your group: pair each enrolled business with its closest twin, matching on
-**who they are**, not on their cost. Then take the average cost difference
-across the three pairs. Two minutes, one answer per group.
+In your group: pair each business that took part with its closest twin,
+matching on **who they are**, not on their cost. Then take the average cost
+difference across the three pairs. Two minutes, one answer per group.
 :::
 
 ::: {.panel .fragment}
@@ -614,12 +503,11 @@ explain the match; business 4 is left standing alone. Ask what happens to it.
 
 The point they should feel: matching is intuitive, they already know how to
 do it, and it quietly sets aside units that resemble nobody. That is
-the common-support idea, which comes back in Section 2 and is the heart of
-Case 2.
+the overlap idea, which comes back in Section 2.
 
-Circulate and listen for "but what if none of them really match?". That
-instinct leads to Case 2. Also listen for anyone matching on cost: that is
-matching on the outcome, which would build the answer into the comparison.
+Circulate and listen for "but what if none of them really match?". Also listen
+for anyone matching on cost: that is matching on the outcome, which would build
+the answer into the comparison.
 :::
 
 ## What matching does, on real businesses
@@ -633,8 +521,8 @@ fr_t <- map_dfr(steps, ~ pic_t %>% mutate(step = .x))
 fr_c <- map_dfr(steps, function(s) pic_c %>% mutate(step = s,
   col = case_when(s == steps[3] & !used ~ "#D3D7DA", TRUE ~ ACCENT2)))
 links <- map_dfr(seq_len(nrow(pic_t)), function(k) tibble(
-  x = c(pic_t$efficiency_index[k], pic_c$efficiency_index[pic_j[k]], NA),
-  y = c(pic_t$age_manager[k], pic_c$age_manager[pic_j[k]], NA)))
+  x = c(pic_t$manager_age[k], pic_c$manager_age[pic_j[k]], NA),
+  y = c(pic_t$area[k], pic_c$area[pic_j[k]], NA)))
 fr_l <- bind_rows(
   tibble(x = off, y = off, step = steps[1]),
   links %>% mutate(step = steps[2]),
@@ -644,25 +532,25 @@ plot_ly() %>%
   add_trace(data = fr_l, x = ~x, y = ~y, frame = ~step, type = "scatter",
             mode = "lines", line = list(color = MUTED, width = 1.5),
             hoverinfo = "skip", showlegend = FALSE) %>%
-  add_trace(data = fr_c, x = ~efficiency_index, y = ~age_manager, frame = ~step,
+  add_trace(data = fr_c, x = ~manager_age, y = ~area, frame = ~step,
             type = "scatter", mode = "markers",
             marker = list(color = ~col, size = 11, symbol = "circle",
                           line = list(color = "white", width = 1)),
-            hovertemplate = "Not enrolled<br>index %{x:.1f}, manager %{y}<extra></extra>",
+            hovertemplate = "Did not take part<br>manager %{x}, premises %{y}<extra></extra>",
             showlegend = FALSE) %>%
-  add_trace(data = fr_t, x = ~efficiency_index, y = ~age_manager, frame = ~step,
+  add_trace(data = fr_t, x = ~manager_age, y = ~area, frame = ~step,
             type = "scatter", mode = "markers",
             marker = list(color = ACCENT, size = 14, symbol = "triangle-up",
                           line = list(color = "white", width = 1)),
-            hovertemplate = "Enrolled<br>index %{x:.1f}, manager %{y}<extra></extra>",
+            hovertemplate = "Took part<br>manager %{x}, premises %{y}<extra></extra>",
             showlegend = FALSE) %>%
   animation_opts(frame = 1200, transition = 0, redraw = FALSE) %>%
   animation_slider(currentvalue = list(visible = FALSE),
                    font = list(size = 12, color = INK), x = 0.08, len = 0.84) %>%
-  layout(xaxis = ax("Efficiency index at baseline", range = c(20, 100), zeroline = FALSE),
-         yaxis = ax("Manager age", range = c(15, 90), zeroline = FALSE)) %>%
+  layout(xaxis = ax("Manager age", range = c(12, 82), zeroline = FALSE),
+         yaxis = ax("Premises (100 m2)", range = c(0, 6.5), zeroline = FALSE)) %>%
   pl_m2(height = 338, t = 34, b = 90,
-        title = "&#9650; enrolled &nbsp;&nbsp; &#9679; not enrolled &nbsp;&nbsp; (71 real GreenWaste businesses, matched on two characteristics)")
+        title = "&#9650; took part &nbsp;&nbsp; &#9679; did not take part &nbsp;&nbsp; (71 GreenWaste businesses, matched on two characteristics)")
 ```
 
 ::: {.ask}
@@ -671,16 +559,17 @@ anyone's twin?
 :::
 
 ::: {.notes}
-Real GreenWaste businesses, a random 16 enrolled and 55 not enrolled, matched
-here on just two characteristics so the pairs can be drawn on a flat chart. The
-real analysis uses ten, and does the same thing in ten dimensions.
+GreenWaste businesses from the rest of the city, a random 16 that took part
+and 55 that did not, matched here on just two characteristics so the pairs can
+be drawn on a flat chart. The real analysis uses four, and does the same thing
+in four dimensions.
 
-Frame 1: the triangles all sit on the left, below an index of 58 (that was the
-eligibility rule), and the circles spread across the whole range. The two
-groups are different crowds. Frame 2: each triangle is joined to its nearest
-circle. Some circles are the twin of more than one triangle: that is allowed.
-Frame 3: circles that nobody picked fade out. They are set aside, and the
-comparison is now only between the pairs.
+Frame 1: the triangles sit mostly on the left (younger managers) and lower
+(smaller premises); the circles spread further right and up. The two groups
+are different crowds. Frame 2: each triangle is joined to its nearest circle.
+Some circles are the twin of more than one triangle: that is allowed. Frame 3:
+circles that nobody picked fade out. They are set aside, and the comparison is
+now only between the pairs.
 :::
 
 ## The GreenWaste lab: add matching
@@ -761,8 +650,8 @@ it?*, and have it question you about who took part before it answers.
 Items 3 and 4 are the ones that matter most. Item 3: a characteristic measured
 after the programme may itself have been changed by the programme, so matching
 on it builds part of the effect into the comparison. Item 4 is the one Section 3
-turns on: matching can only use what is on the list. Item 5 is the common
-support check two slides on, and it is what goes wrong in Case 2.
+turns on: matching can only use what is on the list. Item 5 is the overlap
+check two slides on.
 :::
 
 ## Does GreenWaste have what we need?
@@ -771,49 +660,49 @@ support check two slides on, and it is what goes wrong in Case 2.
 
 ::::: {.column width="56%"}
 ```{webr}
-biz %>%
-  group_by(enrolled) %>%
+city %>%
+  group_by(took_part) %>%
   summarise(businesses  = n(),
-            cost_before = round(mean(y0)),
-            cost_after  = round(mean(y1)),
-            efficiency  = round(mean(efficiency_index), 1),
-            staff       = round(mean(staff_size), 1))
+            cost_before = round(mean(cost_before)),
+            cost_after  = round(mean(cost_after)),
+            manager_age = round(mean(manager_age), 1),
+            staff       = round(mean(staff), 1))
 ```
 
 :::::
 
 ::::: {.column width="44%"}
 ::: {.panel}
-✔ **Outcome, group:** `y1` costs after; `enrolled` 1 or 0
+✔ **Outcome, group:** `cost_after`; `took_part` 1 or 0
 
-✔ **Before the programme:** ten round-0 characteristics, incl. the efficiency
-index
+✔ **Before the programme:** manager age, staff, premises, filtration
 
 ✔ **A big pool:** `r gfmt(n_rest)` possible twins for `r gfmt(n_took)`
-enrolled
+businesses that took part
 :::
 
 ::: {.warn .fragment}
-The enrolled were already cheaper **before** the programme. The raw gap after,
-**`r gfmt(raw_gap)` AED**, mixes the programme with who they already were.
+The businesses that took part were already cheaper **before** the programme.
+The raw gap after, **`r gfmt(raw_gap)` AED**, mixes the programme with who they
+already were.
 :::
 :::::
 
 ::::::
 
 ::: {.notes}
-Press Run. `biz` has one row per business: its characteristics at baseline and
-its costs before (`y0`) and after (`y1`).
+Press Run. `city` has one row per business: its characteristics before the
+programme and its costs before and after.
 
-Read the two rows. Enrolled businesses: `r gfmt(raw_t0)` AED before and
-`r gfmt(raw_t1)` after. Everyone else: `r gfmt(raw_c0)` before and
-`r gfmt(raw_c1)` after. Do not dwell on the raw gap: the room met this problem
-on Day 1 Session 3. The point is only that the two groups started in different
-places, so there is work for matching to do.
+Read the two rows. Took part: `r gfmt(raw_t0)` AED before and `r gfmt(raw_t1)`
+after. Did not: `r gfmt(raw_c0)` before and `r gfmt(raw_c1)` after. Do not
+dwell on the raw gap: the room met this problem on Day 1 Session 3. The point
+is only that the two groups started in different places, so there is work for
+matching to do.
 
-The pool of "not enrolled" includes businesses above the cut-off and eligible
-businesses in neighbourhoods that were never offered the programme. Matching
-will pick the lookalikes out of it.
+If asked why the efficiency score is not on the list: in the rest of the city
+it decided who took part completely. Every business at 58 or below took part,
+so no business that did not take part could be a twin on it.
 :::
 
 ## Implementing matching: four steps
@@ -824,28 +713,25 @@ will pick the lookalikes out of it.
 ```{r}
 #| echo: true
 #| eval: false
-# Step 1. A score: how likely was each business
-#         to enrol, given what we knew at baseline?
-fit <- glm(enrolled ~ efficiency_index + age_manager +
-             educ_manager + female_manager + foreign_owned +
-             staff_size + advanced_filtration +
-             water_treatment_system + business_area +
-             recycling_center_distance,
-           data = biz, family = binomial)
+# Step 1. Put each characteristic on one scale
+#         (distance from the average, in
+#         standard deviations).
+X <- scale(city[, c("manager_age", "staff",
+                    "area", "filtration")])
 
-# Step 2. Each enrolled business takes the
-#         not-enrolled business with the closest score.
+# Step 2. Each business that took part takes the
+#         business that did not with the
+#         smallest distance on X.
 # Step 3. Check the pairs are alike (balance).
 # Step 4. Compare their costs after the programme.
-lm_robust(y1 ~ enrolled, data = matched,
-          clusters = neighborhood_identifier)
+lm_robust(cost_after ~ took_part, data = matched,
+          clusters = business)
 ```
 :::::
 
 ::::: {.column width="44%"}
 ::: {.panel}
-- **Step 1** squeezes ten characteristics into one number between 0 and 1,
-  the **likelihood of enrolling**
+- **Step 1** makes a year of manager age and a member of staff comparable
 - **Step 2** is your twins exercise, done `r gfmt(n_took)` times
 - **Step 3** is the only evidence the pairs are alike
 - **Step 4** is the comparison you wanted all along
@@ -861,12 +747,11 @@ The **list in Step 1** is the analyst's choice. Section 3 tests it.
 ::: {.notes}
 Do not dwell on syntax. The one idea that matters: matching is preparation. It
 builds the comparison group first, and only then do we compare. The regression
-in Step 4 is deliberately plain: enrolled against not, on the matched pairs.
+in Step 4 is deliberately plain: took part against not, on the matched pairs.
 
-If asked why a score and not all ten characteristics at once: finding a twin
-that is close on ten things at once is hard; the score says how alike two
-businesses are in the one respect that matters here, how likely each was to
-enrol.
+If asked about a "propensity score": many evaluations squeeze the
+characteristics into one number, the likelihood of taking part, and match on
+that. The logic is the same: pair each business with its closest lookalike.
 :::
 
 ## Steps 1 and 2, live
@@ -875,20 +760,15 @@ enrol.
 
 ::::: {.column width="58%"}
 ```{webr}
-# Step 1. The likelihood-of-enrolling score
-fit <- glm(f_all, data = biz, family = binomial)
-biz$score <- fitted(fit)
+# Steps 1 and 2. Each business that took part
+# takes the closest business that did not,
+# on these four characteristics
+vars <- c("manager_age", "staff", "area",
+          "filtration")
+matched <- find_twins(city, vars)
 
-# Step 2. Each enrolled business takes the
-#         closest score among the rest
-took <- filter(biz, enrolled == 1)
-rest <- filter(biz, enrolled == 0)
-twin <- sapply(took$score, function(s)
-          which.min(abs(s - rest$score)))
-matched <- bind_rows(took, rest[twin, ])
-
-c(enrolled   = nrow(took),
-  twins_used = length(unique(twin)))
+c(took_part  = sum(city$took_part),
+  twins_used = length(unique(attr(matched, "twins"))))
 ```
 :::::
 
@@ -899,30 +779,30 @@ Guess first: `r gfmt(n_took)` different twins, or far fewer? Then press
 :::
 
 ::: {.panel .fragment}
-**`r gfmt(twins_used)` twins for `r gfmt(n_took)` enrolled businesses.** Some
-not-enrolled businesses are the closest match for several enrolled ones, and
-are used more than once.
+**`r gfmt(A$used)` twins for `r gfmt(n_took)` businesses.** Some businesses
+that did not take part are the closest match for several that did, and are
+used more than once.
 :::
 
 ::: {.warn .fragment}
-The other `r gfmt(n_rest - twins_used)` not-enrolled businesses are set aside.
-Business 4, `r gfmt(n_rest - twins_used)` times over.
+The other `r gfmt(n_rest - A$used)` are set aside. Business 4,
+`r gfmt(n_rest - A$used)` times over.
 :::
 :::::
 
 ::::::
 
 ::: {.notes}
-`f_all` is the list of ten characteristics from the previous slide. The
-`sapply` line does the matching: for each enrolled business's score,
-find the position of the closest score in the pool.
+`find_twins()` does Steps 1 and 2: it scales the four characteristics and, for
+each business that took part, finds the closest business that did not. It ran
+once when the deck opened, so Run answers at once.
 
 Reusing a twin is allowed (analysts call it matching "with replacement"). It
 keeps every pair as close as possible, at the cost of leaning harder on the
 businesses that get reused. Worth knowing the phrase if an evaluator uses it.
 :::
 
-## Did every enrolled business find a real lookalike?
+## Did every business find a real lookalike?
 
 :::::: {.columns}
 
@@ -930,32 +810,32 @@ businesses that get reused. Worth knowing the phrase if an evaluator uses it.
 ```{webr}
 #| fig-width: 6.2
 #| fig-height: 2.8
-biz %>%
-  mutate(group = ifelse(enrolled == 1,
-                        "Enrolled", "Not enrolled")) %>%
-  ggplot(aes(score, fill = group)) +
+city %>%
+  mutate(group = ifelse(took_part == 1,
+                        "Took part", "Did not take part")) %>%
+  ggplot(aes(manager_age, fill = group)) +
   geom_density(alpha = 0.45, colour = NA) +
   scale_fill_manual(values = grp_cols) +
-  labs(x = "Likelihood of enrolling (the score)",
-       y = "Businesses") +
+  labs(x = "Manager age", y = "Businesses") +
   theme_m2()
 ```
 :::::
 
 ::::: {.column width="44%"}
 ::: {.panel}
-A twin can only come from where the curves **overlap**. Out past every
-not-enrolled business, there is no real lookalike, only the least bad one.
+A twin can only come from where the curves **overlap**. Young managers are
+common among businesses that took part and rare among the rest.
 :::
 
 ::: {.panel .fragment}
-Here the ranges overlap almost completely. Only
-**`r n_beyond` of `r gfmt(n_took)`** enrolled businesses scores beyond the pool.
+One business that did not take part is the twin for
+**`r gfmt(max_use)`** that did. The ten most-used twins stand in for
+`r round(100 * top10)`% of all pairs.
 :::
 
 ::: {.warn .fragment}
-What matters is **which** units have no match. If they are a particular kind,
-the result no longer covers that kind. Case 2 shows this.
+Where there is little overlap, the result leans on a handful of businesses.
+Ask how many twins were used, and how often.
 :::
 :::::
 
@@ -963,12 +843,12 @@ the result no longer covers that kind. Case 2 shows this.
 
 ::: {.notes}
 Press Run. This is the picture that decides whether matching is even possible.
-The enrolled curve sits to the right (they were likely to enrol, and did), the
-not-enrolled curve to the left, but there are not-enrolled businesses right
-across the enrolled range, thinly at the top end.
+The two curves overlap in the middle, but the youngest managers have few
+counterparts among the businesses that did not take part, so the same few twins
+are used again and again.
 
-Ask: if an enrolled business had no counterpart and we dropped it, who would
-the result still be about? Only the ones that had a match. Hold that for Case 2.
+Ask: if a business had no counterpart and we dropped it, who would the result
+still be about? Only the ones that had a match.
 :::
 
 ## Did matching work? Balance
@@ -989,9 +869,9 @@ plot_ly() %>%
             x = ~abs(smd), y = ~Characteristic, type = "scatter", mode = "markers",
             name = "After matching",
             marker = list(color = ACCENT, size = 12, symbol = "diamond"),
-            hovertemplate = "%{y}: %{x:.3f} after<extra></extra>") %>%
+            hovertemplate = "%{y}: %{x:.2f} after<extra></extra>") %>%
   layout(xaxis = ax("How far apart the groups are (standardised difference)",
-                    range = c(0, 1.1), zeroline = FALSE),
+                    range = c(0, 1.8), zeroline = FALSE),
          yaxis = ax("", tickfont = list(size = 12, color = INK)),
          shapes = list(list(type = "line", x0 = 0.1, x1 = 0.1, y0 = 0, y1 = 1,
                             yref = "paper", line = list(color = ALERT, dash = "dash", width = 1.5))),
@@ -1002,18 +882,21 @@ plot_ly() %>%
 ```
 
 ::: {.ask}
-Each row is one characteristic. Hover to read the values. What happened to the
-efficiency index?
+Each row is one characteristic. Hover to read the values. Which ones are still
+apart after matching?
 :::
 
 ::: {.notes}
-Light blue dots: how far apart enrolled and not-enrolled businesses were before
-matching. Dark blue diamonds: how far apart the matched pairs are. Beyond about 0.1
-is usually treated as a problem.
+Light blue dots: how far apart the two groups were before matching. Dark blue
+diamonds: how far apart the matched pairs are. Beyond about 0.1 is usually
+treated as a problem.
 
-The efficiency index was by far the worst (`r sprintf("%.2f", abs(bal1$Before[bal1$var == "efficiency_index"]))`),
-because it decided eligibility. After matching, every characteristic is under
-`r sprintf("%.2f", max(abs(bal1$After)))`.
+Manager age was the furthest apart (`r sprintf("%.2f", abs(bal1$Before[bal1$var == "manager_age"]))`).
+After matching, staff, premises and filtration are close; manager age is still
+`r sprintf("%.2f", abs(bal1$After[bal1$var == "manager_age"]))` apart, about
+`r sprintf("%.0f", abs(A$age_gap))` years, and costs before the programme
+`r sprintf("%.2f", abs(bal1$After[bal1$var == "cost_before"]))`. Few young
+managers have a lookalike, which is the overlap problem from the last slide.
 
 Say it plainly: balance means alike **on the list**. It says nothing about
 anything that is not on the list. That is Section 3.
@@ -1025,8 +908,8 @@ anything that is not on the list. That is Section 3.
 
 ::::: {.column width="58%"}
 ```{webr}
-out <- lm_robust(y1 ~ enrolled, data = matched,
-                 clusters = neighborhood_identifier)
+out <- lm_robust(cost_after ~ took_part, data = matched,
+                 clusters = business)
 
 res <- tidy(out)[, c("term", "estimate", "std.error",
                      "conf.low", "conf.high")]
@@ -1042,8 +925,8 @@ press **Run**.
 :::
 
 ::: {.panel .fragment}
-**Row 2, `enrolled`: `r gfmt(est1)` AED.** The cost difference between each
-enrolled business and its twin, averaged.
+**Row 2, `took_part`: `r gfmt(est1)` AED.** The cost difference between each
+business that took part and its twin, averaged.
 :::
 
 ::: {.warn .fragment}
@@ -1060,11 +943,11 @@ naming the row.
 
 Reminder of the vocabulary (Day 1 Session 1): the **coefficient** is the effect
 size in AED; the **confidence interval** (conf.low to conf.high) is the range of
-plausible true values; clustering by neighbourhood means businesses in the same
-neighbourhood are not treated as independent evidence.
+plausible true values. Clustering by business means a twin used many times
+counts as one business, not as many independent ones.
 
-Close the loop: this is the twins card, done for every enrolled business at
-once, with a margin of error attached.
+Close the loop: this is the twins card, done for every business at once, with
+a margin of error attached.
 :::
 
 ## Does it clear the rule?
@@ -1100,12 +983,13 @@ turns on the analyst's choices, which we test next.
 
 ::: {.notes}
 Same reading as the last two sessions: does my decision change across this
-range? It does: the optimistic end clears the
-bar, the pessimistic end does not.
+range? It does: the optimistic end clears the bar, the pessimistic end does
+not.
 
-Worth noting if asked: the randomised comparison on Day 1 gave -1,014. Matching
-has landed close to it, which is reassuring about the method here. But the
-commissioner deciding from a matching study alone would not know that.
+Worth noting if asked: the lottery in the pilot district gave
+`r gfmt(case$rct)`. Matching has landed close to it, which is reassuring about
+the method here. But the commissioner deciding from a matching study alone
+would not know that.
 :::
 
 ## Five-minute break
@@ -1143,67 +1027,62 @@ every way we can observe.**
 
 ::: {.notes}
 DiD rested on parallel trends; RDD on a clean cut-off. Matching rests on
-something plainer and harder: everything that drove enrolment and also affects
-costs was measured and matched on. This cannot be tested from the data, by
-definition. But we can see how much it would matter, which is the next slide.
+something plainer and harder: everything that drove who took part and also
+affects costs was measured and matched on. This cannot be tested from the data,
+by definition. But we can see how much it would matter, which is the next slide.
 :::
 
-## Check 1: what if we had never measured the index?
+## Check 1: what if manager age had never been measured?
 
 :::::: {.columns}
 
 ::::: {.column width="58%"}
 ```{webr}
-# Re-run Steps 1 and 2, pretending the
-# efficiency index was never collected
-biz$score2 <- fitted(glm(f_no_index, data = biz,
-                         family = binomial))
-m2 <- find_twins(biz, "score2")
-
-m2 %>%
-  group_by(enrolled) %>%
-  summarise(cost_after = round(mean(y1)),
-            index      = round(mean(efficiency_index), 1),
-            staff      = round(mean(staff_size), 1),
-            manager    = round(mean(age_manager), 1))
+# Re-run Steps 1 and 2, pretending manager
+# age was never collected
+matched2 <- find_twins(city, c("staff", "area",
+                               "filtration"))
+matched2 %>%
+  group_by(took_part) %>%
+  summarise(cost_after  = round(mean(cost_after)),
+            staff       = round(mean(staff), 1),
+            area        = round(mean(area), 1),
+            manager_age = round(mean(manager_age), 1))
 ```
 :::::
 
 ::::: {.column width="42%"}
 ::: {.ask}
-Press **Run**. The index is no longer in the recipe. Before you look: will the
+Press **Run**. Manager age is no longer on the list. Before you look: will the
 pairs still match on it?
 :::
 
 ::: {.panel .fragment}
-The pairs are now **`r sprintf("%.1f", abs(s_noindex$index_gap))` index
-points apart**, and the estimate moves to **`r gfmt(s_noindex$est)` AED**,
-across the bar.
+The pairs' managers are now **`r sprintf("%.0f", abs(B$age_gap))` years
+apart**, and the estimate moves to **`r gfmt(B$est)` AED**, across the bar.
 :::
 
 ::: {.warn .fragment}
-The balance check on the nine would still pass (worst
-`r sprintf("%.2f", s_noindex$worst_other)`). **Nothing in the output would
-warn you.**
+The balance check on the three would still pass (worst
+`r sprintf("%.2f", max(abs(B$sd[c("staff", "area", "filtration")])))`).
+**Nothing in the output would warn you.**
 :::
 :::::
 
 ::::::
 
 ::: {.notes}
-This is the session's key demonstration. The efficiency index is the thing
-that decided who was eligible, so it is the kind of characteristic that
-drives both enrolment and costs. Here we have it, so we can see what leaving it
+This is the session's key demonstration. Manager age goes with the efficiency
+score that decided who took part, and it also drives costs, so it is the kind
+of characteristic that matters. Here we have it, so we can see what leaving it
 out does. In a real evaluation, the missing characteristic is one nobody
 collected, so you never get to see this comparison.
 
-The estimate moves from `r gfmt(est1)` to `r gfmt(s_noindex$est)`. Not a huge
-move, but enough to push the point estimate over the bar. The direction flatters
-the programme, which is the usual direction for an omitted "motivated and
-already improving" characteristic.
+The estimate moves from `r gfmt(est1)` to `r gfmt(B$est)`, far enough to clear
+the bar. The direction flatters the programme.
 :::
 
-## Check 2: change the recipe, see what moves
+## Check 2: change the list, see what moves
 
 ```{r fig.height=3.1, fig.width=11.5}
 sens_plot <- sens_tbl %>% mutate(spec = factor(spec, levels = rev(spec)))
@@ -1215,7 +1094,7 @@ plot_ly(sens_plot, x = ~est, y = ~spec, type = "scatter", mode = "markers+text",
         text = ~gfmt(est), textposition = "bottom center",
         textfont = list(size = 13, color = INK),
         hovertemplate = "%{y}: %{x:,.0f} AED<extra></extra>", showlegend = FALSE) %>%
-  layout(xaxis = ax("Estimated effect on waste costs (AED)", range = c(-1220, -860),
+  layout(xaxis = ax("Estimated effect on waste costs (AED)", range = c(-1500, -400),
                     zeroline = FALSE),
          yaxis = ax("", tickfont = list(size = 13, color = INK)),
          shapes = list(list(type = "line", x0 = -RULEBAR, x1 = -RULEBAR, y0 = 0, y1 = 1,
@@ -1228,8 +1107,9 @@ plot_ly(sens_plot, x = ~est, y = ~spec, type = "scatter", mode = "markers+text",
 ```
 
 ::: {.warn}
-Same businesses, same method, four choices of list. The estimates land on
-**both sides of the bar**, and every interval crosses it.
+Same businesses, same method, four choices of list. The estimates run from
+about `r gfmt(min(abs(sens_tbl$est)))` to `r gfmt(max(abs(sens_tbl$est)))` AED,
+on **both sides of the bar**.
 :::
 
 ::: {.ask .fragment}
@@ -1237,11 +1117,9 @@ Would you sign off a national scale-up on any single one of these rows?
 :::
 
 ::: {.notes}
-Row 1 is the main estimate. Row 2 compares each pair's change in costs rather
-than their costs afterwards (the difference-in-differences idea from this
-morning, applied to the matched pairs): a useful second opinion when the pairs
-might have started at slightly different levels. It agrees. Rows 3 and 4 match
-on less: without the index, and on manager age and education alone.
+Row 1 is the main estimate. Row 2 matches on manager age alone: the interval is
+wide because only `r s_age$used` businesses end up as twins. Rows 3 and 4 leave
+manager age out, and both clear the bar.
 
 The takeaway for a commissioner: with matching, ask what was matched on, and
 whether the answer holds when the list changes. If one choice of list flips the
@@ -1254,7 +1132,8 @@ recommendation, the result is not settled. Here, it flips.
 
 ::::: {.column width="52%"}
 ::: {.ask style="font-size: 118%;"}
-For each business that enrolled, you found one that did not but looked the same.
+For each business that took part, you found one that did not but looked the
+same.
 
 **What else might be different about those two businesses that you could not
 measure?**
@@ -1267,8 +1146,8 @@ It cannot be answered from the table.
 ::: {.panel}
 For GreenWaste, the plausible answers are things like:
 
-**How badly did this business want to cut costs?** Businesses that enrol are
-often the ones already looking for a solution.
+**How badly did this business want to cut costs?** Businesses that take part
+are often the ones already looking for a solution.
 
 **Was the owner about to invest anyway?** If so, we are crediting the programme
 with a decision already made.
@@ -1276,7 +1155,7 @@ with a decision already made.
 
 ::: {.warn}
 Neither of these is in the data. Both would make the programme look better than
-it was, just as leaving out the index did.
+it was, just as leaving out manager age did.
 :::
 :::::
 
@@ -1288,208 +1167,104 @@ Owner motivation always comes up, and it is a good example: it is unmeasured
 and it flatters the programme.
 :::
 
-# 4 · Case 2: when the worst roads have no lookalike {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+# 4 · Two evaluators, one dataset {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ::: {.notes}
 About 20 minutes.
 :::
 
-## The cameras went where the roads were worst
+## Two evaluators, the same businesses
 
 :::::: {.columns}
 
-::::: {.column width="52%"}
-```{r}
-d2 %>%
-  group_by(`Has a camera` = ifelse(cameras_installed == 1, "Yes", "No")) %>%
-  summarise(Segments = n(),
-            `85th pct speed` = round(mean(baseline_speed_85th), 1),
-            `Collisions, baseline` = round(mean(y0), 2),
-            `Collisions, prior 3 yrs` = round(mean(prior_collisions_3yr), 1),
-            .groups = "drop") %>%
-  tbl(align = "lrrrr", digits = 2, font_size = 15)
-```
-
-::: {.warn .note-ctr}
-**Illustrative case, with invented figures.** The roads-authority data from
-Day 1; not a real programme.
-:::
-:::::
-
-::::: {.column width="48%"}
+::::: {.column width="50%"}
 ::: {.panel}
-You met these cameras on Day 1. The camera segments were **faster** and had
-**more collisions** before anything was installed.
+**Evaluator A** matched on manager age, staff, premises and filtration.
 
-In GreenWaste, businesses opted in. Here the authority chose the worst roads on
-purpose.
+**Evaluator B** used a business survey that never asked the manager's age, and
+matched on the other three.
 :::
 
 ::: {.ask}
-Same four steps, same checks. Rule: at least **`r sprintf("%.1f", CAM_RULE)`
-fewer collisions** per segment per round. Which check do you expect to fail?
+Each sends you a balance table of what they matched on, and an estimate. Which
+check do you expect to tell them apart?
 :::
 :::::
 
-::::::
-
-::: {.notes}
-Section 4 is the second case study the outline asks for: a matching study that
-is carried out correctly and still leaves gaps: the fastest camera roads have no
-good match, and the pairs do not start level. Move at pace: the room
-now knows the checks, so this section is about spotting which one fails.
-:::
-
-## Check: is there a lookalike for every camera segment?
-
-:::::: {.columns}
-
-::::: {.column width="52%"}
-```{r fig.height=2.9, fig.width=5.6}
-plot_ly() %>%
-  add_trace(data = d2 %>% filter(cameras_installed == 0),
-            x = ~score, type = "histogram", name = "No camera",
-            marker = list(color = ACCENT2, line = list(width = 0)),
-            opacity = 0.65, xbins = list(start = 0, end = 1, size = 0.025),
-            hovertemplate = "score %{x:.2f}: %{y} segments<extra></extra>") %>%
-  add_trace(data = d2 %>% filter(cameras_installed == 1),
-            x = ~score, type = "histogram", name = "Has a camera",
-            marker = list(color = ACCENT, line = list(width = 0)),
-            opacity = 0.65, xbins = list(start = 0, end = 1, size = 0.025),
-            hovertemplate = "score %{x:.2f}: %{y} segments<extra></extra>") %>%
-  layout(barmode = "overlay",
-         xaxis = ax("Likelihood of getting a camera (the score)", zeroline = FALSE),
-         yaxis = ax("Segments")) %>%
-  pl_m2(width = PL_WC, height = 275)
-```
-:::::
-
-::::: {.column width="48%"}
-::: {.panel}
-Camera segments pile up at the **high** end of the score, just where
-no-camera segments thin out.
-:::
-
-::: {.warn .fragment}
-**`r c2_outside` camera segments (`r round(c2_pct_out)`%) score higher than any
-segment without a camera.** Few, but they are the **fastest** camera roads
-(`r round(c2_spd_out)` km/h against `r round(c2_spd_in)` for the rest), the
-ones the cameras were aimed at. The software still paired them, with the least
-bad one.
-:::
-
-::: {.warn .fragment}
-And `r n_cam` camera segments share **`r c2_used` twins**. The ten most-used
-twins stand in for `r round(100 * c2_top10)`% of all pairs
-(GreenWaste: `r round(100 * g_top10)`%).
-:::
-:::::
-
-::::::
-
-::: {.notes}
-Contrast with GreenWaste, where the curves overlapped almost completely and
-`r n_beyond` enrolled businesses sat outside. Here `r c2_outside` do. Nothing in
-a standard results table flags them: the match rate still reads 100%. The
-two reasonable options are to drop them (and say the result no longer covers the fastest
-roads) or to keep them and say the comparison for them is weak. Either way, the
-evaluator should tell you which.
-:::
-
-## Check: mostly balanced, but not level
-
-:::::: {.columns}
-
-::::: {.column width="52%"}
+::::: {.column width="50%"}
 ```{r}
-c2_bal %>%
-  mutate(across(c(Before, After), ~ sprintf("%.2f", .x))) %>%
-  tbl(align = "lrr", col.names = c("Characteristic", "Before", "After"),
-      font_size = 14, hl = nrow(c2_bal), hl_bg = HL_RED, hl_bold = TRUE,
-      note = "Standardised differences. Beyond about 0.1 is usually a problem.")
+tibble(
+  Characteristic = c("Manager age", "Staff", "Premises", "Advanced filtration"),
+  A = sprintf("%.2f", abs(A$sd[VARS])),
+  B = c("not measured", sprintf("%.2f", abs(B$sd[c("staff", "area", "filtration")])))
+) %>%
+  tbl(align = "lrr", col.names = c("After matching", "Evaluator A", "Evaluator B"),
+      font_size = 17, note = "Standardised differences. Beyond about 0.1 is usually a problem.")
 ```
 :::::
 
-::::: {.column width="48%"}
+::::::
+
+::: {.notes}
+Both evaluators did everything correctly with what they had. On their own
+tables, B looks better: every row is close to zero. A has one row over the line.
+:::
+
+## What B's table did not show
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+```{r}
+tibble(
+  ` ` = c("Manager age", "Waste costs before"),
+  A = c(sprintf("%.0f years", abs(A$age_gap)), sprintf("%s AED", gfmt(abs(A$base_gap)))),
+  B = c(sprintf("%.0f years", abs(B$age_gap)), sprintf("%s AED", gfmt(abs(B$base_gap))))
+) %>%
+  tbl(align = "lrr", col.names = c("How far apart the pairs are", "A", "B"),
+      font_size = 18, hl = 1:2, hl_bg = HL_RED)
+```
+:::::
+
+::::: {.column width="50%"}
 ::: {.panel}
-Most characteristics in the model are within 0.1; `r c2_n_over` are not
-(`r c2_over_txt`). The **outcome itself**, measured before the cameras went
-in, is furthest apart:
-**`r sprintf("%.2f", c2_base_t)`** collisions on camera segments against
-**`r sprintf("%.2f", c2_base_c)`** on their twins.
+B's pairs have managers `r sprintf("%.0f", abs(B$age_gap))` years apart, and
+their costs were already `r gfmt(abs(B$base_gap))` AED apart **before** the
+programme.
 :::
 
 ::: {.warn .fragment}
-Matching balanced most of what the model **contained**. Collisions in the
-baseline year were not in it, so they were free to differ, and they sit
-furthest over 0.1.
+B reports `r gfmt(B$est)` AED, and its whole interval clears the rule. A reports
+`r gfmt(A$est)`. The lottery in the pilot district found `r gfmt(case$rct)`.
 :::
 :::::
 
 ::::::
 
 ::: {.notes}
-The model included collisions over the prior three years, and that balances.
-But the baseline-year count, the outcome's own starting point, still differs by
-`r sprintf("%.2f", c2_base_t - c2_base_c)` collisions. Ask to see the outcome's
-baseline in any balance table: it is often left out.
+The outcome's own starting point, costs before the programme, is the check B
+could have run without measuring manager age. Ask to see it in any balance
+table: it is often left out.
 :::
 
-## Three numbers from the same pairs
-
-```{r results='asis'}
-cat(sprintf('
-<div class="hero">
-  <div class="value">%.2f</div>
-  <div class="label">collisions avoided per segment, comparing changes (95%% CI: %.2f to %.2f)</div>
-</div>
-<div class="stat-row">
-  <div><span class="n">%.2f</span><span class="k">Comparing follow-up levels</span></div>
-  <div><span class="n">%.2f</span><span class="k">Plain DiD, no matching</span></div>
-  <div><span class="n">%.1f</span><span class="k">The rule</span></div>
-</div>', c2_changes, min(c2_ci), max(c2_ci), c2_levels, c2_did, CAM_RULE))
-```
-
-::: {.ask}
-**Levels** says `r sprintf("%.2f", c2_levels)` avoided and fails the rule;
-**changes** says `r sprintf("%.2f", c2_changes)` and clears it. Which do you
-believe?
-:::
-
-::: {.panel .fragment}
-**Changes.** The pairs started `r sprintf("%.2f", c2_base_t - c2_base_c)`
-collisions apart, and changes remove that. It lands near the plain DiD. **But**
-the least generous end, `r sprintf("%.2f", min(c2_ci))`, is short of
-`r sprintf("%.1f", CAM_RULE)`.
-:::
-
-::: {.notes}
-Two methods that should agree, agreeing, is the reassurance: the changes-based
-matched estimate and the plain DiD from this morning's logic. The levels
-comparison was the odd one out because the pairs did not start level. Note the
-same check was run on GreenWaste (Check 2, row 2) and there the two agreed,
-because the pairs did start level.
-:::
-
-## The two cases, side by side
+## The two evaluators, side by side
 
 ```{r}
 compare_tbl %>%
-  tbl(align = "l", col.names = c("", "Case 1 · GreenWaste", "Case 2 · Cameras"),
-      font_size = 15, hl = c(1, 4), hl_bg = HL_RED)
+  tbl(align = "l", col.names = c("", "Evaluator A", "Evaluator B"),
+      font_size = 15, hl = c(4, 5), hl_bg = HL_RED)
 ```
 
 ::: {.ask}
-Read down the table. Which rows separate the two cases, and would you see them
-in a typical results table?
+Read down the table. Which rows separate the two studies, and would you see
+them in a typical results table?
 :::
 
 ::: {.notes}
-Case 1 passes every check. Case 2 comes close on the checks people usually
-report (worst `r sprintf("%.2f", c2_worst_cov)`) and fails the two they
-usually do not. Rows 1 and 4 are the two that separate the cases: real lookalikes for everyone,
-and the outcome's own baseline. Neither appears in a typical matching results
-table, which is why they are on the question card at the end.
+B passes the checks people usually report and fails the two they usually do
+not. Rows 4 and 5 separate the studies: a characteristic that was not on the
+list, and the outcome's own baseline. Neither appears in a typical matching
+results table, which is why they are on the question card at the end.
 :::
 
 # 5 · Group exercise: which would you trust? {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
@@ -1498,46 +1273,45 @@ table, which is why they are on the question card at the end.
 About 15 minutes.
 :::
 
-## Which case would you trust?
+## Which evaluator would you trust?
 
 ::: {.ask}
 In your groups, ten minutes:
 
-1. Which case gives you **more confidence**, and why?
-2. What would you ask **Case 2's** evaluator that Case 1 does not raise?
-3. Using changes, Case 2's estimate is `r round(c2_clear_pct)`% above its
-   decision rule; Case 1's estimate is only `r round(g_clear_pct)`% above its
-   rule. Does that change your answer?
+1. Which evaluator gives you **more confidence**, and why?
+2. What would you ask **evaluator B** that A does not raise?
+3. B's whole interval clears the rule; A's straddles it. Does that change your
+   answer?
 :::
 
 ::: {.panel .fragment}
-Our read: **Case 1** is the more trustworthy study, and it
-cannot show it clears the rule. **Case 2** gives the more attractive answer,
-and it carries the unquantified risk.
+Our read: **A** is the more trustworthy study, and it cannot show it clears the
+rule. **B** gives the more attractive answer because it left out something that
+drove who took part.
 :::
 
 ::: {.notes}
-Paper (Oct13_session3_materials.docx): Hand out the "Which case would you
+Paper (Oct13_session3_materials.docx): Hand out the "Which evaluator would you
 trust?" sheet (pack page 3, one per group). Groups circle a verdict for each
-case before the reveal.
+study before the reveal.
 
-Verdict round at the end: hands, not discussion. Push them past "Case 1 is
-cleaner" to why: overlap, the outcome's baseline, and who the result applies
-to. Ask whoever says "send it back" for the single question behind it.
+Verdict round at the end: hands, not discussion. Push them past "A is cleaner"
+to why: the list, the outcome's baseline, and how few twins carry the young
+managers. Ask whoever says "send it back" for the single question behind it.
 :::
 
-## What to ask the evaluator of Case 2
+## What to ask evaluator B
 
 ```{=html}
 <div class="facts">
-  <div class="k">Ask</div> <div class="v">"What happened to the segments with no real lookalike, and does the answer change without them?"</div>
-  <div class="k">Ask</div> <div class="v">"Did the outcome's own baseline balance, and did you compare levels or changes?"</div>
+  <div class="k">Ask</div> <div class="v">"What decided who took part, and is all of it on your list?"</div>
+  <div class="k">Ask</div> <div class="v">"Were the pairs' costs similar before the programme?"</div>
 </div>
 ```
 
 ::: {.notes}
-These are the two questions Case 1 does not raise. The full list of five is on
-the take-away card at the end.
+These are the two questions A's study does not raise as sharply. The full list
+of five is on the take-away card at the end.
 :::
 
 # 6 · Put AI to work {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
@@ -1549,7 +1323,7 @@ About 10 minutes. The snapshot and its debrief only; the better prompt is a take
 ## AI Snapshot: comparing two studies
 
 ::: {.panel}
-**Prompt, with the two-case table and both balance tables pasted in:**
+**Prompt, with the side-by-side table and both balance tables pasted in:**
 "Summarise the key differences between these two studies and identify what a
 commissioner should flag."
 :::
@@ -1557,14 +1331,15 @@ commissioner should flag."
 ::: {.ai-output}
 *A response like this is possible, especially with a short or leading prompt:*
 
-**Case 1:** Matching was highly effective, with every business matched and
-excellent covariate balance. The programme reduced costs by around 1,000 AED,
-with an interval that straddles the 1,000 AED threshold.
+**Evaluator A:** Manager age remains somewhat imbalanced. The programme reduced
+costs by around
+`r gfmt(round(abs(A$est), -1))` AED, with an interval that straddles the
+1,000 AED threshold.
 
-**Case 2:** [Matching was similarly strong, with every segment matched and good
-balance]{.flag}. [The matched estimate shows cameras avoided 2.10 collisions per
-segment, comfortably exceeding the 2.0 threshold]{.flag},
-**[so this programme should be scaled]{.flag}**.
+**Evaluator B:** [Matching was even stronger, with near-perfect balance on every
+characteristic]{.flag}. [The matched estimate shows a cut of
+`r gfmt(abs(B$est))` AED, comfortably exceeding the 1,000 AED threshold]{.flag},
+**[so the programme should be scaled]{.flag}**.
 :::
 
 ::: {.ask}
@@ -1584,25 +1359,25 @@ the rest. Keep the better-prompt strip (page 5) back until after the debrief.
 
 ::::: {.column width="50%"}
 ::: {.panel}
-**What it got right.** Case 1 is reported accurately, including the awkward
-part: the interval straddles the rule.
+**What it got right.** A is reported accurately, including the awkward part:
+the interval straddles the rule.
 :::
 
 ::: {.warn}
-**1 · "Similarly strong" in Case 2.** It was not. `r c2_outside` segments had
-no real lookalike, and "every segment matched" hides that.
+**1 · "Near-perfect balance" for B.** Only on the three things B matched on.
+The pairs' managers are `r sprintf("%.0f", abs(B$age_gap))` years apart.
 :::
 :::::
 
 ::::: {.column width="50%"}
 ::: {.warn}
-**2 · "Comfortably exceeding."** Only the changes-based estimate clears 2.0;
-the levels estimate does not, and the interval dips to
-`r sprintf("%.2f", min(c2_ci))`.
+**2 · "Comfortably exceeding."** B's pairs were already
+`r gfmt(abs(B$base_gap))` AED apart before the programme, so part of the cut is
+who they already were.
 :::
 
 ::: {.warn}
-**3 · "So this programme should be scaled."** The recommendation rests entirely
+**3 · "So the programme should be scaled."** The recommendation rests entirely
 on sentences 1 and 2, and it is stated most confidently of all.
 :::
 :::::
@@ -1633,10 +1408,10 @@ The model may summarise the tables it was given and repeat their framing.
 ::: {.panel}
 **What to type instead**
 
-> Two matching studies. For each: how many treated units had **no real
-> lookalike**; did the **outcome's baseline** balance; do levels and changes
-> agree? Our decision rules are below. **Ask me questions before you
-> answer.**
+> Two matching studies of the same businesses. For each: what was **left off
+> the list**; were the pairs' costs **similar before** the programme; how far
+> apart are characteristics that were not matched on? Our decision rule is
+> below. **Ask me questions before you answer.**
 :::
 :::::
 
@@ -1681,9 +1456,9 @@ anything it suggested was incorrect.
 ```{=html}
 <div class="facts">
   <div class="k">1</div> <div class="v">What did you match on, and what was left out?</div>
-  <div class="k">2</div> <div class="v">How many treated units had no close match, and what happened to those units?</div>
+  <div class="k">2</div> <div class="v">How many treated units had no close match, and how often was each twin reused?</div>
   <div class="k">3</div> <div class="v">Are the matched groups similar on their characteristics? Was the outcome itself similar before the programme?</div>
-  <div class="k">4</div> <div class="v">Does the answer hold if you change what you matched on, or compare changes instead of levels?</div>
+  <div class="k">4</div> <div class="v">Does the answer hold if you change what you matched on?</div>
   <div class="k">5</div> <div class="v">What else might differ that you could not measure?</div>
 </div>
 ```
@@ -1703,14 +1478,16 @@ card, then take two or three examples from the room.
 
 ## The week so far
 
-```{=html}
+```{r results='asis'}
+cat(sprintf('
 <div class="facts">
-  <div class="k">Day 1 S2</div> <div class="v">descriptive reading &middot; -2.53 against a 2.0 rule, with no comparison group</div>
-  <div class="k">Day 1 S3</div> <div class="v">randomisation &middot; -1,014, interval spans 1,000</div>
-  <div class="k">Day 2 S1</div> <div class="v">DiD &middot; -816 against a 1,000 rule, and an assumption that could not be tested</div>
-  <div class="k">Day 2 S2</div> <div class="v">RDD &middot; -791 against a 1,000 rule, and local to the line</div>
-  <div class="k">Today</div>  <div class="v">matching &middot; `r gfmt(est1)` against a 1,000 rule, and only as good as the list</div>
-</div>
+  <div class="k">Day 1 S2</div> <div class="v">before and after &middot; %s, with no comparison group</div>
+  <div class="k">Day 1 S3</div> <div class="v">the lottery &middot; %s, interval spans 1,000</div>
+  <div class="k">Day 2 S1</div> <div class="v">DiD &middot; %s, and an assumption the waiting list showed failing</div>
+  <div class="k">Day 2 S2</div> <div class="v">RDD &middot; %s, and local to the line</div>
+  <div class="k">Today</div>  <div class="v">matching &middot; %s, and only as good as the list</div>
+</div>', gfmt(case$before_after), gfmt(case$rct), gfmt(case$did),
+   gfmt(case$rdd2[["estimate"]]), gfmt(est1)))
 ```
 
 ::: {.ask}

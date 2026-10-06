@@ -23,7 +23,7 @@ format:
     embed-resources: true
 engine: knitr
 resources:
-  - evaluation_data_GreenWaste.csv
+  - evaluation_data_GreenWaste_simple.csv
   - gw_lab.R
 webr:
   packages:
@@ -149,31 +149,36 @@ MENTI_QR <- menti_qr()
 # ---- The decision rule, fixed for the whole week ---------------------------
 RULEBAR <- 1000    # must cut costs by at least this many AED
 
-# ---- GreenWaste, among the neighbourhoods that were offered the programme ---
-# DiD needs a group that got the programme and one that did not. Here the split
-# is ENROLMENT inside the treated neighbourhoods, and enrolled == eligible: every
-# business scoring below the 58 cut-off enrolled, none above it did.
-gw  <- read.csv("./evaluation_data_GreenWaste.csv")
-tn  <- gw %>% filter(treatment_neighborhood == 1)
+# ---- GreenWaste: the rest of the city --------------------------------------
+# The simple case (SIMPLE_GREENWASTE_PLAN.md). In the rest of the city every
+# business scoring 58 or below took part and none above did; DiD compares the
+# change in costs of the two groups. greenwaste_case.R is sourced into its own
+# environment because it defines RULE (here a colour).
+case_env <- new.env()
+case_env$gw <- read.csv("./evaluation_data_GreenWaste_simple.csv")
+sys.source("greenwaste_case.R", envir = case_env)
+city  <- case_env$city
+pilot <- case_env$pilot
+took  <- city$took_part == 1
+rct_est <- case_env$case$rct
 
-gw_means <- tn %>%
-  group_by(enrolled, round) %>%
-  summarise(mc = mean(waste_management_costs), .groups = "drop")
-gv <- function(e, r) gw_means$mc[gw_means$enrolled == e & gw_means$round == r]
+# One row per business per period: the shape an evaluator's regression uses.
+long <- data.frame(business = rep(city$business, 2), after = rep(0:1, each = nrow(city)),
+                   took_part = rep(city$took_part, 2), cost = c(city$cost_before, city$cost_after))
 
-off_b <- gv(1, 0); off_a <- gv(1, 1)   # offered / enrolled
-ctl_b <- gv(0, 0); ctl_a <- gv(0, 1)   # not offered / not enrolled
+off_b <- mean(city$cost_before[took]);  off_a <- mean(city$cost_after[took])    # took part
+ctl_b <- mean(city$cost_before[!took]); ctl_a <- mean(city$cost_after[!took])   # did not
 
-off_chg  <- off_a - off_b               # -665
-ctl_chg  <- ctl_a - ctl_b               # +151
-did_hand <- off_chg - ctl_chg           # -816, the four numbers done by hand
+off_chg  <- off_a - off_b               # the before-and-after change
+ctl_chg  <- ctl_a - ctl_b               # the comparison group's change
+did_hand <- off_chg - ctl_chg           # the four numbers done by hand
 
 # ---- The regression an evaluator would actually report ---------------------
-fit_did <- lm_robust(waste_management_costs ~ round * enrolled, data = tn,
-                     clusters = neighborhood_identifier)
-did_est <- coef(fit_did)[["round:enrolled"]]
-did_ci  <- confint(fit_did)["round:enrolled", ]
-did_p   <- fit_did$p.value[["round:enrolled"]]
+fit_did <- lm_robust(cost ~ after * took_part, data = long,
+                     clusters = business, se_type = "stata")
+did_est <- coef(fit_did)[["after:took_part"]]
+did_ci  <- confint(fit_did)["after:took_part", ]
+did_p   <- fit_did$p.value[["after:took_part"]]
 
 # Sign trap: the coefficient is negative, so conf.low is the LARGER effect and
 # abs(conf.low) is the OPTIMISTIC end. Sorting the absolute values makes the
@@ -184,19 +189,15 @@ did_avoided_most  <- did_avoided[2]
 did_clears        <- did_avoided_least >= RULEBAR
 
 # ---- The two traps, both computed rather than asserted ---------------------
-# Trap 1: the baseline gap. The two groups did not start level.
-trap_gap  <- off_b - ctl_b              # -630 (offered started lower)
-# Trap 2: the time trend. Both groups would have moved with it.
-trap_time <- ctl_a - ctl_b              # +151
+trap_gap  <- off_b - ctl_b              # the baseline gap: the groups did not start level
+trap_time <- ctl_a - ctl_b              # the time trend
 
 # ---- The two naive answers, which bracket the truth ------------------------
-naive_ba <- off_a - off_b               # -665  before-and-after only
-naive_ww <- off_a - ctl_a               # -1447 with-and-without at follow-up
+naive_ba <- off_a - off_b               # before-and-after only
+naive_ww <- off_a - ctl_a               # with-and-without at follow-up
 
 # ---- The counterfactual line, for the chart -------------------------------
-cf_after <- off_b + ctl_chg             # what the offered group would have
-                                        # paid, had it merely followed the
-                                        # not-offered group's path
+cf_after <- off_b + ctl_chg
 
 did_tbl_viz <- tibble(
   Time  = tlev(rep(c("Before", "After"), 2)),
@@ -206,31 +207,28 @@ did_tbl_viz <- tibble(
 
 # The table as a participant would receive it.
 did_tbl <- fit_did %>% tidy() %>%
-  mutate(` ` = c("(Intercept)", "After (round 1)", "Enrolled",
-                 "After (round 1) x Enrolled"),
+  mutate(` ` = c("(Intercept)", "After", "Took part", "After x Took part"),
          CI = sprintf("[%s, %s]", gfmt(conf.low), gfmt(conf.high))) %>%
   select(` `, estimate, std.error, p.value, CI)
 
-# ---- The balance table, which is the honest substitute for a pre-trend test -
-# GreenWaste has ONE period before the programme: round 0. A pre-trend test
-# needs at least TWO. So it cannot be run, and the deck says so rather than
-# implying it was checked. What CAN be shown is how the two groups differed at
-# baseline, which is the other half of the same worry.
-bal_vars <- c("age_manager", "educ_manager", "staff_size", "foreign_owned",
-              "recycling_center_distance", "business_area")
-bal_labs <- c(age_manager = "Manager age (years)",
-              educ_manager = "Manager education (level)",
-              staff_size = "Staff size",
-              foreign_owned = "Foreign owned (share)",
-              recycling_center_distance = "Distance to recycling centre (m)",
-              business_area = "Business area (units)")
-bal0 <- tn %>% filter(round == 0)
+# ---- A check this data does allow ------------------------------------------
+# The lottery in the pilot district made 200 businesses wait. They score 58 or
+# below, like the city businesses that took part, and got nothing: their change
+# is what businesses of that kind would have done without the programme.
+wait     <- pilot[pilot$took_part == 0, ]
+wait_chg <- mean(wait$cost_after - wait$cost_before)
+did_wait <- off_chg - wait_chg
 
+# ---- How far apart the groups started ---------------------------------------
+bal_vars <- c("manager_age", "staff", "area", "filtration", "cost_before")
+bal_labs <- c(manager_age = "Manager age (years)", staff = "Staff",
+              area = "Premises (100 m2)", filtration = "Advanced filtration (share)",
+              cost_before = "Waste costs before (AED)")
 balance_tbl <- map_dfr(bal_vars, function(v) {
-  m <- lm_robust(bal0[[v]] ~ bal0$enrolled)
+  m <- lm_robust(city[[v]] ~ city$took_part)
   tibble(Characteristic = bal_labs[[v]],
-         Programme   = mean(bal0[[v]][bal0$enrolled == 1]),
-         Comparison  = mean(bal0[[v]][bal0$enrolled == 0]),
+         Programme   = mean(city[[v]][took]),
+         Comparison  = mean(city[[v]][!took]),
          Difference  = coef(m)[2],
          p = tidy(m)$p.value[2])
 })
@@ -258,16 +256,17 @@ library(ggplot2)
 library(estimatr)
 library(broom)
 
-gw <- read.csv("evaluation_data_GreenWaste.csv")
-tn <- gw %>% filter(treatment_neighborhood == 1)
+gw    <- read.csv("evaluation_data_GreenWaste_simple.csv")
+city  <- subset(gw, setting == "city")     # the score rule: 58 or below took part
 source("gw_lab.R")   # the GreenWaste lab: an invented world where the true effect is known
 
-gw_means <- tn %>%
-  group_by(enrolled, round) %>%
-  summarise(mc = mean(waste_management_costs), .groups = "drop")
-gv <- function(e, r) gw_means$mc[gw_means$enrolled == e & gw_means$round == r]
-off_b <- gv(1, 0); off_a <- gv(1, 1)
-ctl_b <- gv(0, 0); ctl_a <- gv(0, 1)
+# One row per business per period (after = 0 before the programme, 1 after).
+long <- data.frame(business = rep(city$business, 2), after = rep(0:1, each = nrow(city)),
+                   took_part = rep(city$took_part, 2), cost = c(city$cost_before, city$cost_after))
+
+t1 <- city$took_part == 1
+off_b <- mean(city$cost_before[t1]);  off_a <- mean(city$cost_after[t1])
+ctl_b <- mean(city$cost_before[!t1]); ctl_a <- mean(city$cost_after[!t1])
 off_chg <- off_a - off_b
 ctl_chg <- ctl_a - ctl_b
 did_hand <- off_chg - ctl_chg
@@ -328,6 +327,16 @@ pretrend_plot <- function() {
 ```
 ::::
 
+## The GreenWaste case
+
+{{< include _case_map.qmd >}}
+
+::: {.notes}
+About 1 minute: a reminder of the case from Day 1. Point at the pilot district
+(a lottery decided) and the rest of the city (the score decided). This session
+works in the rest of the city, and uses the pilot district once, in Section 4.
+:::
+
 ## The GreenWaste programme, one more time
 
 :::::: {.columns}
@@ -363,8 +372,9 @@ with a method that answers it properly.
 ::: {.notes}
 Sections 1 and 2 are the "remember" recap: aim for 5 to 10 minutes total. The
 room already met GreenWaste, the before-and-after and with-and-without numbers,
-and the idea of subtracting one group's change from the other's (on the traffic
-cameras in Day 1 Session 1). Move through the recall quickly. The new material
+and the idea of subtracting one group's change from the other's (on landfill in
+Day 1 Session 1). Today's data is the rest of the city: businesses scoring 58 or
+below took part, the rest did not. Move through the recall quickly. The new material
 today is reading the table (Section 3) and the one assumption DiD rests on
 (Section 4): that is where the time should go.
 :::
@@ -487,8 +497,8 @@ why?
 :::
 
 ::: {.notes}
-Recap: these are the two naive comparisons from Day 1 Session 3, on this same
-GreenWaste data. Take one answer for each, then say that difference-in-differences
+Recap: these are the two naive comparisons from Day 1 Sessions 2 and 3, on this
+same GreenWaste data. Take one answer for each, then say that difference-in-differences
 removes both problems at once. The new work today is the assumption DiD rests on.
 :::
 
@@ -683,27 +693,21 @@ foreshadow of Section 4. Do not resolve it here.
 
 ::::: {.column width="56%"}
 ```{webr}
-tn %>%
-  select(business_identifier, round, enrolled,
-         waste_management_costs) %>%
-  arrange(business_identifier, round) %>%
-  mutate(waste_management_costs =
-           round(waste_management_costs)) %>%
-  head(6)
+long[order(long$business, long$after), ] |> head(6)
 
-tn %>% count(enrolled, round)
+table(took_part = long$took_part, after = long$after)
 ```
 :::::
 
 ::::: {.column width="44%"}
 ::: {.panel}
-✔ **Outcome:** `waste_management_costs` (AED)
+✔ **Outcome:** `cost`, waste costs in AED
 
-✔ **Time:** `round`, 0 before and 1 after
+✔ **Time:** `after`, 0 before and 1 after
 
-✔ **Group:** `enrolled`, 1 took part and 0 did not
+✔ **Group:** `took_part`, 1 took part and 0 did not
 
-✔ **Same businesses:** each one appears in both rounds
+✔ **Same businesses:** each one appears in both periods
 :::
 
 ::: {.warn}
@@ -714,16 +718,14 @@ tn %>% count(enrolled, round)
 ::::::
 
 ::: {.notes}
-Press Run. Read one business across its two rows (business 11 went from about
-1,308 to 240 AED) so the room sees "one row per business per round". The counts
-table shows 2,964 businesses that took part and 1,995 that did not, each
-observed in both rounds (4,959 businesses in total).
+Press Run. Read one business across its two rows so the room sees "one row per
+business per period". The counts show `r format(sum(took), big.mark = ",")`
+businesses that took part and `r format(sum(!took), big.mark = ",")` that did
+not, each observed twice.
 
-If asked about `tn`: it is the businesses in the neighbourhoods where the
-programme was offered (treatment_neighborhood == 1). Within those, every
-business scoring below the eligibility cut-off of 58 enrolled and none above it
-did, so "did not take part" means the businesses above the cut-off. That is our
-comparison.
+If asked about the groups: these are the businesses in the rest of the city.
+Every business scoring 58 or below took part and none above did, so "did not take
+part" means the businesses above the cut-off. That is our comparison.
 
 The warning sets up "What this data can and cannot show" in Section 4: with a single
 pre-period, parallel pre-trends cannot be tested.
@@ -732,8 +734,8 @@ pre-period, parallel pre-trends cannot be tested.
 ## Running the regression
 
 ```{webr}
-out_did <- lm_robust(waste_management_costs ~ round * enrolled,
-                     data = tn, clusters = neighborhood_identifier)
+out_did <- lm_robust(cost ~ after * took_part, data = long,
+                     clusters = business, se_type = "stata")
 
 res <- tidy(out_did)[, c("term", "estimate", "std.error", "p.value")]
 res[, -1] <- round(res[, -1], 1)
@@ -750,14 +752,14 @@ Paper (Oct13_session1_materials.docx): Hand out "Which row is the impact?"
 (pack page 2, one per participant) now, after the hand calculation. Tell the
 room to leave question 4 until Section 4 ("What this data can and cannot show").
 
-Before running, point at the formula: `round * enrolled` gives the time
-indicator, the group indicator and their interaction (`round:enrolled`), and
-the clusters line clusters standard errors by neighbourhood.
+Before running, point at the formula: `after * took_part` gives the time
+indicator, the group indicator and their interaction (`after:took_part`), and
+the clusters line counts each business once, because it appears twice.
 
 Run the chunk live, then take a vote across the three coefficients. Many will
-pick `enrolled` because it is large and has the word "enrolled" in it; that is
-the trap the next slides unpack. The number in `round:enrolled` is the same
--816 they got by hand.
+pick `took_part` because it is large and has the words "took part" in it; that is
+the trap the next slides unpack. The number in `after:took_part` is the same
+`r gfmt(did_hand)` they got by hand.
 :::
 
 ## Reading the table
@@ -779,15 +781,15 @@ did_tbl %>%
 ::: {.panel}
 One regression produces all four numbers from your hand calculation.
 
-**Row 4 is the impact.** The interaction of round and enrolment: the extra
+**Row 4 is the impact.** The interaction of after and took part: the extra
 change in the group that took part, over and above the change everyone
 experienced.
 :::
 
 ::: {.warn}
 Rows 2 and 3 are the **two things you must not report as the effect**:
-`r gfmt(abs(coef(fit_did)[["enrolled"]]))` AED is the baseline gap, and
-`r gfmt(coef(fit_did)[["round"]])` AED is the time trend.
+`r gfmt(abs(coef(fit_did)[["took_part"]]))` AED is the baseline gap, and
+`r gfmt(coef(fit_did)[["after"]])` AED is the time trend.
 :::
 :::::
 
@@ -950,8 +952,37 @@ Most evaluations you receive have this limitation. So what do you do instead?
 ::: {.notes}
 Paper (Oct13_session1_materials.docx): the room now answers question 4 on
 "Which row is the impact?" (pack page 2). Take two or three answers to the ask
-before moving on; the next two slides give our list.
+before moving on.
 :::
+
+## A check this data does allow
+
+```{webr}
+waiting <- subset(gw, setting == "pilot" & took_part == 0)   # the lottery said "not yet"
+did_not <- subset(gw, setting == "city" & took_part == 0)
+round(data.frame(waiting_businesses = mean(waiting$cost_after - waiting$cost_before),
+                 city_did_not_take_part = mean(did_not$cost_after - did_not$cost_before)))
+```
+
+::: {.ask}
+The pilot lottery made `r nrow(wait)` businesses wait. They score 58 or below,
+like the city businesses that took part. **Before you press Run: did their costs
+rise as much as those of city businesses that did not take part?**
+:::
+
+::: {.warn .fragment}
+They rose `r gfmt(wait_chg)` AED, not `r gfmt(ctl_chg)`. The two city groups were
+**not** moving in parallel, so the DiD **understates** the effect. With the
+waiting businesses as the comparison: `r gfmt(did_wait)` AED, close to the
+lottery's `r gfmt(rct_est)`.
+:::
+
+::: {.notes}
+About 4 minutes. Most evaluations have no group like this; here the pilot's
+waiting list provides one. The point to land: the assumption could not be tested
+with the DiD data alone, and when another group finally allows a check, it fails.
+:::
+
 
 ## How far apart did they start?
 
@@ -970,8 +1001,8 @@ balance_tbl %>%
 
 ::::: {.column width="44%"}
 ::: {.panel}
-The comparison group is businesses above the eligibility score: larger
-premises, and costlier from the start (`r gfmt(ctl_b)` vs `r gfmt(off_b)` AED).
+The comparison group is businesses above 58: older managers, more staff,
+larger premises, and costlier from the start (`r gfmt(ctl_b)` vs `r gfmt(off_b)` AED).
 :::
 
 ::: {.warn}
@@ -1003,13 +1034,14 @@ really the same?", so a tiny p-value is the worry here, not the reassurance.
   <div class="k">Ask</div> <div class="v">"Which comparison group did you use, and why that one?"</div>
   <div class="k">Ask</div> <div class="v">"What differed between the groups before the programme started?"</div>
   <div class="k">Ask</div> <div class="v">"Is there any earlier data, even one extra year, that could show the trend?"</div>
+  <div class="k">Ask</div> <div class="v">"Is there a group like the programme group that did not get it yet, such as a waiting list?"</div>
   <div class="k">Then</div> <div class="v">treat the estimate as a plausible range, not a precise number</div>
 </div>
 ```
 
 ::: {.panel}
 None of these questions requires you to run anything. A commissioner is
-entitled to ask them. Expect an evaluator to answer all three.
+entitled to ask them. Expect an evaluator to answer all four.
 :::
 
 # 5 · Put AI to work {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
@@ -1026,7 +1058,7 @@ believing the result."**
 *A response like this is possible:*
 
 The table reports a difference-in-differences estimate. **The programme reduced
-costs by 816 AED**, and the effect is highly statistically significant
+costs by `r gfmt(abs(did_est))` AED**, and the effect is highly statistically significant
 (p < 0.001), [so the programme was a success]{.flag}. [The confidence interval does
 not include zero, which confirms the finding is robust]{.flag}.
 
@@ -1064,8 +1096,8 @@ substitution.
 ::::: {.column width="50%"}
 ::: {.warn}
 **3 · "The parallel trends assumption has been satisfied."** The serious one.
-**We established in Section 4 that it cannot be tested with this data.** The
-model reported a test that was never run and could not be.
+**The two-wave data cannot test it, and the pilot's waiting businesses suggest
+it fails.** The model reported a test that was never run.
 :::
 
 ::: {.warn}
@@ -1118,7 +1150,7 @@ check that answer for claims about tests that were never run.
 
 ::: {.panel .fragment}
 **If you have time, a prompt that pushes the AI towards an answer:** *"Our DiD
-shows an 816 AED cut in costs (p<0.001). Write two sentences for the minister
+shows an `r gfmt(abs(did_est))` AED cut in costs (p<0.001). Write two sentences for the minister
 recommending scale-up."* Does the AI mention the 1,000 AED rule or parallel
 trends without being asked?
 :::
@@ -1165,19 +1197,20 @@ three examples.
 
 ## Where this sits
 
-```{=html}
+```{r results='asis'}
+cat(sprintf('
 <div class="facts">
-  <div class="k">Day 1 S1</div> <div class="v">compared to what? &middot; the three questions</div>
-  <div class="k">Day 1 S2</div> <div class="v">reading a descriptive output &middot; -2.53 against a 2.0 rule, with no comparison group</div>
-  <div class="k">Day 1 S3</div> <div class="v">naive comparisons and an RCT &middot; the design that removes the difference</div>
-  <div class="k">Today</div>  <div class="v">DiD &middot; -816 against a 1,000 rule, with the assumption that could not be tested</div>
-</div>
+  <div class="k">Day 1 S1</div> <div class="v">compared to what? &middot; the three questions, on landfill</div>
+  <div class="k">Day 1 S2</div> <div class="v">before and after &middot; %s AED, short of the rule, with no comparison group</div>
+  <div class="k">Day 1 S3</div> <div class="v">with and without, and the lottery &middot; %s AED</div>
+  <div class="k">Today</div>  <div class="v">DiD &middot; %s AED, with an assumption the waiting list shows failing</div>
+</div>', gfmt(naive_ba), gfmt(rct_est), gfmt(did_hand)))
 ```
 
 ::: {.ask}
-Every estimate so far has been statistically clear. The one that cleared its
-bar, Day 1 S2's camera result, had no comparison group. The results with a
-comparison group have not yet cleared theirs.
+Every estimate so far has been statistically clear. Only the lottery came close
+to the 1,000 AED bar, and today's DiD fell short partly because its comparison
+group was on a different path.
 
 What does that mean for the way evaluations get commissioned? Bring your answer
 to the next session, where the comparison comes from a **cut-off**.
