@@ -1,5 +1,5 @@
-﻿"""Verify live hub links, day filters, keyboard controls and phone layouts."""
-import asyncio,json,urllib.request
+"""Verify live hub links, day filters, keyboard controls and phone layouts."""
+import asyncio,json,urllib.request,re
 from pathlib import Path
 from bs4 import BeautifulSoup
 from playwright.async_api import async_playwright
@@ -12,6 +12,8 @@ async def main():
   assert (ROOT/'docs'/href).is_file(),href
   with urllib.request.urlopen(urllib.request.Request('http://127.0.0.1:8770/'+href,method='HEAD')) as r:assert r.status==200
  assert len(soup.select('article.card'))==11
+ assert not soup.select('.daytime')
+ assert not re.search(r'\b(?:minutes?|mins?)\b',soup.get_text(),re.I)
  assert not soup.select('a[href*="exports/"]')
  assert not soup.select('a[href="Oct15_session3.html"]')
  results=[]
@@ -24,6 +26,7 @@ async def main():
    for day,expected in [('1',3),('2',3),('3',3),('4',2),('all',11)]:
     button=page.locator(f'button[data-day="{day}"]');await button.focus();await page.keyboard.press('Enter')
     assert await button.get_attribute('aria-pressed')=='true'
+    assert not re.search(r'\b(?:minutes?|mins?)\b',await page.locator('#session-count').inner_text(),re.I)
     assert await page.locator('.day:not([hidden]) article.card').count()==expected
     assert await page.locator('button[aria-pressed=true]').count()==1
    await page.locator('button[data-day="4"]').click()

@@ -1,5 +1,9 @@
 # Handoff: moving Module 2 to the simple GreenWaste case
 
+## Landing page durations removed, 6 October 2026
+
+Lucas requested no timings in the landing page session boxes or day summaries. The live hub now shows session numbers and counts without durations, including every day-filter state. Actual teaching timings remain in the course sources and trainer materials. The hub generator preserves this change on future builds. Pre-change hub and generator copies: backups/landing_no_times_2026_10_06/. Existing link, keyboard and responsive-layout checks cover the revised page.
+
 ## Trainer R boxes improved, 6 October 2026
 
 All eight visible trainer calculations now include short plain-language comments explaining their comparison, units and output. Shared styles use 22px code, clear comments, a framed editor and a "Trainer calculation - R" header. The duplicate echoed source underneath is hidden; results remain visible. The lottery demonstration now uses the full slide width. Participant coding and session durations are unchanged.
