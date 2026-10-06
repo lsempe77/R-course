@@ -1,5 +1,27 @@
 # Handoff: moving Module 2 to the simple GreenWaste case
 
+## Day 2 approved and built on 6 October 2026
+
+Lucas approved Day 2, including the score-rule correction and refresh of affected Day 1 figures. The active three Day 2 decks now have 10, 10 and 13 content screens, 60/60/75 minutes. One trainer demonstration per session; no participant coding. Plain-language report reading, individual questions and evidence reveals replace the long model labs. No Menti or restored AI wall boards.
+
+- `day2_case.R` supplies screen and paper values, using the corrected CSV. Exactly eight city rows at score 58 changed in participation, cost_after and landfill_after; pilot and other city rows are unchanged. City participation is now 4,794. Before/after -669; with/without -1,638; DiD -812 (95% interval -833 to -792); pilot -1,014 unchanged.
+- Canonical RDD now uses `estimatr::lm_robust` with HC2, the intended original teaching interval. Two-point estimate -721 (95% interval -943 to -498); five-point -784; age-adjusted two-point -632. The eight corrected records are at the cut-off, so the local change is material. Do not use the former -656 or ordinary interval.
+- Four-feature matching -1,029 (reported interval -1,200 to -859); without age -1,341. Every participant gets a nearest neighbour, with replacement, no caliper. 585 different controls, maximum reuse 440; manager-age gap remains 3.0 years. Do not claim perfect balance, no bias, or discarded participants. Interval clusters by original business and treats selected matches as given.
+- Fiona's eight seeded RDD cards A-H and A1 number line are retained. Seven matching profiles retain original identifiers, age and size; separate cost slips are withheld until pairs are recorded. Optional walking retained. Toy unused business 4 is a comparison profile, not an excluded full-study participant.
+- `make_day2_materials.R` and `--day2` write three two-sided participant sheets and trainer packs of 3/12/12 pages. `reader_material_helpers.R` shares print styling with Day 1. The full generator skips old Day 2 blocks; retained code is historical. The existing static RDD A1 line needs no numerical refresh.
+- Day 1 data-derived decks and all six print files are refreshed. `Module2_exercise_plan_v3.docx` now covers Days 1 and 2; Days 3 and 4 rows are historical. Backups: `backups/day2_2026_10_06_approved/`.
+- Review hub source: `review_2026_10_06/day2_review.qmd`. Next daily tables: `day3_plan.qmd`; build Day 3 after Lucas approves those tables. Scope remains eleven sessions; former Day 4 S3 is the other provider's simulation.
+
+The optional `GreenWaste_case_brief.docx` was also refreshed: its older saved copy still described 6,000 city records. It now uses 10,000 city records and computed means, two A4 pages at 12 point. Rebuild with `Rscript make_case_brief.R --brief-only` (calls `refresh_case_brief.R`). Give it out after costs enter; the picture card remains the opening reference.
+
+Validation: all six decks walked sequentially, live outputs checked, fragments and evidence opened. No browser errors or overflow after the DiD screen correction. Final native keyboard/reveal checks passed. Every Day 2 print page and refreshed Day 1 page was inspected through Word rendering; the brief is 14 pages. Room poll two-browser and phone-width regression passed. Main preview files were hash-verified and review hub relative links checked.
+
+Review: https://3ie.academy/preview/day2_review.html
+Next tables: https://3ie.academy/preview/day3_plan.html
+The site password gate applies. The main preview worktree `.preview_day2_publish` is retained for reuse; avoid deleting the earlier ignored `.preview_publish` residue whose cleanup was rejected by automatic approval review. Live teaching pages are unchanged.
+
+The previous Day 1 checkpoint and conversion notes below are historical where they refer to an unchanged CSV or a pending correction.
+
 ## Latest direction from Lucas (6 October 2026)
 
 - Review and revise the whole programme for officials with little evaluation
@@ -79,15 +101,9 @@ branch is not reviewed by **2026-10-09**, deliver with `main` and merge after.
 - Lucas works in daily batches: for each day, propose one plan table (slide by slide),
   wait for approval, build, publish previews, report the links.
 
-## Decision waiting on Lucas
+## Score-rule correction resolved
 
-**Data flaw.** Eight city businesses with a score of exactly 58.0 have `took_part = 0`:
-`make_greenwaste_simple.R` assigns `took_part = score <= 58` before rounding the score to
-one decimal. It shows on Oct13 S2's "Did the rule hold?" slide (take-up 0.998, not 1).
-The fix is to assign `took_part` from the rounded score. Only those 8 rows change, but
-it overwrites the CSV and shifts Day 1–2 numbers by a few AED, so it needs Lucas's OK.
-After the fix: regenerate the CSV, re-render Days 1–2, regenerate packs, update the
-headline numbers in `SIMPLE_GREENWASTE_PLAN.md`, re-publish previews.
+Approved and completed with Day 2. Use the latest checkpoint above for current figures.
 
 ## The case and its numbers
 

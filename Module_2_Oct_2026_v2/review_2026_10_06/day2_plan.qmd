@@ -8,15 +8,16 @@ format:
     theme: cosmo
 ---
 
+**Approved and built on 6 October 2026.** See [the Day 2 review](day2_review.html). The data correction is complete; RDD uses the shared robust interval.
+
+
 Day 2 asks readers to judge three ways of constructing the missing comparison.
 The technical names remain, each attached to a plain question. Participants
 predict, read an extract, practise with physical materials, and explain a
 provisional judgement. The proposed screens below exclude a title slide.
 Timings belong in trainer notes.
 
-These tables are the next daily review under `HANDOFF.md`. Day 1 has been rebuilt
-to its approved 60/60/75-minute route. No Day 2 source or pack has been changed
-by this review.
+These tables record the approved daily review under `HANDOFF.md`. Days 1 and 2 are rebuilt. The historical pre-build notes below are retained; the Day 2 review reports the completed checks and corrected figures.
 
 ## Session 1 Reading a difference in changes
 

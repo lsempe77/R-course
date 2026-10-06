@@ -182,7 +182,12 @@ if ('--day1' %in% commandArgs(trailingOnly = TRUE)) {
   source('make_day1_materials.R', encoding='UTF-8')
   quit(save = 'no')
 }
+if ('--day2' %in% commandArgs(trailingOnly = TRUE)) {
+  source('make_day2_materials.R', encoding='UTF-8')
+  quit(save='no')
+}
 source('make_day1_materials.R', encoding='UTF-8')
+source('make_day2_materials.R', encoding='UTF-8')
 # The later-day packets retain their existing defaults until their rebuild.
 set_flextable_defaults(font.family = FONT, font.size = 10.5, padding = 4,
                        border.color = "#9AA8B8")
@@ -439,6 +444,7 @@ print(s3, target = "Oct12_session3_materials.docx")
 # ===========================================================================
 # Oct13 S2 · Reading RDD Results
 # ===========================================================================
+if (FALSE) { # retained previous Day 2 implementation
 S5 <- "Module 2 · Day 2, Session 2 · Reading RDD Results"
 # The simple GreenWaste case: the rest of the city, where businesses scoring
 # 58 or below took part. Numbers from greenwaste_case.R, in its own environment.
@@ -564,6 +570,8 @@ s5 <- s5 |>
   p_("Wrong: 'applies to all businesses', 'generalises to the wider population', 'basis for scaling to every business'. The estimate is local to the line. Left out: the manager-age jump, and the 1,000 AED rule.") |>
   add_board_page("Oct13_session2", board5, S5, "the jump at the line (A1)")
 print(s5, target = "Oct13_session2_materials.docx")
+}
+
 
 # ===========================================================================
 # Oct14 S1 · Was It Worth It?
@@ -909,6 +917,7 @@ print(s2, target = "Oct12_session2_materials.docx")
 # ===========================================================================
 # Oct13 S1 · Reading DiD Results
 # ===========================================================================
+if (FALSE) { # retained previous Day 2 implementation
 S4 <- "Module 2 · Day 2, Session 1 · Reading DiD Results"
 # The simple GreenWaste case: the rest of the city, where businesses scoring
 # 58 or below took part. Numbers from greenwaste_case.R, in its own environment.
@@ -997,10 +1006,13 @@ s4 <- new_pack() |>
   p_(sprintf("Supported by the table: the %s AED estimate and p < 0.001. Not supported: \"so the programme was a success\" answers whether the effect is non-zero, not whether it clears 1,000. \"Does not include zero, which confirms the finding is robust\": not zero and big enough are different claims. \"The parallel trends assumption has been satisfied\" is the serious one: with one period before the programme it cannot be tested, so the model reported a test that was never run, and the pilot's waiting businesses suggest it fails. \"Clears the 1,000 AED threshold\" is false: even the interval's most generous end is %s AED.", gfmt(abs(did_hand)), gfmt(did_av[2]))) |>
   p_("With the second prompt, check whether the parallel-trends claim disappears. Supplying the constraint makes the error less likely; it does not rule it out.")
 print(s4, target = "Oct13_session1_materials.docx")
+}
+
 
 # ===========================================================================
 # Oct13 S3 · Reading Matching Results
 # ===========================================================================
+if (FALSE) { # retained previous Day 2 implementation
 S6 <- "Module 2 · Day 2, Session 3 · Reading Matching Results"
 # The simple GreenWaste case: the rest of the city. Evaluator A matches on four
 # characteristics; evaluator B never measured manager age. The same matcher as
@@ -1139,6 +1151,8 @@ s6 <- new_pack() |>
   p_(sprintf("A is reported accurately, including the interval that straddles the rule. Three false assurances about B: \"near-perfect balance on every characteristic\" holds only for the three it matched on, and the pairs' managers are %.0f years apart; \"comfortably exceeding\" ignores that the pairs were already %s AED apart before the programme; \"should be scaled\" rests on the first two and is stated most confidently. The model had the details in front of it and still went with the headline. Check its summary against the table you gave it.",
              s6_B$age_gap, gfmt(s6_B$base_gap)))
 print(s6, target = "Oct13_session3_materials.docx")
+}
+
 
 # ===========================================================================
 # Oct14 S2 · What Can You Read? What Might Be Wrong?
@@ -1430,8 +1444,7 @@ participant_copy <- function(src, dest) {
 }
 
 dir.create("../docs/handouts", showWarnings = FALSE)
-for (s in c("Oct13_session1",
-            "Oct13_session2", "Oct13_session3", "Oct14_session1", "Oct14_session2",
+for (s in c("Oct14_session1", "Oct14_session2",
             "Oct14_session3", "Oct15_session1", "Oct15_session2"))
   participant_copy(paste0(s, "_materials.docx"), paste0("../docs/handouts/", s, "_handouts.docx"))
 # Handouts built elsewhere that participants keep, copied as they are.

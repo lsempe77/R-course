@@ -40,3 +40,20 @@ left unchanged. Day 2 slide tables are a proposal pending daily review.
 Detailed screenshots, JSON checks, PDFs and recovery copies stay local and are
 ignored by Git. Reproduce the browser checks with `verify_day1.py`,
 `verify_reading_controls.py` and `verify_room_poll.py` in this folder.
+
+## Day 2 approved rebuild and Day 1 data refresh
+
+- Generator correction: exactly eight city rows at displayed score 58 changed; only took_part, cost_after and landfill_after. Pilot identical. Every city participation flag now follows score <= 58.
+- Shared RDD model uses estimatr robust HC2; coefficient agrees with the browser lm, robust interval shared on screen and paper. Matching source and browser estimates agree.
+- All six decks walked sequentially with live outputs, evidence opened and fragments visible.
+- Oct12_session1_live: 12 slides including title; maximum lower overflow -16 px; browser errors [].
+- Oct12_session2: 12 slides including title; maximum lower overflow -30 px; browser errors [].
+- Oct12_session3_live: 14 slides including title; maximum lower overflow -21 px; browser errors [].
+- Oct13_session1: 11 slides including title; maximum lower overflow -14 px; browser errors [].
+- Oct13_session2_live: 11 slides including title; maximum lower overflow -35 px; browser errors [].
+- Oct13_session3: 14 slides including title; maximum lower overflow -64 px; browser errors [].
+- Word fallback rendered all Day 2 pages: participant 2/2/2, trainer 3/12/12. Refreshed Day 1 participant 2/2/2 and trainer 4/3/3. Partner brief 14 landscape pages. Every page visually inspected; no clipping. RDD A1 retained and visually checked.
+- Final native controls checked keyboard reveal/toggle and choice without advancing slides, and three-column result tables. Room poll regression passed with two browsers and 320/375/1280 widths.
+- Backups in backups/day2_2026_10_06_approved; local QA remains ignored. Main previews only, no live teaching-page change. Venue phone reachability remains a rehearsal check.
+
+- Optional case reference refreshed from an older 6,000-city-business save to the current 10,000 records and computed means. Two A4 pages rendered and inspected at 12 point; technical before/after column names wrap explicitly.

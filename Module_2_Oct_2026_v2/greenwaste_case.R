@@ -24,7 +24,7 @@ case$rct_ci <- unname(confint(rct_fit)["took_part", ])
 rdd_at <- function(width, adjust = FALSE, cut = 58, data = city) {
   d <- subset(data, abs(score - cut) <= width)
   d$below <- as.integer(d$score <= cut); d$dist <- d$score - cut
-  f <- lm(if (adjust) cost_after ~ below * dist + manager_age else cost_after ~ below * dist, data = d)
+  f <- estimatr::lm_robust(if (adjust) cost_after ~ below * dist + manager_age else cost_after ~ below * dist, data = d)
   c(estimate = coef(f)[["below"]], confint(f)["below", ], businesses = nrow(d))
 }
 case$rdd2     <- rdd_at(2)

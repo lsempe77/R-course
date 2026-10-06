@@ -1,5 +1,5 @@
 /*-- scss:rules --*/
-// Day 1 reading layouts extend, rather than replace, the DGE theme.
+// Reading layouts extend the DGE theme.
 .reveal .slides section.reader-slide { font-size: 28px; line-height: 1.4; }
 .reveal .slides section.reader-slide h2 { font-size: 1.4em; margin-bottom: 24px; }
 .reveal .reader-slide p { max-width: 1100px; margin: 16px 0; }
@@ -31,3 +31,8 @@
 .reveal .reader-slide .cell { font-size: 19px; }
 .reveal .reader-slide .cell-output-webr { font-size: 20px; }
 .reveal .reader-slide .quarto-layout-panel { margin-bottom: 8px; }
+.reveal .reader-slide .trend-options { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.reveal .reader-slide .trend-options h3 { margin: 0; font-size: 26px; }
+.reveal .reader-slide .trend-visual { width: 100%; height: 190px; }
+.reveal .reader-slide .score-rule { display: grid; grid-template-columns: 1fr 1fr; margin: 32px 0; }
+.reveal .reader-slide .score-rule div { padding: 35px; background: #e3ebf5; border-right: 5px solid #B8272C; text-align: center; }

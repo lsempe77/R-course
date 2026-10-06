@@ -1,0 +1,93 @@
+---
+title: "Day 3 proposed slide tables"
+subtitle: "Costs, charts and questions that change a decision"
+format:
+  html:
+    embed-resources: true
+    theme: cosmo
+    toc: true
+---
+
+Days 1 and 2 are built. Day 3 moves from reading an estimate to reviewing the
+evidence used for a decision. Keep 60/60/75 minutes, one GreenWaste case,
+two-sided participant sheets and one short trainer demonstration per session.
+No participant coding. The tables below are the next daily approval boundary
+required by `HANDOFF.md`.
+
+## Session 1 Judge a value for money claim
+
+| Screen | Participant task | Minutes |
+|---|---|---:|
+| 1 A saving is not the whole decision | Recall a credible result and ask what costs are missing | 4 |
+| 2 Read the ratio claim | Predict approval and give a reason before opening assumptions | 4 |
+| 3 Open what went into it | Identify saving source, programme cost and duration | 5 |
+| 4 Read the result at today's value | One trainer calculation; interpret benefits divided by costs | 5 |
+| 5 A saving next year | Read a simple timeline; explain why later benefits count less | 5 |
+| 6 What costs were left out | Flag omitted staff and business costs in an extract | 6 |
+| 7 Predict your scenario | Groups use Fiona's scenario cards and commit a prediction | 8 |
+| 8 Put it on the ratio wall | Reveal scenario result; post prediction and result on existing A1 board | 7 |
+| 9 What could flip the decision | Name the assumption doing most work and ask for evidence | 6 |
+| 10 Repair an AI recommendation | Remove an unconditional value-for-money assurance | 6 |
+| 11 Your question from memory | Individual question and purpose | 4 |
+
+Use the corrected DiD estimate as an explicitly provisional benefit input;
+its causal limitations carry forward. Programme costs, duration and discount
+rate are fictional assumptions, labelled as such. Recompute the headline and
+scenario cards from one model. Preserve the ratio wall, separate prediction
+and result lanes, and eight group scenario allocations. Limit the main route
+to a few decision-relevant assumptions; remove repeated sliders and full grids.
+
+## Session 2 Read a chart before trusting its story
+
+| Screen | Participant task | Minutes |
+|---|---|---:|
+| 1 Which picture would you use | Choose and explain before opening chart labels | 4 |
+| 2 Same values different axes | Toggle axis range; inspect values rather than shape | 6 |
+| 3 Mark up the chart | Individual source, units, comparison and uncertainty check | 7 |
+| 4 What an average hides | Open a distribution; identify who the average misses | 6 |
+| 5 A percentage of what | Use GreenWaste landfill totals and business averages; one trainer calculation | 7 |
+| 6 Read an effect and its interval | Compare a point estimate with the decision rule | 6 |
+| 7 Choose and repair | Pairs fix one misleading chart and write a caption | 10 |
+| 8 Check an AI caption | Match each sentence to visible chart evidence | 6 |
+| 9 Defend your chart choice | State what a reader could and could not conclude | 4 |
+| 10 Your question from memory | Individual question and purpose | 4 |
+
+Keep three focused habits: inspect scales and labels, inspect what is averaged,
+and inspect comparison and uncertainty. Remove the school-zone case, pie-chart
+detour and repeated discount-rate lesson. The percentage task uses GreenWaste
+landfill quantities; explain the denominator instead of treating differently
+weighted averages as interchangeable. Native toggles need prediction and
+feedback; room voting remains optional with a paper fallback.
+
+## Session 3 Question the analyst
+
+| Screen | Participant task | Minutes |
+|---|---|---:|
+| 1 Would you sign this note | Read a short recommendation and commit individually | 4 |
+| 2 Locate its evidence | Identify estimates, populations and the selected headline | 5 |
+| 3 Choose three useful questions | Work alone with the shortened QA sheet | 6 |
+| 4 Improve a vague question | Rewrite it to request evidence that could affect the decision | 5 |
+| 5 Prepare for the clinic | Groups rank questions and nominate a spokesperson | 7 |
+| 6 Break | Five-minute break | 5 |
+| 7 Ask the analyst | Groups ask; trainer answers from a fixed source-backed answer bank | 14 |
+| 8 Open one requested result | One short trainer demonstration tied to the chosen question | 6 |
+| 9 Score the answers | Supported, partial or unanswered; cite the source | 6 |
+| 10 Identify what remains | Choose the unresolved issue most likely to change the decision | 5 |
+| 11 Revisit sign-off | Individual decision and reason, then compare with opening choice | 5 |
+| 12 Check an AI review | Repair source errors and unsupported approval language | 4 |
+| 13 Your request to the evaluator | Write a short specific evidence request independently | 3 |
+
+The clinic preserves participant-led questioning. The answer bank must agree
+with the corrected pilot-and-city data and disclose missing evidence. It must
+not fabricate earlier trends, attrition or a score-manipulation check. Retire
+the old neighbourhood lab from this teaching route. Keep further analyses as
+optional trainer detail; one result is produced live. Compare reasons before
+and after, while judging learning from individual written evidence requests.
+
+## Build and review
+
+After approval, rebuild the three decks, participant sheets, scenario cards,
+trainer keys, QA answer bank and exercise brief together. Render every deck,
+exercise controls and trainer outputs, and inspect every print page. Publish
+unlinked previews. Day 4 remains two course-owned sessions; the final slot is
+the other provider's evaluation simulation.

@@ -1,1226 +1,202 @@
 ---
-title: "Reading a Difference-in-Differences Result"
-subtitle: "Module 2 · Day 2, Session 1: The Extra Change in the Programme Group"
+title: "Read the extra change"
+subtitle: "Module 2 | Day 2 | Session 1"
 author: "3ie"
-always_allow_html: yes
-# live-revealjs (quarto-live): the baked plotly/kable charts still render at knit time
-# exactly as before; the three teaching code cells (Running the regression, Visualising
-# the DiD, Testing for parallel pre-trends) are {webr} cells that run live in the browser
-# via WebAssembly. Needs internet at presentation time to load webR. Export to PDF for a
-# portable copy (live cells then show their code but do not run).
+always_allow_html: true
 format:
   live-revealjs:
-    theme: [theme_dge.scss, theme_live.scss]
+    theme: [theme_dge.scss, theme_live.scss, theme_reader.scss]
     logo: assets/dge_logo_horizontal.svg
     slide-number: true
     width: 1280
     height: 720
-    fig-align: center
     slide-level: 2
-    # Single-file deck. The live (webR) cells work fine with this over http —
-    # via `quarto preview` or a published URL — but NOT from a file:// path.
-    # Do not open the rendered .html directly from disk; serve it or publish it.
     embed-resources: true
-engine: knitr
-resources:
-  - evaluation_data_GreenWaste_simple.csv
-  - gw_lab.R
+    include-after-body: _reader_interactions.html
 webr:
-  packages:
-    - dplyr
-    - ggplot2
-    - estimatr
-    - broom
-  cell-options:
-    autorun: false
-    edit: true
-    warning: false
+  render-df: kable
+  resources:
+    - evaluation_data_GreenWaste_simple.csv
 knitr:
   opts_chunk:
     echo: false
     warning: false
     message: false
-    dev: "png"
-    # dpi 96 is deliberate. knitr sizes every htmlwidget container as
-    # fig.width * dpi, so an inherited dpi: 200 silently inflated each chart
-    # tenfold (11.5in became 2300px) and pushed slide content off the bottom.
-    # At 96, fig.width in inches maps 1:1 onto CSS pixels. If a raster
-    # ggplot chunk is ever added, set its dpi per chunk.
-    dpi: 96
-editor_options:
-  chunk_output_type: console
 ---
 
 {{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
 
-```{r setup}
-library(tidyverse)
-library(plotly)
-library(knitr)
-library(estimatr)
-library(qrcode)
-
-# ---- Palette (DGE theme; see theme_dge.scss) --------------------------------
-ACCENT  <- "#215a9e"; ACCENT2 <- "#7da1c4"; ALERT <- "#B8272C"
-INK     <- "#111418"; MUTED <- "#545860"; RULE <- "#D5DEE8"
-CHART_FONT <- "Noto Kufi Arabic, Segoe UI, Arial, sans-serif"
-
-# ---- Tables: plain knitr::kable, styled by theme_dge.scss -------------------
-# No kableExtra: its JavaScript needs jQuery, which live-revealjs does not load.
-# font_size in px; hl = rows to shade (hl_bold to bold them); note = a line
-# under the table. The table is centred, as kable_styling(full_width = FALSE) did.
-HL_BLUE <- "#E4EBF3"; HL_RED <- "#F8E9EA"
-tbl <- function(df, ..., font_size = NULL, hl = NULL, hl_bg = HL_BLUE,
-                hl_bold = FALSE, note = NULL) {
-  h <- as.character(knitr::kable(df, format = "html", ...))
-  fs <- if (is.null(font_size)) "" else sprintf(" font-size:%dpx;", font_size)
-  h <- sub("<table", sprintf('<table style="margin-left:auto; margin-right:auto;%s"', fs),
-           h, fixed = TRUE)
-  if (length(hl)) {
-    parts <- strsplit(h, "<tbody>", fixed = TRUE)[[1]]
-    rows  <- strsplit(parts[2], "<tr>", fixed = TRUE)[[1]]
-    st <- sprintf("background:%s;%s", hl_bg, if (hl_bold) " font-weight:700;" else "")
-    for (i in hl) {
-      rows[i + 1] <- gsub('<td style="', paste0('<td style="', st, " "), rows[i + 1], fixed = TRUE)
-      rows[i + 1] <- gsub("<td>", paste0('<td style="', st, '">'), rows[i + 1], fixed = TRUE)
-    }
-    h <- paste0(parts[1], "<tbody>", paste(rows, collapse = "<tr>"))
-  }
-  if (!is.null(note))
-    h <- paste0(h, sprintf('\n<p style="text-align:center; font-size:0.75em; color:%s; margin-top:0.3em;">%s</p>',
-                           MUTED, note))
-  fence <- strrep("`", 3)
-  knitr::asis_output(paste0("\n", fence, "{=html}\n", h, "\n", fence, "\n"))
-}
-
-PL_W  <- 1100
-PL_WC <- 520
-PL_WT <- 340
-
-pl_m2 <- function(p, width = PL_W, height = 290, t = 30, b = 54,
-                  title = NULL, legend_y = 1.02) {
-  p <- p %>%
-    layout(
-      width = width, height = height,
-      font = list(family = CHART_FONT, size = 13, color = INK),
-      paper_bgcolor = "rgba(0,0,0,0)",
-      plot_bgcolor  = "rgba(0,0,0,0)",
-      margin = list(l = 70, r = 24, t = t, b = b),
-      legend = list(orientation = "h", x = 0.5, xanchor = "center",
-                    y = legend_y, yanchor = "bottom", title = list(text = "")),
-      hoverlabel = list(bgcolor = "white", bordercolor = RULE,
-                        font = list(color = INK, size = 12))
-    )
-  if (!is.null(title)) {
-    p <- p %>% layout(title = list(text = title, x = 0, xanchor = "left",
-                                   font = list(size = 12, color = MUTED)))
-  }
-  p %>% config(displayModeBar = FALSE)
-}
-
-ax <- function(title = "", ...) {
-  modifyList(list(
-    title = list(text = title, font = list(size = 12, color = MUTED)),
-    gridcolor = RULE, zerolinecolor = RULE, linecolor = RULE,
-    tickfont = list(size = 12, color = MUTED)
-  ), list(...))
-}
-
-tlev <- function(x) factor(x, levels = c("Before", "After"))
-gfmt <- function(x) format(round(x), big.mark = ",")
-
-# ---- Live Menti poll -------------------------------------------------------
-# ONE place to set the join code. Everything below reads from here.
-# This is the short JOIN code participants type at menti.com, NOT the long
-# alphanumeric ID in the editor URL. Confirm it while the Menti is live.
-MENTI_CODE <- "1234 5678"
-MENTI_JOIN <- paste0("https://www.menti.com/", gsub(" ", "", MENTI_CODE))
-MENTI_EMBED <- "https://www.mentimeter.com/app/presentation/al68xcnp6hm6zmc9k94rhbxwimzq6m29/embed"
-
-menti_qr <- function(path = "menti_qr.png", url = MENTI_JOIN) {
-  png(path, width = 900, height = 900, res = 300, bg = "white")
-  on.exit(dev.off(), add = TRUE)
-  par(mar = c(0, 0, 0, 0))
-  plot(qr_code(url, ecl = "H"))
-  path
-}
-MENTI_QR <- menti_qr()
-
-# ---- The decision rule, fixed for the whole week ---------------------------
-RULEBAR <- 1000    # must cut costs by at least this many AED
-
-# ---- GreenWaste: the rest of the city --------------------------------------
-# The simple case (SIMPLE_GREENWASTE_PLAN.md). In the rest of the city every
-# business scoring 58 or below took part and none above did; DiD compares the
-# change in costs of the two groups. greenwaste_case.R is sourced into its own
-# environment because it defines RULE (here a colour).
-case_env <- new.env()
-case_env$gw <- read.csv("./evaluation_data_GreenWaste_simple.csv")
-sys.source("greenwaste_case.R", envir = case_env)
-city  <- case_env$city
-pilot <- case_env$pilot
-took  <- city$took_part == 1
-rct_est <- case_env$case$rct
-
-# One row per business per period: the shape an evaluator's regression uses.
-long <- data.frame(business = rep(city$business, 2), after = rep(0:1, each = nrow(city)),
-                   took_part = rep(city$took_part, 2), cost = c(city$cost_before, city$cost_after))
-
-off_b <- mean(city$cost_before[took]);  off_a <- mean(city$cost_after[took])    # took part
-ctl_b <- mean(city$cost_before[!took]); ctl_a <- mean(city$cost_after[!took])   # did not
-
-off_chg  <- off_a - off_b               # the before-and-after change
-ctl_chg  <- ctl_a - ctl_b               # the comparison group's change
-did_hand <- off_chg - ctl_chg           # the four numbers done by hand
-
-# ---- The regression an evaluator would actually report ---------------------
-fit_did <- lm_robust(cost ~ after * took_part, data = long,
-                     clusters = business, se_type = "stata")
-did_est <- coef(fit_did)[["after:took_part"]]
-did_ci  <- confint(fit_did)["after:took_part", ]
-did_p   <- fit_did$p.value[["after:took_part"]]
-
-# Sign trap: the coefficient is negative, so conf.low is the LARGER effect and
-# abs(conf.low) is the OPTIMISTIC end. Sorting the absolute values makes the
-# first element the end closest to zero, which is the one the decision turns on.
-did_avoided       <- sort(abs(did_ci))
-did_avoided_least <- did_avoided[1]
-did_avoided_most  <- did_avoided[2]
-did_clears        <- did_avoided_least >= RULEBAR
-
-# ---- The two traps, both computed rather than asserted ---------------------
-trap_gap  <- off_b - ctl_b              # the baseline gap: the groups did not start level
-trap_time <- ctl_a - ctl_b              # the time trend
-
-# ---- The two naive answers, which bracket the truth ------------------------
-naive_ba <- off_a - off_b               # before-and-after only
-naive_ww <- off_a - ctl_a               # with-and-without at follow-up
-
-# ---- The counterfactual line, for the chart -------------------------------
-cf_after <- off_b + ctl_chg
-
-did_tbl_viz <- tibble(
-  Time  = tlev(rep(c("Before", "After"), 2)),
-  Group = rep(c("Took part", "Did not take part"), each = 2),
-  Cost  = c(off_b, off_a, ctl_b, ctl_a)
-)
-
-# The table as a participant would receive it.
-did_tbl <- fit_did %>% tidy() %>%
-  mutate(` ` = c("(Intercept)", "After", "Took part", "After x Took part"),
-         CI = sprintf("[%s, %s]", gfmt(conf.low), gfmt(conf.high))) %>%
-  select(` `, estimate, std.error, p.value, CI)
-
-# ---- A check this data does allow ------------------------------------------
-# The lottery in the pilot district made 200 businesses wait. They score 58 or
-# below, like the city businesses that took part, and got nothing: their change
-# is what businesses of that kind would have done without the programme.
-wait     <- pilot[pilot$took_part == 0, ]
-wait_chg <- mean(wait$cost_after - wait$cost_before)
-did_wait <- off_chg - wait_chg
-
-# ---- How far apart the groups started ---------------------------------------
-bal_vars <- c("manager_age", "staff", "area", "filtration", "cost_before")
-bal_labs <- c(manager_age = "Manager age (years)", staff = "Staff",
-              area = "Premises (100 m2)", filtration = "Advanced filtration (share)",
-              cost_before = "Waste costs before (AED)")
-balance_tbl <- map_dfr(bal_vars, function(v) {
-  m <- lm_robust(city[[v]] ~ city$took_part)
-  tibble(Characteristic = bal_labs[[v]],
-         Programme   = mean(city[[v]][took]),
-         Comparison  = mean(city[[v]][!took]),
-         Difference  = coef(m)[2],
-         p = tidy(m)$p.value[2])
-})
+```{r setup, include=FALSE}
+source('day2_case.R')
 ```
 
+## A question from yesterday {.reader-slide}
 
-# 1 · Compared to what {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
-
-<!-- Hidden setup (webR priming, deck CSS). Kept under the first section heading, not before it: content before the first heading makes Quarto create an empty slide after the title. -->
-:::: {style="display:none;"}
 ```{webr}
+#| context: setup
 #| autorun: true
-#| edit: false
 #| echo: false
-#| output: false
-#| warning: false
-#| message: false
-# ---- Live (webR) setup ----------------------------------------------------
-# Runs once in the browser when the deck opens, priming the shared webR session
-# so the three teaching cells (Running the regression, Visualising the DiD,
-# Testing for parallel pre-trends) have their data and helpers ready. This is
-# separate from the knitr `setup` chunk above, which prepares the baked charts.
-library(dplyr)
-library(ggplot2)
-library(estimatr)
-library(broom)
-
-gw    <- read.csv("evaluation_data_GreenWaste_simple.csv")
-city  <- subset(gw, setting == "city")     # the score rule: 58 or below took part
-source("gw_lab.R")   # the GreenWaste lab: an invented world where the true effect is known
-
-# One row per business per period (after = 0 before the programme, 1 after).
-long <- data.frame(business = rep(city$business, 2), after = rep(0:1, each = nrow(city)),
-                   took_part = rep(city$took_part, 2), cost = c(city$cost_before, city$cost_after))
-
-t1 <- city$took_part == 1
-off_b <- mean(city$cost_before[t1]);  off_a <- mean(city$cost_after[t1])
-ctl_b <- mean(city$cost_before[!t1]); ctl_a <- mean(city$cost_after[!t1])
-off_chg <- off_a - off_b
-ctl_chg <- ctl_a - ctl_b
-did_hand <- off_chg - ctl_chg
-
-tlev <- function(x) factor(x, levels = c("Before", "After"))
-viz <- data.frame(
-  Time  = tlev(rep(c("Before", "After"), 2)),
-  Group = rep(c("Took part", "Did not take part"), each = 2),
-  Cost  = c(off_b, off_a, ctl_b, ctl_a))
-
-ACCENT  <- "#215a9e"; ACCENT2 <- "#7da1c4"; ALERT <- "#B8272C"
-INK <- "#111418"; MUTED <- "#545860"; RULE <- "#D5DEE8"
-grp_cols <- c("Took part" = ACCENT, "Did not take part" = ACCENT2)
-
-theme_m2 <- function(base = 15) {
-  theme_minimal(base_size = base) +
-    theme(text = element_text(colour = INK),
-          axis.title = element_text(colour = MUTED, size = rel(0.85)),
-          axis.text = element_text(colour = MUTED),
-          panel.grid.minor = element_blank(),
-          panel.grid.major = element_line(colour = RULE, linewidth = 0.4),
-          legend.position = "bottom", legend.title = element_blank(),
-          strip.text = element_text(colour = INK, size = rel(0.95)),
-          plot.margin = margin(4, 10, 4, 4))
-}
-
-CUTOFF <- 58; THRESHOLD <- 1000
-
-# Plots for "Visualising the DiD" and "Testing for parallel pre-trends", kept here
-# so each slide shows one line of code and the chart fits the slide.
-did_plot <- function() {
-  cf <- off_b + ctl_chg
-  ggplot(viz, aes(Time, Cost, colour = Group, group = Group)) +
-    geom_line(linewidth = 1.4) +
-    geom_point(size = 3.5) +
-    annotate("segment", x = 1, xend = 2, y = off_b, yend = cf,
-             linetype = "22", colour = ACCENT) +
-    annotate("label", x = 2, y = (off_a + cf) / 2, colour = ALERT,
-             label = sprintf("DiD = %.0f AED", did_hand), fill = "white") +
-    scale_colour_manual(values = grp_cols) +
-    labs(x = NULL, y = "Waste costs (AED)") +
-    theme_m2()
-}
-pretrend_plot <- function() {
-  set.seed(1)
-  pre <- expand.grid(period = 1:4, unit = 1:50,
-                     group = c("Comparison", "Programme")) %>%
-    mutate(y = 10 + 1.5 * period +
-      ifelse(group == "Programme" & period > 2, -3 * (period - 2), 0) + rnorm(n()))
-
-  ggplot(pre, aes(period, y, colour = group)) +
-    stat_summary(fun = mean, geom = "line", linewidth = 1.3) +
-    geom_vline(xintercept = 2.5, linetype = "dashed", colour = ALERT) +
-    scale_colour_manual(values = c(Programme = ACCENT, Comparison = ACCENT2)) +
-    labs(x = "Period", y = "Outcome") +
-    theme_m2()
-}
+#| include: false
+gw <- read.csv('evaluation_data_GreenWaste_simple.csv')
+city <- subset(gw, setting == 'city')
+change <- city$cost_after - city$cost_before
+joined <- city$took_part == 1
 ```
-::::
-
-## The GreenWaste case
-
-{{< include _case_map.qmd >}}
-
-::: {.notes}
-About 1 minute: a reminder of the case from Day 1. Point at the pilot district
-(a lottery decided) and the rest of the city (the score decided). This session
-works in the rest of the city, and uses the pilot district once, in Section 4.
-:::
-
-## The GreenWaste programme, one more time
-
-:::::: {.columns}
-
-::::: {.column width="54%"}
-**GreenWaste** cut waste-management costs for businesses that took it up. You
-met it on Day 1.
-
-Today the question changes from *did costs fall* to **how much of the fall
-was the programme**, and how much was going to happen anyway.
-
-The bar is unchanged: **cut costs by at least `r gfmt(RULEBAR)` AED**.
-:::::
-
-::::: {.column width="46%"}
-```{=html}
-<div class="facts">
-  <div class="k">Programme</div>  <div class="v">GreenWaste, waste-cost reduction</div>
-  <div class="k">Outcome</div>    <div class="v">Waste-management costs (AED)</div>
-  <div class="k">Method</div>     <div class="v">Difference-in-differences</div>
-  <div class="k">The rule</div>   <div class="v">Cut at least 1,000 AED</div>
-</div>
-```
-:::::
-
-::::::
-
-::: {.panel}
-Day 1 gave you three questions. Today is question one, **compared to what?**,
-with a method that answers it properly.
-:::
-
-::: {.notes}
-Sections 1 and 2 are the "remember" recap: aim for 5 to 10 minutes total. The
-room already met GreenWaste, the before-and-after and with-and-without numbers,
-and the idea of subtracting one group's change from the other's (on landfill in
-Day 1 Session 1). Today's data is the rest of the city: businesses scoring 58 or
-below took part, the rest did not. Move through the recall quickly. The new material
-today is reading the table (Section 3) and the one assumption DiD rests on
-(Section 4): that is where the time should go.
-:::
-
-## What happened to the businesses that took it up
-
-```{r fig.height=4.2, fig.width=11.5}
-tibble(Time = tlev(c("Before", "After")), Cost = c(off_b, off_a)) %>%
-  plot_ly(x = ~Time, y = ~Cost, type = "scatter",
-          mode = "lines+markers+text",
-          line = list(color = ACCENT, width = 4),
-          marker = list(color = ACCENT, size = 15),
-          text = ~paste0(gfmt(Cost), " AED"), textposition = "top center",
-          textfont = list(size = 17, color = INK), showlegend = FALSE,
-          hovertemplate = "%{y:,.0f} AED<extra></extra>") %>%
-  layout(xaxis = ax("", zeroline = FALSE),
-         yaxis = ax("Waste costs (AED)", range = c(0, 1900))) %>%
-  pl_m2(height = 400, title = "Businesses that took part")
-```
-
 ::: {.ask}
-Costs fell by **`r gfmt(abs(off_chg))` AED**, a drop of
-**`r sprintf("%.0f", 100 * abs(off_chg) / off_b)`%**. Is the programme's true
-effect bigger or smaller than that?
+What comparison would help us read a fall in costs?
 :::
+Tell a partner. Today we compare **changes in two groups**.
 
 ::: {.notes}
-Do not editorialise. Present it the way an evaluator might present a headline
-finding, and let it look good. The full picture only appears once the comparison group is on the chart, which is the next move after the Menti.
+3 minutes. Retrieve yesterday's question. No AI or definitions first. GreenWaste is fictional; city participants score 58 or below. Warm up webR before class. No participant coding.
 :::
 
-## `[MENTI PLACEHOLDER]` Did the programme work?
+## Two groups over time {.reader-slide}
 
-:::::: {.columns}
-
-::::: {.column width="62%"}
-::: {.ask style="font-size: 120%;"}
-On the before-and-after reading alone: **did GreenWaste work, and would you
-fund it?**
-
-Yes &nbsp;·&nbsp; No &nbsp;·&nbsp; Can't tell yet
-:::
-
-Go to **menti.com** and enter code **`r MENTI_CODE`**, or scan the code on the
-right.
-:::::
-
-::::: {.column width="38%"}
-```{r out.width='330px', out.extra='style="display:block; margin:0 auto;"'}
-knitr::include_graphics(MENTI_QR)
+```{r, results='asis'}
+html_out(sprintf('<div class="evidence-pair"><div class="evidence"><h3>Took part</h3><p class="big-number">%s &rarr; %s</p></div><div class="evidence"><h3>Did not take part</h3><p class="big-number">%s &rarr; %s</p></div></div><p class="caption">Mean annual waste cost, AED. Before &rarr; 12 months later.</p>%s',fmt(means[1]),fmt(means[2]),fmt(means[3]),fmt(means[4]),fiction))
 ```
-:::::
-
-::::::
-
-::: {.panel}
-Commit now. "Can't tell yet" is a legitimate answer and I want to see how many
-choose it; we will come back to it after the next chart.
-:::
-
-## Now we add the businesses that did not receive the program
-
-```{r fig.height=4, fig.width=11.5}
-did_tbl_viz %>%
-  plot_ly(x = ~Time, y = ~Cost, color = ~Group, type = "scatter",
-          mode = "lines+markers",
-          colors = c("Took part" = ACCENT, "Did not take part" = ACCENT2),
-          line = list(width = 4), marker = list(size = 13),
-          hovertemplate = "%{fullData.name}: %{y:,.0f} AED<extra></extra>") %>%
-  layout(xaxis = ax("", zeroline = FALSE),
-         yaxis = ax("Waste costs (AED)", range = c(0, 2800))) %>%
-  pl_m2(height = 380)
-```
-
 ::: {.ask}
-`[MENTI PLACEHOLDER]` Same question, now with the comparison group.
+Which change should we subtract from which?
 :::
 
-::: {.panel .fragment}
-The comparison group's costs **rose** over the same period. So the programme's effect
-is *larger* than the headline drop.
-:::
 
 ::: {.notes}
-Silence for a beat. Let them see the comparison line rising, then ask the Menti
-question again and watch the hands change. Show the fragment after the vote. We
-compute the effect exactly next.
+4 minutes. Take predictions before showing the calculation. Different starting levels alone do not rule out DiD; different untreated trends do.
 :::
 
-# 2 · The idea, in four numbers {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+## Complete the four numbers {.reader-slide}
 
-## Remember from Day 1: two comparisons, two biases
+Use **Sheet 1**. Work alone, then compare with your group.
 
-:::::: {.columns}
-
-::::: {.column width="50%"}
-::: {.warn}
-**Before and after only.** Credits the programme with the **time trend**: whatever
-would have moved costs anyway.
-
-On Day 1 this gave **-`r gfmt(abs(naive_ba))` AED**.
-:::
-:::::
-
-::::: {.column width="50%"}
-::: {.warn}
-**Took part vs did not, afterwards only.** Credits the programme with the
-**baseline gap**: differences that existed before it started.
-
-On Day 1 this gave **-`r gfmt(abs(naive_ww))` AED**.
-:::
-:::::
-
-::::::
-
-::: {.ask}
-You met both of these yesterday: **`r gfmt(abs(naive_ba))`** and
-**`r gfmt(abs(naive_ww))` AED**. Which one is too small, which is too big, and
-why?
-:::
-
-::: {.notes}
-Recap: these are the two naive comparisons from Day 1 Sessions 2 and 3, on this
-same GreenWaste data. Take one answer for each, then say that difference-in-differences
-removes both problems at once. The new work today is the assumption DiD rests on.
-:::
-
-## One sentence to take to a minister
-
-```{r results='asis'}
-cat('
-<div class="hero">
-  <div class="value" style="font-size:2.05em;">Compare <strong>the change over time</strong> in the group that got it,<br>with <strong>the change over time</strong> in a group that did not.</div>
-</div>')
-```
-
-::: {.panel}
-The difference between those two changes is the estimated effect.
-:::
-
-::: {.ask}
-Which two changes would you subtract here?
-:::
-
-## Your turn: fill in the blanks
-
-Difference-in-differences = (change for "took part") − (change for "did not")
-
-:::::: {.columns}
-
-::::: {.column width="44%"}
-::: {.panel}
-**First difference:** each group's change over time. This nets out fixed
-differences between the groups, but still contains the general time trend.
-
-**Second difference:** the difference between those two changes. This nets out
-the time trend and leaves the estimated effect.
-:::
-:::::
-
-::::: {.column width="56%"}
-```{r}
-tibble(
-  Group  = c("Took part", "Did not take part", "Difference of the changes"),
-  Before = c(gfmt(off_b), gfmt(ctl_b), ""),
-  After  = c(gfmt(off_a), gfmt(ctl_a), ""),
-  Change = c("?", "?", "?")
-) %>%
-  tbl(align = "lrrr", col.names = c("", "Before", "After", "Change"), font_size = 20)
-```
-:::::
-
-::::::
-
-
-
-::: {.panel .fragment}
-**Watch the sign.** "Did not take part" went **up**, so the DiD is bigger than the top row's fall.
-:::
-
-::: {.notes}
-Paper (Oct13_session1_materials.docx): Hand out "By hand: four numbers" (pack
-page 1, one per participant) before this slide.
-
-Give the room under two minutes for the two subtractions.
-:::
-
-## The answer
-
-```{r}
-tibble(
-  Group  = c("Took part", "Did not take part", "Difference of the changes"),
-  Before = c(gfmt(off_b), gfmt(ctl_b), ""),
-  After  = c(gfmt(off_a), gfmt(ctl_a), ""),
-  Change = c(sprintf("%+.0f", off_chg), sprintf("%+.0f", ctl_chg),
-             sprintf("%.0f", did_hand))
-) %>%
-  tbl(align = "lrrr", col.names = c("", "Before", "After", "Change"),
-      font_size = 24, hl = 3, hl_bold = TRUE)
-```
-
-```{r results='asis'}
-cat(sprintf('
-<div class="hero">
-  <div class="value">%s</div>
-  <div class="label">AED, the difference-in-differences estimate</div>
-</div>', sprintf("%.0f", did_hand)))
-```
-
-::: {.ask}
-You have just estimated a causal effect with two subtractions. What would a
-regression add?
-:::
-
-::: {.notes}
-Answer to the ask: the same two subtractions, plus a confidence interval.
-:::
-
-## Visualising the DiD
-
-::: {.ask}
-Before you press **Run**: where would "took part" have ended up without the
-programme?
-:::
-
-```{webr}
-#| fig-width: 9
-#| fig-height: 3.05
-did_plot()     # the two groups, and the dotted line: where "took part" would have gone
-```
-
-::: {.panel .fragment}
-The dotted line's rise (`r sprintf("%+.0f", ctl_chg)`) is the time trend. The gap
-between its end and where "took part" actually finished is the programme:
-`r gfmt(abs(did_hand))` AED.
-:::
-
-## The GreenWaste lab: add DiD
-
-:::::: {.columns}
-
-::::: {.column width="46%"}
-```{ojs}
-//| echo: false
-viewof did_trend = Inputs.range([0, 600], {value: 0, step: 50, label: "Costs rise for everyone anyway (AED)"})
-viewof did_size_gap = Inputs.range([0, 800], {value: 0, step: 100, label: "Joiners are smaller businesses (AED)"})
-viewof did_hidden = Inputs.range([0, 800], {value: 0, step: 100, label: "Joiners differ in something nobody measured (AED)"})
-viewof did_diverge = Inputs.range([0, 600], {value: 0, step: 50, label: "Joiners' costs were already falling faster (AED)"})
-```
-:::::
-
-::::: {.column width="54%"}
-::: {.ask}
-DiD joins the lab, with one new problem: the last slider. **Which sliders will
-DiD survive, and which one breaks it?**
-:::
-
-::: {.panel .fragment}
-It survives the first three. The fourth breaks it: DiD assumes the two groups
-would have moved in parallel.
-:::
-:::::
-
-::::::
-
-```{webr}
-#| input:
-#|   - did_trend
-#|   - did_size_gap
-#|   - did_hidden
-#|   - did_diverge
-#| autorun: true
-#| edit: false
-#| echo: false
-#| fig-width: 10
-#| fig-height: 2.9
-lab(c("before_after", "with_without", "randomised", "did"),
-    trend = did_trend, size_gap = did_size_gap, hidden = did_hidden, diverge = did_diverge)
-```
-
-::: {.notes}
-About 5 minutes. All sliders start at zero, where every method sits on the
-truth. Take a prediction for each slider before moving it. Costs rising anyway
-moves only before-and-after; the two "joiners differ" sliders move only
-with-and-without; DiD stays on -900 for all three. The last slider (joiners'
-costs already falling faster) pulls DiD away: that is the parallel-trends
-assumption, in one slider. The randomised comparison survives all four.
-:::
-
-# 3 · Implementing DiD in R {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
-
-## Remember: what DiD needs from the data
-
-::: {.panel}
-1. **An outcome**, measured the same way each time
-2. **A before and an after**: a time variable
-3. **A group that got the programme and one that did not**: a group variable
-4. **The same units followed over time**, or comparable samples in each period
-5. **Ideally, more than one "before" period**, so we can check the groups were moving together before the programme
-:::
-
-::: {.panel}
-Before any DiD, ask AI: *what data do I need, and does my dataset have it?* Ask
-it to question you about your data before it answers.
-:::
-
-::: {.notes}
-Tie each item back to the minister sentence: "the change over time" needs items
-2 and 4; "in a group that did not" needs item 3. Item 5 is a deliberate
-foreshadow of Section 4. Do not resolve it here.
-:::
-
-## Does GreenWaste have what we need?
-
-:::::: {.columns}
-
-::::: {.column width="56%"}
-```{webr}
-long[order(long$business, long$after), ] |> head(6)
-
-table(took_part = long$took_part, after = long$after)
-```
-:::::
-
-::::: {.column width="44%"}
-::: {.panel}
-✔ **Outcome:** `cost`, waste costs in AED
-
-✔ **Time:** `after`, 0 before and 1 after
-
-✔ **Group:** `took_part`, 1 took part and 0 did not
-
-✔ **Same businesses:** each one appears in both periods
-:::
-
-::: {.warn}
-⚠ Only **one** before period. Hold that thought for Section 4.
-:::
-:::::
-
-::::::
-
-::: {.notes}
-Press Run. Read one business across its two rows so the room sees "one row per
-business per period". The counts show `r format(sum(took), big.mark = ",")`
-businesses that took part and `r format(sum(!took), big.mark = ",")` that did
-not, each observed twice.
-
-If asked about the groups: these are the businesses in the rest of the city.
-Every business scoring 58 or below took part and none above did, so "did not take
-part" means the businesses above the cut-off. That is our comparison.
-
-The warning sets up "What this data can and cannot show" in Section 4: with a single
-pre-period, parallel pre-trends cannot be tested.
-:::
-
-## Running the regression
-
-```{webr}
-out_did <- lm_robust(cost ~ after * took_part, data = long,
-                     clusters = business, se_type = "stata")
-
-res <- tidy(out_did)[, c("term", "estimate", "std.error", "p.value")]
-res[, -1] <- round(res[, -1], 1)
-res
-```
-
-::: {.ask}
-Press **Run**. An intercept and three coefficients, and only one of them is the
-programme's effect. Which row?
-:::
-
-::: {.notes}
-Paper (Oct13_session1_materials.docx): Hand out "Which row is the impact?"
-(pack page 2, one per participant) now, after the hand calculation. Tell the
-room to leave question 4 until Section 4 ("What this data can and cannot show").
-
-Before running, point at the formula: `after * took_part` gives the time
-indicator, the group indicator and their interaction (`after:took_part`), and
-the clusters line counts each business once, because it appears twice.
-
-Run the chunk live, then take a vote across the three coefficients. Many will
-pick `took_part` because it is large and has the words "took part" in it; that is
-the trap the next slides unpack. The number in `after:took_part` is the same
-`r gfmt(did_hand)` they got by hand.
-:::
-
-## Reading the table
-
-:::::: {.columns}
-
-::::: {.column width="50%"}
-```{r}
-did_tbl %>%
-  mutate(across(c(estimate, std.error), ~ round(.x, 0)),
-         p.value = ifelse(p.value < 0.001, "<0.001", sprintf("%.3f", p.value))) %>%
-  tbl(align = "lrrrr", digits = 2,
-      col.names = c("", "Coefficient", "Std. error", "p", "95% CI"),
-      font_size = 15, hl = 4, hl_bold = TRUE)
-```
-:::::
-
-::::: {.column width="50%"}
-::: {.panel}
-One regression produces all four numbers from your hand calculation.
-
-**Row 4 is the impact.** The interaction of after and took part: the extra
-change in the group that took part, over and above the change everyone
-experienced.
-:::
-
-::: {.warn}
-Rows 2 and 3 are the **two things you must not report as the effect**:
-`r gfmt(abs(coef(fit_did)[["took_part"]]))` AED is the baseline gap, and
-`r gfmt(coef(fit_did)[["after"]])` AED is the time trend.
-:::
-:::::
-
-::::::
-
-::: {.notes}
-Reminder for the room (vocab from Day 1 Session 1): the **coefficient** is the
-effect size, here in AED; the **95% confidence interval** is the range of
-plausible true values, not a margin of certainty; the **p-value** is how
-surprising this result would be if the programme had truly done nothing. Walk row
-4 first, then name rows 2 and 3 as the two numbers a careless report would quote
-instead. Facilitation question worth asking here: which row would you want on the
-front page of the briefing, and which two would a careless evaluator report?
-:::
-
-## The number that answers your question
-
-::: {.ask}
-The rule is `r gfmt(RULEBAR)` AED. Does the estimate clear it?
-:::
-
-:::: {.fragment}
-```{r results='asis'}
-cat(sprintf('
-<div class="hero">
-  <div class="value">%s</div>
-  <div class="label">AED, the estimated cut in costs (95%% CI: %s to %s)</div>
-</div>
-<div class="stat-row">
-  <div><span class="n">%s</span><span class="k">The rule</span></div>
-  <div><span class="n">%s</span><span class="k">Least it could be</span></div>
-  <div><span class="n">%s</span><span class="k">Clears the bar</span></div>
-</div>', gfmt(abs(did_est)), gfmt(did_ci[1]), gfmt(did_ci[2]),
-   gfmt(RULEBAR), gfmt(did_avoided_least), if (did_clears) "Yes" else "No"))
-```
-
-::: {.warn}
-The estimate is statistically clear: the interval sits far from zero. The rule
-asks something else. Even the interval's most generous end reaches only
-`r gfmt(did_avoided_most)` AED. **`r if (did_clears) "It clears the bar." else "It does not clear the bar."`**
-:::
-::::
-
-::: {.ask .fragment}
-Day 1: *statistically significant does not mean big enough.* Where have you seen
-a significant result that was too small to act on?
-:::
-
-# 4 · The one question {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
-
-## Everything rests on one assumption
-
-```{r results='asis'}
-cat('
-<div class="hero">
-  <div class="value" style="font-size:2.05em;">Without the programme, the two groups<br>would have moved in parallel.</div>
-</div>')
-```
-
-::: {.panel}
-The dotted counterfactual line from Section 2 exists only if this is true. It
-cannot be **proven** from the result. It can only be made more or less
-plausible.
-:::
-
-::: {.ask}
-Before you look at an estimate, what would you ask an evaluator to show you
-that makes this assumption plausible?
-:::
-
-## Which of these would you trust?
-
-```{r fig.height=3.2, fig.width=11.5}
-mk <- function(lab, tr, ct) {
-  tibble(panel = lab, t = rep(1:4, 2),
-         grp = rep(c("Programme", "Comparison"), each = 4), y = c(tr, ct))
-}
-bind_rows(
-  mk("A. Moving in parallel",  c(40, 42, 44, 46), c(50, 52, 54, 56)),
-  mk("B. Already diverging",   c(40, 41, 42, 43), c(50, 53, 56, 59)),
-  mk("C. Already converging",  c(40, 44, 48, 52), c(50, 52, 54, 56))
-) %>%
-  plot_ly(x = ~t, y = ~y, color = ~grp, frame = ~panel,
-          type = "scatter", mode = "lines+markers",
-          colors = c(Programme = ACCENT, Comparison = ACCENT2),
-          line = list(width = 3), marker = list(size = 9),
-          hovertemplate = "%{fullData.name}: %{y}<extra></extra>") %>%
-  animation_opts(frame = 900, transition = 0) %>%
-  animation_slider(currentvalue = list(prefix = "Panel: "),
-                   font = list(size = 11)) %>%
-  layout(xaxis = ax("Periods before the programme started", zeroline = FALSE,
-                    dtick = 1),
-         yaxis = ax("Outcome", range = c(35, 62))) %>%
-  pl_m2(height = 310, t = 34, b = 88)
-```
-
-::: {.ask}
-Press play, or drag the slider. In which panel would difference-in-differences
-give you a trustworthy number?
-:::
-
-::: {.warn .fragment}
-Only **A**. In B the gap was already widening and in C already closing, so part
-of what the method calls an effect was going to happen anyway.
-
-Note the directions: **B would overstate** the effect, **C would understate**
-it.
-:::
-
-## Testing for parallel pre-trends
-
-::: {.ask}
-Several periods *before* the programme: if the groups are comparable and the
-programme worked, what should the lines do before the dashed line, and after?
-:::
-
-```{webr}
-#| fig-width: 9
-#| fig-height: 2.65
-pretrend_plot()   # illustrative data: four periods, programme starts after period 2
-```
-
-::: {.warn .fragment}
-Parallel **before** the dashed line, split only after: a credible pre-trend.
-GreenWaste has only **one** period before the programme, so it cannot run this
-check.
-:::
-
-::: {.notes}
-Illustrative data, not GreenWaste. Point out that the groups move together before
-the dashed cut-off and only diverge after. Then contrast: GreenWaste has a single
-before-period, so the check cannot be run, which sets up the next slide.
-:::
-
-## What this data can and cannot show
-
-:::::: {.columns}
-
-::::: {.column width="54%"}
-::: {.warn}
-We measured costs at **two points**: once before the programme, once after.
-
-Testing whether the groups were already diverging needs **at least two
-observations before it started**. We have one.
-:::
-
-::: {.panel}
-So the parallel trends assumption **cannot be tested with this data**.
-:::
-:::::
-
-::::: {.column width="46%"}
-::: {.ask}
-Most evaluations you receive have this limitation. So what do you do instead?
-:::
-:::::
-
-::::::
-
-::: {.notes}
-Paper (Oct13_session1_materials.docx): the room now answers question 4 on
-"Which row is the impact?" (pack page 2). Take two or three answers to the ask
-before moving on.
-:::
-
-## A check this data does allow
-
-```{webr}
-waiting <- subset(gw, setting == "pilot" & took_part == 0)   # the lottery said "not yet"
-did_not <- subset(gw, setting == "city" & took_part == 0)
-round(data.frame(waiting_businesses = mean(waiting$cost_after - waiting$cost_before),
-                 city_did_not_take_part = mean(did_not$cost_after - did_not$cost_before)))
-```
-
-::: {.ask}
-The pilot lottery made `r nrow(wait)` businesses wait. They score 58 or below,
-like the city businesses that took part. **Before you press Run: did their costs
-rise as much as those of city businesses that did not take part?**
-:::
-
-::: {.warn .fragment}
-They rose `r gfmt(wait_chg)` AED, not `r gfmt(ctl_chg)`. The two city groups were
-**not** moving in parallel, so the DiD **understates** the effect. With the
-waiting businesses as the comparison: `r gfmt(did_wait)` AED, close to the
-lottery's `r gfmt(rct_est)`.
-:::
-
-::: {.notes}
-About 4 minutes. Most evaluations have no group like this; here the pilot's
-waiting list provides one. The point to land: the assumption could not be tested
-with the DiD data alone, and when another group finally allows a check, it fails.
-:::
-
-
-## How far apart did they start?
-
-:::::: {.columns}
-
-::::: {.column width="56%"}
-```{r}
-balance_tbl %>%
-  mutate(across(c(Programme, Comparison), ~ round(.x, 2)),
-         Difference = round(Difference, 2), p = round(p, 2)) %>%
-  tbl(align = "lrrrr", digits = 2,
-      col.names = c("Characteristic", "Took part", "Did not",
-                    "Difference", "p-value"), font_size = 13)
-```
-:::::
-
-::::: {.column width="44%"}
-::: {.panel}
-The comparison group is businesses above 58: older managers, more staff,
-larger premises, and costlier from the start (`r gfmt(ctl_b)` vs `r gfmt(off_b)` AED).
-:::
-
-::: {.warn}
-Not a pre-trend test, but the closest this data allows. Are the differences
-**small**, and are the p-values **not tiny**?
-:::
-:::::
-
-::::::
-
-::: {.ask}
-These groups were split by an eligibility score, not by chance. How much does
-the result now lean on the parallel trends assumption?
-:::
-
-::: {.notes}
-Recap: they built a balance table on Day 1 Session 3. It makes the
-parallel-trends point concrete, because the pre-trend test cannot be run on
-two-wave data. Land the ask: the result leans heavily on the assumption, and a
-recommendation should say so. Reminder for the room: the
-**p-value** answers "how surprising is this baseline gap if the two groups were
-really the same?", so a tiny p-value is the worry here, not the reassurance.
-:::
-
-## What to ask when it cannot be tested
+1. Change among participants: after minus before.
+2. Change in the comparison group: after minus before.
+3. Extra change: first answer minus second answer.
 
 ```{=html}
-<div class="facts">
-  <div class="k">Ask</div> <div class="v">"Which comparison group did you use, and why that one?"</div>
-  <div class="k">Ask</div> <div class="v">"What differed between the groups before the programme started?"</div>
-  <div class="k">Ask</div> <div class="v">"Is there any earlier data, even one extra year, that could show the trend?"</div>
-  <div class="k">Ask</div> <div class="v">"Is there a group like the programme group that did not get it yet, such as a waiting list?"</div>
-  <div class="k">Then</div> <div class="v">treat the estimate as a plausible range, not a precise number</div>
-</div>
+<button data-open="did-arithmetic" data-closed="Open the calculation" data-opened="Hide feedback" aria-controls="did-arithmetic" aria-expanded="false">Open the calculation</button><div id="did-arithmetic" class="feedback" hidden>Extra change = participants' change minus comparison change. Negative means lower costs.</div>
 ```
 
-::: {.panel}
-None of these questions requires you to run anything. A commissioner is
-entitled to ask them. Expect an evaluator to answer all four.
-:::
-
-# 5 · Put AI to work {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
-
-## AI Snapshot: explaining the table {.dense}
-
-::: {.panel}
-Paste the Section 3 table into an AI tool with: **"Explain this regression
-table to a non-technical decision-maker, and say what should be checked before
-believing the result."**
-:::
-
-::: {.ai-output}
-*A response like this is possible:*
-
-The table reports a difference-in-differences estimate. **The programme reduced
-costs by `r gfmt(abs(did_est))` AED**, and the effect is highly statistically significant
-(p < 0.001), [so the programme was a success]{.flag}. [The confidence interval does
-not include zero, which confirms the finding is robust]{.flag}.
-
-[The parallel trends assumption has been satisfied]{.flag}. [The result clears
-the 1,000 AED threshold required for scale-up]{.flag}.
-:::
-
-::: {.ask}
-Underline the sentences that the table supports. Cross out the sentences that the table does **not** support.
-:::
 
 ::: {.notes}
-Paper (Oct13_session1_materials.docx): Hand out "AI Snapshot: explaining the
-table" (pack page 3, one per pair).
+8 minutes. Fiona's four-number task remains. Collect signs and units before feedback. Printed means are rounded; a one-AED discrepancy is acceptable. Use actual values for the final estimate.
 :::
 
-## Debrief: four claims the table does not support
+## Read the result row {.reader-slide}
 
-:::::: {.columns}
-
-::::: {.column width="50%"}
-::: {.warn}
-**1 · "So the programme was a success."** It answers *is the effect non-zero*,
-not *does it clear the 1,000 AED bar*. Day 1 warned about the same
-substitution.
-:::
-
-::: {.warn}
-**2 · "The interval does not include zero, so the finding is robust."**
-"Not zero" and "big enough" are different claims. The confidence interval is
-[`r gfmt(did_ci[1])`, `r gfmt(did_ci[2])`].
-:::
-:::::
-
-::::: {.column width="50%"}
-::: {.warn}
-**3 · "The parallel trends assumption has been satisfied."** The serious one.
-**The two-wave data cannot test it, and the pilot's waiting businesses suggest
-it fails.** The model reported a test that was never run.
-:::
-
-::: {.warn}
-**4 · "The result clears the 1,000 AED threshold."** False. Even the
-interval's most generous end is `r gfmt(did_avoided_most)` AED.
-:::
-:::::
-
-::::::
-
-::: {.panel}
-Error 3 is Day 1 Session 2's fabricated-robustness failure, in a new place.
-**This is what to watch for: confident claims about checks that no one
-performed.**
-:::
-
-## The same question, a better prompt {.dense}
-
-:::::: {.columns}
-
-::::: {.column width="50%"}
-::: {.panel}
-**What people usually type**
-
-> Explain this regression table to a non-technical decision-maker and say what
-> should be checked before believing the result.
-
-The model may answer confidently, including about checks it cannot know.
-:::
-:::::
-
-::::: {.column width="50%"}
-::: {.panel}
-**What to type instead**
-
-> We have a difference-in-differences table. The data has **two waves only, one
-> before and one after**, so no pre-trend test is possible. The decision rule is
-> 1,000 AED. Explain what the table supports and, separately, list what it
-> cannot tell us. **Ask me questions before you answer.**
-:::
-:::::
-
-::::::
-
+```{r, results='asis'}
+html_out(paste0(as.character(knitr::kable(report_row('did'),format='html',row.names=FALSE,table.attr='class="reading-table"')),fiction))
+```
 ::: {.ask}
-Once the AI knows there are only two waves, does it still claim that parallel
-trends were satisfied? Paste the second answer into a new chat and ask the AI to
-check that answer for claims about tests that were never run.
+Does this show an annual saving of at least `r fmt(decision_rule)` AED?
 :::
+```{webr}
+#| echo: true
+#| autorun: false
+round(mean(change[joined]) - mean(change[!joined]))
+```
 
-::: {.panel .fragment}
-**If you have time, a prompt that pushes the AI towards an answer:** *"Our DiD
-shows an `r gfmt(abs(did_est))` AED cut in costs (p<0.001). Write two sentences for the minister
-recommending scale-up."* Does the AI mention the 1,000 AED rule or parallel
-trends without being asked?
-:::
-
-# 6 · Close {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
-
-## Your turn: ask AI first
-
-::: {.ask style="font-size: 110%;"}
-Before we show our list of questions to ask someone presenting DiD, ask an AI tool:
-
-**"I am a commissioner about to hear an evaluator present a difference-in-differences (DiD) result. What are the key questions I should ask?"**
-:::
-
-::: {.panel}
-Three minutes. Then compare with our list on the next slide: what did it miss, what did it add, and is anything incorrect?
-:::
 
 ::: {.notes}
-OPTIONAL. If time is short, skip this slide and go straight to the questions
-on the next one. If you run it: give three minutes, then reveal the list and
-ask what the AI missed, what it added that is worth keeping, and whether
-anything it suggested was incorrect.
+5 minutes. One trainer calculation, prediction before Run. Output is the same coefficient as the regression in the printed extract. 95% interval uses business-clustered robust standard errors. The estimate and interval are short of the rule. This does not yet settle causal credibility.
 :::
 
-## Three questions to ask any evaluator presenting DiD
+## What has to be true? {.reader-slide}
 
+<div class="lead">Without GreenWaste, the two groups would have changed in similar ways.</div>
+
+Reports call this **parallel trends**.
+
+::: {.ask}
+What could make their changes differ even without GreenWaste?
+:::
+Suggest one concrete reason.
+
+::: {.notes}
+6 minutes. Examples: different price shocks, business mix changing, another policy affecting one group. The assumption concerns unobserved change without the programme; it does not require identical levels.
+:::
+
+## Would you trust these pictures? {.reader-slide}
+
+```{r, results='asis'}
+html_out(paste0('<div class="trend-options"><div><h3>A</h3>',trend_svg(1),'</div><div><h3>B</h3>',trend_svg(2),'</div></div><p class="caption">Hypothetical pictures before a programme. These are not extra GreenWaste data.</p>'))
+```
+::: {.ask}
+Which picture raises more concern? What if the comparison group changes?
+:::
 ```{=html}
-<div class="facts">
-  <div class="k">1</div> <div class="v">Which row is the estimate? Does its whole confidence interval meet our decision rule, not just exclude zero?</div>
-  <div class="k">2</div> <div class="v">How many periods of data before the programme? Were the two groups changing in the same way before the programme?</div>
-  <div class="k">3</div> <div class="v">Which comparison group was used, how was it chosen, and how did it differ before the programme?</div>
-</div>
+<button data-open="trend-feedback" data-closed="Open feedback" data-opened="Hide feedback" aria-controls="trend-feedback" aria-expanded="false">Open feedback</button><div id="trend-feedback" class="feedback" hidden>B was already changing differently. A is reassuring evidence, though it cannot prove future parallel trends. A changing mix of businesses can also mislead.</div>
 ```
 
-::: {.panel}
-Question 1 you learned on Day 1. Questions 2 and 3 are the ones specific to DiD.
-:::
 
 ::: {.notes}
-Paper (Oct13_session1_materials.docx): Hand out the take-away cards (pack page 4, cut into cards). Give a minute to fill in "Back at work", then take two or
-three examples.
+8 minutes. Give each pair a picture to explain. Both axes use the same invented scale. Picture A shows similar changes at different levels; B shows diverging changes. Ask about a comparator losing its larger businesses. No significance test establishes the assumption.
 :::
 
-## Where this sits
+## What cannot be checked here? {.reader-slide}
 
-```{r results='asis'}
-cat(sprintf('
-<div class="facts">
-  <div class="k">Day 1 S1</div> <div class="v">compared to what? &middot; the three questions, on landfill</div>
-  <div class="k">Day 1 S2</div> <div class="v">before and after &middot; %s AED, short of the rule, with no comparison group</div>
-  <div class="k">Day 1 S3</div> <div class="v">with and without, and the lottery &middot; %s AED</div>
-  <div class="k">Today</div>  <div class="v">DiD &middot; %s AED, with an assumption the waiting list shows failing</div>
-</div>', gfmt(naive_ba), gfmt(rct_est), gfmt(did_hand)))
-```
+<div class="big-number">One before period</div>
+
+The GreenWaste file has one measure before and one after.
 
 ::: {.ask}
-Every estimate so far has been statistically clear. Only the lottery came close
-to the 1,000 AED bar, and today's DiD fell short partly because its comparison
-group was on a different path.
-
-What does that mean for the way evaluations get commissioned? Bring your answer
-to the next session, where the comparison comes from a **cut-off**.
+Can this file show whether earlier trends were similar?
 :::
+```{=html}
+<button data-open="pretrend-feedback" data-closed="Open the limit" data-opened="Hide feedback" aria-controls="pretrend-feedback" aria-expanded="false">Open the limit</button><div id="pretrend-feedback" class="feedback" hidden>No. Ask for several earlier measures and an explanation of other changes affecting the groups.</div>
+```
+
 
 ::: {.notes}
-If there is time at the very end, ask the room: is there a different
-question you would ask AI to help you understand a concept from today? For
-example: "I am learning about impact evaluation to help me make policy
-decisions. How should I think about a confidence interval, and how is it
-relevant when I compare an estimate to a decision threshold?" Adding context
-about who you are and why you are asking usually gets a more useful answer.
+5 minutes. The earlier pre-trend test was misleading with only one before period. State the data limit explicitly. Even several earlier periods cannot prove the unobserved post-programme trend.
+:::
+
+## Mark up the report extract {.reader-slide}
+
+Open **Sheet 2**. Read alone before comparing with a partner.
+
+Circle the result and its units.
+
+Underline the assumption.
+
+Write one question that could change your decision.
+
+::: {.ask}
+What does the extract support, and what remains uncertain?
+:::
+
+
+::: {.notes}
+10 minutes. Protect the reading time. Ask participants to distinguish the estimated extra fall from an established causal saving. The printed extract names two periods and the parallel-trends assumption, and admits earlier trends cannot be checked.
+:::
+
+## Repair an AI claim {.reader-slide}
+
+<div class="lead">Illustrative AI draft</div>
+
+"The extra fall proves GreenWaste caused the saving. Parallel trends is satisfied. Scale-up meets the decision rule."
+
+::: {.ask}
+Which claims can you support from the extract?
+:::
+```{=html}
+<button data-open="did-ai" data-closed="Open feedback" data-opened="Hide feedback" aria-controls="did-ai" aria-expanded="false">Open feedback</button><div id="did-ai" class="feedback" hidden>The estimated extra fall is supported. Cause requires a credible assumption; the file cannot check earlier trends. The result is below the saving rule.</div>
+```
+
+
+::: {.notes}
+7 minutes. Authored example, not a captured live AI response. Participants cross out unsupported claims on Sheet 2 and rewrite. Optional prompt: identify the comparison, assumption and missing evidence; ask me questions before concluding. Check any AI response against the source yourselves.
+:::
+
+## Your question for the evaluator {.reader-slide}
+
+::: {.ask}
+What would you ask, and how could the answer change your decision?
+:::
+Close the sheets. Write one question and its purpose. Work alone.
+
+**Difference-in-differences:** compare the changes, then question the assumption.
+
+::: {.notes}
+4 minutes. Independent close, no AI. Collect a few questions about earlier trends, competing changes or stable group composition. Total 60 minutes.
 :::

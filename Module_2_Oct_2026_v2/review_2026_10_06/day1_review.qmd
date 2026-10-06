@@ -65,15 +65,6 @@ individual evidence of reading; a shift in poll totals alone does not.
 
 ## What is next
 
-[The Day 2 slide tables](day2_plan.html) are ready for the next daily review.
-They shorten DiD and RDD to 60 minutes and matching to 75 minutes, while
-preserving Fiona's physical activities. `HANDOFF.md` requires a slide-table
-review and approval before each daily build.
-
-The shared case CSV is unchanged. Eight rounded-score records need a decision
-before the score-rule lesson is rebuilt; the Day 2 plan explains the correction
-and the need to refresh affected figures. Days 2–4 have not yet been rebuilt to
-the shortened route. Day 4's former final workshop is excluded; another
-provider will prepare the replacement simulation.
-
-[Whole-week review](week_review.html) · [Updated partner exercise brief](Module2_exercise_plan_v3.docx)
+[Day 2 is built](day2_review.html), retaining Fiona's RDD wall and matching cards.
+The score-rule correction is complete and affected Day 1 figures and packs are refreshed.
+[Day 3 slide tables](day3_plan.html) are ready for the next daily review.

@@ -1,0 +1,70 @@
+---
+title: "Day 2 review"
+subtitle: "Read the comparison before accepting the conclusion"
+format:
+  html:
+    embed-resources: true
+    theme: cosmo
+    toc: false
+---
+
+The approved Day 2 route is built: 60 minutes for difference-in-differences,
+60 for regression discontinuity and 75 for matching. Participants read one
+report extract, make a provisional judgement and ask a useful evaluator question
+in each session. The explanation is shorter; guided practice takes most of the time.
+
+| Session | Content screens | Deck | Participant sheet | Trainer pack |
+|---|---:|---|---|---|
+| Read the extra change | 10 | [Open](Oct13_session1.html) | [Two sides](Oct13_session1_handouts.docx) | [Key](Oct13_session1_materials.docx) |
+| Read the jump at a score rule | 10 | [Open](Oct13_session2_live.html) | [Two sides](Oct13_session2_handouts.docx) | [Eight cards and key](Oct13_session2_materials.docx) |
+| Read a matched comparison | 13 | [Open](Oct13_session3.html) | [Two sides](Oct13_session3_handouts.docx) | [Profiles, cost slips and key](Oct13_session3_materials.docx) |
+
+Counts exclude the title. Matching includes a five-minute break. Each session
+has one short trainer-run calculation, with a prediction first. Participants
+read its result and do not write or debug code.
+
+## Activities and reveals
+
+Fiona's four-number DiD task, eight different RDD cards A to H and
+[A1 number line](Oct13_session2_board_A1.pdf) remain. The seven matching
+profiles retain their identifiers and characteristics. Costs are separate slips,
+held until pairs have been chosen. The optional walking activity remains.
+
+Try the trend-picture feedback, wider RDD window, manager-age check and matching
+result with age left out. Commit to a prediction before revealing evidence.
+The AI examples are authored drafts for checking against the source, rather
+than reported live AI responses. No AI account is required.
+
+Native choices record one open page's choice. For room totals, use the
+[course-owned room tool](GreenWaste_room_poll.zip) and its
+[classroom instructions](ROOM_POLL_README.md). It hides totals until voting
+closes and includes Before/After phases and anonymous reasons. Phone access
+still needs a classroom Wi-Fi test; labelled cards are the fallback.
+
+## Corrected figures and print checks
+
+Exactly eight city records at displayed score 58 now take part, as the rule
+states. Only their participation, later cost and later landfill values changed.
+The pilot is unchanged. Day 1 figures and packs were refreshed.
+
+The DiD estimate is now -812 AED. The local RDD estimate is -721 AED, with a
+robust 95% interval of -943 to -498. Matching gives -1,029 AED, with a reported
+interval of -1,200 to -859. Screen and paper read the same computed objects.
+The RDD correction is larger than the city-wide change because those eight
+records sit exactly at the cut-off.
+
+Every participant sheet is two A4 pages. Trainer packs have 3, 12 and 12 pages;
+the longer packs contain the group cards and profiles, not twelve pages for
+each participant. Word rendered every print page for inspection. The exercise
+brief is updated for Days 1 and 2: [open the brief](Module2_exercise_plan_v3.docx).
+Later-day rows remain historical pending their rebuild. The [optional case reference](GreenWaste_case_brief.docx) also has corrected counts and recorded means; use it once cost reading has begun.
+
+The decks were checked sequentially at presentation size, including trainer
+outputs, evidence reveals and feedback. The data correction and the intended
+robust RDD interval are recorded in the source handoff.
+
+## Next daily review
+
+[Day 3 slide tables](day3_plan.html) are ready for review. They retain the ratio
+wall and analyst clinic, and replace the long catalogue of chart problems with
+three focused reading tasks. [Day 1 review](day1_review.html) is also refreshed.

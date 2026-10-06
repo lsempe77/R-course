@@ -1,4 +1,4 @@
-# Shared Day 1 screen and paper values. The underlying CSV is unchanged.
+# Shared Day 1 screen and paper values from the corrected score-rule CSV.
 case_env <- new.env()
 case_env$gw <- read.csv('evaluation_data_GreenWaste_simple.csv')
 sys.source('greenwaste_case.R', envir = case_env)

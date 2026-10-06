@@ -1,3 +1,5 @@
+> Day 2 approved and rebuilt 6 October 2026. The eight score-58 records are corrected; the current table below uses that CSV and robust RDD intervals. Earlier completion notes are historical. Next tables: `review_2026_10_06/day3_plan.qmd`.
+
 # Simple GreenWaste: what is being done and what is next
 
 ## Scope update from Lucas (6 October 2026)
@@ -92,13 +94,13 @@ quote the objects in that file, never type the numbers):
 
 | Estimate | Value |
 |---|---|
-| Before and after | -670 |
-| With and without | -1,639 (took part started 825 AED cheaper) |
+| Before and after | -669 |
+| With and without | -1,638 (took part started 825 AED cheaper) |
 | Randomised (pilot) | -1,014, 95% CI -1,167 to -862 (spans the 1,000 rule) |
-| Difference-in-differences | -813 |
-| RDD, +/-2 points | -656 (CI -890 to -422); -554 adjusted for manager age |
-| RDD, +/-5 points | -755 |
-| Matching, all four | -1,031; without manager age -1,342 |
+| Difference-in-differences | -812 |
+| RDD, +/-2 points | -721 (robust HC2 CI -943 to -498); -632 adjusted for manager age |
+| RDD, +/-5 points | -784 |
+| Matching, all four | -1,029; without manager age -1,341 |
 | Manager age just below 58 | 5.3 years younger |
 
 ## Done so far
@@ -137,7 +139,7 @@ map is shared as `_case_map.qmd`. Days 3 and 4 are next.
 
    | Session | Owner | Main changes |
    |---|---|---|
-   | Oct12 S3, naive comparisons and RCT | Lucas | done: recap of Session 2's -670, with-and-without (-1,639), the lottery and the RCT on the pilot; no clustering slide |
+   | Oct12 S3, naive comparisons and RCT | Lucas | done: recap of Session 2's -670, with-and-without (-1,638), the lottery and the RCT on the pilot; no clustering slide |
    | Oct13 S1, DiD | Fiona | done: four numbers from the city; parallel-trends failure is now visible in the data (the pilot's untreated businesses show the true trend) |
    | Oct13 S2, RDD | Lucas | done: cut-off at 58 in the city; Check 3 fails on manager age; remove "Module 1" facts box |
    | Oct13 S3, matching | Fiona | done (camera case replaced by two evaluators, A and B): match on age, staff, area, filtration; Check 1 = leave out manager age |

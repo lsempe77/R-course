@@ -52,7 +52,7 @@ Fictional GreenWaste case · invented figures
 Fictional case · today we read **waste sent to landfill**, in tonnes per business per year.
 
 ::: {.notes}
-3 minutes. Use the existing case picture/card. GreenWaste advises businesses and helps them improve waste handling. One pilot used a lottery; the rest of the city used a score rule. Do not teach either method yet or reveal cost findings. The map shows an illustrative arrangement, not actual counts. The existing data contain eight rounded score-58 exceptions; do not claim that every displayed score follows the rule without exception.
+3 minutes. Use the existing case picture/card. GreenWaste advises businesses and helps them improve waste handling. One pilot used a lottery; the rest of the city used a score rule. Do not teach either method yet or reveal cost findings. The map shows an illustrative arrangement, not actual counts. The corrected city records follow the displayed rule: score 58 or below took part.
 :::
 
 ## Would you extend it? {.reader-slide}

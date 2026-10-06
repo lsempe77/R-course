@@ -75,7 +75,8 @@ pilot$cost_after[pilot$took_part == 1] <- round(pilot$cost_after[pilot$took_part
 pilot$setting <- "pilot"
 
 s    <- runif(10000, 20, 100)
-city <- outcomes(characteristics(10000, s), s <= 58)
+city_characteristics <- characteristics(10000, s)
+city <- outcomes(city_characteristics, city_characteristics$score <= 58)
 city$setting <- "city"
 
 gw <- rbind(pilot, city)

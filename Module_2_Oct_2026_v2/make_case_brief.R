@@ -6,6 +6,12 @@
 # every number comes from evaluation_data_GreenWaste_simple.csv. No results:
 # the estimates belong to the sessions.
 
+# Current reference uses larger type and corrected pilot-and-city figures.
+# The legacy implementation below remains for the picture-card generation.
+if ('--brief-only' %in% commandArgs(trailingOnly=TRUE)) {
+  source('refresh_case_brief.R',encoding='UTF-8')
+  quit(save='no')
+}
 suppressPackageStartupMessages({ library(officer); library(flextable) })
 gw <- read.csv("evaluation_data_GreenWaste_simple.csv")
 source("greenwaste_case.R")
@@ -27,6 +33,7 @@ tbl <- function(df, widths, header_fill = "#e3ebf5") {
     valign(valign = "top", part = "all") |> align(align = "left", part = "all")
 }
 
+if (FALSE) { # retained legacy one-page reference
 doc <- read_docx() |>
   body_set_default_section(prop_section(page_size = page_size(orient = "portrait"),
     page_margins = page_mar(top = 0.6, bottom = 0.6, left = 0.75, right = 0.75))) |>
@@ -74,6 +81,8 @@ doc <- read_docx() |>
 
 print(doc, target = "GreenWaste_case_brief.docx")
 cat("Wrote GreenWaste_case_brief.docx\n")
+}
+source('refresh_case_brief.R',encoding='UTF-8')
 
 # ---------------------------------------------------------------------------
 # The picture card: handed out with the case introduction (Oct12 S3, slide 1).
