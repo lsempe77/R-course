@@ -76,7 +76,7 @@ plain_table <- function(df, widths = NULL) {
 
 # Cards laid out in a grid with dashed cut lines. `cards` is a list of
 # character vectors: first element bold (the card title), the rest body lines.
-card_grid <- function(cards, ncol = 2, card_width = 3.4, min_height = 1.6) {
+card_grid <- function(cards, ncol = 2, card_width = 3.4, min_height = 1.6, title_size = 11, body_size = 10.5) {
   n <- length(cards); nrow <- ceiling(n / ncol)
   m <- matrix("", nrow, ncol)
   df <- as.data.frame(m, stringsAsFactors = FALSE)
@@ -88,15 +88,52 @@ card_grid <- function(cards, ncol = 2, card_width = 3.4, min_height = 1.6) {
   for (k in seq_len(n)) {
     i <- (k - 1) %/% ncol + 1; j <- (k - 1) %% ncol + 1
     card <- cards[[k]]
-    chunks <- list(as_chunk(card[1], props = fp_text(font.family = FONT, font.size = 11,
+    chunks <- list(as_chunk(card[1], props = fp_text(font.family = FONT, font.size = title_size,
                                                       bold = TRUE, color = DARK)))
     for (line in card[-1]) chunks <- c(chunks, list(as_chunk(paste0("\n", line),
-                                     props = fp_text(font.family = FONT, font.size = 10.5))))
+                                     props = fp_text(font.family = FONT, font.size = body_size))))
     ft <- compose(ft, i = i, j = j, value = do.call(as_paragraph, chunks))
   }
   ft
 }
 add_cards <- function(doc, cards, ...) body_add_flextable(doc, card_grid(cards, ...), align = "center")
+
+# Wall-board pieces: large labels or claim strips, one per row of a single
+# column, with dashed cut lines between them. `labels` is a character vector;
+# `heads` (optional) puts a small line above each label, e.g. "Claim 3".
+board_pieces <- function(doc, labels, size = 40, height = 2.9, heads = NULL, width = 6.8) {
+  df <- data.frame(x = rep("", length(labels)))
+  ft <- flextable(df) |> delete_part("header") |> border_remove() |>
+    border_outer(border = cut_line) |> border_inner(border = cut_line) |>
+    width(width = width) |> height_all(height = height) |> hrule(rule = "atleast") |>
+    line_spacing(space = 1.15) |>
+    valign(valign = "center") |> align(align = "center") |> padding(padding = 12)
+  for (k in seq_along(labels)) {
+    chunks <- list()
+    if (!is.null(heads)) chunks <- list(as_chunk(paste0(heads[k], "\n"),
+                                        props = fp_text(font.family = FONT, font.size = 12, color = GREY)))
+    chunks <- c(chunks, list(as_chunk(labels[k], props = fp_text(font.family = FONT, font.size = size,
+                                                                bold = TRUE, color = DARK))))
+    ft <- compose(ft, i = k, j = 1, value = do.call(as_paragraph, chunks))
+  }
+  body_add_flextable(doc, ft, align = "center")
+}
+# The marker rules shared by the two AI Snapshot boards (Oct12 S3, Oct13 S1).
+MARKER_RULES <- c(
+  "Marker rules. At your table, mark each numbered claim with a coloured marker:",
+  "Green: the evidence supports the claim.",
+  "Yellow: partly true, or true but not enough to act on.",
+  "Red: the evidence does not support the claim.",
+  "Then one person from your group takes your colours to the claim strips on the wall and puts one dot on each strip.")
+marker_rules <- function(doc) {
+  doc <- p_(doc, MARKER_RULES[1], bold = TRUE, space_after = 2)
+  for (x in MARKER_RULES[2:4]) doc <- p_(doc, paste("   ", x), space_after = 1)
+  p_(doc, MARKER_RULES[5], bold = TRUE)
+}
+numbered_claims <- function(doc, claims) {
+  for (k in seq_along(claims)) doc <- p_(doc, sprintf("%d.  %s", k, claims[k]), space_after = 3)
+  doc
+}
 
 gfmt <- function(x, d = 0) formatC(x, format = "f", digits = d, big.mark = ",")
 
@@ -180,22 +217,26 @@ s1 <- new_pack() |>
       "\"The coefficient on school_within_500m is -0.37. What should I do about it?\"",
       "", "Did the AI give you advice about schools?", "", "", "")), min_height = 3.2)
 
+# The triage uses the first four excerpts only (6 Oct); the other four stay in
+# `excerpts` and in the key for reference.
+NT <- 4
 s1 <- s1 |> new_page() |> title_("Triage the claims", S1) |>
-  print_line("1 per group, with one set of the excerpt slips (next page)") |>
-  p_("You are the commissioner. You receive eight sentences from reports on the camera programme. For each sentence: which of the three questions (compared to what? how big? how sure?) does the sentence not answer? Would you act on the sentence, not act, or ask a question first?") |>
+  print_line("1 per group (8), with one set of the excerpt slips (next page)") |>
+  p_("You are the commissioner. You receive four sentences from reports on the camera programme. For each sentence: which of the three questions (compared to what? how big? how sure?) does the sentence not answer? Would you act on the sentence, not act, or ask a question first?") |>
   body_add_flextable(plain_table(data.frame(
-    Excerpt = 1:8,
-    `Question the sentence does not answer: compared to what? / how big? / how sure? / none` = rep("", 8),
-    `Act / do not act / ask first` = rep("", 8),
-    `The question you would ask the evaluator` = rep("", 8), check.names = FALSE),
-    widths = c(0.8, 2.3, 1.4, 2.4)) |> height_all(height = 0.55, part = "body") |>
+    Excerpt = seq_len(NT),
+    `Question the sentence does not answer: compared to what? / how big? / how sure? / none` = rep("", NT),
+    `Act / do not act / ask first` = rep("", NT),
+    `The question you would ask the evaluator` = rep("", NT), check.names = FALSE),
+    widths = c(0.8, 2.3, 1.4, 2.4)) |> height_all(height = 0.8, part = "body") |>
     hrule(rule = "atleast", part = "body")) |>
+  p_("If the trainer uses the wall matrix: draw a stripe in your group's colour across each excerpt slip, then tape each slip in the cell that matches your answer (row: the question it does not answer; column: act, ask first or do not act).", bold = TRUE) |>
   p_("Which excerpt would you most want to act on? What would you need to know before acting on that excerpt?") |>
   write_lines(2) |>
   new_page() |> title_("Triage the claims: the excerpts", S1) |>
-  print_line("1 set per group; cut into slips") |>
-  add_cards(lapply(seq_along(excerpts), function(i) c(sprintf("Excerpt %d", i), excerpts[i])),
-            ncol = 2, min_height = 1.1) |>
+  print_line("1 set per group (8 sets); cut into slips. The same slips go on the wall matrix if it is used") |>
+  add_cards(lapply(seq_len(NT), function(i) c(sprintf("Excerpt %d", i), excerpts[i])),
+            ncol = 2, min_height = 2.2, title_size = 14, body_size = 16) |>
   illustrative() |>
   new_page() |> title_("Take-away card: three questions for any number", S1) |>
   print_line("1 per participant, cut into cards") |>
@@ -216,7 +257,7 @@ s1 <- s1 |> new_page() |> title_("Triage the claims", S1) |>
   p_("B: do not act, it is precise and below the bar. A and C: cannot tell yet; the intervals span the bar. The interval decides, not the point estimate.") |>
   h2_("AI prompt cards") |>
   p_("Card 1: look for \"95% probability that the true value is in this interval\". 95% describes the method over many studies. Card 2: look for \"the probability the result is due to chance\" or \"the probability the programme works\". Card 3: a good answer asks what the 32% was compared with and how much driving changed. Card 4: the row adjusts the comparison; it is not a policy lever.") |>
-  h2_("Triage key") |>
+  h2_("Triage key (the session uses excerpts 1 to 4; 5 to 8 are kept for reference)") |>
   body_add_flextable(plain_table(data.frame(
     Excerpt = 1:8,
     Unanswered = c("Compared to what? (before and after; driving rose 4%)",
@@ -230,7 +271,14 @@ s1 <- s1 |> new_page() |> title_("Triage the claims", S1) |>
     Call = c("Ask first", "Ask first", "Do not act on this", "Ask first",
              "Ask for the spread", "Do not conclude 'no effect'", "Do not act on this", "Act"),
     check.names = FALSE), widths = c(0.8, 4.0, 2.0))) |>
-  p_("Debrief: groups disagree most on 2 and 4, which is the point; take one group's reasoning for each.")
+  p_("Debrief: groups disagree most on 2 and 4, which is the point; take one group's reasoning for each.") |>
+  h2_("Wall matrix (optional, alongside the triage sheet)") |>
+  p_("Setup, before the session: a grid on the wall (flipchart sheets, about 2 m by 1.5 m) with three columns, Act / Ask first / Do not act, and four rows, Compared to what? / How big? / How sure? / None: it answers all three. Signs are at the end of this pack. Give each group a marker in its own colour (8 colours, for example blue, green, orange, purple, black, brown, pink and red) and some masking tape.") |>
+  p_("Running it: groups fill in the triage sheet at the table, draw a stripe of their colour across each slip and tape the four slips into the matrix. Expected: 1 in Compared to what? / Ask first; 2 in How big? / Ask first; 3 in How big? / Do not act; 4 in How sure? / Ask first. Look for the excerpts whose slips are spread across cells (usually 2 and 4) and ask two groups of different colours to explain. The Act column will probably stay empty: ask what an excerpt would need to move there (excerpt 8 on the full list is an example: a comparison, an effect and a target).") |>
+  new_page() |> title_("Wall board: matrix signs", S1) |>
+  print_line("1 set for the trainer, cut along the dashed lines: three column signs and four row signs") |>
+  board_pieces(c("Act", "Ask first", "Do not act", "Compared to what?", "How big?", "How sure?", "None: it answers all three"),
+               size = 28, height = 1.25)
 print(s1, target = "Oct12_session1_materials.docx")
 
 # ===========================================================================
@@ -246,6 +294,16 @@ ww0 <- mc(gw$treatment_neighborhood == 1 & gw$enrolled == 1 & gw$round == 0) -
 fu <- subset(gw, round == 1 & eligible == 1)
 rct <- mean(fu$waste_management_costs[fu$treatment_neighborhood == 1]) -
        mean(fu$waste_management_costs[fu$treatment_neighborhood == 0])
+
+# The AI response, one claim per strip: the same words as the deck, split where
+# a sentence carries both a supported and an unsupported claim.
+S3_CLAIMS <- c(
+  "The GreenWaste pilot produced a clear result: waste-management costs fell by 665 AED per business,",
+  "and with p < 0.001 we can be confident the programme caused this reduction.",
+  "Because the same businesses were measured before and after, differences between businesses are already accounted for,",
+  "so the 665 AED saving can be attributed to the programme.",
+  "This makes a strong case for national scale-up.",
+  "As with any pilot, results should be monitored as the programme expands.")
 
 s3 <- new_pack() |>
   title_("Session tracker", S3) |>
@@ -268,13 +326,14 @@ s3 <- new_pack() |>
   p_("One question I would ask the evaluator:") |> write_lines(2) |>
   new_page() |>
   title_("AI Snapshot: a paragraph for the minister", S3) |>
-  print_line("1 per pair") |>
+  print_line("1 per group (8 groups), plus one green, one yellow and one red marker per group. The claim strips for the wall are at the end of this pack") |>
   p_("The prompt, written the way a busy official might write it:", bold = TRUE) |>
   p_("\"Our pilot cut waste costs by 665 AED per business (costs before vs after, p < 0.001). Write a short paragraph for the minister on what this shows.\"", italic = TRUE) |>
   h2_("A response like this is possible") |>
-  p_("The GreenWaste pilot produced a clear result: waste-management costs fell by 665 AED per business, and with p < 0.001 we can be confident the programme caused this reduction. Because the same businesses were measured before and after, differences between businesses are already accounted for, so the 665 AED saving can be attributed to the programme. This makes a strong case for national scale-up. As with any pilot, results should be monitored as the programme expands.") |>
-  p_("Underline every claim in the response that the evidence does not support. Then run the same prompt yourselves: did your AI write something similar?", bold = TRUE) |>
-  write_lines(3) |>
+  numbered_claims(S3_CLAIMS) |>
+  marker_rules() |>
+  p_("Then run the same prompt yourselves: did your AI write something similar?", bold = TRUE) |>
+  write_lines(2) |>
   h2_("Then run this prompt instead, and compare") |>
   p_("\"Costs for participating businesses were 665 AED lower after the pilot than before (p < 0.001). We also have businesses that did not take part and a randomised comparison. The scale-up rule is at least 1,000 AED. Before writing anything, tell me what this before-and-after number can and cannot show. Ask me questions before you answer.\"", italic = TRUE) |>
   p_("Which answer checks whether 665 AED is a fair measure of the effect before writing the paragraph? Paste the better answer into a new chat and ask the AI to check that answer for errors.") |>
@@ -291,7 +350,13 @@ s3 <- new_pack() |>
              gfmt(ba), gfmt(ww), gfmt(ww0), gfmt(rct))) |>
   p_("Lottery: random draws start within a few dozen AED; officials picking the cheapest-to-run neighbourhoods start hundreds of AED ahead. 4 neighbourhoods: about ± 400 AED; 196: a few dozen.") |>
   h2_("AI Snapshot: four errors") |>
-  p_("1. Significant is not causal: p < 0.001 says the fall is unlikely to be chance, not what caused it. 2. Half right: following the same businesses removes fixed differences but not what changed for everyone. 3. It reports 665 as the effect; the randomised estimate is about 1,014. 4. It recommends scale-up without asking what bar the programme must clear.")
+  p_("1. Significant is not causal: p < 0.001 says the fall is unlikely to be chance, not what caused it. 2. Half right: following the same businesses removes fixed differences but not what changed for everyone. 3. It reports 665 as the effect; the randomised estimate is about 1,014. 4. It recommends scale-up without asking what bar the programme must clear.") |>
+  h2_("AI Snapshot board") |>
+  p_("Setup, before the session: tape the six claim strips (last pages of this pack) down the wall in order, with space beside each strip for eight dots. Give each group one green, one yellow and one red marker (or dot stickers in the same colours). Groups mark the claims on their handout at the table, then one person per group puts one dot on each strip.") |>
+  p_("Expected wall: strip 1 mostly green (the fall of 665 AED is in the data). Strips 2, 4 and 5 red. Strip 3 split between yellow and green: it is half right, which is the debrief's error 2, so start the debrief there. Strip 6 green or yellow: true, but a generic caveat that cannot be monitored. Read the wall before showing the debrief slide: ask the groups that disagree on strip 3 to give their reasons.") |>
+  new_page() |> title_("Wall board: claim strips", S3) |>
+  print_line("1 set for the trainer, cut along the dashed lines; tape down the wall in order") |>
+  board_pieces(S3_CLAIMS, size = 26, height = 2.9, heads = paste("Claim", seq_along(S3_CLAIMS)))
 print(s3, target = "Oct12_session3_materials.docx")
 
 # ===========================================================================
@@ -299,8 +364,10 @@ print(s3, target = "Oct12_session3_materials.docx")
 # ===========================================================================
 S5 <- "Module 2 · Day 2, Session 2 · Reading RDD Results"
 off <- subset(gw, round == 1 & treatment_neighborhood == 1)
-# Four cards (A-D), each with a different random six businesses on each side of
-# the line. Pairs call out their gaps; the spread is the lesson.
+# Eight cards (A-H), one per group, each with a different random six businesses
+# on each side of the line. Groups put their jumps on a number line on the
+# wall; the spread is the lesson. A-D are the original four; E-H were chosen to
+# widen the spread (one of them, H, even goes the wrong way).
 jump_card <- function(seed) {
   set.seed(seed)
   b <- off[sample(which(off$efficiency_index > 57 & off$efficiency_index <= 58), 6), ]
@@ -312,19 +379,21 @@ jump_card <- function(seed) {
                          check.names = FALSE),
        below = mean(round(b$waste_management_costs, -1)), above = mean(round(a$waste_management_costs, -1)))
 }
-cards5 <- lapply(c(A = 1, B = 4, C = 3, D = 6), jump_card)
+cards5 <- lapply(c(A = 1, B = 4, C = 3, D = 6, E = 2, F = 10, G = 7, H = 12), jump_card)
+jumps5 <- sapply(cards5, function(x) x$below - x$above)
 
 s5 <- new_pack()
 for (k in names(cards5)) {
   s5 <- s5 |>
     title_(sprintf("By hand: the jump at the line (card %s)", k), S5) |>
-    print_line("four different cards (A-D); give each pair one card, so neighbours hold different cards") |>
+    print_line("eight different cards (A-H); one card per group, so every group holds a different card") |>
     p_("Twelve GreenWaste businesses in the offered neighbourhoods, all within one index point of the cut-off at 58. Businesses at 58 or below got the programme. Costs are rounded to the nearest 10 AED.") |>
     body_add_flextable(plain_table(cards5[[k]]$rows, widths = c(1.8, 1.3, 1.9, 1.3))) |>
     h2_("Work it out") |>
     p_("Average cost just below the line:  ________      Average cost just above:  ________") |>
-    p_("The jump (below minus above):  ________ AED.   Write the jump on the flipchart when the trainer asks.") |>
-    p_("The pair next to you had a card with different businesses, and found a different jump. Why are the jumps different? What would you need before you trusted one jump as the effect of the programme?") |>
+    p_("The jump (below minus above):  ________ AED.") |>
+    p_(sprintf("Write the jump and your card letter (%s) on a sticky note. Put the sticky note on the number line on the wall, at your jump.", k), bold = TRUE) |>
+    p_("The other groups had cards with different businesses, and found different jumps. Look at the wall: why are the jumps so different? What would you need before you trusted one jump as the effect of the programme?") |>
     write_lines(2) |>
     new_page()
 }
@@ -373,11 +442,18 @@ s5 <- s5 |>
     `Above (AED)` = sapply(cards5, function(x) gfmt(x$above)),
     Jump = sapply(cards5, function(x) gfmt(x$below - x$above)), check.names = FALSE),
     widths = c(0.8, 1.4, 1.4, 1.2))) |>
-  p_("Write the pairs' jumps on the flipchart. They spread widely because six businesses a side is too few; the regression uses the 773 businesses within two points and reports an interval (-791, from -1,084 to -498). The rough gap is also inflated by the slope of costs along the index, which the regression removes.") |>
+  p_("Groups put their jumps on the wall number line. They spread widely because six businesses a side is too few; the regression uses the 773 businesses within two points and reports an interval (-791, from -1,084 to -498). The rough gap is also inflated by the slope of costs along the index, which the regression removes.") |>
+  h2_("Number line board") |>
+  p_(sprintf("Setup, before the session: a strip of paper about 2 m long on the wall, with a line marked from -2,000 to +500 AED in steps of 500 (signs at the end of this pack). Mark the decision rule at -1,000 AED in red and label it \"The rule: 1,000 AED\". Each group needs one sticky note and a marker. The eight jumps run from %s to %s; their average is %s.",
+             gfmt(min(jumps5)), gfmt(max(jumps5)), gfmt(mean(jumps5)))) |>
+  p_("After the groups have posted, press Run. Then add the regression to the wall: a star at -791 and a piece of coloured tape (or a marker line) from -1,084 to -498 for its interval. Ask: how many of the sticky notes fall inside the interval? Which side of the rule is most of the interval on? Card H goes the wrong way: six businesses a side can point anywhere.") |>
   h2_("Scorecard") |>
   p_("0: pass only with the offered neighbourhoods (pooling every neighbourhood waters the jump down to about -249). 1: the estimate moves between about 790 and 1,120; the least generous end never reaches 1,000 (verdict: does not clear). 1b: pass. 2: pass. 3: FAIL, manager age is 5 to 9 years younger just below the line at every window. 4: the 773 businesses near the line are smaller than the rest.") |>
   h2_("AI Snapshot") |>
-  p_("Wrong: 'applies to all businesses', 'generalises to the wider population', 'basis for scaling to every business'. The estimate is local to the line. Left out: the manager-age jump, and the 1,000 AED rule.")
+  p_("Wrong: 'applies to all businesses', 'generalises to the wider population', 'basis for scaling to every business'. The estimate is local to the line. Left out: the manager-age jump, and the 1,000 AED rule.") |>
+  new_page() |> title_("Wall board: number line signs", S5) |>
+  print_line("1 set for the trainer, cut along the dashed lines; tape along the line at equal spacing") |>
+  board_pieces(c("-2,000", "-1,500", "-1,000  The rule", "-500", "0", "+500"), size = 36, height = 1.35)
 print(s5, target = "Oct13_session2_materials.docx")
 
 # ===========================================================================
@@ -421,20 +497,22 @@ s7 <- new_pack() |>
   p_("Run both prompts. Which answer compares all the assumptions before picking one? Which answer gives you a number you could use to make a decision?") |>
   new_page() |>
   title_("Stress-test scenario cards", S7) |>
-  print_line("1 set, cut; each group takes one card") |>
+  print_line("2 sets, cut; hand out cards 1 to 5, then cards 1 to 3 again, so each of the 8 groups holds one card") |>
   add_cards(lapply(seq_len(nrow(scen)), function(i)
     c(sprintf("Card %d · %s", scen$card[i], scen$name[i]), scen$story[i], "",
-      paste("Tell the trainer:", scen$settings[i]), "",
+      "Predict the ratio: ______  Post a sticky note with your card number and prediction on the ratio wall.",
+      paste("Tell the trainer:", scen$settings[i]),
+      "Then put this card on the wall at the ratio shown on screen.", "",
       "Could this realistically happen in a programme like GreenWaste?", "Your verdict: does the programme still pay for itself (ratio above 1)?")),
-    min_height = 2.2) |>
+    min_height = 2.4) |>
   new_page() |>
   title_("Group recording sheet", S7) |>
   print_line("1 per group") |>
   body_add_flextable(plain_table(data.frame(
-    ` ` = c("Our card", "Settings we gave the trainer", "Benefit-cost ratio shown on screen", "Realistic? Why or why not?",
+    ` ` = c("Our card", "Settings we gave the trainer", "Our prediction (before the trainer ran it)", "Benefit-cost ratio shown on screen", "Realistic? Why or why not?",
             "Does the programme still pay for itself (ratio above 1)?", "One question for the evaluator"),
-    Answer = rep("", 6), check.names = FALSE), widths = c(2.3, 4.6)) |>
-    height_all(height = 0.7, part = "body") |> hrule(rule = "atleast", part = "body")) |>
+    Answer = rep("", 7), check.names = FALSE), widths = c(2.3, 4.6)) |>
+    height_all(height = 0.6, part = "body") |> hrule(rule = "atleast", part = "body")) |>
   h2_("The three questions, for GreenWaste") |>
   p_("1. Are the benefits realistic? Circle where the benefit figure comes from:  Measured  /  Modelled  /  Assumed") |>
   p_("2. Are all the costs included?  What is missing?") |> write_lines(1) |>
@@ -453,7 +531,13 @@ s7 <- new_pack() |>
     Verdict = ifelse(scen$value >= 1, "pays for itself", "does not pay"),
     check.names = FALSE), widths = c(0.6, 2.8, 0.9, 1.6))) |>
   p_("Base case 1.87. The rate alone does not flip it until about 24%. Two years of saving gives 0.80; break-even is about 2.5 years. Missing costs flip it at about 1,600 AED per business.") |>
-  p_("AI Snapshot: the arithmetic in version 1 holds (40% does push the ratio below 1) but it picks the easiest lever, gives no number for 'benefits delayed', and claims unsourced authority ('commonly observed in infrastructure appraisal').")
+  p_("AI Snapshot: the arithmetic in version 1 holds (40% does push the ratio below 1) but it picks the easiest lever, gives no number for 'benefits delayed', and claims unsourced authority ('commonly observed in infrastructure appraisal').") |>
+  h2_("Ratio wall") |>
+  p_(sprintf("Setup, before the session: a horizontal line about 2 m long on the wall, from 0 to 2.0, with signs at 0, 0.5, 1.0, 1.5 and 2.0 (end of this pack). Draw a thick red vertical line at 1.0 and put the \"Break-even\" sign above it. Put the \"Headline: %.2f\" sign at %.2f. Each group needs one sticky note and a marker.", ratio(), ratio())) |>
+  p_("Running it: each group predicts its ratio and posts a sticky note, then reads out its settings. Enter them in the calculator on the \"Your turn\" slide; the group puts its card at the real ratio. Debrief from the wall: how far was each prediction from the real ratio? Only card 5 (two things going wrong at once) lands left of the red line. Groups holding the same card will often have predicted differently.") |>
+  new_page() |> title_("Wall board: ratio signs", S7) |>
+  print_line("1 set for the trainer, cut along the dashed lines") |>
+  board_pieces(c("0", "0.5", "1.0", "1.5", "2.0", "Break-even", sprintf("Headline: %.2f", ratio())), size = 36, height = 1.35)
 print(s7, target = "Oct14_session1_materials.docx")
 
 # ===========================================================================
@@ -707,6 +791,16 @@ did_rows <- data.frame(
   `95% CI` = sprintf("[%s, %s]", gfmt(fit_did$conf.low), gfmt(fit_did$conf.high)),
   check.names = FALSE)
 
+# The AI response, one claim per strip (the deck's words, split at each claim).
+S4_CLAIMS <- c(
+  "The table reports a difference-in-differences estimate.",
+  "The programme reduced costs by 816 AED, and the effect is highly statistically significant (p < 0.001),",
+  "so the programme was a success.",
+  "The confidence interval does not include zero,",
+  "which confirms the finding is robust.",
+  "The parallel trends assumption has been satisfied.",
+  "The result clears the 1,000 AED threshold required for scale-up.")
+
 s4 <- new_pack() |>
   title_("By hand: four numbers", S4) |>
   print_line("1 per participant, single-sided: the next sheet is handed out later") |>
@@ -734,14 +828,12 @@ s4 <- new_pack() |>
   write_lines(2) |>
   new_page() |>
   title_("AI Snapshot: explaining the table", S4) |>
-  print_line("1 per pair") |>
+  print_line("1 per group (8 groups), plus one green, one yellow and one red marker per group. The claim strips for the wall are at the end of this pack") |>
   p_("Paste the regression table into an AI tool with this prompt:", bold = TRUE) |>
   p_("\"Explain this regression table to a non-technical decision-maker, and say what should be checked before believing the result.\"", italic = TRUE) |>
   h2_("A response like this is possible") |>
-  p_("The table reports a difference-in-differences estimate. The programme reduced costs by 816 AED, and the effect is highly statistically significant (p < 0.001), so the programme was a success. The confidence interval does not include zero, which confirms the finding is robust.") |>
-  p_("The parallel trends assumption has been satisfied. The result clears the 1,000 AED threshold required for scale-up.") |>
-  p_("Underline the sentences that the table supports. Cross out the sentences that the table does not support.", bold = TRUE) |>
-  write_lines(3) |>
+  numbered_claims(S4_CLAIMS) |>
+  marker_rules() |>
   h2_("Then run this prompt instead, and compare") |>
   p_("\"We have a difference-in-differences table. The data has two waves only, one before and one after, so no pre-trend test is possible. The decision rule is 1,000 AED. Explain what the table supports and, separately, list what it cannot tell us. Ask me questions before you answer.\"", italic = TRUE) |>
   p_("With the second prompt, does the AI still claim that parallel trends were satisfied? Then paste the second answer into a new chat and ask the AI to check that answer for claims about tests that were never run.") |>
@@ -767,7 +859,13 @@ s4 <- new_pack() |>
              gfmt(did_av[2]))) |>
   h2_("AI Snapshot") |>
   p_(sprintf("Supported by the table: the 816 AED estimate and p < 0.001. Not supported: \"so the programme was a success\" answers whether the effect is non-zero, not whether it clears 1,000. \"Does not include zero, which confirms the finding is robust\": not zero and big enough are different claims. \"The parallel trends assumption has been satisfied\" is the serious one: with one period before the programme it cannot be tested, so the model reported a test that was never run. \"Clears the 1,000 AED threshold\" is false: even the interval's most generous end is %s AED.", gfmt(did_av[2]))) |>
-  p_("With the second prompt, check whether the parallel-trends claim disappears. Supplying the constraint makes the error less likely; it does not rule it out.")
+  p_("With the second prompt, check whether the parallel-trends claim disappears. Supplying the constraint makes the error less likely; it does not rule it out.") |>
+  h2_("AI Snapshot board") |>
+  p_("Setup, before the session: tape the seven claim strips (last pages of this pack) down the wall in order, with space beside each strip for eight dots. Give each group one green, one yellow and one red marker (or dot stickers in the same colours). Groups mark the claims on their handout at the table, then one person per group puts one dot on each strip.") |>
+  p_("Expected wall: strips 1, 2 and 4 green (they are in the table). Strips 3, 5, 6 and 7 red: 3 and 5 turn \"not zero\" into \"success\" and \"robust\"; 7 is false. Strip 6 is the one to watch: a group that marks it green or yellow has taken a test that was never run on trust. Read the wall before showing the debrief slide and start with strip 6.") |>
+  new_page() |> title_("Wall board: claim strips", S4) |>
+  print_line("1 set for the trainer, cut along the dashed lines; tape down the wall in order") |>
+  board_pieces(S4_CLAIMS, size = 26, height = 2.9, heads = paste("Claim", seq_along(S4_CLAIMS)))
 print(s4, target = "Oct13_session1_materials.docx")
 
 # ===========================================================================
@@ -862,8 +960,8 @@ compare_rows <- data.frame(
 
 s6 <- new_pack() |>
   title_("By hand: find the twins", S6) |>
-  print_line("1 per participant") |>
-  p_("Three businesses that enrolled in GreenWaste and four that did not. Pair each enrolled business with its closest twin, matching on who they are (manager age and size), not on their cost. Then take the average cost difference across the three pairs.") |>
+  print_line("1 per group (8); the profile cards on the next page are for the card or walking version") |>
+  p_("As a group: three businesses that enrolled in GreenWaste and four that did not. Pair each enrolled business with its closest twin, matching on who they are (manager age and size), not on their cost. Then take the average cost difference across the three pairs. Your group reports one answer: the three pairs, the average, and the business that is nobody's twin.") |>
   p_("Enrolled", bold = TRUE, color = DARK) |>
   body_add_flextable(plain_table(data.frame(` ` = c("A", "B", "C"), `Manager age` = c(45, 38, 52),
     Size = c("small", "large", "small"), `Cost after (AED)` = c("900", "1,400", "700"), check.names = FALSE),
@@ -879,6 +977,18 @@ s6 <- new_pack() |>
   p_("Average difference across the three pairs:  ________ AED") |>
   p_("One business that did not enrol is nobody's twin. Which business? What happens to that business in the analysis?") |>
   write_lines(2) |>
+  new_page() |>
+  title_("Find the twins: profile cards", S6) |>
+  print_line("1 set of seven cards per group (8 sets), cut. Groups can pair the cards on the table, or the trainer runs the walking version with one set") |>
+  add_cards(c(
+    lapply(1:3, function(i) c(sprintf("%s  ·  Enrolled", c("A", "B", "C")[i]),
+      sprintf("Manager age: %d", c(45, 38, 52)[i]), sprintf("Size: %s", c("small", "large", "small")[i]),
+      sprintf("Cost after: %s AED", c("900", "1,400", "700")[i]), "", "Find your closest twin. Match on who you are, not on cost.")),
+    lapply(1:4, function(i) c(sprintf("%d  ·  Did not enrol", i),
+      sprintf("Manager age: %d", c(39, 46, 51, 29)[i]), sprintf("Size: %s", c("large", "small", "small", "large")[i]),
+      sprintf("Cost after: %s AED", c("2,300", "1,900", "1,800", "2,600")[i]), "", "Wait to be chosen as someone's twin."))),
+    ncol = 2, min_height = 2.25, title_size = 20, body_size = 15) |>
+  p_("These seven businesses are invented for the exercise.", 8.5, italic = TRUE, color = GREY) |>
   new_page() |>
   title_("Which case would you trust?", S6) |>
   print_line("1 per group") |>
@@ -922,6 +1032,7 @@ s6 <- new_pack() |>
   new_page() |> title_("Facilitator key", S6) |> print_line("trainer only") |>
   h2_("Find the twins") |>
   p_("A with 2, B with 1, C with 3. Differences of -1,000, -900 and -1,100: an average of -1,000 AED. Business 4 is nobody's twin, so it is set aside. Listen for anyone matching on cost: that is matching on the outcome, which builds the answer into the comparison.") |>
+  p_("Three ways to run it; decide on the day. (1) Worksheet: each group works through the sheet together and reports one answer. (2) Cards on the table: each group lays out its seven profile cards and pairs them physically, then fills in the sheet. (3) Walking version: take one set of cards and give one card to a volunteer from each of seven groups; the eighth group checks the matches. A, B and C walk to the person they think is their twin; their own groups explain the match. Business 4 is left standing alone: ask the room what happens to it in the analysis (it is set aside, the common-support idea that returns in Case 2). Few people walk, and each group reports through its volunteer.") |>
   h2_("Which case would you trust?") |>
   p_(sprintf("Case 1 is the more trustworthy study, and it cannot show it clears the rule: it estimates %s AED saved, and the least generous end is %s. Case 2 gives the more attractive answer and carries the unquantified risk: %d camera segments (%d%%) have no real lookalike, %d segments share %d twins, and the outcome's own baseline is out of balance (%.2f). Levels say %.2f avoided, changes say %.2f; the interval for changes runs down to %.2f, short of %.1f. Rows 1 and 4 separate the two cases, and neither appears in a typical results table.",
              gfmt(abs(g_lev$est)), gfmt(avoid1[1]), c2_out, round(100 * c2_out / n_cam), n_cam, c2_used,
@@ -1038,12 +1149,13 @@ s10 <- new_pack() |>
   title_("Credibility rating sheet", S10) |>
   print_line("1 per participant, with the report") |>
   p_("Work through the report one section at a time. For each section, circle a colour and write the main reason for your colour. Rate the executive summary first, on your own, before reading the rest of the report. Then rate Sections 3 to 7 in pairs. The Area to check column tells you which part of yesterday's QA checklist to use.") |>
+  p_("Wall grid: after each rating, put a sticky note with a few words of your reason on the wall grid, in the section's column and your colour's row. Summary: one note each. Sections 3 to 7: one note per pair. No names.", bold = TRUE) |>
   body_add_flextable(plain_table(setNames(rating_scale, c("Colour", "What it means")), widths = c(1.2, 5.6))) |>
   p_("Section 2, The programme, describes the programme and is not rated.", 8.5, italic = TRUE, color = GREY) |>
   body_add_flextable(plain_table(data.frame(
     Section = rating_sections$section, `Area to check` = rating_sections$area, Colour = "Green  /  Amber  /  Red",
     `Your reason for selecting this colour` = "", `If amber or red: what would be needed to shift the colour to green?` = "", check.names = FALSE),
-    widths = c(1.4, 1.1, 1.1, 1.8, 1.4)) |> tall_rows(0.95)) |>
+    widths = c(1.4, 1.1, 1.1, 1.8, 1.4)) |> tall_rows(0.85)) |>
   new_page() |>
   title_("Your verdict", S10) |>
   print_line("on the back of the rating sheet") |>
@@ -1088,8 +1200,15 @@ s10 <- new_pack() |>
     check.names = FALSE), widths = c(1.3, 2.7, 2.8)) |> fontsize(size = 9, part = "body")) |>
   h2_("The most important problem") |>
   p_(rating_decisive) |>
+  h2_("Wall grid") |>
+  p_("Setup, before the session: a grid on the wall (flipchart sheets or brown paper, about 3 m wide) with six columns, one per rated section (1, 3, 4, 5, 6, 7), and three rows: Green, Amber, Red. Use the signs at the end of this pack; colour the row signs or add a coloured dot. Each participant needs about four sticky notes and a pen; the sticky notes can be any colour, because the row gives the colour.") |>
+  p_("Running it: participants post their executive-summary note after the five minutes alone, and pairs post one note per section as they finish each one. In the debrief, read each column from the wall before the slide's reveal, in place of a show of colours. The pattern to expect: the executive-summary column leans green and the Results column leans amber or red. Put the two columns side by side at \"The same question\": what did the summary lead people to believe?") |>
   h2_("AI Snapshot") |>
   p_("The two unsupported claims: \"the programme meets the criterion for scale-up\" and \"the recommendation is supported by the evidence\". The larger problem: the response reads \"approximately 1,000\" as if all four methods agreed (only the matched comparison gives 1,000), and never notices that the preferred specification is 816, which fails the threshold, or asks whether 1,014 was chosen as the headline because it clears the bar. It also treats the compliance gap as evidence of honesty instead of asking which businesses are missing. What it did well: it found the real disclosures, described the offer-effect and locality limitations correctly, and reached a verdict. The better prompt asks for a comparison instead of a verdict, so the 816 is hard to miss.")
+s10 <- s10 |>
+  new_page() |> title_("Wall board: grid signs", S10) |>
+  print_line("1 set for the trainer, cut along the dashed lines: six column signs (sections) and three row signs (colours)") |>
+  board_pieces(c(rating_sections$section, "Green", "Amber", "Red"), size = 26, height = 1.3)
 print(s10, target = "Oct15_session1_materials.docx")
 
 # ===========================================================================

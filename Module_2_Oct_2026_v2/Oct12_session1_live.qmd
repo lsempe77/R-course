@@ -844,29 +844,27 @@ answer through a second chat to check it. Also note what it explained well.
 **1.** "Fatal collisions on camera roads fell 32% over two years." \
 **2.** "The effect of cameras on speed is −3.4 km/h, 95% confidence interval −3.6 to −3.1." \
 **3.** "The fall in speed is statistically significant (p < 0.001), so every road should get a camera." \
-**4.** "Speed fell 3.4 km/h on camera roads and did not change on roads without them." \
-**5.** "The average road in our sample had 13.5 injury collisions." \
-**6.** "A study of 20 roads found no significant change in speed." \
-**7.** "The coefficient on school_within_500m is −0.37, so schools near roads slow traffic." \
-**8.** "Speed fell 3.4 km/h more than on roads without cameras; the target was at least 3 km/h."
+**4.** "Speed fell 3.4 km/h on camera roads and did not change on roads without them."
 :::
 
 ::: {.ask}
 In groups: for each excerpt, **which of the three questions does the excerpt not
-answer? Would you act, not act, or ask a question first?** Six minutes. Then:
+answer? Would you act, not act, or ask a question first?** Four minutes. Then:
 which excerpt would you most want to act on?
 :::
 
 ::: {.notes}
-Target in excerpt 8 is invented for the exercise. Key: 1 compared to what (ask
-first); 2 how big in units that matter, speed not collisions (ask first); 3
-significance is not a decision rule (do not act); 4 how sure, no interval (ask
-first); 5 one road pulls the mean (ask for the spread); 6 too small to see
-anything (do not conclude "no effect"); 7 not a policy lever (do not act); 8
-comparison, effect and bar (act). Groups usually split on 2 and 4: take one
-group's reasoning for each.
+Four excerpts only (6 Oct). Key: 1 compared to what (ask first); 2 how big in
+units that matter, speed not collisions (ask first); 3 significance is not a
+decision rule (do not act); 4 how sure, no interval (ask first). Groups usually
+split on 2 and 4: take one group's reasoning for each. None of the four earns
+"act": ask what an excerpt would need to get there (a comparison, an effect and
+a target, as in "Speed fell 3.4 km/h more than on roads without cameras; the
+target was at least 3 km/h").
 
-Paper (Oct12_session1_materials.docx): Hand out the triage sheet (pack page 4, one per group) and one set of excerpt slips per group (page 5, cut).
+Paper (Oct12_session1_materials.docx): Hand out the triage sheet (pack page 4, one per group) and one set of the four excerpt slips per group (page 5, cut).
+
+Optional wall matrix (set up beforehand; signs at the end of the pack): columns Act / Ask first / Do not act, rows Compared to what? / How big? / How sure? / None. Each group has its own marker colour, draws a stripe across its slips and tapes them into the matrix after filling in the sheet. Ask two groups whose slips for the same excerpt sit in different cells to explain.
 :::
 
 # 6 · Take this back to your desk {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
