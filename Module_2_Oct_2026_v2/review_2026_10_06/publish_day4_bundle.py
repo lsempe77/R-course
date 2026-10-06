@@ -1,6 +1,6 @@
-﻿from pathlib import Path
+from pathlib import Path
 import shutil,zipfile,hashlib,json
-root=Path('.').resolve();pre=root.parent/'.preview_day2_publish/docs/preview';qa=root/'review_2026_10_06/qa'
+root=Path(__file__).resolve().parents[1];pre=root.parent/'.preview_day2_publish/docs/preview';qa=root/'review_2026_10_06/qa'
 files=['Oct15_session1.html','Oct15_session2_live.html','Oct15_session2.html','Oct15_session1_report.docx','Oct15_session1_rating_sheet.docx','Oct15_session1_materials.docx','Oct15_session1_board_A1.pdf','Oct15_session2_materials.docx','Oct15_session2_findings.docx','Oct15_session2_brief_template.docx','Module2_exercise_plan_v3.docx']
 for f in files:shutil.copy2(root/f,pre/f)
 for f in ['Oct15_session1_handouts.docx','Oct15_session2_handouts.docx']:shutil.copy2(root.parent/'docs/handouts'/f,pre/f)

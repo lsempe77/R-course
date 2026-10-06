@@ -15,8 +15,8 @@ result_df <- function(trial=FALSE) {
 write_participant <- function(d,n) print(d,target=file.path(out_handouts,sprintf('Oct12_session%d_handouts.docx',n)))
 write_trainer <- function(d,n) print(d,target=sprintf('Oct12_session%d_materials.docx',n))
 
-# Session 1 two-sided participant sheet.
-d1 <- rdoc() |> rt('Question a claim',1) |>
+# Session 2 two-sided participant sheet.
+d1 <- rdoc() |> rt('Question a claim',2) |>
   rp('Read the claim, make a provisional decision and write the question you would ask before acting.') |>
   rf() |> rh('1 Read alone first') |>
   rp(sprintf('\"Landfill waste from businesses in GreenWaste fell %s%% in a year.\"',fmt(landfill_fall)),14,TRUE) |>
@@ -26,18 +26,18 @@ d1 <- rdoc() |> rt('Question a claim',1) |>
   rp('Landfill before GreenWaste, tonnes per year, for ten businesses') |>
   body_add_flextable(rtable(data.frame(t(ten$landfill_before),check.names=FALSE),rep(.68,10)) |> delete_part('header')) |>
   rp('Circle the business that would most affect the mean. Would the mean describe most of these businesses? Why?') |> rl(2) |>
-  body_add_break() |> rt('Triage four claims',1) |>
+  body_add_break() |> rt('Triage four claims',2) |>
   rp('Read your group\'s four cards. For each, choose a decision and explain the evidence you still need.') |>
   rp('Decisions: Act / Ask first / Do not act. Questions: Compared to what? / How big? / How sure?')
 for(i in 1:4) d1 <- d1 |> rh(paste('Card',i)) |> rp('Decision __________________   Missing question __________________') |>
   rp('My reason or question for the evaluator') |> rl(1)
 d1 <- d1 |> rh('My next question from memory') |> rp('Turn the cards over. Write one useful question and why its answer matters.') |> rl(2)
-write_participant(d1,1)
-t1 <- d1 |> body_add_break() |> rt('Four claim cards',1) |>
+write_participant(d1,2)
+t1 <- d1 |> body_add_break() |> rt('Four claim cards',2) |>
   rp('Trainer print instruction: one copy of this page per group. Cut into four slips. Do not give the key to participants.',10) |> rf()
 for(i in 1:4) t1 <- t1 |> rh(paste('Card',i)) |> rp(claims[i],14) |>
   rp('What does this claim leave unanswered?',11,after=18)
-t1 <- t1 |> body_add_break() |> rt('Trainer key for questioning claims',1) |>
+t1 <- t1 |> body_add_break() |> rt('Trainer key for questioning claims',2) |>
   rp('Print the first two pages double-sided, one per participant. Print page 3 once per group. This page is trainer only.',10) |>
   rh('Entry and comparison') |>
   rp(sprintf('No single opening choice is compulsory. Look for a reason and a concrete missing-evidence question. Landfill among participants fell from %s to %s tonnes; among others from %s to %s. Other changes are possible. This comparison alone does not establish causality.',fmt(landfill[1],1),fmt(landfill[2],1),fmt(landfill[3],1),fmt(landfill[4],1))) |>
@@ -46,36 +46,39 @@ t1 <- t1 |> body_add_break() |> rt('Trainer key for questioning claims',1) |>
   rh('Wall and phone options') |> rp('Keep Fiona\'s existing Oct12_session1_board_A1.pdf: optional, one A1 landscape print. Give each group a different marker colour and write the four card numbers in the grid. Groups must explain disagreements. Do not restore the reverted AI wall boards.') |>
   rp('Room voting: start room_poll.py, open the private facilitator URL, then use Before and After phases. Close voting before showing totals. Ask which evidence changed a reason. If phones cannot reach the server, use three labelled cards or a show of hands.') |>
   rh('AI check and close') |> rp('The authored AI sentence \"GreenWaste caused the entire fall\" is unsupported. A useful AI prompt asks it to identify missing comparison evidence before concluding. Participants verify against the source. Close with an individual question and reason, without AI.')
-write_trainer(t1,1)
+write_trainer(t1,2)
 
-# Session 2 one extract, one annotated reading task.
-d2 <- rdoc() |> rt('Read a reported result',2) |>
-  rp('Read the extract. Circle the estimate, box its interval and underline the comparison. Use these to write a careful decision sentence.') |>
-  rf() |> rh('The decision rule') |>
-  rp(sprintf('At least %s AED annual saving per business, measured 12 months later. This is an invented course rule; it is not a full value-for-money test.',fmt(decision_rule))) |>
-  rh('The report extract') |>
-  rp('City businesses that took part: the same businesses before and 12 months after. Outcome: annual waste cost, AED per business.') |>
-  body_add_flextable(rtable(result_df(),c(1.9,1.25,2.25,1.4))) |>
-  rp('Negative means lower costs. Coefficient means the number beside the named result row. The confidence interval describes statistical uncertainty; it does not cover every source of bias.',11) |>
-  rh('1 What does the result say') |> rp('Write the change with its units, group and period.') |> rl(2) |>
-  rh('2 Does the reported change meet the rule') |> rp('Explain using the estimate and interval.') |> rl(2) |>
-  body_add_break() |> rt('Check the conclusion',2) |>
-  rh('3 What does this comparison leave unanswered') |> rp('What could have changed costs without GreenWaste? What would you ask the evaluator?') |> rl(3) |>
-  rh('4 Repair this illustrative AI summary') |>
-  rp(sprintf('\"City participants\' annual costs fell by %s AED. GreenWaste caused that saving, so scale-up is justified.\"',fmt(abs(case$before_after))),14) |>
-  rp('Underline what the extract supports. Cross out what it does not support. Rewrite the conclusion using the source.') |> rl(3) |>
-  rh('5 Your decision sentence') |> rp('State the result, one limit and your next question. Work alone before comparing with a partner.') |> rl(3) |>
-  rp('A small p-value does not establish cause or a large enough saving. A non-significant result does not prove there is no effect.',11)
-write_participant(d2,2)
-t2 <- d2 |> body_add_break() |> rt('Trainer key for reading a result',2) |>
-  rp('Print pages 1 and 2 double-sided, one per participant. This page is trainer only.',10) |>
-  rh('Source and answer') |>
-  rp(sprintf('Change %s AED; 95%% interval %s to %s. Annual cost for city participants, after minus before, measured 12 months later. Both the estimate and interval imply a saving below the %s AED rule. The result does not isolate what GreenWaste caused.',fmt(case$before_after),fmt(ba_ci[1]),fmt(ba_ci[2]),fmt(decision_rule))) |>
-  rp('The printed regression stacks each business twice and clusters standard errors by business using estimatr::lm_robust with se_type = stata. The trainer\'s short live arithmetic reproduces its coefficient. Displayed means are rounded; subtracting them can differ by one AED.') |>
-  rh('Feedback') |> rp('Insist on comparison, units and period. Negative here means lower costs. The interval concerns the reported change, not individual business outcomes. Its precision does not solve causal bias. Statistical significance concerns a no-change model and its assumptions; it is not a probability that the programme works.') |>
-  rh('AI and independent close') |> rp('Keep the descriptive fall; remove the causal and scale-up conclusion. Example: the observed fall is below the rule, but this comparison cannot isolate the programme\'s effect. Ask for a credible estimate of what happened without GreenWaste. Review source evidence yourselves, even if a second AI agrees.') |>
-  rh('Delivery') |> rp('One trainer-run calculation only. Predict its sign before Run. If webR cannot load, use the printed result. Protect ten minutes for individual mark-up, pair comparison and feedback. Total 60 minutes.')
-write_trainer(t2,2)
+# Session 1 five essential terms and a regression-table reading task.
+d2 <- rdoc() |> rt('Read a regression table',1) |>
+  rp('Read the five terms in the slides, then use this table to state what the report supports.') |> rf() |>
+  rh('1 Mean') |> rp('Ten selected businesses sent 3, 4, 5, 5, 6, 7, 7, 8, 9 and 46 tonnes to landfill in one year.',11) |>
+  rp('Find the mean. Explain why it does not describe every business.') |> rl(2) |>
+  rh('Annual waste cost regression') |>
+  rp('The same city participants before and 12 months later. Outcome: annual waste cost in AED per business. The starting mean and the change are different rows.',11) |>
+  body_add_flextable(rtable(regression_df(),c(1.8,1.3,2.15,1.55))) |>
+  rh('2 Coefficient') |> rp('Circle the change row. Write its number, units and meaning of the sign.') |> rl(2) |>
+  body_add_break() |> rt('Explain what the table supports',1) |>
+  rh('3 Treatment effect') |> rp('Does the after/before change establish what GreenWaste caused? Explain the missing comparison.') |> rl(2) |>
+  rh('4 Confidence interval') |> rp('Box the interval for the change. What does it describe? Does it show the range for individual businesses?') |> rl(2) |>
+  rh('5 P value') |> rp('Find the change row p-value. Does it give the probability that GreenWaste works or establish cause?') |> rl(2) |>
+  rh('6 Read and repair') |>
+  rp('The course rule is at least 1,000 AED annual saving per business. Repair this claim: The tiny p-value proves GreenWaste caused enough saving to expand.',11) |> rl(2) |>
+  rh('My independent reading and next question') |>
+  rp('State the change, its interval and comparison. Ask for evidence needed before calling it a programme effect.') |> rl(2)
+write_participant(d2,1)
+t2 <- d2 |> body_add_break() |> rt('Trainer key for the five terms',1) |>
+  rp('Print participant pages 1 and 2 double-sided. These key pages are trainer only.',10) |>
+  rh('Mean') |> rp('100 tonnes divided by 10 businesses = 10 tonnes. Nine of these selected records are below the mean; one is 46. It is not the value for every business and this teaching selection is not representative of the city.') |>
+  rh('Coefficient') |> rp(sprintf('Before GreenWaste is the starting mean, %s AED. After minus before is the change, %s AED. Negative means lower annual costs, not automatically a harmful outcome. A coefficient is a named model result, not automatically a treatment effect.',fmt(ba_mean['before']),fmt(case$before_after))) |>
+  rh('Treatment effect') |> rp('The change caused by the programme, relative to what would have happened without it. A before/after change can include other changes over time. Ask for a credible no-programme comparison.') |>
+  rh('Confidence interval') |> rp(sprintf('For the change: %s to %s AED. It describes uncertainty around the model estimate under its assumptions, not the spread of individual savings. It does not cover all bias or establish cause. Do not give a 95%% probability interpretation for this fixed interval.',fmt(ba_ci[1]),fmt(ba_ci[2]))) |>
+  rh('P value') |> rp('Less than 0.001 for the change. Evidence against the tested no-change model under its assumptions, not the probability that the programme works or that the result is due to chance. It establishes neither cause nor a large enough saving; a non-significant result also does not prove no effect.') |>
+  body_add_break() |> rt('Trainer feedback and delivery',1) |>
+  rh('Decision rule and source repair') |> rp('The observed saving and its interval are below the invented 1,000 AED rule. Keep the reported fall; remove causal assurance and the assertion that the minimum saving is met. This is not evidence that the programme has no effect.') |>
+  rh('Independent reading') |> rp('Require named row, signed coefficient, units, interval and comparison. Accept accurate plain language for all five terms. Collect one independent answer and question. Give brief feedback for any missed term in Session 2.') |>
+  rh('Delivery') |> rp('60 minutes. One four-minute trainer arithmetic demonstration reproduces -669 AED. Participants predict its sign; no participant coding. Protect ten minutes for individual reading, paired source check and feedback. Printed results are the fallback.') |>
+  rh('Source') |> rp('The actual regression stacks each participant business twice and clusters by business using estimatr::lm_robust with se_type = stata. The intercept is the starting mean and the after coefficient is mean change. Means are rounded for display; do not subtract displayed values to audit the unrounded coefficient. Standard error and sample size can be pointed out if a report uses them, but they are not a replacement for the five core terms.')
+write_trainer(t2,1)
 
 # Session 3 trial reading and a short decision note.
 d3 <- rdoc() |> rt('Judge a fair comparison',3) |>

@@ -1,5 +1,13 @@
 # Handoff: moving Module 2 to the simple GreenWaste case
 
+## Day 1 order and case notice corrected, 6 October 2026
+
+Lucas requested the first two Day 1 sessions exchange places and explicitly teach the five core terms before regression-table reading. Session 1 is now **Read a regression table**: mean, treatment effect, coefficient, confidence interval and p-value; a two-row actual regression distinguishes the starting mean (1,432 AED) from the observed change (-669 AED). The fifth term recovered from the original lesson is treatment effect. A coefficient is not automatically a programme effect. Preserve ten minutes for independent reading, paired checking and feedback. Session 2 is **Question a claim**, applying the vocabulary to Fiona's four claim cards. Both remain 60 minutes; Day 1 S3 stays 75. Session 1/2 each have 11 content screens, two participant pages and four trainer pages. The classroom brief and hub match the order. The optional triage poster retains its legacy Oct12_session1 filename but is used in Session 2.
+
+Generic fictional-case stamps are removed from slide content, plots and tables. Shared title-slide notice reads "GreenWaste is a fictional training case." exactly once per deck, 19px Noto Sans, regular grey; paper notices use Arial 9 grey. The four-page deliberately flawed report states its status on its first page. Keep substantive fictional-assumption and teaching-record labels where needed for interpretation.
+
+Both revised decks were walked with feedback open: no browser errors or overflow, trainer Run reproduced -669, keyboard choices/reveals passed. All eleven title notices have identical computed styles and fit. Updated print pages and all nine classroom-brief pages rendered in Word and visually inspected. Three download archives regenerated with byte checks; all remain under 25 MiB. Existing backups in backups/case_notice_2026_10_06/ retain pre-change sources and materials. The latest source replaces the earlier Day 1 lesson; historical notes below are superseded.
+
 ## Live publication authorised, 6 October 2026
 
 Live checkpoint `0a0a03d` pushed to main and simple-greenwaste. Cloudflare `Workers Builds: module2` completed successfully; GitHub Pages build and deploy also succeeded. The revised hub is https://3ie.academy/ with all eleven live decks and their materials. Main-worktree checks confirmed all 49 hub links and byte identity for the eleven decks plus corrected CSV. Remote unauthenticated requests returned 403 and no authenticated browser was available, so online page content was not inspected. This deployment record is saved on the source branch after publication.

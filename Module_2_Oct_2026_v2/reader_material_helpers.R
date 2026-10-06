@@ -17,7 +17,7 @@ rt <- function(d, title, session) {
 }
 rh <- function(d, text) rp(d,text,14,TRUE,after=6)
 rl <- function(d, n=2) {for (i in seq_len(n)) d <- rp(d,strrep('_',55),12,colour='#B5BEC9',after=12); d}
-rf <- function(d) rp(d,'Fictional GreenWaste case | invented figures',9,colour='#545860',after=8)
+rf <- function(d) rp(d,'GreenWaste is a fictional training case.',9,colour='#545860',after=8)
 rtable <- function(df, widths) {
   ft <- flextable(df) |> fontsize(size=12,part='all') |> font(fontname='Arial',part='all') |>
     bg(bg='#063360',part='header') |> color(color='white',part='header') |> bold(part='header') |>

@@ -49,9 +49,8 @@ s1 = r'''
 Would this sentence justify extending the programme?
 :::
 
-Write your decision and one question on **Sheet 1**. Work alone first.
+Use the five terms from Session 1. Write your decision and one question on **Sheet 1**. Work alone first.
 
-Fictional GreenWaste case · invented figures
 
 ::: {.notes}
 7 minutes. This is the entry task, not a lecture. Do not define terms or correct answers yet. Collect a few decisions and questions. Keep the sheets so participants can compare their own reading at the end of the week. No AI for this task.
@@ -61,7 +60,7 @@ Fictional GreenWaste case · invented figures
 
 {{< include _case_map.qmd >}}
 
-Fictional case · today we read **waste sent to landfill**, in tonnes per business per year.
+Today we read **waste sent to landfill**, in tonnes per business per year.
 
 ::: {.notes}
 3 minutes. Use the existing case picture/card. GreenWaste advises businesses and helps them improve waste handling. One pilot used a lottery; the rest of the city used a score rule. Do not teach either method yet or reveal cost findings. The map shows an illustrative arrangement, not actual counts. The corrected city records follow the displayed rule: score 58 or below took part.
@@ -84,7 +83,6 @@ Landfill among businesses that took part, one year later.
 </div>
 ```
 
-Fictional GreenWaste case · invented figures
 
 ::: {.notes}
 3 minutes. Individual choice, then a reason. Buttons record only the choice in this open page. For shared phone voting use room_poll.py and its facilitator page; the room poll is separate from this local interaction. Keep results hidden until voting closes. Paper fallback: three labelled cards or a show of hands. Revisit the same question after opening the comparison.
@@ -228,9 +226,8 @@ Write one question and explain why the answer matters.
 :::
 '''
 
-s2 = r'''
-## One question from memory {.reader-slide}
-
+from build_day2_decks import slide, ask, chunk, demo, open_answer
+s2 = slide('A table has reached your desk',r'''
 ```{webr}
 #| context: setup
 #| autorun: true
@@ -239,201 +236,26 @@ s2 = r'''
 gw <- read.csv('evaluation_data_GreenWaste_simple.csv')
 tp <- subset(gw, setting == 'city' & took_part == 1)
 ```
+GreenWaste advises businesses about waste handling.
 
-::: {.ask}
-What would you ask before turning a fall into a claim of impact?
-:::
+Today we read **mean, treatment effect, coefficient, p-value and confidence interval**.
 
-Tell a partner. Keep the cards closed.
+'''+ask('Which of these terms could you explain to a director?'),4,'Individual entry check, no AI. Ask for meanings rather than confidence alone. Five terms are essential reading vocabulary. Use the same fictional GreenWaste case; two-sided worksheet includes the regression table. One trainer Run later; no participant coding.')
+s2 += slide('Mean: one number for many businesses',chunk("html_out(paste0('<div class=\"ten-businesses\">',paste(sprintf('<span>%s</span>',fmt(ten$landfill_before)),collapse=''),'</div><p class=\"caption\">Waste sent to landfill by ten selected businesses, tonnes in one year</p>'))")+'**Mean = total divided by the number of records.**\n\nThese records total **100 tonnes**: the mean is **10 tonnes**.\n\n'+ask('Does 10 tonnes describe every business?'),7,'Participants add the displayed ten actual records and divide by ten before checking 100/10. Nine records are below 10 and one is 46. This is a selected teaching set, not a representative city sample. Ask how an unusual business moves the mean. We switch outcome explicitly to annual waste COST in AED for the regression table.')
+s2 += slide('Treatment effect: compared with what?', '**Treatment effect**: the change the programme caused.\n\nCompare what happened with the programme with what would have happened without it.\n\n'+open_answer('effect-change','Open the distinction','An observed before/after change can include other changes over time. A programme effect requires a credible no-programme comparison.')+ask('Would a fall after GreenWaste, on its own, establish its effect?'),6,'Use plain counterfactual words, no estimator lecture. Observed change and programme effect are different quantities. The effect is estimated rather than directly observed for the same business in both states. Session 2 applies this distinction to claims, Session 3 uses the pilot lottery.')
+s2 += slide('Coefficient: find the named row',chunk('html_out(regression_table())')+ask('Which row describes the starting mean, and which describes the change?'),6,'Table is an actual before/after regression of annual cost on after, clustering by business. Intercept labelled Before GreenWaste estimates the starting mean; after row is the change. Read named row, sign and units, not any number at random. 1432 baseline, -669 change, about 763 after. Negative means lower COST, not automatically a harmful outcome. A coefficient becomes an effect estimate only when the design supports causal interpretation.')
+s2 += slide('Read and check the change',demo("change <- tp$cost_after - tp$cost_before\ndata.frame(Result = 'After minus before', AED = round(mean(change)))")+ask('Predict the sign before the trainer runs the calculation.'),4,'One short trainer arithmetic demonstration reproduces the regression change coefficient -669, using unrounded costs. Ask one participant to read the result with units and comparison. No participant coding. Printed table is the fallback.')
+s2 += slide('Confidence interval: read the uncertainty',r'''
+**95% confidence interval**: `r fmt(ba_ci[1])` to `r fmt(ba_ci[2])` AED for the change.
 
-::: {.notes}
-3 minutes. Retrieve the previous session’s question. Do not reteach the whole session. Hidden webR setup belongs beneath this heading to avoid a blank slide. Open the deck early for webR; its trainer demo is optional, with the same static result on paper.
-:::
+A range compatible with the data and statistical model. It describes uncertainty around the estimate.
 
-## What decision is required? {.reader-slide}
-
-::: {.big-number}
-`r fmt(decision_rule)` AED
-:::
-
-The course’s decision rule: an annual saving of at least this amount **per business**, measured **12 months later**.
-
-::: {.ask}
-What units and time period must the result use?
-:::
-
-Fictional GreenWaste case · invented decision rule
-
-::: {.notes}
-3 minutes. Distinguish a minimum saving from a value-for-money judgement. Programme costs, reach and implementation matter later. This rule alone is not a complete scale-up decision. It is not a real government policy.
-:::
-
-## Read this extract {.reader-slide}
-
-```{r extract, results='asis'}
-html_out(reading_table())
-```
-
-::: {.ask}
-Which number answers “how much did costs change”?
-:::
-
-Read **Sheet 1** alone before discussing it.
-
-::: {.notes}
-5 minutes. Wait for reading. Ask participants to circle a number and underline the comparison words. Do not explain every column immediately. The extract is a before/after regression with business-clustered standard errors. The statistical method is in the trainer key, not a participant prerequisite.
-:::
-
-## Circle the change {.reader-slide}
-
-```{r cost-pair, results='asis'}
-html_out(sprintf('<div class="evidence-pair"><div class="evidence"><h3>Before</h3><p class="big-number">%s</p></div><div class="evidence"><h3>12 months later</h3><p class="big-number">%s</p></div></div><p class="caption">Annual waste cost, AED per city business that took part</p>%s',fmt(ba_mean['before']),fmt(ba_mean['after']),fiction))
-```
-
-::: {.ask}
-What does the negative sign on `r fmt(case$before_after)` mean here?
-:::
-
-::: {.fragment}
-Costs were `r fmt(abs(case$before_after))` AED lower. This is a change over time.
-:::
-
-::: {.notes}
-5 minutes. The difference uses unrounded values, so subtracting displayed rounded means may differ by one AED. Distinguish lower costs from a harmful outcome. Ask for the time period and group in the spoken answer. Do not call the change the programme’s causal effect.
-:::
-
-## Find its row {.reader-slide}
-
-**Coefficient**: the number beside a named result row.
-
-::: {.ask}
-Will this calculation give a rise or a fall?
-:::
-
-:::: {.columns}
-::: {.column width="48%"}
-```{webr}
-#| echo: true
-change <- tp$cost_after - tp$cost_before
-data.frame(Result = 'After minus before',
-           AED = round(mean(change)))
-```
-:::
-::: {.column width="52%"}
-```{r highlighted, results='asis'}
-html_out(sprintf('<div class="evidence"><h3>After GreenWaste</h3><p class="big-number">%s</p><p>Coefficient, AED</p></div>%s',fmt(case$before_after),fiction))
-```
-:::
-::::
-
-::: {.notes}
-5 minutes. Predict, then trainer Run. Participants read the output, not the code. The arithmetic produces the same coefficient as the before/after regression shown in the extract. The row’s name is essential: a different coefficient answers a different question. Use the printed coefficient if webR is unavailable. Never ask participants to fix code.
-:::
-
-## What does the interval add? {.reader-slide}
-
-::: {.lead}
-95% confidence interval: `r fmt(ba_ci[1])` to `r fmt(ba_ci[2])` AED
-:::
-
-A range compatible with the data and statistical model. It shows uncertainty around the estimate.
-
-::: {.ask}
-Does a narrow interval fix a poor comparison?
-:::
-
-::: {.fragment}
-It does not account for every source of bias.
-:::
-
-Fictional GreenWaste case · invented figures
-
-::: {.notes}
-6 minutes. Box the interval on the worksheet. It is not a range of individual business savings or a 95% chance statement about this fixed interval. If needed: repeating the procedure under its assumptions yields intervals covering the true model quantity about 95% of the time. Do not teach repeated-sampling machinery. Precision cannot tell us what else changed over time.
-:::
-
-## Compare it with the rule {.reader-slide}
-
-```{r before-rule, results='asis'}
-html_out(interval_svg())
-```
-
-::: {.ask}
-Does this reported change reach the rule?
-:::
-
-::: {.fragment}
-The interval is below the rule. The comparison still does not establish what GreenWaste caused.
-:::
-
-::: {.notes}
-6 minutes. Orient to the saving scale, which is positive here: it is the magnitude of the negative cost change in the table. Participants trace the estimate, interval and rule with a finger. Even a precise before/after change cannot settle a causal decision. Avoid concluding that the programme does not work.
-:::
-
-## Significant enough to act? {.reader-slide}
-
-The **p-value** for this change is **less than 0.001**.
-
-“Statistically significant” asks how unusual the result would be under a no-change model and its assumptions.
-
-::: {.ask}
-Does that tell us GreenWaste caused enough saving to extend it?
-:::
-
-::: {.fragment}
-A small p-value establishes neither cause nor a large enough saving. A non-significant result does not prove no effect.
-:::
-
-Fictional GreenWaste case · invented figures
-
-::: {.notes}
-5 minutes. Recognise the term when reading reports. The p-value concerns the null tested by the analysis; here the before/after change, not a causal effect. It is not the probability that the programme works or that the result is due to chance. Do not introduce a hypothesis-testing lecture.
-:::
-
-## Finish the mark up {.reader-slide}
-
-On **Sheet 1**:
-
-Circle the estimate. Box its interval. Underline the comparison.
-
-Write the units and period, then a decision sentence.
-
-::: {.ask}
-Which part of the scale-up decision does this extract leave unanswered?
-:::
-
-::: {.notes}
-10 minutes. Five minutes alone, three in pairs, two for feedback. Every reader locates the result before discussing. Use the answer space on Sheet 1. The causal comparison is missing. Invite a threshold reading plus the limitation; do not accept “significant therefore extend”.
-:::
-
-## Repair an AI summary {.reader-slide data-correct="The second sentence is unsupported. The extract measures a change over time; it does not isolate what GreenWaste caused."}
-
-Select every unsupported claim in this illustrative AI draft.
-
-```{r ai-summary, results='asis'}
-html_out(sprintf('<div class="claim-list"><button data-claim="supported" aria-pressed="false">City participants&#39; annual costs fell by %s AED.</button><button data-claim="unsupported" aria-pressed="false">GreenWaste caused that saving, so scale-up is justified.</button></div><button data-check>Check against the extract</button><p data-feedback class="feedback" role="status"></p>%s',fmt(abs(case$before_after)),fiction))
-```
-
-::: {.ask}
-How would you rewrite the second sentence using only this source?
-:::
-
-::: {.notes}
-7 minutes. Use Sheet 2. Example rewrite: the observed fall is below the rule, but the extract cannot isolate the programme’s effect. Ask an AI to identify the comparison, quote the supporting result row and ask for missing information before recommending. Check its answer against the source yourselves. A second AI review is assistance, not verification. The draft is an authored example.
-:::
-
-## Write the decision sentence {.reader-slide}
-
-::: {.ask}
-What can you say confidently, and what would you ask next?
-:::
-
-Write a result with its units, one limit, and your next question. Use the extract.
-
-::: {.notes}
-5 minutes. Individual close. Accept plain wording: participants’ annual costs fell about the estimated amount after 12 months; the change is below the 1,000 AED rule; we need a credible estimate of what happened without the programme. Do not turn this into a definitive rejection of GreenWaste. Total 60 minutes.
-:::
-'''
+'''+ask('Is this the range of savings for individual businesses?')+open_answer('interval-meaning','Open the reading check','No. This interval concerns the estimated change. It does not cover every source of bias or establish cause.'),7,'Participants box the after-row interval and state its units. Do not interpret it as a 95% probability statement about this fixed interval. If asked: under assumptions, repeated intervals from this procedure cover the true model quantity about 95% of the time. No machinery lecture. Precision does not repair a weak comparison.')
+s2 += slide('P-value: significant enough to act?', '**p-value < 0.001** for the reported change.\n\nIt asks how unusual a result this extreme would be under a **no-change model** and its assumptions.\n\n'+ask('Does a small p-value establish cause or enough saving?')+open_answer('p-reading','Open the reading check','Neither. It is not the probability that GreenWaste works. A non-significant result also does not prove no effect.'),6,'Find the p-value on the after row. Distinguish evidence against the tested null from causal credibility and policy importance. Do not call it the probability that the result is due to chance. No shuffle simulation or hypothesis-testing lecture.')
+s2 += slide('Compare the result with the decision rule',chunk('html_out(interval_svg())')+ask('Does the reported change reach an annual saving of 1,000 AED per business?'),5,'Read the same change on a positive SAVING scale. Estimate and interval fall below the invented rule. A statistically clear fall can still be below a policy minimum, and the comparison still does not isolate cause. Do not conclude the programme has no effect.')
+s2 += slide('Read the table independently','On **Sheet 1**, circle the change coefficient, box its interval and find its p-value.\n\nOn **Sheet 2**, explain all five terms using the source.\n\n'+ask('What can you say about the result, and what remains unanswered?'),10,'Five minutes independently, three minutes paired source check, two minutes feedback. Require mean as total/count, treatment effect as causal quantity needing no-programme comparison, coefficient as named row with units/sign, p-value not probability programme works, interval for estimate not individuals. Accept accurate plain words. This is core reading practice, not optional vocabulary.')
+s2 += slide('Repair the conclusion',chunk("html_out(sprintf('<p class=\"lead\">Annual costs fell by %s AED. The tiny p-value proves GreenWaste caused enough saving to expand.</p>',fmt(abs(case$before_after))))")+ask('Which parts can the table support?')+open_answer('table-ai','Open the source check','Keep the reported fall and its interval. Remove the causal assurance and the claim that the 1,000 AED minimum is met.'),3,'Authored AI draft; no external account. Participants repair one sentence. A correct number can accompany an unsupported causal or policy conclusion.')
+s2 += slide('Your reading check','Close the term explanations. Keep the regression table open.\n\nWrite the change with its units, interval and comparison. State what its p-value does not establish.\n\n'+ask('What evidence would you request before calling this a programme effect?'),2,'Independent close without AI. Retrieve the five meanings, not five labels. Mark missed terms for brief feedback in Session 2. No formal certification claim. Total 60 minutes.')
 
 s3 = r'''
 ## Two estimates one programme {.reader-slide}
@@ -667,8 +489,8 @@ Write your question and say how its answer could change your recommendation.
 :::
 '''
 
-for name, text in [('Oct12_session1_live.qmd', header('Compared to what',1)+s1),
-                   ('Oct12_session2.qmd', header('Read the result',2,True)+s2),
+for name, text in [('Oct12_session1_live.qmd', header('Read a regression table',1,True)+s2),
+                   ('Oct12_session2.qmd', header('Question a claim',2)+s1),
                    ('Oct12_session3_live.qmd', header('Choose a fair comparison',3,True)+s3)]:
     (ROOT/name).write_text(text.strip()+'\n', encoding='utf-8')
     print(name, 'content screens:', sum(line.startswith('## ') for line in text.splitlines()))

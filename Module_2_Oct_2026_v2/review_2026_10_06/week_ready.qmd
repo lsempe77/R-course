@@ -24,8 +24,8 @@ Short explanations lead into individual predictions, source checks, practical gr
 
 | Day | Session | Minutes | Deck | Participant sheet | Trainer pack |
 |---|---|---:|---|---|---|
-| 1 | Question a claim | 60 | [Open](Oct12_session1_live.html) | [Two sides](Oct12_session1_handouts.docx) | [Key and materials](Oct12_session1_materials.docx) |
-| 1 | Read a reported result | 60 | [Open](Oct12_session2.html) | [Two sides](Oct12_session2_handouts.docx) | [Key and materials](Oct12_session2_materials.docx) |
+| 1 | Read a regression table | 60 | [Open](Oct12_session1_live.html) | [Two sides](Oct12_session1_handouts.docx) | [Key and materials](Oct12_session1_materials.docx) |
+| 1 | Question a claim | 60 | [Open](Oct12_session2.html) | [Two sides](Oct12_session2_handouts.docx) | [Key and materials](Oct12_session2_materials.docx) |
 | 1 | Judge a fair comparison | 75 | [Open](Oct12_session3_live.html) | [Two sides](Oct12_session3_handouts.docx) | [Key and materials](Oct12_session3_materials.docx) |
 | 2 | Read the extra change | 60 | [Open](Oct13_session1.html) | [Two sides](Oct13_session1_handouts.docx) | [Key and materials](Oct13_session1_materials.docx) |
 | 2 | Read the jump at a score rule | 60 | [Open](Oct13_session2_live.html) | [Two sides](Oct13_session2_handouts.docx) | [Key and materials](Oct13_session2_materials.docx) |
@@ -42,7 +42,7 @@ Print each participant sheet double-sided, one per person. Trainer packs hold se
 
 ## Progress towards independent reading
 
-Day 1 builds outcome, units, interval and comparison reading. Day 2 questions the assumptions behind city comparisons. Day 3 separates cost-model assumptions from evidence, repairs charts and practises evaluator questions. Day 4 assesses five reading abilities independently, provides feedback and a targeted retry, then asks for a short defensible recommendation. This classroom check measures the taught abilities; it does not establish proficiency on all future reports.
+Day 1 explicitly teaches mean, treatment effect, coefficient, p-value and confidence interval, then applies them to claims and comparisons. Day 2 questions the assumptions behind city comparisons. Day 3 separates cost-model assumptions from evidence, repairs charts and practises evaluator questions. Day 4 assesses five reading abilities independently, provides feedback and a targeted retry, then asks for a short defensible recommendation. This classroom check measures the taught abilities; it does not establish proficiency on all future reports.
 
 [Day 1 activities and checks](day1_review.html) | [Day 2](day2_review.html) | [Day 3](day3_review.html) | [Day 4](day4_review.html)
 

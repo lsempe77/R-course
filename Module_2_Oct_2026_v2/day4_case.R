@@ -3,7 +3,7 @@
 source('day3_case.R',encoding='UTF-8')
 
 report_title <- 'GreenWaste evaluation report for review'
-report_label <- 'Intentionally flawed fictional review exercise. Figures are invented for training.'
+report_label <- 'GreenWaste is a fictional training case. This report contains deliberate flaws for review.'
 report_sections <- list(
   list(title='1 Executive summary',paragraphs=c(
     'GreenWaste helps businesses reduce annual waste costs. The authority asks whether the evidence supports expansion beyond the pilot district and the city. Its minimum saving rule is 1,000 AED per business per year.',

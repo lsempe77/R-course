@@ -1,3 +1,5 @@
+> Day 1 update, 6 October: Session 1 is Read a regression table (mean, treatment effect, coefficient, p-value, confidence interval); Session 2 is Question a claim. Both 60 minutes. Shared case notice appears only on deck title slides.
+
 > Current Module 2 route (6 October 2026): eleven rebuilt course-owned sessions, Days 1-3 at 60/60/75 minutes and Day 4 at 60/60. The final simulation is prepared by another provider. The working hub is `docs/index.html`, published at https://3ie.academy behind the existing password gate. Current build/promotion instructions are in `Module_2_Oct_2026_v2/HANDOFF.md`; run `review_2026_10_06/publish_live.py` to promote checked preview bytes. Earlier session counts, timings, case descriptions and Menti/export notes below are historical where superseded. Current landing links use browser decks and Word materials; historical PDF/PPTX snapshots are not advertised.
 
 # R course · Module 2 teaching decks

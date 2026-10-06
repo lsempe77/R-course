@@ -1,4 +1,13 @@
 <script>
+// Identify the fictional case once per deck, without repeating it in results.
+document.addEventListener('DOMContentLoaded', function () {
+  const title = document.querySelector('.reveal .slides #title-slide');
+  if (!title || title.querySelector('.case-notice')) return;
+  const notice = document.createElement('p');
+  notice.className = 'case-notice';
+  notice.textContent = 'GreenWaste is a fictional training case.';
+  title.appendChild(notice);
+});
 document.addEventListener('click', function (event) {
   const button = event.target.closest('button');
   if (!button) return;

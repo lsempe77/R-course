@@ -1,3 +1,5 @@
+> Latest Day 1 order: Session 1 teaches mean, treatment effect, coefficient, p-value and confidence interval through a regression table; Session 2 applies these terms to claim checking. Both are 60 minutes. Generic case notices appear once per deck with shared typography. See HANDOFF.md for the current build and validation.
+
 > Live publication authorised on 6 October 2026. The rebuilt eleven-session week and revised working course hub are being promoted to `docs/` on main, behind the existing password gate. Prior preview-only notes below are historical. Build and promote with `review_2026_10_06/publish_live.py`.
 
 > All eleven course-owned sessions are approved, rebuilt and checked as of 6 October 2026. [Current whole-week review](review_2026_10_06/week_ready.qmd) and [Day 4 review](review_2026_10_06/day4_review.qmd). Days 1-3: 60/60/75 minutes; Day 4: 60/60. Former Day 4 S3 is excluded for the other provider's simulation. The default print generator now builds all eleven current sessions. Earlier status and proposed work below are historical where superseded.

@@ -1,10 +1,10 @@
 ---
-title: "Compared to what"
+title: "Read a regression table"
 subtitle: "Module 2 · Day 1 · Session 1"
 author: "3ie"
 always_allow_html: true
 format:
-  revealjs:
+  live-revealjs:
     theme: [theme_dge.scss, theme_live.scss, theme_reader.scss]
     logo: assets/dge_logo_horizontal.svg
     slide-number: true
@@ -13,6 +13,10 @@ format:
     slide-level: 2
     embed-resources: true
     include-after-body: _reader_interactions.html
+webr:
+  render-df: kable
+  resources:
+    - evaluation_data_GreenWaste_simple.csv
 knitr:
   opts_chunk:
     echo: false
@@ -20,197 +24,197 @@ knitr:
     message: false
 ---
 
-
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
 
 ```{r setup, include=FALSE}
 source('day1_case.R')
 ```
 
+## A table has reached your desk {.reader-slide}
 
-## A report has reached your desk {.reader-slide}
 
-::: {.lead}
-“Landfill waste from businesses in GreenWaste fell `r fmt(landfill_fall)`% in a year.”
-:::
+```{webr}
+#| context: setup
+#| autorun: true
+#| echo: false
+#| include: false
+gw <- read.csv('evaluation_data_GreenWaste_simple.csv')
+tp <- subset(gw, setting == 'city' & took_part == 1)
+```
+GreenWaste advises businesses about waste handling.
+
+Today we read **mean, treatment effect, coefficient, p-value and confidence interval**.
 
 ::: {.ask}
-Would this sentence justify extending the programme?
+Which of these terms could you explain to a director?
 :::
 
-Write your decision and one question on **Sheet 1**. Work alone first.
-
-Fictional GreenWaste case · invented figures
 
 ::: {.notes}
-7 minutes. This is the entry task, not a lecture. Do not define terms or correct answers yet. Collect a few decisions and questions. Keep the sheets so participants can compare their own reading at the end of the week. No AI for this task.
+4 minutes. Individual entry check, no AI. Ask for meanings rather than confidence alone. Five terms are essential reading vocabulary. Use the same fictional GreenWaste case; two-sided worksheet includes the regression table. One trainer Run later; no participant coding.
 :::
 
-## Meet GreenWaste {.reader-slide}
+## Mean: one number for many businesses {.reader-slide}
 
-{{< include _case_map.qmd >}}
+```{r, results='asis'}
+html_out(paste0('<div class="ten-businesses">',paste(sprintf('<span>%s</span>',fmt(ten$landfill_before)),collapse=''),'</div><p class="caption">Waste sent to landfill by ten selected businesses, tonnes in one year</p>'))
+```
+**Mean = total divided by the number of records.**
 
-Fictional case · today we read **waste sent to landfill**, in tonnes per business per year.
+These records total **100 tonnes**: the mean is **10 tonnes**.
+
+::: {.ask}
+Does 10 tonnes describe every business?
+:::
+
 
 ::: {.notes}
-3 minutes. Use the existing case picture/card. GreenWaste advises businesses and helps them improve waste handling. One pilot used a lottery; the rest of the city used a score rule. Do not teach either method yet or reveal cost findings. The map shows an illustrative arrangement, not actual counts. The corrected city records follow the displayed rule: score 58 or below took part.
+7 minutes. Participants add the displayed ten actual records and divide by ten before checking 100/10. Nine records are below 10 and one is 46. This is a selected teaching set, not a representative city sample. Ask how an unusual business moves the mean. We switch outcome explicitly to annual waste COST in AED for the regression table.
 :::
 
-## Would you extend it? {.reader-slide}
+## Treatment effect: compared with what? {.reader-slide}
 
-::: {.big-number}
-`r fmt(landfill_fall)`% lower
-:::
+**Treatment effect**: the change the programme caused.
 
-Landfill among businesses that took part, one year later.
+Compare what happened with the programme with what would have happened without it.
 
 ```{=html}
-<div data-choices>
-  <button data-choice aria-pressed="false">Extend</button>
-  <button data-choice aria-pressed="false">Do not extend</button>
-  <button data-choice aria-pressed="false">Ask first</button>
-  <p role="status" class="feedback"></p>
-</div>
+<button data-open="effect-change" data-closed="Open the distinction" data-opened="Hide feedback" aria-controls="effect-change" aria-expanded="false">Open the distinction</button><div id="effect-change" class="feedback" hidden>An observed before/after change can include other changes over time. A programme effect requires a credible no-programme comparison.</div>
 ```
-
-Fictional GreenWaste case · invented figures
-
-::: {.notes}
-3 minutes. Individual choice, then a reason. Buttons record only the choice in this open page. For shared phone voting use room_poll.py and its facilitator page; the room poll is separate from this local interaction. Keep results hidden until voting closes. Paper fallback: three labelled cards or a show of hands. Revisit the same question after opening the comparison.
-:::
-
-## What is missing? {.reader-slide}
-
-::: {.lead}
-“Landfill fell after GreenWaste.”
-:::
-
 ::: {.ask}
-What would you need to know before saying GreenWaste caused the fall?
+Would a fall after GreenWaste, on its own, establish its effect?
 :::
 
-Write one question. Compare it with a partner’s.
 
 ::: {.notes}
-4 minutes. Invite concrete questions, not a list of technical terms. Prompt only if needed: what else changed, what happened elsewhere, how businesses were selected? Keep the next slide hidden until participants have committed.
+6 minutes. Use plain counterfactual words, no estimator lecture. Observed change and programme effect are different quantities. The effect is estimated rather than directly observed for the same business in both states. Session 2 applies this distinction to claims, Session 3 uses the pilot lottery.
 :::
 
-## Open the comparison {.reader-slide}
+## Coefficient: find the named row {.reader-slide}
 
-```{r landfill-comparison, results='asis'}
-html_out(sprintf('<div class="evidence-pair"><div class="evidence"><h3>Took part</h3><p class="big-number">%s &rarr; %s</p><p>Before &rarr; one year later</p></div><div class="evidence"><h3>Did not take part</h3><button data-open="other-landfill" data-closed="Open their result" data-opened="Hide their result" aria-controls="other-landfill" aria-expanded="false">Open their result</button><div id="other-landfill" hidden><p class="big-number">%s &rarr; %s</p><p>Before &rarr; one year later</p></div></div></div><p class="caption">Landfill, tonnes per business per year</p>%s', fmt(landfill['before'],1), fmt(landfill['after'],1), fmt(landfill['other_before'],1), fmt(landfill['other_after'],1), fiction))
+```{r, results='asis'}
+html_out(regression_table())
 ```
-
 ::: {.ask}
-What can the first fall tell us on its own?
+Which row describes the starting mean, and which describes the change?
 :::
+
 
 ::: {.notes}
-5 minutes. Ask participants to predict the other group’s direction before opening it. The other group also improved. This weakens a causal reading of before/after; it does not prove that these groups are a valid causal comparison. They started at different levels. Ask the same extension question again using the room poll’s After phase or cards. Invite a changed reason, not a winning answer.
+6 minutes. Table is an actual before/after regression of annual cost on after, clustering by business. Intercept labelled Before GreenWaste estimates the starting mean; after row is the change. Read named row, sign and units, not any number at random. 1432 baseline, -669 change, about 763 after. Negative means lower COST, not automatically a harmful outcome. A coefficient becomes an effect estimate only when the design supports causal interpretation.
 :::
 
-## Compared to what? {.reader-slide}
+## Read and check the change {.reader-slide}
 
-::: {.lead}
-“Waste was lower **than it had been before**.”
-:::
-
-The **counterfactual** is what would have happened without GreenWaste.
-
-::: {.ask}
-Does this sentence tell us what would have happened without it?
-:::
-
-::: {.fragment}
-Ask how the evaluator estimated that missing outcome.
-:::
-
-::: {.notes}
-5 minutes. Point to the comparison words. Explain counterfactual once in plain language. We cannot observe the same business, at the same time, both with and without the programme. A comparison can help estimate the missing outcome if its assumptions are credible. Avoid launching a methods survey. Have pairs add comparison words to one claim.
-:::
-
-## What does an average hide? {.reader-slide}
-
-Landfill before GreenWaste, tonnes per year, for ten businesses:
-
-```{r ten-businesses, results='asis'}
-html_out(paste0('<div class="ten-businesses">', paste(sprintf('<span>%s</span>', fmt(ten$landfill_before)), collapse=''), '</div>', fiction))
+```{webr}
+#| echo: true
+#| autorun: false
+change <- tp$cost_after - tp$cost_before
+data.frame(Result = 'After minus before', AED = round(mean(change)))
 ```
-
 ::: {.ask}
-Would one number describe these businesses well?
+Predict the sign before the trainer runs the calculation.
 :::
 
-::: {.fragment}
-The **mean** is the total divided by ten: `r fmt(mean(ten$landfill_before),1)` tonnes. Nine businesses are below it.
-:::
 
 ::: {.notes}
-5 minutes. Participants point to the large business before revealing the mean. No long arithmetic exercise. A mean can answer a useful total-related question, but it does not describe every business. Ask which extra information they would want about the spread. Do not introduce quartiles or a second lesson on medians.
+4 minutes. One short trainer arithmetic demonstration reproduces the regression change coefficient -669, using unrounded costs. Ask one participant to read the result with units and comparison. No participant coding. Printed table is the fallback.
 :::
 
-## Try four claims {.reader-slide}
+## Confidence interval: read the uncertainty {.reader-slide}
 
-Read the four claim cards. For each, choose:
 
-**Act · Ask first · Do not act**
+**95% confidence interval**: `r fmt(ba_ci[1])` to `r fmt(ba_ci[2])` AED for the change.
 
-Then name what is missing:
-
-**Compared to what? · How big? · How sure?**
+A range compatible with the data and statistical model. It describes uncertainty around the estimate.
 
 ::: {.ask}
-What question would move your decision forward?
+Is this the range of savings for individual businesses?
 :::
-
-::: {.notes}
-12 minutes. Preserve Fiona’s four cards and triage activity. Give one card set per group and use Sheet 2. Optional A1 board: one group-coloured marker per group; write card numbers into its question/decision grid. No extra AI wall board. Card 2’s causal wording is intentionally open to challenge. Technical terms on cards can be glossed briefly; the full uncertainty lesson comes next session. Protect time for groups to write their reasons.
-:::
-
-## Defend one choice {.reader-slide}
-
-Choose a card that two groups placed differently.
-
-::: {.ask}
-Which words or numbers support your choice?
-:::
-
-Explain one missing piece of evidence that could change it.
-
-::: {.notes}
-6 minutes. Discuss two disagreements, not a tour through every group. Expected primary placements: card 1 compared to what/ask first; card 2 how big/ask first (it concerns landfill, not the cost rule; also ask about the causal comparison); card 3 do not act on the nationwide recommendation; card 4 how sure/ask first. More than one missing question can be justified. Do not treat grid placement as a single-answer test.
-:::
-
-## Check the AI sentence {.reader-slide data-correct="The second sentence claims a cause the headline has not established. Ask what happened without GreenWaste."}
-
-An illustrative AI draft. Select the unsupported sentence.
-
 ```{=html}
-<div class="claim-list">
-<button data-claim="supported" aria-pressed="false">Landfill fell among businesses that took part.</button>
-<button data-claim="unsupported" aria-pressed="false">GreenWaste caused the entire fall.</button>
-</div>
-<button data-check>Check against the evidence</button>
-<p data-feedback class="feedback" role="status"></p>
+<button data-open="interval-meaning" data-closed="Open the reading check" data-opened="Hide feedback" aria-controls="interval-meaning" aria-expanded="false">Open the reading check</button><div id="interval-meaning" class="feedback" hidden>No. This interval concerns the estimated change. It does not cover every source of bias or establish cause.</div>
 ```
 
-::: {.ask}
-What should the AI ask before writing that conclusion?
-:::
 
 ::: {.notes}
-6 minutes. This is an authored example of a possible AI error, not a transcript of a verified tool response. Participants must point to source evidence. Optional live AI: provide only the headline and ask it to list the missing information before offering a conclusion. Review its questions yourselves. No AI account is required to complete the activity.
+7 minutes. Participants box the after-row interval and state its units. Do not interpret it as a 95% probability statement about this fixed interval. If asked: under assumptions, repeated intervals from this procedure cover the true model quantity about 95% of the time. No machinery lecture. Precision does not repair a weak comparison.
 :::
 
-## Your next question {.reader-slide}
+## P-value: significant enough to act? {.reader-slide}
 
-Close the cards and turn over the sheet.
+**p-value < 0.001** for the reported change.
+
+It asks how unusual a result this extreme would be under a **no-change model** and its assumptions.
 
 ::: {.ask}
-What would you ask the evaluator before acting on a claim of improvement?
+Does a small p-value establish cause or enough saving?
 :::
+```{=html}
+<button data-open="p-reading" data-closed="Open the reading check" data-opened="Hide feedback" aria-controls="p-reading" aria-expanded="false">Open the reading check</button><div id="p-reading" class="feedback" hidden>Neither. It is not the probability that GreenWaste works. A non-significant result also does not prove no effect.</div>
+```
 
-Write one question and explain why the answer matters.
 
 ::: {.notes}
-4 minutes. Individual retrieval, no list or AI. Look for a concrete comparison/counterfactual question, a decision-relevant size question or a useful uncertainty question, with a reason. Collect two answers. Session total 60 minutes. Do not add a summary lecture.
+6 minutes. Find the p-value on the after row. Distinguish evidence against the tested null from causal credibility and policy importance. Do not call it the probability that the result is due to chance. No shuffle simulation or hypothesis-testing lecture.
+:::
+
+## Compare the result with the decision rule {.reader-slide}
+
+```{r, results='asis'}
+html_out(interval_svg())
+```
+::: {.ask}
+Does the reported change reach an annual saving of 1,000 AED per business?
+:::
+
+
+::: {.notes}
+5 minutes. Read the same change on a positive SAVING scale. Estimate and interval fall below the invented rule. A statistically clear fall can still be below a policy minimum, and the comparison still does not isolate cause. Do not conclude the programme has no effect.
+:::
+
+## Read the table independently {.reader-slide}
+
+On **Sheet 1**, circle the change coefficient, box its interval and find its p-value.
+
+On **Sheet 2**, explain all five terms using the source.
+
+::: {.ask}
+What can you say about the result, and what remains unanswered?
+:::
+
+
+::: {.notes}
+10 minutes. Five minutes independently, three minutes paired source check, two minutes feedback. Require mean as total/count, treatment effect as causal quantity needing no-programme comparison, coefficient as named row with units/sign, p-value not probability programme works, interval for estimate not individuals. Accept accurate plain words. This is core reading practice, not optional vocabulary.
+:::
+
+## Repair the conclusion {.reader-slide}
+
+```{r, results='asis'}
+html_out(sprintf('<p class="lead">Annual costs fell by %s AED. The tiny p-value proves GreenWaste caused enough saving to expand.</p>',fmt(abs(case$before_after))))
+```
+::: {.ask}
+Which parts can the table support?
+:::
+```{=html}
+<button data-open="table-ai" data-closed="Open the source check" data-opened="Hide feedback" aria-controls="table-ai" aria-expanded="false">Open the source check</button><div id="table-ai" class="feedback" hidden>Keep the reported fall and its interval. Remove the causal assurance and the claim that the 1,000 AED minimum is met.</div>
+```
+
+
+::: {.notes}
+3 minutes. Authored AI draft; no external account. Participants repair one sentence. A correct number can accompany an unsupported causal or policy conclusion.
+:::
+
+## Your reading check {.reader-slide}
+
+Close the term explanations. Keep the regression table open.
+
+Write the change with its units, interval and comparison. State what its p-value does not establish.
+
+::: {.ask}
+What evidence would you request before calling this a programme effect?
+:::
+
+
+::: {.notes}
+2 minutes. Independent close without AI. Retrieve the five meanings, not five labels. Mark missed terms for brief feedback in Session 2. No formal certification claim. Total 60 minutes.
 :::

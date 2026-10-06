@@ -53,3 +53,6 @@
 .reveal .reader-slide .rating-options > div, .reveal .reader-slide .decision-checks > div { padding: 22px; background: #f4f7fb; border-radius: 12px; }
 .reveal .reader-slide .rating-options h3, .reveal .reader-slide .decision-checks h3 { font-size: 28px; margin: 0; }
 .reveal .reader-slide .sample-brief { font-size: 25px; line-height: 1.35; }
+
+// One consistent case notice, on the title slide only.
+.reveal .slides .case-notice { font-family: "Noto Sans", Arial, sans-serif; font-size: 19px; font-weight: 400; font-style: normal; color: #545860; line-height: 1.45; margin: 22px 0 0; }

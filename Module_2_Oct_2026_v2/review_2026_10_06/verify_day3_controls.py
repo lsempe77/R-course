@@ -35,12 +35,12 @@ async def main():
                     assert await b.get_attribute('aria-pressed')=='true'
                     assert await page.evaluate('Reveal.getIndices().h')==i
                 row=page.locator('section.present .reading-table thead tr')
-                if await row.count():assert await row.locator('th').count()==3
+                if await row.count():assert await row.locator('th').count()==(4 if name=='Oct12_session1_live' else 3)
             if name=='Oct13_session2_live':
                 await page.evaluate('Reveal.slide(2)');b=page.locator('section.present button[data-choice]').first
                 await b.focus();await page.keyboard.press('Space');assert await b.get_attribute('aria-pressed')=='true'
                 assert await page.evaluate('Reveal.getIndices().h')==2
-            results.append({'deck':name,'keyboard_and_toggle_reveals':count,'result_columns':3})
+            results.append({'deck':name,'keyboard_and_toggle_reveals':count,'result_columns':4 if name=='Oct12_session1_live' else 3})
             await page.close()
         await browser.close()
     (Path(__file__).parent/'qa/day3_controls.json').write_text(json.dumps(results,indent=2))

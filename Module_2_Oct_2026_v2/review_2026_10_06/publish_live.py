@@ -8,8 +8,8 @@ DOCS=ROOT/'docs'
 PREVIEW=DOCS/'preview'
 BACKUP=MODULE/'backups/live_2026_10_06'
 ROWS=[
- (1,1,60,'Oct12_session1_live','Question a claim','Find the missing comparison before accepting a headline.'),
- (1,2,60,'Oct12_session2','Read a reported result','Read the outcome, units, estimate and uncertainty.'),
+ (1,1,60,'Oct12_session1_live','Read a regression table','Read mean, treatment effect, coefficient, p-value and confidence interval.'),
+ (1,2,60,'Oct12_session2','Question a claim','Apply the five terms and find the missing comparison.'),
  (1,3,75,'Oct12_session3_live','Judge a fair comparison','Compare groups and read evidence from a lottery.'),
  (2,1,60,'Oct13_session1','Read the extra change','Ask whether the groups would have changed together.'),
  (2,2,60,'Oct13_session2_live','Read the jump at a score rule','Check the nearby comparison and what else changes.'),
@@ -19,7 +19,7 @@ ROWS=[
  (3,3,75,'Oct14_session3_live','Question the analyst','Request evidence that could change your decision.'),
  (4,1,60,'Oct15_session1','Judge a report section by section','Read independently, then support your judgement with a source.'),
  (4,2,60,'Oct15_session2_live','Write a defensible recommendation','Connect the finding, action, limit and next evidence.')]
-DAYS={1:('Monday 12 October','Read the claim and the comparison'),2:('Tuesday 13 October','Question how the comparison was made'),3:('Wednesday 14 October','Test the story and ask for evidence'),4:('Thursday 15 October','Read independently and make a recommendation')}
+DAYS={1:('Monday 12 October','Read the numbers and the claim'),2:('Tuesday 13 October','Question how the comparison was made'),3:('Wednesday 14 October','Test the story and ask for evidence'),4:('Thursday 15 October','Read independently and make a recommendation')}
 COPIES=[]
 def protect(dest):
  if dest.exists():

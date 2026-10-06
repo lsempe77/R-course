@@ -31,7 +31,7 @@ claims <- c(
   'The fall in landfill is statistically significant (p < 0.001), so every business in the country should join GreenWaste.',
   sprintf('Landfill fell %s tonnes per business among those that took part and %s tonnes among those that did not.',
           fmt(landfill['before'] - landfill['after'], 1), fmt(landfill['other_before'] - landfill['other_after'], 1)))
-fiction <- '<p class="fiction">Fictional GreenWaste case | invented figures</p>'
+fiction <- '' # Case notice appears once on the title slide.
 reading_table <- function(kind = 'before', highlight = FALSE) {
   trial <- kind == 'trial'
   b <- if (trial) case$rct else case$before_after
@@ -62,4 +62,19 @@ interval_svg <- function(kind = 'before', reveal = FALSE) {
          sprintf('<line x1="%.1f" x2="%.1f" y1="90" y2="90" stroke="#215a9e" stroke-width="9"/><text x="%.1f" y="68" text-anchor="end" font-size="24">%s</text><text x="%.1f" y="68" font-size="24">%s</text>', x(ci[1]), x(ci[2]), x(ci[1]) - 6, fmt(ci[1]), x(ci[2]) + 6, fmt(ci[2])),
          '</g>', sprintf('<circle cx="%.1f" cy="90" r="10" fill="#063360"/><text x="%.1f" y="131" text-anchor="middle" font-size="24" font-weight="bold">Estimate %s</text>', x(b), x(b), fmt(b)),
          '<text x="550" y="226" text-anchor="middle" font-size="24">Annual saving per business (AED)</text></svg>', fiction)
+}
+
+# A real two-row before/after regression table for the opening reading lesson.
+regression_df <- function() {
+  ci <- confint(ba_fit); est <- coef(ba_fit); pv <- ba_fit$p.value
+  data.frame('Result row'=c('Before GreenWaste','After minus before'),
+    'Coefficient AED'=vapply(est,fmt,''),
+    '95% interval AED'=vapply(seq_along(est),function(i) paste(fmt(ci[i,1]),'to',fmt(ci[i,2])),''),
+    'p-value'=vapply(pv,function(v)if(v<.001)'< 0.001' else fmt(v,3),''),check.names=FALSE)
+}
+regression_table <- function() {
+  df <- regression_df()
+  paste0('<table class="reading-table"><thead><tr>',paste0('<th>',names(df),'</th>',collapse=''),
+    '</tr></thead><tbody>',paste(vapply(seq_len(nrow(df)),function(i)paste0('<tr>',paste0('<td>',gsub('<','&lt;',as.character(df[i,])), '</td>',collapse=''),'</tr>'),''),collapse=''),
+    '</tbody></table><p class="caption">Annual waste cost in AED. The same city participants before and 12 months after. This comparison alone does not establish the programme effect.</p>')
 }

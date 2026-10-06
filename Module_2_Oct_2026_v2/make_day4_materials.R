@@ -3,7 +3,7 @@ source('day4_case.R',encoding='UTF-8')
 reader_day<-4;source('reader_material_helpers.R')
 write_part4<-function(d,n)print(d,target=file.path(out_handouts,sprintf('Oct15_session%d_handouts.docx',n)))
 write_train4<-function(d,n)print(d,target=sprintf('Oct15_session%d_materials.docx',n))
-ref4<-function(d,title)rt(d,title,1) |> rp('Read the stated evidence, then judge what it can support. Cite a section when you question a claim.') |> rp(report_label,10)
+ref4<-function(d,title)rt(d,title,1) |> rp('Read the stated evidence, then judge what it can support. Cite a section when you question a claim.') |> rp(report_label,9,colour='#545860')
 add_section4<-function(d,i){
   d<-d |> rh(report_sections[[i]]$title)
   for(p in report_sections[[i]]$paragraphs)d<-d |> rp(p,12,after=10)
@@ -12,15 +12,15 @@ add_section4<-function(d,i){
 
 # Four deliberate pages keep the results table and recommendations easy to find.
 report<-rdoc() |> ref4(report_title) |> add_section4(1) |> add_section4(2)
-report<-report |> body_add_break() |> rt('GreenWaste design and data',1) |> rf() |> add_section4(3) |> add_section4(4)
-report<-report |> body_add_break() |> rt('GreenWaste results',1) |> rf() |>
+report<-report |> body_add_break() |> rt('GreenWaste design and data',1) |> add_section4(3) |> add_section4(4)
+report<-report |> body_add_break() |> rt('GreenWaste results',1) |>
   rh(report_sections[[5]]$title) |> rp(report_sections[[5]]$paragraphs[1]) |>
   body_add_flextable(rtable(method_rows,c(2.2,1.7,2.4))) |>
   rp('Source: corrected synthetic GreenWaste file. Annual saving per business in AED, 12 months after the programme.',11)
 for(p in report_sections[[5]]$paragraphs[-1])report<-report |> rp(p)
 report<-report |> rh('The two city quantities') |>
   rp(sprintf('Recorded mean fall among participants: %s AED. Estimated extra change relative to other city businesses: %s AED. These quantities use different comparisons.',fmt(-case$before_after),fmt(-case$did))) |>
-  body_add_break() |> rt('GreenWaste limitations and recommendations',1) |> rf() |> add_section4(6) |> add_section4(7)
+  body_add_break() |> rt('GreenWaste limitations and recommendations',1) |> add_section4(6) |> add_section4(7)
 print(report,target='Oct15_session1_report.docx')
 
 # Individual opening assessment before discussion or AI.

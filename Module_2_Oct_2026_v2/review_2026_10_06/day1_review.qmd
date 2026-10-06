@@ -8,8 +8,8 @@ format:
     toc: false
 ---
 
-The approved Day 1 route is built. Participants practise questioning a claim,
-finding a reported result and judging a fair comparison. Each session has one
+The approved Day 1 route is built. Participants first read a regression table and practise the five core terms,
+then question a claim and judge a fair comparison. Each session has one
 two-sided worksheet. The trainer packs keep printing directions, cards and
 answer keys separate from those participant sheets.
 
@@ -17,13 +17,12 @@ answer keys separate from those participant sheets.
 
 | Session | Length | Content screens | Deck | Participant sheet | Trainer pack |
 |---|---:|---:|---|---|---|
-| Question a claim | 60 minutes | 11 | [Open](Oct12_session1_live.html) | [Two sides](Oct12_session1_handouts.docx) | [Cards and key](Oct12_session1_materials.docx) |
-| Read the result | 60 minutes | 11 | [Open](Oct12_session2.html) | [Two sides](Oct12_session2_handouts.docx) | [Key](Oct12_session2_materials.docx) |
+| Read a regression table | 60 minutes | 11 | [Open](Oct12_session1_live.html) | [Two sides](Oct12_session1_handouts.docx) | [Five-term key](Oct12_session1_materials.docx) |
+| Question a claim | 60 minutes | 11 | [Open](Oct12_session2.html) | [Two sides](Oct12_session2_handouts.docx) | [Cards and key](Oct12_session2_materials.docx) |
 | Choose a fair comparison | 75 minutes | 13 | [Open](Oct12_session3_live.html) | [Two sides](Oct12_session3_handouts.docx) | [Key](Oct12_session3_materials.docx) |
 
 Screen counts exclude the title. Session 3 includes a five-minute break.
-Landfill stays in Session 1; costs enter in Session 2. Technical terms are
-introduced beside the result readers need to interpret. Only Sessions 2 and 3
+Session 1 teaches mean, treatment effect, coefficient, p-value and confidence interval explicitly. It uses ten landfill records for the mean and a two-row annual-cost regression table for reading. Session 2 applies these terms to claims. Only Sessions 1 and 3
 have a trainer-run R demonstration. Participants do not write or debug code.
 
 Fiona's four-claim triage is retained, with the [existing optional A1 board](Oct12_session1_board_A1.pdf).
@@ -34,7 +33,7 @@ other branch are already present and will be preserved in later daily rebuilds.
 
 Use a choice before revealing comparison evidence. In Session 3, open the trial
 interval after reading the point estimate. In each session, select unsupported
-AI claims and check them against the extract. These native deck controls work
+AI claims and check them against the extract. A single consistently styled fictional-case notice appears on each title slide. These native deck controls work
 in the open page; they do not display room totals.
 
 The course-owned room poll replaces the Day 1 Menti activity. It has a phone

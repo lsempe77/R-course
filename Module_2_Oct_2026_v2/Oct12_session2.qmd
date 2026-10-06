@@ -1,10 +1,10 @@
 ---
-title: "Read the result"
+title: "Question a claim"
 subtitle: "Module 2 · Day 1 · Session 2"
 author: "3ie"
 always_allow_html: true
 format:
-  live-revealjs:
+  revealjs:
     theme: [theme_dge.scss, theme_live.scss, theme_reader.scss]
     logo: assets/dge_logo_horizontal.svg
     slide-number: true
@@ -13,10 +13,6 @@ format:
     slide-level: 2
     embed-resources: true
     include-after-body: _reader_interactions.html
-webr:
-  render-df: kable
-  resources:
-    - evaluation_data_GreenWaste_simple.csv
 knitr:
   opts_chunk:
     echo: false
@@ -24,214 +20,195 @@ knitr:
     message: false
 ---
 
-{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+
 
 ```{r setup, include=FALSE}
 source('day1_case.R')
 ```
 
 
-## One question from memory {.reader-slide}
-
-```{webr}
-#| context: setup
-#| autorun: true
-#| echo: false
-#| include: false
-gw <- read.csv('evaluation_data_GreenWaste_simple.csv')
-tp <- subset(gw, setting == 'city' & took_part == 1)
-```
-
-::: {.ask}
-What would you ask before turning a fall into a claim of impact?
-:::
-
-Tell a partner. Keep the cards closed.
-
-::: {.notes}
-3 minutes. Retrieve the previous session’s question. Do not reteach the whole session. Hidden webR setup belongs beneath this heading to avoid a blank slide. Open the deck early for webR; its trainer demo is optional, with the same static result on paper.
-:::
-
-## What decision is required? {.reader-slide}
-
-::: {.big-number}
-`r fmt(decision_rule)` AED
-:::
-
-The course’s decision rule: an annual saving of at least this amount **per business**, measured **12 months later**.
-
-::: {.ask}
-What units and time period must the result use?
-:::
-
-Fictional GreenWaste case · invented decision rule
-
-::: {.notes}
-3 minutes. Distinguish a minimum saving from a value-for-money judgement. Programme costs, reach and implementation matter later. This rule alone is not a complete scale-up decision. It is not a real government policy.
-:::
-
-## Read this extract {.reader-slide}
-
-```{r extract, results='asis'}
-html_out(reading_table())
-```
-
-::: {.ask}
-Which number answers “how much did costs change”?
-:::
-
-Read **Sheet 1** alone before discussing it.
-
-::: {.notes}
-5 minutes. Wait for reading. Ask participants to circle a number and underline the comparison words. Do not explain every column immediately. The extract is a before/after regression with business-clustered standard errors. The statistical method is in the trainer key, not a participant prerequisite.
-:::
-
-## Circle the change {.reader-slide}
-
-```{r cost-pair, results='asis'}
-html_out(sprintf('<div class="evidence-pair"><div class="evidence"><h3>Before</h3><p class="big-number">%s</p></div><div class="evidence"><h3>12 months later</h3><p class="big-number">%s</p></div></div><p class="caption">Annual waste cost, AED per city business that took part</p>%s',fmt(ba_mean['before']),fmt(ba_mean['after']),fiction))
-```
-
-::: {.ask}
-What does the negative sign on `r fmt(case$before_after)` mean here?
-:::
-
-::: {.fragment}
-Costs were `r fmt(abs(case$before_after))` AED lower. This is a change over time.
-:::
-
-::: {.notes}
-5 minutes. The difference uses unrounded values, so subtracting displayed rounded means may differ by one AED. Distinguish lower costs from a harmful outcome. Ask for the time period and group in the spoken answer. Do not call the change the programme’s causal effect.
-:::
-
-## Find its row {.reader-slide}
-
-**Coefficient**: the number beside a named result row.
-
-::: {.ask}
-Will this calculation give a rise or a fall?
-:::
-
-:::: {.columns}
-::: {.column width="48%"}
-```{webr}
-#| echo: true
-change <- tp$cost_after - tp$cost_before
-data.frame(Result = 'After minus before',
-           AED = round(mean(change)))
-```
-:::
-::: {.column width="52%"}
-```{r highlighted, results='asis'}
-html_out(sprintf('<div class="evidence"><h3>After GreenWaste</h3><p class="big-number">%s</p><p>Coefficient, AED</p></div>%s',fmt(case$before_after),fiction))
-```
-:::
-::::
-
-::: {.notes}
-5 minutes. Predict, then trainer Run. Participants read the output, not the code. The arithmetic produces the same coefficient as the before/after regression shown in the extract. The row’s name is essential: a different coefficient answers a different question. Use the printed coefficient if webR is unavailable. Never ask participants to fix code.
-:::
-
-## What does the interval add? {.reader-slide}
+## A report has reached your desk {.reader-slide}
 
 ::: {.lead}
-95% confidence interval: `r fmt(ba_ci[1])` to `r fmt(ba_ci[2])` AED
+“Landfill waste from businesses in GreenWaste fell `r fmt(landfill_fall)`% in a year.”
 :::
-
-A range compatible with the data and statistical model. It shows uncertainty around the estimate.
 
 ::: {.ask}
-Does a narrow interval fix a poor comparison?
+Would this sentence justify extending the programme?
 :::
 
-::: {.fragment}
-It does not account for every source of bias.
-:::
+Use the five terms from Session 1. Write your decision and one question on **Sheet 1**. Work alone first.
 
-Fictional GreenWaste case · invented figures
 
 ::: {.notes}
-6 minutes. Box the interval on the worksheet. It is not a range of individual business savings or a 95% chance statement about this fixed interval. If needed: repeating the procedure under its assumptions yields intervals covering the true model quantity about 95% of the time. Do not teach repeated-sampling machinery. Precision cannot tell us what else changed over time.
+7 minutes. This is the entry task, not a lecture. Do not define terms or correct answers yet. Collect a few decisions and questions. Keep the sheets so participants can compare their own reading at the end of the week. No AI for this task.
 :::
 
-## Compare it with the rule {.reader-slide}
+## Meet GreenWaste {.reader-slide}
 
-```{r before-rule, results='asis'}
-html_out(interval_svg())
+{{< include _case_map.qmd >}}
+
+Today we read **waste sent to landfill**, in tonnes per business per year.
+
+::: {.notes}
+3 minutes. Use the existing case picture/card. GreenWaste advises businesses and helps them improve waste handling. One pilot used a lottery; the rest of the city used a score rule. Do not teach either method yet or reveal cost findings. The map shows an illustrative arrangement, not actual counts. The corrected city records follow the displayed rule: score 58 or below took part.
+:::
+
+## Would you extend it? {.reader-slide}
+
+::: {.big-number}
+`r fmt(landfill_fall)`% lower
+:::
+
+Landfill among businesses that took part, one year later.
+
+```{=html}
+<div data-choices>
+  <button data-choice aria-pressed="false">Extend</button>
+  <button data-choice aria-pressed="false">Do not extend</button>
+  <button data-choice aria-pressed="false">Ask first</button>
+  <p role="status" class="feedback"></p>
+</div>
+```
+
+
+::: {.notes}
+3 minutes. Individual choice, then a reason. Buttons record only the choice in this open page. For shared phone voting use room_poll.py and its facilitator page; the room poll is separate from this local interaction. Keep results hidden until voting closes. Paper fallback: three labelled cards or a show of hands. Revisit the same question after opening the comparison.
+:::
+
+## What is missing? {.reader-slide}
+
+::: {.lead}
+“Landfill fell after GreenWaste.”
+:::
+
+::: {.ask}
+What would you need to know before saying GreenWaste caused the fall?
+:::
+
+Write one question. Compare it with a partner’s.
+
+::: {.notes}
+4 minutes. Invite concrete questions, not a list of technical terms. Prompt only if needed: what else changed, what happened elsewhere, how businesses were selected? Keep the next slide hidden until participants have committed.
+:::
+
+## Open the comparison {.reader-slide}
+
+```{r landfill-comparison, results='asis'}
+html_out(sprintf('<div class="evidence-pair"><div class="evidence"><h3>Took part</h3><p class="big-number">%s &rarr; %s</p><p>Before &rarr; one year later</p></div><div class="evidence"><h3>Did not take part</h3><button data-open="other-landfill" data-closed="Open their result" data-opened="Hide their result" aria-controls="other-landfill" aria-expanded="false">Open their result</button><div id="other-landfill" hidden><p class="big-number">%s &rarr; %s</p><p>Before &rarr; one year later</p></div></div></div><p class="caption">Landfill, tonnes per business per year</p>%s', fmt(landfill['before'],1), fmt(landfill['after'],1), fmt(landfill['other_before'],1), fmt(landfill['other_after'],1), fiction))
 ```
 
 ::: {.ask}
-Does this reported change reach the rule?
+What can the first fall tell us on its own?
+:::
+
+::: {.notes}
+5 minutes. Ask participants to predict the other group’s direction before opening it. The other group also improved. This weakens a causal reading of before/after; it does not prove that these groups are a valid causal comparison. They started at different levels. Ask the same extension question again using the room poll’s After phase or cards. Invite a changed reason, not a winning answer.
+:::
+
+## Compared to what? {.reader-slide}
+
+::: {.lead}
+“Waste was lower **than it had been before**.”
+:::
+
+The **counterfactual** is what would have happened without GreenWaste.
+
+::: {.ask}
+Does this sentence tell us what would have happened without it?
 :::
 
 ::: {.fragment}
-The interval is below the rule. The comparison still does not establish what GreenWaste caused.
+Ask how the evaluator estimated that missing outcome.
 :::
 
 ::: {.notes}
-6 minutes. Orient to the saving scale, which is positive here: it is the magnitude of the negative cost change in the table. Participants trace the estimate, interval and rule with a finger. Even a precise before/after change cannot settle a causal decision. Avoid concluding that the programme does not work.
+5 minutes. Point to the comparison words. Explain counterfactual once in plain language. We cannot observe the same business, at the same time, both with and without the programme. A comparison can help estimate the missing outcome if its assumptions are credible. Avoid launching a methods survey. Have pairs add comparison words to one claim.
 :::
 
-## Significant enough to act? {.reader-slide}
+## What does an average hide? {.reader-slide}
 
-The **p-value** for this change is **less than 0.001**.
+Landfill before GreenWaste, tonnes per year, for ten businesses:
 
-“Statistically significant” asks how unusual the result would be under a no-change model and its assumptions.
-
-::: {.ask}
-Does that tell us GreenWaste caused enough saving to extend it?
-:::
-
-::: {.fragment}
-A small p-value establishes neither cause nor a large enough saving. A non-significant result does not prove no effect.
-:::
-
-Fictional GreenWaste case · invented figures
-
-::: {.notes}
-5 minutes. Recognise the term when reading reports. The p-value concerns the null tested by the analysis; here the before/after change, not a causal effect. It is not the probability that the programme works or that the result is due to chance. Do not introduce a hypothesis-testing lecture.
-:::
-
-## Finish the mark up {.reader-slide}
-
-On **Sheet 1**:
-
-Circle the estimate. Box its interval. Underline the comparison.
-
-Write the units and period, then a decision sentence.
-
-::: {.ask}
-Which part of the scale-up decision does this extract leave unanswered?
-:::
-
-::: {.notes}
-10 minutes. Five minutes alone, three in pairs, two for feedback. Every reader locates the result before discussing. Use the answer space on Sheet 1. The causal comparison is missing. Invite a threshold reading plus the limitation; do not accept “significant therefore extend”.
-:::
-
-## Repair an AI summary {.reader-slide data-correct="The second sentence is unsupported. The extract measures a change over time; it does not isolate what GreenWaste caused."}
-
-Select every unsupported claim in this illustrative AI draft.
-
-```{r ai-summary, results='asis'}
-html_out(sprintf('<div class="claim-list"><button data-claim="supported" aria-pressed="false">City participants&#39; annual costs fell by %s AED.</button><button data-claim="unsupported" aria-pressed="false">GreenWaste caused that saving, so scale-up is justified.</button></div><button data-check>Check against the extract</button><p data-feedback class="feedback" role="status"></p>%s',fmt(abs(case$before_after)),fiction))
+```{r ten-businesses, results='asis'}
+html_out(paste0('<div class="ten-businesses">', paste(sprintf('<span>%s</span>', fmt(ten$landfill_before)), collapse=''), '</div>', fiction))
 ```
 
 ::: {.ask}
-How would you rewrite the second sentence using only this source?
+Would one number describe these businesses well?
+:::
+
+::: {.fragment}
+The **mean** is the total divided by ten: `r fmt(mean(ten$landfill_before),1)` tonnes. Nine businesses are below it.
 :::
 
 ::: {.notes}
-7 minutes. Use Sheet 2. Example rewrite: the observed fall is below the rule, but the extract cannot isolate the programme’s effect. Ask an AI to identify the comparison, quote the supporting result row and ask for missing information before recommending. Check its answer against the source yourselves. A second AI review is assistance, not verification. The draft is an authored example.
+5 minutes. Participants point to the large business before revealing the mean. No long arithmetic exercise. A mean can answer a useful total-related question, but it does not describe every business. Ask which extra information they would want about the spread. Do not introduce quartiles or a second lesson on medians.
 :::
 
-## Write the decision sentence {.reader-slide}
+## Try four claims {.reader-slide}
+
+Read the four claim cards. For each, choose:
+
+**Act · Ask first · Do not act**
+
+Then name what is missing:
+
+**Compared to what? · How big? · How sure?**
 
 ::: {.ask}
-What can you say confidently, and what would you ask next?
+What question would move your decision forward?
 :::
 
-Write a result with its units, one limit, and your next question. Use the extract.
+::: {.notes}
+12 minutes. Preserve Fiona’s four cards and triage activity. Give one card set per group and use Sheet 2. Optional A1 board: one group-coloured marker per group; write card numbers into its question/decision grid. No extra AI wall board. Card 2’s causal wording is intentionally open to challenge. Technical terms on cards can be glossed briefly; the full uncertainty lesson comes next session. Protect time for groups to write their reasons.
+:::
+
+## Defend one choice {.reader-slide}
+
+Choose a card that two groups placed differently.
+
+::: {.ask}
+Which words or numbers support your choice?
+:::
+
+Explain one missing piece of evidence that could change it.
 
 ::: {.notes}
-5 minutes. Individual close. Accept plain wording: participants’ annual costs fell about the estimated amount after 12 months; the change is below the 1,000 AED rule; we need a credible estimate of what happened without the programme. Do not turn this into a definitive rejection of GreenWaste. Total 60 minutes.
+6 minutes. Discuss two disagreements, not a tour through every group. Expected primary placements: card 1 compared to what/ask first; card 2 how big/ask first (it concerns landfill, not the cost rule; also ask about the causal comparison); card 3 do not act on the nationwide recommendation; card 4 how sure/ask first. More than one missing question can be justified. Do not treat grid placement as a single-answer test.
+:::
+
+## Check the AI sentence {.reader-slide data-correct="The second sentence claims a cause the headline has not established. Ask what happened without GreenWaste."}
+
+An illustrative AI draft. Select the unsupported sentence.
+
+```{=html}
+<div class="claim-list">
+<button data-claim="supported" aria-pressed="false">Landfill fell among businesses that took part.</button>
+<button data-claim="unsupported" aria-pressed="false">GreenWaste caused the entire fall.</button>
+</div>
+<button data-check>Check against the evidence</button>
+<p data-feedback class="feedback" role="status"></p>
+```
+
+::: {.ask}
+What should the AI ask before writing that conclusion?
+:::
+
+::: {.notes}
+6 minutes. This is an authored example of a possible AI error, not a transcript of a verified tool response. Participants must point to source evidence. Optional live AI: provide only the headline and ask it to list the missing information before offering a conclusion. Review its questions yourselves. No AI account is required to complete the activity.
+:::
+
+## Your next question {.reader-slide}
+
+Close the cards and turn over the sheet.
+
+::: {.ask}
+What would you ask the evaluator before acting on a claim of improvement?
+:::
+
+Write one question and explain why the answer matters.
+
+::: {.notes}
+4 minutes. Individual retrieval, no list or AI. Look for a concrete comparison/counterfactual question, a decision-relevant size question or a useful uncertainty question, with a reason. Collect two answers. Session total 60 minutes. Do not add a summary lecture.
 :::
