@@ -186,8 +186,13 @@ if ('--day2' %in% commandArgs(trailingOnly = TRUE)) {
   source('make_day2_materials.R', encoding='UTF-8')
   quit(save='no')
 }
+if ('--day3' %in% commandArgs(trailingOnly=TRUE)) {
+  source('make_day3_materials.R',encoding='UTF-8')
+  quit(save='no')
+}
 source('make_day1_materials.R', encoding='UTF-8')
 source('make_day2_materials.R', encoding='UTF-8')
+source('make_day3_materials.R',encoding='UTF-8')
 # The later-day packets retain their existing defaults until their rebuild.
 set_flextable_defaults(font.family = FONT, font.size = 10.5, padding = 4,
                        border.color = "#9AA8B8")
@@ -576,6 +581,7 @@ print(s5, target = "Oct13_session2_materials.docx")
 # ===========================================================================
 # Oct14 S1 · Was It Worth It?
 # ===========================================================================
+if (FALSE) { # retained previous Day 3 implementation
 S7 <- "Module 2 · Day 3, Session 1 · Was It Worth It?"
 pv <- function(r, y, lag = 1, decay = 0) {
   t <- seq_len(lag + y)
@@ -664,10 +670,13 @@ s7 <- new_pack() |>
   p_("Running it: each group predicts its ratio and posts a sticky note, then reads out its settings. Enter them in the calculator on the \"Your turn\" slide; the group puts its card at the real ratio. Debrief from the wall: how far was each prediction from the real ratio? Only card 5 (two things going wrong at once) lands left of the red line. Groups holding the same card will often have predicted differently.") |>
   add_board_page("Oct14_session1", board7, S7, "the ratio wall (A1)")
 print(s7, target = "Oct14_session1_materials.docx")
+}
+
 
 # ===========================================================================
 # Oct14 S3 · Interrogate the Analyst
 # ===========================================================================
+if (FALSE) { # retained previous Day 3 implementation
 S9 <- "Module 2 · Day 3, Session 3 · Interrogate the Analyst"
 cands <- c("Did the programme work?",
            "What would have happened to these businesses without the programme?",
@@ -718,6 +727,8 @@ s9 <- new_pack() |>
   p_("The analyst's answers with the data (section 4 of the deck): intervals DiD -873 to -760, RDD -992 to -818, randomised -1,093 to -935, none clears 1,000 at its least generous end; the discontinuity moves from about -790 to -1,080 with the window; no business dropped out, but recycling compliance is recorded only for eligible businesses (8,570 empty rows); only two rounds, so parallel trends cannot be checked.") |>
   p_("AI list: none of its six questions needs a fact to answer, so all fail the sort. Its two flagged errors confuse sample size with selection bias.")
 print(s9, target = "Oct14_session3_materials.docx")
+}
+
 
 # ===========================================================================
 # Oct15 S2 · From Findings to Policy
@@ -1157,6 +1168,7 @@ print(s6, target = "Oct13_session3_materials.docx")
 # ===========================================================================
 # Oct14 S2 · What Can You Read? What Might Be Wrong?
 # ===========================================================================
+if (FALSE) { # retained previous Day 3 implementation
 S8 <- "Module 2 · Day 3, Session 2 · What Can You Read? What Might Be Wrong?"
 base0 <- subset(gw, treatment_neighborhood == 1 & round == 0)
 enr <- base0$waste_management_costs[base0$enrolled == 1]
@@ -1248,6 +1260,8 @@ s8 <- new_pack() |>
   h2_("AI Snapshot") |>
   p_(sprintf("Each sentence is accurate. The answer skips who is reading the figure and the sentence beside it: a truncated axis suits \"a difference exists\", not \"a large difference\". It never checks either picture against the number (%s AED, %.2f standard deviations), and it does not ask who the audience is. The better prompt names both.", gfmt(vgap), sd_gap))
 print(s8, target = "Oct14_session2_materials.docx")
+}
+
 
 # ===========================================================================
 # Oct15 S1 · Is This Evidence Credible?
@@ -1444,8 +1458,7 @@ participant_copy <- function(src, dest) {
 }
 
 dir.create("../docs/handouts", showWarnings = FALSE)
-for (s in c("Oct14_session1", "Oct14_session2",
-            "Oct14_session3", "Oct15_session1", "Oct15_session2"))
+for (s in c( "Oct15_session1", "Oct15_session2"))
   participant_copy(paste0(s, "_materials.docx"), paste0("../docs/handouts/", s, "_handouts.docx"))
 # Handouts built elsewhere that participants keep, copied as they are.
 file.copy(c("Oct14_session3_qa_checklist.docx", "Oct15_session2_findings.docx",

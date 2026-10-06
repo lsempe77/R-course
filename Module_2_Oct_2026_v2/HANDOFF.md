@@ -1,5 +1,24 @@
 # Handoff: moving Module 2 to the simple GreenWaste case
 
+## Day 3 approved and built on 6 October 2026
+
+Lucas approved the Day 3 slide tables. Three active decks now have 11, 10 and 13 content screens, 60/60/75 minutes. One trainer calculation per session, no participant coding. Keep predictions before reveals and the clinic's five-minute break.
+
+- `day3_case.R` shares all screen and paper values. The provisional benefit input is minus corrected city DiD, 812 AED. Causal limitations carry forward. The model assumes 1,800 AED one-off cost, no benefit in year 1, five saving years in years 2 to 6 and a 5% rate: benefits at today's value 3,350 AED, ratio 1.86. Cost, timing and duration are fictional assumptions.
+- Fiona's five scenario cards and eight allocations 1,2,3,4,5,1,2,3 remain. Ratios 1.07/1.40/1.67/1.17/0.80; only the combined decay and hidden-cost scenario is below 1. A1 headline regenerated; prediction and result lanes retained.
+- Chart session uses native axis toggle with identical values, ten-business landfill distribution, different percentage weights, pilot interval and caption repair. Total participant tonnes fall 49.5%; mean business percentage fall 58.6%. These descriptive changes do not establish cause. School-zone, pie-chart and repeated discount tasks are retired.
+- Analyst clinic has five questions and a trainer-only fixed answer bank. It discloses missing earlier trends, fieldwork/attrition documents and score-manipulation evidence. Complete generated rows do not establish real data quality. The live pilot saving interval is 862 to 1,167 AED; endpoint names removed after negation so the output does not mislabel quantiles. Old neighbourhood lab is outside the main teaching route.
+- `Rscript make_session_materials.R --day3` writes three two-sided participant sheets, trainer packs 9/3/5 pages, a one-page QA reference and the ratio A1 board. Print pages 3-7 plus 3-5 again for eight scenario groups. The optional QA desk reference uses the same five questions as the clinic. Historical `qa_checklist.R` remains for reference.
+- Exercise brief now covers Days 1 to 3, 11 landscape pages. Day 4 rows are explicitly historical. Backups: `backups/day3_2026_10_06_approved/`. Live teaching pages unchanged.
+- All three decks walked sequentially with actual trainer outputs and feedback open. Browser errors [] and no overflow; final heading/logo and enlarged SVG label checks passed. Native keyboard controls, both axis states and room poll regression passed. All print pages and A1 board rendered and inspected.
+
+Review: https://3ie.academy/preview/day3_review.html
+Next tables: https://3ie.academy/preview/day4_plan.html
+The Day 4 proposal has two 60-minute sessions: independent report reading and the two-sheet credibility wall, then a brief based on corrected evidence. Build both only after Lucas approves the concrete tables. Former Day 4 S3 remains excluded for another provider's simulation.
+
+Use the retained `.preview_day2_publish` main worktree for unlinked previews. The site password gate applies. Source and preview checkpoints below pre-date this Day 3 update. Venue phone reachability still needs rehearsal.
+
+
 ## Day 2 approved and built on 6 October 2026
 
 Lucas approved Day 2, including the score-rule correction and refresh of affected Day 1 figures. The active three Day 2 decks now have 10, 10 and 13 content screens, 60/60/75 minutes. One trainer demonstration per session; no participant coding. Plain-language report reading, individual questions and evidence reveals replace the long model labs. No Menti or restored AI wall boards.

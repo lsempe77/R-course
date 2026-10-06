@@ -15,6 +15,9 @@ execute:
   message: false
 ---
 
+> Days 1 to 3 are approved and rebuilt. [Day 3 review](day3_review.html). [Day 4 tables](day4_plan.html) cover the two remaining course-owned sessions. Earlier proposals below are historical where superseded.
+
+
 ```{r}
 case_env <- new.env()
 case_env$gw <- read.csv("../evaluation_data_GreenWaste_simple.csv")
@@ -228,18 +231,18 @@ Make charts interactive where the action changes the evidence the reader can ins
 ## Corrections to carry into the rebuild
 
 1. **Cut-off rule:** eight city records printed with score 58 did not take part. I reproduced the mismatch from the CSV. The generator uses the unrounded score for participation. The correction was approved with Day 2 and completed, with affected Day 1 exports refreshed.
-2. **Case drift:** Days 3 and 4 still use old numbers, old columns and Tariff Shield or school-zone material. Converting only the decks will leave the report, findings, QA responses and handouts inconsistent.
+2. **Case drift:** Day 4 still uses old numbers, old columns and Tariff Shield or school-zone material. Converting only the decks will leave the report, findings, QA responses and handouts inconsistent.
 3. **Lab drift:** `gw_lab.R` still describes neighbourhoods, enrolment and a fixed effect of 900 AED. A scalar rename would not make that simulated world match the pilot-and-city case with varying effects. Simplify or replace the lab structure; use it sparingly in the main teaching route.
 4. **Intervals:** the handoff and plan quote different RDD interval endpoints. Check whether they use ordinary or robust standard errors, choose the intended analysis and share the computed outputs between screen and paper.
 5. **Causal wording:** use “the estimated difference” until the comparison assumptions have been examined. A pilot waiting group can inform the city comparison, but treating it as the city's untreated path also requires comparability across settings.
 6. **Decision wording:** keep observed change, causal credibility, uncertainty, the threshold and value for money distinct. “Not enough evidence to approve scale-up” is different from “the programme does not work”.
 7. **AI checks:** a number-matching script or second chat can assist review; neither proves a brief is faithful to the source. Participants must point to the report evidence themselves.
 
-Current computed values for reference: before and after `r fmt(case$before_after)` AED; with and without `r fmt(case$with_without)` AED; pilot lottery `r fmt(case$rct)` AED; DiD `r fmt(case$did)` AED; RDD near the cut-off `r fmt(case$rdd2[["estimate"]])` AED; matching `r fmt(case$matching)` AED. These are estimates from the corrected dataset. Days 1 and 2 are rebuilt; later-day materials remain pending.
+Current computed values for reference: before and after `r fmt(case$before_after)` AED; with and without `r fmt(case$with_without)` AED; pilot lottery `r fmt(case$rct)` AED; DiD `r fmt(case$did)` AED; RDD near the cut-off `r fmt(case$rdd2[["estimate"]])` AED; matching `r fmt(case$matching)` AED. These are estimates from the corrected dataset. Days 1 to 3 are rebuilt; Day 4 materials remain pending.
 
 ## Build sequence for the remaining days
 
-The shorter timetable and Days 1 and 2 are approved and built. Review the next daily tables, then rebuild each day as one package: decks, activity sheets, trainer keys, boards where used, the exercise brief and local preview. Save a versioned backup before substantial edits, as required by the handoff. Preserve the working branch and reconcile any newer owner edits before changes.
+The shorter timetable and Days 1 to 3 are approved and built. Review the next daily tables, then rebuild each day as one package: decks, activity sheets, trainer keys, boards where used, the exercise brief and local preview. Save a versioned backup before substantial edits, as required by the handoff. Preserve the working branch and reconcile any newer owner edits before changes.
 
 Render each changed deck, run its live cells, inspect all slides at presentation size, and check every participant sheet in Word. The handoff requires walks one deck at a time. Check numbers, fictional-case labels, questions before reveals, keyboard use and the paper fallback. Update exports and the materials zip only after content review.
 

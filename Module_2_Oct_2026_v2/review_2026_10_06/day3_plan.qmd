@@ -8,11 +8,7 @@ format:
     toc: true
 ---
 
-Days 1 and 2 are built. Day 3 moves from reading an estimate to reviewing the
-evidence used for a decision. Keep 60/60/75 minutes, one GreenWaste case,
-two-sided participant sheets and one short trainer demonstration per session.
-No participant coding. The tables below are the next daily approval boundary
-required by `HANDOFF.md`.
+Approved on 6 October 2026 and now built. [Open the Day 3 review](day3_review.html). The tables below record the approved design. [Day 4 tables](day4_plan.html) are the next daily review.
 
 ## Session 1 Judge a value for money claim
 

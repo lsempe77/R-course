@@ -127,7 +127,7 @@ def handler_for(room):
                     self.send(404,{'error':'QR package is unavailable. Use the displayed join address.'})
             elif path in ('/','/facilitator'):
                 self.send(200,(ROOT/'room_poll.html').read_bytes(),'text/html; charset=utf-8')
-            elif path.lstrip('/') in ('Oct12_session1_live.html','Oct12_session2.html','Oct12_session3_live.html', 'Oct13_session1.html', 'Oct13_session2_live.html', 'Oct13_session3.html',
+            elif path.lstrip('/') in ('Oct12_session1_live.html','Oct12_session2.html','Oct12_session3_live.html', 'Oct13_session1.html', 'Oct13_session2_live.html', 'Oct13_session3.html', 'Oct14_session1_live.html', 'Oct14_session2.html', 'Oct14_session3_live.html',
                                        'evaluation_data_GreenWaste_simple.csv'):
                 file=ROOT/path.lstrip('/')
                 if not file.exists(): return self.send(404,{'error':'Render this deck first.'})

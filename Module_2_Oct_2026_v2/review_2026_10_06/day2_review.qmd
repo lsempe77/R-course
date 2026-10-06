@@ -65,6 +65,4 @@ robust RDD interval are recorded in the source handoff.
 
 ## Next daily review
 
-[Day 3 slide tables](day3_plan.html) are ready for review. They retain the ratio
-wall and analyst clinic, and replace the long catalogue of chart problems with
-three focused reading tasks. [Day 1 review](day1_review.html) is also refreshed.
+[Day 3 is built](day3_review.html), with the ratio wall, focused chart tasks and analyst clinic. [Day 4 tables](day4_plan.html) are the next review. [Day 1 review](day1_review.html) is also available.

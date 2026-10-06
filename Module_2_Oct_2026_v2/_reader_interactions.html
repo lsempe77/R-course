@@ -3,6 +3,11 @@ document.addEventListener('click', function (event) {
   const button = event.target.closest('button');
   if (!button) return;
   const slide = button.closest('section');
+  if (button.hasAttribute('data-swap')) {
+    const group = document.getElementById(button.dataset.swap);
+    group.querySelectorAll('[data-variant]').forEach(e => e.toggleAttribute('hidden'));
+    if (window.Reveal) Reveal.layout();
+  }
   if (button.hasAttribute('data-open')) {
     const target = document.getElementById(button.dataset.open);
     const wasHidden = target.hasAttribute('hidden');

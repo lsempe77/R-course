@@ -1,1056 +1,195 @@
 ---
-title: "What Can You Read? What Might Be Wrong?"
-subtitle: "Module 2 · Day 3, Session 2: Reading the Figures That Carry the Claim"
+title: "Read a chart before trusting its story"
+subtitle: "Module 2 | Day 3 | Session 2"
 author: "3ie"
-always_allow_html: yes
-# live-revealjs: the quarto-live extension (_extensions/r-wasm/live) runs R in
-# the browser through webR, the same set-up as Oct12_session2.qmd. Three slides
-# carry live cells ("Try it"); the CSVs under webr: resources must sit next to
-# the published .html, and webR needs an internet connection on the day. The
-# plotly charts are baked at render time as before.
-# Two datasets, an exception to the one-example rule: GreenWaste is a cost per
-# business, so the denominator problem (section 3) and the overlapping pie
-# (section 6) need count data, which the school-zone RCT supplies.
+always_allow_html: true
 format:
   live-revealjs:
-    theme: [theme_dge.scss, theme_live.scss]
+    theme: [theme_dge.scss, theme_live.scss, theme_reader.scss]
     logo: assets/dge_logo_horizontal.svg
     slide-number: true
     width: 1280
     height: 720
-    fig-align: center
     slide-level: 2
     embed-resources: true
+    include-after-body: _reader_interactions.html
 webr:
-  packages: []
   render-df: kable
   resources:
-    - evaluation_data_GreenWaste.csv
-    - evaluation_data_SchoolZoneRCT.csv
+    - evaluation_data_GreenWaste_simple.csv
 knitr:
   opts_chunk:
     echo: false
     warning: false
     message: false
-    dev: "png"
-    # dpi 96 is deliberate. knitr sizes every htmlwidget container as
-    # fig.width * dpi, so an inherited dpi: 200 silently inflated each chart
-    # tenfold (11.5in became 2300px) and pushed slide content off the bottom.
-    # At 96, fig.width in inches maps 1:1 onto CSS pixels.
-    dpi: 96
-editor_options:
-  chunk_output_type: console
 ---
 
 {{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
 
-```{r setup}
-library(tidyverse)
-library(plotly)
-library(knitr)
-library(qrcode)
-
-# ---- Palette (DGE theme; see theme_dge.scss) --------------------------------
-ACCENT  <- "#215a9e"; ACCENT2 <- "#7da1c4"; ALERT <- "#B8272C"
-INK     <- "#111418"; MUTED <- "#545860"; RULE <- "#D5DEE8"
-CHART_FONT <- "Noto Kufi Arabic, Segoe UI, Arial, sans-serif"
-
-# ---- Tables: plain knitr::kable, styled by theme_dge.scss -------------------
-# No kableExtra: its JavaScript needs jQuery, which live-revealjs does not load.
-# font_size in px; hl = rows to shade (hl_bold to bold them); widths = CSS widths
-# per column; note = a line under the table. The table is centred.
-HL_BLUE <- "#E4EBF3"; HL_RED <- "#F8E9EA"
-tbl <- function(df, ..., font_size = NULL, hl = NULL, hl_bg = HL_BLUE,
-                hl_bold = FALSE, widths = NULL, note = NULL) {
-  h <- as.character(knitr::kable(df, format = "html", ...))
-  fs <- if (is.null(font_size)) "" else sprintf(" font-size:%dpx;", font_size)
-  h <- sub("<table", sprintf('<table style="margin-left:auto; margin-right:auto;%s"', fs),
-           h, fixed = TRUE)
-  if (!is.null(widths))
-    h <- sub("(<table[^>]*>)", paste0("\\1<colgroup>",
-             paste0('<col style="width:', widths, ';">', collapse = ""), "</colgroup>"), h)
-  if (length(hl)) {
-    parts <- strsplit(h, "<tbody>", fixed = TRUE)[[1]]
-    rows  <- strsplit(parts[2], "<tr>", fixed = TRUE)[[1]]
-    st <- sprintf("background:%s;%s", hl_bg, if (hl_bold) " font-weight:700;" else "")
-    for (i in hl) {
-      rows[i + 1] <- gsub('<td style="', paste0('<td style="', st, " "), rows[i + 1], fixed = TRUE)
-      rows[i + 1] <- gsub("<td>", paste0('<td style="', st, '">'), rows[i + 1], fixed = TRUE)
-    }
-    h <- paste0(parts[1], "<tbody>", paste(rows, collapse = "<tr>"))
-  }
-  if (!is.null(note))
-    h <- paste0(h, sprintf('\n<p style="text-align:center; font-size:0.75em; color:%s; margin-top:0.3em;">%s</p>',
-                           MUTED, note))
-  fence <- strrep("`", 3)
-  knitr::asis_output(paste0("\n", fence, "{=html}\n", h, "\n", fence, "\n"))
-}
-
-PL_W  <- 1100
-PL_WC <- 520
-PL_WT <- 340
-
-pl_m2 <- function(p, width = PL_W, height = 290, t = 30, b = 54,
-                  title = NULL, legend_y = 1.02) {
-  p <- p %>%
-    layout(width = width, height = height,
-      font = list(family = CHART_FONT, size = 13, color = INK),
-      paper_bgcolor = "rgba(0,0,0,0)", plot_bgcolor = "rgba(0,0,0,0)",
-      margin = list(l = 70, r = 24, t = t, b = b),
-      legend = list(orientation = "h", x = 0.5, xanchor = "center",
-                    y = legend_y, yanchor = "bottom", title = list(text = "")),
-      hoverlabel = list(bgcolor = "white", bordercolor = RULE,
-                        font = list(color = INK, size = 12)))
-  if (!is.null(title)) {
-    p <- p %>% layout(title = list(text = title, x = 0, xanchor = "left",
-                                   font = list(size = 12, color = MUTED)))
-  }
-  p %>% config(displayModeBar = FALSE)
-}
-
-ax <- function(title = "", ...) {
-  modifyList(list(
-    title = list(text = title, font = list(size = 12, color = MUTED)),
-    gridcolor = RULE, zerolinecolor = RULE, linecolor = RULE,
-    tickfont = list(size = 12, color = MUTED)
-  ), list(...))
-}
-
-gfmt <- function(x) format(round(x), big.mark = ",")
-
-# ---- Live Menti poll -------------------------------------------------------
-MENTI_CODE <- "1234 5678"
-MENTI_JOIN <- paste0("https://www.menti.com/", gsub(" ", "", MENTI_CODE))
-
-menti_qr <- function(path = "menti_qr.png", url = MENTI_JOIN) {
-  png(path, width = 900, height = 900, res = 300, bg = "white")
-  on.exit(dev.off(), add = TRUE)
-  par(mar = c(0, 0, 0, 0))
-  plot(qr_code(url, ecl = "H"))
-  path
-}
-MENTI_QR <- menti_qr()
-
-# ===========================================================================
-# The figures this session interrogates
-# ===========================================================================
-# Every figure is drawn from the same three datasets the week has already used,
-# so participants are reading real structure rather than decoration. The
-# session's method is to show the SAME data twice and ask what changed.
-
-# ---- GreenWaste: the two groups at baseline -------------------------------
-gw  <- read.csv("./evaluation_data_GreenWaste.csv")
-base <- gw %>% filter(treatment_neighborhood == 1, round == 0)
-enr  <- base$waste_management_costs[base$enrolled == 1]
-non  <- base$waste_management_costs[base$enrolled == 0]
-
-mean_enr <- mean(enr); mean_non <- mean(non)
-gap      <- mean_non - mean_enr
-pooled   <- sd(c(enr, non))
-sd_gap   <- gap / pooled
-
-# ---- The difference-in-differences, carried over from Session 1 -----------
-tn <- gw %>% filter(treatment_neighborhood == 1)
-grp <- tn %>% group_by(enrolled, round) %>%
-  summarise(mc = mean(waste_management_costs), .groups = "drop")
-gv  <- function(e, r) grp$mc[grp$enrolled == e & grp$round == r]
-ba_claim  <- gv(1, 0) - gv(1, 1)                     # 665, before-and-after
-did_est   <- abs((gv(1, 1) - gv(1, 0)) - (gv(0, 1) - gv(0, 0)))   # 816
-
-# ---- The cost-benefit model, from Session 1 --------------------------------
-COST_PER_BUSINESS <- 1800
-BENEFIT_PER_YEAR  <- 816
-BENEFIT_LAG       <- 1
-DISCOUNT_BASE     <- 0.05
-
-# Cumulative saving against cumulative cost, nominal and discounted. A payment
-# at the end of year y is discounted by (1 + r)^y, and there is no benefit in
-# year 1, so the five years of benefit are years 2 to 6.
-cb_years <- tibble(
-  year      = 1:8,
-  nominal   = ifelse(year == 1, 0, BENEFIT_PER_YEAR),
-  discounted = ifelse(year == 1, 0, BENEFIT_PER_YEAR / (1 + DISCOUNT_BASE)^year)
-) %>%
-  mutate(cum_nominal = cumsum(nominal), cum_discounted = cumsum(discounted))
-
-cb_nom_total <- sum(cb_years$nominal[2:6])
-cb_dis_total <- sum(cb_years$discounted[2:6])
-cb_ratio     <- cb_dis_total / COST_PER_BUSINESS
-
-# ---- School-zone child collisions: the denominator problem -----------------
-sz <- read.csv("./evaluation_data_SchoolZoneRCT.csv")
-# Section 3 asks where the package worked, so it uses the package arm only
-# (200 of the 400 segments). The pie in section 6 uses both arms.
-sc <- sz %>% filter(arm == "Package") %>% group_by(segment_id) %>%
-  summarise(base = child_collisions[round == 0],
-            follow = child_collisions[round == 1], .groups = "drop")
-n_seg      <- nrow(sc)
-
-zero_base  <- sum(sc$base == 0)
-sc_pos     <- sc %>% filter(base > 0) %>%
-  mutate(pct = 100 * (follow - base) / base, absolute = follow - base)
-
-# The two different "biggest wins". Many segments tie at -100% (they fell to
-# zero); arrange() keeps segment order among ties.
-big_pct <- sc_pos %>% arrange(pct) %>% slice_head(n = 6)
-big_abs <- sc_pos %>% arrange(absolute) %>% slice_head(n = 6)
-overlap <- length(intersect(big_pct$segment_id, big_abs$segment_id))
-n_to_zero       <- sum(sc_pos$follow == 0)
-n_to_zero_small <- sum(sc_pos$follow == 0 & sc_pos$base <= 4)
-
-# The pooled percentage against the average of the percentages, which is the
-# difference between weighting by size and giving every segment equal say.
-pooled_pct   <- 100 * (sum(sc$follow) - sum(sc$base)) / sum(sc$base)
-# Only segments with a non-zero baseline have a percentage change to average.
-average_pct  <- mean(sc_pos$pct)
-n_pct        <- nrow(sc_pos)
-
-# ---- The severity mix, for the pie ----------------------------------------
-sev <- c(minor = sum(sz$minor_collisions),
-         injury = sum(sz$injury_collisions),
-         child = sum(sz$child_collisions))
-
-# ---- The rules this session teaches ---------------------------------------
-# Five habits, each demonstrated on a figure rather than asserted.
-fig_rules <- tribble(
-  ~n, ~Rule, ~Why,
-  "1", "Read the axis before the shape",
-       "A truncated axis makes a real gap look decisive. The gap is the same number either way; only your impression of it changes.",
-  "2", "Ask what each bar is an average of",
-       "A mean can sit between two groups that barely overlap. It summarises the group and may describe nobody in it.",
-  "3", "Check what each percentage is a percentage of",
-       "A percentage needs a base. Where the base is zero or tiny, the biggest percentage change belongs to the smallest number.",
-  "4", "Compare changes, not levels",
-       "Levels carry whatever the two groups already differed by. The comparison the chart invites is often not the one that answers the question.",
-  "5", "Show future savings at today's value (discounted)",
-       "Undiscounted sums look bigger and are easier to draw. The gap between the two lines comes from the discount rate."
-)
+```{r setup, include=FALSE}
+source('day3_case.R')
 ```
 
-# 1 · Why the picture matters {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
-
-## Where we are
+## Which picture would you use? {.reader-slide}
 
 ```{webr}
+#| context: setup
 #| autorun: true
+#| echo: false
 #| include: false
-# Runs once, in the browser, when the deck opens. Everything the three "Try it"
-# cells use is defined here, so each live cell stays a few lines long.
-gw <- read.csv("evaluation_data_GreenWaste.csv")
-b0 <- subset(gw, treatment_neighborhood == 1 & round == 0)
-costs <- c(Enrolled       = mean(b0$waste_management_costs[b0$enrolled == 1]),
-           "Not enrolled" = mean(b0$waste_management_costs[b0$enrolled == 0]))
-sz <- read.csv("evaluation_data_SchoolZoneRCT.csv")
-sz <- subset(sz, arm == "Package")   # section 3 uses the package segments only
-sc <- merge(subset(sz, round == 0, c(segment_id, child_collisions)),
-            subset(sz, round == 1, c(segment_id, child_collisions)), by = "segment_id")
-names(sc) <- c("segment_id", "before", "after")
-ACCENT <- "#215a9e"; ACCENT2 <- "#7da1c4"; ALERT <- "#B8272C"; MUTED <- "#545860"
-options(width = 100, scipen = 6)
-
-# Layout only: margins, font size and muted axes for a projector.
-clean_par <- function() par(mar = c(4.2, 5.5, 1, 1), family = "sans", las = 1,
-                            col.axis = MUTED, col.lab = MUTED, fg = MUTED, cex = 1.25)
-
-# Cumulative saving, year by year, against the one-off cost.
-plot_payback <- function(today, cost = 1800) {
-  clean_par()
-  plot(seq_along(today), cumsum(today), type = "b", pch = 19, lwd = 4, col = ACCENT,
-       bty = "n", ylim = c(0, 4500), xlab = "Years after rollout",
-       ylab = "Saving so far (AED)")
-  abline(h = cost, col = ALERT, lwd = 3)
-  text(1, cost, "what it cost", col = ALERT, pos = 3, adj = 0)
-}
+gw <- read.csv('evaluation_data_GreenWaste_simple.csv')
+tp <- subset(gw, setting == 'city' & took_part == 1)
 ```
-
-```{=html}
-<div class="facts">
-  <div class="k">Day 1</div>  <div class="v">is the number answering your question, and is it big enough?</div>
-  <div class="k">Day 2</div>  <div class="v">which method produced it, and what does that method assume?</div>
-  <div class="k">This morning</div> <div class="v">what is it worth, and which assumption decides that?</div>
-  <div class="k">Now</div>     <div class="v">the chart a decision-maker actually sees</div>
-</div>
+```{r, results='asis'}
+html_out(paste0('<div class="chart-pair"><div><h3>A</h3>',bar_svg(0,FALSE),'</div><div><h3>B</h3>',bar_svg(700,FALSE),'</div></div><p class="caption">Two draft charts of the same records. Labels are missing.</p>',fiction))
 ```
-
-::: {.panel}
-Every session this week has ended with a number and the assumptions behind it.
-A decision-maker usually sees neither directly: they see a chart and a sentence
-about it.
-
-An assumption that is left out of the chart is hard to question.
-:::
-
 ::: {.ask}
-This session is about **reading charts as evidence**. When a report reaches you,
-do you question its charts the way you have questioned its numbers this week?
+Can you choose responsibly without the labels?
 :::
 
-## Six pairs, two questions
-
-::: {.panel}
-Each section of this session shows the same data drawn two ways. One version is
-fair; the other invites a wrong reading, or cannot be read correctly at all.
-:::
-
-::: {.ask}
-**For every pair, in groups:**
-
-1. What is this figure telling you?
-2. What might be wrong or misleading?
-:::
 
 ::: {.notes}
-Paper (Oct14_session2_materials.docx): Hand out the six pairs tracker (pack page 1,
-one per participant). They fill in a row after each pair. The three predictions are
-at the bottom of the same sheet.
+4 minutes. Retrieve source and comparison questions. These are deliberately incomplete drafts; accepting either shape alone is premature. Commit a reason. No room poll needed; pairs or local cards. Next screen supplies values and scales.
 :::
 
-## The same data, two pictures
+## Same values different axes {.reader-slide}
 
-::: {.panel}
-Among the businesses that were offered GreenWaste, the ones that enrolled paid **`r gfmt(mean_enr)` AED** in waste costs at baseline and the
-ones that did not paid **`r gfmt(mean_non)` AED**. A gap of
-**`r gfmt(gap)` AED**.
-
-Before the programme started, the businesses that enrolled were already paying
-less. Keep this `r gfmt(gap)` AED; it returns in section 4.
-:::
-
-```{r fig.height=2.6, fig.width=5.6}
-tibble(group = c("Enrolled", "Not enrolled"), cost = c(mean_enr, mean_non)) %>%
-  plot_ly(x = ~group, y = ~cost, type = "bar",
-          marker = list(color = c(ACCENT, ACCENT2), line = list(width = 0)),
-          text = ~gfmt(cost), textposition = "outside", cliponaxis = FALSE,
-          textfont = list(size = 16, color = INK), showlegend = FALSE,
-          hovertemplate = "%{x}: %{y:,.0f} AED<extra></extra>") %>%
-  layout(xaxis = ax("", zeroline = FALSE),
-         yaxis = ax("Mean annual waste cost (AED)", range = c(0, 2400))) %>%
-  pl_m2(width = PL_W, height = 250, title = "Figure A")
+```{r, results='asis'}
+html_out(paste0('<div id="axis-charts"><div data-variant>',bar_svg(700),'</div><div data-variant hidden>',bar_svg(0),'</div></div><button data-swap="axis-charts">Change the axis start</button>',fiction))
 ```
-
 ::: {.ask}
-Is this figure fair? What would you check first?
+Which impression changes, and which recorded values stay the same?
 :::
 
-## The same gap, drawn to fill the frame
-
-```{r fig.height=2.6, fig.width=5.6}
-tibble(group = c("Enrolled", "Not enrolled"), cost = c(mean_enr, mean_non)) %>%
-  plot_ly(x = ~group, y = ~cost, type = "bar",
-          marker = list(color = c(ACCENT, ACCENT2), line = list(width = 0)),
-          text = ~gfmt(cost), textposition = "outside", cliponaxis = FALSE,
-          textfont = list(size = 16, color = INK), showlegend = FALSE,
-          hovertemplate = "%{x}: %{y:,.0f} AED<extra></extra>") %>%
-  layout(xaxis = ax("", zeroline = FALSE),
-         yaxis = ax("Mean annual waste cost (AED)",
-                    range = c(1300, 2200), zeroline = FALSE)) %>%
-  pl_m2(width = PL_W, height = 250, t = 40, title = "Figure B")
-```
-
-::: {.warn}
-**Same numbers and labels, different impression.**
-
-The gap is `r gfmt(gap)` AED in both figures. Here the y-axis starts at
-`r gfmt(1300)`, so a `r sprintf("%.0f%%", 100 * gap / mean_non)` difference fills
-most of the frame.
-:::
-
-::: {.ask}
-**In groups, two minutes.** Which figure would you put in a briefing to a
-minister? Which would you put in an annex? Is your answer the same for both?
-:::
-
-## `[MENTI PLACEHOLDER]` Which figure for the minister?
-
-:::::: {.columns}
-
-::::: {.column width="62%"}
-::: {.ask style="font-size: 120%;"}
-Briefing a minister: **figure A, figure B, or either with one sentence added?**
-
-A &nbsp;·&nbsp; B &nbsp;·&nbsp; Either, with one sentence added
-:::
-
-Figure A starts the axis at zero; figure B starts it at 1,300. Go to
-**menti.com** and enter code **`r MENTI_CODE`**, or scan the code on the right.
-:::::
-
-::::: {.column width="38%"}
-```{r out.width='330px', out.extra='style="display:block; margin:0 auto;"'}
-knitr::include_graphics(MENTI_QR)
-```
-:::::
-
-::::::
 
 ::: {.notes}
-Take the vote, then ask one person from each answer what the sentence would say.
+6 minutes. Predict before toggle. Truncated bar baseline starts at 700 versus 0; true mean values identical. Bars should ordinarily start at 0; a truncated axis needs explicit disclosure and a reason. This is descriptive before/after, not a causal effect chart. Keyboard button must not advance deck.
 :::
 
-## Try it: where should the axis start?
+## Mark up the chart {.reader-slide}
 
+Use the printed chart on **Sheet 1**. Work alone first.
+
+Circle the units. Mark where the axis starts.
+
+Underline who is compared and when.
+
+::: {.ask}
+What can this chart support on its own?
+:::
+
+
+::: {.notes}
+7 minutes. Chart is full axis, participant before/after. Ask for source, annual AED, period 12 months and no causal comparison. Distribution and uncertainty absent, so do not infer everyone gained. The worksheet also includes its descriptive source caption.
+:::
+
+## What an average hides {.reader-slide}
+
+```{r, results='asis'}
+html_out(sprintf('<p class="distribution-mean">Mean: %s tonnes</p><button data-open="distribution" data-closed="Open the individual values" data-opened="Hide the individual values" aria-controls="distribution" aria-expanded="false">Open the individual values</button><div id="distribution" hidden>%s</div>%s',fmt(mean(ten$landfill_before),1),distribution_svg(),fiction))
+```
+::: {.ask}
+Does the mean describe most of these ten businesses?
+:::
+
+
+::: {.notes}
+6 minutes. Predict before revealing Day 1 ten actual landfill records. Nine below the mean; one at 46 tonnes. Dot stacking makes repeated values visible. This is a small teaching selection, not a representative city distribution or a programme effect.
+:::
+
+## A percentage of what? {.reader-slide}
+
+```{r, results='asis'}
+html_out(sprintf('<div class="percentage-pair"><div><h3>Change in total tonnes</h3><p>%s%%</p></div><div><h3>Mean business percentage</h3><p>%s%%</p></div></div>%s',fmt(percent_total,1),fmt(percent_average,1),fiction))
+```
 ```{webr}
-#| fig-width: 10
-#| fig-height: 3.2
-start <- 1300    # where the y-axis begins: try 0, then 1400
-clean_par()
-barplot(costs, ylim = c(start, 2300), xpd = FALSE, border = NA,
-        col = c(ACCENT, ACCENT2), ylab = "Mean annual waste cost (AED)")
+#| echo: true
+#| autorun: false
+total_fall <- 100 * (1 - sum(tp$landfill_after) /
+  sum(tp$landfill_before))
+round(total_fall, 1)
 ```
-
 ::: {.ask}
-Predict before each run: how big does the gap look from 0? From 1,400?
+Why can these percentages differ for the same businesses?
 :::
+
 
 ::: {.notes}
-Run it as written first: 1300 reproduces figure B. Then change `start`
-to 0 and run, then 1400. The costs never change; only the frame around them does.
+7 minutes. One trainer demo after prediction. Total percentage weights businesses by their starting tonnes; mean business percentage gives each business equal weight. All before tonnes are positive. Two valid different summaries; neither alone establishes cause. Shorten variableline if editorclips. No school-zone or pie-chart case.
 :::
 
-## Rule 1: read the axis before the shape
+## Read an estimate and its interval {.reader-slide}
 
-:::::: {.columns}
-
-::::: {.column width="54%"}
-::: {.panel}
-A truncated axis works like a **magnifying glass**. That is useful when the
-question is whether a difference exists at all.
-
-It misleads when the reader does not notice that the axis has been cut.
-:::
-
-::: {.ask}
-Test: **cover the bars, read the y-axis, uncover.** Does the gap still look the
-same size?
-:::
-:::::
-
-::::: {.column width="46%"}
+```{r, results='asis'}
+html_out(interval_svg('trial',reveal=TRUE))
+```
 ```{=html}
-<div class="facts">
-  <div class="k">The gap</div>     <div class="v">630 AED &middot; the same in both figures</div>
-  <div class="k">As a share</div>  <div class="v">30% of the non-enrolled mean</div>
-  <div class="k">In SD units</div> <div class="v">1.13 standard deviations</div>
-  <div class="k">The accurate line</div> <div class="v">"a substantial gap on a truncated axis"</div>
-</div>
+<button data-open="interval-trial" data-closed="Open the interval" data-opened="Hide the interval" aria-controls="interval-trial" aria-expanded="false">Open the interval</button>
 ```
-:::::
+::: {.ask}
+Does the pilot chart settle the minimum saving rule?
+:::
 
-::::::
+
+::: {.notes}
+6 minutes. Predict before interval opens. Pilot lottery after 12 months, annual AED saving. Interval crosses 1000. Teach units, compared population and reported uncertainty; intervals do not account for every bias. Use the existing computed SVG, not a new hand-coded result.
+:::
+
+## Choose and repair {.reader-slide}
+
+Pairs work on **Sheet 2**.
+
+Repair a chart caption that claims cause from a before/after fall.
+
+Name the source, units, comparison and one limit.
 
 ::: {.ask}
-Here the number and the picture agree: `r sprintf("%.2f", sd_gap)` SD is a large
-gap. **If the gap really is large, what is still wrong with figure B?**
+Would a decision-maker understand what the chart actually shows?
 :::
+
 
 ::: {.notes}
-The answer: figure B asks the reader to judge the gap from the drawing instead of
-the number.
+10 minutes. Protect repair task. Accept explicit source title and reference to worksheetfigure. No drawing software or code. Repairing caption alone cannot supply missing causal comparison; say so.
 :::
 
-# 2 · What the bar is hiding {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+## Check an AI caption {.reader-slide}
 
-## What the bar of means leaves out
+Illustrative AI draft:
 
-::: {.panel}
-The same comparison as a **bar chart of means**, one number per group. It is one
-of the most common figures in evaluation reports.
-
-Two groups with the same mean can have little else in common.
-:::
-
-```{r fig.height=2.5, fig.width=5.6}
-tibble(group = c("Enrolled", "Not enrolled"), cost = c(mean_enr, mean_non)) %>%
-  plot_ly(x = ~group, y = ~cost, type = "bar",
-          marker = list(color = c(ACCENT, ACCENT2), line = list(width = 0)),
-          text = ~gfmt(cost), textposition = "outside", cliponaxis = FALSE,
-          textfont = list(size = 16, color = INK), showlegend = FALSE,
-          hovertemplate = "%{x}: %{y:,.0f} AED<extra></extra>") %>%
-  layout(xaxis = ax("", zeroline = FALSE),
-         yaxis = ax("Mean annual waste cost (AED)", range = c(0, 2400))) %>%
-  pl_m2(width = PL_W, height = 230)
-```
+"GreenWaste caused a fall of almost half in every business's landfill waste. The before/after chart proves the programme works."
 
 ::: {.ask}
-**Before the next slide:** what share of the enrolled businesses do you think
-paid **more** than the average non-enrolled business? Write a number down.
+Which words would you keep, qualify or remove?
 :::
-
-::: {.notes}
-Paper (Oct14_session2_materials.docx): the first prediction on the tracker (pack
-page 1).
-:::
-
-## The same comparison, as distributions
-
-```{r fig.height=2.4, fig.width=11.4}
-tibble(cost = c(enr, non),
-       group = c(rep("Enrolled", length(enr)), rep("Not enrolled", length(non)))) %>%
-  plot_ly(x = ~cost, color = ~factor(group, levels = c("Enrolled", "Not enrolled")),
-          colors = c(ACCENT, ACCENT2), type = "histogram",
-          # Same bins for both groups, so each bar is a comparable share.
-          xbins = list(start = 600, end = 3600, size = 65),
-          opacity = 0.72, histnorm = "probability",
-          hovertemplate = "%{x:.0f} AED<extra></extra>") %>%
-  layout(barmode = "overlay",
-         xaxis = ax("Annual waste cost (AED)"),
-         yaxis = ax("Share of the group", tickformat = ".0%"),
-         shapes = list(
-           list(type = "line", y0 = 0, y1 = 1, yref = "paper",
-                x0 = mean_enr, x1 = mean_enr, line = list(color = ACCENT, width = 3)),
-           list(type = "line", y0 = 0, y1 = 1, yref = "paper",
-                x0 = mean_non, x1 = mean_non, line = list(color = ACCENT2, width = 3, dash = "dot"))),
-         annotations = list(
-           list(x = mean_enr, y = 1.04, yref = "paper", xanchor = "right",
-                showarrow = FALSE, text = "enrolled mean",
-                font = list(size = 12, color = ACCENT)),
-           list(x = mean_non, y = 1.04, yref = "paper", xanchor = "left",
-                showarrow = FALSE, text = "not enrolled mean",
-                font = list(size = 12, color = ACCENT2)))) %>%
-  pl_m2(width = PL_W, height = 230, t = 40)
-```
-
-::: {.warn}
-**The two groups overlap very little.** Only
-`r sprintf("%.1f%%", 100 * mean(enr > mean_non))` of enrolled businesses
-(`r gfmt(sum(enr > mean_non))`) paid more than the average non-enrolled business.
-A bar chart of means cannot show this.
-:::
-
-::: {.ask .fragment}
-**Look back at the number you wrote down.** Did you expect
-`r sprintf("%.1f%%", 100 * mean(enr > mean_non))`?
-:::
-
-::: {.notes}
-A mean tells you where a group sits on average. It cannot tell you how many of
-them sit somewhere else. The reverse figure: `r sprintf("%.1f%%", 100 * mean(non < mean_enr))`
-of the comparison group paid less than the enrolled average.
-:::
-
-## Rule 2: ask what each bar is an average of
-
 ```{=html}
-<div class="facts">
-  <div class="k">A mean</div>        <div class="v">a summary of a group &middot; not a description of anyone in it</div>
-  <div class="k">Two groups can</div><div class="v">share a mean and share nothing else</div>
-  <div class="k">A bar chart</div>   <div class="v">cannot show how much two groups overlap</div>
-  <div class="k">So ask</div>        <div class="v">"how much do the two groups overlap?" &middot; it is answerable</div>
-</div>
+<button data-open="chart-ai" data-closed="Open feedback" data-opened="Hide feedback" aria-controls="chart-ai" aria-expanded="false">Open feedback</button><div id="chart-ai" class="feedback" hidden>The total fell by about half among participants. Every business is unsupported, and this descriptive comparison cannot establish cause.</div>
 ```
 
-::: {.ask}
-This is the same instinct as Day 1's confidence interval and Day 2's baseline
-balance table. **Ask what the summary leaves out.**
-
-Here the overlap agrees with the gap. What would you conclude if the two groups had
-overlapped heavily?
-:::
-
-# 3 · A percentage of what? {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
-
-## The change nobody can compute
-
-::: {.panel}
-The school-zone trial put its safety package on `r n_seg` of its 400 segments and
-counted child collisions before and after. An analyst wants to report **the
-percentage change in child collisions at the typical package segment.**
-:::
-
-```{r}
-sc %>%
-  mutate(`Baseline child collisions` = cut(base, c(-Inf, 0, 1, 2, 5, 9, Inf),
-           labels = c("0", "1", "2", "3 to 5", "6 to 9", "10 or more"))) %>%
-  count(`Baseline child collisions`) %>%
-  mutate(`Share of segments` = sprintf("%.1f%%", 100 * n / sum(n))) %>%
-  select(-n) %>%
-  tbl(align = "rr", font_size = 14, hl = 1, hl_bg = HL_RED, hl_bold = TRUE)
-```
-
-::: {.warn}
-**`r gfmt(zero_base)` of the `r n_seg` package segments had no child collisions at
-baseline**, so their percentage change would mean dividing by zero. Any figure
-that reports one has dropped these segments or handled them somehow. Does it say
-which?
-:::
-
-## Two charts, two different "biggest wins"
-
-:::::: {.columns}
-
-::::: {.column width="50%"}
-**The largest percentage reductions**
-
-```{r fig.height=2.3, fig.width=5.4}
-big_pct %>%
-  mutate(lab = sprintf("%s: %d to %d", segment_id, base, follow)) %>%
-  plot_ly(x = ~pct, y = ~factor(lab, levels = rev(lab)), type = "bar",
-          orientation = "h", marker = list(color = ACCENT),
-          text = ~sprintf("%.0f%%", pct), textposition = "inside",
-          insidetextanchor = "start", textfont = list(color = "white", size = 13),
-          hovertemplate = "%{y}<extra></extra>") %>%
-  layout(xaxis = ax("Change in child collisions (%)", range = c(-100, 0)),
-         yaxis = ax("")) %>%
-  pl_m2(width = PL_WC, height = 220, t = 10, b = 46) %>%
-  layout(margin = list(l = 130))
-```
-:::::
-
-::::: {.column width="50%"}
-**The largest absolute reductions**
-
-```{r fig.height=2.3, fig.width=5.4}
-big_abs %>%
-  mutate(lab = sprintf("%s: %d to %d", segment_id, base, follow)) %>%
-  plot_ly(x = ~absolute, y = ~factor(lab, levels = rev(lab)), type = "bar",
-          orientation = "h", marker = list(color = ACCENT2),
-          text = ~sprintf("%+d", as.integer(absolute)), textposition = "inside",
-          insidetextanchor = "start", textfont = list(color = "white", size = 13),
-          hovertemplate = "%{y}<extra></extra>") %>%
-  layout(xaxis = ax("Change in child collisions (number)", range = c(-13, 0)),
-         yaxis = ax("")) %>%
-  pl_m2(width = PL_WC, height = 220, t = 10, b = 46) %>%
-  layout(margin = list(l = 130))
-```
-:::::
-
-::::::
-
-::: {.warn .fragment}
-**These two lists have `r if (overlap == 0) "no segments" else if (overlap == 1) "one segment" else paste(overlap, "segments")` in common.**
-Every segment on the left fell to zero, a 100% cut. So did `r n_to_zero` package
-segments in all, `r n_to_zero_small` of them from four collisions or fewer. The
-segments on the right removed `r gfmt(-sum(big_abs$absolute))` between them.
-:::
-
-::: {.ask .fragment}
-Both are correct. The left answers *where did the package work best?*; the right,
-*where did it prevent the most harm?* **Which question would a minister want a
-report's chart to answer?**
-:::
-
-## Try it: one change, two averages
-
-```{webr}
-# 1. Pooled: all collisions after, against all before
-100 * (sum(sc$after) - sum(sc$before)) / sum(sc$before)
-
-# 2. The average of each segment's own percentage change
-#    (only segments that had a collision to begin with)
-has_base <- sc$before > 0
-mean(100 * (sc$after - sc$before)[has_base] / sc$before[has_base])
-```
-
-::: {.ask}
-Predict before I run it: will the two answers be close?
-:::
 
 ::: {.notes}
-Paper (Oct14_session2_materials.docx): the second prediction on the tracker (pack
-page 1); everyone writes "close" or "far apart" before you run it.
-
-Expected: about `r sprintf("%.1f%%", pooled_pct)` pooled and about
-`r sprintf("%.1f%%", average_pct)` averaged. The next slide explains
-the gap: the pooled figure weights each segment by its collisions; the average
-gives every segment equal weight, so small bases pull it around.
+6 minutes. Authored example applies to the total landfill result, not the cost bars. Participants verify source and denominator. Optional AI prompt asks it to describe visible evidence and missing context before recommending. No account required.
 :::
 
-## Rule 3: check what each percentage is a percentage of
-
-```{=html}
-<div class="facts">
-  <div class="k">A percentage</div>   <div class="v">is a claim about a base &middot; find the base before you believe it</div>
-  <div class="k">Small bases</div>    <div class="v">produce the largest percentages and the smallest changes</div>
-  <div class="k">Zero bases</div>     <div class="v">produce no number at all &middot; but the figure still has a bar there</div>
-  <div class="k">So ask</div>         <div class="v">"how many segments is that percentage built on?"</div>
-</div>
-```
+## Defend your chart choice {.reader-slide}
 
 ::: {.ask}
-The pooled change across all `r n_seg` package segments is
-`r sprintf("%.1f%%", pooled_pct)`. The average of the `r n_pct` percentage changes
-that can be computed is `r sprintf("%.1f%%", average_pct)`.
-
-**They differ by `r sprintf("%.0f", abs(average_pct - pooled_pct))` percentage
-points** because the pooled figure weights each segment by its collisions and the
-average gives every segment equal weight. **Which one belongs in the headline?**
+What can your repaired caption help a reader conclude?
 :::
+Give one supported statement and one limit.
 
-# 4 · Levels or changes {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
-
-## The figure that flatters the programme
-
-::: {.panel}
-Day 1 Session 3's with-and-without comparison, drawn as a chart. After the programme,
-the enrolled businesses paid **`r gfmt(gv(1, 1))` AED** and the comparison
-businesses paid **`r gfmt(gv(0, 1))` AED**.
-
-A difference of `r gfmt(gv(0, 1) - gv(1, 1))` AED. **The programme cut costs.**
-:::
-
-```{r fig.height=2.5, fig.width=6.6}
-tibble(group = c("Enrolled", "Not enrolled"),
-       cost  = c(gv(1, 1), gv(0, 1))) %>%
-  plot_ly(x = ~group, y = ~cost, type = "bar",
-          marker = list(color = c(ACCENT, ACCENT2), line = list(width = 0)),
-          text = ~gfmt(cost), textposition = "outside", cliponaxis = FALSE,
-          textfont = list(size = 15, color = INK), showlegend = FALSE,
-          hovertemplate = "%{x}: %{y:,.0f} AED<extra></extra>") %>%
-  layout(xaxis = ax("", zeroline = FALSE),
-         yaxis = ax("Mean annual waste cost, after (AED)", range = c(0, 2700))) %>%
-  pl_m2(width = PL_W, height = 230)
-```
-
-::: {.ask}
-Every number here is correct, and a figure like this could appear in a
-reputable report.
-
-**What question does it answer, and what question did the evaluation ask?**
-:::
-
-## The same two groups, with where they started
-
-```{r fig.height=2.4, fig.width=11.4}
-tibble(
-  Group = factor(rep(c("Enrolled", "Not enrolled"), each = 2),
-                 levels = c("Enrolled", "Not enrolled")),
-  Time  = factor(rep(c("Before", "After"), 2), levels = c("Before", "After")),
-  Cost  = c(gv(1, 0), gv(1, 1), gv(0, 0), gv(0, 1))
-) %>%
-  plot_ly(x = ~Time, y = ~Cost, color = ~Group, colors = c(ACCENT, ACCENT2),
-          type = "scatter", mode = "lines+markers",
-          line = list(width = 3), marker = list(size = 11),
-          hovertemplate = "%{fullData.name}, %{x}: %{y:,.0f} AED<extra></extra>") %>%
-  layout(xaxis = ax("", zeroline = FALSE),
-         yaxis = ax("Mean annual waste cost (AED)", range = c(0, 2700))) %>%
-  pl_m2(width = PL_W, height = 230)
-```
-
-::: {.warn .fragment}
-**The comparison group started `r gfmt(gv(0, 0) - gv(1, 0))` AED worse off, and its
-costs were rising anyway.** The gap on the previous slide mixes the programme
-effect with that starting gap and with a trend unrelated to the programme. The
-DiD estimate from Day 2 Session 1 is `r gfmt(did_est)` AED, not `r gfmt(gv(0, 1) - gv(1, 1))`.
-:::
-
-::: {.ask .fragment}
-Day 1 showed this as a with-and-without comparison. **Why does the same comparison
-look more convincing as a bar chart?**
-:::
+Point to the chart evidence while explaining.
 
 ::: {.notes}
-The analyst need not have been careless: the level comparison is the easiest one
-to draw.
+4 minutes. Pairs share a short defence. Require the actual values, comparison and denominator; accept different captions when faithful.
 :::
 
-## Rule 4: compare changes, not levels
-
-```{=html}
-<div class="facts">
-  <div class="k">Levels carry</div>   <div class="v">whatever the two groups already differed by &middot; and whatever moved on its own</div>
-  <div class="k">Changes remove</div> <div class="v">the starting gap &middot; if the groups were on parallel paths</div>
-  <div class="k">Both are easy</div>  <div class="v">to compute &middot; only one answers "did the programme work?"</div>
-  <div class="k">So ask</div>         <div class="v">"what did the comparison group look like before?"</div>
-</div>
-```
+## Your question from memory {.reader-slide}
 
 ::: {.ask}
-Check for four numbers on any before-and-after figure: before and after, for
-both groups.
-
-**Does the figure show the before for both groups? If not, what can it tell you
-about the programme's effect?**
+What would you check first in a chart from an evaluation report?
 :::
-
-# 5 · The assumption the picture hides {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
-
-## Two ways to add up the same saving
-
-::: {.panel}
-From this morning: GreenWaste cost **`r gfmt(COST_PER_BUSINESS)` AED** per
-business and saved **`r gfmt(BENEFIT_PER_YEAR)` AED** a year, for five years
-starting one year after rollout. The two lines add up that saving in two ways.
-:::
-
-```{r fig.height=2.4, fig.width=11.4}
-cb_years %>%
-  plot_ly(x = ~year, y = ~cum_nominal, name = "Added up as they come",
-          type = "scatter", mode = "lines+markers",
-          line = list(color = ACCENT2, width = 3, dash = "dot"),
-          marker = list(size = 9),
-          hovertemplate = "Year %{x}: %{y:,.0f} AED<extra></extra>") %>%
-  add_trace(y = ~cum_discounted, name = "Discounted to today's money",
-            type = "scatter", mode = "lines+markers",
-            line = list(color = ACCENT, width = 3), marker = list(size = 9),
-            hovertemplate = "Year %{x}: %{y:,.0f} AED<extra></extra>") %>%
-  layout(xaxis = ax("Years after rollout"),
-         yaxis = ax("Cumulative saving per business (AED)"),
-         shapes = list(list(type = "line", x0 = 0.5, x1 = 8.5, y0 = COST_PER_BUSINESS,
-                            y1 = COST_PER_BUSINESS, line = list(color = ALERT, width = 3))),
-         annotations = list(list(x = 8.4, y = COST_PER_BUSINESS, xanchor = "right",
-                                 yanchor = "bottom", showarrow = FALSE,
-                                 text = "what the programme cost", font = list(size = 12, color = ALERT)))) %>%
-  pl_m2(width = PL_W, height = 230, t = 20)
-```
-
-::: {.warn}
-**Both lines use the same measured saving.** The upper line counts a future
-saving as worth the same as one today and reaches `r gfmt(cb_nom_total)` AED. The
-lower line discounts at 5% and reaches `r gfmt(cb_dis_total)`. The
-`r gfmt(cb_nom_total - cb_dis_total)` AED gap is the **discount rate** at work.
-:::
-
-## Try it: change the discount rate
-
-```{webr}
-#| fig-width: 10
-#| fig-height: 3
-rate   <- 0.05                        # try 0, then 0.10
-saving <- c(0, rep(816, 5))           # nothing in year 1, then five years
-today  <- saving / (1 + rate)^(1:6)   # each year's saving in today's money
-cat("Total in today's money:", round(sum(today)), "AED; cost 1,800 AED\n")
-plot_payback(today)
-```
-
-::: {.ask}
-Predict: what rate would push the total below the 1,800 AED cost?
-:::
+Close the sheet. Write the check and explain why it matters.
 
 ::: {.notes}
-Paper (Oct14_session2_materials.docx): the third prediction on the tracker (pack
-page 1).
-
-Run at 0.05 (`r gfmt(cb_dis_total)`), then 0 (`r gfmt(cb_nom_total)`: the
-undiscounted line), then 0.10 (`r gfmt(sum(816 / 1.10^(2:6)))`), then 0.24: the
-total falls to about `r gfmt(sum(816 / 1.24^(2:6)))`, level with the cost. The
-answer to the question is about 24%, the flip rate from this morning's session.
-:::
-
-## Rule 5: show future savings at today's value
-
-::: {.panel}
-**The ratio, discounted:** `r gfmt(cb_dis_total)` / `r gfmt(COST_PER_BUSINESS)` =
-**`r sprintf("%.2f", cb_ratio)`**.
-:::
-
-::: {.ask}
-The undiscounted line is easier to explain and looks better. Leaving out the
-discount is a choice that favours the programme. **Would anyone in your review
-process ask the analyst to defend it, as they would a 5% rate?**
-:::
-
-::: {.warn}
-The cost line is crossed in year
-`r sprintf("%.1f", 3.21)` on the undiscounted view and year
-`r sprintf("%.1f", 3.53)` on the discounted one. **The discount rate alone moves
-payback by about four months.**
-:::
-
-# 6 · The pie {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
-
-## What is this pie not telling you?
-
-::: {.panel}
-The school-zone evaluation reports its collisions by severity, as a pie chart.
-:::
-
-```{r fig.height=2.9, fig.width=5.2}
-tibble(severity = factor(c("Minor", "Injury", "Child"),
-                         levels = c("Minor", "Injury", "Child")),
-       n = as.numeric(sev)) %>%
-  plot_ly(labels = ~severity, values = ~n, type = "pie",
-          marker = list(colors = c(ACCENT2, ACCENT, ALERT),
-                        line = list(color = "white", width = 2)),
-          textinfo = "label+percent", textfont = list(size = 14, color = "white"),
-          hovertemplate = "%{label}: %{value:,}<extra></extra>") %>%
-  pl_m2(width = PL_WC, height = 260, b = 20)
-```
-
-::: {.ask}
-**In groups, three minutes.** Write down two things this chart tells you and two
-things it does not.
-:::
-
-## What the pie cannot show
-
-:::::: {.columns}
-
-::::: {.column width="52%"}
-```{=html}
-<div class="facts">
-  <div class="k">It shows</div>     <div class="v">which kind of collision is most common &middot; minor ones</div>
-  <div class="k">It hides</div>     <div class="v">that the categories overlap &middot; a child collision is also an injury collision</div>
-  <div class="k">It hides</div>     <div class="v">any change over time &middot; both rounds pooled into one number</div>
-  <div class="k">It hides</div>     <div class="v">the counts &middot; a pie shows shares, not how many collisions</div>
-</div>
-```
-:::::
-
-::::: {.column width="48%"}
-::: {.warn}
-**The first problem is the most serious.** A pie chart says its slices add up to
-one whole. These do not: child collisions are also counted as injury collisions,
-so the slices overlap and the percentages are wrong.
-:::
-:::::
-
-::::::
-
-::: {.ask}
-The truncated axis and the level comparison were accurate charts that invited a
-wrong reading. This chart's percentages are wrong. **Before you read what a
-figure shows, how would you check that its parts add up?**
-:::
-
-## The same collisions, as counts
-
-```{r fig.height=2.4, fig.width=11.4}
-plot_ly() %>%
-  add_bars(x = c("Minor", "Injury"), y = c(sev[["minor"]], sev[["injury"]]),
-           marker = list(color = c(ACCENT2, ACCENT)), width = 0.6,
-           text = gfmt(c(sev[["minor"]], sev[["injury"]])), textposition = "outside",
-           cliponaxis = FALSE, textfont = list(size = 15, color = INK),
-           showlegend = FALSE, hovertemplate = "%{x}: %{y:,}<extra></extra>") %>%
-  add_bars(x = "Injury", y = sev[["child"]], marker = list(color = ALERT), width = 0.3,
-           text = paste("of which child:", gfmt(sev[["child"]])), textposition = "inside",
-           textfont = list(size = 13, color = "white"), showlegend = FALSE,
-           hovertemplate = "Child: %{y:,}<extra></extra>") %>%
-  layout(barmode = "overlay", xaxis = ax("", zeroline = FALSE),
-         yaxis = ax("Collisions, both rounds")) %>%
-  pl_m2(width = PL_W, height = 230, t = 40)
-```
-
-::: {.panel}
-The same totals as bars. Child collisions sit **inside** the injury bar, because
-each one is also an injury collision, and the counts are on the chart.
-:::
-
-::: {.ask .fragment}
-**In groups:** what does this version show that the pie could not? What is still
-missing?
-:::
-
-::: {.notes}
-Still missing: the two rounds are pooled, so the chart says nothing about change,
-and there is no comparison between the arms.
-:::
-
-# 7 · Put AI to work {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
-
-## AI Snapshot: which chart is fairer?
-
-::: {.panel}
-Give the model figures A and B and this prompt: **"Which of these two charts
-better represents the difference between the two groups, and why?"**
-:::
-
-::: {.ai-output}
-*A response like this is possible, especially with a short or leading prompt:*
-
-Both charts present the same underlying data accurately. [The truncated-axis
-chart is often preferable for a policy audience because it makes the difference
-visible]{.flag}, and [a y-axis that starts at zero is not a requirement in
-professional data visualisation]{.flag}.
-
-[On balance the truncated version communicates the finding more effectively, and
-a reader who wants the absolute values can consult the data labels]{.flag}.
-:::
-
-::: {.ask}
-**Four minutes.** Is it right? Does it answer the question that was asked? What
-does it explain well?
-:::
-
-::: {.notes}
-Paper (Oct14_session2_materials.docx): Hand out the AI Snapshot sheet (pack page 2,
-one per group). It has both figures, the prompt and the response.
-:::
-
-## Debrief: what the answer skipped
-
-::: {.warn}
-**Each sentence is accurate. The answer skips what decides the question:**
-
-* **who is reading it**: a minister and an analyst need different figures;
-* **the sentence beside it**: a truncated axis suits "a difference exists", not "a large difference";
-* **the number**: `r gfmt(gap)` AED, `r sprintf("%.2f", sd_gap)` SD, answers "is it large?" without any chart.
-:::
-
-::: {.ask}
-**A better prompt** names the reader and the sentence: *"This chart will sit
-beside the claim 'the programme reduced costs substantially'. Is the axis
-appropriate for that claim, for a non-technical reader?"*
-
-**Two habits:** ask the AI to ask you questions before it answers, and paste the
-AI's answer into a new chat and ask the AI to check that answer.
-:::
-
-::: {.notes}
-Paper (Oct14_session2_materials.docx): the better prompt and the two habits are at
-the bottom of the AI Snapshot sheet (pack page 2). Groups run the better prompt and
-compare.
-:::
-
-# 8 · The five rules {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
-
-## What to do with any figure you are handed
-
-```{r}
-fig_rules %>%
-  select(` ` = n, Rule, Why) %>%
-  tbl(align = "cll", font_size = 14, widths = c("2em", "13em", "26em"))
-```
-
-::: {.ask}
-None of the five needs software, and you have now run all five on data from
-earlier in the week. **Which one would you find hardest to apply under time
-pressure?**
-:::
-
-## The fastest check
-
-::: {.panel}
-The fastest of the five checks:
-
-**Read the y-axis, then read the sentence underneath the figure, then decide
-whether they are describing the same thing.**
-:::
-
-```{=html}
-<div class="facts">
-  <div class="k">The axis says</div>      <div class="v">how big the difference is on the page</div>
-  <div class="k">The sentence says</div>  <div class="v">how big the difference is in the world</div>
-  <div class="k">They can disagree</div> <div class="v">when they do, the sentence overclaims</div>
-  <div class="k">So ask</div>             <div class="v">"large compared to what?"</div>
-</div>
-```
-
-::: {.warn}
-Every figure this session had a fair version and a misleading version made from
-the same numbers. The difference came from choices about how to draw them.
-:::
-
-## Where this sits
-
-```{=html}
-<div class="facts">
-  <div class="k">This morning</div> <div class="v">what a result is worth &middot; cost, and the assumption that decides it</div>
-  <div class="k">Now</div>          <div class="v">the form it arrives in &middot; and what the form does to your reading</div>
-  <div class="k">Next session</div> <div class="v">the analyst is in the room &middot; and has to answer for all of it</div>
-  <div class="k">Bring with you</div><div class="v">the five rules, and the questions you did not get to ask</div>
-</div>
-```
-
-::: {.ask}
-**Pick one chart from a report your team received this year. Which of the five
-rules does it fail?**
-
-Next session the 3ie trainer plays the evaluator of a study you have not seen.
-Which questions from your checklist, and from today, will you ask first?
-:::
-
-::: {.notes}
-Paper (Oct14_session2_materials.docx): Hand out the take-away cards (pack page 3,
-one per participant, cut). Give a minute to write two questions for the clinic on
-the card.
+4 minutes. Independent close. Scales and labels, averages, comparison and uncertainty. Total 60minutes.
 :::

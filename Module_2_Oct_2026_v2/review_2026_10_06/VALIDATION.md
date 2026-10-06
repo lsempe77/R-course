@@ -57,3 +57,14 @@ ignored by Git. Reproduce the browser checks with `verify_day1.py`,
 - Backups in backups/day2_2026_10_06_approved; local QA remains ignored. Main previews only, no live teaching-page change. Venue phone reachability remains a rehearsal check.
 
 - Optional case reference refreshed from an older 6,000-city-business save to the current 10,000 records and computed means. Two A4 pages rendered and inspected at 12 point; technical before/after column names wrap explicitly.
+
+
+## Day 3 approved rebuild
+
+- Shared `day3_case.R`: ratio 1.86 under explicitly fictional assumptions, scenario ratios 1.07/1.40/1.67/1.17/0.80, percentages 49.5/58.6. Corrected DiD input and its causal limitation retained. No fabricated fieldwork or pre-trend checks.
+- Sequential browser walks: S1 12 slides including title, lower overflow maximum -2 px; S2 11 slides, maximum -3 px; S3 14 slides, maximum -49 px. All browser errors []. Live outputs 1.86, 49.5, 862/1167 match shared objects. Scenario-table and percentage-output overflow fixed before passing walks.
+- Final targeted QA after a shorter heading and enlarged chart labels: no logo overlap; all SVG labels inside viewBox; both axis states inspected with identical values. Native keyboard reveal/close and choices passed on all three decks; existing Day 1 opening and Day 2 RDD controls also checked.
+- Word fallback: participant pages 2/2/2, trainer pages 9/3/5, shortened QA reference 1, partner brief 11 landscape pages. Every page visually inspected; revised cards and brief re-rendered after corrections. Ratio A1 landscape page rendered and inspected.
+- Room poll HTTP/two-browser regression: anonymous replacement votes, hidden totals, Before/After counts, unauthorized and cross-origin rejection, closed/stale rejection, text-safe reasons, QR and widths 320/375/1280 all passed. Venue reachability remains untested.
+- Scoped Day 3 generation and full-script syntax passed. Full legacy generator was not run, because Day 4 packs remain historical pending daily approval.
+- Backup and QA artifacts remain ignored. Main publication contains unlinked previews only; live teaching pages stay unchanged. Day 4 tables are a proposal for the remaining two sessions.

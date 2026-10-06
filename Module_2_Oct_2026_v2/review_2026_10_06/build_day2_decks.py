@@ -88,6 +88,7 @@ s3+=slide('Mark up the report extract','Read **Sheet 2** alone, then with a part
 s3+=slide('Make a provisional judgement',ask('Would you act, act with conditions or request more evidence?')+'Write two sentences: your reason and the evidence that could change it.\n\nCompare with a partner. Different decisions need clear support.',6,'Protect individual judgement before discussion. Matching point estimate near rule, interval straddles rule. Causal credibility and programme costs still uncertain. Compare to pilot only if needed, no second case.')
 s3+=slide('Check an AI assurance','Illustrative AI draft:\n\n"Every participant has a match, so selection bias is removed. The estimated saving guarantees the minimum saving rule is met."\n\n'+ask('What would you keep, cross out and rewrite?')+open_answer('match-ai','Open feedback','Every participant was matched. That fact does not remove all selection bias. The interval spans the decision rule, so reaching it is uncertain.'),5,'All participants matched is true in this algorithm. Unsupported inference is bias removed and threshold guaranteed. Optional AI prompt asks for claims and source evidence plus missing checks; ask questions before concluding. Verify with extract, no external AI required.')
 s3+=slide('A question from memory',ask('What would you ask the evaluator about these matches?')+'Close your sheets. Write one question and explain its purpose.\n\n**Matching:** inspect what made the pairs similar, what was left out and who was reused.',3,'Individual exit, no AI. Look for concrete requests about closeness, reuse, baseline outcomes or unmeasured influences. Total 75 minutes.')
-for name,text in [('Oct13_session1.qmd',s1),('Oct13_session2_live.qmd',s2),('Oct13_session3.qmd',s3)]:
-    (ROOT/name).write_text(text.rstrip()+'\n',encoding='utf-8')
-    print(name,'content screens',text.count('## '))
+if __name__=='__main__':
+    for name,text in [('Oct13_session1.qmd',s1),('Oct13_session2_live.qmd',s2),('Oct13_session3.qmd',s3)]:
+        (ROOT/name).write_text(text.rstrip()+'\n',encoding='utf-8')
+        print(name,'content screens',text.count('## '))
