@@ -1,0 +1,16 @@
+// Cloudflare Worker "module2": serves docs/ at 3ie.academy behind a shared password.
+// Deployed by Cloudflare Workers Builds on every push to main (deploy command:
+// npx wrangler deploy). The password is the Worker secret SITE_PASSWORD, set in
+// the dashboard (Settings > Variables and Secrets), never in this file.
+{
+  "name": "module2",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./docs",
+    "binding": "ASSETS",
+    "run_worker_first": true
+  },
+  // Keep variables set in the dashboard when deploying from this file.
+  "keep_vars": true
+}
