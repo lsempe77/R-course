@@ -1,5 +1,16 @@
 # Handoff: moving Module 2 to the simple GreenWaste case
 
+## Live publication authorised, 6 October 2026
+
+Lucas requested a revised internal landing page and explicitly instructed us to push the whole rebuilt week live. This supersedes earlier preview-only restrictions. `docs/index.html` is now a working course hub with day filters, eleven session cards, worksheets, three downloads and a collapsible trainer area. The existing password gate is unchanged; no public-facing launch or access changes are requested.
+
+`review_2026_10_06/publish_live.py` promotes checked preview bytes into the live deck URLs, `docs/handouts/`, `docs/trainer/`, `docs/posters/` and `docs/downloads/`. It also copies the corrected CSV next to the live decks, retains old aliases as redirects and replaces Oct15 S3 with an other-provider simulation notice. The old landing page linked stale PDF/PPTX snapshots; those links are omitted from the current hub. Old snapshot files remain historical and should not be advertised until refreshed.
+
+Versioned pre-publication copies: `backups/live_2026_10_06/`. Fifty-three promotion copies hash-verified. Landing checks: 49 links served HTTP 200 locally, eleven cards, keyboard filters, day-hash reload and trainer disclosure, 1280/768/375/320 widths with no horizontal overflow or browser errors. All static assets below 25 MiB. Earlier deck/print walks remain applicable because the promoted bytes match their checked previews. Trainer calculation smoke check runs from the live root with the corrected CSV.
+
+Source and preview histories are reconciled before the live push. Retain previews as build-review history; the live root is now the current delivery route. Do not remove the password gate or retry the previously rejected worktree cleanup.
+
+
 ## Current checkpoint: all eleven sessions built, 6 October 2026
 
 Lucas approved Day 4. All four daily rebuilds are complete. The historical notes below are superseded where they describe pending approval, twelve sessions, old figures or retired teaching tasks.

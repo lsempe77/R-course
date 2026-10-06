@@ -87,3 +87,13 @@ ignored by Git. Reproduce the browser checks with `verify_day1.py`,
 The complete download was split into print materials and deck archives for Days 1-2 and Days 3-4 to respect Cloudflare's 25 MiB static asset limit. Each archive is size-checked before publication.
 
 Published source checkpoints 63ff9cc/a92f8e8 and preview checkpoint 57df051; both pushes succeeded. Final downloads 762,846 / 17,193,159 / 13,686,934 bytes all below 25 MiB. Remote unauthenticated checks of both current review URLs returned 403; online content was not inspected. Worktrees have no remaining tracked changes apart from this checkpoint note. Unrelated untracked user files remain untouched.
+
+
+## Working hub and live promotion
+
+- Lucas explicitly requested landing-page work and publication of the whole week to the live site. Source and preview branches reconciled before promotion.
+- New docs/index.html: DGE branding, day filters, eleven short session cards, current 60/75-minute timings, direct worksheets, three downloads and a keyboard-accessible trainer disclosure. No link to the old final workshop or stale PDF/PPTX exports. Final slot labelled as the other provider's simulation. Password gate unchanged; working hub carries noindex metadata.
+- 53 copied live assets matched checked preview hashes, including corrected CSV beside live decks. Versioned pre-overwrite copies in backups/live_2026_10_06. Existing aliases redirect to current decks; former final-session URL shows a simulation notice.
+- All 49 landing material links served HTTP 200 locally. Day filters, exclusive selection, keyboard activation, Day 4 hash/reload and trainer disclosure passed at 1280/768/375/320 widths. No horizontal overflow or browser errors; desktop, phone and expanded-trainer screenshots inspected.
+- Live-root score-rule deck walked sequentially: 11 slides including title, Run output -721 from the corrected CSV, all feedback open, no overflow or browser errors. Other deck checks remain applicable via byte identity with their walked previews.
+- All site assets fit the 25 MiB cap. Current preview review now links to the live working hub. Historical exports remain unlinked rather than advertised as current.
