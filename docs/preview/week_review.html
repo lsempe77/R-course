@@ -2693,7 +2693,7 @@ vertical-align: -.125em;
 <section id="corrections-to-carry-into-the-rebuild" class="level2">
 <h2 class="anchored" data-anchor-id="corrections-to-carry-into-the-rebuild">Corrections to carry into the rebuild</h2>
 <ol type="1">
-<li><strong>Cut-off rule:</strong> eight city records printed with score 58 did not take part. I reproduced the mismatch from the CSV. The generator uses the unrounded score for participation. Agree the correction before regeneration; recalculate outcomes consistently for those records, then refresh every affected number and export.</li>
+<li><strong>Cut-off rule:</strong> eight city records printed with score 58 did not take part. I reproduced the mismatch from the CSV. The generator uses the unrounded score for participation. The correction was approved with Day 2 and completed, with affected Day 1 exports refreshed.</li>
 <li><strong>Case drift:</strong> Days 3 and 4 still use old numbers, old columns and Tariff Shield or school-zone material. Converting only the decks will leave the report, findings, QA responses and handouts inconsistent.</li>
 <li><strong>Lab drift:</strong> <code>gw_lab.R</code> still describes neighbourhoods, enrolment and a fixed effect of 900 AED. A scalar rename would not make that simulated world match the pilot-and-city case with varying effects. Simplify or replace the lab structure; use it sparingly in the main teaching route.</li>
 <li><strong>Intervals:</strong> the handoff and plan quote different RDD interval endpoints. Check whether they use ordinary or robust standard errors, choose the intended analysis and share the computed outputs between screen and paper.</li>
@@ -2701,11 +2701,11 @@ vertical-align: -.125em;
 <li><strong>Decision wording:</strong> keep observed change, causal credibility, uncertainty, the threshold and value for money distinct. “Not enough evidence to approve scale-up” is different from “the programme does not work”.</li>
 <li><strong>AI checks:</strong> a number-matching script or second chat can assist review; neither proves a brief is faithful to the source. Participants must point to the report evidence themselves.</li>
 </ol>
-<p>Current computed values for reference: before and after -670 AED; with and without -1,639 AED; pilot lottery -1,014 AED; DiD -813 AED; RDD near the cut-off -656 AED; matching -1,031 AED. These remain estimates from the current, uncorrected dataset.</p>
+<p>Current computed values for reference: before and after -669 AED; with and without -1,638 AED; pilot lottery -1,014 AED; DiD -812 AED; RDD near the cut-off -721 AED; matching -1,029 AED. These are estimates from the corrected dataset. Days 1 and 2 are rebuilt; later-day materials remain pending.</p>
 </section>
 <section id="build-sequence-for-the-remaining-days" class="level2">
 <h2 class="anchored" data-anchor-id="build-sequence-for-the-remaining-days">Build sequence for the remaining days</h2>
-<p>The shorter timetable and Day 1 plan are approved and built. Review the next daily tables, then rebuild each day as one package: decks, activity sheets, trainer keys, boards where used, the exercise brief and local preview. Save a versioned backup before substantial edits, as required by the handoff. Preserve the working branch and reconcile any newer owner edits before changes.</p>
+<p>The shorter timetable and Days 1 and 2 are approved and built. Review the next daily tables, then rebuild each day as one package: decks, activity sheets, trainer keys, boards where used, the exercise brief and local preview. Save a versioned backup before substantial edits, as required by the handoff. Preserve the working branch and reconcile any newer owner edits before changes.</p>
 <p>Render each changed deck, run its live cells, inspect all slides at presentation size, and check every participant sheet in Word. The handoff requires walks one deck at a time. Check numbers, fictional-case labels, questions before reveals, keyboard use and the paper fallback. Update exports and the materials zip only after content review.</p>
 <p>The review boundary comes from <code>HANDOFF.md</code>: “for each day, propose one plan table (slide by slide), wait for approval, build”. Day 1’s tables above make that approval concrete. Subsequent days should use the agreed design standard and the same daily review rhythm.</p>
 </section>
