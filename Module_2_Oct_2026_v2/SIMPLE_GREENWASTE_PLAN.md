@@ -1,6 +1,6 @@
 # Simple GreenWaste: what is being done and what is next
 
-Status 2026-10-06. Owner: Lucas, agreed with Fiona. Work happens on the branch
+Status 2026-10-06 (updated the same day). Owner: Lucas, agreed with Fiona. Work happens on the branch
 `simple-greenwaste`; `main` and the live site stay as they are until the branch
 is reviewed and merged.
 
@@ -14,6 +14,13 @@ thread. Participants have also never seen any GreenWaste numbers (Module 1 used
 the case only for a Theory of Change exercise; see the 2026-10-05 reminder in
 `CLAUDE.md`), so there are no Module 1 figures to stay consistent with.
 
+## Scope (decided 2026-10-06)
+
+**Every Module 2 deck uses this one case**: no traffic cameras (Oct12 S1, S2, Oct13 S3's second case),
+no school-zone data (Oct14 S2), no Tariff Shield (Oct15 S2), no old GreenWaste file. The work runs in
+daily batches: all of a day's decks are drafted together, Lucas reviews one table and the previews
+per day.
+
 ## The new case, in one sentence
 
 GreenWaste helps businesses cut their waste costs. In the **pilot district** a
@@ -23,15 +30,16 @@ with an efficiency score of 58 or below joined.
 ## The data (done)
 
 `evaluation_data_GreenWaste_simple.csv`, written by `make_greenwaste_simple.R`.
-Invented, one row per business, ten columns, no other file needed:
+Invented, one row per business, twelve columns, no other file needed:
 
 | Column | Meaning |
 |---|---|
 | `business` | identifier |
-| `setting` | `pilot` (400 businesses, all scoring 58 or below, lottery) or `city` (6,000 businesses, every score, rule at 58) |
+| `setting` | `pilot` (400 businesses, all scoring 58 or below, lottery) or `city` (10,000 businesses, every score, rule at 58) |
 | `score` | efficiency score, 0 to 100, higher is more efficient |
 | `took_part` | 1 if the business took part |
 | `cost_before`, `cost_after` | waste-management costs in AED, before and 12 months after |
+| `landfill_before`, `landfill_after` | waste sent to landfill, tonnes per year (a second outcome, used in Day 1 Session 1 to practise the vocabulary without giving away the cost results) |
 | `manager_age`, `staff`, `area`, `filtration` | what else we know about each business |
 
 Which part each method uses:
@@ -56,6 +64,11 @@ What is built in, so each method has something real to find:
   four characteristics works; **leaving manager age out breaks it**.
 - Managers are about 5 years younger just below 58: **the RDD balance check
   fails**, and adjusting for manager age moves the RDD estimate.
+- A few large businesses give costs and landfill a long right tail (mean above
+  median), and changes vary: about one business in ten that took part ends with
+  higher costs.
+- Landfill: smaller businesses send less (a head start), everyone's landfill fell a
+  little, and taking part cut it by about 3 tonnes a year.
 
 Current headline numbers (computed by `greenwaste_case.R`; decks and handouts must
 quote the objects in that file, never type the numbers):
@@ -63,13 +76,13 @@ quote the objects in that file, never type the numbers):
 | Estimate | Value |
 |---|---|
 | Before and after | -670 |
-| With and without | -1,503 (took part started 685 AED cheaper) |
-| Randomised (pilot) | -1,014, 95% CI -1,086 to -941 (spans the 1,000 rule) |
-| Difference-in-differences | -818 |
-| RDD, +/-2 points | -820 (CI -949 to -691); -675 adjusted for manager age |
-| RDD, +/-5 points | -784 |
-| Matching, all four | -1,058; without manager age -1,361 |
-| Manager age just below 58 | 5.1 years younger |
+| With and without | -1,639 (took part started 825 AED cheaper) |
+| Randomised (pilot) | -1,014, 95% CI -1,167 to -862 (spans the 1,000 rule) |
+| Difference-in-differences | -813 |
+| RDD, +/-2 points | -656 (CI -890 to -422); -554 adjusted for manager age |
+| RDD, +/-5 points | -755 |
+| Matching, all four | -1,031; without manager age -1,342 |
+| Manager age just below 58 | 5.3 years younger |
 
 ## Done so far
 
@@ -105,7 +118,7 @@ None of the twelve session decks uses the new data yet.
 
    | Session | Owner | Main changes |
    |---|---|---|
-   | Oct12 S3, naive comparisons and RCT | Lucas | biggest rework: new opening, "two numbers someone might report", RCT on the pilot, drop the neighbourhood-clustering slide, lottery sliders on the pilot |
+   | Oct12 S3, naive comparisons and RCT | Lucas | done: recap of Session 2's -670, with-and-without (-1,639), the lottery and the RCT on the pilot; no clustering slide |
    | Oct13 S1, DiD | Fiona | four numbers from the city; parallel-trends failure is now visible in the data (the pilot's untreated businesses show the true trend) |
    | Oct13 S2, RDD | Lucas | cut-off at 58 in the city; Check 3 fails on manager age; remove "Module 1" facts box |
    | Oct13 S3, matching | Fiona | match on age, staff, area, filtration; Check 1 = leave out manager age |
@@ -113,7 +126,10 @@ None of the twelve session decks uses the new data yet.
    | Oct14 S2, charts | Fiona | GreenWaste charts redrawn from the new data |
    | Oct14 S3, QA clinic | Lucas | the analyst's reruns and "who is missing" slide |
    | Oct15 S1, report | Fiona | report rewritten for the pilot-and-city design and its planted flaws re-checked (or a different case, per the 2026-10-05 note) |
-   | Oct12 S1, Oct12 S2, Oct15 S2, Oct15 S3 | | no change (other cases or participants' own designs) |
+   | Oct12 S1, language | Lucas | traffic cameras replaced: the city-map introduction (first meeting with the case) and the five words practised on landfill |
+   | Oct12 S2, reading an output | Fiona | traffic cameras replaced: the decision rule, meet the data, and the before-and-after number on costs (-670, short of the rule); compared to what? |
+   | Oct15 S2, writing a brief | Lucas | Tariff Shield replaced: the brief is written from GreenWaste's own findings |
+   | Oct15 S3, own designs | Fiona | one line (the GreenWaste ratio it quotes) |
 
 4. **Print packs.** Point `make_session_materials.R` at the new file for the eight
    sessions above; regenerate packs, keys and participant copies.

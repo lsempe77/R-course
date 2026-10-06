@@ -346,16 +346,13 @@ html_out(paste0('
 ```
 
 ::: {.notes}
-About 3 minutes. One city; the pilot district is part of it. Point at the pilot
-district: every shop there scores below 58, yet only some joined, because a
-lottery decided. Then the rest of the city: the number under each shop decided.
-Ask: "Where would it be fairer to compare shops that joined with shops that did
-not: inside the pilot district or in the rest of the city? Why?" Take answers;
-do not resolve it yet. The map is illustrative; the real counts come next.
+About 1 minute: a reminder of the case from Session 1. Point at the pilot
+district (a lottery decided) and the rest of the city (the score decided).
+Session 2 worked in the rest of the city; today ends in the pilot district.
 
 Open the deck a couple of minutes before the session starts: R and its statistics package take about a minute to load in the browser, after which every live cell runs in a few seconds.
 
-Paper: hand out the GreenWaste picture card (GreenWaste_case_card.docx, one per participant) and the session tracker (Oct12_session3_materials.docx, pack page 1, one per participant); they fill in each row as the numbers appear.
+Paper (Oct12_session3_materials.docx): Hand out the session tracker (pack page 1, one per participant); they fill in each row as the numbers appear.
 :::
 
 ## Today
@@ -368,8 +365,8 @@ were measured before the programme and 12 months after.
 
 ```{=html}
 <div class="facts">
-  <div class="k">1</div> <div class="v">Meet the data: one row per business, and who took part where</div>
-  <div class="k">2</div> <div class="v">Two numbers someone might report, and what is wrong with each</div>
+  <div class="k">1</div> <div class="v">Where Session 2 left us: one number, and why it is too small</div>
+  <div class="k">2</div> <div class="v">A second number someone might report, and what is wrong with it</div>
   <div class="k">3</div> <div class="v">Run the lottery ourselves, and see why it works</div>
   <div class="k">4</div> <div class="v">Read the randomised result against the 1,000 AED rule</div>
 </div>
@@ -380,82 +377,46 @@ You will not write any code. You will call the numbers; I will type them in and
 press **Run**. The grey boxes are real R, running in this page.
 :::
 
-# 1 · Meet the data {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+# 1 · Where Session 2 left us {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
-## One row, one business
-
-```{webr}
-head(gw[, c("business", "setting", "score", "took_part", "cost_before", "cost_after")], 4)
-```
+## Where Session 2 left us
 
 :::::: {.columns}
 
-::::: {.column width="50%"}
-::: {.panel}
-**setting**: the pilot district or the rest of the city. **score**: efficiency,
-0 to 100. **took_part** 1: the business took part. **cost_before**,
-**cost_after**: waste costs in AED.
-:::
+::::: {.column width="52%"}
+```{r results='asis'}
+html_out(sprintf('
+<div class="facts">
+  <div class="k">Who took part</div>     <div class="v">in the rest of the city, every business scoring 58 or below</div>
+  <div class="k">Before and after</div>  <div class="v">%s AED, for the businesses that took part</div>
+  <div class="k">The rule</div>          <div class="v">at least %s AED</div>
+</div>', gfmt(ba_change), gfmt(RULEBAR)))
+```
 :::::
 
-::::: {.column width="50%"}
+::::: {.column width="48%"}
 ::: {.ask}
-Which column tells you **how** a business came to take part?
+From Session 2: is `r gfmt(abs(ba_change))` too big or too small? What did the
+businesses that did not take part show?
 :::
 
 ::: {.panel .fragment}
-**setting**. In the pilot district a lottery decided; in the rest of the city the
-score did. **took_part** records the result.
+Too small. Their costs rose by about `r gfmt(city_rise)` AED with no programme at
+all, so before-and-after hides part of what the programme did.
 :::
 :::::
 
 ::::::
 
-## Who took part, where?
-
-```{webr}
-groups <- aggregate(score ~ setting + took_part, data = gw, FUN = length)
-names(groups)[3] <- "businesses"
-groups$highest_score <- aggregate(score ~ setting + took_part, data = gw, FUN = max)$score
-groups <- groups[order(groups$setting), ]; rownames(groups) <- NULL
-groups
-```
-
-::: {.ask}
-**Who took part in the rest of the city?** And in the pilot district?
-:::
-
-::: {.warn .fragment}
-In the rest of the city, **every business scoring 58 or below took part, and no
-other did.** So there "did not take part" means "scored above 58": a different
-kind of business. In the pilot district, half took part, all scoring below 58:
-the lottery decided.
-:::
-
-# 2 · Two numbers someone might report {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
-
-## Comparison A: before and after
-
-::: {.ask}
-A report says waste costs fell for the city businesses that took part.
-**Before I press Run: by how much?**
-:::
-
-```{webr}
-#| fig-width: 6
-#| fig-height: 2.5
-before <- mean(city$cost_before[city$took_part == 1])
-after  <- mean(city$cost_after[city$took_part == 1])
-round(data.frame(before, after, change = after - before))
-bars(Before = before, After = after)
-```
-
 ::: {.notes}
-Take two or three guesses, then press Run. The room should see
-`r gfmt(ba_change)` appear. Point at each line as you read it aloud in plain words.
+About 3 minutes, recall only. Then: if before-and-after is too small, could we
+compare the businesses that took part with the ones that did not, after the
+programme? That is the second number.
 :::
 
-## Comparison B: with and without
+# 2 · A second number someone might report {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+
+## With and without
 
 ```{webr}
 #| fig-width: 6
@@ -472,15 +433,14 @@ Same city, after the programme. Two readings of one programme,
 one clears it.
 :::
 
-## `[MENTI PLACEHOLDER]` Which way is each one wrong?
+## `[MENTI PLACEHOLDER]` Too big or too small?
 
 :::::: {.columns}
 
 ::::: {.column width="62%"}
 ::: {.ask style="font-size: 115%;"}
-Both numbers come from real comparisons, and both are biased. The harder question:
-
-**Is `r gfmt(abs(ba_change))` too big or too small?**
+Session 2 showed that `r gfmt(abs(ba_change))` is too small. This number comes
+from a real comparison too, and it is also biased.
 
 **Is `r gfmt(abs(ww_gap))` too big or too small?**
 :::
@@ -497,43 +457,12 @@ knitr::include_graphics(MENTI_QR)
 ::::::
 
 ::: {.notes}
-~4 min. Do not settle it. The next three slides answer it from the data.
+~3 min. Do not settle it. The next two slides answer it from the data.
 :::
 
-# 3 · Catch each one out, in the data {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+# 3 · Catch it out, in the data {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
-## A: what happened to everyone else?
-
-:::::: {.columns}
-
-::::: {.column width="56%"}
-```{webr}
-#| fig-width: 6.2
-#| fig-height: 4.2
-plot_two_lines()
-```
-:::::
-
-::::: {.column width="44%"}
-::: {.panel}
-Before-and-after compares the programme to **the past**. If costs were moving
-anyway, that movement is baked into the `r gfmt(abs(ba_change))`.
-:::
-
-::: {.ask}
-Look at the businesses that did **not** take part. Which way did their costs go
-with no programme at all?
-:::
-
-::: {.warn .fragment}
-Up, by about `r gfmt(city_rise)` AED. Costs were rising anyway, so the
-`r gfmt(abs(ba_change))` fall **understates** what the programme did.
-:::
-:::::
-
-::::::
-
-## B: the same gap, before the programme existed
+## The same gap, before the programme existed
 
 :::::: {.columns}
 

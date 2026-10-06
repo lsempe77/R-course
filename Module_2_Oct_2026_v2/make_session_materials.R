@@ -145,62 +145,82 @@ gw <- read.csv("evaluation_data_GreenWaste.csv")
 # Oct12 S1 · Compared to What?
 # ===========================================================================
 S1 <- "Module 2 · Day 1, Session 1 · Compared to What?"
-TEN <- c("SEC08-013", "SEC10-021", "SEC10-024", "SEC12-020", "SEC04-033",
-         "SEC02-023", "SEC10-047", "SEC08-002", "SEC06-011", "SEC05-018")
-ten <- subset(tc, year == 2019 & segment_id %in% TEN)
-ten <- ten[order(ten$injury_collisions), ]
-ten_x <- ten$injury_collisions
-spd <- function(t, yr) round(mean(tc$ave_speed_kmh[tc$treated == t & tc$year == yr]), 2)
-sp <- c(c0 = spd(1, 2019), c1 = spd(1, 2021), o0 = spd(0, 2019), o1 = spd(0, 2021))
+# The simple GreenWaste case, LANDFILL only (tonnes per business per year, the
+# rest of the city), as in Oct12_session1_live.qmd. Costs are not shown in S1.
+s1_env <- new.env()
+s1_env$gw <- read.csv("evaluation_data_GreenWaste_simple.csv")
+sys.source("greenwaste_case.R", envir = s1_env)
+s1_city <- s1_env$city; s1_took <- s1_env$took
+s1_city$change <- s1_city$landfill_after - s1_city$landfill_before   # landfill, not costs
+s1_pct  <- 100 * (mean(s1_city$landfill_after[s1_took]) / mean(s1_city$landfill_before[s1_took]) - 1)
+s1_rest <- 100 * (mean(s1_city$landfill_after[!s1_took]) / mean(s1_city$landfill_before[!s1_took]) - 1)
+# The same ten businesses as the deck (chosen by ID; the last is the large one).
+s1_TEN <- c("B02136", "B00755", "B03791", "B05600", "B01274",
+            "B07507", "B01673", "B04954", "B08013", "B03836")
+s1_ten <- subset(s1_city, business %in% s1_TEN)
+s1_ten <- s1_ten[order(s1_ten$landfill_before), ]
+s1_x <- s1_ten$landfill_before
+stopifnot(nrow(s1_ten) == 10, s1_ten$business[10] == "B03836", mean(s1_x) > median(s1_x))
+s1_r2 <- function(x) round(x, 2)
+s1_lf <- c(t0 = s1_r2(mean(s1_city$landfill_before[s1_took])), t1 = s1_r2(mean(s1_city$landfill_after[s1_took])),
+           o0 = s1_r2(mean(s1_city$landfill_before[!s1_took])), o1 = s1_r2(mean(s1_city$landfill_after[!s1_took])))
+s1_eff <- (s1_lf[["t1"]] - s1_lf[["t0"]]) - (s1_lf[["o1"]] - s1_lf[["o0"]])
+s1_fit <- lm(change ~ took_part, data = s1_city)
+s1_b   <- coef(s1_fit)[["took_part"]]; s1_ci <- confint(s1_fit)["took_part", ]
+s1_area <- coef(lm(change ~ took_part + staff + area, data = s1_city))[["area"]]
+s1_f2 <- function(x) sprintf("%.2f", x)
 
-excerpts <- c(
-  "Fatal collisions on camera roads fell 32% over two years.",
-  "The effect of cameras on speed is -3.4 km/h, 95% confidence interval -3.6 to -3.1.",
-  "The fall in speed is statistically significant (p < 0.001), so every road should get a camera.",
-  "Speed fell 3.4 km/h on camera roads and did not change on roads without them.",
-  "The average road in our sample had 13.5 injury collisions.",
-  "A study of 20 roads found no significant change in speed.",
-  "The coefficient on school_within_500m is -0.37, so schools near roads slow traffic.",
-  "Speed fell 3.4 km/h more than on roads without cameras; the target was at least 3 km/h.")
+s1_excerpts <- c(
+  sprintf("Landfill waste from businesses in GreenWaste fell %s%% in a year.", gfmt(abs(s1_pct))),
+  sprintf("The effect of GreenWaste on landfill is %s tonnes per business, 95%% confidence interval %s to %s.",
+          s1_f2(s1_b), s1_f2(s1_ci[1]), s1_f2(s1_ci[2])),
+  "The fall in landfill is statistically significant (p < 0.001), so every business in the country should join GreenWaste.",
+  sprintf("Landfill fell %s tonnes per business among those that took part and %s tonnes among those that did not.",
+          gfmt(abs(s1_lf[["t1"]] - s1_lf[["t0"]]), 1), gfmt(abs(s1_lf[["o1"]] - s1_lf[["o0"]]), 1)),
+  sprintf("The average business in our sample sent %s tonnes to landfill.", gfmt(mean(s1_city$landfill_before), 1)),
+  "A study of 6 businesses found no significant change in landfill.",
+  sprintf("The coefficient on area is %s, so businesses should move to larger premises.", s1_f2(s1_area)),
+  sprintf("Landfill fell %s tonnes per business more than among businesses that did not take part; the target was at least 2 tonnes.",
+          gfmt(abs(s1_eff), 1)))
 
 s1 <- new_pack() |>
-  title_("By hand: ten roads", S1) |>
+  title_("By hand: ten businesses", S1) |>
   print_line("1 per participant (double-sided with the next page)") |>
-  p_("Ten roads that got speed cameras. Injury collisions per road in 2019, before the cameras.") |>
-  body_add_flextable(plain_table(data.frame(Road = ten$segment_id, Type = ten$corridor_type,
-                                            `Injury collisions` = ten_x, check.names = FALSE),
-                                 widths = c(1.4, 2.2, 1.6))) |>
+  p_("Ten businesses in the rest of the city. Waste each one sent to landfill in the year before GreenWaste, in tonnes.") |>
+  body_add_flextable(plain_table(data.frame(Business = s1_ten$business, Staff = s1_ten$staff,
+                                            `Landfill (tonnes)` = s1_x, check.names = FALSE),
+                                 widths = c(1.6, 1.2, 1.8))) |>
   illustrative() |>
   h2_("1. Work it out by hand") |>
-  p_("The mean (the average) number of collisions per road:  ________") |>
-  p_("How many of the ten roads are below the mean?  ________") |>
-  p_("The median (the middle road when they are in order):  ________") |>
-  h2_("2. Remove the busiest road") |>
+  p_("The mean (the average) landfill per business:  ________") |>
+  p_("How many of the ten businesses are below the mean?  ________") |>
+  p_("The median (the middle business when they are in order):  ________") |>
+  h2_("2. Remove the largest business") |>
   p_("New mean:  ________      New median:  ________") |>
   p_("Which changed more, the mean or the median? What does this tell you about an average in a report?") |>
   write_lines(2) |>
   new_page() |>
-  title_("By hand: the speed table", S1) |>
-  print_line("on the back of the ten-roads sheet") |>
-  p_("Average speed on the roads, before and after the cameras. Fill in the empty cells.") |>
+  title_("By hand: the landfill table", S1) |>
+  print_line("on the back of the ten-businesses sheet") |>
+  p_("Average landfill per business in the rest of the city (tonnes per year), before GreenWaste and 12 months after. Fill in the empty cells.") |>
   body_add_flextable(plain_table(data.frame(
-    `Average speed (km/h)` = c("Camera roads", "Roads without cameras", "Difference"),
-    `2019` = c(gfmt(sp["c0"], 2), gfmt(sp["o0"], 2), ""),
-    `2021` = c(gfmt(sp["c1"], 2), gfmt(sp["o1"], 2), ""),
+    `Average landfill (tonnes)` = c("Took part", "Did not take part", "Difference"),
+    Before = c(gfmt(s1_lf[["t0"]], 2), gfmt(s1_lf[["o0"]], 2), ""),
+    After  = c(gfmt(s1_lf[["t1"]], 2), gfmt(s1_lf[["o1"]], 2), ""),
     Change = c("", "", ""), check.names = FALSE), widths = c(2.4, 1.2, 1.2, 1.2))) |>
   illustrative() |>
   p_("Copy these three numbers from your table:") |>
-  p_("The change on camera roads:  ________     The gap in 2021:  ________     The gap in 2019:  ________") |>
-  p_("Which of these three numbers is the effect of the cameras on speed? Why are the other two numbers not the effect?") |>
+  p_("The change for those that took part:  ________     The gap after:  ________     The gap before:  ________") |>
+  p_("Which of these three numbers is the effect of GreenWaste on landfill? Why are the other two numbers not the effect?") |>
   write_lines(2) |>
   h2_("3. Which report would you act on?") |>
-  p_("Three evaluations each report 1.8 fewer injury collisions per road. The decision rule: act only if the cameras prevent at least 2.0 injury collisions per road. For each report, tick one box.") |>
+  p_("Three evaluations of GreenWaste each report 1.8 tonnes less landfill per business per year. The city's target: at least 2.0 tonnes less. For each report, tick one box.") |>
   body_add_flextable(plain_table(data.frame(
     Report = c("A", "B", "C"), `95% interval` = c("0.4 to 3.2", "1.6 to 2.0", "-0.9 to 4.5"),
     Act = c("[   ]", "[   ]", "[   ]"), `Do not act` = c("[   ]", "[   ]", "[   ]"),
     `Cannot tell yet` = c("[   ]", "[   ]", "[   ]"), check.names = FALSE),
     widths = c(0.8, 1.6, 0.8, 1.1, 1.4))) |>
-  p_("These three results are invented for the exercise.", 8.5, italic = TRUE, color = GREY) |>
+  p_("These three results and the target are invented for the exercise.", 8.5, italic = TRUE, color = GREY) |>
   new_page() |>
   title_("AI prompt cards", S1) |>
   print_line("1 set per group, cut along the dashed lines; each group takes one card") |>
@@ -211,18 +231,18 @@ s1 <- new_pack() |>
     c("Card 2", "Paste into your AI tool:", "\"Explain what a p-value means.\"",
       "", "Did the AI's answer contain mistakes, or claim more than is true?", "", "", ""),
     c("Card 3", "Paste into your AI tool:",
-      "\"Fatal collisions on our camera roads fell 32%. Is that a good result?\"",
-      "", "Did the AI ask what the 32% was compared with?", "", "", ""),
+      sprintf("\"Landfill waste from businesses in our programme fell %s%%. Is that a good result?\"", gfmt(abs(s1_pct))),
+      "", sprintf("Did the AI ask what the %s%% was compared with?", gfmt(abs(s1_pct))), "", "", ""),
     c("Card 4", "Paste into your AI tool:",
-      "\"The coefficient on school_within_500m is -0.37. What should I do about it?\"",
-      "", "Did the AI give you advice about schools?", "", "", "")), min_height = 3.2)
+      sprintf("\"The coefficient on area is %s. What should I do about it?\"", s1_f2(s1_area)),
+      "", "Did the AI give you advice about premises?", "", "", "")), min_height = 3.2)
 
 # The triage uses the first four excerpts only (6 Oct); the other four stay in
-# `excerpts` and in the key for reference.
+# `s1_excerpts` and in the key for reference.
 NT <- 4
 s1 <- s1 |> new_page() |> title_("Triage the claims", S1) |>
   print_line("1 per group (8), with one set of the excerpt slips (next page)") |>
-  p_("You are the commissioner. You receive four sentences from reports on the camera programme. For each sentence: which of the three questions (compared to what? how big? how sure?) does the sentence not answer? Would you act on the sentence, not act, or ask a question first?") |>
+  p_("You are the commissioner. You receive four sentences from reports on GreenWaste. For each sentence: which of the three questions (compared to what? how big? how sure?) does the sentence not answer? Would you act on the sentence, not act, or ask a question first?") |>
   body_add_flextable(plain_table(data.frame(
     Excerpt = seq_len(NT),
     `Question the sentence does not answer: compared to what? / how big? / how sure? / none` = rep("", NT),
@@ -235,7 +255,7 @@ s1 <- s1 |> new_page() |> title_("Triage the claims", S1) |>
   write_lines(2) |>
   new_page() |> title_("Triage the claims: the excerpts", S1) |>
   print_line("1 set per group (8 sets); cut into slips. The same slips go on the wall matrix if it is used") |>
-  add_cards(lapply(seq_len(NT), function(i) c(sprintf("Excerpt %d", i), excerpts[i])),
+  add_cards(lapply(seq_len(NT), function(i) c(sprintf("Excerpt %d", i), s1_excerpts[i])),
             ncol = 2, min_height = 2.2, title_size = 14, body_size = 16) |>
   illustrative() |>
   new_page() |> title_("Take-away card: three questions for any number", S1) |>
@@ -244,28 +264,29 @@ s1 <- s1 |> new_page() |> title_("Triage the claims", S1) |>
                        "2. How big is the number, in units that matter to the decision?",
                        "3. How sure are we?", "", "Back at work, I will ask these questions about:", "______________________________")), 8), min_height = 1.8) |>
   new_page() |> title_("Facilitator key", S1) |> print_line("trainer only") |>
-  h2_("Ten roads") |>
-  p_(sprintf("Mean %s; %d of the ten roads are below it; median %s. Without the busiest road (%d collisions): mean %s, median %s. One road moved the mean further than the median.",
-             gfmt(mean(ten_x), 1), sum(ten_x < mean(ten_x)), gfmt(median(ten_x), 1), max(ten_x),
-             gfmt(mean(ten_x[-length(ten_x)]), 1), gfmt(median(ten_x[-length(ten_x)]), 1))) |>
-  h2_("Speed table") |>
-  p_(sprintf("Changes: camera roads %s, other roads %s. Differences: 2019 %s (the head start), 2021 %s (still carries the head start), change %s. The effect is %s km/h, close to the camera roads' own change only because the other roads barely moved.",
-             gfmt(sp["c1"] - sp["c0"], 2), gfmt(sp["o1"] - sp["o0"], 2), gfmt(sp["c0"] - sp["o0"], 2),
-             gfmt(sp["c1"] - sp["o1"], 2), gfmt((sp["c1"] - sp["c0"]) - (sp["o1"] - sp["o0"]), 2),
-             gfmt((sp["c1"] - sp["c0"]) - (sp["o1"] - sp["o0"]), 2))) |>
+  h2_("Ten businesses") |>
+  p_(sprintf("Mean %s tonnes; %d of the ten businesses are below it; median %s. Without the largest business (%s staff, %s tonnes): mean %s, median %s. One business moved the mean further than the median.",
+             gfmt(mean(s1_x), 1), sum(s1_x < mean(s1_x)), gfmt(median(s1_x), 1), s1_ten$staff[10], gfmt(max(s1_x)),
+             gfmt(mean(s1_x[-length(s1_x)]), 1), gfmt(median(s1_x[-length(s1_x)]), 1))) |>
+  h2_("Landfill table") |>
+  p_(sprintf("Changes: took part %s, did not take part %s. Differences: before %s (the head start: the businesses that took part are smaller), after %s (still carries the head start), change %s. The effect is %s tonnes per business per year, smaller than the fall for those that took part because the rest fell too.",
+             gfmt(s1_lf[["t1"]] - s1_lf[["t0"]], 2), gfmt(s1_lf[["o1"]] - s1_lf[["o0"]], 2),
+             gfmt(s1_lf[["t0"]] - s1_lf[["o0"]], 2), gfmt(s1_lf[["t1"]] - s1_lf[["o1"]], 2),
+             gfmt(s1_eff, 2), gfmt(s1_eff, 2))) |>
   h2_("Which one would you act on?") |>
-  p_("B: do not act, it is precise and below the bar. A and C: cannot tell yet; the intervals span the bar. The interval decides, not the point estimate.") |>
+  p_("B: do not act, it is precise and below the target. A and C: cannot tell yet; the intervals span the target. The interval decides, not the point estimate.") |>
   h2_("AI prompt cards") |>
-  p_("Card 1: look for \"95% probability that the true value is in this interval\". 95% describes the method over many studies. Card 2: look for \"the probability the result is due to chance\" or \"the probability the programme works\". Card 3: a good answer asks what the 32% was compared with and how much driving changed. Card 4: the row adjusts the comparison; it is not a policy lever.") |>
+  p_(sprintf("Card 1: look for \"95%% probability that the true value is in this interval\". 95%% describes the method over many studies. Card 2: look for \"the probability the result is due to chance\" or \"the probability the programme works\". Card 3: a good answer asks what the %s%% was compared with and what happened to businesses outside the programme. Card 4: look for advice about premises; the row adjusts the comparison, it is not a policy lever.",
+             gfmt(abs(s1_pct)))) |>
   h2_("Triage key (the session uses excerpts 1 to 4; 5 to 8 are kept for reference)") |>
   body_add_flextable(plain_table(data.frame(
     Excerpt = 1:8,
-    Unanswered = c("Compared to what? (before and after; driving rose 4%)",
-                   "How big, in units that matter? (speed, not collisions)",
+    Unanswered = c(sprintf("Compared to what? (before and after; businesses that did not take part fell %s%% too)", gfmt(abs(s1_rest))),
+                   "How big, in units that matter? (landfill, not the waste costs the decision rests on)",
                    "How big? Significance is not a decision rule",
                    "How sure? (no interval)",
-                   "How big, for a typical road? (one road pulls the mean)",
-                   "How sure? (20 roads is too few to see anything)",
+                   "How big, for a typical business? (a few large businesses pull the mean)",
+                   "How sure? (6 businesses is too few to see anything)",
                    "Misread coefficient: not a policy lever",
                    "None: a comparison, an effect and a bar"),
     Call = c("Ask first", "Ask first", "Do not act on this", "Ask first",
@@ -703,61 +724,72 @@ pfmt <- function(p) ifelse(p < 0.001, "<0.001", sprintf("%.3f", p))
 # Oct12 S2 · What Do the Numbers Say?
 # ===========================================================================
 S2 <- "Module 2 · Day 1, Session 2 · What Do the Numbers Say?"
-POL_RULE   <- 2.0
-cams       <- subset(tc, treated == 1)
-cam_before <- mean(cams$injury_collisions[cams$round == 0])
-cam_after  <- mean(cams$injury_collisions[cams$round == 1])
-cam_fall   <- cam_before - cam_after
-cam_pct    <- 100 * cam_fall / cam_before
-oth_before <- mean(tc$injury_collisions[tc$treated == 0 & tc$round == 0])
-oth_after  <- mean(tc$injury_collisions[tc$treated == 0 & tc$round == 1])
-oth_fall   <- oth_before - oth_after
-seg_w      <- reshape(cams[, c("segment_id", "round", "injury_collisions")],
-                      idvar = "segment_id", timevar = "round", direction = "wide")
-share_fell <- 100 * mean(seg_w$injury_collisions.1 - seg_w$injury_collisions.0 < 0)
-ba_fit     <- lm_robust(injury_collisions ~ round, data = cams, clusters = segment_id)
-ba_ci      <- sort(abs(confint(ba_fit)["round", ]))
+# The simple GreenWaste case (SIMPLE_GREENWASTE_PLAN.md): the before-and-after
+# change in waste costs for the city businesses that took part. Numbers from
+# greenwaste_case.R, sourced into its own environment because it defines RULE.
+s2_env <- new.env()
+s2_env$gw <- read.csv("evaluation_data_GreenWaste_simple.csv")
+sys.source("greenwaste_case.R", envir = s2_env)
+s2_case <- s2_env$case; s2_city <- s2_env$city; s2_took <- s2_env$took
+s2_tp     <- s2_city[s2_took, ]                       # city businesses that took part
+s2_before <- mean(s2_tp$cost_before)
+s2_after  <- mean(s2_tp$cost_after)
+s2_change <- s2_case$before_after                     # after minus before
+s2_pct    <- 100 * abs(s2_change) / s2_before
+s2_up     <- 100 * mean(s2_tp$change > 0)             # ended with higher costs
+s2_rise   <- mean(s2_city$change[!s2_took])           # did not take part
+# Each business twice (after = 0, then 1), errors clustered by business: the
+# same regression as the deck.
+s2_long <- data.frame(business = rep(s2_tp$business, 2), after = rep(0:1, each = nrow(s2_tp)),
+                      cost = c(s2_tp$cost_before, s2_tp$cost_after))
+s2_fit  <- lm_robust(cost ~ after, data = s2_long, clusters = business, se_type = "stata")
+s2_ci   <- sort(abs(confint(s2_fit)["after", ]))     # [1] = the smaller fall
 
-p_cam <- ggplot(data.frame(year = c("2019", "2021"), y = c(cam_before, cam_after)),
-                aes(year, y)) +
+# The AI response and the better prompt, word for word as on the slides.
+S2_AI <- sprintf("\"The chart shows a %.0f%% reduction in waste costs after businesses joined GreenWaste, from %s to %s AED per business. This reduction is statistically significant (p < 0.001), confirming that the programme caused the decline. The fall was consistent across all types of business, which suggests the effect is robust. Given the size of the effect, the programme should be scaled up nationally.\"",
+                 s2_pct, gfmt(s2_before), gfmt(s2_after))
+S2_PROMPT <- "\"This chart shows average waste costs per business, before the GreenWaste programme and 12 months after, for the city businesses that took part. The rule for scaling up is a fall of at least 1,000 AED per business per year. Describe only what the chart shows. Then list what else could explain the change, and what comparison you would need before saying the programme caused it. Before you answer, ask me any questions you need.\""
+
+p_s2 <- ggplot(data.frame(when = factor(c("Before", "After"), levels = c("Before", "After")),
+                          y = c(s2_before, s2_after)), aes(when, y)) +
   geom_col(fill = BLUE, width = 0.6) +
-  geom_text(aes(label = sprintf("%.1f", y)), vjust = -0.5, size = 4.2) +
-  scale_y_continuous(limits = c(0, 14), expand = c(0, 0)) +
-  labs(x = NULL, y = "Collisions per segment") + theme_page()
+  geom_text(aes(label = paste(gfmt(y), "AED")), vjust = -0.5, size = 4.2) +
+  scale_y_continuous(limits = c(0, s2_before * 1.15), expand = c(0, 0)) +
+  labs(x = NULL, y = "Waste costs per business, AED") + theme_page()
 
 s2 <- new_pack() |>
   title_("Annotate this output", S2) |>
   print_line("1 per participant") |>
-  p_("The before-and-after regression for the road segments that got speed cameras. Outcome: injury collisions per road segment, 2019 (round 0) and 2021 (round 1). Standard errors are clustered by road segment. The p-value is the column R printed as Pr(>|t|).") |>
+  p_("The before-and-after regression for the city businesses that took part in GreenWaste. Outcome: waste costs in AED per business per year, before the programme (after = 0) and 12 months later (after = 1). Standard errors are clustered by business. The p-value is the column R printed as Pr(>|t|).") |>
   body_add_flextable(plain_table(data.frame(
-    ` ` = c("(Intercept)", "round"),
-    Estimate = sprintf("%.3f", coef(ba_fit)), `Std. Error` = sprintf("%.3f", ba_fit$std.error),
-    `p-value` = pfmt(ba_fit$p.value), `CI Lower` = sprintf("%.3f", ba_fit$conf.low),
-    `CI Upper` = sprintf("%.3f", ba_fit$conf.high), check.names = FALSE),
+    ` ` = c("(Intercept)", "after"),
+    Estimate = gfmt(coef(s2_fit), 1), `Std. Error` = gfmt(s2_fit$std.error, 1),
+    `p-value` = pfmt(s2_fit$p.value), `CI Lower` = gfmt(s2_fit$conf.low, 1),
+    `CI Upper` = gfmt(s2_fit$conf.high, 1), check.names = FALSE),
     widths = c(1.2, 1.0, 1.1, 0.9, 1.0, 1.0))) |>
   illustrative() |>
   h2_("On the table above") |>
   p_("1. Which number is the before-and-after change? Circle that number.") |>
   p_("2. Where is the confidence interval for that change? Draw a box around the interval.") |>
-  p_("3. Which number is the 2019 average? Underline that number. Why is the 2019 average not the effect of the cameras?") |>
+  p_("3. Which number is the average before the programme? Underline that number. Why is it not the effect of GreenWaste?") |>
   write_lines(2) |>
-  p_("4. To know whether the cameras caused the change, what would you compare these roads with? Write the question you would ask the evaluator.") |>
+  p_("4. To know whether GreenWaste caused the change, what would you compare these businesses with? Write the question you would ask the evaluator.") |>
   write_lines(2) |>
   new_page() |>
   title_("AI Snapshot: ask AI to read the chart", S2) |>
   print_line("1 per pair") |>
-  p_("Average injury collisions per road segment in the sectors that got speed cameras.") |>
-  body_add_gg(p_cam, width = 3.6, height = 2.4) |>
+  p_("Average waste costs per business, before GreenWaste and 12 months after, for the city businesses that took part.") |>
+  body_add_gg(p_s2, width = 3.6, height = 2.4) |>
   illustrative() |>
   p_("To give the AI the chart, photograph the chart on this sheet and attach the photo to your prompt.") |>
   p_("The prompt most people would type, with a picture of the chart:", bold = TRUE) |>
-  p_("\"What does this chart show? Did the cameras work?\"", italic = TRUE) |>
+  p_("\"What does this chart show? Did GreenWaste work?\"", italic = TRUE) |>
   h2_("A response like this is possible") |>
-  p_("\"The chart shows a 22% reduction in injury collisions after speed cameras were installed, from 11.5 to 9.0 per road segment. This reduction is statistically significant (p < 0.001), confirming that the cameras caused the decline. The fall was consistent across all road types, which suggests the effect is robust. Given the size of the effect, the programme should be extended to the remaining sectors.\"") |>
+  p_(S2_AI) |>
   p_("In pairs: underline each claim in the response that you can see in the chart. Cross out each claim that the chart does not show.", bold = TRUE) |>
   write_lines(3) |>
   h2_("Then run this prompt instead, and compare") |>
-  p_("\"This chart shows average injury collisions per road segment in the sectors that got speed cameras, in 2019 and 2021. Describe only what the chart shows. Then list what else could explain the change, and what comparison you would need before saying the cameras caused it. Before you answer, ask me any questions you need.\"", italic = TRUE) |>
+  p_(S2_PROMPT, italic = TRUE) |>
   p_("1. Run both prompts with the same chart.") |>
   p_("2. What does the second answer include that the first answer left out?") |>
   p_("3. Paste the second answer into a new chat and ask: which of these claims does the chart not support? Which claims does the new chat find?") |>
@@ -772,15 +804,17 @@ s2 <- new_pack() |>
             min_height = 2.2) |>
   new_page() |> title_("Facilitator key", S2) |> print_line("trainer only") |>
   h2_("Annotate this output") |>
-  p_(sprintf("1. The change is the round row: %.3f collisions per segment (the slides round it to %.2f). 2. Its interval runs from %.3f to %.3f. 3. The intercept, %.3f, is the 2019 average on camera roads. It is a starting level with nothing to compare it against, so it says nothing about what the cameras did. 4. Roads without cameras over the same two years. Their collisions fell too, by %.2f per segment (%.0f%%), so some of the %.2f would have happened anyway.",
-             coef(ba_fit)[["round"]], -cam_fall, ba_fit$conf.low[["round"]], ba_fit$conf.high[["round"]],
-             coef(ba_fit)[["(Intercept)"]], oth_fall, 100 * oth_fall / oth_before, cam_fall)) |>
-  p_(sprintf("Against the rule of %.1f fewer collisions: the estimate (%.2f) and the whole interval (%.2f to %.2f) clear it. The camera result passes how big and how sure; compared to what is still open.",
-             POL_RULE, cam_fall, ba_ci[1], ba_ci[2])) |>
+  p_(sprintf("1. The change is the after row: %s AED per business (the slides round it to %s). 2. Its interval runs from %s to %s. 3. The intercept, %s AED, is the average before the programme for the city businesses that took part. It is a starting level with nothing to compare it against, so it says nothing about what GreenWaste did. 4. Businesses that did not take part, over the same 12 months. Their costs rose by %s AED per business with no programme, so the fall of %s likely understates what GreenWaste did. Whether they are a fair comparison (they all scored above 58) is the question for Session 3.",
+             gfmt(coef(s2_fit)[["after"]], 1), gfmt(s2_change), gfmt(s2_fit$conf.low[["after"]], 1),
+             gfmt(s2_fit$conf.high[["after"]], 1), gfmt(coef(s2_fit)[["(Intercept)"]], 1),
+             gfmt(s2_rise), gfmt(abs(s2_change)))) |>
+  p_(sprintf("Against the rule of %s AED: the estimate (%s) and the whole interval (%s to %s) fall short. The result is precise, so on how big and how sure the before-and-after number says do not scale up; compared to what is still open.",
+             gfmt(RULEBAR), gfmt(abs(s2_change)), gfmt(s2_ci[1]), gfmt(s2_ci[2]))) |>
   h2_("AI Snapshot") |>
-  p_(sprintf("Correct: \"22%% reduction, 11.5 to 9.0\". The bars show %.1f and %.1f; the %.0f%% can be worked out from them. Not on the chart: \"p < 0.001\"; the model supplied a p-value it was never given. \"Confirming that the cameras caused\": a before-and-after chart cannot show cause, and a small p-value says the fall is unlikely to be noise, not what caused it. \"Consistent across all road types\": invented; the chart has no road types, and %.0f%% of camera roads did not fall. \"Should be extended\": a recommendation with no rule and no comparison.",
-             cam_before, cam_after, cam_pct, 100 - share_fell)) |>
-  p_("With the second prompt, listen for answers that ask what happened on roads without cameras and whether traffic changed.")
+  p_(sprintf("Correct: \"%.0f%% reduction, %s to %s\". The bars show %s and %s; the %.0f%% can be worked out from them. Not on the chart: \"p < 0.001\"; the model supplied a p-value it was never given. \"Confirming that the programme caused\": a before-and-after chart cannot show cause, and a small p-value says the fall is unlikely to be noise, not what caused it. \"Consistent across all types of business\": invented; the chart has no types of business, and %.0f%% of the businesses that took part ended with higher costs. \"Should be scaled up nationally\": a recommendation with no rule and no comparison; the rule asks for %s AED and the bars show a fall of %s.",
+             s2_pct, gfmt(s2_before), gfmt(s2_after), gfmt(s2_before), gfmt(s2_after), s2_pct, s2_up,
+             gfmt(RULEBAR), gfmt(abs(s2_change)))) |>
+  p_("With the second prompt, listen for answers that check the fall against the 1,000 AED rule, ask what happened to businesses that did not take part, and ask whether prices or waste fees changed.")
 print(s2, target = "Oct12_session2_materials.docx")
 
 # ===========================================================================
