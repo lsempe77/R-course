@@ -74,3 +74,22 @@ doc <- read_docx() |>
 
 print(doc, target = "GreenWaste_case_brief.docx")
 cat("Wrote GreenWaste_case_brief.docx\n")
+
+# ---------------------------------------------------------------------------
+# The picture card: handed out with the case introduction (Oct12 S3, slide 1).
+# Only the story: no numbers, no decision rule. The map is the slide's own
+# graphic (assets/greenwaste_city_map.png, captured from the rendered deck).
+# ---------------------------------------------------------------------------
+card <- read_docx() |>
+  body_set_default_section(prop_section(page_size = page_size(orient = "landscape"),
+    page_margins = page_mar(top = 0.6, bottom = 0.6, left = 0.7, right = 0.7))) |>
+  par_(txt("Module 2 · Reading Impact Evaluation Results · the case for the week", 9, color = GREY), after = 0) |>
+  par_(txt("The GreenWaste programme", 22, TRUE, DARK), after = 4) |>
+  par_(txt("GreenWaste helps businesses cut their waste costs. Here is how it reached them.", 13), after = 8) |>
+  body_add_img("assets/greenwaste_city_map.png", width = 9.6, height = 9.6 * 1356 / 3456) |>
+  par_(txt(""), after = 6) |>
+  par_(txt("In the pilot district, ", 13), txt("a lottery", 13, TRUE), txt(" chose which shops joined. Everywhere else, shops scoring ", 13),
+       txt("58 or below", 13, TRUE), txt(" joined. Every business has an efficiency score from 0 to 100; higher means more efficient.", 13), after = 4) |>
+  par_(txt("Invented for this training.", 9.5, color = GREY, italic = TRUE))
+print(card, target = "GreenWaste_case_card.docx")
+cat("Wrote GreenWaste_case_card.docx\n")

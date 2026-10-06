@@ -237,61 +237,73 @@ print(s1, target = "Oct12_session1_materials.docx")
 # Oct12 S3 · Spot the Problem
 # ===========================================================================
 S3 <- "Module 2 · Day 1, Session 3 · Spot the Problem"
-mc <- function(keep) mean(gw$waste_management_costs[keep])
-ba <- mc(gw$enrolled == 1 & gw$round == 1) - mc(gw$enrolled == 1 & gw$round == 0)
-ww <- mc(gw$treatment_neighborhood == 1 & gw$enrolled == 1 & gw$round == 1) -
-      mc(gw$treatment_neighborhood == 1 & gw$enrolled == 0 & gw$round == 1)
-ww0 <- mc(gw$treatment_neighborhood == 1 & gw$enrolled == 1 & gw$round == 0) -
-       mc(gw$treatment_neighborhood == 1 & gw$enrolled == 0 & gw$round == 0)
-fu <- subset(gw, round == 1 & eligible == 1)
-rct <- mean(fu$waste_management_costs[fu$treatment_neighborhood == 1]) -
-       mean(fu$waste_management_costs[fu$treatment_neighborhood == 0])
+# The simple GreenWaste case (SIMPLE_GREENWASTE_PLAN.md); numbers from greenwaste_case.R,
+# sourced into its own environment because it defines RULE.
+s3_env <- new.env()
+s3_env$gw <- read.csv("evaluation_data_GreenWaste_simple.csv")
+sys.source("greenwaste_case.R", envir = s3_env)
+s3_case <- s3_env$case; s3_pilot <- s3_env$pilot; s3_city <- s3_env$city; s3_took <- s3_env$took
+ba  <- s3_case$before_after
+ww  <- s3_case$with_without
+ww0 <- s3_case$gap_before
+rct <- s3_case$rct
+rct_ci <- sort(abs(s3_case$rct_ci))
+city_rise <- mean(s3_city$change[!s3_took])
+s3_off <- order(s3_pilot$cost_before)[seq_len(nrow(s3_pilot) / 2)]
+officials_gap <- mean(s3_pilot$cost_before[s3_off]) - mean(s3_pilot$cost_before[-s3_off])
+crowd_q <- function(k, draws = 1000) {
+  set.seed(7)
+  quantile(abs(replicate(draws, { s <- sample(nrow(s3_pilot), k)
+    mean(s3_pilot$cost_before[s[seq_len(k / 2)]]) - mean(s3_pilot$cost_before[s[-seq_len(k / 2)]]) })), 0.95)
+}
+q4 <- crowd_q(4); q400 <- crowd_q(400)
 
 s3 <- new_pack() |>
   title_("Session tracker", S3) |>
   print_line("1 per participant; filled in as the session runs") |>
-  p_("In Module 1 you saw three GreenWaste numbers. Today the trainer recalculates each number from the data. Your task: decide what is wrong with each number. The decision rule for national scale-up: the programme must save at least 1,000 AED per business.") |>
+  p_("Today the trainer calculates three GreenWaste numbers from the data. Your task: decide what is wrong with each one. The decision rule for national scale-up: the programme must save at least 1,000 AED per business per year.") |>
   body_add_flextable(plain_table(data.frame(
-    Comparison = c("Before and after", "Enrolled vs not enrolled", "Randomised (drawn neighbourhoods)"),
-    `Module 1 said` = c(gfmt(ba), gfmt(ww), gfmt(rct)),
-    `Today's number` = c("", "", ""),
+    Comparison = c("Before and after (rest of the city)", "Took part vs did not (rest of the city)", "Randomised (the pilot district lottery)"),
+    `The number` = c("", "", ""),
     `Too big, too small, or about right?` = c("", "", ""),
-    `Why?` = c("", "", ""), check.names = FALSE), widths = c(1.8, 1.0, 0.9, 1.5, 1.8)) |>
+    `Why?` = c("", "", ""), check.names = FALSE), widths = c(2.3, 1.0, 1.6, 2.1)) |>
     height_all(height = 0.55, part = "body") |> hrule(rule = "atleast", part = "body")) |>
   h2_("The lottery") |>
-  p_("The trainer draws the offered neighbourhoods at random five times. Each time, look at the difference in costs before the programme between offered and not-offered neighbourhoods. Write the largest difference:  ________ AED") |>
-  p_("The same difference when officials choose the neighbourhoods instead:  ________ AED") |>
-  p_("With 4 neighbourhoods in the lottery, in 95 out of 100 draws the starting difference is smaller than ± ________ AED. With 196 neighbourhoods: ± ________ AED.") |>
+  p_("The trainer draws the pilot lottery again five times. Each time, look at the difference in costs before the programme between the businesses picked and the ones not picked. Write the largest difference:  ________ AED") |>
+  p_("The same difference when officials choose the businesses instead:  ________ AED") |>
+  p_("With 4 businesses in the lottery, in 95 out of 100 draws the starting difference is smaller than ± ________ AED. With 400 businesses: ± ________ AED.") |>
   h2_("Reading the randomised result") |>
-  p_("The effect of the programme: ________ AED.   The 95% confidence interval for the effect (standard errors clustered by neighbourhood): ________ to ________") |>
+  p_("The effect of the programme: ________ AED.   The 95% confidence interval for the effect: ________ to ________") |>
   p_("Look at the end of the interval with the smallest saving. Is that saving at least 1,000 AED?   Yes  /  No") |>
   p_("One question I would ask the evaluator:") |> write_lines(2) |>
   new_page() |>
   title_("AI Snapshot: a paragraph for the minister", S3) |>
   print_line("1 per pair") |>
   p_("The prompt, written the way a busy official might write it:", bold = TRUE) |>
-  p_("\"Our pilot cut waste costs by 665 AED per business (costs before vs after, p < 0.001). Write a short paragraph for the minister on what this shows.\"", italic = TRUE) |>
+  p_(sprintf("\"Our pilot cut waste costs by %s AED per business (costs before vs after, p < 0.001). Write a short paragraph for the minister on what this shows.\"", gfmt(abs(ba))), italic = TRUE) |>
   h2_("A response like this is possible") |>
-  p_("The GreenWaste pilot produced a clear result: waste-management costs fell by 665 AED per business, and with p < 0.001 we can be confident the programme caused this reduction. Because the same businesses were measured before and after, differences between businesses are already accounted for, so the 665 AED saving can be attributed to the programme. This makes a strong case for national scale-up. As with any pilot, results should be monitored as the programme expands.") |>
+  p_(sprintf("The GreenWaste pilot produced a clear result: waste-management costs fell by %s AED per business, and with p < 0.001 we can be confident the programme caused this reduction. Because the same businesses were measured before and after, differences between businesses are already accounted for, so the %s AED saving can be attributed to the programme. This makes a strong case for national scale-up. As with any pilot, results should be monitored as the programme expands.", gfmt(abs(ba)), gfmt(abs(ba)))) |>
   p_("Underline every claim in the response that the evidence does not support. Then run the same prompt yourselves: did your AI write something similar?", bold = TRUE) |>
   write_lines(3) |>
   h2_("Then run this prompt instead, and compare") |>
-  p_("\"Costs for participating businesses were 665 AED lower after the pilot than before (p < 0.001). We also have businesses that did not take part and a randomised comparison. The scale-up rule is at least 1,000 AED. Before writing anything, tell me what this before-and-after number can and cannot show. Ask me questions before you answer.\"", italic = TRUE) |>
-  p_("Which answer checks whether 665 AED is a fair measure of the effect before writing the paragraph? Paste the better answer into a new chat and ask the AI to check that answer for errors.") |>
+  p_(sprintf("\"Costs for participating businesses were %s AED lower after the pilot than before (p < 0.001). We also have businesses that did not take part and a randomised comparison. The scale-up rule is at least 1,000 AED. Before writing anything, tell me what this before-and-after number can and cannot show. Ask me questions before you answer.\"", gfmt(abs(ba))), italic = TRUE) |>
+  p_(sprintf("Which answer checks whether %s AED is a fair measure of the effect before writing the paragraph? Paste the better answer into a new chat and ask the AI to check that answer for errors.", gfmt(abs(ba)))) |>
   new_page() |> title_("Take-away card: three questions for an RCT", S3) |>
   print_line("1 per participant, cut into cards") |>
   add_cards(rep(list(c("Three questions to ask the evaluator",
                        "1. Compared to what? Before-and-after, with-and-without, or a fair comparison?",
                        "2. Show me the balance table. How do you know the groups started out alike?",
-                       "3. Were standard errors clustered at the level you randomised? Does the whole confidence interval meet our decision rule?", "", "Back at work, I will ask these questions about:", "______________________________")), 6),
+                       "3. How many units were randomised? Does the whole confidence interval meet our decision rule?", "", "Back at work, I will ask these questions about:", "______________________________")), 6),
             min_height = 2.2) |>
   new_page() |> title_("Facilitator key", S3) |> print_line("trainer only") |>
   h2_("Session tracker") |>
-  p_(sprintf("Before and after %s: too small; costs for non-participants rose about 150 AED, so the fall understates the effect. Enrolled vs not %s: too big; the groups differed by %s AED before the programme. Randomised %s: fair. Interval counted by neighbourhood about -1,093 to -935: the estimate clears 1,000, the interval spans it.",
-             gfmt(ba), gfmt(ww), gfmt(ww0), gfmt(rct))) |>
-  p_("Lottery: random draws start within a few dozen AED; officials picking the cheapest-to-run neighbourhoods start hundreds of AED ahead. 4 neighbourhoods: about ± 400 AED; 196: a few dozen.") |>
+  p_(sprintf("Before and after %s: too small; costs for city businesses that did not take part rose about %s AED, so the fall understates the effect. Took part vs did not %s: too big; the groups differed by %s AED before the programme. Randomised %s: fair. 95%% interval -%s to -%s: the estimate clears 1,000, the interval spans it.",
+             gfmt(ba), gfmt(city_rise), gfmt(ww), gfmt(ww0), gfmt(rct), gfmt(rct_ci[2]), gfmt(rct_ci[1]))) |>
+  p_(sprintf("Lottery: random draws among the 400 pilot businesses start within a few dozen AED; officials picking the cheapest-to-run businesses start about %s AED apart. 4 businesses: about ± %s AED; 400: about ± %s AED.",
+             gfmt(abs(officials_gap)), gfmt(q4), gfmt(q400))) |>
   h2_("AI Snapshot: four errors") |>
-  p_("1. Significant is not causal: p < 0.001 says the fall is unlikely to be chance, not what caused it. 2. Half right: following the same businesses removes fixed differences but not what changed for everyone. 3. It reports 665 as the effect; the randomised estimate is about 1,014. 4. It recommends scale-up without asking what bar the programme must clear.")
+  p_(sprintf("1. Significant is not causal: p < 0.001 says the fall is unlikely to be chance, not what caused it. 2. Half right: following the same businesses removes fixed differences but not what changed for everyone. 3. It reports %s as the effect; the randomised estimate is about %s. 4. It recommends scale-up without asking what bar the programme must clear.",
+             gfmt(abs(ba)), gfmt(abs(rct))))
 print(s3, target = "Oct12_session3_materials.docx")
 
 # ===========================================================================
