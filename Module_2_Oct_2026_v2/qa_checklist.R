@@ -21,7 +21,7 @@ qa_purpose <- c(
   Methodology   = "Is the design capable of answering the question at all?",
   Assumptions   = "What has to be true, and was it actually tested?",
   `Data quality` = "Where did the numbers come from, and who is missing?",
-  Conclusions   = "Does the claim follow, or does it outrun the evidence?"
+  Conclusions   = "Does the claim follow, or does it go further than the evidence?"
 )
 
 qa_questions <- data.frame(
@@ -43,8 +43,8 @@ qa_questions <- data.frame(
     "Was the study capable of detecting an effect this size, or was it always going to be inconclusive?",
 
     "State the one assumption this result rests on, in a single sentence.",
-    "What evidence do you have that it holds here, not merely in general?",
-    "What did you do to test it, and what would the result look like if it failed?",
+    "What evidence do you have that this assumption holds here, not merely in general?",
+    "What did you do to test the assumption, and what would the result look like if the assumption failed?",
     "Which assumption, if it were wrong, would reverse the sign of the finding?",
     "What can this design not tell us, even if every assumption holds?",
 
@@ -52,7 +52,7 @@ qa_questions <- data.frame(
     "Who is missing from the data, and are they different from those present?",
     "How many units were dropped in preparing the sample, and why?",
     "Could any participant influence the measure, or the rule that decides eligibility?",
-    "Is the outcome the one that matters, or a convenient stand-in for it?",
+    "Is the outcome the one that matters, or an easier-to-measure substitute for it?",
 
     "Does the headline claim match the size of what was actually estimated?",
     "Does the conclusion depend on a subgroup, a specification, or a period not shown?",
@@ -67,10 +67,10 @@ qa_questions <- data.frame(
 # each phrased so it can be asked out loud of an evaluator in the room.
 qa_headline <- c(
   "What is the comparison, and how was it chosen?",
-  "What has to be true for this to be causal, and did you test it?",
+  "What has to be true for this to be causal, and did you test that assumption?",
   "Where did the numbers come from, and who is missing from them?",
   "How big is the effect, and how sure are you of it?",
-  "Does the conclusion follow, or does it outrun the evidence?"
+  "Does the conclusion follow, or does it go further than the evidence?"
 )
 
 # A quick lookup used by the deck's sorting exercise.

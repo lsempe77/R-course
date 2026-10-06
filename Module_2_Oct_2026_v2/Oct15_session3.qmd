@@ -219,7 +219,7 @@ and is that true?"
 
 ::: {.ask}
 What are your **decision rule**, **benefit per unit per year**, **horizon** and
-**discount rate**? State which of those choices decides the answer.
+**discount rate**? Which of these choices changes the answer most?
 :::
 
 :::::: {.columns}
@@ -338,7 +338,7 @@ Type your Part 1 answers and your counterfactual sentence into the AI tool. Prom
 :::
 
 ::: {.warn}
-Check its answer in a fresh chat.
+Paste the AI's answer into a new chat and ask the AI to check that answer.
 :::
 
 ::: {.notes}
@@ -412,14 +412,14 @@ Three minutes per team. The room gives feedback in this order:
 
 1. **What is the design?** Say it back in one sentence. If you cannot, that is the
    feedback.
-2. **What would make it fail?** The one assumption that would have to break.
+2. **What would make the design fail?** Name the one assumption that would have to break.
 3. **What is missing?** One thing you would have wanted to hear.
-4. **Which trap from this week could hit it?** Headline vs preferred estimate,
-   horizon, truncated axis, missing threshold.
+4. **Which mistake from this week could affect this design?** For example:
+   headline vs preferred estimate, time horizon, truncated axis, missing threshold.
 :::
 
 ::: {.warn}
-**Write it down**, so the team can use it. Aim it at the design, never at the team.
+**Write your feedback down**, so the team can use it. Comment on the design, not on the people.
 :::
 
 ::: {.notes}
@@ -466,7 +466,7 @@ Which programme in your unit could you ask this about next week?
 :::
 
 ::: {.notes}
-Paper (Oct15_session3_materials.docx): Hand out the take-away cards (pack page 6), one per participant. Give a minute to fill in the card's last line (the first evaluation decision at your desk), then take two or three examples on the thank-you slide.
+Paper (Oct15_session3_materials.docx): Hand out the take-away cards (pack page 6), one per participant. Give a minute to fill in the card's last line (the first evaluation decision back at work), then take two or three examples on the thank-you slide.
 :::
 
 ## Thank you

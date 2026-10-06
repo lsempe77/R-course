@@ -1145,8 +1145,8 @@ that framing.
 ::::::
 
 ::: {.ask}
-Run both. Which one questions the 665 before writing the paragraph? What did
-each explain well?
+Run both prompts. Which answer checks whether 665 AED is a fair measure of the
+effect before writing the paragraph? What did each answer explain well?
 
 Two habits: make the AI **ask you questions first**, and have a **second chat**
 review the first one's answer.
@@ -1185,7 +1185,7 @@ anything it suggested was incorrect.
 <div class="facts">
   <div class="k">1</div> <div class="v">Compared to what? Before-and-after, with-and-without, or a fair comparison?</div>
   <div class="k">2</div> <div class="v">Show me the balance table. How do you know the groups started out alike?</div>
-  <div class="k">3</div> <div class="v">Were errors clustered where you randomised, and does the interval clear our rule?</div>
+  <div class="k">3</div> <div class="v">Were standard errors clustered at the level you randomised? Does the whole confidence interval meet our decision rule?</div>
 </div>
 ```
 
@@ -1195,7 +1195,7 @@ whether the result is enough to act on.
 :::
 
 ::: {.notes}
-Paper (Oct12_session3_materials.docx): Hand out the take-away cards (pack page 3). Give a minute to fill in "On my desk" on the card, then take two or three examples from the room.
+Paper (Oct12_session3_materials.docx): Hand out the take-away cards (pack page 3). Give a minute to fill in "Back at work" on the card, then take two or three examples from the room.
 :::
 
 ## What today gives you

@@ -161,8 +161,8 @@ separately:
 ::: {.ask}
 On your rating sheet: **the executive summary**.
 
-Give it a colour. Then write the one reason that decided it. If you rate it
-amber or red, write what would settle it.
+Circle a colour. Then write your reason for selecting this colour. If you rate
+the summary amber or red, write what would be needed to shift the colour to green.
 :::
 
 :::::: {.columns}
@@ -249,8 +249,9 @@ rating sheet. Do not wait for the slides.
 :::
 
 ::: {.panel}
-For each section: a colour, the one reason that decided it, and, if amber or red,
-what would settle it. The rating sheet names the area to check.
+For each section: a colour, your reason for selecting this colour, and, if amber
+or red, what would be needed to shift the colour to green. The Area to check
+column tells you which part of yesterday's QA checklist to use.
 :::
 
 ::: {.notes}
@@ -524,8 +525,9 @@ recommendation is [supported by the evidence]{.fragment .highlight-red fragment-
 :::
 
 ::: {.ask .fragment fragment-index=1}
-Find the two claims the report does not support, then the larger problem. What
-did the AI you ran get right, and what did it miss?
+Underline the two claims in the AI's response that the report does not support.
+Then name the bigger problem that the response never mentions. What did your own
+AI get right, and what did your AI miss?
 :::
 
 ## What AI got, and what it could not get
@@ -607,8 +609,8 @@ Timing: 5 minutes (1:25 to 1:30). Take-away card and the "On my desk" minute.
 ```{r}
 #| results: asis
 cat('<div class="panel"><b>1.</b> Tabulate the estimates yourself, with the threshold in its own column. Do not let the report choose which number you see first.</div>\n')
-cat('<div class="panel"><b>2.</b> Read the limitations section, then check whether it names the problems in the data section. If it does not, ask why they were dropped.</div>\n')
-cat('<div class="panel"><b>3.</b> Find the preferred specification and check whether the headline is it. When they differ, ask why.</div>\n')
+cat('<div class="panel"><b>2.</b> Read the limitations section, then check whether the limitations section names the problems in the data section. If those problems are missing, ask why they were left out.</div>\n')
+cat('<div class="panel"><b>3.</b> Find the preferred specification (the estimate the evaluators trust most). Check whether the headline number is that estimate. When the two differ, ask why.</div>\n')
 ```
 
 ::: {.ask .fragment}
@@ -616,7 +618,7 @@ Which of the three would have caught the most important problem in this report?
 :::
 
 ::: {.notes}
-Paper (Oct15_session1_materials.docx): Hand out the take-away cards (pack page 4, cut). Give a minute to fill in "On my desk" on the card, then take two or three examples from the room.
+Paper (Oct15_session1_materials.docx): Hand out the take-away cards (pack page 4, cut). Give a minute to fill in "Back at work" on the card, then take two or three examples from the room.
 :::
 
 ## Next session

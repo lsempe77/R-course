@@ -235,7 +235,7 @@ checks an RDD result has to pass.
 <div class="facts">
   <div class="k">1</div> <div class="v">The rule and the data: who was offered, who took part</div>
   <div class="k">2</div> <div class="v">From the picture to a number</div>
-  <div class="k">3</div> <div class="v">Four checks: the window, bending the rule, balance, who it applies to</div>
+  <div class="k">3</div> <div class="v">Can we trust the jump? Checks on the window, bending the rule, balance, and who the result applies to</div>
 </div>
 ```
 
@@ -499,7 +499,7 @@ The interval is wide because only 773 businesses sit within 2 points. Check 1
 shows how the answer moves with that choice.
 :::
 
-# 3 · Four checks {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
+# 3 · Can we trust the jump at 58? {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ## This method's one assumption
 
@@ -522,7 +522,7 @@ change at 58, where in the data would you see it?**
 :::
 
 ::: {.notes}
-Paper (Oct13_session2_materials.docx): Hand out the four-checks scorecard (pack page 5, one per group). Groups mark each check as you run it, starting with check 0 (who is compared) from Section 1.
+Paper (Oct13_session2_materials.docx): Hand out the checks scorecard ("Can we trust the jump at 58?") (pack page 5, one per group). Groups mark each check as you run it, starting with check 0 (who is compared) from Section 1.
 :::
 
 ## The GreenWaste lab: add RDD
@@ -567,7 +567,7 @@ lab(c("before_after", "with_without", "randomised", "did", "rdd"),
 ```
 
 ::: {.notes}
-About 5 minutes, before the four checks. The first two sliders break
+About 5 minutes, before the checks. The first two sliders break
 with-and-without, and the middle one breaks DiD; RDD stays on -900 for both,
 because neither changes suddenly at 58. The last slider is this method's one
 assumption: if something else changes at the cut-off, the jump is not only the
@@ -727,7 +727,7 @@ the businesses the extension would reach?
 
 ::::: {.column width="42%"}
 ::: {.panel}
-Paste the regression table and the four checks into an AI tool with this
+Paste the regression table and the check results into an AI tool with this
 prompt:
 
 **"Explain, without jargon, who this result actually applies to."**
@@ -842,15 +842,15 @@ AI missed, what it added that is worth keeping, and whether anything was wrong.
 ```{=html}
 <div class="facts">
   <div class="k">1</div> <div class="v">Where is the cut-off, which side is eligible, and exactly which units are compared?</div>
-  <div class="k">2</div> <div class="v">Does the jump survive other windows, and is there none at placebo cut-offs?</div>
-  <div class="k">3</div> <div class="v">Is the number of units smooth at the line, or did anyone bend the rule?</div>
-  <div class="k">4</div> <div class="v">Does anything else jump at the line, such as manager age?</div>
-  <div class="k">5</div> <div class="v">Who is near the line, and does the estimate clear our rule for them?</div>
+  <div class="k">2</div> <div class="v">Does the jump stay when the window is wider or narrower? Is there no jump at placebo (fake) cut-offs?</div>
+  <div class="k">3</div> <div class="v">Are there about the same number of units just above and just below the cut-off, or did anyone bend the rule?</div>
+  <div class="k">4</div> <div class="v">Do other characteristics (such as size or manager age) change suddenly at the cut-off?</div>
+  <div class="k">5</div> <div class="v">Who is near the cut-off, and does the estimate meet our decision rule for them?</div>
 </div>
 ```
 
 ::: {.notes}
-Paper (Oct13_session2_materials.docx): Hand out the take-away cards (pack page 7). Give a minute to fill in "On my desk" on the card, then take two or three examples from the room.
+Paper (Oct13_session2_materials.docx): Hand out the take-away cards (pack page 7). Give a minute to fill in "Back at work" on the card, then take two or three examples from the room.
 :::
 
 ## Where this sits

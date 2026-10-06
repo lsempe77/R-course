@@ -526,11 +526,11 @@ Paper (Oct15_session2_materials.docx): Hand out the peer-critique sheet (pack pa
 
 ```{r results='asis'}
 checks <- c("Does the headline sentence contain the number?",
-            "Does it mention the 900 AED threshold at all?",
-            "Does it claim a customer benefit from the pass-through finding?",
-            "Does it explain why two-thirds did not enrol?",
-            "Does it mention the 22% cost overrun?",
-            "Does it turn the null finding into a statement of no effect?")
+            "Does the brief mention the 900 AED threshold at all?",
+            "Does the brief claim customers benefited from lower freight rates (Finding 3)?",
+            "Does the brief guess why two-thirds of operators did not enrol?",
+            "Does the brief mention the 22% overrun in administration costs?",
+            "Does the brief say Finding 6 shows 'no effect'?")
 html_out(paste(sprintf('<div class="panel"><b>%d.</b> %s</div>', seq_along(checks), checks),
                collapse = "\n"))
 ```
@@ -732,9 +732,9 @@ knitr::include_graphics(MENTI_QR)
 ```{r results='asis'}
 rules <- c("The number is in the headline sentence, not buried in the body.",
            "The threshold the number is judged against is stated, even when it is missed.",
-           "Findings that argue against the recommendation are named, not left out.",
+           "Findings that do not support the recommendation are mentioned, not left out.",
            "The recommendation is an action the reader can take or refuse.",
-           "The risk is something that could happen and could be watched.",
+           "The risk is something that could really happen, and it can be monitored.",
            "What the evaluation did not establish is stated as plainly as what it did.")
 html_out(paste(sprintf('<div class="panel"><b>%d.</b> %s</div>', seq_along(rules), rules),
                collapse = "\n"))
@@ -746,7 +746,7 @@ you want?
 :::
 
 ::: {.notes}
-Paper (Oct15_session2_materials.docx): Hand out the take-away cards (pack page 3). Give a minute to fill in "On my desk" on the card, then take two or three examples from the room.
+Paper (Oct15_session2_materials.docx): Hand out the take-away cards (pack page 3). Give a minute to fill in "Back at work" on the card, then take two or three examples from the room.
 :::
 
 ## Next session

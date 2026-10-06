@@ -18,28 +18,28 @@ source("qa_translation.R")
 cat("This is the evaluation you are translating. It is a **fictitious programme**, written for\n")
 cat("teaching. The numbers are invented.\n\n")
 
-cat(sprintf("**Programme.** %s \u2014 %s.\n\n", transl_programme$name, transl_programme$what))
+cat(sprintf("**Programme.** %s: %s.\n\n", transl_programme$name, transl_programme$what))
 cat(sprintf("**Where and when.** %s, %s.\n\n", transl_programme$where, transl_programme$when))
 cat(sprintf("**The decision rule.** %s\n\n", transl_programme$rule))
 
 cat("The evaluation was randomised and is methodologically sound. Read the six findings below,\n")
 cat("then turn to the brief template. Do not start writing until you have read all six: the\n")
-cat("decision depends on how they sit together, not on any one of them.\n\n")
+cat("decision depends on all six findings together, not on any one finding.\n\n")
 
 cat("# The findings\n\n")
 for (i in seq_len(nrow(transl_findings))) {
   f <- transl_findings[i, ]
   cat(sprintf("## Finding %d. %s\n\n", i, f$finding))
   cat(sprintf("%s\n\n", f$numbers))
-  cat(sprintf("*What it can bear.* %s\n\n", f$bears))
+  cat(sprintf("*What this finding can support.* %s\n\n", f$bears))
 }
 
 cat("\\newpage\n\n")
-cat("# What each finding does not license\n\n")
-cat("A brief is judged as much by what it refuses to claim as by what it claims. These are the\n")
-cat("claims each finding invites and cannot support.\n\n")
+cat("# What each finding does not support\n\n")
+cat("A good brief is judged by what it does not claim, as well as by what it claims. Below are\n")
+cat("claims that each finding might tempt you to make, but that the finding cannot support.\n\n")
 for (i in seq_len(nrow(transl_findings))) {
-  cat(sprintf("- **Finding %d** (%s) does not license: %s\n",
+  cat(sprintf("- **Finding %d** (%s) does not support the claim: %s\n",
               i, transl_findings$finding[i], transl_findings$does_not_license[i]))
 }
 cat("\n")

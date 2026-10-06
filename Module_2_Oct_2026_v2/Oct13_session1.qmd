@@ -1035,7 +1035,7 @@ the 1,000 AED threshold required for scale-up]{.flag}.
 :::
 
 ::: {.ask}
-Which sentences can you check against the table, and which does it **not** support?
+Underline the sentences that the table supports. Cross out the sentences that the table does **not** support.
 :::
 
 ::: {.notes}
@@ -1111,14 +1111,16 @@ The model may answer confidently, including about checks it cannot know.
 ::::::
 
 ::: {.ask}
-Does error 3 survive once the model knows there are two waves? Paste the second
-answer into a fresh chat to check for claims about tests never run.
+Once the AI knows there are only two waves, does it still claim that parallel
+trends were satisfied? Paste the second answer into a new chat and ask the AI to
+check that answer for claims about tests that were never run.
 :::
 
 ::: {.panel .fragment}
-**If time allows, a leading prompt:** *"Our DiD shows an 816 AED cut in costs
-(p<0.001). Write two sentences for the minister recommending scale-up."* Does it
-mention the 1,000 AED rule or parallel trends without being asked?
+**If you have time, a prompt that pushes the AI towards an answer:** *"Our DiD
+shows an 816 AED cut in costs (p<0.001). Write two sentences for the minister
+recommending scale-up."* Does the AI mention the 1,000 AED rule or parallel
+trends without being asked?
 :::
 
 # 6 · Close {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
@@ -1146,9 +1148,9 @@ anything it suggested was incorrect.
 
 ```{=html}
 <div class="facts">
-  <div class="k">1</div> <div class="v">Which row is the estimate, and does its interval clear our rule, not just zero?</div>
-  <div class="k">2</div> <div class="v">How many periods before the programme, and were the groups already moving together?</div>
-  <div class="k">3</div> <div class="v">Which comparison group, chosen how, and how did it differ at baseline?</div>
+  <div class="k">1</div> <div class="v">Which row is the estimate? Does its whole confidence interval meet our decision rule, not just exclude zero?</div>
+  <div class="k">2</div> <div class="v">How many periods of data before the programme? Were the two groups changing in the same way before the programme?</div>
+  <div class="k">3</div> <div class="v">Which comparison group was used, how was it chosen, and how did it differ before the programme?</div>
 </div>
 ```
 
@@ -1157,7 +1159,7 @@ Question 1 you learned on Day 1. Questions 2 and 3 are the ones specific to DiD.
 :::
 
 ::: {.notes}
-Paper (Oct13_session1_materials.docx): Hand out the take-away cards (pack page 4, cut into cards). Give a minute to fill in "On my desk", then take two or
+Paper (Oct13_session1_materials.docx): Hand out the take-away cards (pack page 4, cut into cards). Give a minute to fill in "Back at work", then take two or
 three examples.
 :::
 

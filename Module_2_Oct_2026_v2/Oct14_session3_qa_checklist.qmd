@@ -16,9 +16,9 @@ source("qa_checklist.R")
 
 ```{r, results='asis', echo=FALSE}
 cat("This is the checklist to work from when someone hands you an evaluation result and asks\n")
-cat("whether to act on it. It is deliberately blunt: every question is one you can ask out loud,\n")
-cat("and every one has an answer or an admission. A question the analyst cannot answer is itself\n")
-cat("a finding, and sometimes the most important one.\n\n")
+cat("whether to act on it. Every question is short and direct, so you can ask it out loud. For\n")
+cat("every question, the analyst should either give an answer or admit that they cannot. A question\n")
+cat("the analyst cannot answer is itself a finding, and sometimes the most important one.\n\n")
 
 cat("The four areas below are the four places an evaluation most often goes wrong. Work through\n")
 cat("them in order. If you only have five minutes, use the short list on the last page.\n\n")
@@ -51,12 +51,12 @@ cat("**Ask for the number, not the adjective.** \"Was it significant?\" invites 
 cat("the estimate and its confidence interval?\" invites a figure you can check. An evaluator who\n")
 cat("cannot produce the figure has not finished the analysis.\n\n")
 
-cat("**Ask what would change your mind.** A claim that nothing could falsify is not a finding.\n")
-cat("Listen for a specific answer -- a rate, a horizon, a subgroup, a specification.\n\n")
+cat("**Ask what would change your mind.** If no result could ever prove a claim wrong, the claim\n")
+cat("is not a finding. Listen for a specific answer: a rate, a time horizon, a subgroup, a specification.\n\n")
 
 cat("**Ask what you would do differently if it were half the size.** If the recommendation is the\n")
-cat("same either way, the estimate is not really doing the work. The decision is being carried by\n")
-cat("something else, and you should find out what.\n\n")
+cat("same either way, the estimate is not what is driving the decision. Something else is driving\n")
+cat("it, and you should find out what.\n\n")
 
 cat("# Notes\n\n")
 cat("Questions the analyst could not answer:\n\n")
@@ -64,7 +64,7 @@ cat("...........................................................................
 cat("......................................................................................\n\n")
 cat("......................................................................................\n\n")
 cat("......................................................................................\n\n")
-cat("What you would need before signing off:\n\n")
+cat("What you would need before approving:\n\n")
 cat("......................................................................................\n\n")
 cat("......................................................................................\n\n")
 cat("......................................................................................\n\n")

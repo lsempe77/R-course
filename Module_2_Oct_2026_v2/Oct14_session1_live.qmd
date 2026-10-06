@@ -484,9 +484,9 @@ than the rate.
 
 ```{=html}
 <div class="facts">
-  <div class="k">1</div> <div class="v">Are the benefits plausible?</div>
+  <div class="k">1</div> <div class="v">Are the benefits realistic? Were they measured, modelled or assumed?</div>
   <div class="k">2</div> <div class="v">Are all the costs included?</div>
-  <div class="k">3</div> <div class="v">What would flip the result?</div>
+  <div class="k">3</div> <div class="v">What would make the ratio fall below 1?</div>
 </div>
 ```
 
@@ -774,7 +774,7 @@ this ratio to fall below 1, and what is your evidence for it?"**
 :::
 
 ::: {.notes}
-Paper (Oct14_session1_materials.docx): Hand out the take-away cards (pack page 4). Give a minute to fill in "On my desk" on the card, then take two or three examples from the room.
+Paper (Oct14_session1_materials.docx): Hand out the take-away cards (pack page 4). Give a minute to fill in "Back at work" on the card, then take two or three examples from the room.
 :::
 
 ## Where this sits

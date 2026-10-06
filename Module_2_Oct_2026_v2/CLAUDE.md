@@ -349,11 +349,39 @@ were built by Claude, and git history rather than this table records who wrote w
 
 ## Checklist / Next Steps
 
-**All twelve decks are built and published.** Nothing is outstanding on the slides
-themselves; what remains is delivery readiness.
+**All twelve decks are built and published.** One slide-level fix is outstanding (the
+GreenWaste introduction, first item below); otherwise what remains is delivery readiness.
 
 ### Delivery readiness
 
+- [ ] **REMINDER (added 2026-10-05) · Introduce GreenWaste in Module 2; drop "Module 1 said"
+      references to its numbers.** Participants met GreenWaste in Module 1 only through a Theory
+      of Change exercise; they have **never seen any GreenWaste numbers**. Several decks assume
+      they have:
+      - **Oct12 S3 (live), Lucas's** — the first GreenWaste session. Opening slide "Where we left
+        GreenWaste" asks the room to recall Module 1's three estimates (-665, -1,446, -1,014)
+        "from memory"; the notes say "Pure recall; do not re-teach". "Counterfeit
+        counterfactuals", "Module 1 said ..." before each rebuilt number, the "Module 1 recap"
+        of the neighbourhood lottery and "two people versus two crowds from Module 1" all
+        assume prior exposure. The subtitle is "Opening the Box on Module 1's Numbers".
+        Proposed fix: replace the recall slide with a short introduction (what the programme
+        offers; waste management cost in AED as the outcome, linked back to their ToC;
+        eligibility at efficiency index <= 58; neighbourhoods offered by lottery, the 2x2;
+        the 1,000 AED scale-up rule), then present the first two numbers fresh as "two numbers
+        someone might report" for the room to critique, rather than as recall.
+      - **Oct13 S2 (live)** — section "Where Module 1 left us" / "What you saw in Module 1"
+        and the facts box "Module 1, straight lines" / "Module 1, with covariates" (RDD
+        numbers); also lines 193, 368, 683.
+      - Check `zzmerge_Oct12_session3_live.qmd` (merge leftover with the same text) and the
+        retired `Oct13_session2.qmd` comments; the Oct12 S1 and Oct15 "Module 1" references are
+        about the counterfactual concept and participants' own designs, not GreenWaste numbers,
+        and can stay.
+      - Also fix the Data Inventory line above: the CSV holds **9,913 businesses in 200
+        neighbourhoods** (100 offered, 100 not); "4,959 businesses, 100 neighbourhoods" is
+        the offered half only.
+      Agree the approach with Lucas (owner of Oct12 S3 and Oct13 S2) before editing; then
+      re-render, refresh the PDF/PPTX exports and check the session tracker handout in
+      `Oct12_session3_materials.docx`.
 - [ ] **Session length.** Oct12 S3 (live) is 29 slides and Oct14 S3 (live) 29, just under the
       30–36 budget for a 2h session; Oct13 S3 is 31 after the DCD section was removed.
       Oct15 S3 is 17 (trimmed 2026-09-25) and should stay low: it is group work.

@@ -852,9 +852,9 @@ answer through a second chat to check it. Also note what it explained well.
 :::
 
 ::: {.ask}
-In groups: for each excerpt, **which of the three questions does it leave
-unanswered, and would you act, not act, or ask first?** Six minutes. Then: which
-one were you most tempted to act on?
+In groups: for each excerpt, **which of the three questions does the excerpt not
+answer? Would you act, not act, or ask a question first?** Six minutes. Then:
+which excerpt would you most want to act on?
 :::
 
 ::: {.notes}
@@ -881,7 +881,7 @@ number?
 ```{=html}
 <div class="facts">
   <div class="k">1</div> <div class="v">Compared to what?</div>
-  <div class="k">2</div> <div class="v">How big is it, in units that matter to the decision?</div>
+  <div class="k">2</div> <div class="v">How big is the number, in units that matter to the decision?</div>
   <div class="k">3</div> <div class="v">How sure are we?</div>
 </div>
 ```
@@ -898,5 +898,5 @@ should I read a confidence interval when I compare an estimate with a decision
 threshold? Ask me questions first." Saying who you are and why you ask usually
 gets a more useful answer.
 
-Paper (Oct12_session1_materials.docx): Hand out the take-away cards (pack page 6). Give a minute to fill in "On my desk" on the card, then take two or three examples from the room.
+Paper (Oct12_session1_materials.docx): Hand out the take-away cards (pack page 6). Give a minute to fill in "Back at work" on the card, then take two or three examples from the room.
 :::
