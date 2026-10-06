@@ -992,9 +992,8 @@ p < 0.001). Write a short paragraph for the minister on what this shows."**
 :::
 
 ::: {.ask}
-At your table, mark each numbered claim: **green** supported, **yellow** partly,
-**red** not supported. Then one person per group puts your dots on the claim
-strips on the wall. Five minutes.
+Mark anything the evidence does not support. Three minutes, in your groups. Then
+run the same prompt yourselves: did your AI write something similar?
 :::
 :::::
 
@@ -1002,22 +1001,20 @@ strips on the wall. Five minutes.
 ::: {.ai-output}
 *A response like this is possible, especially with a short or leading prompt:*
 
-**(1)** The GreenWaste pilot produced a clear result: waste-management costs fell
-by `r gfmt(abs(ba_change))` AED per business, **(2)** and with p < 0.001 we can be confident the
-programme caused this reduction. **(3)** Because the same businesses were
-measured before and after, differences between businesses are already accounted
-for, **(4)** so the `r gfmt(abs(ba_change))` AED saving can be attributed to the programme. **(5)**
-This makes a strong case for national scale-up. **(6)** As with any pilot,
-results should be monitored as the programme expands.
+The GreenWaste pilot produced a clear result: waste-management costs fell by `r gfmt(abs(ba_change))`
+AED per business, and [with p < 0.001 we can be confident the programme caused
+this reduction]{.flag}. [Because the same businesses were measured before and
+after, differences between businesses are already accounted for]{.flag}, so
+[the `r gfmt(abs(ba_change))` AED saving can be attributed to the programme]{.flag}. [This makes a
+strong case for national scale-up]{.flag}. As with any pilot, results should be
+monitored as the programme expands.
 :::
 :::::
 
 ::::::
 
 ::: {.notes}
-Paper (Oct12_session3_materials.docx): Hand out the AI handout (pack page 2, one per group) and one green, one yellow and one red marker per group. The better prompt is printed below the flawed paragraph.
-
-Wall board (set up beforehand): the six claim strips from the end of the pack, taped down the wall in order. Groups mark the handout at the table, then one person per group puts one dot on each strip. The claims are not flagged on this slide so the groups find the errors themselves; the debrief slide names them. Before showing the debrief, read the wall: strips 2, 4 and 5 should be red; strip 3 (half right) is where groups disagree, so start there. Then groups run the same prompt themselves: did their AI write something similar?
+Paper (Oct12_session3_materials.docx): Hand out the AI handout (pack page 2, one per pair). The better prompt is printed below the flawed paragraph.
 :::
 
 ## Debrief: four errors

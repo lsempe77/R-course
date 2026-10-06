@@ -601,7 +601,7 @@ years; (5) all of 1 and 2 together. About 10 minutes including report-back.
 
 Paper (Oct14_session1_materials.docx): Hand out the scenario cards (pack page 2, two sets cut; cards 1 to 5, then 1 to 3 again, so each of the 8 groups holds one) and a recording sheet per group (page 3). Ratios for each card are in the facilitator key.
 
-Ratio wall (set up beforehand; signs at the end of the pack): a line from 0 to 2.0, a thick red line at 1.0 (break-even), the headline 1.87 marked. Each group posts its prediction on a sticky note, reads out its settings, then puts its card at the ratio on screen. Debrief from the wall: how far off were the predictions, and why does only card 5 land left of the red line?
+Ratio wall (print Oct14_session1_board_A1.pdf at A1 and tape it up beforehand): a line from 0 to 2.0, break-even at 1.0 in red, the headline 1.87 marked, a lane for predictions above and for cards below. Each group posts its prediction on a sticky note, reads out its settings, then puts its card at the ratio on screen. Debrief from the wall: how far off were the predictions, and why does only card 5 land left of the red line?
 :::
 
 # 4 · Put AI to work {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}

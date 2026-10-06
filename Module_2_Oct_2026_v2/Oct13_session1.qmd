@@ -1025,27 +1025,22 @@ believing the result."**
 ::: {.ai-output}
 *A response like this is possible:*
 
-**(1)** The table reports a difference-in-differences estimate. **(2)** The
-programme reduced costs by 816 AED, and the effect is highly statistically
-significant (p < 0.001), **(3)** so the programme was a success. **(4)** The
-confidence interval does not include zero, **(5)** which confirms the finding is
-robust.
+The table reports a difference-in-differences estimate. **The programme reduced
+costs by 816 AED**, and the effect is highly statistically significant
+(p < 0.001), [so the programme was a success]{.flag}. [The confidence interval does
+not include zero, which confirms the finding is robust]{.flag}.
 
-**(6)** The parallel trends assumption has been satisfied. **(7)** The result
-clears the 1,000 AED threshold required for scale-up.
+[The parallel trends assumption has been satisfied]{.flag}. [The result clears
+the 1,000 AED threshold required for scale-up]{.flag}.
 :::
 
 ::: {.ask}
-At your table, mark each numbered claim: **green** supported, **yellow** partly,
-**red** not supported. Then one person per group puts your dots on the claim
-strips on the wall.
+Underline the sentences that the table supports. Cross out the sentences that the table does **not** support.
 :::
 
 ::: {.notes}
 Paper (Oct13_session1_materials.docx): Hand out "AI Snapshot: explaining the
-table" (pack page 3, one per group) and one green, one yellow and one red marker per group.
-
-Wall board (set up beforehand): the seven claim strips from the end of the pack, taped down the wall in order. Groups mark the handout at the table, then one person per group puts one dot on each strip. The claims are not flagged on this slide so the groups find the errors themselves; the debrief slide names them. Before showing the debrief, read the wall: strips 3, 5, 6 and 7 should be red. Start with strip 6 (parallel trends): any green or yellow dot there is a group that took a test that was never run on trust.
+table" (pack page 3, one per pair).
 :::
 
 ## Debrief: four claims the table does not support

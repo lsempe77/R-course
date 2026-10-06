@@ -239,7 +239,7 @@ What single fact would move your amber to green or red?
 # 3 · Section by section {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
 
 ::: {.notes}
-Timing: 40 minutes (0:20 to 1:00). 20 minutes of reading in pairs, then 20 minutes of debrief, about 3 minutes per slide. In the debrief, read the section's column on the wall grid before each reveal (no show of colours needed). Grid setup is in the facilitator key: six section columns, rows Green, Amber, Red.
+Timing: 40 minutes (0:20 to 1:00). 20 minutes of reading in pairs, then 20 minutes of debrief, about 3 minutes per slide. In the debrief, read the section's column on the wall grid before each reveal (no show of colours needed). The grid is two A1 sheets (print Oct15_session1_board_A1.pdf): the executive summary on its own, then Sections 3 to 7; rows Green, Amber, Red. Use small sticky notes.
 :::
 
 ## Your turn: rate the rest

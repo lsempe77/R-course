@@ -944,7 +944,7 @@ tonnes").
 
 Paper (Oct12_session1_materials.docx): Hand out the triage sheet (pack page 4, one per group) and one set of the four excerpt slips per group (page 5, cut).
 
-Optional wall matrix (set up beforehand; signs at the end of the pack): columns Act / Ask first / Do not act, rows Compared to what? / How big? / How sure? / None. Each group has its own marker colour, draws a stripe across its slips and tapes them into the matrix after filling in the sheet. Ask two groups whose slips for the same excerpt sit in different cells to explain.
+Optional wall board (print Oct12_session1_board_A1.pdf at A1 and tape it up beforehand): columns Act / Ask first / Do not act, rows Compared to what? / How big? / How sure? / None. Each group has its own marker colour and, after filling in the sheet, writes the four excerpt numbers in the matching cells. Ask two groups that put the same excerpt in different cells to explain.
 :::
 
 # 6 · Take this back to your desk {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
