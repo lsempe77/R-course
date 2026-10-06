@@ -4,11 +4,13 @@
 #   Rscript make_greenwaste_simple.R   ->  evaluation_data_GreenWaste_simple.csv
 #
 # Invented data for training. GreenWaste reached businesses two ways:
-#   setting = "pilot"  400 businesses scoring 58 or below; a lottery decided
-#                      who took part (the randomised comparison)
-#   setting = "pool"   6,000 businesses across the whole efficiency score; the
-#                      programme went to those scoring 58 or below (before and
-#                      after, with and without, DiD, RDD, matching)
+#   setting = "pilot"  400 businesses in the pilot district, all scoring 58 or
+#                      below; a lottery decided who took part (the randomised
+#                      comparison)
+#   setting = "city"   6,000 businesses in the rest of the city, across the whole
+#                      efficiency score; the programme went to those scoring 58
+#                      or below (before and after, with and without, DiD, RDD,
+#                      matching)
 #
 # Columns: business, setting, score, took_part, cost_before, cost_after,
 #          manager_age, staff, area, filtration
@@ -55,10 +57,10 @@ pilot$cost_after[pilot$took_part == 1] <- round(pilot$cost_after[pilot$took_part
 pilot$setting <- "pilot"
 
 s    <- runif(6000, 20, 100)
-pool <- outcomes(characteristics(6000, s), s <= 58)
-pool$setting <- "pool"
+city <- outcomes(characteristics(6000, s), s <= 58)
+city$setting <- "city"
 
-gw <- rbind(pilot, pool)
+gw <- rbind(pilot, city)
 gw$business <- sprintf("B%04d", seq_len(nrow(gw)))
 gw <- gw[, c("business", "setting", "score", "took_part", "cost_before", "cost_after",
              "manager_age", "staff", "area", "filtration")]

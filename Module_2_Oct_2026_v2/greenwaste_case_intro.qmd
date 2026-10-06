@@ -1,12 +1,13 @@
 ---
-title: "GreenWaste at a glance"
-subtitle: "Preview of the case introduction for the simple dataset"
+title: "The GreenWaste case"
+subtitle: "Preview of the case introduction (simple dataset)"
 author: "3ie"
 format:
   revealjs:
-    theme: [theme_dge.scss]
+    theme: [theme_dge.scss, theme_live.scss]
     logo: assets/dge_logo_horizontal.svg
     slide-number: true
+    center: false
     width: 1280
     height: 720
     embed-resources: true
@@ -15,99 +16,132 @@ knitr:
     echo: false
     warning: false
     message: false
-    dev: "png"
-    dpi: 192
 ---
 
 ```{r setup}
 gw <- read.csv("evaluation_data_GreenWaste_simple.csv")
 source("greenwaste_case.R")
-ACCENT <- "#215a9e"; LIGHT <- "#c9d6e6"; MUTED <- "#545860"; ALERT <- "#B8272C"
-f <- function(x) format(round(abs(x)), big.mark = ",")
+n  <- function(x) format(x, big.mark = ",")
+av <- function(x) format(round(mean(x)), big.mark = ",")
 FENCE <- strrep("`", 3)
 html_out <- function(x) cat("\n", FENCE, "{=html}\n", x, "\n", FENCE, "\n", sep = "")
 ```
 
-## GreenWaste at a glance
+
+## The GreenWaste programme
 
 ```{=html}
 <style>
-.case-grid { display: grid; grid-template-columns: 37% 63%; gap: 22px; margin-top: 0; }
-.case-card .b { color: #215a9e; font-weight: 700; } .case-card .l { color: #7f97b5; font-weight: 700; }
-.case-card { border: 1px solid #D5DEE8; border-radius: 6px; padding: 12px 16px 10px; background: #fff; }
-.case-card h3 { font-size: 0.95em; margin: 0 0 2px; color: #063360; }
-.case-card .how { font-size: 0.72em; line-height: 1.35; color: #545860; margin: 0 0 6px; }
-.case-card img { width: 100%; display: block; }
-.case-card .uses { font-size: 0.66em; line-height: 1.35; margin-top: 6px; color: #111418; }
-.case-card .uses b { color: #215a9e; }
-.case-foot { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 22px; margin-top: 16px; font-size: 0.68em; line-height: 1.35; }
-.case-foot div { border-top: 3px solid #215a9e; padding-top: 6px; color: #111418; }
-.case-foot div.rule { border-top-color: #B8272C; }
-.case-foot .k { display: block; font-size: 0.85em; color: #545860; text-transform: uppercase; letter-spacing: 0.06em; }
+.gw-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 10px; }
+.gw-card { border-top: 5px solid #215a9e; background: #f4f7fb; padding: 16px 18px; border-radius: 0 0 6px 6px; }
+.gw-card.rule { border-top-color: #B8272C; }
+.gw-card .k { font-size: 0.55em; letter-spacing: 0.08em; text-transform: uppercase; color: #545860; }
+.gw-card .v { font-size: 0.72em; line-height: 1.4; color: #111418; margin-top: 6px; }
+.gw-card .big { font-size: 1.5em; font-weight: 700; color: #063360; line-height: 1.1; margin-top: 4px; }
+.gw-card.rule .big { color: #B8272C; }
+
+.lanes { display: grid; grid-template-columns: 220px 0.9fr 1.5fr 0.8fr; gap: 16px 16px; margin-top: 6px; align-items: stretch; }
+.lanes .head { font-size: 0.58em; letter-spacing: 0.08em; text-transform: uppercase; color: #545860; padding-bottom: 2px; border-bottom: 2px solid #D5DEE8; }
+.lanes .who { font-size: 0.78em; line-height: 1.3; color: #063360; font-weight: 700; padding: 10px 0; }
+.lanes .who span { display: block; font-weight: 400; color: #545860; font-size: 0.85em; }
+.lanes .step { font-size: 0.74em; line-height: 1.35; background: #f4f7fb; border-radius: 6px; padding: 14px 14px; position: relative; }
+.lanes .step.key { background: #215a9e; color: #fff; }
+.lanes .step.key b { color: #fff; }
+.lanes .step b { color: #063360; }
+.lanes .arrow::after { content: "\2192"; position: absolute; right: -14px; top: 40%; color: #7da1c4; font-size: 1.1em; }
+
+.groups { display: grid; grid-template-columns: 230px 1fr 1fr; gap: 10px; margin-top: 8px; }
+.groups .h { font-size: 0.62em; font-weight: 700; color: #063360; text-align: center; padding: 6px; border-bottom: 3px solid #215a9e; }
+.groups .h.not { border-bottom-color: #7da1c4; }
+.groups .row { font-size: 0.66em; font-weight: 700; color: #063360; padding: 12px 6px; line-height: 1.3; }
+.groups .row span { display: block; font-weight: 400; color: #545860; font-size: 0.85em; }
+.groups .cell { background: #f4f7fb; border-radius: 6px; padding: 10px 14px; text-align: center; }
+.groups .cell.took { background: #e3ebf5; }
+.groups .cell .count { font-size: 0.58em; color: #545860; }
+.groups .cell .costs { font-size: 0.95em; font-weight: 700; color: #111418; margin-top: 2px; }
+.groups .cell .costs small { font-size: 0.55em; font-weight: 400; color: #545860; display: block; }
 </style>
 ```
 
-```{r pilot-plot, include=FALSE}
-png("case_pilot.png", width = 520, height = 330, res = 96, bg = "transparent")
-par(mar = c(0.5, 0.5, 0.5, 0.5))
-set.seed(4)
-drawn <- sample(rep(c(TRUE, FALSE), 200))
-xy <- expand.grid(x = 1:25, y = 16:1)
-plot(xy$x, xy$y, pch = 15, cex = 2.1, col = ifelse(drawn, ACCENT, LIGHT),
-     axes = FALSE, xlab = "", ylab = "", asp = 1)
-dev.off()
-```
-
-```{r pool-plot, include=FALSE}
-png("case_pool.png", width = 900, height = 330, res = 96, bg = "transparent")
-par(mar = c(3.4, 0.5, 2.4, 0.5), family = "sans", col.axis = MUTED, fg = MUTED)
-set.seed(5)
-show <- pool[sample(nrow(pool), 1400), ]
-y <- runif(nrow(show))
-plot(show$score, y, pch = 16, cex = 0.75, col = ifelse(show$took_part == 1, ACCENT, LIGHT),
-     axes = FALSE, xlab = "", ylab = "", xlim = c(20, 100), ylim = c(-0.02, 1.02))
-abline(v = 58, col = ALERT, lwd = 3, lty = 2)
-mtext("cut-off: 58", side = 3, at = 58, line = 0.6, col = ALERT, font = 2, cex = 1.15)
-axis(1, at = seq(20, 100, 10), cex.axis = 1.1)
-mtext("Efficiency score (higher = more efficient)", side = 1, line = 2.3, col = MUTED, cex = 1.05)
-mtext("took part", side = 3, at = 39, line = 0.6, col = ACCENT, font = 2, cex = 1.1)
-mtext("did not", side = 3, at = 79, line = 0.6, col = MUTED, font = 2, cex = 1.1)
-dev.off()
-```
-
-```{r card-html, results='asis'}
-img64 <- function(p) paste0("data:image/png;base64,", base64enc::base64encode(p))
+```{r cards, results='asis'}
 html_out(sprintf('
-<div class="case-grid">
-  <div class="case-card">
-    <h3>The pilot &middot; %s businesses</h3>
-    <p class="how">A <b>lottery</b> decided who took part: <span class="b">%s did</span>, <span class="l">%s did not</span>.</p>
-    <img src="%s" alt="400 squares, half blue">
-    <p class="uses">Used for: <b>the randomised comparison</b></p>
+<div class="gw-cards">
+  <div class="gw-card">
+    <div class="k">What it does</div>
+    <div class="big">Cuts waste costs</div>
+    <div class="v">A subsidy for new waste equipment, technical help to install it, and training for staff.</div>
   </div>
-  <div class="case-card">
-    <h3>The pool &middot; %s businesses</h3>
-    <p class="how">A <b>rule</b> decided: every business scoring 58 or below took part (%s), none above (%s).</p>
-    <img src="%s" alt="businesses along the efficiency score, blue below 58">
-    <p class="uses">Used for: <b>before and after &middot; with and without &middot; difference-in-differences &middot; regression discontinuity &middot; matching</b></p>
+  <div class="gw-card">
+    <div class="k">Who it is for</div>
+    <div class="big">Score 58 or below</div>
+    <div class="v">Every business has an <b>efficiency score</b> from 0 to 100 (higher is more efficient). GreenWaste targets the less efficient ones.</div>
   </div>
-</div>
-<div class="case-foot">
-  <div><span class="k">What we measure</span>Waste-management costs per business, in AED, before and after the programme</div>
-  <div><span class="k">What we know about each business</span>Efficiency score, manager age, staff, premises area, filtration</div>
-  <div class="rule"><span class="k">The decision rule</span>Scale up only if costs fall by at least <b>%s AED</b></div>
-</div>',
-  format(nrow(pilot), big.mark = ","), sum(pilot$took_part), sum(pilot$took_part == 0), img64("case_pilot.png"),
-  format(nrow(pool), big.mark = ","), format(sum(took), big.mark = ","), format(sum(!took), big.mark = ","),
-  img64("case_pool.png"), f(RULE)))
+  <div class="gw-card rule">
+    <div class="k">The decision</div>
+    <div class="big">At least %s AED</div>
+    <div class="v">Scale up nationally only if costs fall by at least %s AED per business per year.</div>
+  </div>
+</div>', n(RULE), n(RULE)))
 ```
 
 ::: {.notes}
-About 3 minutes, the first time Module 2 opens GreenWaste. Two ways the
-programme reached businesses: a lottery in the pilot, a rule in the wider pool.
-Everything this week comes from these two groups. Ask: "Which group would you
-trust more to tell you what the programme did, and why?" Keep the answer for
-the randomised comparison.
+Invented case, used all week. Read the three cards; the decision rule on the
+right is the bar every estimate is judged against.
+:::
+
+## How it reached businesses
+
+```{r lanes, results='asis'}
+html_out(sprintf('
+<div class="lanes">
+  <div class="head"></div><div class="head">Before</div><div class="head">The programme</div><div class="head">12 months later</div>
+
+  <div class="who">Pilot district<span>%s businesses, all scoring 58 or below</span></div>
+  <div class="step arrow">Waste costs measured for every business</div>
+  <div class="step key arrow">A <b>lottery</b> picked <b>%s</b> to take part; the other %s waited</div>
+  <div class="step">Costs measured again</div>
+
+  <div class="who">Rest of the city<span>%s businesses, every score</span></div>
+  <div class="step arrow">Waste costs measured for every business</div>
+  <div class="step key arrow">A <b>rule</b>: every business scoring 58 or below took part (<b>%s</b>); the %s above did not</div>
+  <div class="step">Costs measured again</div>
+</div>
+<p style="font-size:0.74em; color:#545860; margin-top:26px;">Same programme, same measurements, two ways of deciding who took part.</p>',
+  n(nrow(pilot)), n(sum(pilot$took_part)), n(sum(pilot$took_part == 0)),
+  n(nrow(city)), n(sum(took)), n(sum(!took))))
+```
+
+::: {.notes}
+The pilot came first, in one district, to test the programme: a lottery decided.
+In the rest of the city the programme was simply given to every business
+scoring 58 or below. Ask: "In which of the two would you trust a simple
+comparison of those who took part with those who did not? Why?"
+:::
+
+## Four groups of businesses
+
+```{r groups, results='asis'}
+cell <- function(d, cls) sprintf('<div class="cell %s"><div class="count">%s businesses</div><div class="costs">%s &rarr; %s<small>average waste costs, AED: before &rarr; after</small></div></div>',
+                                 cls, n(nrow(d)), av(d$cost_before), av(d$cost_after))
+html_out(paste0('
+<div class="groups">
+  <div></div><div class="h">Took part</div><div class="h not">Did not take part</div>
+  <div class="row">Pilot district<span>a lottery decided</span></div>',
+  cell(pilot[pilot$took_part == 1, ], "took"), cell(pilot[pilot$took_part == 0, ], ""), '
+  <div class="row">Rest of the city<span>the score rule decided</span></div>',
+  cell(city[took, ], "took"), cell(city[!took, ], ""), '
+</div>'))
+```
+
+::: {.ask}
+Every method this week compares businesses that took part with one of the other
+groups. **Which group would you compare them with, and why?**
+:::
+
+::: {.notes}
+This grid comes back at the start of every GreenWaste session, with that
+session's comparison highlighted. Do not compute anything yet; the point is
+that the four groups started from different places.
 :::
 
 ## One row, one business
@@ -116,19 +150,19 @@ the randomised comparison.
 cols <- c("business", "setting", "score", "took_part", "cost_before", "cost_after",
           "manager_age", "staff", "area", "filtration")
 ex <- rbind(head(pilot[pilot$took_part == 1, cols], 1), head(pilot[pilot$took_part == 0, cols], 1),
-            head(pool[pool$took_part == 1, cols], 1), head(pool[pool$took_part == 0, cols], 1))
+            head(city[city$took_part == 1, cols], 1), head(city[city$took_part == 0, cols], 1))
 cat(knitr::kable(ex, format = "html", row.names = FALSE, align = "llrrrrrrrr"), sep = "\n")
 ```
 
 ```{=html}
 <div class="facts" style="margin-top:18px;">
-  <div class="k">setting</div>     <div class="v">pilot (the lottery) or pool (the rule)</div>
+  <div class="k">setting</div>     <div class="v">pilot (the lottery) or city (the rule)</div>
   <div class="k">took_part</div>   <div class="v">1 if the business took part in GreenWaste</div>
-  <div class="k">cost_before, cost_after</div> <div class="v">waste-management costs, AED, before and after</div>
-  <div class="k">the last four</div> <div class="v">what we know about each business, used for matching</div>
+  <div class="k">cost_before, cost_after</div> <div class="v">waste-management costs, AED, before and 12 months after</div>
+  <div class="k">the last four</div> <div class="v">what else we know about each business</div>
 </div>
 ```
 
 ::: {.notes}
-Ten columns, one row per business. No other file is needed all week.
+Ten columns, one row per business. This is the only data file used all week.
 :::
