@@ -11,17 +11,43 @@ format:
     width: 1280
     height: 720
     embed-resources: true
+knitr:
+  opts_chunk:
+    echo: false
 ---
+
+```{r setup}
+FENCE <- strrep("`", 3)
+html_out <- function(x) cat("\n", FENCE, "{=html}\n", x, "\n", FENCE, "\n", sep = "")
+BLUE <- "#215a9e"; GREY <- "#c9d6e6"
+
+# One illustrative city: shop position, efficiency score, and whether it joined.
+# Inside the pilot district every score is below 58 and a lottery decided;
+# everywhere else, a score of 58 or below meant the shop joined.
+pilot_shops <- data.frame(x = c(70, 165, 260, 70, 165, 260), y = c(98, 98, 98, 186, 186, 186),
+                          score = c(41, 52, 37, 48, 33, 55), joined = c(1, 0, 1, 0, 0, 1))
+city_shops  <- data.frame(
+  x = c(415, 525, 635, 745, 415, 525, 635, 745, 70, 180, 290, 415, 525, 635, 745),
+  y = c(80, 80, 80, 80, 195, 195, 195, 195, 330, 330, 330, 330, 330, 330, 330),
+  score = c(72, 45, 88, 39, 56, 63, 29, 91, 47, 77, 52, 68, 35, 84, 58))
+city_shops$joined <- as.integer(city_shops$score <= 58)
+
+shop_svg <- function(d) paste(sprintf(
+  '<use href="#shop" x="%d" y="%d" width="62" height="58" color="%s"/><text x="%d" y="%d" font-size="19" text-anchor="middle" fill="%s" font-weight="%s">%d</text>',
+  d$x, d$y, ifelse(d$joined == 1, BLUE, GREY), d$x + 31, d$y + 80,
+  ifelse(d$joined == 1, "#063360", "#545860"), ifelse(d$joined == 1, "700", "400"), d$score), collapse = "\n")
+```
 
 ## The GreenWaste programme
 
-```{=html}
-<p style="font-size:0.85em; margin: 0 0 6px; max-width: none;">GreenWaste helps businesses cut their waste costs. It reached them in two ways.</p>
+<p style="font-size:0.85em; margin: 0 0 4px; max-width: none;">GreenWaste helps businesses cut their waste costs. Here is how it reached them.</p>
+
+```{r city-map, results='asis'}
+html_out(paste0('
 <svg viewBox="0 0 1200 470" width="100%" role="img"
-     aria-label="Pilot district: a lottery chose which businesses joined. Rest of the city: businesses with an efficiency score of 58 or below joined."
-     style="font-family: 'Noto Kufi Arabic', 'Segoe UI', Arial, sans-serif;">
+     aria-label="A city map. In the pilot district a lottery chose which shops joined. In the rest of the city, shops with an efficiency score of 58 or below joined."
+     style="font-family: \'Noto Kufi Arabic\', \'Segoe UI\', Arial, sans-serif;">
   <defs>
-    <!-- a small shop: awning, front, door, window -->
     <symbol id="shop" viewBox="0 0 60 56">
       <path d="M4 14 L10 2 H50 L56 14 Z" fill="currentColor"/>
       <path d="M4 14 q5 7 10 0 q5 7 10 0 q5 7 10 0 q5 7 10 0 q5 7 12 0" fill="currentColor"/>
@@ -29,74 +55,51 @@ format:
       <rect x="14" y="30" width="12" height="24" fill="#fff" opacity="0.85"/>
       <rect x="32" y="28" width="14" height="12" fill="#fff" opacity="0.85"/>
     </symbol>
-    <linearGradient id="eff" x1="0" x2="1">
-      <stop offset="0" stop-color="#215a9e" stop-opacity="0.30"/>
-      <stop offset="1" stop-color="#7da1c4" stop-opacity="0.08"/>
-    </linearGradient>
   </defs>
 
-  <!-- ===== Left: pilot district ===== -->
-  <rect x="10" y="10" width="520" height="450" rx="14" fill="#f4f7fb"/>
-  <text x="40" y="58" font-size="30" font-weight="700" fill="#063360">Pilot district</text>
-  <!-- a die: the lottery -->
-  <g transform="translate(446,22)">
-    <rect width="54" height="54" rx="10" fill="#fff" stroke="#063360" stroke-width="3"/>
-    <circle cx="15" cy="15" r="5" fill="#063360"/><circle cx="39" cy="15" r="5" fill="#063360"/>
-    <circle cx="27" cy="27" r="5" fill="#063360"/>
-    <circle cx="15" cy="39" r="5" fill="#063360"/><circle cx="39" cy="39" r="5" fill="#063360"/>
-  </g>
-  <use href="#shop" x="45"  y="100" width="70" height="66" color="#215a9e"/>
-  <use href="#shop" x="140" y="100" width="70" height="66" color="#c9d6e6"/>
-  <use href="#shop" x="235" y="100" width="70" height="66" color="#c9d6e6"/>
-  <use href="#shop" x="330" y="100" width="70" height="66" color="#215a9e"/>
-  <use href="#shop" x="425" y="100" width="70" height="66" color="#215a9e"/>
-  <use href="#shop" x="45"  y="185" width="70" height="66" color="#c9d6e6"/>
-  <use href="#shop" x="140" y="185" width="70" height="66" color="#215a9e"/>
-  <use href="#shop" x="235" y="185" width="70" height="66" color="#215a9e"/>
-  <use href="#shop" x="330" y="185" width="70" height="66" color="#c9d6e6"/>
-  <use href="#shop" x="425" y="185" width="70" height="66" color="#c9d6e6"/>
-  <use href="#shop" x="45"  y="270" width="70" height="66" color="#215a9e"/>
-  <use href="#shop" x="140" y="270" width="70" height="66" color="#c9d6e6"/>
-  <use href="#shop" x="235" y="270" width="70" height="66" color="#215a9e"/>
-  <use href="#shop" x="330" y="270" width="70" height="66" color="#c9d6e6"/>
-  <use href="#shop" x="425" y="270" width="70" height="66" color="#215a9e"/>
-  <text x="270" y="390" font-size="26" fill="#111418" text-anchor="middle">A <tspan font-weight="700">lottery</tspan> chose who joined</text>
-  <text x="270" y="426" font-size="20" fill="#545860" text-anchor="middle">Every business here could have joined</text>
+  <!-- the city -->
+  <rect x="20" y="20" width="820" height="440" rx="18" fill="#f4f7fb" stroke="#D5DEE8" stroke-width="2"/>
+  <path d="M370 20 V460 M20 300 H840" stroke="#e3e9f1" stroke-width="10"/>
+  <text x="820" y="450" font-size="22" font-weight="700" fill="#7f97b5" text-anchor="end">THE CITY</text>
 
-  <!-- ===== Right: rest of the city ===== -->
-  <rect x="560" y="10" width="630" height="450" rx="14" fill="#f4f7fb"/>
-  <text x="590" y="58" font-size="30" font-weight="700" fill="#063360">Rest of the city</text>
-  <!-- shops placed along their efficiency score -->
-  <use href="#shop" x="592"  y="100" width="54" height="50" color="#215a9e"/>
-  <use href="#shop" x="638"  y="165" width="54" height="50" color="#215a9e"/>
-  <use href="#shop" x="684"  y="100" width="54" height="50" color="#215a9e"/>
-  <use href="#shop" x="730"  y="165" width="54" height="50" color="#215a9e"/>
-  <use href="#shop" x="776"  y="100" width="54" height="50" color="#215a9e"/>
-  <use href="#shop" x="818"  y="165" width="54" height="50" color="#215a9e"/>
-  <use href="#shop" x="900"  y="100" width="54" height="50" color="#c9d6e6"/>
-  <use href="#shop" x="946"  y="165" width="54" height="50" color="#c9d6e6"/>
-  <use href="#shop" x="992"  y="100" width="54" height="50" color="#c9d6e6"/>
-  <use href="#shop" x="1038" y="165" width="54" height="50" color="#c9d6e6"/>
-  <use href="#shop" x="1084" y="100" width="54" height="50" color="#c9d6e6"/>
-  <use href="#shop" x="1122" y="165" width="54" height="50" color="#c9d6e6"/>
-  <!-- the efficiency scale -->
-  <rect x="590" y="240" width="580" height="26" rx="13" fill="url(#eff)"/>
-  <line x1="884" y1="90" x2="884" y2="286" stroke="#B8272C" stroke-width="4" stroke-dasharray="10 7"/>
-  <text x="884" y="314" font-size="22" font-weight="700" fill="#B8272C" text-anchor="middle">58</text>
-  <text x="592" y="294" font-size="18" fill="#545860">less efficient</text>
-  <text x="1168" y="294" font-size="18" fill="#545860" text-anchor="end">more efficient</text>
-  <text x="875" y="390" font-size="26" fill="#111418" text-anchor="middle">Businesses scoring <tspan font-weight="700">58 or below</tspan> joined</text>
-  <text x="875" y="426" font-size="20" fill="#545860" text-anchor="middle">Every business has an efficiency score</text>
-</svg>
-<div style="display:flex; gap:40px; justify-content:center; font-size:0.62em; color:#111418; margin-top:4px;">
-  <span><svg width="28" height="26" viewBox="0 0 60 56" style="vertical-align:-5px"><use href="#shop" width="60" height="56" color="#215a9e"/></svg> joined GreenWaste</span>
-  <span><svg width="28" height="26" viewBox="0 0 60 56" style="vertical-align:-5px"><use href="#shop" width="60" height="56" color="#c9d6e6"/></svg> did not join</span>
-</div>
+  <!-- the pilot district, inside the city -->
+  <rect x="45" y="45" width="305" height="245" rx="14" fill="#e3ebf5" stroke="#215a9e" stroke-width="3" stroke-dasharray="12 8"/>
+  <text x="62" y="80" font-size="22" font-weight="700" fill="#063360">Pilot district</text>
+  <g transform="translate(300,55)">
+    <rect width="38" height="38" rx="7" fill="#fff" stroke="#063360" stroke-width="2.5"/>
+    <circle cx="11" cy="11" r="3.5" fill="#063360"/><circle cx="27" cy="11" r="3.5" fill="#063360"/>
+    <circle cx="19" cy="19" r="3.5" fill="#063360"/>
+    <circle cx="11" cy="27" r="3.5" fill="#063360"/><circle cx="27" cy="27" r="3.5" fill="#063360"/>
+  </g>
+', shop_svg(pilot_shops), '
+', shop_svg(city_shops), '
+
+  <!-- how each part decided -->
+  <g font-size="21" fill="#111418">
+    <rect x="875" y="40" width="300" height="150" rx="12" fill="#fff" stroke="#215a9e" stroke-width="3" stroke-dasharray="12 8"/>
+    <text x="895" y="82" font-weight="700" fill="#063360">In the pilot district</text>
+    <text x="895" y="118">a <tspan font-weight="700">lottery</tspan> chose which</text>
+    <text x="895" y="148">shops joined</text>
+    <rect x="875" y="215" width="300" height="178" rx="12" fill="#fff" stroke="#D5DEE8" stroke-width="2"/>
+    <text x="895" y="257" font-weight="700" fill="#063360">Everywhere else</text>
+    <text x="895" y="293">shops scoring <tspan font-weight="700">58 or below</tspan></text>
+    <text x="895" y="323">joined</text>
+    <text x="895" y="356" font-size="16" fill="#545860">the number under each shop</text>
+    <text x="895" y="377" font-size="16" fill="#545860">is its efficiency score</text>
+  </g>
+  <g font-size="19" fill="#111418">
+    <use href="#shop" x="878" y="404" width="30" height="28" color="', BLUE, '"/><text x="918" y="425">joined GreenWaste</text>
+    <use href="#shop" x="878" y="436" width="30" height="28" color="', GREY, '"/><text x="918" y="457">did not join</text>
+  </g>
+
+</svg>'))
 ```
 
 ::: {.notes}
-About 2 minutes. Keep it to the story: what the programme does and the two
-ways businesses got it. Ask: "In which of the two places would it be fairer to
-compare businesses that joined with businesses that did not? Why?" Take
-answers; do not resolve it yet. The numbers come in the sessions that need them.
+About 2 minutes. One city; the pilot district is part of it. Point at the pilot
+district: every shop there scores below 58, yet only some joined, because a
+lottery decided. Then the rest of the city: the number under each shop decided.
+Ask: "Where would it be fairer to compare shops that joined with shops that did
+not: inside the pilot district or in the rest of the city? Why?" Take answers;
+do not resolve it yet.
 :::
