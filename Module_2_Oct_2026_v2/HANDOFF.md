@@ -16,6 +16,8 @@ Review: https://3ie.academy/preview/day3_review.html
 Next tables: https://3ie.academy/preview/day4_plan.html
 The Day 4 proposal has two 60-minute sessions: independent report reading and the two-sheet credibility wall, then a brief based on corrected evidence. Build both only after Lucas approves the concrete tables. Former Day 4 S3 remains excluded for another provider's simulation.
 
+Published checkpoint: Day 3 source and packs pushed in `2019e52` on `simple-greenwaste`; unlinked main previews pushed in `7120980`. Eighteen copied files were hash-verified; 18 Day 3 hub links and both Day 4 plan links resolve locally. The unauthenticated site check returned HTTP 403 this time, so online page content was not inspected.
+
 Use the retained `.preview_day2_publish` main worktree for unlinked previews. The site password gate applies. Source and preview checkpoints below pre-date this Day 3 update. Venue phone reachability still needs rehearsal.
 
 

@@ -68,3 +68,5 @@ ignored by Git. Reproduce the browser checks with `verify_day1.py`,
 - Room poll HTTP/two-browser regression: anonymous replacement votes, hidden totals, Before/After counts, unauthorized and cross-origin rejection, closed/stale rejection, text-safe reasons, QR and widths 320/375/1280 all passed. Venue reachability remains untested.
 - Scoped Day 3 generation and full-script syntax passed. Full legacy generator was not run, because Day 4 packs remain historical pending daily approval.
 - Backup and QA artifacts remain ignored. Main publication contains unlinked previews only; live teaching pages stay unchanged. Day 4 tables are a proposal for the remaining two sessions.
+
+- Preview copy hashes matched for all 18 files; Day 3 hub has 18 valid relative links, Day 4 plan 2. Source push 2019e52 and main preview push 7120980 succeeded. Unauthenticated URLs returned 403; online content was not inspected.
