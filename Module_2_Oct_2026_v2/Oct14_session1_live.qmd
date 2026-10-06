@@ -587,9 +587,10 @@ data.frame(ratio = round(ratio(tb, cost = 1800 + s_extra), 2),
 ```
 
 ::: {.ask}
-Each group takes one card and tells me the settings. Is your scenario plausible
-for a waste-cost programme, and what is your verdict? Then: **how long do you
-think the saving lasts, and what evidence would you ask for?**
+Each group: predict your card's ratio and put a sticky note on the ratio wall.
+Then tell me the settings, and put your card at the real ratio. Is your scenario
+plausible, and what is your verdict? **How long do you think the saving lasts,
+and what evidence would you ask for?**
 :::
 
 ::: {.notes}
@@ -598,7 +599,9 @@ habits, saving shrinks 30% a year; (2) set-up and admin add 600 AED per
 business; (3) the ministry of finance insists on 8%; (4) the saving lasts three
 years; (5) all of 1 and 2 together. About 10 minutes including report-back.
 
-Paper (Oct14_session1_materials.docx): Hand out the scenario cards (pack page 2, cut, one card per group) and a recording sheet per group (page 3). Ratios for each card are in the facilitator key.
+Paper (Oct14_session1_materials.docx): Hand out the scenario cards (pack page 2, two sets cut; cards 1 to 5, then 1 to 3 again, so each of the 8 groups holds one) and a recording sheet per group (page 3). Ratios for each card are in the facilitator key.
+
+Ratio wall (set up beforehand; signs at the end of the pack): a line from 0 to 2.0, a thick red line at 1.0 (break-even), the headline 1.87 marked. Each group posts its prediction on a sticky note, reads out its settings, then puts its card at the ratio on screen. Debrief from the wall: how far off were the predictions, and why does only card 5 land left of the red line?
 :::
 
 # 4 · Put AI to work {background-gradient="linear-gradient(240deg, #7da1c4 0%, #7da1c4 22%, #215a9e 58%, #063360 100%)"}
