@@ -93,7 +93,9 @@ quote the objects in that file, never type the numbers):
 | Case introduction: one city map, pilot district inside it, shops with their scores | `greenwaste_case_intro.qmd` | sempe.dev/R-course/greenwaste_case_intro.html (unlinked preview) |
 | Detailed case brief (draft) | `make_case_brief.R` -> `GreenWaste_case_brief.docx` | docs/handouts (unlinked) |
 
-None of the twelve session decks uses the new data yet.
+Converted on the branch (see `HANDOFF.md` for the full state): Day 1 (Oct12 S1, S2, S3,
+approved) and Day 2 (Oct13 S1, S2, S3, waiting for review), with their packs. The city
+map is shared as `_case_map.qmd`. Days 3 and 4 are next.
 
 ## Words to use, words to retire
 
@@ -119,15 +121,15 @@ None of the twelve session decks uses the new data yet.
    | Session | Owner | Main changes |
    |---|---|---|
    | Oct12 S3, naive comparisons and RCT | Lucas | done: recap of Session 2's -670, with-and-without (-1,639), the lottery and the RCT on the pilot; no clustering slide |
-   | Oct13 S1, DiD | Fiona | four numbers from the city; parallel-trends failure is now visible in the data (the pilot's untreated businesses show the true trend) |
-   | Oct13 S2, RDD | Lucas | cut-off at 58 in the city; Check 3 fails on manager age; remove "Module 1" facts box |
-   | Oct13 S3, matching | Fiona | match on age, staff, area, filtration; Check 1 = leave out manager age |
+   | Oct13 S1, DiD | Fiona | done: four numbers from the city; parallel-trends failure is now visible in the data (the pilot's untreated businesses show the true trend) |
+   | Oct13 S2, RDD | Lucas | done: cut-off at 58 in the city; Check 3 fails on manager age; remove "Module 1" facts box |
+   | Oct13 S3, matching | Fiona | done (camera case replaced by two evaluators, A and B): match on age, staff, area, filtration; Check 1 = leave out manager age |
    | Oct14 S1, cost-benefit | Lucas | saving from the new DiD (-818); ratio barely moves |
    | Oct14 S2, charts | Fiona | GreenWaste charts redrawn from the new data |
    | Oct14 S3, QA clinic | Lucas | the analyst's reruns and "who is missing" slide |
    | Oct15 S1, report | Fiona | report rewritten for the pilot-and-city design and its planted flaws re-checked (or a different case, per the 2026-10-05 note) |
-   | Oct12 S1, language | Lucas | traffic cameras replaced: the city-map introduction (first meeting with the case) and the five words practised on landfill |
-   | Oct12 S2, reading an output | Fiona | traffic cameras replaced: the decision rule, meet the data, and the before-and-after number on costs (-670, short of the rule); compared to what? |
+   | Oct12 S1, language | Lucas | done: traffic cameras replaced: the city-map introduction (first meeting with the case) and the five words practised on landfill |
+   | Oct12 S2, reading an output | Fiona | done: traffic cameras replaced: the decision rule, meet the data, and the before-and-after number on costs (-670, short of the rule); compared to what? |
    | Oct15 S2, writing a brief | Lucas | Tariff Shield replaced: the brief is written from GreenWaste's own findings |
    | Oct15 S3, own designs | Fiona | one line (the GreenWaste ratio it quotes) |
 
