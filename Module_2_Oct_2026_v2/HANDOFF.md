@@ -1,5 +1,9 @@
 # Handoff: moving Module 2 to the simple GreenWaste case
 
+## Client-facing landing copy, 6 October 2026
+
+Facilitator preparation belongs in the collapsed trainer section. The Before teaching paragraph, presenter-note shortcut and trainer calculation setup instructions now sit there. The main-page slide guide contains only navigation and evidence controls. The hub generator preserves this placement. Pre-change copies: backups/landing_trainer_copy_2026_10_06/.
+
 ## Landing page durations removed, 6 October 2026
 
 Lucas requested no timings in the landing page session boxes or day summaries. The live hub now shows session numbers and counts without durations, including every day-filter state. Actual teaching timings remain in the course sources and trainer materials. The hub generator preserves this change on future builds. Pre-change hub and generator copies: backups/landing_no_times_2026_10_06/. Existing link, keyboard and responsive-layout checks cover the revised page.
