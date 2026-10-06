@@ -1,5 +1,8 @@
 """Author the approved Day 1 teaching route. Calculations stay in day1_case.R."""
 from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from trainer_code import annotate_deck
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -361,12 +364,8 @@ Fictional pilot district · `r fmt(nrow(pilot))` businesses · roughly half in e
 
 ## Draw once draw again {.reader-slide}
 
-::: {.ask}
-Will a small lottery make the groups exactly alike?
-:::
+20 businesses, 10 places. Compare **pre-programme manager ages**.
 
-:::: {.columns}
-::: {.column width="50%"}
 ```{webr}
 #| echo: true
 draw <- draw + 1
@@ -374,15 +373,10 @@ set.seed(draw)
 group <- sample(rep(c('Join', 'Wait'), each = 10))
 group_ages(group)
 ```
-:::
-::: {.column width="50%"}
-Twenty businesses. Ten places.
 
-The output compares **manager age before the programme**.
-
-Fictional case · demonstration only
+::: {.ask}
+Will a small lottery make the groups exactly alike?
 :::
-::::
 
 ::: {.notes}
 7 minutes. Predict first; trainer Run, then Run once more. The input is the first 20 pilot businesses’ actual pre-programme manager ages. This redraw is a demonstration of chance balance, not a reanalysis of the trial or an effect estimate. Rename output x orally as average manager age. Each run uses a new fixed seed. Paper fallback: draw ten of twenty numbered slips from the age list in the trainer pack and compare means. Avoid adding a sample-size slider or a sampling theory lecture.
@@ -492,5 +486,5 @@ Write your question and say how its answer could change your recommendation.
 for name, text in [('Oct12_session1_live.qmd', header('Read a regression table',1,True)+s2),
                    ('Oct12_session2.qmd', header('Question a claim',2)+s1),
                    ('Oct12_session3_live.qmd', header('Choose a fair comparison',3,True)+s3)]:
-    (ROOT/name).write_text(text.strip()+'\n', encoding='utf-8')
+    (ROOT/name).write_text(annotate_deck(text).strip()+'\n', encoding='utf-8')
     print(name, 'content screens:', sum(line.startswith('## ') for line in text.splitlines()))

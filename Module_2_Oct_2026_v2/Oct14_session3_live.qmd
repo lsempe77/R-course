@@ -151,8 +151,11 @@ Predict where the two interval limits sit.
 ```{webr}
 #| echo: true
 #| autorun: false
+# Compare annual waste costs in the pilot lottery groups.
 fit <- lm(cost_after ~ took_part, data = pilot)
+# Find the 95% interval for their cost difference (AED).
 limits <- confint(fit)['took_part', ]
+# Turn the cost difference into saving; show lower then upper limit.
 sort(round(-unname(limits)))
 ```
 ::: {.ask}

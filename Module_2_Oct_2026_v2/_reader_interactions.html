@@ -44,3 +44,18 @@ document.addEventListener('keydown', function(event) {
   if (event.target.closest('button, input, textarea, select') && ['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' '].includes(event.key)) event.stopPropagation();
 }, true);
 </script>
+
+<script>
+// Live editors arrive asynchronously after the presentation has loaded.
+(function () {
+  function labelCalculations() {
+    document.querySelectorAll('.reader-slide .exercise-editor-header').forEach(header => {
+      const label = header.firstElementChild?.firstElementChild;
+      if (label && label.textContent === 'R Code') label.textContent = 'Trainer calculation · R';
+    });
+  }
+  const watch = new MutationObserver(labelCalculations);
+  watch.observe(document.body, { childList: true, subtree: true });
+  labelCalculations();
+})();
+</script>

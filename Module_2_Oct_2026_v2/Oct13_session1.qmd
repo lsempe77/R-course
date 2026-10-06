@@ -93,6 +93,8 @@ Does this show an annual saving of at least `r fmt(decision_rule)` AED?
 ```{webr}
 #| echo: true
 #| autorun: false
+# Compare the cost change in participants with the change in others.
+# This is the extra change, in AED; read the comparison assumptions.
 round(mean(change[joined]) - mean(change[!joined]))
 ```
 

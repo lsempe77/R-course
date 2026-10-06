@@ -113,7 +113,10 @@ html_out(paste0(as.character(knitr::kable(report_row('rdd'),format='html',row.na
 ```{webr}
 #| echo: true
 #| autorun: false
+# Compare waste costs just below and above the score rule.
+# Allow costs to slope differently on either side.
 fit <- lm(cost_after ~ below * distance, data = near)
+# Show the estimated jump at the rule, in whole AED.
 round(coef(fit)['below'])
 ```
 ::: {.ask}

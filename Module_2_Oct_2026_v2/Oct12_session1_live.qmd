@@ -109,7 +109,9 @@ Which row describes the starting mean, and which describes the change?
 ```{webr}
 #| echo: true
 #| autorun: false
+# Find each business's change in annual waste cost (AED).
 change <- tp$cost_after - tp$cost_before
+# Show the average change, rounded to whole AED.
 data.frame(Result = 'After minus before', AED = round(mean(change)))
 ```
 ::: {.ask}

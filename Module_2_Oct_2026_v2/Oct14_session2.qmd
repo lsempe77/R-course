@@ -105,8 +105,10 @@ html_out(sprintf('<div class="percentage-pair"><div><h3>Change in total tonnes</
 ```{webr}
 #| echo: true
 #| autorun: false
+# Compare total landfill tonnes after GreenWaste with the total before.
 total_fall <- 100 * (1 - sum(tp$landfill_after) /
   sum(tp$landfill_before))
+# Show the percentage fall, rounded to one decimal place.
 round(total_fall, 1)
 ```
 ::: {.ask}

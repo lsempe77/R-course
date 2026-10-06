@@ -132,6 +132,8 @@ Does finding a match for everyone make every match convincing?
 ```{webr}
 #| echo: true
 #| autorun: false
+# Pair businesses using the four recorded characteristics.
+# Show participant cost minus matched comparison cost, in AED.
 round(matched_difference())
 ```
 ::: {.ask}

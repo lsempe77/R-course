@@ -56,3 +56,16 @@
 
 // One consistent case notice, on the title slide only.
 .reveal .slides .case-notice { font-family: "Noto Sans", Arial, sans-serif; font-size: 19px; font-weight: 400; font-style: normal; color: #545860; line-height: 1.45; margin: 22px 0 0; }
+
+// Trainer calculations: a clear header, readable comments and a quiet frame.
+.reveal .reader-slide .exercise-editor { border: 2px solid #c8d6e5; border-radius: 12px; overflow: hidden; box-shadow: none; }
+.reveal .reader-slide .exercise-editor-header { background: #edf3f9; color: #063360; padding: 10px 16px; font: 600 22px "Noto Sans", Arial, sans-serif; border-bottom: 1px solid #c8d6e5; }
+.reveal .reader-slide .exercise-editor .cm-editor { font-size: 22px; background: #fafcff; }
+.reveal .reader-slide .exercise-editor .cm-content { padding: 12px 0; line-height: 1.4; }
+.reveal .reader-slide .exercise-editor .tok-comment { color: #375d50; font-style: normal; }
+.reveal .reader-slide .exercise-editor .btn-exercise-editor { font-size: 18px; padding: 6px 12px; border-radius: 7px; }
+.reveal .reader-slide .exercise-editor-btn-run-code { background: #063360; border-color: #063360; }
+.reveal .reader-slide .exercise-editor .cm-activeLine { background: transparent; }
+
+// The editable box already shows the calculation; keep the result separate.
+.reveal .reader-slide .cell-output-container-webr > .sourceCode { display: none; }

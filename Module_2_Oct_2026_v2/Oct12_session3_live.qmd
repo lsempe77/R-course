@@ -134,28 +134,22 @@ Fictional pilot district · `r fmt(nrow(pilot))` businesses · roughly half in e
 
 ## Draw once draw again {.reader-slide}
 
+20 businesses, 10 places. Compare **pre-programme manager ages**.
+
+```{webr}
+#| echo: true
+# Make a new lottery draw each time the trainer runs this.
+draw <- draw + 1
+set.seed(draw)
+# Randomly give 10 businesses a place and 10 a wait-list place.
+group <- sample(rep(c('Join', 'Wait'), each = 10))
+# Compare their manager ages: a balance check, not an effect.
+group_ages(group)
+```
+
 ::: {.ask}
 Will a small lottery make the groups exactly alike?
 :::
-
-:::: {.columns}
-::: {.column width="50%"}
-```{webr}
-#| echo: true
-draw <- draw + 1
-set.seed(draw)
-group <- sample(rep(c('Join', 'Wait'), each = 10))
-group_ages(group)
-```
-:::
-::: {.column width="50%"}
-Twenty businesses. Ten places.
-
-The output compares **manager age before the programme**.
-
-Fictional case · demonstration only
-:::
-::::
 
 ::: {.notes}
 7 minutes. Predict first; trainer Run, then Run once more. The input is the first 20 pilot businesses’ actual pre-programme manager ages. This redraw is a demonstration of chance balance, not a reanalysis of the trial or an effect estimate. Rename output x orally as average manager age. Each run uses a new fixed seed. Paper fallback: draw ten of twenty numbered slips from the age list in the trainer pack and compare means. Avoid adding a sample-size slider or a sampling theory lecture.

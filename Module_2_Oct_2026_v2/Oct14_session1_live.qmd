@@ -93,6 +93,8 @@ html_out(sprintf('<div class="evidence-pair"><div class="evidence"><h3>Modelled 
 ```{webr}
 #| echo: true
 #| autorun: false
+# Divide modelled benefits at today's value by the included cost.
+# Show the ratio to two decimal places; assumptions still matter.
 round(benefits / cost, 2)
 ```
 ::: {.ask}

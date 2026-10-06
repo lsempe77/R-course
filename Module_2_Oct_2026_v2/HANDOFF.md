@@ -1,5 +1,13 @@
 # Handoff: moving Module 2 to the simple GreenWaste case
 
+## Trainer R boxes improved, 6 October 2026
+
+All eight visible trainer calculations now include short plain-language comments explaining their comparison, units and output. Shared styles use 22px code, clear comments, a framed editor and a "Trainer calculation - R" header. The duplicate echoed source underneath is hidden; results remain visible. The lottery demonstration now uses the full slide width. Participant coding and session durations are unchanged.
+
+`review_2026_10_06/trainer_code.py` annotates visible cells in all four deck builders, preserving hidden setup code. All twelve generated QMDs, including the Day 4 alias, reproduced exactly in an isolated build; the final Day 1 layout was rechecked. `verify_trainer_boxes.py` ran all eight calculations and checked comments, header, font, duplicate echo, slide overflow and editor clipping. All passed: editor overflow zero, browser errors empty; results -669 / -812 / -721 / -1029 / 1.86 / 49.5 and pilot interval 862 to 1167 unchanged. Every calculation screenshot inspected. Hub verification: 49 local links, 53 byte-checked copies, phone and desktop layouts passed. Current downloads regenerated. Pre-change sources retained in backups/trainer_code_2026_10_06/.
+
+The preceding Day 1 order and notice changes were published at 09d6559; Cloudflare and GitHub Pages deployment checks succeeded. This update continues the same authorised live publication route.
+
 ## Day 1 order and case notice corrected, 6 October 2026
 
 Lucas requested the first two Day 1 sessions exchange places and explicitly teach the five core terms before regression-table reading. Session 1 is now **Read a regression table**: mean, treatment effect, coefficient, confidence interval and p-value; a two-row actual regression distinguishes the starting mean (1,432 AED) from the observed change (-669 AED). The fifth term recovered from the original lesson is treatment effect. A coefficient is not automatically a programme effect. Preserve ten minutes for independent reading, paired checking and feedback. Session 2 is **Question a claim**, applying the vocabulary to Fiona's four claim cards. Both remain 60 minutes; Day 1 S3 stays 75. Session 1/2 each have 11 content screens, two participant pages and four trainer pages. The classroom brief and hub match the order. The optional triage poster retains its legacy Oct12_session1 filename but is used in Session 2.

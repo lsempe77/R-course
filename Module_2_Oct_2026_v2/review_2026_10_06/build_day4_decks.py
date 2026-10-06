@@ -1,5 +1,8 @@
 """Build the approved two-session Day 4 route with native browser controls."""
 from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from trainer_code import annotate_deck
 from build_day2_decks import slide,ask,chunk,raw,open_answer
 ROOT=Path(__file__).resolve().parents[1]
 def header(title,n):
@@ -58,5 +61,5 @@ s2+=slide('Defend one recommendation','Share the action and its condition.\n\nPo
 s2+=slide('Make your final request',ask('What specific evidence should the evaluator send, and how would you use it?')+'Write independently.\n\nIf you received a reading-item retry, answer it now using the source.',6,'Give targeted feedback on the Session 1 reading task and a retry for the missing ability, including a before/after causal trap if needed. Record revised scores separately. The 8/10 target is a teaching check, not validated certification; a new presentation of one case does not demonstrate transfer to a different programme. The other provider owns the final simulation. Total 60 minutes.')
 
 for name,text in [('Oct15_session1.qmd',s1),('Oct15_session2_live.qmd',s2),('Oct15_session2.qmd',s2)]:
-    (ROOT/name).write_text(text.rstrip()+'\n',encoding='utf-8')
+    (ROOT/name).write_text(annotate_deck(text).rstrip()+'\n',encoding='utf-8')
     print(name,text.count('## '),'content screens')
