@@ -46,6 +46,14 @@
   Day 1 previews are refreshed under the existing unlinked `docs/preview/`
   workflow; live teaching pages and the landing page are unchanged.
 
+Published checkpoint: Day 1 source and packs were pushed in `8a7973d` on
+`simple-greenwaste`. Unlinked preview files were pushed in `d3fdbfd` on `main`.
+Review hub: https://3ie.academy/preview/day1_review.html
+Next tables: https://3ie.academy/preview/day2_plan.html
+The normal site password gate returns 401 to unauthenticated checks; the local
+preview files and all fifteen links in the review hub were verified before push.
+The source CSV, other days' outputs and live teaching-page URLs are unchanged.
+
 The state and conversion notes below describe the earlier plan. The latest
 scope direction above supersedes references to rebuilding Oct15 Session 3.
 
