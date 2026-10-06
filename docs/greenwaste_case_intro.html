@@ -987,7 +987,7 @@ margin-right: 0; }
 
 <section id="title-slide" class="quarto-title-block center">
   <h1 class="title">The GreenWaste case</h1>
-  <p class="subtitle">Preview of the case introduction (simple dataset)</p>
+  <p class="subtitle">Preview of the case introduction</p>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -1000,298 +1000,82 @@ margin-right: 0; }
 </section>
 <section id="the-greenwaste-programme" class="slide level2">
 <h2>The GreenWaste programme</h2>
-<style>
-.gw-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 10px; }
-.gw-card { border-top: 5px solid #215a9e; background: #f4f7fb; padding: 16px 18px; border-radius: 0 0 6px 6px; }
-.gw-card.rule { border-top-color: #B8272C; }
-.gw-card .k { font-size: 0.55em; letter-spacing: 0.08em; text-transform: uppercase; color: #545860; }
-.gw-card .v { font-size: 0.72em; line-height: 1.4; color: #111418; margin-top: 6px; }
-.gw-card .big { font-size: 1.5em; font-weight: 700; color: #063360; line-height: 1.1; margin-top: 4px; }
-.gw-card.rule .big { color: #B8272C; }
-.lanes { display: grid; grid-template-columns: 220px 0.9fr 1.5fr 0.8fr; gap: 16px 16px; margin-top: 6px; align-items: stretch; }
-.lanes .head { font-size: 0.58em; letter-spacing: 0.08em; text-transform: uppercase; color: #545860; padding-bottom: 2px; border-bottom: 2px solid #D5DEE8; }
-.lanes .who { font-size: 0.78em; line-height: 1.3; color: #063360; font-weight: 700; padding: 10px 0; }
-.lanes .who span { display: block; font-weight: 400; color: #545860; font-size: 0.85em; }
-.lanes .step { font-size: 0.74em; line-height: 1.35; background: #f4f7fb; border-radius: 6px; padding: 14px 14px; position: relative; }
-.lanes .step.key { background: #215a9e; color: #fff; }
-.lanes .step.key b { color: #fff; }
-.lanes .step b { color: #063360; }
-.lanes .arrow::after { content: "\2192"; position: absolute; right: -14px; top: 40%; color: #7da1c4; font-size: 1.1em; }
-.groups { display: grid; grid-template-columns: 230px 1fr 1fr; gap: 10px; margin-top: 8px; }
-.groups .h { font-size: 0.62em; font-weight: 700; color: #063360; text-align: center; padding: 6px; border-bottom: 3px solid #215a9e; }
-.groups .h.not { border-bottom-color: #7da1c4; }
-.groups .row { font-size: 0.66em; font-weight: 700; color: #063360; padding: 12px 6px; line-height: 1.3; }
-.groups .row span { display: block; font-weight: 400; color: #545860; font-size: 0.85em; }
-.groups .cell { background: #f4f7fb; border-radius: 6px; padding: 10px 14px; text-align: center; }
-.groups .cell.took { background: #e3ebf5; }
-.groups .cell .count { font-size: 0.58em; color: #545860; }
-.groups .cell .costs { font-size: 0.95em; font-weight: 700; color: #111418; margin-top: 2px; }
-.groups .cell .costs small { font-size: 0.55em; font-weight: 400; color: #545860; display: block; }
-</style>
+<p style="font-size:0.85em; margin: 0 0 6px; max-width: none;">GreenWaste helps businesses cut their waste costs. It reached them in two ways.</p>
+<svg viewbox="0 0 1200 470" width="100%" role="img" aria-label="Pilot district: a lottery chose which businesses joined. Rest of the city: businesses with an efficiency score of 58 or below joined." style="font-family: &#39;Noto Kufi Arabic&#39;, &#39;Segoe UI&#39;, Arial, sans-serif;">
+  <defs>
+    <!-- a small shop: awning, front, door, window -->
+    <symbol id="shop" viewbox="0 0 60 56">
+      <path d="M4 14 L10 2 H50 L56 14 Z" fill="currentColor" />
+      <path d="M4 14 q5 7 10 0 q5 7 10 0 q5 7 10 0 q5 7 10 0 q5 7 12 0" fill="currentColor" />
+      <rect x="8" y="20" width="44" height="34" rx="2" fill="currentColor" />
+      <rect x="14" y="30" width="12" height="24" fill="#fff" opacity="0.85" />
+      <rect x="32" y="28" width="14" height="12" fill="#fff" opacity="0.85" />
+    </symbol>
+    <lineargradient id="eff" x1="0" x2="1">
+      <stop offset="0" stop-color="#215a9e" stop-opacity="0.30"></stop>
+      <stop offset="1" stop-color="#7da1c4" stop-opacity="0.08"></stop>
+    </lineargradient>
+  </defs>
 
-<div class="gw-cards">
-  <div class="gw-card">
-    <div class="k">What it does</div>
-    <div class="big">Cuts waste costs</div>
-    <div class="v">A subsidy for new waste equipment, technical help to install it, and training for staff.</div>
-  </div>
-  <div class="gw-card">
-    <div class="k">Who it is for</div>
-    <div class="big">Score 58 or below</div>
-    <div class="v">Every business has an <b>efficiency score</b> from 0 to 100 (higher is more efficient). GreenWaste targets the less efficient ones.</div>
-  </div>
-  <div class="gw-card rule">
-    <div class="k">The decision</div>
-    <div class="big">At least 1,000 AED</div>
-    <div class="v">Scale up nationally only if costs fall by at least 1,000 AED per business per year.</div>
-  </div>
+  <!-- ===== Left: pilot district ===== -->
+  <rect x="10" y="10" width="520" height="450" rx="14" fill="#f4f7fb" />
+  <text x="40" y="58" font-size="30" font-weight="700" fill="#063360">Pilot district</text>
+  <!-- a die: the lottery -->
+  <g transform="translate(446,22)">
+    <rect width="54" height="54" rx="10" fill="#fff" stroke="#063360" stroke-width="3" />
+    <circle cx="15" cy="15" r="5" fill="#063360"></circle><circle cx="39" cy="15" r="5" fill="#063360"></circle>
+    <circle cx="27" cy="27" r="5" fill="#063360"></circle>
+    <circle cx="15" cy="39" r="5" fill="#063360"></circle><circle cx="39" cy="39" r="5" fill="#063360"></circle>
+  </g>
+  <use href="#shop" x="45" y="100" width="70" height="66" color="#215a9e" />
+  <use href="#shop" x="140" y="100" width="70" height="66" color="#c9d6e6" />
+  <use href="#shop" x="235" y="100" width="70" height="66" color="#c9d6e6" />
+  <use href="#shop" x="330" y="100" width="70" height="66" color="#215a9e" />
+  <use href="#shop" x="425" y="100" width="70" height="66" color="#215a9e" />
+  <use href="#shop" x="45" y="185" width="70" height="66" color="#c9d6e6" />
+  <use href="#shop" x="140" y="185" width="70" height="66" color="#215a9e" />
+  <use href="#shop" x="235" y="185" width="70" height="66" color="#215a9e" />
+  <use href="#shop" x="330" y="185" width="70" height="66" color="#c9d6e6" />
+  <use href="#shop" x="425" y="185" width="70" height="66" color="#c9d6e6" />
+  <use href="#shop" x="45" y="270" width="70" height="66" color="#215a9e" />
+  <use href="#shop" x="140" y="270" width="70" height="66" color="#c9d6e6" />
+  <use href="#shop" x="235" y="270" width="70" height="66" color="#215a9e" />
+  <use href="#shop" x="330" y="270" width="70" height="66" color="#c9d6e6" />
+  <use href="#shop" x="425" y="270" width="70" height="66" color="#215a9e" />
+  <text x="270" y="390" font-size="26" fill="#111418" text-anchor="middle">A <tspan font-weight="700">lottery</tspan> chose who joined</text>
+  <text x="270" y="426" font-size="20" fill="#545860" text-anchor="middle">Every business here could have joined</text>
+
+  <!-- ===== Right: rest of the city ===== -->
+  <rect x="560" y="10" width="630" height="450" rx="14" fill="#f4f7fb" />
+  <text x="590" y="58" font-size="30" font-weight="700" fill="#063360">Rest of the city</text>
+  <!-- shops placed along their efficiency score -->
+  <use href="#shop" x="592" y="100" width="54" height="50" color="#215a9e" />
+  <use href="#shop" x="638" y="165" width="54" height="50" color="#215a9e" />
+  <use href="#shop" x="684" y="100" width="54" height="50" color="#215a9e" />
+  <use href="#shop" x="730" y="165" width="54" height="50" color="#215a9e" />
+  <use href="#shop" x="776" y="100" width="54" height="50" color="#215a9e" />
+  <use href="#shop" x="818" y="165" width="54" height="50" color="#215a9e" />
+  <use href="#shop" x="900" y="100" width="54" height="50" color="#c9d6e6" />
+  <use href="#shop" x="946" y="165" width="54" height="50" color="#c9d6e6" />
+  <use href="#shop" x="992" y="100" width="54" height="50" color="#c9d6e6" />
+  <use href="#shop" x="1038" y="165" width="54" height="50" color="#c9d6e6" />
+  <use href="#shop" x="1084" y="100" width="54" height="50" color="#c9d6e6" />
+  <use href="#shop" x="1122" y="165" width="54" height="50" color="#c9d6e6" />
+  <!-- the efficiency scale -->
+  <rect x="590" y="240" width="580" height="26" rx="13" fill="url(#eff)" />
+  <line x1="884" y1="90" x2="884" y2="286" stroke="#B8272C" stroke-width="4" stroke-dasharray="10 7"></line>
+  <text x="884" y="314" font-size="22" font-weight="700" fill="#B8272C" text-anchor="middle">58</text>
+  <text x="592" y="294" font-size="18" fill="#545860">less efficient</text>
+  <text x="1168" y="294" font-size="18" fill="#545860" text-anchor="end">more efficient</text>
+  <text x="875" y="390" font-size="26" fill="#111418" text-anchor="middle">Businesses scoring <tspan font-weight="700">58 or below</tspan> joined</text>
+  <text x="875" y="426" font-size="20" fill="#545860" text-anchor="middle">Every business has an efficiency score</text>
+</svg>
+<div style="display:flex; gap:40px; justify-content:center; font-size:0.62em; color:#111418; margin-top:4px;">
+  <span><svg width="28" height="26" viewbox="0 0 60 56" style="vertical-align:-5px"><use href="#shop" width="60" height="56" color="#215a9e" /></svg> joined GreenWaste</span>
+  <span><svg width="28" height="26" viewbox="0 0 60 56" style="vertical-align:-5px"><use href="#shop" width="60" height="56" color="#c9d6e6" /></svg> did not join</span>
 </div>
 <aside class="notes">
-<p>Invented case, used all week. Read the three cards; the decision rule on the right is the bar every estimate is judged against.</p>
-<style type="text/css">
-span.MJX_Assistive_MathML {
-position:absolute!important;
-clip: rect(1px, 1px, 1px, 1px);
-padding: 1px 0 0 0!important;
-border: 0!important;
-height: 1px!important;
-width: 1px!important;
-overflow: hidden!important;
-display:block!important;
-}</style></aside>
-</section>
-<section id="how-it-reached-businesses" class="slide level2">
-<h2>How it reached businesses</h2>
-
-<div class="lanes">
-  <div class="head"></div><div class="head">Before</div><div class="head">The programme</div><div class="head">12 months later</div>
-
-  <div class="who">Pilot district<span>400 businesses, all scoring 58 or below</span></div>
-  <div class="step arrow">Waste costs measured for every business</div>
-  <div class="step key arrow">A <b>lottery</b> picked <b>200</b> to take part; the other 200 waited</div>
-  <div class="step">Costs measured again</div>
-
-  <div class="who">Rest of the city<span>6,000 businesses, every score</span></div>
-  <div class="step arrow">Waste costs measured for every business</div>
-  <div class="step key arrow">A <b>rule</b>: every business scoring 58 or below took part (<b>2,886</b>); the 3,114 above did not</div>
-  <div class="step">Costs measured again</div>
-</div>
-<p style="font-size:0.74em; color:#545860; margin-top:26px;">Same programme, same measurements, two ways of deciding who took part.</p>
-<aside class="notes">
-<p>The pilot came first, in one district, to test the programme: a lottery decided. In the rest of the city the programme was simply given to every business scoring 58 or below. Ask: “In which of the two would you trust a simple comparison of those who took part with those who did not? Why?”</p>
-<style type="text/css">
-span.MJX_Assistive_MathML {
-position:absolute!important;
-clip: rect(1px, 1px, 1px, 1px);
-padding: 1px 0 0 0!important;
-border: 0!important;
-height: 1px!important;
-width: 1px!important;
-overflow: hidden!important;
-display:block!important;
-}</style></aside>
-</section>
-<section id="four-groups-of-businesses" class="slide level2">
-<h2>Four groups of businesses</h2>
-
-<div class="groups">
-  <div></div><div class="h">Took part</div><div class="h not">Did not take part</div>
-  <div class="row">Pilot district<span>a lottery decided</span></div><div class="cell took"><div class="count">200 businesses</div><div class="costs">1,399 → 744<small>average waste costs, AED: before → after</small></div></div><div class="cell "><div class="count">200 businesses</div><div class="costs">1,397 → 1,758<small>average waste costs, AED: before → after</small></div></div>
-  <div class="row">Rest of the city<span>the score rule decided</span></div><div class="cell took"><div class="count">2,886 businesses</div><div class="costs">1,411 → 742<small>average waste costs, AED: before → after</small></div></div><div class="cell "><div class="count">3,114 businesses</div><div class="costs">2,097 → 2,245<small>average waste costs, AED: before → after</small></div></div>
-</div>
-<div class="ask">
-<p>Every method this week compares businesses that took part with one of the other groups. <strong>Which group would you compare them with, and why?</strong></p>
-</div>
-<aside class="notes">
-<p>This grid comes back at the start of every GreenWaste session, with that session’s comparison highlighted. Do not compute anything yet; the point is that the four groups started from different places.</p>
-<style type="text/css">
-span.MJX_Assistive_MathML {
-position:absolute!important;
-clip: rect(1px, 1px, 1px, 1px);
-padding: 1px 0 0 0!important;
-border: 0!important;
-height: 1px!important;
-width: 1px!important;
-overflow: hidden!important;
-display:block!important;
-}</style></aside>
-</section>
-<section id="one-row-one-business" class="slide level2">
-<h2>One row, one business</h2>
-<table>
-<thead>
-<tr>
-<th style="text-align:left;">
-business
-</th>
-<th style="text-align:left;">
-setting
-</th>
-<th style="text-align:right;">
-score
-</th>
-<th style="text-align:right;">
-took_part
-</th>
-<th style="text-align:right;">
-cost_before
-</th>
-<th style="text-align:right;">
-cost_after
-</th>
-<th style="text-align:right;">
-manager_age
-</th>
-<th style="text-align:right;">
-staff
-</th>
-<th style="text-align:right;">
-area
-</th>
-<th style="text-align:right;">
-filtration
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-B0002
-</td>
-<td style="text-align:left;">
-pilot
-</td>
-<td style="text-align:right;">
-41.1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1739
-</td>
-<td style="text-align:right;">
-1110
-</td>
-<td style="text-align:right;">
-39
-</td>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:right;">
-2.2
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-B0001
-</td>
-<td style="text-align:left;">
-pilot
-</td>
-<td style="text-align:right;">
-46.5
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1479
-</td>
-<td style="text-align:right;">
-1847
-</td>
-<td style="text-align:right;">
-36
-</td>
-<td style="text-align:right;">
-7
-</td>
-<td style="text-align:right;">
-2.7
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-B0405
-</td>
-<td style="text-align:left;">
-city
-</td>
-<td style="text-align:right;">
-36.1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1419
-</td>
-<td style="text-align:right;">
-784
-</td>
-<td style="text-align:right;">
-34
-</td>
-<td style="text-align:right;">
-7
-</td>
-<td style="text-align:right;">
-2.1
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-B0401
-</td>
-<td style="text-align:left;">
-city
-</td>
-<td style="text-align:right;">
-66.5
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1935
-</td>
-<td style="text-align:right;">
-2265
-</td>
-<td style="text-align:right;">
-48
-</td>
-<td style="text-align:right;">
-7
-</td>
-<td style="text-align:right;">
-2.7
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-</tbody>
-</table>
-<div class="facts" style="margin-top:18px;">
-  <div class="k">setting</div>     <div class="v">pilot (the lottery) or city (the rule)</div>
-  <div class="k">took_part</div>   <div class="v">1 if the business took part in GreenWaste</div>
-  <div class="k">cost_before, cost_after</div> <div class="v">waste-management costs, AED, before and 12 months after</div>
-  <div class="k">the last four</div> <div class="v">what else we know about each business</div>
-</div>
-<aside class="notes">
-<p>Ten columns, one row per business. This is the only data file used all week.</p>
+<p>About 2 minutes. Keep it to the story: what the programme does and the two ways businesses got it. Ask: “In which of the two places would it be fairer to compare businesses that joined with businesses that did not? Why?” Take answers; do not resolve it yet. The numbers come in the sessions that need them.</p>
 <style type="text/css">
 span.MJX_Assistive_MathML {
 position:absolute!important;
@@ -2482,82 +2266,6 @@ window.QuartoSupport = function () {
         ]
       });
     </script>
-    
-
-    <script>
-
-      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
-
-      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
-
-      // slide changes (different for each slide format).
-
-      (function () {
-
-        // dispatch for htmlwidgets
-
-        function fireSlideEnter() {
-
-          const event = window.document.createEvent("Event");
-
-          event.initEvent("slideenter", true, true);
-
-          window.document.dispatchEvent(event);
-
-        }
-
-    
-
-        function fireSlideChanged(previousSlide, currentSlide) {
-
-          fireSlideEnter();
-
-    
-
-          // dispatch for shiny
-
-          if (window.jQuery) {
-
-            if (previousSlide) {
-
-              window.jQuery(previousSlide).trigger("hidden");
-
-            }
-
-            if (currentSlide) {
-
-              window.jQuery(currentSlide).trigger("shown");
-
-            }
-
-          }
-
-        }
-
-    
-
-        // hookup for slidy
-
-        if (window.w3c_slidy) {
-
-          window.w3c_slidy.add_observer(function (slide_num) {
-
-            // slide_num starts at position 1
-
-            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
-
-          });
-
-        }
-
-    
-
-      })();
-
-    </script>
-
-    
-
     <script id="quarto-html-after-body" type="application/javascript">
       window.document.addEventListener("DOMContentLoaded", function (event) {
         const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
