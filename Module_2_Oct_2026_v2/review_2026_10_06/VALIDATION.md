@@ -97,3 +97,5 @@ Published source checkpoints 63ff9cc/a92f8e8 and preview checkpoint 57df051; bot
 - All 49 landing material links served HTTP 200 locally. Day filters, exclusive selection, keyboard activation, Day 4 hash/reload and trainer disclosure passed at 1280/768/375/320 widths. No horizontal overflow or browser errors; desktop, phone and expanded-trainer screenshots inspected.
 - Live-root score-rule deck walked sequentially: 11 slides including title, Run output -721 from the corrected CSV, all feedback open, no overflow or browser errors. Other deck checks remain applicable via byte identity with their walked previews.
 - All site assets fit the 25 MiB cap. Current preview review now links to the live working hub. Historical exports remain unlinked rather than advertised as current.
+
+Live commit 0a0a03d pushed to main. Cloudflare Workers build and GitHub Pages build/deploy check runs all completed successfully. Main worktree validates 49 links, 11 live deck hashes and corrected CSV against previews. Remote requests returned 403; no authenticated browser available. Online page content therefore not inspected.

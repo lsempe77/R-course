@@ -2,6 +2,8 @@
 
 ## Live publication authorised, 6 October 2026
 
+Live checkpoint `0a0a03d` pushed to main and simple-greenwaste. Cloudflare `Workers Builds: module2` completed successfully; GitHub Pages build and deploy also succeeded. The revised hub is https://3ie.academy/ with all eleven live decks and their materials. Main-worktree checks confirmed all 49 hub links and byte identity for the eleven decks plus corrected CSV. Remote unauthenticated requests returned 403 and no authenticated browser was available, so online page content was not inspected. This deployment record is saved on the source branch after publication.
+
 Lucas requested a revised internal landing page and explicitly instructed us to push the whole rebuilt week live. This supersedes earlier preview-only restrictions. `docs/index.html` is now a working course hub with day filters, eleven session cards, worksheets, three downloads and a collapsible trainer area. The existing password gate is unchanged; no public-facing launch or access changes are requested.
 
 `review_2026_10_06/publish_live.py` promotes checked preview bytes into the live deck URLs, `docs/handouts/`, `docs/trainer/`, `docs/posters/` and `docs/downloads/`. It also copies the corrected CSV next to the live decks, retains old aliases as redirects and replaces Oct15 S3 with an other-provider simulation notice. The old landing page linked stale PDF/PPTX snapshots; those links are omitted from the current hub. Old snapshot files remain historical and should not be advertised until refreshed.
