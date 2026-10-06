@@ -85,3 +85,5 @@ ignored by Git. Reproduce the browser checks with `verify_day1.py`,
 - Unlinked previews only. Production teaching pages unchanged. No additional daily approval is pending.
 
 The complete download was split into print materials and deck archives for Days 1-2 and Days 3-4 to respect Cloudflare's 25 MiB static asset limit. Each archive is size-checked before publication.
+
+Published source checkpoints 63ff9cc/a92f8e8 and preview checkpoint 57df051; both pushes succeeded. Final downloads 762,846 / 17,193,159 / 13,686,934 bytes all below 25 MiB. Remote unauthenticated checks of both current review URLs returned 403; online content was not inspected. Worktrees have no remaining tracked changes apart from this checkpoint note. Unrelated untracked user files remain untouched.

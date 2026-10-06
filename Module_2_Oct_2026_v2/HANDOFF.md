@@ -13,6 +13,7 @@ Lucas approved Day 4. All four daily rebuilds are complete. The historical notes
 - Three whole-week downloads together include 11 decks, 11 participant sheets, 11 trainer packs, references, four poster files/five A1 sheets, classroom brief and room tool. File bytes and local links checked. Browser R still needs internet; rehearse trainer decks early and use printed output as fallback. Classroom phone access requires venue rehearsal.
 
 Current reviews: https://3ie.academy/preview/week_ready.html and https://3ie.academy/preview/day4_review.html
+Published checkpoints: source build `63ff9cc` plus size-limit adjustment `a92f8e8` on simple-greenwaste; main previews `57df051`. Both pushes succeeded. Download sizes are 762,846 / 17,193,159 / 13,686,934 bytes, each below the static asset cap. Final hub relative links: Day 4 18, whole week 43. Unauthenticated checks returned HTTP 403 for both review URLs; local copies were verified, online content was not inspected.
 Source remains `simple-greenwaste`; only unlinked `docs/preview/` assets are updated on main. Live teaching pages remain unchanged. No further daily build approval is pending. Production replacement requires a separate final review and instruction.
 
 Use `.preview_day2_publish` for main previews. Retain ignored worktree residue; do not retry the previously rejected cleanup. The site password gate applies; unauthenticated remote content verification is unavailable.
