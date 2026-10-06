@@ -16,7 +16,7 @@ format:
 
 All eleven course-owned sessions are rebuilt and checked. Days 1 to 3 run for 60, 60 and 75 minutes; Day 4 has two 60-minute sessions. The other provider prepares the final evaluation simulation.
 
-[Download the complete teaching pack](GreenWaste_week_materials.zip){.btn .btn-primary} [Print and classroom brief](Module2_exercise_plan_v3.docx){.btn .btn-outline-primary}
+[Print materials](GreenWaste_week_materials.zip){.btn .btn-primary} [Decks: Days 1-2](GreenWaste_decks_days1_2.zip){.btn .btn-outline-primary} [Decks: Days 3-4](GreenWaste_decks_days3_4.zip){.btn .btn-outline-primary}
 
 Short explanations lead into individual predictions, source checks, practical group activities and decisions. Technical terms remain where readers need them. Participants read evaluation evidence; trainer calculations illustrate it without participant coding.
 
@@ -54,7 +54,7 @@ Native choices, evidence reveals, intervals, trend pictures, axis toggles and di
 
 The course-owned tool provides anonymous Before/After votes, QR entry and totals hidden until voting closes. It runs on the facilitator's machine. Rehearse venue phone access; labelled cards remain the fallback. Open webR trainer decks early and rehearse the calculation on the teaching network; printed results provide a fallback.
 
-The complete zip includes eleven decks, participant sheets, trainer packs, references, four poster files (five A1 sheets), the classroom brief and room tool. Browser R needs internet; the zip does not bundle the external R runtime. The former Day 4 Session 3 and historical cases are excluded.
+The three downloads together include eleven decks, participant sheets, trainer packs, references, four poster files (five A1 sheets), the classroom brief and room tool. Unzip both deck downloads to the same folder. Browser R needs internet; the downloads do not bundle the external R runtime. The former Day 4 Session 3 and historical cases are excluded.
 
 ## Review status
 

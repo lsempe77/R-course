@@ -19,7 +19,7 @@ for f in ['GreenWaste_case_card.docx','GreenWaste_case_brief.docx','Oct14_sessio
 for f in ['Oct12_session1_board_A1.pdf','Oct13_session2_board_A1.pdf','Oct14_session1_board_A1.pdf','Oct15_session1_board_A1.pdf']:entries.append((pre/f,'Posters/'+f))
 for f in ['room_poll.py','room_poll.html','ROOM_POLL_README.md']:entries.append((root/f,'RoomTool/'+f))
 entries.extend([(pre/'evaluation_data_GreenWaste_simple.csv','Decks/evaluation_data_GreenWaste_simple.csv'),(root/'Module2_exercise_plan_v3.docx','Module2_exercise_plan_v3.docx')])
-readme='''GreenWaste: eleven course-owned sessions, October 2026
+readme='''GreenWaste: eleven course-owned sessions, October 2026\nThree downloads: print materials, decks Days 1-2, decks Days 3-4. Unzip both deck archives to the same folder.
 Days 1-3: 60/60/75 minutes. Day 4: 60/60 minutes.
 The final Day 4 evaluation simulation is prepared by another provider and excluded.
 
@@ -34,17 +34,24 @@ Decks: open the HTML decks in a browser. Browser R trainer demos require interne
 RoomTool: follow ROOM_POLL_README.md; Python standard library server, no accounts or paid service. Rehearse facilitator-to-phone network access; labelled cards are the fallback.
 All figures are fictional training data. The individual reading check is a teaching check, not validated certification.
 '''
-with zipfile.ZipFile(pre/'GreenWaste_week_materials.zip','w',zipfile.ZIP_DEFLATED) as z:
- for source,dest in entries:
-  assert source.is_file(),source
-  assert 'session3' not in dest or 'Oct15' not in dest
-  z.write(source,dest)
- z.writestr('README.txt',readme)
- assert len([i for i in z.namelist() if i.startswith('ParticipantSheets/')])==11
- assert len([i for i in z.namelist() if i.startswith('TrainerPacks/')])==11
- assert len([i for i in z.namelist() if i.endswith('.html') and i.startswith('Decks/')])==11
-with zipfile.ZipFile(pre/'GreenWaste_week_materials.zip') as z:
- for src,dst in entries:assert hashlib.sha256(z.read(dst)).hexdigest()==hashlib.sha256(src.read_bytes()).hexdigest()
+groups={
+ 'GreenWaste_week_materials.zip':[(a,b) for a,b in entries if not b.startswith('Decks/')],
+ 'GreenWaste_decks_days1_2.zip':[(a,b) for a,b in entries if b.startswith('Decks/') and ('Oct12' in b or 'Oct13' in b or b.endswith('.csv'))],
+ 'GreenWaste_decks_days3_4.zip':[(a,b) for a,b in entries if b.startswith('Decks/') and ('Oct14' in b or 'Oct15' in b or b.endswith('.csv'))]
+}
+for filename,items in groups.items():
+ with zipfile.ZipFile(pre/filename,'w',zipfile.ZIP_DEFLATED) as z:
+  for source,dest in items:
+   assert source.is_file(),source
+   assert 'session3' not in dest or 'Oct15' not in dest
+   z.write(source,dest)
+  z.writestr('README.txt',readme)
+ assert (pre/filename).stat().st_size<25*1024*1024,filename
+ with zipfile.ZipFile(pre/filename) as z:
+  for src,dst in items:assert hashlib.sha256(z.read(dst)).hexdigest()==hashlib.sha256(src.read_bytes()).hexdigest()
+assert sum(sum(dest.startswith('Decks/') and dest.endswith('.html') for _,dest in items) for items in groups.values())==11
+assert sum(dest.startswith('ParticipantSheets/') for _,dest in groups['GreenWaste_week_materials.zip'])==11
+assert sum(dest.startswith('TrainerPacks/') for _,dest in groups['GreenWaste_week_materials.zip'])==11
 copy_sources=[(root/f,pre/f) for f in files]+[(root.parent/'docs/handouts'/f,pre/f) for f in ['Oct15_session1_handouts.docx','Oct15_session2_handouts.docx']]+[(root/'review_2026_10_06'/f,pre/f) for f in ['day4_review.html','week_ready.html','day4_plan.html','day3_review.html','week_review.html']]
 for a,b in copy_sources:assert a.read_bytes()==b.read_bytes()
 from bs4 import BeautifulSoup
@@ -53,7 +60,7 @@ for n in ['day4_review','week_ready','day3_review','day4_plan','week_review']:
  s=BeautifulSoup((pre/(n+'.html')).read_text(encoding='utf-8'),'html.parser');hrefs=[a['href'].split('#')[0] for a in s.select('a[href]') if not a['href'].startswith(('http','mailto:','#','data:'))]
  for href in hrefs:assert (pre/href).is_file(),(n,href)
  links[n]=len(hrefs)
-checks={'hash_verified_copies':len(copy_sources),'review_links':links,'bundle_files':len(entries)+1,'bundle_bytes':(pre/'GreenWaste_week_materials.zip').stat().st_size}
+checks={'hash_verified_copies':len(copy_sources),'review_links':links,'unique_payload_files':len(entries),'downloads':{name:(pre/name).stat().st_size for name in groups}}
 (qa/'day4_publish_checks.json').write_text(json.dumps(checks,indent=2));print(json.dumps(checks))
 temp=qa/'week_generator'
 assert len(list((temp/'Module').glob('Oct*_materials.docx')))==11

@@ -10,7 +10,7 @@ Lucas approved Day 4. All four daily rebuilds are complete. The historical notes
 - Session 2 uses the corrected one-page findings, not the planted report's assurances. Protect twelve minutes for a first draft and eight for peer review. At most 150 words: finding/source, recommendation/condition, important risk/limit, next evidence/purpose. Accept another defensible conditional action. Participant sheet 2 pages, trainer pack 3; optional one-page template duplicates Sheet 1.
 - `Rscript make_session_materials.R --day4` rebuilds this day only. The default now calls all four current builders and writes eleven trainer packs plus eleven participant sheets. Legacy implementation is retained inside `if (FALSE)` and cannot overwrite current packs. Full build passed in an isolated copy. Styled reference DOCX files come from the scoped builder; reference QMDs mirror the content but should not overwrite the checked print layouts.
 - Exercise brief: all eleven sessions, 9 landscape pages. Day 4 backup: `backups/day4_2026_10_06_approved/`. All final print pages and both A1 sheets rendered and inspected. Deck walks, open feedback, keyboard choices/reveals and room-tool regression passed. Browser errors [], no slide overflow or logo collisions. Review hubs checked at desktop and phone widths.
-- Whole-week download includes 11 decks, 11 participant sheets, 11 trainer packs, references, four poster files/five A1 sheets, classroom brief and room tool. File bytes and local links checked. Browser R still needs internet; rehearse trainer decks early and use printed output as fallback. Classroom phone access requires venue rehearsal.
+- Three whole-week downloads together include 11 decks, 11 participant sheets, 11 trainer packs, references, four poster files/five A1 sheets, classroom brief and room tool. File bytes and local links checked. Browser R still needs internet; rehearse trainer decks early and use printed output as fallback. Classroom phone access requires venue rehearsal.
 
 Current reviews: https://3ie.academy/preview/week_ready.html and https://3ie.academy/preview/day4_review.html
 Source remains `simple-greenwaste`; only unlinked `docs/preview/` assets are updated on main. Live teaching pages remain unchanged. No further daily build approval is pending. Production replacement requires a separate final review and instruction.
@@ -250,3 +250,5 @@ Approved and completed with Day 2. Use the latest checkpoint above for current f
   without telling Lucas the cost; nothing outside this folder without permission.
 - If a delete is denied, give Lucas the command instead of working around it.
 - Avoid running parallel subagents: the org spend limit has cut one off before.
+
+The complete download was split into print materials and deck archives for Days 1-2 and Days 3-4 to respect Cloudflare's 25 MiB static asset limit. Each archive is size-checked before publication.
