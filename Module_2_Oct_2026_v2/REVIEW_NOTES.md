@@ -187,3 +187,105 @@ work, charts and AI snapshot were dropped.
     recommendations, the strengths and weaknesses the exercise depends on).
     Restore detail where it was thinned. Also check the D4 S2 findings sheet
     (701 -> 232 words) is detailed enough to write a brief from.
+
+## PROPOSED Day 1 restructure (DRAFT 7 Oct, for Fiona to review; not agreed)
+
+Rationale: comparisons are currently split awkwardly (S2 does "compared with
+what?" on landfill, S3 repeats it on costs) and the data is never shown. Give each
+session one job: S1 read a result; S2 what the data show and why the obvious
+comparisons mislead; S3 how a lottery gives a fair comparison. Keep the whole day
+on **costs in AED** (landfill only on the triage cards, or convert the cards).
+The day's story is three numbers for one programme:
+
+| Comparison | Saving per business |
+|---|---|
+| Before vs after (participants) | 669 AED (likely too small: non-participants' costs rose 143 AED) |
+| With vs without (after only) | 1,638 AED (too big: non-participants started far higher, 2,258 vs 1,432) |
+| Pilot lottery | 1,014 AED (interval 862 to 1,167; spans the 1,000 AED rule) |
+
+Assumes 90/90/120-minute slots (being confirmed). Cuts for 60/60/75 are noted.
+
+Open question: keep terms first (as below) or a data-first order (case, data
+and descriptives, comparisons, regression as a way to report a difference,
+uncertainty), which would partly merge and swap S1 and S2. Lucas asked for
+terms first.
+
+### Session 1: Reading a result (mostly current deck)
+1. The GreenWaste case study: case map; hand out the picture card
+2. Where GreenWaste fits: Module 1 theory of change; costs highlighted
+3. A results table lands on your desk: self-check on the five terms
+4. Mean: ten businesses, worksheet Q1, reveal; what the mean hides (restore
+   "remove the largest business" visual)
+5. Treatment effect: what the programme caused vs what would have happened
+   without it (simple actual vs without-programme picture)
+6. Coefficient: which row is the start, which is the change (Q2)
+7. What the minus sign means
+8. Confidence interval with a restored visual (100-studies chart or three
+   intervals around the same estimate) (Q4)
+9. P-value: small is not the same as important (restore "significant is not
+   the same as big") (Q5)
+10. Against the 1,000 AED rule (interval chart)
+11. Pair check and debrief (option A)
+12. AI exercise: mark up a realistic AI reading of the table, then run the
+    better prompt
+13. Close: what would you tell the director? Teaser: was -669 the effect?
+If 60 min: drop the p-value visual; keep one interval visual.
+Board/activities: none; worksheet done as you go.
+
+### Session 2: What do the data show? Compared with what? (rebuilt)
+1. Callback: this morning we read -669. Was it GreenWaste's effect? Predict.
+2. Meet the data: a few real rows on screen; one row = one business; column
+   meanings. Worksheet: describe one business in words.
+3. Who took part: city score 58 or below joined (4,794 vs 5,206); bar chart
+4. Describing costs: histogram before the programme; mean vs median; spread.
+   Worksheet question.
+5. Before and after for participants: 1,432 -> 763 chart; did every business's
+   cost fall? (distribution of changes)
+6. What else changed that year? Brainstorm; introduces the counterfactual
+7. Non-participants: 2,258 -> 2,401, costs rose. What does that say about -669?
+8. With vs without: 763 vs 2,401 = -1,638; reveal starting levels; two-group
+   before/after chart
+9. Two numbers, two biases (-669, -1,638). Which would you trust? Neither, so
+   we need a fair comparison (to S3)
+10. Claim triage with Fiona's four cards (compared with what / how big / how
+    sure; act / ask first / do not act)
+11. AI exercise: mark up a realistic AI reading of the before/after chart,
+    then run the better prompt (adapt old S2 AI Snapshot)
+12. Close: one question for the evaluator
+If 60 min: drop the histogram detail (4); shorten triage to two cards.
+Replaces the current S2 almost entirely (landfill headline and "who else saw
+waste fall" go).
+Board/activities: the optional A1 claim-triage board
+(`Oct12_session2_board_A1.pdf`) and the four claim cards move to step 10 as
+the main group activity: groups write card numbers in their marker colour on
+the grid; debrief two disagreements. Worksheet grid is the fallback. Three of
+the four cards are about landfill: convert to costs or add one sentence that
+landfill is the second outcome. Optional flipchart "three numbers" line: mark
+the 1,000 AED rule, add -669 and -1,638 here; S3 adds -1,014 with its interval.
+
+### Session 3: Did the programme make the difference? The pilot lottery
+1. Recap: -669 vs -1,638 and why each is unfair
+2. The pilot district: 400 businesses; a lottery chose 200 (picture card)
+3. What a lottery buys you: physical draw with the twenty numbered manager-age
+   slips (volunteer draws ten; room compares average age of drawn vs not drawn;
+   draw again), then the live R draw repeats it many times (restore "draw the
+   lottery again"). The physical draw is the no-internet fallback.
+4. Four businesses or four hundred? Slider: small lotteries can be unbalanced
+   (restore)
+5. Did the real draw work? Starting costs 1,390 vs 1,411
+6. The effect is a difference of two averages: 769 vs 1,783 = -1,014
+7. The regression gives the same number: callback to S1; here the coefficient
+   is a treatment effect because the design supports it
+8. Break
+9. How sure: interval 862 to 1,167 against 1,000 AED; it spans the rule
+10. Optional: what if the trial had been smaller? (wider interval)
+11. Who does this apply to? One district, scores 58 or below
+12. Three numbers side by side: -669, -1,638, -1,014 (day's summary visual;
+    add -1,014 to the flipchart line)
+13. Your recommendation in three sentences (worksheet)
+14. AI exercise: a paragraph for the minister; mark up, then better prompt
+15. Close: one question that could change your decision
+If 75 min: drop the slider (4) and smaller-trial slide (10).
+
+Unaffected by this restructure: RDD number line (D2 S2), value-for-money wall
+(D3 S1), report credibility grid (D4 S1). Check their fit when reviewing those days.
