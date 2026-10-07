@@ -1,5 +1,19 @@
 # Handoff: moving Module 2 to the simple GreenWaste case
 
+## Separate Session 3 comparison prototype, 7 October 2026
+
+Lucas asked to continue Day 1 with Session 3 using separate review QMDs and both renders. `Oct12_session3_review.qmd` implements D1S3-P01-P16: 16 content screens and 120 minutes in facilitator notes. `Oct12_session3_live.qmd`, existing handouts and the live teaching route remain unchanged. Current source is freshly rendered as `Oct12_session3_current_compare.html`. Review comparison: https://3ie.academy/preview/session3_compare.html.
+
+The city comparisons are a brief recap. The pilot has 400 eligible businesses (all scores 58 or below), individually assigned exactly 200 to join and 200 to wait. Native figures cover allocation, chance age imbalance, actual baseline distributions, after-group means, regression columns and the saving interval against the rule. Baseline means are 1,390/1,411 AED; after means 769/1,783; the fitted effect is -1,014 with interval -1,167 to -862, or saving 1,014 with interval 862-1,167. The pilot is not labelled ground truth for the city. Random assignment is distinguished from representative sampling; full costs and national effects are not supplied.
+
+Physical activity uses twenty cuttable numbered manager-age slips (`Oct12_session3_review_slips.qmd`) from the first twenty actual pilot records. Draw ten, compare join/wait means, replace all and redraw. Optional webR uses the same age pool, with a new fixed seed per Run. It demonstrates pre-programme age balance, not an effect or the actual trial allocation. First two trainer draws should give Join/Wait 35.2/35.6 and 36.8/34.0. The larger-sample visual uses the full pilot age pool: 200 practice allocations per size, N=20 random subsets versus N=400; every redraw is labelled illustrative.
+
+`Oct12_session3_review_worksheet.qmd` supplies six printable pages: named H3-A design/baseline, findings/interval/three-comparison reference, Q1-Q2, Q3-Q5 and independent recommendation, realistic ministerial AI markup/better prompt, and prepared paper alternative. Exact source paragraphs and physical page locations are repeated in slides. AI Snapshot totals 15 minutes, uses Microsoft Copilot and the shared good-practice card. The obsolete internal break is replaced by a physical change of activity within the fixed timetable. Daily wrap-up/buffer remains separate.
+
+Render the three new QMDs in the module directory. Values and native SVGs come from `session3_review.R`; scoped styles supplement `session1_review.css`. Publish independent renders only under `docs/preview/`; no production builder changes. This remains a content-review candidate, not replacement of the original session.
+
+Validation: all 17 title/content screens, reveals and larger-sample variants fit 1280x720; no heading/logo collisions or browser errors. Native table highlights and decisions work. Trainer Run executed twice and returned the expected different Join/Wait age means; editor has no horizontal clipping and output fits. Topic comparison controls and phone layout pass. All six worksheets fit A4 at 14mm margins (largest panel 860px of 1,016px available), and the 20 cuttable age slips fit one page. Final slide montages, executed R, source pages, writing space, AI tasks and slips visually inspected. Source labels are consistent. Five preview copies match the tested renders byte-for-byte and are below 25 MiB; links and browser CSV checked.
+
 ## Separate Session 2 comparison prototype, 7 October 2026
 
 Lucas asked to continue the separate-review approach with Day 1 Session 2. `Oct12_session2_review.qmd` implements the master plan's D1S2-P01-P15 sequence: 15 content screens and a 90-minute facilitator script. `Oct12_session2.qmd`, the existing DOCX/cards/A1 board and live Session 2 route are unchanged. The current source is freshly rendered as `Oct12_session2_current_compare.html`.

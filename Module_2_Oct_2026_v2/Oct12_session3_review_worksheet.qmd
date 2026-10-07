@@ -1,0 +1,217 @@
+---
+title: "GreenWaste pilot: evidence and recommendation"
+format:
+  html:
+    embed-resources: true
+    toc: false
+    html-math-method: plain
+    theme: none
+    include-in-header:
+      text: |
+        <style>
+        body{font:16px/1.45 Arial,sans-serif;color:#111418;margin:0;background:#eef2f6}
+        main{max-width:850px;margin:auto}h1{font-size:26px;color:#063360;margin:12px 0}h2{font-size:22px;color:#063360;margin:0 0 12px}h3{font-size:18px;margin:14px 0 6px}
+        .sheet-page{background:white;padding:28px 40px;margin:20px 0;box-sizing:border-box;min-height:950px}p{margin:8px 0}.caption{font-size:13px;color:#545860}.reading-table{border-collapse:collapse;width:100%;font-size:14px}.reading-table td,.reading-table th{padding:8px;border-bottom:1px solid #D5DEE8;text-align:left}.reading-table thead{background:#063360;color:white}.writing{height:44px;border-bottom:1px solid #c8d6e5;margin:6px 0}.writing.tall{height:75px}.costs{font-size:19px;word-spacing:9px;border-top:2px solid #215a9e;padding:12px 0}.ai-source{border-left:3px solid #7da1c4;padding-left:16px}.prompt{border-top:2px solid #215a9e;padding-top:8px;font-size:15px}.source-note{font-size:14px}
+        header button{font:inherit;margin:12px 0;padding:8px 15px;border:1px solid #215a9e;background:white;color:#063360;cursor:pointer}
+        @page{size:A4;margin:14mm}@media print{body{background:white;font-size:11pt;line-height:1.35}main{max-width:none}.sheet-page{padding:0;margin:0;min-height:0;break-after:page;box-shadow:none}.sheet-page:last-child{break-after:auto}header{display:none}h1{font-size:19pt}h2{font-size:17pt}h3{font-size:12pt}.reading-table{font-size:10pt}.writing{height:10mm}.writing.tall{height:17mm}.ai-source{font-size:11pt}.prompt{font-size:10pt}#title-block-header{display:none}}
+        .review-svg{display:block;width:100%;height:210px}.comparison-table{border-collapse:collapse;width:100%;font-size:14px}.comparison-table td,.comparison-table th{border-bottom:1px solid #D5DEE8;padding:7px;text-align:left}.sheet-page .ai-source p{margin:8px 0}.sheet-page table{border-collapse:collapse;width:100%}.sheet-page th,.sheet-page td{border-bottom:1px solid #D5DEE8;padding:7px;text-align:left}.sheet-page thead{background:#063360;color:white}@media print{.review-svg{height:200px}.comparison-table{font-size:10pt}}
+        .interval-visual{display:block;width:100%;height:160px}.draw-table{width:100%;border-collapse:collapse}
+        </style>
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+```{r, include=FALSE}
+source('session3_review.R', encoding='UTF-8')
+```
+
+<header><p>Separate Session 3 review worksheet.</p><button onclick="window.print()">Print worksheet</button></header>
+
+<div class="sheet-page">
+
+## Page 1 | H3-A: pilot design and baseline
+
+**GreenWaste is a fictional training case.** This supplied study extract is your source; there is no separate report to find.
+
+### §1 | Who and what?
+
+GreenWaste offers equipment subsidies, installation help and staff training. This pilot covered **400 businesses in one district**, all with efficiency scores **58 or below**. The outcome was **annual waste cost in AED per business**, measured before and **12 months after**.
+
+### §2 | How were places allocated?
+
+There were 200 places. A lottery assigned **individual businesses**: **200 to join** and **200 to wait**. The waiting group did not receive GreenWaste during the study. Random assignment within this pilot is different from selecting a representative sample of the country.
+
+### §3 | What must be credible?
+
+In this fictional pilot, assignment matched participation and all 400 businesses have follow-up cost records. An effect reading depends on the lottery being implemented as stated, comparable measurement and no consequential programme effects on waiting businesses. A real report should document these conditions.
+
+### §4 | Before the programme
+
+```{r, results='asis'}
+html_out(s3_baseline())
+```
+
+These are the **actual assigned groups**, 200 each. Baseline mean annual costs were **1,390 AED for join** and **1,411 AED for wait**. Distributions were similar, not identical. Similar starting costs support the comparison; they do not prove correct random assignment or perfect balance on everything.
+
+<div class="source-note">Source: corrected `evaluation_data_GreenWaste_simple.csv`, pilot records; calculations in `session3_review.R` and the shared pilot model. The age-slip redraw is a practice activity, not this trial's allocation.</div>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 2 | H3-A: findings and comparisons
+
+### §5 | Mean annual costs after 12 months
+
+The join group averaged **769 AED**; the waiting group **1,783 AED**. Join minus wait gives **-1,014 AED**, using unrounded means. With the trial conditions in §3, this supports an estimated effect among the eligible pilot businesses.
+
+```{r, results='asis'}
+html_out(s3_regression())
+```
+
+The waiting-group row is its mean after-cost. The join row is the difference from that reference, not the join group's mean. Negative cost difference means positive saving.
+
+### The same result on a positive-saving scale
+
+```{r, results='asis'}
+html_out(interval_svg('trial'))
+```
+
+The fictional minimum is **1,000 AED annual saving per business**. The point estimate is above it; the **862-1,167 AED interval includes values below it**. The interval concerns mean-effect uncertainty under the model, not individual savings.
+
+### Three studies, three comparisons
+
+```{r, results='asis'}
+html_out(s3_comparisons())
+```
+
+The pilot is not automatically the true effect for the city's different population. One district does not establish national effects. Full programme costs are not supplied here, so these results alone do not settle value for money.
+
+</div>
+
+<div class="sheet-page">
+
+## Page 3 | Q1-Q2: comparison and mechanics
+
+### Q1 | Why does chance help?
+
+Use H3-A §1-3 on page 1. Why is the waiting group a more credible comparison than businesses that chose whether to join?
+
+<div class="writing tall"></div>
+
+### Practice lottery: 20 age slips, 10 places
+
+Draw ten to join; the remaining ten wait. Calculate both mean manager ages. Replace **all** slips and draw again. These are pre-programme ages, not cost effects. The actual pilot has **400**, not 20 businesses.
+
+| Practice draw | Join mean age | Wait mean age | Join minus wait |
+|---|---|---|---|
+| 1 | __________ | __________ | __________ |
+| 2 | __________ | __________ | __________ |
+
+What changed between draws? Would larger groups usually be closer in mean age?
+
+<div class="writing"></div>
+
+Use the actual baseline figure (§4, page 1). What reassurance does it give, and what does it not prove?
+
+<div class="writing"></div>
+
+### Q2 | Calculate, then read the regression
+
+Use §5/table on page 2. Calculate join minus wait after a year. Interpret sign, units, comparison and population.
+
+<div class="writing tall"></div>
+
+Circle the comparison row on the table. Explain the waiting-group row and reconstruct the join mean from both coefficients.
+
+<div class="writing"></div>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 4 | Q3-Q5: what advice follows?
+
+### Q3 | Some saving, or enough saving?
+
+Use the interval on page 2. What supports some saving? What remains uncertain about the 1,000 AED minimum?
+
+<div class="writing tall"></div>
+
+### Q4 | Who does the pilot describe?
+
+Use §1-3 and the final source paragraph on page 2. What evidence would you request for the proposed expansion? Say why it matters.
+
+<div class="writing tall"></div>
+
+### Q5 | Your provisional action
+
+Choose **Extend / Do not extend / Ask first**. Give a trial-design strength, a consequential limit and a proportionate condition. State the scope of the action.
+
+<div class="writing"></div>
+
+### Your recommendation in three sentences
+
+Finding and source; action or condition; important limit and specific request.
+
+<div class="writing tall"></div>
+<div class="writing"></div>
+
+**Peer source check:** comparison and population; units/period; interval against rule; reach; evidence request. Mark one claim to strengthen.
+
+### My final recommendation and request
+
+Keep H3-A open; close AI responses and peer comments. Revise independently. What answer could change your advice, and how?
+
+<div class="writing tall"></div>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 5 | AI Snapshot: advice for the minister
+
+### A | Check a plausible paragraph
+
+Naive prompt: "Our GreenWaste pilot saved 1,014 AED per business (p < 0.001). Write a short paragraph for the minister recommending expansion." This is authored exercise material. **Underline support; cross out overclaims.** Check H3-A, pages 1-2.
+
+```{r, results='asis'}
+html_out(paste0('<div class="ai-source">',s3_paragraphs(s3_ai),'</div>'))
+```
+
+### B | Run a trial-aware prompt, then compare
+
+Copy the prompt and H3-A into **Microsoft Copilot**. Keep your AI good-practice card beside you. Paper route: read page 6 after A.
+
+```{r, results='asis'}
+html_out(paste0('<div class="prompt">',s3_paragraphs(s3_prompt),'</div>'))
+```
+
+What improved? What still needs a source check? Compare with your own note.
+
+<div class="writing tall"></div>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 6 | Prepared comparison response
+
+Use for Snapshot B **after** marking page 5. This is a possible improved response, not a guarantee of an AI tool's answer.
+
+```{r, results='asis'}
+html_out(paste0('<div class="ai-source">',s3_paragraphs(s3_fallback),'</div>'))
+```
+
+What clarifying question helps? Does the advice distinguish some saving, the minimum, wider reach and full costs?
+
+<div class="writing tall"></div>
+
+Which claim would you check or strengthen before sharing this advice?
+
+<div class="writing tall"></div>
+
+</div>
