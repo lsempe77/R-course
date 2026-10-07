@@ -14,7 +14,7 @@ Fiona's review is [REVIEW_NOTES.md on main](https://github.com/lsempe77/R-course
 
 Reviewed: eleven current QMD decks, published participant DOCX sheets, relevant trainer packs, supplementary references, the four A1 poster uses, HANDOFF.md, SIMPLE_GREENWASTE_PLAN.md and CLAUDE.md. Original headings at `217858a` identify useful restoration candidates. This is a teaching/content review, not a fresh visual render audit.
 
-Slide IDs refer to the **current sequence**, excluding the generated title screen: `D1S1-01` is the first content slide. All eleven title screens and 122 content screens have a proposal below. “Combine” retains a slide's teaching purpose within another screen. H1–H11 identify participant handouts in session order. Their section names below refer to the current documents, not hypothetical worksheets.
+Baseline IDs refer to the original content sequence, excluding the generated title screen: `D1S1-01` is its first content slide. All eleven title screens and 122 baseline content screens are mapped. Day 1 now uses P IDs for the proposed delivery order, with origin/action columns mapping existing material and additions. H1–H11 identify participant handouts in session order; Day 1 tables explicitly show replacement sections and questions rather than preserving the earlier worksheet order.
 
 ## Decisions to settle together
 
@@ -24,7 +24,7 @@ Slide IDs refer to the **current sequence**, excluding the generated title scree
 | Simulation start | Lucas confirmed the Day 4 simulation starts at 13:00. Within the confirmed day ending at 15:00, this leaves 120 minutes for the simulation and 195 minutes before it after the two breaks. | Confirmed start; end follows daily schedule |
 | Session allocation | For Days 1–3, propose 90/90/120 minutes plus 15 minutes of daily consolidation. For Day 4, propose two 90-minute sessions plus 15 minutes of feedback/handover before the simulation. Break placement remains a proposal. | Pending |
 | Technical level | Explain comparisons, coefficients, p-values, confidence intervals and causal assumptions through worked examples. Keep full estimator syntax and advanced inference as trainer extensions unless necessary to read the supplied report. | Pending |
-| Day 1 order and outcome | Keep the requested terms-first order. Fiona's new outline proposes S1 read a result, S2 descriptive cost data and weak comparisons, S3 pilot lottery. Prefer costs in AED as the main thread throughout Day 1; decide whether to convert landfill claim cards or explicitly identify them as the second outcome. | Pending |
+| Day 1 order and outcome | Proposed sequence now consistently follows Fiona's outline: S1 read a cost result, S2 descriptive cost data and weak comparisons, S3 pilot lottery. Keep annual cost AED throughout, including the four claim cards. Landfill remains available for later chart/denominator teaching. | Draft aligned; teaching approval pending |
 | Slide count | With the explicit additions below, provisionally aim for about 14–18 substantive screens for explanation-heavy sessions, fewer for workshops, excluding title/break screens. Agree a final sequence before exact timings. Do not add slides simply to fill a longer slot. | Pending |
 | AI tasks | Fiona records a decision to restore a shortened AI Snapshot in each session: mark a realistic response, then run the better prompt and compare. Reflect that sequence in the draft, with device/account requirements and a prepared paper fallback. Confirm its timing within each session. | Recorded as decided in Fiona's notes; timings to agree |
 | Reading assessment | Retain independent Day 4 reading, feedback and targeted retries. Consider a short unfamiliar extract to check transfer beyond recognition of GreenWaste numbers. This is a teaching check, not validated certification. | Pending |
@@ -78,13 +78,13 @@ Implications for the slide and handout proposals: keep the same core concepts an
 
 ## Proposed teaching sequence
 
-The table and slide/handout rows below are the original review mapping. Fiona's newer cost-focused Day 1 alternative is the preferred sequence for discussion in the reconciliation section below. If agreed, D1S2 landfill data/figures become cost data/figures and D1S3's repeated weak-comparison teaching becomes a brief recap. Do not implement both versions in parallel.
+The Day 1 tables below now directly specify the cost-focused sequence, as-you-go worksheets and two-stage AI exercises. The reconciliation section records why the plan changed; it is not an alternative sequence. Days 2–4 retain their original baseline row mapping plus the proposed insertions.
 
 | Session | Progression | Main source |
 |---|---|---|
-| D1S1 | Case; records and mean/spread; worked change; coefficient; effect versus change; interval; p-value; independent reading. | Case card + H1 table |
-| D1S2 | City landfill data; descriptive summaries/distribution; before/after versus with/without; four claims; chart review. | H2 data/figures + cards |
-| D1S3 | Weak cost comparisons; pilot lottery; difference of means/regression; uncertainty/reach; recommendation. | H3 pilot study extract |
+| D1S1 | Case/ToC; five terms through annual cost results; worksheet questions as concepts are taught; pair correction; realistic AI markup and better-prompt comparison. | Case card + H1 cost records/table |
+| D1S2 | City cost records/counts/distributions; before/after versus with/without; four cost claims; chart AI markup and better-prompt comparison. | H2 cost data/figures + four cost cards |
+| D1S3 | Brief city-comparison recap; pilot lottery/draw; baseline check; post-period means/regression; uncertainty/reach; recommendation and ministerial AI task. | H3 pilot study extract |
 | D2S1 | Four means; DiD diagram/arithmetic; output; parallel trends; data limits; source interpretation. | H4 DiD extract |
 | D2S2 | Score rule/scatterplot; raw group gaps; fitted local jump; window/credibility checks; reach. | H5 cutoff extract + cards |
 | D2S3 | Pair profiles before costs; differences; full-study matching/reuse; balance/overlap; unmeasured factors. | H6 matching extract + cards |
@@ -102,66 +102,84 @@ Title screens: keep the question-led main titles for review, use explicit conten
 
 ### D1S1 What do the numbers actually say?
 
-Source: `Oct12_session1_live.qmd`. Current duration: 60 minutes. Handout: H1. Session decision: **Pending**. Comments: ____________________
+Source: `Oct12_session1_live.qmd`. Existing notes total 60 minutes; proposed allocation: **90 minutes**, with 17 content screens. Handout: H1. Session decision: **Pending**. Comments: ____________________
 
-Proposed order of current material: 01 with new case/data orientation; 02; 04+05; 03; 06; 07; 08; 09+10; 11. Additional screens are justified only where a worked diagram cannot fit legibly.
+The P IDs below give the proposed delivery order. Origin IDs preserve traceability to every baseline screen and Fiona's additions. Worksheet questions are answered as concepts are taught; P14 is correction and Q6, not a repeat of the whole worksheet. Title screen has no separate time allocation.
 
-| Current slide | Action | Specific revision and learner work |
-|---|---|---|
-| D1S1-T Title | Retain | Explicit subtitle and objective: interpret a simple regression table using five terms. |
-| 01 An impressive result lands on your desk | Expand | Replace the one-line description with a formal case introduction before the vocabulary check. Show programme components, pilot/city settings, outcomes and timing using the existing case map. Add a separate context screen if needed. Link H1 to the case card. |
-| 02 Mean: who looks like the average? | Expand | Keep ten records and calculation. Restore a dot plot with mean marker and the 46-tonne business. Calculate before revealing 100/10. Compare median 6.5 tonnes for this selected set; explain that these are selected records, not a representative city sample. |
-| 03 Treatment effect: what did GreenWaste cause? | Expand; move after 04+05 | Draw the observed outcome and the missing no-programme outcome for a concrete business. Explain the counterfactual and why the change just calculated is not automatically a causal effect. |
-| 04 Coefficient: which row is the change? | Expand | Restore a complete teaching output with labelled intercept, after indicator, coefficients, intervals and p-values. Explain rows/columns, reference category and 1,432 + (-669) ≈ 763. An intercept is the baseline mean in this simple model, not in every regression. |
-| 05 A minus sign. Good news or bad? | Combine with 04 | Show the worked subtraction beside the optional commented R calculation. Learners predict sign and explain units before Run. Explain why this arithmetic and the simple regression give the same change. |
-| 06 Confidence interval: how sure are we? | Expand | Plot estimate/interval on a labelled line. Contrast estimate uncertainty with individual outcome variation. Restore a short hypothetical repeated-sample coverage illustration; avoid a 95% probability claim about this fixed interval. |
-| 07 P-value: does small mean important? | Expand | Adapt the old null/shuffle teaching device to a valid hypothetical no-mean-change illustration. Do not shuffle programme labels and imply random assignment in this before/after analysis. Include significant-but-small and imprecise non-significant examples. |
-| 08 A lower cost. Enough of a saving? | Keep; clarify | Explicitly convert negative cost change to positive saving, reversing interval endpoints. Separate statistical evidence, causal credibility and the fictional 1,000 AED minimum. |
-| 09 Your turn: what does the table say? | Keep | Protect independent annotation then paired checking. Use the same labelled output as the worked example. Require population, outcome, comparison and uncertainty in the interpretation. |
-| 10 A correct number. A wrong conclusion. | Replace; combine debrief with 09 | Use a plausible 80–120 word paragraph with accurate descriptive figures, a cautious phrase and two consequential overclaims. Learners explain repairs before flags appear. Adapt older AI task structure, not old figures. |
-| 11 What would you tell the director? | Keep | Ask for an interpretation and its limit, not only another question. Give feedback on the five meanings. Bridge to inspecting the data behind a headline in S2. |
+| Proposed slide | Origin/action | Explanation, visual and learner work | Paper task | Minutes |
+|---|---|---|---|---:|
+| D1S1-T Title | Retain | Five terms for reading an annual cost result; one interpretation objective. | H1 source identified | — |
+| D1S1-P01 The GreenWaste case study | Preserve Fiona F1 | Case map, intervention components, pilot/city settings and measured outcomes. Introduce annual cost AED as Day 1's main outcome; distribute the picture card. | Case card | 4 |
+| D1S1-P02 Where does GreenWaste fit? | Preserve Fiona F2 | ToC bridge from delivery outputs to measured outcomes. Explain that distributing equipment does not establish caused savings. | Case reference | 4 |
+| D1S1-P03 A cost result lands on your desk | D1S1-01, orient | Show the named city before/after source and self-check the five terms. Explain people/period/units before asking learners to read it. | H1-A source | 2 |
+| D1S1-P04 Mean: who looks like the average? | D1S1-02, adapt to costs | Ten selected actual annual COST records; learners calculate first, then reveal mean and dot plot. Recompute values from CSV; do not relabel the old tonne values as AED. | Q1 | 5 |
+| D1S1-P05 One large business changes the average | ADD1, restore | Remove the largest selected cost record; compare mean and median and predict movement. Selected records are not a representative city sample. | Q1 follow-up | 4 |
+| D1S1-P06 Treatment effect: what did GreenWaste cause? | D1S1-03, expand | Observed-versus-missing-no-programme outcome diagram and concrete business example. Separate causal effect from recorded change; revisit after coefficient reading. | Proposed Q2 | 5 |
+| D1S1-P07 Coefficient: which row is the change? | D1S1-04, expand | Annotated intercept/after rows, intervals, p-values and source/model note. Explain reference period and 1,432 + (-669) ≈ 763. Intercept interpretation is model-specific. | Proposed Q3 | 6 |
+| D1S1-P08 What does the minus sign mean? | Preserve Fiona's revision of D1S1-05 | Outcome-dependent sign interpretation; worked subtraction, then optional commented R Run. Explain arithmetic/regression agreement without requiring participant code. | Proposed Q3 follow-up | 4 |
+| D1S1-P09 Confidence interval: how sure are we? | D1S1-06, expand | Estimate/interval line; uncertainty around the mean change versus business-level spread. Brief hypothetical repeated-sample coverage explanation. | Q4 | 5 |
+| D1S1-P10 Same estimate. Different uncertainty. | ADD2, restore | Three hypothetical intervals on one labelled scale; compare precision and implications for the same threshold. No extra model-fitting lecture. | Q4 follow-up | 5 |
+| D1S1-P11 P-value: what does small tell us? | D1S1-07, expand | Explain result under no-mean-change null and assumptions with a valid hypothetical illustration. Not probability the programme works; not proof of cause. | Q5 | 5 |
+| D1S1-P12 Statistically clear. Large enough to matter? | ADD3, restore | Coherent precise-small versus imprecise-larger examples. A non-significant result does not prove no change; significance is not policy importance. | Q5 follow-up | 4 |
+| D1S1-P13 A lower cost. Enough saving? | D1S1-08, retain | Convert -669 change to positive saving with reversed interval endpoints; compare against fictional 1,000 AED rule. Do not label change as impact. | Q6 interpretation | 4 |
+| D1S1-P14 Pair check: what does the table support? | D1S1-09, revise | Compare completed Q1–Q5, correct misunderstandings and finish Q6. Trainer listens for each term's meaning; no second full worksheet round. | Pair check + Q6 | 10 |
+| D1S1-P15 A plausible AI reading of the table | D1S1-10, replace | Realistic multi-paragraph response to a busy official's prompt: correct figures/qualifications mixed with causal and decision overclaims. Mark source support before debrief. | H1 AI response/source | 8 |
+| D1S1-P16 Ask for a reading you can verify | AI2, add | Run better prompt with decision, source and limits; ask for clarifying questions. Compare to marked response and source. Prepared second response is paper fallback. | H1 better prompt/comparison | 7 |
+| D1S1-P17 What would you tell the director? | D1S1-11, retain | Independent interpretation, causal limit and evidence request. Bridge: S2 inspects the cost data and comparisons behind -669. | Individual close | 8 |
+| Total content time | | | | **90** |
 
 ### D1S2 Good news. Enough to act?
 
-Source: `Oct12_session2.qmd`. Current duration: 60 minutes. Handout: H2. Session decision: **Pending**. Comments: ____________________
+Source: `Oct12_session2.qmd`. Current duration: 60 minutes; proposed allocation: **90 minutes**, with 15 content screens. Handout: H2. Session decision: **Pending**. Comments: ____________________
 
-Proposed order: 01+03 with brief context from 02; 04 data orientation; 07 descriptive distribution; 05+06 worked comparisons; 08; 09; 10; 11. This makes the descriptive purpose visible.
+Replace the landfill headline sequence with cost data and descriptive comparisons. Keep Fiona's brief case reminder within P01, four-card triage and A1 board. Do not repeat S1's ten-record mean lesson or formally teach DiD before Day 2.
 
-| Current slide | Action | Specific revision and learner work |
-|---|---|---|
-| D1S2-T Title | Clarify subtitle | Name descriptive statistics, recorded outcomes and claim checking. |
-| 01 That headline lands on your desk | Keep; orient | Identify city participants, landfill tonnes and before/after period. Take a provisional vote with a reason. Do not present the headline as an effect. |
-| 02 What did GreenWaste actually do? | Move; combine | Move the substantive introduction to S1. Here retain a small city-setting reminder and explicitly announce the switch to landfill tonnes. |
-| 03 Would you extend it? | Combine with 01 | Reveal the fully labelled headline chart. Explain approximately 50% as rounding of 49.5%; show the underlying quantities rather than an isolated percentage. |
-| 04 What does the headline leave out? | Expand | Restore selected rows with identifier, participation and before/after landfill columns. Explain one row per business with two measures. Add the before/after timeline; selected rows illustrate structure, not the whole sample. |
-| 05 Who else saw waste fall? | Expand | Restore paired participant/comparison charts with common axes and labelled means. Calculate both changes without calling the extra change causal; DiD assumptions come on Day 2. |
-| 06 Better than before. Better than without? | Expand | Show actual before/after and with/without landfill comparisons side by side. Work one calculation for each; name people, period and limitation. Keep counterfactual explanation attached to the diagrams. |
-| 07 Who is hidden by the average? | Extend S1 | Use a full-city distribution or labelled size-group summary, with mean/median and variation. Avoid repeating the same ten numbers as if they represented the city. |
-| 08 Four claims. Which would you act on? | Keep | Preserve Fiona's four cards and optional A1 board. Add short sources and units. Card 2's causal wording remains open to challenge; landfill does not establish the cost decision rule. |
-| 09 Which evidence supports your choice? | Keep | Debrief disagreement using exact claims and available evidence. Explain what would justify action; avoid teaching that ask-first is always the answer. |
-| 10 Would you accept the AI explanation? | Replace | Restore a realistic chart-reading paragraph with correct figures/comparison and a plausible causal or nationwide leap. Mark supported/qualified/unsupported claims, then improve the prompt and verify the answer. |
-| 11 Which answer do you need before acting? | Keep | Repeat the opening decision and compare reasons. Require one supported descriptive conclusion and one missing causal comparison. Bridge to the pilot lottery. |
+| Proposed slide | Origin/action | Explanation, visual and learner work | Paper task | Minutes |
+|---|---|---|---|---:|
+| D1S2-T Title | Revise subtitle | Descriptive statistics, annual costs and the comparison behind a claim. | H2 source identified | — |
+| D1S2-P01 We read -669. Was it the programme's effect? | D1S2-01, D1S2-02 and D1S2-03, replace/combine | City cost result callback and one-minute case reminder. Learners give provisional reason; no landfill headline or isolated percentage. | Opening judgement | 4 |
+| D1S2-P02 One row. One business. Two measurements. | D1S2-04 + ADD1 | Selected real city rows, IDs, participation and before/after cost columns. Describe one business in words; one record contains two measurements. | Q1 data orientation | 5 |
+| D1S2-P03 Who is included in these averages? | ADD2 | Participation counts 4,794/5,206 and score-rule reminder. Identify which businesses each average describes. | Source/sample caption | 3 |
+| D1S2-P04 What do costs look like before the programme? | D1S2-07, replace | Full-city or explicitly labelled group histogram with mean/median/spread. Extend S1; do not re-teach its ten selected records. | Q2 distribution | 6 |
+| D1S2-P05 Participants: what changed after GreenWaste? | D1S2-06, split | Before/after 1,432→763; work approximately -669 using proper unrounded source for final value. Interpret a descriptive change, not an effect. | Q3 before/after | 6 |
+| D1S2-P06 Did every business's cost fall? | ADD3 | Distribution of individual changes with zero marked. A mean fall does not mean a fall for every participant. | Q3 variation | 5 |
+| D1S2-P07 What else could have changed costs? | D1S2-04 question, retain within new context | Before/after timeline plus hypothetical price/service change. Learners state needed evidence; brainstormed shocks are not established case facts. | Q3 comparison limit | 5 |
+| D1S2-P08 Other city businesses: what changed? | D1S2-05, replace | 2,258→2,401 and approximately +143 change, common axes. It raises a counterfactual question; does not alone prove participant untreated trend. | Q4 other-group change | 6 |
+| D1S2-P09 Lower than without. Already lower before. | D1S2-06, split | After-only 763 versus 2,401 gives approximately -1,638. Reveal baseline levels and concrete selection concern; do not call the whole gap caused saving. | Q4 with/without | 7 |
+| D1S2-P10 Two numbers. Two weak comparisons. | ADD4 | Compare -669 and -1,638 with groups/periods labelled. Ask what each misses and why a fair comparison is needed. No claim that these alone establish true bias direction. | Comparison summary | 5 |
+| D1S2-P11 Four cost claims. Which would you act on? | D1S2-08, adapt cards | Four cost cards preserve Fiona's activity and Act/Ask first/Do not act grid. Sources identify before/after change and paired descriptive changes. Do not smuggle in an unexplained DiD effect. | Q5 four cards/A1 | 12 |
+| D1S2-P12 Which evidence supports your choice? | D1S2-09, retain | Debrief two disagreements using words/numbers. Explain what would justify action; several evidence requests can be defensible. | Q5 reasons | 5 |
+| D1S2-P13 Would you accept this AI chart reading? | D1S2-10, replace | Realistic cost-chart reading with correct changes and subtle causal/generalisation leap. Mark supported claims and missing comparison before feedback. | H2 AI response/source | 8 |
+| D1S2-P14 Ask for a comparison-aware explanation | AI2, add | Run better prompt with source, decision and data limits; compare response against chart and marked draft. Paper fallback supplied. | H2 better prompt/comparison | 7 |
+| D1S2-P15 What comparison would you ask for next? | D1S2-11, revise | Independent descriptive conclusion and useful evaluator question; compare opening reason. Bridge to pilot lottery, not another landfill lesson. | Individual close | 6 |
+| Total content time | | | | **90** |
 
 ### D1S3 Did the programme make the difference?
 
-Source: `Oct12_session3_live.qmd`. Current duration: 75 minutes. Handout: H3. Session decision: **Pending**. Comments: ____________________
+Source: `Oct12_session3_live.qmd`. Current duration: 75 minutes; proposed allocation: **120 minutes**, with 16 content screens. Handout: H3. Session decision: **Pending**. Comments: ____________________
 
-| Current slide | Action | Specific revision and learner work |
-|---|---|---|
-| D1S3-T Title | Retain | Explicit lottery/causal-comparison objective. |
-| 01 Two savings. Two weak comparisons. | Expand | Restore two cost mini-tables/timelines for before/after and with/without. Work the comparisons with learners. Explicitly switch from landfill tonnes to annual cost AED. |
-| 02 Which comparison is fair? | Expand | Explain selection bias with a concrete baseline difference and the existing group diagram. Use the current pilot/city design, not the old neighbourhood assignment. |
-| 03 How different were they at the start? | Keep; explain | Keep the baseline gap chart with common axes. Explain why the later level gap cannot all be credited to treatment; starting-level differences are not fatal to every method. |
-| 04 Could something else explain the fall? | Combine with 01 debrief | Attach one hypothetical common price/service change to the before/after timeline. Label it hypothetical, rather than evidence of an observed real shock. |
-| 05 What does the lottery protect us from? | Expand | Restore the lottery diagram: 400 eligible pilot businesses, 200 assigned to join and 200 to wait. Explain random assignment, sample selection and the assumptions supporting the post-period comparison. |
-| 06 A lottery. Perfectly balanced groups? | Keep; explain | Keep one trainer rerandomisation of 20 illustrative businesses and display distributions as well as means. Explain chance imbalance and distinguish this demo from the 400-business pilot. |
-| 07 What did the pilot actually find? | Expand | Restore the worked difference of post-period means followed by the regression row. Annotate treatment indicator, reference group, sign and interval; explain both estimate the pilot comparison. |
-| 08 Break | Keep | Retain a break; confirm length with timetable. Leave comparison diagram and source accessible. |
-| 09 Does the interval clear our saving rule? | Keep | Use a consistent positive-saving scale. Explain what remains uncertain when the interval crosses 1,000. |
-| 10 Would you extend it now? | Keep | Vote after reading. Ask for a design strength and a precision/transfer limit; accept supported conditional actions. |
-| 11 Your recommendation in three sentences | Keep; scaffold | Give one worked interpretation sentence, then learners write their own recommendation, limitation and request. Preserve individual thinking before pairs. |
-| 12 The AI wants to expand. What is missing? | Restore richer example | Adapt the older ministerial paragraph: correct pilot estimate/uncertainty, plausible qualification, then threshold or national-value overclaims. Debrief sentence by sentence without pre-highlighted answers. |
-| 13 Which question could change your decision? | Combine with 11 close | Make the request the last sentence of the recommendation. Finish with a map: pilot lottery today; city comparisons tomorrow. |
+Move the full weak-city-comparison explanation to S2; S3 uses only a brief recap before the pilot. Original D1S3-02, D1S3-03 and D1S3-04 content is covered by D1S2-P07/P09/P10 rather than taught twice. Original D1S3-08 break screen becomes a change-of-activity cue, not a third scheduled break. No outcome switch: costs remain in AED.
+
+| Proposed slide | Origin/action | Explanation, visual and learner work | Paper task | Minutes |
+|---|---|---|---|---:|
+| D1S3-T Title | Retain | Pilot lottery, uncertainty and limits of wider recommendations. | H3 source identified | — |
+| D1S3-P01 Two city comparisons. Why a lottery? | D1S3-01, shorten | Brief recap of -669 and -1,638 with their weaknesses. Do not redo S2 calculations or baseline lesson. | H2 summary referenced | 4 |
+| D1S3-P02 The pilot district: 400 businesses, 200 places | D1S3-05, split | Show eligible pilot population and individual-business allocation; 200 join/200 wait. Distinguish random assignment from selecting a representative sample. | H3-A design | 5 |
+| D1S3-P03 What the lottery buys us | D1S3-05, split | Concrete selection example and random-assignment diagram. Explain comparability under trial assumptions, not guaranteed identical businesses. | Q1 comparison/fairness | 7 |
+| D1S3-P04 Draw the lottery, then draw again | D1S3-06, expand | Physical draw of ten from 20 numbered manager-age slips; compare drawn/not-drawn means, repeat, then optional commented R repeats. Physical activity is internet fallback. | Q1 draw reflection | 12 |
+| D1S3-P05 Small lotteries can look different | D1S3-06, split | Sample-size visual/repeated-draw display, with illustrative and actual pilot sample sizes distinguished. Predict imbalance before reveal. Avoid randomisation-proof significance tests. | Q1 sample-size note | 6 |
+| D1S3-P06 Were groups similar before GreenWaste? | ADD1 | Pilot baseline means 1,390/1,411 and distributions. Explain chance imbalance and why the assignment process matters more than one balance p-value. | H3 baseline panel | 6 |
+| D1S3-P07 The result is a difference of two averages | D1S3-07 + ADD2, split | Post-period means 769/1,783 yield approximately -1,014. Work units, comparison and sign before the output. Use precise data for final estimate. | Q2 mean difference | 8 |
+| D1S3-P08 The regression reports that same comparison | D1S3-07 + ADD2, split | Treatment row, reference group, uncertainty and source. Explain why the assignment design supports the pilot effect interpretation, unlike S1 before/after. | Q2 output annotation | 6 |
+| D1S3-P09 Does the interval clear our rule? | D1S3-09, retain | Positive saving interval 862–1,167 against 1,000. Point exceeds minimum, interval spans it. | Q3 uncertainty/rule | 8 |
+| D1S3-P10 Who does this pilot describe? | Part of D1S3-10, separate | One district, score ≤58 and trial delivery conditions. Explain evidence needed for broader use; a lottery does not guarantee nationwide relevance. | Q4 reach | 6 |
+| D1S3-P11 Three numbers. Three comparisons. | Restore day's summary | City before/after -669, city with/without -1,638, pilot -1,014 with interval, each labelled by people/period. Pilot is not automatic ground truth for city's different population. | H3 comparison reference | 6 |
+| D1S3-P12 Would you extend it now? | D1S3-10, retain | Individual choice before group discussion; explain design strength plus uncertainty/reach limit and proportionate condition. | Q5 provisional action | 8 |
+| D1S3-P13 Your recommendation in three sentences | D1S3-11, retain | Draft finding, action/condition and important limit/request; pair source-check without a predetermined policy answer. | Q5 note | 13 |
+| D1S3-P14 A plausible AI paragraph for the minister | D1S3-12, replace | Accurate result/qualification mixed with subtle threshold/nationwide-value assurance. Mark against H3-A before debrief. | H3 AI response/source | 8 |
+| D1S3-P15 Ask for a recommendation the trial supports | AI2, add | Run better prompt and compare to source and marked draft; provide prepared paper response. | H3 better prompt/comparison | 7 |
+| D1S3-P16 Which evidence could change your decision? | D1S3-13, retain | Independent request and final source-based recommendation. Bridge to city DiD tomorrow; daily cross-session consolidation is separate. | Individual close | 10 |
+| Total content time | | | | **120** |
 
 ### D2S1 What would have happened anyway?
 
@@ -333,7 +351,7 @@ These eight minutes form D1S1's opening allocation below, not extra time on top 
 
 | New ID | Position in agreed sequence | Proposed title and purpose | Visual, learner work and matching paper | Time within session budget |
 |---|---|---|---|---|
-| D1S1-ADD1 | After the mean calculation, original 02 | One large business changes the average | Dot plot before/after removing the largest observation; compare mean and median. Learners predict before reveal. H1 adds one comparison field. Use actual cost records if cost-focused Day 1 is agreed; otherwise explicitly label existing tonnes illustration. | 4 minutes |
+| D1S1-ADD1 | D1S1-P05 | One large business changes the average | Dot plot before/after removing the largest selected actual annual cost; compare recomputed mean and median. Learners predict before reveal. H1 adds one comparison field; no relabelled tonne values. | 4 minutes |
 | D1S1-ADD2 | After interval explanation, original 06, before decision-rule reading | Same estimate. Three different levels of uncertainty. | Three hypothetical intervals around the same estimate with a common decision threshold. Learners explain what changes and what does not. H1 gets the figure and interpretation question. This replaces extra repeated-sample slides if both cannot be taught clearly. | 5 minutes |
 | D1S1-ADD3 | After p-value explanation, original 07 | Statistically clear. Large enough to matter? | Compare a precise small change with a less precise larger change; show estimate, interval and relevant threshold. Hypothetical examples must be coherent, with p-values computed if displayed. H1 supplies both rows. | 4 minutes |
 | D1S2-ADD1 | After brief city/cost reminder, before descriptive summaries | One row. One business. Two measurements. | Selected real rows with highlighted ID, participation and before/after columns. Learner describes one business in words. H2 includes those rows, not the entire dataset. Split from the source-orientation content planned for original 04. | 5 minutes |
@@ -354,7 +372,7 @@ These eight minutes form D1S1's opening allocation below, not extra time on top 
 | D4S1 | No additional technical lecture screen proposed | Protect independent report reading | Expand source orientation and table debrief on existing screens. Use the longer slot for reading, section discussion and feedback; do not coach the independent answers immediately before assessment. | See budget below |
 | D4S2-ADD1 | After source orientation, before worked brief, originals 01–03 | Which finding supports this sentence? | Trace a worked brief sentence to numbered corrected finding, comparison and interval; contrast with a sentence the source cannot support. H11 includes source index; worked answer remains on teaching/reference material, not the independent draft sheet. | 5 minutes |
 
-The insertion list contains **19 proposed explanatory screens**, plus Fiona's two existing opening additions. Some split content already assigned to an expanded slide; they are not 19 new concepts. Preserve scope while giving learners readable steps. Final counts depend on removing repeated instruction screens.
+The insertion catalogue contains **19 proposed explanatory screens**, plus Fiona's two existing opening additions. Some split content already assigned to an expanded slide; they are not 19 new concepts. The Day 1 P tables incorporate these and further splits explicitly, and take precedence for Day 1 order/timing. Final proposed Day 1 counts are 17/15/16 content screens; title screens have no additional time.
 
 ### A second screen for each restored AI Snapshot
 
@@ -396,50 +414,62 @@ Each packet should have an identifiable source, an activity and space to respond
 
 ### H1 Day 1 Session 1
 
-File: `Oct12_session1_handouts.docx`. Current heading: Read a regression table. Decision: **Pending**. Comments: ____________________
+File: `Oct12_session1_handouts.docx`. Proposed purpose: Read an annual cost result using five terms. Decision: **Pending**. Comments: ____________________
 
-| Current section or item | Proposed revision | Slide connection |
+Use a cost-source reference, as-you-go response sheet and realistic AI task. Proposed question numbering follows teaching order: Q1 mean, Q2 treatment effect, Q3 coefficient, Q4 interval, Q5 p-value and Q6 interpretation. This swaps the current coefficient/treatment-effect question numbers; synchronize all slides, notes, worksheet and key when implementing. Fiona's as-you-go method is preserved.
+
+| Proposed section/item | Replacement and learner work | Proposed slide connection |
 |---|---|---|
-| Opening instructions | Name the case reference and table source. Add a compact explanation of participants, annual cost, two periods and what one record means. Use the case card for the fuller introduction. | D1S1-01 |
-| 1 Mean | Retain ten records and arithmetic; add matching dot plot, blank mean marker and median comparison. Label selected teaching records. Give enough space to explain what the mean hides. | 02 |
-| Annual waste cost regression | Restore an authentic-looking but readable teaching output, including row labels, estimate, interval, p-value and N/source/model note. Explain after=0/1 and reference category. Do not present an unexplained machine screenshot or imply causal identification. | 04+05 |
-| 2 Coefficient | Ask learners to mark the relevant row, interpret sign/units and reconstruct the after mean. Explain baseline intercept interpretation applies to this model. | 04+05 |
-| 3 Treatment effect | Add observed-versus-missing-outcome diagram. Ask what comparison would be needed before relabelling change as effect. | 03 |
-| 4 Confidence interval | Add estimate/interval number line and contrast with individual outcomes. Ask what the interval describes; put the repeated-sample explanation in a reference margin/page, not the answer key on the task. | 06 |
-| 5 P value | Add short null-model source and two cases: precise small change and imprecise non-significant estimate. Ask what each allows a reader to conclude. Avoid equating p-value with probability of no effect. | 07 |
-| 6 Read and repair | Replace single obvious sentence with richer source paragraph. Identify it as an illustrative analyst/AI draft based on Table H1-A. No pre-highlighted mistakes. | 08–10 |
-| My independent reading and next question | Require interpretation, comparison/causal limit and next evidence. Keep table open and explanations closed for retrieval. | 09–11 |
+| Opening source instructions | Identify case card and H1-A city before/after cost table, with physical page location. Explain annual cost AED and 12-month follow-up; no teacher setup prose. | D1S1-P01–P03 |
+| Q1 Mean and what it hides | Replace ten landfill values with ten selected real annual cost records, a dot plot and calculation space. Compare mean/median before and after removing largest cost. Recompute answers; the old total 100/mean 10/median 6.5 do not apply to cost records. | P04+P05 |
+| Q2 Treatment effect | Observed-versus-missing-no-programme diagram and question about causal comparison. Answer as taught, then revisit after reading coefficient. | P06 |
+| H1-A annual cost regression reference | Readable annotated output with intercept/after indicator, interval, p-value, N and source/model note. Explain reference category and units; clean copy available for annotation. | P03+P07–P13 |
+| Q3 Coefficient/sign | Mark change row, interpret units/sign, reconstruct after mean and explain why arithmetic reproduces the simple coefficient. | P07+P08 |
+| Q4 Confidence interval | Plot change interval; distinguish estimate uncertainty from individual costs. Three hypothetical intervals add comparison task; avoid presenting task answers in the reference. | P09+P10 |
+| Q5 P-value | Null-model question plus precise-small/imprecise-larger rows; explain significance versus practical relevance and absence-of-evidence limit. | P11+P12 |
+| Q6 Interpretation and pair correction | Learners use completed Q1–Q5 to repair interpretation, compare rule, name causal limit and correct answers with partner. Do not repeat every question independently at the end. | P13+P14 |
+| AI Snapshot A: supplied reading | Multi-paragraph realistic response, naive prompt context and exact H1-A source location. Underline supported claims and cross out unsupported claims before debrief. | P15 |
+| AI Snapshot B: better prompt/comparison | Printed improved prompt with decision, source, limits and request for clarifying questions; room for source-based comparison of response. Trainer provides paper fallback. | P16 |
+| My independent interpretation/request | Cost change, interval, comparison and one causal limit/request. Source table stays available; term explanations closed. | P17 |
 
 ### H2 Day 1 Session 2
 
-File: `Oct12_session2_handouts.docx`. Current heading: Question a claim. Decision: **Pending**. Comments: ____________________
+File: `Oct12_session2_handouts.docx`. Proposed purpose: Read city cost data and question two descriptive comparisons. Decision: **Pending**. Comments: ____________________
 
-| Current section or item | Proposed revision | Slide connection |
+Replace the landfill headline and repeated ten-tonne mean task. Supply a named cost-data/figure reference H2-A, response sheet and AI task; retain four-card group work and optional A1 board. All charts/cards here use annual cost AED. Sources are supplied extracts/figures, not a complete report.
+
+| Proposed section/item | Replacement and learner work | Proposed slide connection |
 |---|---|---|
-| Opening heading/instructions | Make descriptive-statistics purpose explicit. Say the source is city landfill data, not a complete evaluation report. | D1S2-01 |
-| 1 Read alone first | Retain approximate 50% headline, label its rounding from 49.5%, period and population. Add a fully labelled figure and provisional reason; do not imply a causal result. | 01+03 |
-| New data orientation panel | Include a few selected records with identifier, participation, before/after tonnes and a brief column key. Explain the full data contain more businesses than this illustration. | 04 |
-| 2 What could an average hide | Replace repetition of H1 with full-city distribution or size-group summary. Include mean/median and a distribution question. Keep the ten-record example only as an optional recap. | 07 |
-| New comparison panel | Supply participant/non-participant before/after means and one worked example. Learners calculate before/after and with/without, then name limitations. Label rounded descriptive values. | 05+06 |
-| Triage four claims, Cards 1–4 response fields | Keep all four responses. Include card IDs, exact source references, units and sufficiently large spaces for reasons. Do not force one missing-question label when several are defensible. | 08+09 |
-| New AI/source-check task | Current participant sheet lacks the on-slide AI task. Add the richer paragraph only if it is a core exercise, or supply it as a separate optional activity card; slides and print must state which. | 10 |
-| My next question from memory | Add final decision and one supported descriptive statement; compare with the opening reason. | 11 |
+| Opening judgement | Replace approximately 50% landfill headline with city -669 cost callback. Ask whether this is an effect and record reason for later comparison. | D1S2-P01 |
+| Q1 Meet the data | Selected actual city rows with identifier, participation and before/after COST columns; column key and source. Describe one business in words. Count caption identifies 4,794 participants/5,206 others. | P02+P03 |
+| Q2 Describe baseline costs | Histogram with mean/median and labelled population; explain spread and what one average hides. Use full-city/group data, not a second copy of H1's selected ten records. | P04 |
+| Q3 Participants before/after | Labelled 1,432→763 chart, after-minus-before fields, individual-change distribution and a hypothetical common-shock question. Interpret descriptive change and reject every-business inference. | P05–P07 |
+| Q4 Other businesses and with/without | 2,258→2,401 chart and +143 change; after-only 763 versus 2,401; starting levels and named group/period. Learners calculate and explain limitations without a formal DiD lesson. | P08+P09 |
+| Two-comparison summary | -669 and -1,638 with populations/periods and missing-counterfactual question. Do not claim observed group changes alone prove true bias directions. | P10 |
+| Q5 Four cost claims | Four response fields with decision, source support, missing question and reason. Cost versions of cards preserve Fiona's distinct claim types; several justified questions are acceptable. | P11+P12 |
+| AI Snapshot A: cost-chart reading | Realistic multi-paragraph response and naive prompt; mark support against named H2-A charts/tables before feedback. Core planned activity, not optional unless team explicitly changes allocation. | P13 |
+| AI Snapshot B: better prompt/comparison | Supply context, decision and comparison limits; request clarifying questions, run and compare with source. Prepared response is offline alternative. | P14 |
+| Independent conclusion/request | State supported descriptive conclusion, missing causal comparison and specific evaluator question. Compare opening reason. | P15 |
 
 ### H3 Day 1 Session 3
 
-File: `Oct12_session3_handouts.docx`. Current heading: Judge a fair comparison. Decision: **Pending**. Comments: ____________________
+File: `Oct12_session3_handouts.docx`. Proposed purpose: Interpret the pilot lottery and write a proportionate recommendation. Decision: **Pending**. Comments: ____________________
 
-| Current section or item | Proposed revision | Slide connection |
+Use named pilot study extract H3-A and response/AI tasks. Refer back to H2's city comparison summary for the brief recap; do not add a second full weak-comparison worksheet. All substantive Day 1 outcomes remain annual cost AED.
+
+| Proposed section/item | Replacement and learner work | Proposed slide connection |
 |---|---|---|
-| Opening and The pilot trial | Expand into a short study extract with design diagram, exact 200/200 allocation, outcome/period and numbered paragraphs. State eligibility and distinguish pilot from city. | D1S3-05 |
-| New weak-comparisons panel | Add before/after and with/without cost tables or figures so the opening discussion has a paper source. This can sit on a separate reference rather than crowd the response sheet. | 01–04 |
-| 1 Name the comparison | Ask who was assigned to join versus wait and why assignment helps. Use a small blank comparison diagram for annotation. | 05+06 |
-| Pilot result table | Add post-period group means beside the regression row, showing their difference. Keep coefficient/interval sign conventions explicit. | 07 |
-| 2 Read the estimate and interval | Include saving-scale figure and decision-rule line. Ask what is settled and uncertain. | 09 |
-| 3 How far does this result reach | Name the proposed citywide/nationwide use and ask what supports transfer from one district. Do not accept location alone as a complete answer. | 10 |
-| Write a decision note | Retain three/four-sentence task with finding, provisional action, limitation and request. Give a sentence starter, not a full model answer. | 11 |
-| Check an illustrative AI draft | Replace three short assertions with a realistic paragraph containing supported and unsupported material. Cite the pilot source paragraphs/table. | 12 |
-| Your question from memory | Integrate into final recommendation, while preserving an individual response. | 13 |
+| H3-A programme/design source | Numbered paragraphs, eligible pilot population, exact 200/200 individual assignment, annual cost and follow-up. Distinguish pilot district from rest of city. | D1S3-P02+P03 |
+| Q1 Comparison and draw reflection | Who is assigned to join/wait, why chance helps, physical draw/repeated-draw comparison and small-sample chance imbalance. Note demo N=20 separately from actual N=400. | P03–P05 |
+| Baseline source panel | Pilot baseline means 1,390/1,411 with distributions; source-labelled. Ask what reassurance and limitation this supplies; no proof from a non-significant test. | P06 |
+| Q2 Means and regression row | Post-period means 769/1,783 beside full pilot output. Work difference then annotate treatment coefficient and reference group. Explain why design supports pilot effect reading. | P07+P08 |
+| Q3 Interval and rule | Positive-saving number line, 862–1,167 and 1,000 rule; state what is settled and remains uncertain. | P09 |
+| Q4 Reach | One district, score ≤58 and trial delivery conditions; request evidence for proposed wider setting. | P10 |
+| Three-comparison reference | Compact city-before/after, city-with/without and pilot table with people/periods. Supports comparison, not a new calculation round or assertion of identical target populations. | P11 |
+| Q5 Provisional recommendation | Individual action/reason followed by three/four-sentence note and pair source check. Finding, action/condition, important limit and request. | P12+P13 |
+| AI Snapshot A: ministerial paragraph | Realistic multi-paragraph response with accurate trial result/qualification and consequential overclaims; naive prompt and exact H3-A source location. Mark before feedback. | P14 |
+| AI Snapshot B: better prompt/comparison | Improved trial-aware prompt, clarifying questions and response-source comparison; prepared paper response available. | P15 |
+| Independent final request | Revisit recommendation and specify evidence that could change it. Preserve an individual response even after pair work. | P16 |
 
 ### H4 Day 2 Session 1
 
@@ -584,10 +614,10 @@ These are part of the plan because activity materials cannot be reviewed solely 
 | `Oct15_session1_rating_sheet.docx` | Currently duplicates H10. Choose one participant route or label this explicitly as the alternative standalone worksheet; keep content synchronised. | Pending |
 | `Oct15_session2_findings.docx` | Keep corrected authoritative drafting source. Expand short findings into enough design/context to support independent writing. Add precise numbered anchors, result table and input/assumption distinction. Explicitly distinguish it from the flawed report. | Pending |
 | `Oct15_session2_brief_template.docx` | Keep only as an optional standalone version of H11's drafting side. Explain alternative use; no duplicate compulsory task. | Pending |
-| H2 claim card 1 | Retain rounded descriptive percentage; add population, period and source. Learners identify missing comparison. | Pending |
-| H2 claim card 2 | Retain estimate/interval and deliberate causal wording for critique. Add source/comparison so ambiguity is inspectable; do not silently endorse effect. | Pending |
-| H2 claim card 3 | Retain significance-to-national-action leap, but embed in a realistic short recommendation rather than only an obvious wrong sentence. | Pending |
-| H2 claim card 4 | Retain changes in both groups; state units/period. Learners identify uncertainty and comparison credibility needs. | Pending |
+| H2 claim card 1 | Cost version: city participants' annual costs fell 669 AED over 12 months. Identify source and population, with no causal label or comparison group. Learners explain the missing counterfactual. | Proposed conversion; approval pending |
+| H2 claim card 2 | Cost version: label the -669 before/after change as an effect, alongside interval -684 to -654 and exact source. Deliberate causal wording is for critique, not endorsement. Precision does not validate attribution. | Proposed conversion; approval pending |
+| H2 claim card 3 | Cost version: correct small p-value for reported city change, then nationwide recommendation. Use a plausible short paragraph; learners separate significance, minimum saving and reach. | Proposed conversion; approval pending |
+| H2 claim card 4 | Cost version: participants' costs fell 669 AED while other city businesses' costs rose 143 AED, without uncertainty/assumption evidence. Learners identify what is still needed; do not call the extra change a proven DiD effect. | Proposed conversion; approval pending |
 | `Oct12_session2_board_A1.pdf` on Fiona's main branch | Fiona has renamed the former `Oct12_session1_board_A1.pdf` throughout her source changes. Preserve the corrected Session 2 name when integrating; do not repeat the rename. Retain optional triage grid with word labels and room for numbers/reasons. | Rename in main; integration pending |
 | RDD cards A, B, C, D, E, F, G, H | Retain all eight distinct seeded cards, six businesses each side. Improve score/units/subtraction guidance and writing space. Each card remains a participant activity, with no key visible. Recheck each answer against source values. | Pending |
 | `Oct13_session2_board_A1.pdf` | Retain -2,000 to +500 line and two lanes. Label raw card gaps versus fitted local estimate/interval; label the -1,000 cost-change rule and its equivalent positive saving. | Pending |
@@ -609,9 +639,9 @@ Current copies: `docs/trainer/Oct12_session1_materials.docx` through `Oct15_sess
 
 | Pack | Required revision |
 |---|---|
-| D1S1 | Add case introduction, worked table explanation, CI/null-model teaching guidance, acceptable interpretations of all five terms, likely misconceptions and feedback. Explain the intercept's model-specific meaning. |
-| D1S2 | Update descriptive-statistics purpose, data/figure calculations, four-card key and optional board reference. Remove note that the full uncertainty lesson comes next session: vocabulary is now taught in S1. |
-| D1S3 | Add lottery/difference-of-means explanations, updated source IDs, richer AI key and transfer limits. Keep the 20-business demo distinct from actual 400-business pilot. |
+| D1S1 | Preserve Fiona's introduction/ToC scripts; recompute selected cost example and key; follow proposed Q1–Q6 delivery order with Q2 effect/Q3 coefficient. Add worked table/CI/null explanations, misconception feedback, pair correction and both AI stages/fallback. Explain model-specific intercept. |
+| D1S2 | Replace landfill teaching/key with cost data, distribution, before/after and with/without; compute converted four-card sources and preserve A1 method. Remove stale next-session uncertainty note. Add realistic cost-chart AI markup, better prompt and source checks. |
+| D1S3 | Move extended city comparison explanation to S2 and leave short recap. Add physical age-slip draw, pilot baseline/post means/regression, source IDs, richer ministerial AI stages and transfer limits. Distinguish demo N=20 from pilot N=400; no extra unbudgeted break. |
 | D2S1 | Explain DiD diagram, interaction coefficient, rounding and parallel-trends counterfactual. State that one pre-period cannot show prior trends. Update richer AI key. |
 | D2S2 | Retain keys for every A–H card and board setup. Add scatterplot explanation, local slopes, robust interval, window/balance/manipulation discussion and adjusted-result extension. |
 | D2S3 | Keep profile/cost distribution order and toy key. Add process/balance/overlap/reuse explanations, sensitivity interpretation and acceptable source-based judgements. |
@@ -632,7 +662,7 @@ This section was added after locating her two 7 October commits on main. It reco
 | Implemented in source: two opening S1 slides | Addresses our D1S1-01 gap. These slides are The GreenWaste case study and Where does GreenWaste fit? They precede the original content, so original row IDs remain stable. | Preserve case map and Module 1 theory-of-change bridge. Check the outcome highlight, readability and consistent programme description. Do not create a duplicate introduction. |
 | Source edit: hide mean answer | Matches explanation/attempt/reveal approach. | Preserve delayed answer and worksheet Q1 instruction; apply the same check across all decks. |
 | Source edit: minus-sign explanation | Improves D1S1-05 and adds paper/internet fallback. | Preserve outcome-dependent interpretation when combining with coefficient explanation. |
-| Source edit: S2 brief case reminder | Matches moving formal introduction into S1. | Preserve reminder; revise its outcome if the cost-focused S2 proposal is adopted. |
+| Source edit: S2 brief case reminder | Incorporated into D1S2-P01. | Preserve reminder and use the cost outcome, without a second full introduction. |
 | Source edit: triage-poster rename | Resolves legacy filename confusion. | Integrate all renamed references and archive contents without restoring the old name. |
 | Source timings still total 60 minutes | Superseded as a planning constraint by confirmed daily schedule. | Reallocate explanation/practice to proposed 90-minute slot after sequence agreement; do not preserve 60 minutes solely because source notes currently say it. |
 | Item 1: facilitator scripts | Missing from our original row-level notes. | Add task IDs, grouping, timing, expected answers and transitions to every session; remove build-log wording. |
@@ -641,22 +671,16 @@ This section was added after locating her two 7 October commits on main. It reco
 | Item 4: answers visible before attempts | Requires an explicit review criterion. | Audit slide/handout answer visibility, including mean, arithmetic, plots and AI flags. Reveal only after an attempt; keys stay separate. |
 | Item 5: exercise-plan header Running brief for PwC | Intended audience unresolved. | Confirm who uses the brief; update heading after agreement, without assuming client delivery. |
 | Items 6 and 7: programme consistency and ToC typo | Supports case orientation. | Agree one intervention description. Keep simplified less waste to landfill wording; do not reuse the original increase typo from the saved Module 1 image. |
-| Item 8: worksheet as you go, recorded DECIDED | Changes the original plan's standalone end-of-session worksheet approach. | Each S1 concept ends with its corresponding question; the later practice screen becomes pair check, correction and Q6. Keep a short independent final interpretation. Recheck numbering after sequence changes. |
-| Items 9–12: S2 role, missing descriptives and duplication | Strong agreement, but Fiona offers a more coherent outcome choice. | Prefer cost data throughout Day 1: records, participant counts, histogram, individual changes and weak comparisons. Drop repeated ten-business mean in S2. |
+| Item 8: worksheet as you go, recorded DECIDED | Incorporated directly in H1 and D1S1-P04–P14. | Each concept ends with its question; later practice is pair correction/Q6. Proposed numbering follows delivery order, with Q2 treatment effect/Q3 coefficient. Synchronize all source references. |
+| Items 9–12: S2 role, missing descriptives and duplication | Incorporated directly in D1S2 and H2. | Annual cost records, counts, histogram, individual changes and weak comparisons replace the landfill sequence. No repeated ten-business mean in S2. |
 | Item 13: AI Snapshot sequence, recorded DECIDED | More participatory than our original authored-only proposal. | Every core AI task gets naive prompt context, realistic multi-paragraph supplied response, source markup, better prompt run/comparison and paper fallback. Keep second-chat checking/leading-prompt cautions as general guidance, not repeated compulsory exercises. |
 | Item 14: exact source names, recorded TO DO | Matches our source IDs, but wording must include physical location. | First mention names document and location, e.g. short DiD study extract on worksheet page 2. IDs alone are insufficient. |
 | Item 16: realistic report and adequate corrected findings | Strong agreement with H10/H11 proposal. | Compare both old/current documents section by section; restore methods/context needed for independent reading/writing. Do not announce planted errors to participants. |
-| Proposed Day 1 restructure, explicitly DRAFT | Preferred alternative to our original landfill-focused S2, subject to team agreement. | Review the integrated Day 1 sequence below; preserve terms-first request. No deck edits until agreed. |
+| Proposed Day 1 restructure, explicitly DRAFT | Now the sole proposed Day 1 sequence in the slide/handout tables above; teaching approval remains pending. | Terms first; costs throughout; restore context, explanations and AI tasks. No alternative landfill S2 sequence remains in the plan. |
 
-### Preferred Day 1 sequence for discussion after Fiona's review
+### Reconciliation outcome
 
-**S1 — read a result, 90 minutes proposed:** preserve her new introduction and theory-of-change bridge; then terms through one cost result. Mean/spread example should ideally use annual cost data to keep the main thread consistent. If retaining the existing ten-tonne illustration, label that temporary outcome switch explicitly. Each concept includes a worksheet attempt; pair checking and a short independent interpretation consolidate the lesson. Restore an interval visual and p-value explanation; use realistic AI Snapshot plus better-prompt comparison.
-
-**S2 — what the data show and why obvious comparisons mislead, 90 minutes proposed:** show real selected rows and describe one business; participant counts; cost histogram/mean/median; participant before/after means and distribution of changes; other city businesses' cost rise; with/without comparison and starting levels. End with two weak comparisons, four-card triage and chart AI Snapshot. This replaces the original landfill headline sequence rather than adding a second complete sequence. Keep all four cards; agree whether they switch to cost or remain an explicitly introduced second outcome.
-
-**S3 — how the pilot lottery provides a fair comparison, 120 minutes proposed:** short recap of the two weak city comparisons, then pilot design, physical manager-age draw and optional repeated-draw/small-sample visual. Show pilot baseline comparison, post-period difference of means, regression row, interval, reach and the three-results summary. Retain recommendation and ministerial AI task. A physical draw is the offline alternative; no additional permanent method is introduced. Existing internal break slide must fit within the confirmed break allocation or be treated as a brief activity transition with time accounted for.
-
-H1 follows the as-you-go questions and pair correction; H2 gets the cost-data/distribution/comparison source plus triage and realistic AI task; H3 gets pilot design/baseline/post-period table and uncertainty/recommendation task. Recompute cost-based mean/median and any converted claim cards before drafting. Do not substitute invented cost values for the existing ten-tonne records.
+The primary Day 1 tables now implement Fiona's suggestions as a concrete review proposal: 17/15/16 content screens, timed to 90/90/120 minutes, with cost-based H1/H2/H3, as-you-go questions and two-stage AI tasks. This section records provenance rather than offering another sequence. Actual deck/Word changes await review approval; recompute selected cost statistics and converted cards before building. Do not relabel the old ten-tonne example as costs.
 
 Fiona's draft suggests -669 before/after is too small and -1,638 with/without too large. The designed case allows discussion of these directions, but the rise among non-participants and starting-level gap alone do not prove the true causal bias direction in an arbitrary evaluation. Explain the assumptions and use the pilot as its own population-specific estimate; do not call it ground truth for the whole city's effect.
 
@@ -668,7 +692,7 @@ Use `217858a` as a reference for teaching devices, not a wholesale replacement. 
 |---|---|---|
 | D1S1 mean/coefficient | Word 1 — What the mean hides; Word 3 — The other rows of a table | Use business outcomes; choose a compact output and explain reference categories. |
 | D1S1 p-value/interval | Word 4 — p-value: shuffle the labels; Word 4 — The warning cuts both ways; Word 5 — Confidence interval | Hypothetical statistically valid null/coverage illustration; no false random-assignment claim in before/after case. |
-| D1S2 data/descriptive reading | One row, one road segment, one year; Who is in the data?; Did every road fall?; Annotate this output | Business records, landfill outcome and explicit source; no traffic case return. |
+| D1S2 data/descriptive reading | One row, one road segment, one year; Who is in the data?; Did every road fall?; Annotate this output | City business cost records, distributions and explicit sources; no traffic case return. |
 | D1S3 comparison/lottery | Two biases, opposite directions; What the lottery buys you; The effect is a difference of two averages; The regression gives the same number | Current individual business lottery, not old neighbourhood-cluster design. |
 | D2S1 | Visualising the DiD; Reading the table; Everything rests on one assumption | Current extra change and actual data limits; do not restore misleading prior-trend testing. |
 | D2S2 | The picture the method is built on; Seeing the jump; Check 2: did anyone bend the rule?; Check 3: are the two sides alike? | Correct score-58 data, HC2 interval and local reach; manipulation evidence is absent. |
@@ -698,7 +722,7 @@ The revision should change explanation, not silently change the approved trainin
 | Economic model | Provisional benefit 812 AED; cost 1,800 now; five saving years in years 2–6; discount 5%; benefits at today's value approximately 3,350; ratio 1.86. These model assumptions are fictional. |
 | Economic scenarios | Ratios 1.07, 1.40, 1.67, 1.17, 0.80 for cards 1–5 respectively. |
 | Landfill summaries | Total tonnes fall 49.5%; mean of business percentage falls 58.6%. Different weights/questions; neither establishes cause. |
-| Ten selected landfill records | 3,4,5,5,6,7,7,8,9,46; total 100; mean 10; median 6.5. Not a representative sample. |
+| Historical ten selected landfill records | 3,4,5,5,6,7,7,8,9,46; total 100; mean 10; median 6.5. Not a representative sample. Retained here as baseline reference only; proposed Day 1 uses newly selected cost records with recomputed statistics. |
 
 Confidence intervals describe statistical uncertainty under the model and assumptions, not all possible bias. A small p-value does not establish cause or policy importance. A non-significant result does not prove no effect. A point estimate above the minimum does not settle the minimum when its interval crosses it. Shared analyses of city records are not independent studies. Complete synthetic rows do not establish real-world measurement quality. The 1,000 AED rule is a fictional teaching decision rule, not a complete economic approval criterion.
 
@@ -720,4 +744,4 @@ Confidence intervals describe statistical uncertainty under the model and assump
 | | | | |
 | | | | |
 
-Outstanding decisions: session allocations and break placement within the confirmed 09:00–15:00 day and 13:00 Day 4 simulation start; exact final slide sequences/counts; cost-focused Day 1 and claim-card outcome; print/reference length; AI task timings/device arrangements; optional unfamiliar transfer extract; simulation handover. No implementation decisions are implied by an empty review field.
+Outstanding decisions: approval of the single cost-focused Day 1 sequence and converted claim cards; session allocations/break placement within the confirmed day and 13:00 Day 4 simulation start; print/reference length; AI device arrangements; optional unfamiliar transfer extract; simulation handover. The Day 1 slide timings and paper mappings are concrete proposals for that review, not permission to implement.
