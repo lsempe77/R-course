@@ -26,7 +26,7 @@ Baseline IDs refer to the original content sequence, excluding the generated tit
 | Technical level | Explain comparisons, coefficients, p-values, confidence intervals and causal assumptions through worked examples. Keep full estimator syntax and advanced inference as trainer extensions unless necessary to read the supplied report. | Pending |
 | Day 1 order and outcome | Proposed sequence now consistently follows Fiona's outline: S1 read a cost result, S2 descriptive cost data and weak comparisons, S3 pilot lottery. Keep annual cost AED throughout, including the four claim cards. Landfill remains available for later chart/denominator teaching. | Draft aligned; teaching approval pending |
 | Slide count | With the explicit additions below, provisionally aim for about 14–18 substantive screens for explanation-heavy sessions, fewer for workshops, excluding title/break screens. Agree a final sequence before exact timings. Do not add slides simply to fill a longer slot. | Pending |
-| AI tasks | Fiona records a decision to restore a shortened AI Snapshot in each session: mark a realistic response, then run the better prompt and compare. Reflect that sequence in the draft, with device/account requirements and a prepared paper fallback. Confirm its timing within each session. | Recorded as decided in Fiona's notes; timings to agree |
+| AI tasks | Restore a two-stage AI Snapshot: participants mark a realistic supplied response, then run the better prompt themselves and compare it with the source. 15 minutes per Snapshot in every session that already has an AI exercise (ten sessions); D4S1 keeps its independent reading check and gets no separate Snapshot. Participants are expected to have Microsoft Copilot, so no account setup is needed: write the better prompts for Copilot. A prepared second response is the paper fallback. General good practice goes on a one-page AI good-practice card (see "AI good-practice card"). | Agreed by Fiona, 7 Oct; Lucas to confirm |
 | Reading assessment | Retain independent Day 4 reading, feedback and targeted retries. Consider a short unfamiliar extract to check transfer beyond recognition of GreenWaste numbers. This is a teaching check, not validated certification. | Pending |
 | Print length | Allow an activity sheet plus an identified source/reference when needed. Do not shrink diagrams, tables or handwriting spaces to enforce two pages. Keep keys and setup separate from participant materials. | Pending |
 
@@ -43,9 +43,9 @@ Proposed timetable for Days 1–3; break placement is for discussion:
 | 10:45–12:15 | Session 2 | 90 |
 | 12:15–12:45 | Longer break | 30 |
 | 12:45–14:45 | Session 3 | 120 |
-| 14:45–15:00 | Individual reading check, feedback and daily consolidation | 15 |
+| 14:45–15:00 | Daily wrap-up and feedback (no separate materials; also a buffer if sessions run over) | 15 |
 
-An indicative 90-minute concept session could use 10 minutes for context/retrieval, 30 for explanation and worked examples, 25 for guided practice, 15 for source reading and 10 for feedback. A 120-minute applied session could use 10/30/40/25/15 minutes respectively. These are planning envelopes, not final slide timings. The separate 15-minute daily close checks learning across sessions; it is not another lecture.
+An indicative 90-minute concept session could use 10 minutes for context/retrieval, 30 for explanation and worked examples, 25 for guided practice, 15 for source reading and 10 for feedback. A 120-minute applied session could use 10/30/40/25/15 minutes respectively. These are planning envelopes, not final slide timings. The separate 15-minute daily close checks learning across sessions; it is not another lecture. Fiona (7 October): it needs no separate materials and doubles as a buffer if earlier sessions run over.
 
 Day 4's simulation starts at 13:00. Assuming it occupies the remainder of the confirmed day, the allocation is 120 minutes. Before it, 240 elapsed minutes minus the two breaks leaves **195 minutes** for our teaching, feedback and handover.
 
@@ -73,7 +73,7 @@ Implications for the slide and handout proposals: keep the same core concepts an
 5. Announce outcome switches: landfill tonnes versus annual waste cost AED. State population, period, units and comparison on substantive tables and figures. Separate descriptive changes from causal estimates.
 6. Preserve Fiona's four claim cards, RDD cards A–H and number line, seven matching profiles with withheld cost slips, five economic scenarios and prediction wall, and two-sheet credibility grid. Do not restore the AI walls she reverted in D1S3 and D2S1.
 7. Keep readable commented R boxes as optional trainer demonstrations, with printed outputs. Explain how a result was produced even when learners do not run code.
-8. Use authored AI examples that mix accurate facts, plausible qualifications and consequential overclaims. Exercise copies have no answer highlighting; debriefs cite the source. Following Fiona's recorded decision, participants first mark the supplied response, then run the better prompt and compare against the source. Specify device/account arrangements; a prepared second response is the paper fallback. Do not require a separate second-chat checking exercise in every session.
+8. Use authored AI examples that mix accurate facts, plausible qualifications and consequential overclaims. Exercise copies have no answer highlighting; debriefs cite the source. Following Fiona's recorded decision, participants first mark the supplied response, then run the better prompt and compare against the source. Participants are expected to use Microsoft Copilot (no account setup needed); a prepared second response is the paper fallback. Do not require a separate second-chat checking exercise in every session.
 9. Keep one consistent fictional-case notice per deck/document. Remove facilitator instructions from learner-facing prose. Layout should organise meaningful explanation, rather than replace it with large numbers and short slogans.
 
 ## Proposed teaching sequence
@@ -96,7 +96,7 @@ The Day 1 tables below now directly specify the cost-focused sequence, as-you-go
 
 ## Slide-by-slide proposals
 
-**Update for the full teaching day:** additional explanatory screens are proposed explicitly in the next section. The older row-level instructions to combine a screen are provisional, not requirements to fit a 60-minute session. Preserve a separate worked-example screen where combining would make the explanation rushed or crowded. Keep combinations that remove repeated headlines, instructions or exit questions. The timing table budgets the full proposed slots without introducing more methods.
+**Update for the full teaching day:** additional explanatory screens are proposed explicitly in the next section. The older row-level instructions to combine a screen are provisional, not requirements to fit a 60-minute session. Preserve a separate worked-example screen where combining would make the explanation rushed or crowded. Keep combinations that remove repeated headlines, instructions or exit questions. The timing table budgets the full proposed slots without introducing more methods. Minutes columns are for planning and speaker notes only: no timings appear on slides (existing rule, no `.mins` badges).
 
 Title screens: keep the question-led main titles for review, use explicit content/technical subtitles, and add one short interpretation objective. Reconsider titles after the teaching sequence is agreed. Day 1 S2's subtitle should explicitly name descriptive statistics and recorded comparisons. No facilitator setup or duration on the title.
 
@@ -376,11 +376,36 @@ The insertion catalogue contains **19 proposed explanatory screens**, plus Fiona
 
 ### A second screen for each restored AI Snapshot
 
-For each of the eleven sessions, use the existing AI/repair screen as the first stage: a realistic supplied response, its naive prompt context and exact source. Then insert **D1S1-AI2, D1S2-AI2, D1S3-AI2, D2S1-AI2, D2S2-AI2, D2S3-AI2, D3S1-AI2, D3S2-AI2, D3S3-AI2, D4S1-AI2 and D4S2-AI2** immediately afterwards. These are eleven proposed additional screens, not eleven additional exercises.
+For each session with an AI exercise (all except D4S1, see budget note), use the existing AI/repair screen as the first stage: a realistic supplied response, its naive prompt context and exact source. Then insert **D1S1-AI2, D1S2-AI2, D1S3-AI2, D2S1-AI2, D2S2-AI2, D2S3-AI2, D3S1-AI2, D3S2-AI2, D3S3-AI2 and D4S2-AI2** immediately afterwards. These are ten proposed additional screens, not ten additional exercises.
 
 Each AI2 screen is titled for that session's task, for example Ask for a table reading you can verify or Ask for a recommendation tied to the evidence. It supplies the better prompt with context, decision, relevant data and limitations; asks AI to request missing information before concluding; and tells learners what to compare with their marked-up response. Keep instructions brief. Handouts H1–H11 carry the realistic response, exact source location and improved prompt/comparison space. Trainer packs carry keys and a prepared second response for the paper fallback.
 
-Allocate **15 minutes total per Snapshot**, not 15 minutes per screen: 5 for markup, 3 for pair/source-check debrief, 4 for the improved prompt and response, and 3 for comparing what improved or remains unsupported. Account setup occurs before teaching; if a response is delayed or unavailable, use the prepared response within the same time. Correctness is checked against the source, not whether two AI outputs agree. Keep general second-chat and leading-prompt cautions in a shared reference, rather than adding another best-practices slide to every deck.
+Allocate **15 minutes total per Snapshot**, not 15 minutes per screen: 5 for markup, 3 for pair/source-check debrief, 4 for the improved prompt and response, and 3 for comparing what improved or remains unsupported. Account setup occurs before teaching; if a response is delayed or unavailable, use the prepared response within the same time. Correctness is checked against the source, not whether two AI outputs agree. General good practice (second-chat review, leading prompts and the rest) goes on the AI good-practice card below, rather than another best-practices slide in every deck.
+
+### AI good-practice card
+
+Agreed by Fiona, 7 October. The shared reference is a one-page printed card, handed out on Day 1 with the first AI Snapshot (D1S1-P15/P16) and kept for the week. Each later stage-2 AI slide carries a one-line reminder that points to it. Proposed content:
+
+> **The fluency of AI output makes rigorous oversight more important. There are fewer obvious signals when something is wrong.**
+>
+> - **Prompt engineering:** Provide clear context and structure in your query (e.g., role, background, task, output format) and iterate on your instructions to the model.
+> - **Agentic review:** Ask an agent without the same context to review your instructions and/or output (e.g., start a new chat, give the agent multiple roles/personas).
+> - **Human review:** Critically review the output for accuracy and logical consistency (e.g., does the design make sense, is the response complete, is the flow logical, are there errors you have made or seen others make with this kind of task in the past).
+> - **Peer review:** Ask a peer to read your AI-generated code/writing to spot obvious inaccuracies, inconsistencies, etc.
+>
+> *Reminder: You are ultimately responsible for the quality of the output you create and share, regardless of whether it was AI-generated.*
+
+Optional second block, if it fits on the page (otherwise the back of the card): **prompting tips**, adapted from 3ie's internal "Reminder: Prompting Tips" slide for this audience.
+
+> **Prompting tips: Persona, Task, Context, Format**
+>
+> *Example:* "**[Persona]** I am a policy adviser deciding whether to expand a business waste programme. **[Task]** I need to understand what this evaluation result supports. **[Context]** I have pasted the results table; our decision rule is a saving of at least 1,000 AED per business per year, and the study compares the same businesses before and after. **[Format]** Ask me questions before you answer. Then give me three short points: what the result shows, what it does not show, and one question to put to the evaluator."
+>
+> *Other suggestions:*
+> - Ask the AI to take the persona of a sceptical evaluation reviewer.
+> - Ask for a specific format, such as a table listing each claim beside the evidence that supports it.
+> - Give it the decision rule and the limits of the data, so it cannot quietly assume them away.
+> - Watch for prompts that push it towards a conclusion (e.g. "write two sentences recommending scale-up").
 
 ### Session budgets with the additions included
 
@@ -397,8 +422,10 @@ The following are proposed allocations for review, based on 90/90/120 minutes on
 | D3S1 | 5 | 25 | 25 | 10 | 15 | 10 | 90 |
 | D3S2 | 5 | 20 | 25 | 15 | 15 | 10 | 90 |
 | D3S3 | 5 | 15 | 45 | 20 | 15 | 20 | 120 |
-| D4S1 | 5 | 10 | 20 | 25 | 15 | 15 | 90 |
+| D4S1 | 5 | 10 | 20 | 35 | 0 | 20 | 90 |
 | D4S2 | 5 | 15 | 20 | 25 | 15 | 10 | 90 |
+
+D4S1 (Fiona, 7 October): no AI Snapshot on top of the independent reading check; its 15 minutes go to independent reading and feedback. The current short AI item (D4S1-09) can stay as a brief discussion or be dropped.
 
 The two fixed daily breaks remain outside these session budgets. Current internal break screens in S3 decks should become a brief transition/change of activity unless the timetable is explicitly adjusted to accommodate another break. Day 4's 15-minute feedback/handover is separate from the session budgets and ends before the 12:30–13:00 proposed longer break.
 
@@ -483,7 +510,7 @@ File: `Oct13_session1_handouts.docx`. Current heading: Read the extra change. De
 | 3 Question the assumption | Add contrasting hypothetical histories. Ask why different levels can be acceptable and different untreated trends problematic. | 05+06 |
 | Report extract | Rename City DiD study extract, with source ID H4-A and numbered paragraphs. Include design, result, assumption and honest one-pre-period limit. It is a supplied extract, not a separately distributed report. | 07+08 |
 | Annotation prompt after extract | Refer to specific paragraph/table IDs; distinguish finding, assumption and evidence still absent. | 08 |
-| Repair an illustrative AI draft | Replace caricature with 80–120 words adapted from older DiD exercise. Mix correct figures, a plausible caveat and unverified causal/policy assurances. | 09 |
+| AI Snapshot (stages 1 and 2) | Two-stage AI Snapshot (15 min), restoring the old realistic response with fewer steps. Stage 1: mark up the old realistic answer to "explain this regression table to a decision-maker" (correct estimate, plus unsupported claims that parallel trends is satisfied and the 1,000 AED rule is met), updated to current figures. Stage 2: run the better prompt in Copilot (two waves only, no pre-trend test possible, the 1,000 AED rule, ask me questions first) and compare. No second-chat or "if time" prompt. | 09 |
 | Your question from memory | Require one interpretation sentence and one specific evidence request/purpose. | 10 |
 
 ### H5 Day 2 Session 2
@@ -498,7 +525,7 @@ File: `Oct13_session2_handouts.docx`. Current heading: Read the jump at a score 
 | Report extract | Rename Cutoff study extract, with paragraph IDs. Include window results, manager-age jump and absent score-manipulation evidence. No fabricated diagnostic result. | 06+07 |
 | Check table | Add explicit score-setting/manipulation row. Distinguish rule compliance from validity of local comparison. Include evidence reference and concern/unknown reason. | 08 |
 | New visual-check reference | Supply narrow/wide-window picture and manager-age plot, with hypothetical density illustration labelled separately if used. Adjusted estimate remains optional. | 06–08 |
-| Repair an illustrative AI recommendation | Use richer local-to-national example with supported facts and ignored credibility/reach limits. | 09 |
+| AI Snapshot (stages 1 and 2) | Two-stage AI Snapshot (15 min), restoring the old realistic response with fewer steps. Stage 1: mark up the old realistic answer to "explain, without jargon, who this result applies to" (overgeneralises beyond the cutoff), updated to current figures. Stage 2: run the better prompt (cutoff 58, two-point window, most participants score well below 58, manager-age difference, ask me questions first) and compare. | 09 |
 | Your next question | Include an interpretation of who the estimate describes before the evidence request. | 10 |
 
 ### H6 Day 2 Session 3
@@ -514,7 +541,7 @@ File: `Oct13_session3_handouts.docx`. Current heading: Read a matched comparison
 | Report extract | Rename City matching study extract, with paragraph IDs. Explain nearest-neighbour rule, no caliper, residual age gap and reuse. Retain maximum reuse as a reference concern where useful, not a new memorisation target. | 08–10 |
 | New sensitivity panel | Side-by-side full-feature and age-omitted result; ask why the comparison changed. Link unrecorded motivation separately as a hypothetical limitation. | 08+09 |
 | Your provisional judgement | Retain action/reason/evidence task; require a strength and consequential concern. | 11 |
-| Repair an illustrative AI assurance | Restore realistic paragraph with correct matching facts and subtle claims about selection bias/threshold. Do not pre-mark errors. | 12 |
+| AI Snapshot (stages 1 and 2) | Two-stage AI Snapshot (15 min), restoring the old realistic response with fewer steps. Stage 1: adapt the old "what should a commissioner flag?" response to the full four-characteristic result versus the result without manager age (the old two-evaluator comparison), with correct matching facts and subtle bias/threshold assurances. Stage 2: run the better prompt (what was left off the list, were costs similar before, how far apart are unmatched characteristics, decision rule, ask me questions first) and compare. | 12 |
 | A question from memory | Integrate into judgement; optional method comparison reference supports transfer. | 13 |
 
 ### H7 Day 3 Session 1
@@ -529,7 +556,7 @@ File: `Oct14_session1_handouts.docx`. Current heading: Judge a value for money c
 | 2 What would you ask about the inputs | Ask for one specific input, required evidence and possible decision consequence. | 03+05 |
 | 3 What costs might be missing | Add actor/perspective diagram and included/unknown column to prevent double counting. | 06 |
 | Your group scenario | Preserve card number, changed input, prediction/result and plausibility question. Add source for the changed assumption; sufficient handwriting space. | 07–09 |
-| Repair an illustrative AI recommendation | Use richer model-based recommendation with supported calculation and a consequential unverified duration/cost claim. Include one reasonable qualification. | 10 |
+| AI Snapshot (stages 1 and 2) | Two-stage AI Snapshot (15 min), restoring the old realistic response with fewer steps. Stage 1: mark up the response to the old version-1 prompt ("generate a scenario where the ratio falls below 1, and say whether it is realistic"). Stage 2: run the old version-2 prompt (which inputs are measured and which assumed; which single assumption moves the ratio most; ask me questions first) and compare. Current model figures (1.86). | 10 |
 | Your question from memory | Combine with conditional recommendation under stated assumptions. | 11 |
 
 ### H8 Day 3 Session 2
@@ -545,7 +572,7 @@ File: `Oct14_session2_handouts.docx`. Current heading: Read a chart before trust
 | Two summaries of participant landfill waste | Keep actual percentages; add worked two-business example and explicit denominator/weight calculation. | 05 |
 | New pilot interval figure | Add a compact reference if the interval discussion stays core; label it a different outcome/design from landfill. | 06 |
 | Repair the cost chart caption | Retain population/outcome/period/comparison/limit task with generous writing space. | 07 |
-| Repair an illustrative AI caption | Restore a realistic chart interpretation with accurate observations, omitted denominator and causal/generalisation overclaim. | 08 |
+| AI Snapshot (stages 1 and 2) | Two-stage AI Snapshot (15 min), restoring the old realistic response with fewer steps. Stage 1: mark up the old realistic answer to "which of these two charts better represents the difference?" (defends the truncated axis), redrawn from current data. Stage 2: run the better prompt that ties the chart to the claim it will sit beside, for a non-technical reader, and compare. | 08 |
 | Your check from memory | Keep concise; the annotated figure and final caption are the main evidence of learning. | 09+10 |
 
 ### H9 Day 3 Session 3
@@ -561,7 +588,7 @@ File: `Oct14_session3_handouts.docx`. Current heading: Question the analyst. Dec
 | Answer log | Keep question/answer/evidence/rating. Enlarge space and add follow-up/action. A separate sheet may be justified for three substantial exchanges. | 07–09 |
 | The unresolved issue that matters most | Connect issue to a possible action rather than an undirected concern list. | 10 |
 | My final decision and reason | Retain individual decision and compare source-based reasons. | 11 |
-| Check an illustrative AI review | Restore full plausible paragraph checking evidence bank, independence and uncertainty. | 12 |
+| AI Snapshot (stages 1 and 2) | Two-stage AI Snapshot (15 min), restoring the old realistic response with fewer steps. Stage 1: mark up the response to the old Prompt A ("list the critical questions…" for a four-method evaluation). Stage 2: run the old Prompt B (decision, threshold, which single assumption each design rests on, what evidence would change the advice, ask me questions first) and compare. Current figures; keep within 15 min alongside the clinic. | 12 |
 | My independent request to the evaluator | Require document/result, purpose and how advice might change. | 13 |
 
 ### H10 Day 4 Session 1
@@ -580,7 +607,7 @@ File: `Oct15_session1_handouts.docx`. Current heading: Read the report independe
 | Rate the report using its evidence | Clarify claim-level rating within each section. Include paragraph IDs, words with colours, reason and evidence that would change judgement. | 03–07 |
 | Our strongest supported passage | Preserve to counter blanket fault finding. A correct limitations disclosure can be a strength. | 04+05 |
 | The concern that matters most | Require consequence for the decision and evidence that could resolve it. | 07+08 |
-| Repair an illustrative AI verdict | Replace simplistic assertions with plausible report review that gets some strengths/limits right but misses one consequential overclaim. | 09 |
+| AI item | No AI Snapshot in this session (Fiona, 7 October): the independent reading check takes priority. Keep the short AI verdict as an optional brief discussion, or drop it. | 09 |
 | My final judgement and independent request | Keep. Return targeted reading feedback and separate retry instructions. | 10+11 |
 
 ### H11 Day 4 Session 2
@@ -597,7 +624,7 @@ File: `Oct15_session2_handouts.docx`. Current heading: Write a defensible recomm
 | Your partner checks the source | Add visible compact rubric: source, comparison, result/interval, reach, action, risk and request. | 05 |
 | Specific suggested repair and finding number | Keep source reference; require substantive repair. | 05 |
 | My revised sentence and its effect | Keep explanation of how advice changes. Provide space for final connected brief, on reverse/separate paper if needed. | 06+08 |
-| Repair an illustrative AI draft | Restore coherent realistic director brief with accurate numbers, reasonable content and consequential overclaim. Compare to learner draft. | 07 |
+| AI Snapshot (stages 1 and 2) | Two-stage AI Snapshot (15 min), restoring the old realistic response with fewer steps. Stage 1: mark up the old AI-written one-page brief (headline, implications, recommendation, risk), rewritten for GreenWaste from the corrected findings: find what it gets wrong and what it leaves out. Stage 2: run a better prompt (decision, corrected findings, 150 words, interval against the rule, ask me questions first) and compare with your own draft. | 07 |
 | My independent request and purpose | Keep final independent evidence request. | 09 |
 | Retry instruction | Refer to a separately handed-out numbered retry slip; feedback explains the missed ability. Record revised reading result separately. | 09 |
 
@@ -607,6 +634,7 @@ These are part of the plan because activity materials cannot be reviewed solely 
 
 | Material | Proposed revision or retention | Review decision |
 |---|---|---|
+| AI good-practice card (new) | One page, printed for every participant, handed out with the first AI Snapshot on Day 1. Content agreed in "AI good-practice card" above. | Agreed by Fiona |
 | `GreenWaste_case_card.docx` | Make this the opening reference in D1S1. Retain pilot/city picture, add programme components and outcome/timing key. Use businesses consistently rather than switching between shops and businesses. Avoid an overcrowded map. | Pending |
 | `GreenWaste_case_brief.docx` | Retain as technical case reference. First page: intervention/design/outcomes; second: data/means. Remove the participant-facing instruction to use the picture card. Give stable paragraph/table IDs. Avoid repeating the fictional notice. | Pending |
 | `Oct14_session3_qa_checklist.docx` | Keep optional workplace reference; add a worked specific evidence request under each question family and space for follow-up. Do not distribute a duplicate worksheet without explaining purpose. | Pending |
@@ -686,7 +714,7 @@ Fiona's draft suggests -669 before/after is too small and -1,638 with/without to
 
 ## What to recover from the older decks
 
-Use `217858a` as a reference for teaching devices, not a wholesale replacement. The titles below identify exact old content to inspect when an item is approved. Rewrite figures, samples and case design against current sources.
+Use `2993d01` (the last version before the 6 October rebuild, already on the simple GreenWaste case) as the main reference for restoring slides and handout tasks, and `217858a` for older devices. Restore the types of slides, not a wholesale replacement. **The dataset changed (corrected 6 October): recompute every restored figure, table and number from the current `evaluation_data_GreenWaste_simple.csv`; never copy numbers from old slides** (e.g. DiD -812, not -816; RDD -721 with the HC2 interval, not -656).
 
 | Destination | Older slide or task to consult | Adaptation boundary |
 |---|---|---|
@@ -740,6 +768,10 @@ Confidence intervals describe statistical uncertainty under the model and assump
 
 | Reviewer/date | Slide or handout ID | Accept / revise / defer | Reason or proposed alternative |
 |---|---|---|---|
+| Fiona, 7 Oct | Day 1 (D1S1-D1S3, H1-H3) | Accept | Cost-focused sequence, recomputed cost mean example, "two weak comparisons" wording and change-of-activity instead of the D1S3 break. |
+| Fiona, 7 Oct | AI tasks, all sessions | Accept with changes | Copilot (no setup); 15 minutes per Snapshot; none added to D4S1; AI good-practice card instead of per-deck best-practice slides. |
+| Fiona, 7 Oct | Day 2 (D2S1-D2S3, H4-H6) | Accept | Restoration list accepted. Open question: how much trainer-run R stays in each Day 2 session. |
+| Fiona, 7 Oct | Days 2-4 consistency | Revise | Bring Days 2-4 to Day 1's level (sequence and minutes; headers still say 60 minutes). Reconcile D2S3-07 and D3S3-06 break slides with the fixed breaks. Update H4-H11 AI rows to the two-stage Snapshot. The 15-minute daily wrap-up needs no materials and doubles as a buffer. Day 2-4 handout AI rows now updated to the two-stage Snapshot (old realistic responses, fewer steps). |
 | | | | |
 | | | | |
 | | | | |

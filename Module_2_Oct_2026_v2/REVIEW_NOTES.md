@@ -1,5 +1,7 @@
 # Module 2 review notes (Fiona), October 2026
 
+> **From 7 October, `SLIDE_HANDOUT_REVIEW_PLAN.md` (Lucas) is the master plan.** These notes are Fiona's earlier review and are kept for reference; record new decisions and disagreements in the plan.
+
 Running list of changes Fiona has flagged while reviewing each session and its
 worksheets. Open items are not implemented yet; implemented items are removed
 once they are rendered and published. When implementing, change the sources

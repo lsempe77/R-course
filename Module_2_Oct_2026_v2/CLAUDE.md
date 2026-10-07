@@ -1,6 +1,6 @@
 # Abu Dhabi Impact Evaluation Training — Module 2
 
-> **Open review notes:** Fiona's flagged changes awaiting implementation are in `REVIEW_NOTES.md` (this folder). Read it before editing any session, and mark items DONE there when implemented.
+> **Revision plan:** `SLIDE_HANDOUT_REVIEW_PLAN.md` (this folder) is the master plan for revising slides and handouts; read it before editing any session. `REVIEW_NOTES.md` holds Fiona's earlier review notes for reference.
 
 ## Project Overview
 
