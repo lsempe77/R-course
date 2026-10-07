@@ -8,7 +8,9 @@ Only this Markdown plan is being created. Teaching materials, data and the live 
 
 ## Basis of the review
 
-Baseline: `80d9262`, fetched and checked on 7 October. `main` and `simple-greenwaste` have the same head. Fiona's latest published activity and A1-board changes are already integrated. The comments supplied in the conversation inform this proposal. The direct edits mentioned in those comments are not yet visible as newer remote commits, so this plan does not assume they have landed.
+Original slide/handout baseline: `80d9262`. Subsequent check on 7 October found two new Fiona commits on `origin/main`: `ae2bef8` (source edits and review notes) and `f3db11d` (proposed Day 1 outline). These have not been merged into the working `simple-greenwaste` branch. Fiona explicitly records her new deck edits as not yet rendered or published. The row IDs below still identify the original baseline; the reconciliation section records additions and changes rather than silently renumbering them.
+
+Fiona's review is [REVIEW_NOTES.md on main](https://github.com/lsempe77/R-course/blob/f3db11df7e7209e86c64e3869b1059ea9b2077e8/Module_2_Oct_2026_v2/REVIEW_NOTES.md). Her working notes distinguish implemented source edits, items recorded as decided, and the proposed Day 1 restructure, which is explicitly not agreed. This plan preserves those distinctions. No source edits have been merged or rendered as part of this review.
 
 Reviewed: eleven current QMD decks, published participant DOCX sheets, relevant trainer packs, supplementary references, the four A1 poster uses, HANDOFF.md, SIMPLE_GREENWASTE_PLAN.md and CLAUDE.md. Original headings at `217858a` identify useful restoration candidates. This is a teaching/content review, not a fresh visual render audit.
 
@@ -18,15 +20,49 @@ Slide IDs refer to the **current sequence**, excluding the generated title scree
 
 | Decision | Recommendation for discussion | Agreed decision |
 |---|---|---|
-| Timetable | The implemented baseline is 60/60/75 minutes on Days 1–3 and 60/60 on Day 4. Confirm whether the original 90/90/120-minute slots remain available on Days 1–3, as the colleague comments suggest. Confirm the two Day 4 slot lengths separately. The final Day 4 slot stays with the other provider. | Pending |
+| Daily schedule | Lucas confirmed 09:00–15:00, with one 15-minute and one 30-minute break: 315 minutes of teaching/activity time per day. | Confirmed |
+| Simulation start | Lucas confirmed the Day 4 simulation starts at 13:00. Within the confirmed day ending at 15:00, this leaves 120 minutes for the simulation and 195 minutes before it after the two breaks. | Confirmed start; end follows daily schedule |
+| Session allocation | For Days 1–3, propose 90/90/120 minutes plus 15 minutes of daily consolidation. For Day 4, propose two 90-minute sessions plus 15 minutes of feedback/handover before the simulation. Break placement remains a proposal. | Pending |
 | Technical level | Explain comparisons, coefficients, p-values, confidence intervals and causal assumptions through worked examples. Keep full estimator syntax and advanced inference as trainer extensions unless necessary to read the supplied report. | Pending |
-| Day 1 order | Keep the requested order: S1 case and statistical foundations; S2 descriptive data and claims; S3 causal comparisons and lottery. Make S2 explicitly descriptive, with worked before/after and with/without comparisons as a bridge. | Pending |
+| Day 1 order and outcome | Keep the requested terms-first order. Fiona's new outline proposes S1 read a result, S2 descriptive cost data and weak comparisons, S3 pilot lottery. Prefer costs in AED as the main thread throughout Day 1; decide whether to convert landfill claim cards or explicitly identify them as the second outcome. | Pending |
 | Slide count | Provisionally aim for about 12–16 substantive screens per concept session, fewer for workshops, excluding title/break screens. Agree a final sequence before exact timings. Do not add slides simply to fill a longer slot. | Pending |
-| AI tasks | Restore realistic older task structures with current figures and design. One substantial source-checking task per session is enough; some can become optional consolidation to protect core practice. | Pending |
+| AI tasks | Fiona records a decision to restore a shortened AI Snapshot in each session: mark a realistic response, then run the better prompt and compare. Reflect that sequence in the draft, with device/account requirements and a prepared paper fallback. Confirm its timing within each session. | Recorded as decided in Fiona's notes; timings to agree |
 | Reading assessment | Retain independent Day 4 reading, feedback and targeted retries. Consider a short unfamiliar extract to check transfer beyond recognition of GreenWaste numbers. This is a teaching check, not validated certification. | Pending |
 | Print length | Allow an activity sheet plus an identified source/reference when needed. Do not shrink diagrams, tables or handwriting spaces to enforce two pages. Keep keys and setup separate from participant materials. | Pending |
 
-If the original slots are confirmed, an indicative 90-minute concept session could use 10 minutes for context/retrieval, 30 for explanation and worked examples, 25 for guided practice, 15 for source reading and 10 for feedback. A 120-minute applied session could use 10/30/35/20/15 plus a 10-minute break. These are discussion envelopes, not approved timings. They create room to understand the retained concepts, rather than introduce additional methods.
+### Schedule and implications for depth
+
+The confirmed day contains 360 elapsed minutes minus 45 minutes of breaks: **315 minutes for teaching and activities**. The previous shortened 60/60/75-minute plan uses only 195 minutes on Days 1–3, leaving 120 minutes unallocated. It should no longer govern the proposed revision. The additional time should restore explanations, worked examples and practice, rather than add more methods.
+
+Proposed timetable for Days 1–3; break placement is for discussion:
+
+| Time | Allocation | Minutes |
+|---|---|---|
+| 09:00–10:30 | Session 1 | 90 |
+| 10:30–10:45 | Short break | 15 |
+| 10:45–12:15 | Session 2 | 90 |
+| 12:15–12:45 | Longer break | 30 |
+| 12:45–14:45 | Session 3 | 120 |
+| 14:45–15:00 | Individual reading check, feedback and daily consolidation | 15 |
+
+An indicative 90-minute concept session could use 10 minutes for context/retrieval, 30 for explanation and worked examples, 25 for guided practice, 15 for source reading and 10 for feedback. A 120-minute applied session could use 10/30/40/25/15 minutes respectively. These are planning envelopes, not final slide timings. The separate 15-minute daily close checks learning across sessions; it is not another lecture.
+
+Day 4's simulation starts at 13:00. Assuming it occupies the remainder of the confirmed day, the allocation is 120 minutes. Before it, 240 elapsed minutes minus the two breaks leaves **195 minutes** for our teaching, feedback and handover.
+
+Proposed Day 4 timetable; placement of the two breaks remains for discussion:
+
+| Time | Allocation | Minutes |
+|---|---|---|
+| 09:00–10:30 | Session 1: independent report reading and review | 90 |
+| 10:30–10:45 | Short break | 15 |
+| 10:45–12:15 | Session 2: recommendation, peer review and retry | 90 |
+| 12:15–12:30 | Feedback, consolidation and simulation handover | 15 |
+| 12:30–13:00 | Longer break | 30 |
+| 13:00–15:00 | Other provider's evaluation simulation | 120 |
+
+Our Day 4 teaching ends before the simulation; there is no separate 14:45 daily close in this allocation. Coordinate the handover and any closing reflection with the simulation provider.
+
+Implications for the slide and handout proposals: keep the same core concepts and restoration priorities; allow time to explain their diagrams, work calculations and discuss errors. The provisional 12–16 substantive screens is still a useful guide, not a quota. Restore source pages, useful figures and response space where needed, without adding compulsory worksheet tasks merely to fill time. Existing break screens inside longer decks must be reconciled with the two scheduled breaks; do not assume an additional formal break without accounting for its time.
 
 ## Principles for every revision
 
@@ -37,10 +73,12 @@ If the original slots are confirmed, an indicative 90-minute concept session cou
 5. Announce outcome switches: landfill tonnes versus annual waste cost AED. State population, period, units and comparison on substantive tables and figures. Separate descriptive changes from causal estimates.
 6. Preserve Fiona's four claim cards, RDD cards A–H and number line, seven matching profiles with withheld cost slips, five economic scenarios and prediction wall, and two-sheet credibility grid. Do not restore the AI walls she reverted in D1S3 and D2S1.
 7. Keep readable commented R boxes as optional trainer demonstrations, with printed outputs. Explain how a result was produced even when learners do not run code.
-8. Use authored AI examples that mix accurate facts, plausible qualifications and consequential overclaims. Exercise copies have no answer highlighting; debriefs cite the source. No external account is required.
+8. Use authored AI examples that mix accurate facts, plausible qualifications and consequential overclaims. Exercise copies have no answer highlighting; debriefs cite the source. Following Fiona's recorded decision, participants first mark the supplied response, then run the better prompt and compare against the source. Specify device/account arrangements; a prepared second response is the paper fallback. Do not require a separate second-chat checking exercise in every session.
 9. Keep one consistent fictional-case notice per deck/document. Remove facilitator instructions from learner-facing prose. Layout should organise meaningful explanation, rather than replace it with large numbers and short slogans.
 
 ## Proposed teaching sequence
+
+The table and slide/handout rows below are the original review mapping. Fiona's newer cost-focused Day 1 alternative is the preferred sequence for discussion in the reconciliation section below. If agreed, D1S2 landfill data/figures become cost data/figures and D1S3's repeated weak-comparison teaching becomes a brief recap. Do not implement both versions in parallel.
 
 | Session | Progression | Main source |
 |---|---|---|
@@ -476,7 +514,7 @@ These are part of the plan because activity materials cannot be reviewed solely 
 | H2 claim card 2 | Retain estimate/interval and deliberate causal wording for critique. Add source/comparison so ambiguity is inspectable; do not silently endorse effect. | Pending |
 | H2 claim card 3 | Retain significance-to-national-action leap, but embed in a realistic short recommendation rather than only an obvious wrong sentence. | Pending |
 | H2 claim card 4 | Retain changes in both groups; state units/period. Learners identify uncertainty and comparison credibility needs. | Pending |
-| `Oct12_session1_board_A1.pdf` | Retain Fiona's optional triage grid. It now belongs to D1S2 despite legacy filename; clarify cover/print instructions and worksheet references. Give colour-independent labels and room for numbers/reasons. | Pending |
+| `Oct12_session2_board_A1.pdf` on Fiona's main branch | Fiona has renamed the former `Oct12_session1_board_A1.pdf` throughout her source changes. Preserve the corrected Session 2 name when integrating; do not repeat the rename. Retain optional triage grid with word labels and room for numbers/reasons. | Rename in main; integration pending |
 | RDD cards A, B, C, D, E, F, G, H | Retain all eight distinct seeded cards, six businesses each side. Improve score/units/subtraction guidance and writing space. Each card remains a participant activity, with no key visible. Recheck each answer against source values. | Pending |
 | `Oct13_session2_board_A1.pdf` | Retain -2,000 to +500 line and two lanes. Label raw card gaps versus fitted local estimate/interval; label the -1,000 cost-change rule and its equivalent positive saving. | Pending |
 | Matching profiles A, B, C, 1, 2, 3, 4 | Retain original identifiers, ages and sizes. Clear fronts/cut lines; no costs on front. Explain that unused comparison 4 is a toy profile, not an excluded full-study participant. | Pending |
@@ -509,7 +547,44 @@ Current copies: `docs/trainer/Oct12_session1_materials.docx` through `Oct15_sess
 | D4S1 | Fix assigned reading, keep item-level rubric and alternative defensible responses, synchronise report paragraph IDs, section allocations, wall guidance and targeted retries. |
 | D4S2 | Add worked brief/weak-sentence explanation, peer-review rubric and source-linked alternative recommendations. Synchronise corrected findings, richer AI brief and retry feedback. |
 
-All packs should receive timings only after the timetable decision. Add optional technical extensions explicitly, so trainers can explain a question without accidentally making every extension part of the session.
+All packs should receive final timings after session allocations are agreed within the confirmed 09:00–15:00 day. Add optional technical extensions explicitly, so trainers can explain a question without accidentally making every extension part of the session. Following Fiona's item 1, rewrite speaker notes as a facilitator script: what to say, what to ask, answer to listen for and transition. Label every worksheet task by question, grouping and minutes; keep build history in the handoff instead.
+
+## Reconciliation with Fiona's new review notes
+
+This section was added after locating her two 7 October commits on main. It records proposals and source work; it does not merge branches or approve the draft restructure. Her reference for pre-rebuild material is `2993d01`, a later and more relevant restoration reference than `217858a` where the simple case had already been adapted.
+
+| Fiona's item/status | Relationship to this plan | Specific follow-up for review |
+|---|---|---|
+| Implemented in source: two opening S1 slides | Addresses our D1S1-01 gap. These slides are The GreenWaste case study and Where does GreenWaste fit? They precede the original content, so original row IDs remain stable. | Preserve case map and Module 1 theory-of-change bridge. Check the outcome highlight, readability and consistent programme description. Do not create a duplicate introduction. |
+| Source edit: hide mean answer | Matches explanation/attempt/reveal approach. | Preserve delayed answer and worksheet Q1 instruction; apply the same check across all decks. |
+| Source edit: minus-sign explanation | Improves D1S1-05 and adds paper/internet fallback. | Preserve outcome-dependent interpretation when combining with coefficient explanation. |
+| Source edit: S2 brief case reminder | Matches moving formal introduction into S1. | Preserve reminder; revise its outcome if the cost-focused S2 proposal is adopted. |
+| Source edit: triage-poster rename | Resolves legacy filename confusion. | Integrate all renamed references and archive contents without restoring the old name. |
+| Source timings still total 60 minutes | Superseded as a planning constraint by confirmed daily schedule. | Reallocate explanation/practice to proposed 90-minute slot after sequence agreement; do not preserve 60 minutes solely because source notes currently say it. |
+| Item 1: facilitator scripts | Missing from our original row-level notes. | Add task IDs, grouping, timing, expected answers and transitions to every session; remove build-log wording. |
+| Items 2 and 15: participant-facing copy | Supports our source-clarity audit; identifies two additional concrete errors. | Remove trainer sentence from case brief and planted-overclaims wording from corrected findings. Fix yesterday's flawed report in D4S2 notes: the report is read the same morning. |
+| Items 3, 6b and 6c: restore explanations, figures and sources | Strong agreement with plan. | Use `2993d01` to inspect original source sections and realistic handout content; restore useful detail, not obsolete models or a mandatory old word count. |
+| Item 4: answers visible before attempts | Requires an explicit review criterion. | Audit slide/handout answer visibility, including mean, arithmetic, plots and AI flags. Reveal only after an attempt; keys stay separate. |
+| Item 5: exercise-plan header Running brief for PwC | Intended audience unresolved. | Confirm who uses the brief; update heading after agreement, without assuming client delivery. |
+| Items 6 and 7: programme consistency and ToC typo | Supports case orientation. | Agree one intervention description. Keep simplified less waste to landfill wording; do not reuse the original increase typo from the saved Module 1 image. |
+| Item 8: worksheet as you go, recorded DECIDED | Changes the original plan's standalone end-of-session worksheet approach. | Each S1 concept ends with its corresponding question; the later practice screen becomes pair check, correction and Q6. Keep a short independent final interpretation. Recheck numbering after sequence changes. |
+| Items 9–12: S2 role, missing descriptives and duplication | Strong agreement, but Fiona offers a more coherent outcome choice. | Prefer cost data throughout Day 1: records, participant counts, histogram, individual changes and weak comparisons. Drop repeated ten-business mean in S2. |
+| Item 13: AI Snapshot sequence, recorded DECIDED | More participatory than our original authored-only proposal. | Every core AI task gets naive prompt context, realistic multi-paragraph supplied response, source markup, better prompt run/comparison and paper fallback. Keep second-chat checking/leading-prompt cautions as general guidance, not repeated compulsory exercises. |
+| Item 14: exact source names, recorded TO DO | Matches our source IDs, but wording must include physical location. | First mention names document and location, e.g. short DiD study extract on worksheet page 2. IDs alone are insufficient. |
+| Item 16: realistic report and adequate corrected findings | Strong agreement with H10/H11 proposal. | Compare both old/current documents section by section; restore methods/context needed for independent reading/writing. Do not announce planted errors to participants. |
+| Proposed Day 1 restructure, explicitly DRAFT | Preferred alternative to our original landfill-focused S2, subject to team agreement. | Review the integrated Day 1 sequence below; preserve terms-first request. No deck edits until agreed. |
+
+### Preferred Day 1 sequence for discussion after Fiona's review
+
+**S1 — read a result, 90 minutes proposed:** preserve her new introduction and theory-of-change bridge; then terms through one cost result. Mean/spread example should ideally use annual cost data to keep the main thread consistent. If retaining the existing ten-tonne illustration, label that temporary outcome switch explicitly. Each concept includes a worksheet attempt; pair checking and a short independent interpretation consolidate the lesson. Restore an interval visual and p-value explanation; use realistic AI Snapshot plus better-prompt comparison.
+
+**S2 — what the data show and why obvious comparisons mislead, 90 minutes proposed:** show real selected rows and describe one business; participant counts; cost histogram/mean/median; participant before/after means and distribution of changes; other city businesses' cost rise; with/without comparison and starting levels. End with two weak comparisons, four-card triage and chart AI Snapshot. This replaces the original landfill headline sequence rather than adding a second complete sequence. Keep all four cards; agree whether they switch to cost or remain an explicitly introduced second outcome.
+
+**S3 — how the pilot lottery provides a fair comparison, 120 minutes proposed:** short recap of the two weak city comparisons, then pilot design, physical manager-age draw and optional repeated-draw/small-sample visual. Show pilot baseline comparison, post-period difference of means, regression row, interval, reach and the three-results summary. Retain recommendation and ministerial AI task. A physical draw is the offline alternative; no additional permanent method is introduced. Existing internal break slide must fit within the confirmed break allocation or be treated as a brief activity transition with time accounted for.
+
+H1 follows the as-you-go questions and pair correction; H2 gets the cost-data/distribution/comparison source plus triage and realistic AI task; H3 gets pilot design/baseline/post-period table and uncertainty/recommendation task. Recompute cost-based mean/median and any converted claim cards before drafting. Do not substitute invented cost values for the existing ten-tonne records.
+
+Fiona's draft suggests -669 before/after is too small and -1,638 with/without too large. The designed case allows discussion of these directions, but the rise among non-participants and starting-level gap alone do not prove the true causal bias direction in an arbitrary evaluation. Explain the assumptions and use the pilot as its own population-specific estimate; do not call it ground truth for the whole city's effect.
 
 ## What to recover from the older decks
 
@@ -555,7 +630,7 @@ Confidence intervals describe statistical uncertainty under the model and assump
 
 ## Review and implementation after agreement
 
-1. Lucas, Fiona and colleagues settle timetable, technical depth and Day 1 roles, then mark each session's proposals accepted, revised or deferred. Capture disagreements beside the relevant stable slide/handout ID.
+1. Lucas, Fiona and colleagues settle session allocations within the confirmed daily schedule, technical depth and Day 1 roles, then mark each session's proposals accepted, revised or deferred. Capture disagreements beside the relevant stable slide/handout ID.
 2. Before implementing any session, fetch again and compare colleagues' direct edits. Preserve them or discuss substantive conflicts; this plan's baseline is not permission to overwrite later work.
 3. Agree a concrete final sequence for that session, including source/reference pages and core versus optional AI/technical tasks. Set timings to protect explanation, independent reading and feedback.
 4. Update shared title catalog, deck builders, material generators and source references together. Revise CLAUDE.md and the top-level plan/handoff so historical twelve-session/timing/print instructions cannot be mistaken for current instructions.
@@ -571,4 +646,4 @@ Confidence intervals describe statistical uncertainty under the model and assump
 | | | | |
 | | | | |
 
-Outstanding decisions at drafting: timetable; exact final slide sequences/counts; print/reference length; which AI tasks are core; optional unfamiliar transfer extract; final Day 4 handover arrangements. No implementation decisions are implied by an empty review field.
+Outstanding decisions: session allocations and break placement within the confirmed 09:00–15:00 day and 13:00 Day 4 simulation start; exact final slide sequences/counts; cost-focused Day 1 and claim-card outcome; print/reference length; AI task timings/device arrangements; optional unfamiliar transfer extract; simulation handover. No implementation decisions are implied by an empty review field.
