@@ -1,0 +1,12 @@
+<script>
+document.addEventListener('click', event => {
+  const button=event.target.closest('button[data-table-column]');
+  if(!button)return;
+  const slide=button.closest('section'),column=Number(button.dataset.tableColumn);
+  const on=button.getAttribute('aria-pressed')!=='true';
+  slide.querySelectorAll('button[data-table-column]').forEach(b=>b.setAttribute('aria-pressed','false'));
+  slide.querySelectorAll('.reading-table td').forEach(td=>td.classList.remove('highlight-cell'));
+  button.setAttribute('aria-pressed',String(on));
+  if(on)slide.querySelectorAll('.reading-table tbody tr').forEach(row=>row.children[column]?.classList.add('highlight-cell'));
+});
+</script>

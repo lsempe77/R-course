@@ -1,0 +1,161 @@
+---
+title: "GreenWaste cost reading worksheet"
+format:
+  html:
+    embed-resources: true
+    toc: false
+    html-math-method: plain
+    theme: none
+    include-in-header:
+      text: |
+        <style>
+        body{font:16px/1.45 Arial,sans-serif;color:#111418;margin:0;background:#eef2f6}
+        main{max-width:850px;margin:auto}h1{font-size:26px;color:#063360;margin:12px 0}h2{font-size:22px;color:#063360;margin:0 0 12px}h3{font-size:18px;margin:14px 0 6px}
+        .sheet-page{background:white;padding:28px 40px;margin:20px 0;box-sizing:border-box;min-height:950px}p{margin:8px 0}.caption{font-size:13px;color:#545860}.reading-table{border-collapse:collapse;width:100%;font-size:14px}.reading-table td,.reading-table th{padding:8px;border-bottom:1px solid #D5DEE8;text-align:left}.reading-table thead{background:#063360;color:white}.writing{height:44px;border-bottom:1px solid #c8d6e5;margin:6px 0}.writing.tall{height:75px}.costs{font-size:19px;word-spacing:9px;border-top:2px solid #215a9e;padding:12px 0}.ai-source{border-left:3px solid #7da1c4;padding-left:16px}.prompt{border-top:2px solid #215a9e;padding-top:8px;font-size:15px}.source-note{font-size:14px}
+        header button{font:inherit;margin:12px 0;padding:8px 15px;border:1px solid #215a9e;background:white;color:#063360;cursor:pointer}
+        @page{size:A4;margin:14mm}@media print{body{background:white;font-size:11pt;line-height:1.35}main{max-width:none}.sheet-page{padding:0;margin:0;min-height:0;break-after:page;box-shadow:none}.sheet-page:last-child{break-after:auto}header{display:none}h1{font-size:19pt}h2{font-size:17pt}h3{font-size:12pt}.reading-table{font-size:10pt}.writing{height:10mm}.writing.tall{height:17mm}.ai-source{font-size:11pt}.prompt{font-size:10pt}#title-block-header{display:none}}
+        </style>
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+```{r, include=FALSE}
+source('session1_review.R', encoding='UTF-8')
+```
+
+<header><p>Separate Session 1 review worksheet. The current published handout is unchanged.</p><button onclick="window.print()">Print worksheet</button></header>
+
+<div class="sheet-page">
+
+## Page 1 · The source and first three terms
+
+GreenWaste subsidises waste equipment and provides installation help and staff training. The pilot used a lottery; the rest of the city used a score rule. Today we read **annual waste cost in AED**.
+
+<p class="caption">GreenWaste is a fictional training case. All pages below belong to the separate review version.</p>
+
+### H1-A · City participants before and after
+
+The same **4,794 businesses** were measured before GreenWaste and 12 months later. This source supplies no non-participant comparison. The fictional decision rule is at least **1,000 AED annual saving per business**; it is not a full value-for-money test.
+
+```{r, results='asis'}
+html_out(review_table())
+```
+
+### Q1 · Mean and what it hides
+
+Ten selected actual records from the fictional file, before GreenWaste. This selected set is not representative of the city.
+
+```{r, results='asis'}
+html_out(paste0('<div class="costs">',paste(fmt(review_costs),collapse=' · '),'</div>'))
+```
+
+Calculate mean. Compare mean and median before/after removing the largest value. Which moves more, and why?
+
+<div class="writing tall"></div>
+
+### Q2 · Treatment effect
+
+Does the before/after comparison supply what would have happened without GreenWaste? Explain the missing outcome.
+
+<div class="writing"></div>
+
+### Q3 · Coefficient and sign
+
+Mark the change row in H1-A. State its number, units, comparison and sign. Reconstruct the after mean.
+
+<div class="writing"></div>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 2 · Uncertainty and your own interpretation
+
+Keep H1-A on page 1 available. Complete each question as its concept is taught.
+
+### Q4 · Confidence interval
+
+Box the change interval in H1-A. What quantity does it describe? Does it show individual businesses' savings?
+
+<div class="writing tall"></div>
+
+Follow-up: three hypothetical saving estimates are all 1,100 AED. Their intervals are A: 1,080–1,120; B: 900–1,300; C: 400–1,800. Which stays above 1,000? What remains uncertain in B/C?
+
+<div class="writing"></div>
+
+### Q5 · P-value
+
+Find the change p-value. What null model is tested? Does the p-value establish causality or the probability that the programme works?
+
+<div class="writing tall"></div>
+
+Follow-up: hypothetical saving A is 50 AED (interval 30–70, p < 0.001); B is 1,100 (interval −100–2,300, p ≈ 0.072). Distinguish statistical evidence, possible importance and uncertainty. Does B prove no saving?
+
+<div class="writing"></div>
+
+### Q6 · Pair check and reading repair
+
+Compare completed Q1–Q5 with a partner and correct one explanation if needed. Interpret the actual H1-A change, interval and comparison against the fictional minimum. Explain the causal limit.
+
+<div class="writing tall"></div>
+
+### My independent reading and evidence request
+
+Close AI responses and term explanations; keep H1-A open. Write the result, what it cannot establish, and a specific evidence request with its purpose.
+
+<div class="writing tall"></div>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 3 · AI Snapshot
+
+### A · Mark the supplied response first
+
+Illustrative prompt: “Explain H1-A and advise whether to expand GreenWaste.” The response below is authored exercise material. Underline supported claims; cross out unsupported ones. Check against **H1-A on page 1**.
+
+```{r, results='asis'}
+html_out(paste0('<div class="ai-source">',review_paragraphs(review_ai),'</div>'))
+```
+
+### B · Run a better prompt, then compare
+
+Copy the prompt and H1-A table into **Microsoft Copilot**. Keep your AI good-practice card beside you. If using the paper route, read the prepared comparison response on page 4 after completing A.
+
+```{r, results='asis'}
+html_out(paste0('<div class="prompt">',review_paragraphs(review_prompt),'</div>'))
+```
+
+Which question helped? What improved? Which claim still needs checking against the source?
+
+<div class="writing tall"></div>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 4 · Prepared comparison response
+
+Use this response as the paper alternative for AI Snapshot B, **after** marking the response on page 3. It is a possible improved response, not a guarantee of how an AI tool will answer.
+
+```{r, results='asis'}
+html_out(paste0('<div class="ai-source">',review_paragraphs(review_fallback),'</div>'))
+```
+
+Which sentences are supported by H1-A? What additional evidence would help answer the clarifying questions?
+
+<div class="writing tall"></div>
+
+### Source record identifiers
+
+The ten-record cost example uses the following selected city participants. Values come from `cost_before`; they were selected for teaching, not representativeness.
+
+```{r, results='asis'}
+html_out(paste0('<p class="source-note">',paste(paste(review_ten$business,fmt(review_costs),'AED'),collapse='; '),'.</p>'))
+```
+
+</div>

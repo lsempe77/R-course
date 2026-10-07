@@ -1,5 +1,17 @@
 # Handoff: moving Module 2 to the simple GreenWaste case
 
+## Separate Session 1 comparison prototype, 7 October 2026
+
+Lucas requested implementation of the first session in a separate QMD, with both versions rendered for comparison. `Oct12_session1_review.qmd` is the proposed 17-content-slide/90-minute version; `Oct12_session1_live.qmd` is unchanged. A fresh comparison render of the current source includes Fiona's two opening additions, rather than the older published deck. The live Session 1 route and its existing print files are not replaced.
+
+`session1_compare.html` links both renders and switches them to corresponding topics. Review preview: `docs/preview/session1_compare.html`. The proposed source is `Oct12_session1_review.qmd`, with `session1_review.R`, scoped `session1_review.css` and `_session1_review_interactions.html`. Render in the module directory with `quarto render Oct12_session1_review.qmd`; render current source separately with `quarto render Oct12_session1_live.qmd --output Oct12_session1_current_compare.html`.
+
+The companion `Oct12_session1_review_worksheet.qmd` renders four printable HTML pages: source and Q1-Q3, uncertainty/Q4-Q6 and independent interpretation, realistic AI task with better prompt, and a prepared paper comparison response. This is a separate review worksheet, not a replacement of the existing DOCX. Q2 treatment effect/Q3 coefficient follow delivery order. Cost-example IDs are real selected city participants; total 13,906 AED, mean 1,390.6, median 1,150; excluding 4,306 gives mean 1,066.7 and median 1,100. This teaching selection is not representative.
+
+The prototype retains the case/ToC introduction, adds actual cost mean/median and outlier interaction, counterfactual explanation, annotated regression columns, worked optional R, interval/coverage and precision visuals, coherent hypothetical p-value examples, pair correction and two-stage realistic AI exercise. Notes are facilitator scripts with worksheet IDs, expected answers, transitions and timings totaling 90 minutes. Do not run the production builders to generate this prototype: it is intentionally independent for comparison. It awaits content review before replacing any teaching route.
+
+Fiona's latest plan update (`044af55`) is incorporated: the two-stage Snapshot uses Microsoft Copilot, totals 15 minutes, and points to a separate one-page `AI_good_practice_review.qmd` card for use throughout the week. The comparison hub links its printable HTML. The prototype does not mark production revisions as complete. Browser verification covers all 18 screens, expanded feedback, visual toggles, table-column controls, topic matching and phone layout; trainer R returns -669. The four worksheet pages fit A4 at the intended margins. Publication is limited to independent files under `docs/preview/`; comparison URL: https://3ie.academy/preview/session1_compare.html.
+
 ## Reader-facing headings rewritten, 6 October 2026
 
 The landing day themes, eleven session titles and card descriptions, deck subtitles and 122 content-slide headings now pose concrete questions or decisions. Examples: What do the numbers actually say?; Good news. Enough to act?; How similar is similar enough?; What should the director do next? Named technical terms remain in subtitles, explanations and the five-term opening lesson. Day themes: Good news needs good questions; Compared with what?; Would you approve it?; Make the call. Show the evidence.

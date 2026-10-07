@@ -1,0 +1,42 @@
+---
+title: "AI: keep your judgement in charge"
+format:
+  html:
+    embed-resources: true
+    toc: false
+    theme: none
+    header-includes: |
+      <style>
+      body{font:17px/1.4 Arial,sans-serif;color:#111418;max-width:760px;margin:30px auto;padding:0 24px}h1{font-size:30px;color:#063360;margin:0 0 16px}h2{font-size:20px;color:#063360;margin:18px 0 5px}p{margin:6px 0}.prompt{border-left:4px solid #215a9e;padding:8px 15px;background:#f4f7fb}.caption{font-size:14px;color:#545860}@page{size:A4;margin:16mm}@media print{body{font-size:11pt;margin:0;padding:0;max-width:none}h1{font-size:21pt}h2{font-size:13pt;margin-top:12px}.caption{font-size:9pt}.prompt{break-inside:avoid}a{color:inherit}}
+      </style>
+---
+
+Smooth writing can hide mistakes. **You remain responsible for the work you share.** Keep this card for the week's Microsoft Copilot exercises.
+
+## Give a clear prompt
+
+State your role, task, source and preferred format. Include the decision rule and the study's limits. Ask for missing information before conclusions. Revise the prompt when the answer misses your purpose.
+
+## Ask for a fresh review
+
+Start a new chat and provide the source, your prompt and the response. Ask for a sceptical evaluation review. A fresh review may spot problems; agreement between two answers does not establish correctness.
+
+## Check it yourself
+
+Check every number and claim against the source. Does the comparison support the conclusion? Does the interval mean what the response says? What is missing? Fluent wording is not evidence.
+
+## Ask a colleague
+
+Ask someone to check the reasoning and important omissions. Give them the source as well as the response. Correct problems before sharing the work.
+
+## Try: role, task, context, format
+
+::: {.prompt}
+I am a policy adviser deciding whether to expand a business waste programme. I need to understand what this evaluation result supports. I have pasted the results table. Our decision rule is a saving of at least 1,000 AED per business per year. The study compares the same businesses before and after. Ask me questions before you answer. Then give three short points: what the result shows, what it does not show, and one question for the evaluator.
+:::
+
+Avoid steering the answer: "recommend expansion" invites a conclusion before the evidence has been checked. Ask which claims are supported and what could change the advice.
+
+::: {.caption}
+Separate review card | Day 1, Session 1 | GreenWaste is a fictional training case.
+:::

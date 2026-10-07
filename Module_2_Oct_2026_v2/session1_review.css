@@ -1,0 +1,36 @@
+/* Styles scoped to the separate Session 1 review deck. */
+.reveal .slides section.s1-review { font-size: 25px; line-height: 1.35; }
+.reveal .s1-review h2 { font-size: 38px; line-height: 1.18; max-width: 1080px; margin-bottom: 18px; }
+.reveal .s1-review p { margin: 12px 0; }
+.reveal .s1-review .ask { font-size: 25px; margin-top: 15px; padding: 13px 18px; }
+.reveal .s1-review .review-svg { width: 100%; max-height: 310px; font-family: 'Noto Sans', Arial, sans-serif; }
+.reveal .s1-review .reading-table { font-size: 24px; margin: 12px 0; }
+.reveal .s1-review .reading-table th, .reveal .s1-review .reading-table td { padding: 12px 14px; }
+.reveal .s1-review .caption { font-size: 18px; line-height: 1.35; margin: 8px 0; }
+.reveal .s1-review .review-grid { display:grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 28px; align-items:start; }
+.reveal .s1-review .review-grid h3 { font-size: 25px; margin: 0 0 10px; }
+.reveal .s1-review .review-grid .review-svg { max-height: 310px; }
+.reveal .s1-review .review-stage { border-top: 3px solid #215a9e; padding-top: 12px; }
+.reveal .s1-review .review-stage strong { color:#063360; }
+.reveal .s1-review .review-toc { display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin:25px 0; }
+.reveal .s1-review .review-toc > div { border-top:4px solid #7da1c4; padding:16px 4px; }
+.reveal .s1-review .review-toc h3 { font-size:24px; margin:0 0 12px; }
+.reveal .s1-review .review-toc p { font-size:23px; }
+.reveal .s1-review .review-toc .measured { border-color:#215a9e; }
+.reveal .s1-review .cost-strip { display:grid;grid-template-columns:repeat(5,1fr);gap:10px; }
+.reveal .s1-review .cost-strip span { border-bottom:2px solid #D5DEE8;padding:10px;text-align:center;font-size:26px;font-weight:600; }
+.reveal .s1-review .feedback { font-size:22px; margin:10px 0; }
+.reveal .s1-review .review-annotate { display:flex;gap:10px;flex-wrap:wrap;margin:12px 0; }
+.reveal .s1-review .review-annotate button { font-size:21px;padding:8px 14px;margin:0; }
+.reveal .s1-review .review-annotate button[aria-pressed=true] { background:#063360;color:white; }
+.reveal .s1-review .reading-table td.highlight-cell { background:#e3ebf5;outline:2px solid #215a9e;outline-offset:-2px; }
+.reveal .s1-review .ai-reading { font-size:23px;line-height:1.4;border-left:4px solid #7da1c4;padding-left:22px; }
+.reveal .s1-review .ai-reading p { margin:0 0 14px; }
+.reveal .s1-review .better-prompt { font-size:22px;line-height:1.4;border-top:3px solid #215a9e;padding-top:12px; }
+.reveal .s1-review .sample-assurances { font-size:23px; }
+.reveal .s1-review .equation { font-size:34px;color:#063360;font-weight:600;margin:22px 0; }
+.reveal .s1-review .exercise-editor .cm-editor { font-size:21px; }
+.reveal .s1-review .exercise-editor .cm-content { line-height:1.3; }
+.reveal .s1-review .review-mini-source { font-size:22px;border-top:2px solid #D5DEE8;padding-top:12px; }
+.reveal .s1-review .case-map svg { max-height:360px; }
+.reveal .s1-review .case-map > p { display:none; }
