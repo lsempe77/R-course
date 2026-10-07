@@ -1,5 +1,17 @@
 # Handoff: moving Module 2 to the simple GreenWaste case
 
+## Separate Session 2 comparison prototype, 7 October 2026
+
+Lucas asked to continue the separate-review approach with Day 1 Session 2. `Oct12_session2_review.qmd` implements the master plan's D1S2-P01-P15 sequence: 15 content screens and a 90-minute facilitator script. `Oct12_session2.qmd`, the existing DOCX/cards/A1 board and live Session 2 route are unchanged. The current source is freshly rendered as `Oct12_session2_current_compare.html`.
+
+The prototype uses annual waste cost AED throughout: actual city records and sample counts, baseline histogram, individual-change histogram, same-group before/after, other-group change and after-only gap. It distinguishes -669 recorded participant change from -1,638 after-only gap, and never treats the other group as an automatically valid counterfactual or teaches an unexplained DiD result. All source values and figures are computed by `session2_review.R` from the corrected CSV. Participant costs rose in 485 records, were unchanged in one, and fell in 4,308. Full-city baseline mean is 1,862 AED, median 1,801; 250 AED histogram bins.
+
+Separate review materials: `Oct12_session2_review_worksheet.qmd` (six printable pages, including named sources and the prepared AI alternative), `Oct12_session2_review_cards.qmd` (four cost claim cards and a printable/local interactive triage board). Existing A1 activity remains available; the native board is local to an open browser page, not a shared room poll. The two-stage Copilot Snapshot totals 15 minutes and reuses the Session 1 AI good-practice card. Facilitator keys and transitions are in slide notes.
+
+`session2_compare.html` maps related topics across both rendered decks and links worksheet, cards/board, AI card and QMD. Review URL: https://3ie.academy/preview/session2_compare.html. Render each of the three new QMDs in the module directory; render the unchanged source with `quarto render Oct12_session2.qmd --output Oct12_session2_current_compare.html`. Scoped `session2_review.css` supplements the existing separate-review type scale. Publish only the independent HTMLs under `docs/preview/`. Production builders and live teaching routes are not changed; this remains a review candidate.
+
+Validation: all 16 title/content screens and revealed states fit 1280x720 with no heading/logo collision or browser errors. Topic controls target both versions, and the comparison hub fits a 375px phone. All six worksheet pages fit A4 with 14mm margins (largest final panel 968px of 1,016px available); four cards and board fit A4 with 16mm margins. Board placements move correctly between cells. Data checks independently confirm counts, changes, after-only gap and 485 rising participant records. Final slide montages, code box, worksheet pages and board inspected. Five preview artifacts are hash-identical to the reviewed local renders, with valid local links and all below 25 MiB.
+
 ## Separate Session 1 comparison prototype, 7 October 2026
 
 Lucas requested implementation of the first session in a separate QMD, with both versions rendered for comparison. `Oct12_session1_review.qmd` is the proposed 17-content-slide/90-minute version; `Oct12_session1_live.qmd` is unchanged. A fresh comparison render of the current source includes Fiona's two opening additions, rather than the older published deck. The live Session 1 route and its existing print files are not replaced.
