@@ -4,13 +4,13 @@
 
 Restore explanatory depth while keeping a manageable number of slides. By the end of the week, officials should be able to identify an evaluation's comparison and assumptions, interpret its tables and figures, and judge whether its recommendations follow from the evidence. Plain language should support that technical understanding.
 
-Only this Markdown plan is being created. Teaching materials, data and the live site remain unchanged. Session decisions and comments below are deliberately open for review.
+Only this Markdown plan is being revised. Teaching materials, data and the live site remain unchanged by this planning work. Session decisions and comments below are deliberately open for review. The plan is now shared on `main` alongside Fiona's notes.
 
 ## Basis of the review
 
 Original slide/handout baseline: `80d9262`. Subsequent check on 7 October found two new Fiona commits on `origin/main`: `ae2bef8` (source edits and review notes) and `f3db11d` (proposed Day 1 outline). These have not been merged into the working `simple-greenwaste` branch. Fiona explicitly records her new deck edits as not yet rendered or published. The row IDs below still identify the original baseline; the reconciliation section records additions and changes rather than silently renumbering them.
 
-Fiona's review is [REVIEW_NOTES.md on main](https://github.com/lsempe77/R-course/blob/f3db11df7e7209e86c64e3869b1059ea9b2077e8/Module_2_Oct_2026_v2/REVIEW_NOTES.md). Her working notes distinguish implemented source edits, items recorded as decided, and the proposed Day 1 restructure, which is explicitly not agreed. This plan preserves those distinctions. No source edits have been merged or rendered as part of this review.
+Fiona's review is [REVIEW_NOTES.md on main](https://github.com/lsempe77/R-course/blob/f3db11df7e7209e86c64e3869b1059ea9b2077e8/Module_2_Oct_2026_v2/REVIEW_NOTES.md). Her working notes distinguish implemented source edits, items recorded as decided, and the proposed Day 1 restructure, which is explicitly not agreed. This plan preserves those distinctions. Her source edits are present in the current `main` checkout; this planning work has not modified or rendered them.
 
 Reviewed: eleven current QMD decks, published participant DOCX sheets, relevant trainer packs, supplementary references, the four A1 poster uses, HANDOFF.md, SIMPLE_GREENWASTE_PLAN.md and CLAUDE.md. Original headings at `217858a` identify useful restoration candidates. This is a teaching/content review, not a fresh visual render audit.
 
@@ -25,7 +25,7 @@ Slide IDs refer to the **current sequence**, excluding the generated title scree
 | Session allocation | For Days 1–3, propose 90/90/120 minutes plus 15 minutes of daily consolidation. For Day 4, propose two 90-minute sessions plus 15 minutes of feedback/handover before the simulation. Break placement remains a proposal. | Pending |
 | Technical level | Explain comparisons, coefficients, p-values, confidence intervals and causal assumptions through worked examples. Keep full estimator syntax and advanced inference as trainer extensions unless necessary to read the supplied report. | Pending |
 | Day 1 order and outcome | Keep the requested terms-first order. Fiona's new outline proposes S1 read a result, S2 descriptive cost data and weak comparisons, S3 pilot lottery. Prefer costs in AED as the main thread throughout Day 1; decide whether to convert landfill claim cards or explicitly identify them as the second outcome. | Pending |
-| Slide count | Provisionally aim for about 12–16 substantive screens per concept session, fewer for workshops, excluding title/break screens. Agree a final sequence before exact timings. Do not add slides simply to fill a longer slot. | Pending |
+| Slide count | With the explicit additions below, provisionally aim for about 14–18 substantive screens for explanation-heavy sessions, fewer for workshops, excluding title/break screens. Agree a final sequence before exact timings. Do not add slides simply to fill a longer slot. | Pending |
 | AI tasks | Fiona records a decision to restore a shortened AI Snapshot in each session: mark a realistic response, then run the better prompt and compare. Reflect that sequence in the draft, with device/account requirements and a prepared paper fallback. Confirm its timing within each session. | Recorded as decided in Fiona's notes; timings to agree |
 | Reading assessment | Retain independent Day 4 reading, feedback and targeted retries. Consider a short unfamiliar extract to check transfer beyond recognition of GreenWaste numbers. This is a teaching check, not validated certification. | Pending |
 | Print length | Allow an activity sheet plus an identified source/reference when needed. Do not shrink diagrams, tables or handwriting spaces to enforce two pages. Keep keys and setup separate from participant materials. | Pending |
@@ -62,7 +62,7 @@ Proposed Day 4 timetable; placement of the two breaks remains for discussion:
 
 Our Day 4 teaching ends before the simulation; there is no separate 14:45 daily close in this allocation. Coordinate the handover and any closing reflection with the simulation provider.
 
-Implications for the slide and handout proposals: keep the same core concepts and restoration priorities; allow time to explain their diagrams, work calculations and discuss errors. The provisional 12–16 substantive screens is still a useful guide, not a quota. Restore source pages, useful figures and response space where needed, without adding compulsory worksheet tasks merely to fill time. Existing break screens inside longer decks must be reconciled with the two scheduled breaks; do not assume an additional formal break without accounting for its time.
+Implications for the slide and handout proposals: keep the same core concepts and restoration priorities; allow time to explain their diagrams, work calculations and discuss errors. The revised guide of 14–18 substantive screens for explanation-heavy sessions is not a quota. Restore source pages, useful figures and response space where needed, without adding compulsory worksheet tasks merely to fill time. Existing break screens inside longer decks must be reconciled with the two scheduled breaks; do not assume an additional formal break without accounting for its time.
 
 ## Principles for every revision
 
@@ -95,6 +95,8 @@ The table and slide/handout rows below are the original review mapping. Fiona's 
 | D4S2 | Corrected findings; worked brief; draft; peer check; revision/defence; reading retry. | Corrected findings + H11 |
 
 ## Slide-by-slide proposals
+
+**Update for the full teaching day:** additional explanatory screens are proposed explicitly in the next section. The older row-level instructions to combine a screen are provisional, not requirements to fit a 60-minute session. Preserve a separate worked-example screen where combining would make the explanation rushed or crowded. Keep combinations that remove repeated headlines, instructions or exit questions. The timing table budgets the full proposed slots without introducing more methods.
 
 Title screens: keep the question-led main titles for review, use explicit content/technical subtitles, and add one short interpretation objective. Reconsider titles after the teaching sequence is agreed. Day 1 S2's subtitle should explicitly name descriptive statistics and recorded comparisons. No facilitator setup or duration on the title.
 
@@ -313,6 +315,78 @@ Source: `Oct15_session2_live.qmd`; non-live alias mirrors it. Current duration: 
 | 07 Which claim did the AI add? | Restore richer example | Adapt older coherent AI brief to GreenWaste with correct numbers, a defensible sentence and an unsupported national/cost assurance. Compare with learner draft. |
 | 08 Defend the action and its conditions. | Keep | Permit different defensible actions. Challenge each with evidence and an answer that could change its conditions. |
 | 09 Ask for the next piece of evidence. | Keep | Complete targeted retries and independent request. Hand over to other provider's simulation; do not restore our former Session 3. |
+
+## Additional slides and session time budgets
+
+These additions answer the question of what is missing between a definition, a result and the learner's task. They are proposed screens, not extra topics. An ADD ID is a stable discussion reference; its final slide number comes after sequence agreement. Where the desired content already exists on one enlarged baseline slide, split it into two focused screens rather than showing the explanation twice.
+
+### Opening slides already added by Fiona
+
+| ID | Position and title | Treatment in this plan | Proposed time |
+|---|---|---|---|
+| D1S1-F1 | Before original 01: The GreenWaste case study | Preserve her source addition, use the case map and distribute the case card. Explain intervention, settings, outcomes and period. No duplicate new introduction. | 4 minutes |
+| D1S1-F2 | After F1: Where does GreenWaste fit? | Preserve her theory-of-change bridge. Highlight the measured outcomes and distinguish delivery outputs from caused outcomes. Simplify the six-column visual if necessary after render review. | 4 minutes |
+
+These eight minutes form D1S1's opening allocation below, not extra time on top of it. The original entry check can become the transition into the first explanation.
+
+### Proposed explanatory insertions
+
+| New ID | Position in agreed sequence | Proposed title and purpose | Visual, learner work and matching paper | Time within session budget |
+|---|---|---|---|---|
+| D1S1-ADD1 | After the mean calculation, original 02 | One large business changes the average | Dot plot before/after removing the largest observation; compare mean and median. Learners predict before reveal. H1 adds one comparison field. Use actual cost records if cost-focused Day 1 is agreed; otherwise explicitly label existing tonnes illustration. | 4 minutes |
+| D1S1-ADD2 | After interval explanation, original 06, before decision-rule reading | Same estimate. Three different levels of uncertainty. | Three hypothetical intervals around the same estimate with a common decision threshold. Learners explain what changes and what does not. H1 gets the figure and interpretation question. This replaces extra repeated-sample slides if both cannot be taught clearly. | 5 minutes |
+| D1S1-ADD3 | After p-value explanation, original 07 | Statistically clear. Large enough to matter? | Compare a precise small change with a less precise larger change; show estimate, interval and relevant threshold. Hypothetical examples must be coherent, with p-values computed if displayed. H1 supplies both rows. | 4 minutes |
+| D1S2-ADD1 | After brief city/cost reminder, before descriptive summaries | One row. One business. Two measurements. | Selected real rows with highlighted ID, participation and before/after columns. Learner describes one business in words. H2 includes those rows, not the entire dataset. Split from the source-orientation content planned for original 04. | 5 minutes |
+| D1S2-ADD2 | After ADD1, before cost histogram | Who is included in these averages? | Count chart: 4,794 city participants and 5,206 other businesses. Explain the score rule and denominator of each mean. H2 adds source/sample caption; no additional worksheet exercise required. | 3 minutes |
+| D1S2-ADD3 | After participant before/after means | Did every business's cost fall? | Distribution of business-level changes with zero marked; distinguish a mean fall from a fall for everyone. H2 adds one supported statement and one limit. This is different from the baseline-cost distribution. | 5 minutes |
+| D1S2-ADD4 | After worked before/after and with/without comparisons | Two numbers. Two different comparisons. | -669 and -1,638 on matched mini-timelines, showing groups and starting costs. Learners identify what each misses. H2 includes comparison summary. Original 06 provides the worked steps; this screen consolidates them and bridges to the pilot. | 5 minutes |
+| D1S3-ADD1 | After lottery demonstration, before post-period result | Were the pilot groups similar at the start? | Baseline cost distribution/means for randomly assigned groups, including 1,390 versus 1,411. Explain chance imbalance; do not use a non-significant balance test as proof of successful randomisation. H3 includes source and question. | 5 minutes |
+| D1S3-ADD2 | After pilot result and before threshold decision | Two group means become one coefficient | Work 769 minus 1,783 ≈ -1,014, then highlight the corresponding regression row. Show reference group, outcome and period. Split original 07 so arithmetic is understood before output is interpreted. H3 supplies both displays. | 6 minutes |
+| D2S1-ADD1 | Between four-number task and result interpretation, originals 03–04 | Where is the extra change in this table? | Annotated teaching regression output with participant, after and interaction rows. The interaction is the DiD row; other rows have different meanings. Link to manual arithmetic without a syntax lesson. H4 includes clean output for annotation. | 6 minutes |
+| D2S2-ADD1 | Before local result interpretation, original 05 | A gap between averages is not the fitted jump | Same score/cost scatterplot, raw card means and fitted lines meeting the cutoff. Explain slope adjustment and why the A–H activity need not reproduce -721. H5 supplies the plot. | 6 minutes |
+| D2S2-ADD2 | Before checklist, original 08 | Could businesses influence which side they landed on? | Clearly hypothetical score-density picture plus explanation of what a real manipulation check could show. No claim that GreenWaste has passed a test. H5 adds score-setting evidence request. | 4 minutes |
+| D2S3-ADD1 | Before full matching result, original 05 | One comparison business can be used many times | Link diagram showing replacement, repeated controls and distinction between participants and unique controls. Use canonical full-study counts alongside a small illustrative diagram. H6 adds reuse interpretation. | 5 minutes |
+| D2S3-ADD2 | After matching process/balance explanation, original 06 | Closest available does not always mean close enough | Paired hypothetical overlap examples, clearly separated from actual balance output. Explain weak support/poor matches without claiming a caliper was applied here. H6 includes a question about acceptable match quality. | 5 minutes |
+| D3S1-ADD1 | After input table, original 03, before ratio result | When do the costs and savings happen? | Cash-flow timeline: cost now, no year-1 saving, savings in years 2–6. Learners distinguish assumption from estimate. Split timeline from the input list. H7 includes both. | 5 minutes |
+| D3S1-ADD2 | After basic discount explanation, original 05 | From future savings to today's total | Work one discounted annual amount and show the sum over the stated saving years; connect present-value benefits, costs, ratio and NPV. No second coding exercise. H7 contains the worked reference. | 6 minutes |
+| D3S2-ADD1 | Before actual 49.5%/58.6% comparison, original 05 | Two businesses. Two ways to calculate a percentage. | Small hypothetical two-business table worked step by step, showing total-weighted fall versus equally weighted business percentages. H8 provides blanks before the city summary. | 6 minutes |
+| D3S3-ADD1 | Between note/source comparison and question selection, originals 02–03 | Which result answers which decision? | Matrix of pilot/city/local populations, comparison and key assumption. Learners select a result relevant to the proposed action before questioning it. Use as a source reference during role-play; H9 supplies the matrix. | 5 minutes |
+| D4S1 | No additional technical lecture screen proposed | Protect independent report reading | Expand source orientation and table debrief on existing screens. Use the longer slot for reading, section discussion and feedback; do not coach the independent answers immediately before assessment. | See budget below |
+| D4S2-ADD1 | After source orientation, before worked brief, originals 01–03 | Which finding supports this sentence? | Trace a worked brief sentence to numbered corrected finding, comparison and interval; contrast with a sentence the source cannot support. H11 includes source index; worked answer remains on teaching/reference material, not the independent draft sheet. | 5 minutes |
+
+The insertion list contains **19 proposed explanatory screens**, plus Fiona's two existing opening additions. Some split content already assigned to an expanded slide; they are not 19 new concepts. Preserve scope while giving learners readable steps. Final counts depend on removing repeated instruction screens.
+
+### A second screen for each restored AI Snapshot
+
+For each of the eleven sessions, use the existing AI/repair screen as the first stage: a realistic supplied response, its naive prompt context and exact source. Then insert **D1S1-AI2, D1S2-AI2, D1S3-AI2, D2S1-AI2, D2S2-AI2, D2S3-AI2, D3S1-AI2, D3S2-AI2, D3S3-AI2, D4S1-AI2 and D4S2-AI2** immediately afterwards. These are eleven proposed additional screens, not eleven additional exercises.
+
+Each AI2 screen is titled for that session's task, for example Ask for a table reading you can verify or Ask for a recommendation tied to the evidence. It supplies the better prompt with context, decision, relevant data and limitations; asks AI to request missing information before concluding; and tells learners what to compare with their marked-up response. Keep instructions brief. Handouts H1–H11 carry the realistic response, exact source location and improved prompt/comparison space. Trainer packs carry keys and a prepared second response for the paper fallback.
+
+Allocate **15 minutes total per Snapshot**, not 15 minutes per screen: 5 for markup, 3 for pair/source-check debrief, 4 for the improved prompt and response, and 3 for comparing what improved or remains unsupported. Account setup occurs before teaching; if a response is delayed or unavailable, use the prepared response within the same time. Correctness is checked against the source, not whether two AI outputs agree. Keep general second-chat and leading-prompt cautions in a shared reference, rather than adding another best-practices slide to every deck.
+
+### Session budgets with the additions included
+
+The following are proposed allocations for review, based on 90/90/120 minutes on Days 1–3 and 90/90 on Day 4. They are not approved slide-by-slide timings. Time estimates in the insertion table sit **inside** these blocks. Existing as-you-go worksheet questions form part of explanation/practice, not a second compulsory full worksheet round.
+
+| Session | Opening/context | Explanation and worked examples | Guided worksheet/activity | Independent source reading or drafting | AI Snapshot | Feedback/close | Total |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| D1S1 | 8 | 30 | 17 | 10 | 15 | 10 | 90 |
+| D1S2 | 5 | 25 | 25 | 10 | 15 | 10 | 90 |
+| D1S3 | 5 | 35 | 30 | 20 | 15 | 15 | 120 |
+| D2S1 | 5 | 25 | 25 | 10 | 15 | 10 | 90 |
+| D2S2 | 5 | 25 | 25 | 10 | 15 | 10 | 90 |
+| D2S3 | 5 | 30 | 35 | 20 | 15 | 15 | 120 |
+| D3S1 | 5 | 25 | 25 | 10 | 15 | 10 | 90 |
+| D3S2 | 5 | 20 | 25 | 15 | 15 | 10 | 90 |
+| D3S3 | 5 | 15 | 45 | 20 | 15 | 20 | 120 |
+| D4S1 | 5 | 10 | 20 | 25 | 15 | 15 | 90 |
+| D4S2 | 5 | 15 | 20 | 25 | 15 | 10 | 90 |
+
+The two fixed daily breaks remain outside these session budgets. Current internal break screens in S3 decks should become a brief transition/change of activity unless the timetable is explicitly adjusted to accommodate another break. Day 4's 15-minute feedback/handover is separate from the session budgets and ends before the 12:30–13:00 proposed longer break.
+
+Reconsider the earlier combine proposals as follows: keep sign interpretation visible during coefficient work; keep source-checking AI work separate from ordinary worksheet correction; keep a dedicated decision/debrief screen after substantial group work where needed. Continue combining duplicate headline/vote screens, repeated spokesperson instructions and multiple nearly identical exit questions. A realistic AI response and its better-prompt stage should not be squeezed into one crowded slide.
+
+Provisional final screen range: roughly 14–18 substantive screens for explanation-heavy sessions; fewer for clinics/report workshops. A workshop screen may remain visible for 15–25 minutes. These ranges supersede the earlier 12–16 guide where the additions warrant it; the team should judge explanation and practice time, not slides per minute.
 
 ## Handout-by-handout proposals
 
