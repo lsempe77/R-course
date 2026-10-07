@@ -29,7 +29,7 @@ for day,session,minutes,deck,title,description in ROWS:
  copy(PREVIEW/(stem+'_materials.docx'),DOCS/'trainer'/(stem+'_materials.docx'))
 for f in ['GreenWaste_case_card.docx','GreenWaste_case_brief.docx','Oct14_session3_qa_checklist.docx','Oct15_session1_report.docx','Oct15_session1_rating_sheet.docx','Oct15_session2_findings.docx','Oct15_session2_brief_template.docx']:
  copy(PREVIEW/f,DOCS/'handouts'/f)
-for f in ['Oct12_session1_board_A1.pdf','Oct13_session2_board_A1.pdf','Oct14_session1_board_A1.pdf','Oct15_session1_board_A1.pdf']:copy(PREVIEW/f,DOCS/'posters'/f)
+for f in ['Oct12_session2_board_A1.pdf','Oct13_session2_board_A1.pdf','Oct14_session1_board_A1.pdf','Oct15_session1_board_A1.pdf']:copy(PREVIEW/f,DOCS/'posters'/f)
 for f in ['GreenWaste_week_materials.zip','GreenWaste_decks_days1_2.zip','GreenWaste_decks_days3_4.zip','GreenWaste_room_poll.zip']:copy(PREVIEW/f,DOCS/'downloads'/f)
 copy(PREVIEW/'Module2_exercise_plan_v3.docx',DOCS/'trainer/Module2_exercise_plan_v3.docx')
 copy(PREVIEW/'ROOM_POLL_README.md',DOCS/'trainer/ROOM_POLL_README.md')
@@ -77,7 +77,7 @@ for day,session,_,_,title,_ in ROWS:
  stem='Oct'+str(day+11)+'_session'+str(session)
  parts.append(f'<li><a href="trainer/{stem}_materials.docx" download>Day {day}, Session {session}: {escape(title)}</a></li>')
 parts.append('''</ul></div><div><h3>Print and room instructions</h3><ul><li><a href="trainer/Module2_exercise_plan_v3.docx" download>Classroom brief: copies, cutting and group allocations</a></li><li><a href="downloads/GreenWaste_room_poll.zip" download>Course room-voting tool</a> &middot; <a href="trainer/ROOM_POLL_README.md">Setup instructions</a></li></ul><h3>A1 posters</h3><ul>''')
-for stem,title in [('Oct12_session1','Claim triage (optional)'),('Oct13_session2','Score-rule number line'),('Oct14_session1','Value for money wall'),('Oct15_session1','Report credibility wall (two sheets)')]:parts.append(f'<li><a href="posters/{stem}_board_A1.pdf" download>{title}</a></li>')
+for stem,title in [('Oct12_session2','Claim triage (optional)'),('Oct13_session2','Score-rule number line'),('Oct14_session1','Value for money wall'),('Oct15_session1','Report credibility wall (two sheets)')]:parts.append(f'<li><a href="posters/{stem}_board_A1.pdf" download>{title}</a></li>')
 parts.append('''</ul><h3>Desk references</h3><ul><li><a href="handouts/GreenWaste_case_card.docx" download>GreenWaste picture card</a> &middot; <a href="handouts/GreenWaste_case_brief.docx" download>Case brief</a></li><li><a href="handouts/Oct14_session3_qa_checklist.docx" download>Five questions for the evaluator</a></li></ul><h3>Review the rebuild</h3><p><a href="preview/week_ready.html">Whole-week review and checks</a></p></div></div></div></details>
 <div class="guide"><section><h2>Using the slides</h2><p>Use the arrow keys to move through the slides and <kbd>Esc</kbd> to see all slides. Select the options and open evidence when prompted.</p></section></div>
 </main><footer class="shell"><p>International Initiative for Impact Evaluation (3ie) &middot; Module 2 working materials &middot; Updated 6 October 2026</p></footer>

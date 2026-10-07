@@ -16,7 +16,7 @@ for day,n in [(12,3),(13,3),(14,3),(15,2)]:
   deck=stem+('_live' if (day,session) in [(12,1),(12,3),(13,2),(14,1),(14,3),(15,2)] else '')+'.html'
   entries.extend([(pre/deck,'Decks/'+deck),(pre/(stem+'_handouts.docx'),'ParticipantSheets/'+stem+'_handouts.docx'),(pre/(stem+'_materials.docx'),'TrainerPacks/'+stem+'_materials.docx')])
 for f in ['GreenWaste_case_card.docx','GreenWaste_case_brief.docx','Oct14_session3_qa_checklist.docx','Oct15_session1_report.docx','Oct15_session1_rating_sheet.docx','Oct15_session2_findings.docx','Oct15_session2_brief_template.docx']:entries.append((pre/f,'References/'+f))
-for f in ['Oct12_session1_board_A1.pdf','Oct13_session2_board_A1.pdf','Oct14_session1_board_A1.pdf','Oct15_session1_board_A1.pdf']:entries.append((pre/f,'Posters/'+f))
+for f in ['Oct12_session2_board_A1.pdf','Oct13_session2_board_A1.pdf','Oct14_session1_board_A1.pdf','Oct15_session1_board_A1.pdf']:entries.append((pre/f,'Posters/'+f))
 for f in ['room_poll.py','room_poll.html','ROOM_POLL_README.md']:entries.append((root/f,'RoomTool/'+f))
 entries.extend([(pre/'evaluation_data_GreenWaste_simple.csv','Decks/evaluation_data_GreenWaste_simple.csv'),(root/'Module2_exercise_plan_v3.docx','Module2_exercise_plan_v3.docx')])
 readme='''GreenWaste: eleven course-owned sessions, October 2026\nThree downloads: print materials, decks Days 1-2, decks Days 3-4. Unzip both deck archives to the same folder.

@@ -44,14 +44,14 @@ Use the five terms from Session 1. Write your decision and one question on **She
 7 minutes. This is the entry task, not a lecture. Do not define terms or correct answers yet. Collect a few decisions and questions. Keep the sheets so participants can compare their own reading at the end of the week. No AI for this task.
 :::
 
-## What did GreenWaste actually do? {.reader-slide}
+## Remember GreenWaste? {.reader-slide}
 
 {{< include _case_map.qmd >}}
 
 Today we read **waste sent to landfill**, in tonnes per business per year.
 
 ::: {.notes}
-3 minutes. Use the existing case picture/card. GreenWaste advises businesses and helps them improve waste handling. One pilot used a lottery; the rest of the city used a score rule. Do not teach either method yet or reveal cost findings. The map shows an illustrative arrangement, not actual counts. The corrected city records follow the displayed rule: score 58 or below took part.
+1 minute. Quick reminder only: GreenWaste was introduced in Session 1 with the picture card and the theory of change. Point to the map: a lottery in the pilot district, the score rule everywhere else. Do not teach either method yet or reveal cost findings. The map shows an illustrative arrangement, not actual counts. The corrected city records follow the displayed rule: score 58 or below took part.
 :::
 
 ## Would you extend it? {.reader-slide}

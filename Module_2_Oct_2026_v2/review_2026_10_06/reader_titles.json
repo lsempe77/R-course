@@ -31,11 +31,13 @@
       "subtitle": "Five terms for reading a regression table",
       "description": "Explain mean, treatment effect, coefficient, p-value and confidence interval.",
       "headings": [
+        "The GreenWaste case study",
+        "Where does GreenWaste fit?",
         "An impressive result lands on your desk",
         "Mean: who looks like the average?",
         "Treatment effect: what did GreenWaste cause?",
         "Coefficient: which row is the change?",
-        "A minus sign. Good news or bad?",
+        "What does the minus sign mean?",
         "Confidence interval: how sure are we?",
         "P-value: does small mean important?",
         "A lower cost. Enough of a saving?",
@@ -54,7 +56,7 @@
       "description": "A fall in waste sounds promising. Decide what you still need to know.",
       "headings": [
         "That headline lands on your desk",
-        "What did GreenWaste actually do?",
+        "Remember GreenWaste?",
         "Would you extend it?",
         "What does the headline leave out?",
         "Who else saw waste fall?",

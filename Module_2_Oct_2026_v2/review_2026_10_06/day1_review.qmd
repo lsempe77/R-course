@@ -25,7 +25,7 @@ Screen counts exclude the title. Session 3 includes a five-minute break.
 Session 1 teaches mean, treatment effect, coefficient, p-value and confidence interval explicitly. It uses ten landfill records for the mean and a two-row annual-cost regression table for reading. Session 2 applies these terms to claims. Only Sessions 1 and 3
 have a trainer-run R demonstration. Participants do not write or debug code.
 
-Fiona's four-claim triage is retained, with the [existing optional A1 board](Oct12_session1_board_A1.pdf).
+Fiona's four-claim triage is retained, with the [existing optional A1 board](Oct12_session2_board_A1.pdf).
 The RDD number line, matching cards, ratio wall and credibility grid from the
 other branch are already present and will be preserved in later daily rebuilds.
 
