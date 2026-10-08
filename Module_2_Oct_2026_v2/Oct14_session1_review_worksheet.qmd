@@ -1,0 +1,259 @@
+---
+title: "GreenWaste: read the economic model"
+format:
+  html:
+    embed-resources: true
+    toc: false
+    theme: none
+    include-in-header:
+      text: |
+        <style>
+        body{font:16px/1.4 Arial,sans-serif;color:#111418;margin:0;background:#eef2f6}main{max-width:850px;margin:auto}h1,h2,h3{color:#063360}h1{font-size:26px}h2{font-size:22px;margin:0 0 12px}h3{font-size:18px;margin:14px 0 6px}p{margin:8px 0}.sheet-page{background:white;padding:28px 40px;margin:20px 0;box-sizing:border-box;min-height:950px}.reading-table{width:100%;border-collapse:collapse;font-size:13px}.reading-table th,.reading-table td{padding:6px;border-bottom:1px solid #D5DEE8;text-align:left}.reading-table thead{background:#063360;color:white}.writing{height:45px;border-bottom:1px solid #c8d6e5;margin:6px 0}.writing.tall{height:70px}.review-svg{display:block;width:100%;height:130px}.caption{font-size:12px;color:#545860}.ai-source{border-left:3px solid #7da1c4;padding-left:16px}.prompt{border-top:2px solid #215a9e;padding-top:8px;font-size:14px}header button{font:inherit;padding:8px 15px;color:#063360;background:white;border:1px solid #215a9e;cursor:pointer}
+        @page{size:A4;margin:14mm}@media print{body{background:white;font-size:11pt;line-height:1.3}main{max-width:none}.sheet-page{padding:0;margin:0;min-height:0;break-after:page}.sheet-page:last-child{break-after:auto}header,#title-block-header{display:none}h2{font-size:17pt}h3{font-size:12pt}.writing{height:10mm}.writing.tall{height:16mm}.reading-table{font-size:9pt}.reading-table th,.reading-table td{padding:5px}.review-svg{height:115px}.caption{font-size:9pt}.prompt{font-size:10pt}}
+        </style>
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+```{r, include=FALSE}
+source('day3_session1_review.R', encoding='UTF-8')
+```
+
+<header><p>Separate Day 3 Session 1 review worksheet. Use pages 3-4 while concepts are taught.</p><button onclick="window.print()">Print worksheet</button></header>
+
+<div class="sheet-page">
+
+## Page 1 | H7-A: economic model note
+
+**GreenWaste is a fictional training case.** This supplied model note is the source; there is no separate economic report.
+
+### §1 | Where does the benefit input come from? [Table I]
+
+The city DiD compares before/after annual waste-cost changes in 4,794 participants with changes in 5,206 other businesses. The extra recorded reduction is **`r fmt(model$saving)` AED per participant**, measured at 12 months. Calling it a causal saving requires parallel trends and other comparison assumptions. It is provisional, not a guarantee; the other methods use different comparisons and populations.
+
+```{r, results='asis'}
+html_out(d7_inputs())
+```
+
+### §2 | How are future amounts combined?
+
+The model assumes equipment delivery costs **1,800 AED per participant now (year 0)**, no saving in year 1, then the same annual saving in **years 2-6**. It discounts future savings at an assumed 5% to express all amounts at year-0 value. The file does **not** observe five years of savings. For year *t*, present saving = annual saving / 1.05^*t*. Table F and Table O are on page 2. Calculations use unrounded inputs.
+
+### §3 | Whose perspective and which items? [Table P]
+
+This is a limited **mixed-actor model**: an authority delivery cost against business financial savings. It is neither a full authority-budget appraisal nor a full social cost-benefit analysis.
+
+| Table P: actor/item | Model status | Evidence needed |
+|---|---|---|
+| Authority: equipment delivery | Assumed year-0 cost included | Actual amounts and coverage |
+| Authority: staff/administration | Coverage unknown | What is already included, amount, timing |
+| Business time/maintenance; wider impacts | Coverage unknown | Perspective, resource costs and transfers |
+
+Check for duplication before adding costs. Financial savings are not automatically net social benefits; charges/transfers and wider effects need appropriate treatment.
+
+### §4 | Sensitivity and the limits of the headline
+
+The scenarios change stated inputs, not observed programme facts. Their settings are on page 2; **Table S (cards page 7) is held by the trainer until predictions are recorded**. Comparisons among single-input Cards 1-4 depend on the tested ranges; Card 5 combines two changes. No evidence of these settings' plausibility is supplied.
+
+An additional check gives ratio **`r fmt(ratio(rate=.4),2)` at 40%**, holding all else fixed. Delaying the stream by **three extra years** (years 5-9) at 5% gives **`r fmt(ratio()/1.05^3,2)`**, still above 1. These checks do not establish suitable government discount-rate guidance or realistic delays. A ratio above 1 or positive NPV is conditional on the model, not proof of value for money. The separate **1,000 AED annual-saving minimum** is not a ratio threshold.
+
+<p class="caption">Source: corrected city CSV and day3_case.R, reproduced by day3_session1_review.R. Model inputs, assumed cost boundary and scenarios are fictional. §§1-4 and Tables I/P/F/O/S are the reference evidence.</p>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 2 | H7-A: cash flows, outputs and scenario settings
+
+```{r, results='asis'}
+html_out(d7_timeline())
+```
+
+### Table F | Assumed cash flows per participant
+
+```{r, results='asis'}
+html_out(d7_cash_table())
+```
+
+One-year illustration: **812 / 1.05 ≈ 774 AED**. The first model saving is in **year 2**: **812 / 1.05² ≈ `r fmt(model$saving/1.05^2)` AED**. Sum discounted years 2-6; printed rounded rows may not sum exactly to the unrounded total.
+
+### Table O | Base model at year-0 value
+
+```{r, results='asis'}
+html_out(d7_output())
+```
+
+**Ratio = benefits / costs** (no units). **NPV = benefits - costs** (AED per participant). Neither proves benefit attribution, persistence or complete cost coverage.
+
+### Scenario settings | Predict before results
+
+1: saving decays 30% after the first saving year. 2: add 600 AED non-duplicated year-0 costs. 3: rate 8%. 4: three saving years (2-4). 5: combine Cards 1 and 2. Everything else stays fixed. Keep this page closed during group predictions.
+
+**Results are withheld separately:** Table S, cards page 7, is distributed after predictions. Record your prediction and reason in Q4 before opening it.
+
+</div>
+
+<div class="sheet-page">
+
+## Page 3 | Q1-Q3: inputs, timing and boundaries
+
+### Q1 | Open the inputs [§§1-2, Table I]
+
+Name one estimated input and one fictional assumption, with source IDs:
+
+<div class="writing tall"></div>
+
+Cost year: _____. First saving year: _____. Last saving year: _____.
+
+Number of saving years: _____. Is there a saving in year 1? __________
+
+What evidence would you need before treating future savings as credible?
+
+<div class="writing"></div>
+
+### Q2 | Discounting, ratio and NPV [Tables F/O]
+
+Year-2 saving at today's value: 812 / __________ ≈ __________ AED.
+
+Why not simply multiply the annual saving by five?
+
+<div class="writing"></div>
+
+Present-value benefits: __________ AED. Included cost: __________ AED.
+
+Ratio calculation: __________________. NPV calculation: __________________.
+
+Explain what each number means, under the stated assumptions:
+
+<div class="writing tall"></div>
+
+### Q3 | Whose perspective? [§3, Table P]
+
+Whose decision is this? Which costs/benefits belong within that perspective?
+
+<div class="writing"></div>
+
+Name a possibly omitted cost. What might already be included? Request an amount and timing without double counting.
+
+<div class="writing tall"></div>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 4 | Q4-Q6: sensitivity and judgement
+
+### Q4 | Your scenario: predict before opening results
+
+Card: _____. Changed input(s): ______________________________________
+
+What stays fixed? _________________________________________________
+
+Prediction: __________. Above/below 1? __________. Your reason:
+
+<div class="writing"></div>
+
+After reveal, actual ratio: __________. What explains the difference?
+
+<div class="writing"></div>
+
+What evidence would show whether this changed assumption is plausible?
+
+<div class="writing tall"></div>
+
+Among specified single-input Cards 1-4, which moves the ratio most? Why does this not establish a universal ranking of assumptions?
+
+<div class="writing"></div>
+
+### Q5 | Independent model reading [H7-A, pages 1-2]
+
+One estimated input and one assumption, with source IDs:
+
+<div class="writing"></div>
+
+What does the ratio support under these assumptions? What is not established?
+
+<div class="writing tall"></div>
+
+### Q6 | Close the source: conditional recommendation
+
+Interpret 1.86. State your provisional action and a condition. Request one specific missing fact and explain how its answer could change your decision.
+
+<div class="writing tall"></div>
+<div class="writing"></div>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 5 | AI Snapshot: verify the scenario (15 minutes)
+
+### Stage 1 | Mark the supplied response (8 minutes)
+
+Naive prompt: **"Generate one plausible scenario where this programme's benefit-cost ratio falls below 1. Tell me whether it is realistic."** Source: H7-A. This is an **illustrative prepared response**, not a live Copilot transcript.
+
+<div class="ai-source">
+```{r, results='asis'}
+html_out(paste0('<p>', gsub('\n\n', '</p><p>', d7_ai, fixed=TRUE), '</p>'))
+```
+</div>
+
+Keep supported claims. Cross out unsupported arithmetic, timing or realism claims. Cite one source ID that changes the advice:
+
+<div class="writing"></div>
+
+### Stage 2 | Use the better prompt in Microsoft Copilot (7 minutes)
+
+<div class="prompt">
+```{r, results='asis'}
+html_out(paste0('<p>', d7_prompt, '</p>'))
+```
+</div>
+
+Use fictional course evidence only and the shared **AI good-practice card**. No device: use page 6 after marking Stage 1.
+
+One verified number and one useful question about missing evidence:
+
+<div class="writing tall"></div>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 6 | Prepared paper alternative
+
+**Open only after marking page 5.** This example is not the exact answer Copilot must produce.
+
+### Distinguish inputs from conclusions
+
+H7-A §1 and Table I use an **estimated city extra change** of about 812 AED, provisionally treated as a causal benefit. The cost, one-year lag, five-year saving stream and 5% rate are **assumptions**, not measured economic facts. Future benefits are modelled from them.
+
+Tables F/O put costs at year 0 and savings in years 2-6. Present-value benefits are about **3,350 AED**, included costs **1,800 AED**, ratio **1.86** and NPV **1,550 AED per participant**. These numbers do not verify attribution, duration or cost coverage. Table P has a limited mixed-actor boundary, not a complete authority-budget or social appraisal.
+
+### Quantify the specified changes
+
+Table S gives single-input ratios **1.07, 1.40, 1.67 and 1.17** for Cards 1-4. Against base 1.86, the largest fall among those settings is the decay scenario (about **0.79** ratio units), then shorter duration (**0.69**), added costs (**0.47**) and rate 8% (**0.19**). Ranking depends on the specified changes. Card 5 combines decay and added costs and gives **0.80**; it is not a single-input test.
+
+At 40% the arithmetic can produce a ratio below 1 (§4). The source does **not** establish that rate as applicable government practice. A three-extra-year delay gives about **`r fmt(ratio()/1.05^3,2)`**, not below 1. A high-rate stress test does not establish programme rejection; suitable guidance and other evidence are needed.
+
+### Questions before recommending an input to investigate
+
+- What decision-maker and cost-benefit perspective should guide this appraisal?
+- What persistence and maintenance evidence supports five years of savings or 30% decay?
+- What actual costs, timing and existing coverage support the extra 600 AED?
+- What discount-rate guidance applies, and how credible is the provisional DiD benefit?
+
+### Verify this alternative yourself
+
+One numerical claim checked against a named source table:
+
+<div class="writing tall"></div>
+
+One evidence request that could change the spending decision, and why:
+
+<div class="writing tall"></div>
+
+</div>

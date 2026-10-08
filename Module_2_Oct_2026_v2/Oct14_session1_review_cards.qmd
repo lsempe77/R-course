@@ -1,0 +1,85 @@
+---
+title: "GreenWaste: cost-benefit scenario cards"
+format:
+  html:
+    embed-resources: true
+    toc: false
+    theme: none
+    include-in-header:
+      text: |
+        <style>
+        body{font:20px/1.45 Arial,sans-serif;color:#111418;background:#eef2f6;margin:0}main{max-width:850px;margin:auto}.sheet-page{background:white;padding:35px;margin:20px 0;min-height:850px;box-sizing:border-box}h2,h3{color:#063360}h2{font-size:28px}h3{font-size:25px}.card-number{font-size:70px;font-weight:bold;color:#063360;margin:10px 0}.writing{height:70px;border-bottom:1px solid #7da1c4;margin:12px 0}.review-svg{width:100%;height:330px}.caption{font-size:16px}header button{font:inherit;padding:8px 15px}#title-block-header{display:none}@page{size:A4;margin:16mm}@media print{body{background:white;font-size:14pt}.sheet-page{padding:0;margin:0;min-height:0;break-after:page}.sheet-page:last-child{break-after:auto}header{display:none}.writing{height:15mm}.review-svg{height:85mm}}
+        .reading-table{border-collapse:collapse;width:100%;font-size:16px}.reading-table th,.reading-table td{padding:6px;border-bottom:1px solid #D5DEE8;text-align:left}.reading-table thead{background:#063360;color:white}@media print{.reading-table{font-size:11pt}}
+        </style>
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+```{r, include=FALSE}
+source('day3_session1_review.R', encoding='UTF-8')
+```
+
+<header><button onclick="window.print()">Print scenario cards, board and separate result key</button><p>One card per group. For eight groups print Cards 1, 2 and 3 twice: allocation 1, 2, 3, 4, 5, 1, 2, 3. Retain page 7 until predictions are recorded; pages 1-6 contain no scenario results.</p></header>
+
+```{r, results='asis'}
+cards_html <- vapply(seq_len(nrow(scenarios)), function(i) paste0(
+  '<div class="sheet-page"><h2>Scenario Card ', scenarios$card[i],
+  '</h2><p class="card-number">', scenarios$card[i],
+  '</p><h3>', scenarios$name[i], '</h3><p>', scenarios$story[i],
+  '</p><p><strong>Everything else stays fixed:</strong> base annual saving ',
+  fmt(model$saving), ' AED, year-0 equipment delivery cost 1,800 AED, no saving in year 1, five saving years 2-6 and 5% rate, except the input(s) this card changes.</p>',
+  '<p>', c(
+    'The first saving in year 2 stays at the base amount; later saving is multiplied by 0.7 each year.',
+    'The additional 600 AED is assumed at year 0, outside the included 1,800 AED; check for duplication when assessing real costs.',
+    'Discount at 8% over the same five saving years.',
+    'Keep savings only in years 2, 3 and 4.',
+    'Apply 30% decay after the first saving year AND add 600 AED at year 0. This card changes two inputs.')[i],
+  '</p><p><strong>Base ratio: 1.86.</strong> Predict your changed ratio before the trainer reveals results.</p>',
+  '<p>Prediction and reason:</p><div class="writing"></div>',
+  '<p>What evidence would establish whether this change is plausible?</p><div class="writing"></div>',
+  '<p class="caption">Fictional scenario, not observed programme performance. Post card number and prediction above the line; after reveal, put card number and result below it.</p></div>'), '')
+html_out(paste(cards_html, collapse='\n'))
+```
+
+<div class="sheet-page">
+
+## Page 6 | Two-lane ratio board
+
+Post predictions **above** the line before the reveal. Place card numbers and computed results **below** it afterwards.
+
+```{r, results='asis'}
+html_out(d7_board())
+```
+
+**Break-even 1:** included modelled benefits equal included modelled costs. **Headline 1.86:** the base assumptions.
+
+The board is a paper/browser reference, not a shared room poll. Use the existing A1 board for the full-room activity. A result below 1 is conditional on that scenario, not an observed programme failure.
+
+<p class="caption">Scenario results are revealed in the review deck and recorded in Q4. These five cards preserve the current scenario inputs and eight-group allocation.</p>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 7 | Table S: trainer holds until reveal
+
+**Distribute only after groups have recorded their predictions.** This table is a supplementary source for H7-A §4 and the AI Snapshot.
+
+```{r, results='asis'}
+html_out(d7_scenario_table())
+```
+
+Base ratio: **1.86**. Only Card 5 is below 1; it combines decay and added costs.
+
+Among the specified single-input Cards 1-4, Card 1 moves the ratio most. This is a comparison of those settings, not a universal ranking of assumptions or evidence that the settings are realistic.
+
+```{r, results='asis'}
+html_out(d7_board(TRUE))
+```
+
+Record the results in Q4, worksheet page 4. Keep predictions visible above the line while comparing results below it.
+
+</div>

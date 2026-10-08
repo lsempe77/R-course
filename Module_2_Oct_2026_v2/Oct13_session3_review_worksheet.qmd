@@ -1,0 +1,250 @@
+---
+title: "GreenWaste city: read a matched comparison"
+format:
+  html:
+    embed-resources: true
+    toc: false
+    theme: none
+    include-in-header:
+      text: |
+        <style>
+        body{font:16px/1.4 Arial,sans-serif;color:#111418;margin:0;background:#eef2f6}main{max-width:850px;margin:auto}h1,h2,h3{color:#063360}h1{font-size:26px}h2{font-size:22px;margin:0 0 12px}h3{font-size:18px;margin:14px 0 6px}p{margin:8px 0}.sheet-page{background:white;padding:28px 40px;margin:20px 0;box-sizing:border-box;min-height:950px}.reading-table{width:100%;border-collapse:collapse;font-size:13px}.reading-table th,.reading-table td{padding:7px;border-bottom:1px solid #D5DEE8;text-align:left}.reading-table thead{background:#063360;color:white}.writing{height:45px;border-bottom:1px solid #c8d6e5;margin:6px 0}.writing.tall{height:70px}.review-svg{display:block;width:100%;height:180px}.caption{font-size:12px;color:#545860}.ai-source{border-left:3px solid #7da1c4;padding-left:16px}.prompt{border-top:2px solid #215a9e;padding-top:8px;font-size:14px}header button{font:inherit;padding:8px 15px;color:#063360;background:white;border:1px solid #215a9e;cursor:pointer}
+        @page{size:A4;margin:14mm}@media print{body{background:white;font-size:11pt;line-height:1.3}main{max-width:none}.sheet-page{padding:0;margin:0;min-height:0;break-after:page}.sheet-page:last-child{break-after:auto}header,#title-block-header{display:none}h2{font-size:17pt}h3{font-size:12pt}.writing{height:10mm}.writing.tall{height:16mm}.reading-table{font-size:9pt}.reading-table th,.reading-table td{padding:5px}.review-svg{height:160px}.caption{font-size:9pt}.prompt{font-size:10pt}}
+        </style>
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+```{r, include=FALSE}
+source('day2_session3_review.R', encoding='UTF-8')
+```
+
+<header><p>Separate Day 2 Session 3 review worksheet. Use pages 3-4 as concepts are taught.</p><button onclick="window.print()">Print worksheet</button></header>
+
+<div class="sheet-page">
+
+## Page 1 | H6-A: city matching study extract
+
+**GreenWaste is a fictional training case.** This supplied extract is the source, not a separately distributed report.
+
+### §1 | Who, what and when?
+
+GreenWaste provides equipment subsidies, installation help and staff training. The city study records **10,000 businesses: 4,794 participants and 5,206 nonparticipants**. Participation followed an efficiency-score rule, not random assignment. Annual waste cost in **AED per business** was measured before and 12 months after. This is not the separate pilot or the local cutoff analysis.
+
+### §2 | How were comparisons selected? [Table R]
+
+For each participant, the evaluator selected one nearest nonparticipant using pre-programme **manager age, staff, premises area and filtration**, standardised by full-city standard deviations. Distance is the sum of squared differences on these scaled features. The procedure allowed **replacement**: all 4,794 participants were matched to **`r fmt(match_A$used)` unique controls**, with maximum reuse **`r fmt(match_A$max_reuse)`**. No maximum acceptable distance (caliper) or participant exclusion was imposed. Before-cost was not a matching feature.
+
+```{r, results='asis'}
+html_out(d6_results())
+```
+
+Table R reports **participant minus selected control annual after-cost**. The four-feature difference is **`r fmt(match_A$est)` AED**, or a reduction of **`r fmt(-match_A$est)` AED**, with a 95% reduction interval of **`r paste(fmt(sort(-match_A$ci)), collapse=' to ')` AED**. Omitting age changes which controls are selected; it is not evidence of the true effect.
+
+### §3 | What is needed for a causal reading?
+
+After accounting for these recorded features, there must be no remaining important difference affecting both participation and costs, and sufficiently comparable controls must be available. Consistent measurement and no important programme effects on comparison businesses also matter. A hypothetical unrecorded influence such as motivation could violate the first condition. It is not a measured GreenWaste variable or an established explanation here.
+
+### §4 | What can and cannot be concluded?
+
+Table B (page 2) shows measured balance, including a residual age gap of **`r fmt(match_A$age_gap, 2)` years** and before-cost gap of **`r fmt(match_A$base_gap)` AED**. Without age, these gaps become **`r fmt(match_B$age_gap, 2)` years** and **`r fmt(match_B$base_gap)` AED**. Finding a nearest control for every participant does not establish acceptable distances. A full joint-support diagnosis, distance distribution and unrecorded-confounding sensitivity analysis are not supplied.
+
+The business-clustered robust interval accounts for reused controls **treating selected matches as given**. It does not fully account for match selection or unmeasured bias. The four-feature reduction interval crosses the fictional **1,000 AED annual-saving minimum**; the estimate alone does not securely establish that minimum. Full programme costs and national effects are not supplied.
+
+<p class="caption">Source: corrected evaluation_data_GreenWaste_simple.csv, city records; day2_case.R and day2_session3_review.R. Values use unrounded records. Tables R and B and §§1-4 are the source to inspect.</p>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 2 | H6-A: measured balance and reference
+
+### Table B | Actual pre-programme means
+
+```{r, results='asis'}
+html_out(d6_balance())
+```
+
+Matched-control means count reused records. **Gap / city SD** is participant mean minus matched-control mean, divided by the full-city standard deviation. It is not a standard error or universal credibility threshold. Filtration is a proportion; before-cost was not matched on.
+
+### Actual age overlap, not a joint-support test
+
+```{r, results='asis'}
+html_out(d6_support())
+```
+
+These are distributions for participants and **all available controls**; bar heights show within-group proportions, with identical scaling. Age overlap alone cannot establish adequate similarity on all four features.
+
+### Reuse and the decision rule
+
+**4,794 pairs do not mean 4,794 different controls.** There are 9,588 stacked matched rows but 5,379 unique businesses in the four-feature comparison. Some control outcomes contribute many times.
+
+```{r, results='asis'}
+html_out(d6_interval())
+```
+
+The interval concerns the mean matched difference under the model. It is not the saving range of individual businesses or an allowance for all bias.
+
+</div>
+
+<div class="sheet-page">
+
+## Page 3 | Q1-Q2: pair first, then interpret
+
+### Q1 | Seven invented profiles, not the city study
+
+Use **manager age and size**. Each comparison profile is used once in this activity. Keep costs closed until your choices are recorded.
+
+| Participant | Chosen comparison | Why this pair? |
+|---|---|---|
+| A | __________ | __________________________________ |
+| B | __________ | __________________________________ |
+| C | __________ | __________________________________ |
+
+Unused comparison: __________. One unknown that could matter:
+
+<div class="writing"></div>
+
+**After the trainer distributes cost slips**, keep your pairs and calculate participant minus comparison annual after-cost:
+
+| Pair | Participant cost | Comparison cost | Difference AED |
+|---|---|---|---|
+| A-____ | __________ | __________ | __________ |
+| B-____ | __________ | __________ | __________ |
+| C-____ | __________ | __________ | __________ |
+
+Mean of three differences: __________ AED. Does this establish causation? Why?
+
+<div class="writing"></div>
+
+### Q2 | Read the actual city result [H6-A §2, Table R]
+
+Explain the four-feature result's **sign, comparison, period and units**:
+
+<div class="writing tall"></div>
+
+Which four features selected the controls? Was before-cost one of them?
+
+<div class="writing"></div>
+
+Why can 4,794 participants be matched to only 585 unique controls? What does reuse mean for interpreting the sample and its uncertainty?
+
+<div class="writing tall"></div>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 4 | Q3-Q6: judge the comparison
+
+### Q3 | Balance and adequate similarity [page 2, Table B]
+
+Identify one improvement and one remaining measured difference. What additional check would help judge whether matches are close enough?
+
+<div class="writing tall"></div>
+
+### Q4 | Age omitted; influences unrecorded [Table R, §§3-4]
+
+Why could leaving age out change the estimate? Why does balancing recorded features not establish that unrecorded influences are absent?
+
+<div class="writing tall"></div>
+
+### Q5 | Independent source reading and the saving rule
+
+Finding with paragraph/table ID: ______________________________________
+
+Causal assumption with paragraph ID: _________________________________
+
+What does "everyone matched" establish? What does it not establish?
+
+<div class="writing"></div>
+
+Does the **interval**, not just the estimate, securely establish the 1,000 AED minimum? Separate uncertainty from causal credibility.
+
+<div class="writing"></div>
+
+### Q6 | Close the source: your provisional judgement
+
+One interpretation, one strength and one consequential concern:
+
+<div class="writing tall"></div>
+
+Act, act with conditions or ask first: your reason, then one matching-specific evidence request and how it could change your decision.
+
+<div class="writing tall"></div>
+
+**Comparison reminder:** lottery = assigned groups; DiD = extra change; RDD = fitted cutoff jump; matching = selected recorded similarities. Do not average these different comparisons.
+
+</div>
+
+<div class="sheet-page">
+
+## Page 5 | AI Snapshot: compare, then verify (15 minutes)
+
+### Stage 1 | Mark the supplied response (8 minutes)
+
+Naive prompt: **"Compare these two matching evaluations and advise the commissioner."** Source: H6-A and Table B. The following is an **illustrative prepared response**, not a live Copilot transcript.
+
+<div class="ai-source">
+```{r, results='asis'}
+html_out(paste0('<p>', gsub('\n\n', '</p><p>', d6_ai, fixed=TRUE), '</p>'))
+```
+</div>
+
+Keep supported claims. Cross out unsupported assurances. Cite one source passage that changes the advice:
+
+<div class="writing"></div>
+
+### Stage 2 | Use the better prompt in Microsoft Copilot (7 minutes)
+
+<div class="prompt">
+```{r, results='asis'}
+html_out(paste0('<p>', d6_prompt, '</p>'))
+```
+</div>
+
+Use only fictional course evidence. Apply the shared **AI good-practice card**. No device: use page 6 after completing Stage 1.
+
+Compare the reply with the source. Record one verified correction and one useful question Copilot asked about missing evidence:
+
+<div class="writing tall"></div>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 6 | Prepared paper alternative
+
+**Open only after marking page 5.** This is a prepared example, not the exact response Copilot must give.
+
+### A source-grounded comparison
+
+H6-A §2 and Table R compare annual after-costs, not cost changes. The four-feature matched reduction is **`r fmt(-match_A$est)` AED**, with interval **`r paste(fmt(sort(-match_A$ci)), collapse=' to ')`**. The no-age result is **`r fmt(-match_B$est)` AED**, with interval **`r paste(fmt(sort(-match_B$ci)), collapse=' to ')`**. Different feature lists select different controls; the larger result is not automatically more credible.
+
+Every participant received a nearest control, but 4,794 participants used only 585 unique controls (§2). That establishes coverage under this algorithm, not acceptable match distances. Table B shows a remaining age difference and a before-cost difference even with four features. Before-cost was not on the matching list. Similar measured means cannot eliminate all selection bias (§3).
+
+The four-feature interval crosses 1,000 AED (§4), so the point estimate does not securely establish the annual-saving minimum. Its conditional uncertainty does not include every threat to causal credibility. Full programme costs and national effects are not provided.
+
+### Questions before recommending action
+
+- Can you supply match-distance distributions and evidence about joint overlap or weak-support regions?
+- Why was before-cost not included, and how do alternative defensible matching choices affect results?
+- What is known about influences on participation absent from the records? Is there a sensitivity analysis?
+- What decision population, full programme costs and tolerance for uncertainty should guide the recommendation?
+
+A conditional recommendation would distinguish the recorded association, the unverified causal assumption and the rule's uncertainty. It should not promise bias removal or automatic expansion.
+
+### Verify the alternative yourself
+
+One factual claim checked against a named paragraph/table:
+
+<div class="writing tall"></div>
+
+One question that could change the decision, and why:
+
+<div class="writing tall"></div>
+
+</div>
