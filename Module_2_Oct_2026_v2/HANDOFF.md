@@ -1,5 +1,21 @@
 # Handoff: moving Module 2 to the simple GreenWaste case
 
+## Separate Day 3 Session 2 comparison prototype, 8 October 2026
+
+Lucas requested continuation with chart reading and confirmed committing/pushing the separate preview. `Oct14_session2_review.qmd` supplies 16 content screens and a 90-minute facilitator script. `Oct14_session2.qmd`, existing handouts, production builder and live teaching route remain unchanged. The original is freshly rendered as `Oct14_session2_current_compare.html`; `day3_session2_compare.html` aligns sixteen related topics.
+
+The opening briefly withholds labels, then reveals the two actual cost-bar versions on the same screen. A separate axis toggle changes the lower bound from 700 to zero without changing values. The underlying table identifies the same 4,794 city participants, mean annual costs 1,432/763 AED before/12 months after, and the descriptive 669 AED fall. The revised sequence distinguishes that result from cause and from an individual-business claim. Nonzero axes are not banned universally; the bar representation must fit the intended claim and audience.
+
+Distribution references include all participant before-costs (mean 1,432, median 1,376, middle half 1,096-1,694 AED) and the earlier ten selected actual landfill records (mean 10.0, median 6.5, range 3-46 tonnes). The selected set is explicitly not representative. A hypothetical 10-to-2 and 90-to-54 tonne example works 44% aggregate versus 60% mean business percentage before showing the actual 49.5%/58.6% participant landfill summaries. The separate pilot interval remains in AED, with its own population and comparison; estimated reduction 1,014, interval 862-1,167 crosses the 1,000 rule. Variation between businesses and uncertainty about a mean effect are taught separately.
+
+`Oct14_session2_review_worksheet.qmd` has seven printable pages: H8-A cost figures/table, distribution reference, Q1-Q3 annotation/interpretation, Q4-Q7 arithmetic/caption/judgement, two-stage 15-minute Copilot Snapshot, prepared paper alternative and numerical percentage/pilot reference. Page 7 is held until the two-business task; page 6 remains the AI fallback after markup. This ordering protects both prediction and Stage 1. The annotated Figure C and repaired caption are the main learning evidence. No extra card set or A1 activity is required.
+
+`day3_session2_review.R` supplies data and native SVGs, scoped CSS reuses the review type scale, and `_day3_session2_review_interactions.html` adds pressed-state/text updates to existing native swap controls. The AI Snapshot adapts the older "which chart is fairer?" response and a better prompt tying the chart to its claim and non-technical audience. The response is prepared, not a live Copilot transcript.
+
+Validation: all 17 title/content screens and alternate chart states fit 1280x720 without heading/logo collisions. Label/axis/interval controls toggle by keyboard without advancing the deck and reset correctly. Trainer Run returns total 49.5 and mean_business 58.6 without editor clipping. All sixteen comparison controls, 375px layout and seven A4 worksheet panels pass (largest 839px of 1,017px at 14mm margins); no browser page errors. R assertions verify all histogram records are included, denominators are positive, toy arithmetic, selected-record summaries, pilot rule crossing and the 90-minute timing. Selected slide, executed R and source-page screenshots were visually inspected.
+
+Render both review QMDs in the module directory, and the unchanged original with `--output Oct14_session2_current_compare.html`. Four independent HTMLs are copied to `docs/preview/` with matching hashes and the correct browser CSV. Lucas approved pushing this bundle to `main`; the existing Cloudflare build deploys the preview paths, not replacement teaching routes. This candidate does not mark production-plan revisions complete.
+
 ## Separate Day 3 Session 1 comparison prototype, 7 October 2026
 
 Lucas requested continuation with the separate-review approach. `Oct14_session1_review.qmd` supplies 16 content screens and a 90-minute facilitator script. The original `Oct14_session1_live.qmd`, current handouts, production builder and live teaching route remain unchanged. `Oct14_session1_current_compare.html` freshly renders the original; `day3_session1_compare.html` aligns fourteen related topics.

@@ -1,0 +1,349 @@
+---
+title: "Same numbers. Different story."
+subtitle: "Day 3 | Session 2: Read the chart, denominator and claim"
+author: "3ie · Review version"
+always_allow_html: true
+format:
+  live-revealjs:
+    theme: [theme_dge.scss, theme_live.scss, theme_reader.scss]
+    css: [session1_review.css, day3_session2_review.css]
+    logo: assets/dge_logo_horizontal.svg
+    slide-number: true
+    width: 1280
+    height: 720
+    slide-level: 2
+    embed-resources: true
+    include-after-body: [_reader_interactions.html, _session1_review_interactions.html, _day3_session2_review_interactions.html]
+webr:
+  render-df: kable
+  resources: [evaluation_data_GreenWaste_simple.csv]
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+
+```{r setup, include=FALSE}
+source('day3_session2_review.R', encoding='UTF-8')
+```
+
+## Which picture would you show the director? {#d3s2-p01 .reader-slide .s1-review .d3s2-review}
+
+<div id="d8-labels">
+<div data-variant>
+```{r, results='asis'}
+html_out(paste0('<div class="review-grid chart-pair"><div><h3>A: draft</h3>',d8_bar(0,FALSE),'</div><div><h3>B: draft</h3>',d8_bar(700,FALSE),'</div></div>'))
+```
+</div>
+<div data-variant hidden>
+```{r, results='asis'}
+html_out(d8_pair())
+```
+</div>
+</div>
+
+<button data-swap="d8-labels" aria-controls="d8-labels" aria-pressed="false" data-closed="Reveal the labels and scales" data-opened="Hide the labels and scales">Reveal the labels and scales</button>
+
+::: {.ask}
+What is missing before you can choose responsibly?
+:::
+
+::: {.notes}
+4 minutes. Brief prediction before labels; reveal on the same screen. Both charts show actual city participant before/after cost means, not two programme groups. Incomplete drafts withhold values, units, sample, time and scale. Source: H8-A Figure C, page 1. Start webR warming; no room poll required.
+:::
+
+## Change the axis, not the values {#d3s2-p02 .reader-slide .s1-review .d3s2-review}
+
+<div id="d8-axis">
+<div data-variant>
+```{r, results='asis'}
+html_out(d8_bar(700))
+```
+</div>
+<div data-variant hidden>
+```{r, results='asis'}
+html_out(d8_bar(0))
+```
+</div>
+</div>
+
+<button data-swap="d8-axis" aria-controls="d8-axis" aria-pressed="false" data-closed="Show a zero baseline" data-opened="Show the 700 AED baseline">Show a zero baseline</button>
+
+::: {.ask}
+Which impression changes? Which recorded values stay the same?
+:::
+
+For **bars**, height represents magnitude: a zero baseline usually preserves that comparison. Other chart types can justify nonzero axes with clear scales.
+
+::: {.notes}
+5 minutes. Predict before toggling, then compare. The truncated bar-height ratio exaggerates the relative drop; the AED difference remains 669. Do not prohibit nonzero axes in every chart type. Both variants are printed on worksheet page 1. Judge the display against the claim and audience, not its drama. Keyboard activation should toggle without advancing the deck.
+:::
+
+## Read the source under the bars {#d3s2-p03 .reader-slide .s1-review .d3s2-review}
+
+```{r, results='asis'}
+html_out(d8_cost_table())
+```
+
+**Annual waste cost per business, AED; before and 12 months after GreenWaste.**
+
+::: {.ask}
+Q1, worksheet page 3: annotate units, axis start, sample, time and comparison on Figure C.
+:::
+
+These are the **same participants at two times**, not participants versus a comparison group. Rounded means; calculations use unrounded records.
+
+::: {.notes}
+5 minutes. H8-A §1, Table C, page 1: 4,794 city participants, annual cost before and at 12 months. Read 1,432/763 AED and the 669 AED fall. Identify who is absent: nonparticipants. Require sample/source even when axis labels supply units. No inferential interval appears on these bars; do not call their gap an effect.
+:::
+
+## A supported description is not a causal verdict {#d3s2-p04 .reader-slide .s1-review .d3s2-review}
+
+**Supported:** "Mean annual waste cost among city participants was about 669 AED lower after 12 months."
+
+**Not established by these bars:** "GreenWaste caused this fall" or "every participant's cost fell".
+
+::: {.ask}
+Q2, page 3: write one supported statement and one specific limit.
+:::
+
+The chart omits a causal comparison, individual changes and uncertainty about an estimated effect.
+
+::: {.notes}
+5 minutes. Separate a mean change from a change for everyone, and description from causality. A causal claim needs a credible comparison; the individual claim needs paired changes. Baseline distributions alone cannot supply either. Reject generic "charts prove nothing": the means support specific descriptive facts. Do not attach another method's effect to these bars.
+:::
+
+## How much does the mean hide? {#d3s2-p05 .reader-slide .s1-review .d3s2-review}
+
+```{r, results='asis'}
+html_out(d8_distribution())
+```
+
+Middle 50%: **`r paste(fmt(d8_quantiles[c(1,3)]),collapse='-')` AED**. This is variation between businesses, not a confidence interval.
+
+::: {.ask}
+Q3, page 3: what does the histogram add to the single mean?
+:::
+
+::: {.notes}
+5 minutes. All 4,794 actual city participant before-costs are included in 300 AED bins from 0 to 4,500; none are excluded. Mean 1,432, median 1,376, middle half 1,096-1,694 AED. Frequencies describe businesses, not effects. Reference: Figure D, page 2. The interquartile range covers the middle half, not 95% estimation uncertainty.
+:::
+
+## One large record can pull the mean {#d3s2-p06 .reader-slide .s1-review .d3s2-review}
+
+```{r, results='asis'}
+html_out(d8_selected())
+```
+
+Mean **10.0 tonnes**; median **6.5**; range **3-46**. Nine of the ten records are below the mean.
+
+::: {.ask}
+Does the mean describe a typical value in this selected set?
+:::
+
+::: {.notes}
+5 minutes. Explicitly switch from AED costs to annual before-landfill tonnes. These are the ten actual teaching records used earlier, not a representative city sample. Values: 3,4,5,5,6,7,7,8,9,46; repeated dots are stacked. Median = (6+7)/2. The 46-tonne record raises the mean; size alone is not a reason to delete it. Figure E, page 2 differs in unit and population from Figure D.
+:::
+
+## Two businesses. Two percentage questions. {#d3s2-p07 .reader-slide .s1-review .d3s2-review}
+
+```{r, results='asis'}
+html_out(d8_toy_table())
+```
+
+**Hypothetical tonnes**, invented for the calculation.
+
+::: {.ask}
+Q4, worksheet page 4: work each business's percentage fall. Then calculate the fall in total tonnes.
+:::
+
+Business fall = (before - after) / **that business's before** × 100.
+
+::: {.notes}
+6 minutes. Three minutes calculate individually, two pair-check, one collect. Small 10 to 2 = 80%; large 90 to 54 = 40%. Totals 100 to 56 = 44%; mean percentages = 60%. Reveal answers on the next screen, not before calculation. These are invented records. Q4 has blanks; hold numerical reference page 7 until this task is complete.
+:::
+
+## Why 44% and 60% both answer real questions {#d3s2-p08 .reader-slide .s1-review .d3s2-review}
+
+```{r, results='asis'}
+html_out(d8_toy_table(TRUE))
+```
+
+**Total-tonne fall:** (100 - 56) / 100 = **44%**.
+
+**Mean business fall:** (80% + 40%) / 2 = **60%**.
+
+::: {.ask}
+Which gives the large starting amount more weight?
+:::
+
+Weights for total tonnes: **10/100 and 90/100**. Thus 0.1 × 80% + 0.9 × 40% = 44%.
+
+::: {.notes}
+6 minutes. Every business has equal weight in the mean percentage; starting tonnes weight the aggregate fall. Neither summary is wrong: they answer different questions. Both starting denominators are positive. Open H8-A §3, page 7 after calculation. Keep the hypothetical pair distinct from selected records and the city. Q4 records both definitions.
+:::
+
+## Same city participants. Two valid summaries. {#d3s2-p09 .reader-slide .s1-review .d3s2-review}
+
+```{r, results='asis'}
+html_out(d8_land_table())
+```
+
+Same **4,794 city participants**, annual landfill tonnes before and 12 months after.
+
+::: {.ask}
+Q4: which summary answers a question about total landfill? Which about the average business percentage?
+:::
+
+Neither descriptive summary by itself establishes **cause** or a fall for **every** business.
+
+::: {.notes}
+5 minutes. Actual aggregate fall 49.51269%, mean business fall 58.58948%; round to 49.5/58.6. H8-A §3, page 7 supplies definitions and totals after the toy exercise. All before-tonnes values are positive. A mean fall does not establish that every business fell. This is landfill, not cost; the two weights are legitimate unless the claim misstates their meaning.
+:::
+
+## The trainer checks the two denominators {#d3s2-p10 .reader-slide .s1-review .d3s2-review}
+
+```{webr}
+#| context: setup
+#| autorun: true
+#| echo: false
+#| include: false
+gw <- read.csv('evaluation_data_GreenWaste_simple.csv')
+tp <- subset(gw, setting == 'city' & took_part == 1)
+```
+
+```{webr}
+#| echo: true
+# Total tonnes versus equal weight per business.
+total_fall <- 100 * (1 - sum(tp$landfill_after) /
+  sum(tp$landfill_before))
+business_fall <- 100 * (1 - tp$landfill_after / tp$landfill_before)
+round(c(total = total_fall, mean_business = mean(business_fall)), 1)
+```
+
+Paper result: **49.5% total; 58.6% mean business percentage**.
+
+::: {.ask}
+What does each denominator represent?
+:::
+
+::: {.notes}
+6 minutes. Predict, then one trainer Run reproduces the shared source. Participants do not code. Read group totals versus each business's own denominator. Units are landfill tonnes, not cost. The actual starting denominators are positive, checked offline. Use the paper result if the browser is delayed; retain the same allocation.
+:::
+
+## Write the caption the chart deserves {#d3s2-p11 .reader-slide .s1-review .d3s2-review}
+
+Draft beside the **cost bars**: "GreenWaste substantially reduced every participant's costs."
+
+Pairs repair it in **Q5, worksheet page 4**, for a non-technical director.
+
+Include **population, outcome, units, period, comparison, source and one causal limit**.
+
+::: {.ask}
+Which chart baseline suits your corrected sentence, and why?
+:::
+
+::: {.notes}
+9 minutes. Three minutes draft individually, four repair in pairs, two collect. Use Figure C/H8-A §1, not landfill percentages or trial results. A valid caption names 4,794 participants, annual AED means 1,432 to 763, before/12 months after, with a causal limit. A zero bar baseline conveys relative magnitudes; justified alternative formats are acceptable. Collect annotation and caption, not a software drawing.
+:::
+
+## Spread between businesses is not this interval {#d3s2-p12 .reader-slide .s1-review .d3s2-review}
+
+<div id="d8-pilot">
+<div data-variant>
+```{r, results='asis'}
+html_out(d8_pilot(FALSE))
+```
+</div>
+<div data-variant hidden>
+```{r, results='asis'}
+html_out(d8_pilot())
+```
+</div>
+</div>
+
+<button data-swap="d8-pilot" aria-controls="d8-pilot" aria-pressed="false" data-closed="Reveal the 95% interval" data-opened="Hide the 95% interval">Reveal the 95% interval</button>
+
+::: {.ask}
+Q6, page 4: does the pilot estimate securely clear the saving minimum? Reference: Figure P, page 7.
+:::
+
+This is **uncertainty about an estimated mean effect**, not the range of individual savings.
+
+::: {.notes}
+5 minutes. Separate pilot: 400 businesses, 200/200 lottery groups, annual cost in AED at 12 months. Point 1,014 and interval 862-1,167 cross 1,000. H8-A §4, Figure P, page 7. The interval is not an individual range or an allowance for all bias; the earlier histogram has a different meaning. Predict before revealing the interval. No new inference lecture.
+:::
+
+## AI Snapshot: which chart is fairer? {#d3s2-p13 .reader-slide .s1-review .d3s2-review}
+
+Naive prompt: **"Which of these two charts better represents the difference, and why?"**
+
+<div class="ai-reading">
+```{r, results='asis'}
+html_out(paste0('<p>',gsub('\n\n','</p><p>',d8_ai,fixed=TRUE),'</p>'))
+```
+</div>
+
+::: {.ask}
+Page 5: verify each sentence against Figure C and the proposed claim.
+:::
+
+::: {.notes}
+8 minutes. Stage 1 of the 15-minute Snapshot. Adapt the older chart-fairness response: accurate means plus unsupported truncation advice, causal effect and every-participant claims. Nonzero axes can be legitimate; assess context, not a blanket rule. Correct arithmetic does not justify the format or claim. Three minutes mark up, three compare, two debrief. This is prepared, not a Copilot transcript. Source pages 1-2 support the cost task.
+:::
+
+## Ask Copilot about the claim and its audience {#d3s2-p14 .reader-slide .s1-review .d3s2-review}
+
+<div class="better-prompt">
+```{r, results='asis'}
+html_out(paste0('<p>',d8_prompt,'</p>'))
+```
+</div>
+
+::: {.ask}
+Use the full prompt on page 5. Check one corrected claim and one missing-evidence question.
+:::
+
+No device: use the **prepared alternative on page 6** after Stage 1. Use the shared **AI good-practice card**.
+
+::: {.notes}
+7 minutes. Stage 2 in Copilot, no account setup. Two minutes enter/run, three verify against §1, two share. The text source describes both baselines if images cannot be supplied. Use fictional course evidence only, not sensitive real documents. The response should ask questions before recommending. No second-chat task. Different faithful caption wording is acceptable.
+:::
+
+## Defend the chart. Defend its limit. {#d3s2-p15 .reader-slide .s1-review .d3s2-review}
+
+The director asks whether to approve expansion. Use your repaired **cost caption** from Q5.
+
+Explain:
+
+- What the figure supports.
+- Why its baseline fits that sentence.
+- What additional evidence the decision still requires.
+
+::: {.ask}
+Can a clearer chart supply the missing causal comparison?
+:::
+
+::: {.notes}
+4 minutes. Each partner explains for one minute, then compare. Accept different faithful captions. Visual repair cannot create the missing comparison or effect uncertainty. Request causal and economic evidence suited to the expansion decision; do not substitute a pilot point estimate for the city's descriptive result.
+:::
+
+## Before trusting a chart, check what? {#d3s2-p16 .reader-slide .s1-review .d3s2-review}
+
+Close the source. In **Q7, worksheet page 4**, write:
+
+1. One check you would make first and why.
+2. One supported chart statement and one limit.
+
+::: {.ask}
+Which error is your check designed to prevent?
+:::
+
+**Axes and labels. Population and comparison. Denominators. Distribution versus uncertainty. Claim versus evidence.**
+
+::: {.notes}
+5 minutes. Two minutes independent writing, two pair challenge, one feedback. The annotated Figure C and Q5 caption are the main learning evidence; the memory check targets follow-up. Require a specific check, not general distrust of charts. Total 90 minutes, proposed 10:45-12:15 slot; the longer break follows.
+:::

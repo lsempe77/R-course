@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Day 3 Session 2 comparison</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font:16px/1.5 Arial,sans-serif;color:#111418}header{padding:22px 30px 12px;border-bottom:1px solid #d5dee8}h1{font-size:28px;color:#063360;margin:0 0 6px}p{margin:6px 0}a{color:#215a9e}nav{display:flex;gap:8px;flex-wrap:wrap;padding:15px 30px;background:#f4f7fb}button{font:inherit;border:1px solid #7da1c4;background:white;border-radius:5px;padding:7px 12px;color:#063360;cursor:pointer}button:focus-visible,a:focus-visible{outline:3px solid #215a9e;outline-offset:3px}button[aria-pressed=true]{background:#063360;color:white}.versions{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:16px 24px}.version h2{font-size:19px;margin:0;color:#063360}.version p{font-size:14px;margin:4px 0 12px}.version iframe{display:block;width:100%;height:calc(100vh - 300px);min-height:430px;border:1px solid #d5dee8}footer{padding:0 30px 20px;font-size:14px;color:#545860}@media(max-width:850px){.versions{grid-template-columns:1fr}.version iframe{height:55vh;min-height:320px}header,nav{padding-left:18px;padding-right:18px}}
+</style>
+<header>
+<h1>Day 3 Session 2: compare chart-reading versions</h1>
+<p>Select a topic to align the two decks. Explore each sequence with its arrows.</p>
+<p><a href="Oct14_session2_review_worksheet.html" target="_blank" rel="noopener">Review worksheet and source figures</a> &middot; <a href="AI_good_practice_review.html" target="_blank" rel="noopener">AI good-practice card</a></p>
+</header>
+<nav aria-label="Compare a teaching topic">
+<button data-pair="1,1" aria-pressed="false">Missing labels</button><button data-pair="2,2" aria-pressed="false">Axis baseline</button><button data-pair="3,3" aria-pressed="false">Underlying values</button><button data-pair="3,4" aria-pressed="false">Supported claim</button><button data-pair="4,5" aria-pressed="false">Full distribution</button><button data-pair="4,6" aria-pressed="false">Selected ten</button><button data-pair="5,7" aria-pressed="false">Two-business arithmetic</button><button data-pair="5,8" aria-pressed="false">Percentage weights</button><button data-pair="5,9" aria-pressed="false">Actual percentages</button><button data-pair="5,10" aria-pressed="false">Trainer R</button><button data-pair="7,11" aria-pressed="false">Caption repair</button><button data-pair="6,12" aria-pressed="false">Pilot interval</button><button data-pair="8,13" aria-pressed="false">AI reading</button><button data-pair="8,14" aria-pressed="false">Better prompt</button><button data-pair="9,15" aria-pressed="false">Defend the chart</button><button data-pair="10,16" aria-pressed="false">Close</button>
+</nav>
+<main class="versions">
+<section class="version"><h2>Current source</h2><p>10 content slides &middot; 60-minute notes &middot; <a href="Oct14_session2_current_compare.html" target="_blank" rel="noopener">Open full size</a></p><iframe id="current" src="Oct14_session2_current_compare.html" title="Current chart-reading deck" allow="clipboard-write"></iframe></section>
+<section class="version"><h2>Proposed review</h2><p>16 content slides &middot; 90-minute script &middot; <a href="Oct14_session2_review.html" target="_blank" rel="noopener">Open full size</a></p><iframe id="proposed" src="Oct14_session2_review.html" title="Proposed chart-reading review deck" allow="clipboard-write"></iframe></section>
+</main>
+<footer><p>Separate review candidate. Original sources, existing handouts and live teaching routes are unchanged. The current source is freshly rendered for comparison.</p><p id="comparison-status" role="status" aria-live="polite"></p></footer>
+<script>
+document.querySelectorAll('[data-pair]').forEach(button=>button.addEventListener('click',()=>{
+ const indices=button.dataset.pair.split(',').map(Number);let ready=true;
+ ['current','proposed'].forEach((id,i)=>{
+  const reveal=document.getElementById(id).contentWindow.Reveal;
+  if(!reveal?.isReady()){ready=false;return;}
+  const slide=reveal.getSlides()[indices[i]],position=reveal.getIndices(slide);
+  reveal.slide(position.h,position.v,-1);
+ });
+ document.querySelectorAll('[data-pair]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+ document.getElementById('comparison-status').textContent=ready?'Showing '+button.textContent+' in both versions.':'One deck is still loading. Select the topic again once both are visible.';
+}));
+</script>
+</html>
