@@ -87,3 +87,40 @@ s2_fallback <- paste0('Before I advise on expansion, I would ask how the efficie
   'The group means do not show that every business improved or that national expansion would produce the same result. Before I judge whether GreenWaste meets our rule of at least a 1,000 AED reduction in annual waste management cost per business per year, I would request evidence for a fair comparison. The chart is useful descriptive evidence, but it is not enough by itself for a decision on expansion.')
 stopifnot(nrow(tp)==4794,nrow(others)==5206,round(case$before_after)==-669,
           round(case$with_without)==-1638,sum(tp$change>0)==485)
+
+# ---- Section 8E additions: filtering example and invented cleaning examples ----
+# NOTE FOR LUCAS (not addressed in the materials): 734 of the 10,000 city businesses
+# (733 of them participants) have a negative annual waste management cost 12 months
+# after GreenWaste (minimum -1,565 AED). The previews keep these values and every
+# number in the course uses them (mean fall 669 AED). If they are not intended, the
+# data and every figure would need rechecking. Raised in PREVIEW_CHANGE_NOTES.md 8E part C.
+s2_filter_table <- function() {
+  gw_all <- read.csv('evaluation_data_GreenWaste_simple.csv')
+  one <- function(d) { ch <- d$cost_after - d$cost_before; t <- d$took_part == 1
+    c(sum(t), sum(!t), mean(ch[t]), mean(ch[!t]), mean(ch[t]) - mean(ch[!t])) }
+  a <- one(subset(gw_all, setting == 'city')); b <- one(gw_all)
+  df <- data.frame(Quantity = c('Participant businesses', 'Comparison businesses', 'Participant businesses: mean change (AED)',
+      'Comparison businesses: mean change (AED)', 'Difference between the two changes (AED)'),
+    'City rows only (correct)' = c(fmt(a[1:2]), fmt(a[3:5])), 'All 10,400 rows (wrong)' = c(fmt(b[1:2]), fmt(b[3:5])), check.names = FALSE)
+  paste0('<p class="table-title"><strong>The same calculation with and without the 400 pilot businesses</strong></p>',
+    as.character(knitr::kable(df, format = 'html', row.names = FALSE, escape = TRUE, table.attr = 'class="reading-table"')))
+}
+s2_cleaning <- function() {
+  ch <- function(b, a) a - b
+  base_b <- c(2000, 1800, 2200, 1600, 2400); base_a <- c(1500, 1400, 1700, 1300, 1900)
+  m0 <- mean(base_a - base_b)
+  dup <- mean(c(base_a, base_a[1]) - c(base_b, base_b[1]))
+  miss_a <- c(1500, 1400, -99, 1700, 1600); miss_clean <- mean(miss_a[miss_a != -99]); miss_bad <- mean(miss_a)
+  th_a <- c(1500, 1400, 1.7, 1700, 1600); th_bad <- mean(th_a); th_ok <- mean(c(1500, 1400, 1700, 1700, 1600))
+  panel <- function(title, messy, effect) paste0('<div class="clean-panel"><h3>', title, '</h3><p>', messy, '</p><p><strong>', effect, '</strong></p></div>')
+  paste0('<div class="clean-grid">',
+    panel('Duplicate rows', 'Business B1 appears twice. The file has 6 rows for 5 businesses.',
+      paste0('Mean change: ', fmt(dup, 1), ' AED with the duplicate, ', fmt(m0, 1), ' AED without it.')),
+    panel('Missing values coded as -99', 'Costs after: 1,500; 1,400; -99; 1,700; 1,600.',
+      paste0('Mean cost: ', fmt(miss_bad, 1), ' AED if -99 is treated as a cost, ', fmt(miss_clean, 1), ' AED if it is treated as missing.')),
+    panel('A cost in thousands of AED', 'Costs after: 1,500; 1,400; 1.7; 1,700; 1,600. One value was entered in thousands.',
+      paste0('Mean cost: ', fmt(th_bad, 1), ' AED as entered, ', fmt(th_ok, 1), ' AED after correcting it to 1,700.')),
+    panel('Labels that differ', 'The took_part column holds "Yes", "yes", "Y" and "No".',
+      'The table of counts shows four groups instead of two, so each group mean describes only some of the businesses.'),
+    '</div>')
+}

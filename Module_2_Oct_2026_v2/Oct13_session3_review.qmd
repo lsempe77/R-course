@@ -30,6 +30,22 @@ knitr:
 source('day2_session3_review.R', encoding='UTF-8')
 ```
 
+## Who and what are we comparing? Participants and similar businesses. {#d2s3-map .reader-slide .s1-review .d2s3-review .case-map-slide}
+
+```{r, include=FALSE}
+map_highlight <- "participants"
+```
+
+::: {.case-map}
+{{< include _case_map.qmd >}}
+:::
+
+<div class="map-facts"><div><strong>Unit</strong>one business</div><div><strong>Group</strong>4,794 participant businesses, each compared with a similar business that did not receive GreenWaste</div><div><strong>Outcome</strong>annual waste management cost, in AED per business</div><div><strong>Period</strong>12 months after GreenWaste</div></div>
+
+::: {.notes}
+1 minute. The blue businesses are the participants. Matching looks for similar businesses among the grey ones. The same map appears in every methods session so that participants know the population before the details start.
+:::
+
 ## Which comparison would you trust? {#d2s3-p01 .reader-slide .s1-review .d2s3-review}
 
 The city did **not** allocate GreenWaste by lottery. Taking part followed the efficiency-score rule.
@@ -180,6 +196,30 @@ This is the difference in annual waste management cost **12 months after GreenWa
 
 ::: {.notes}
 6 minutes. H6-A section 2, page 1. About 1,029 AED lower annual waste management cost 12 months after GreenWaste among city participant businesses than among selected comparison businesses. Business-clustered robust interval accommodates reuse, treating matches as given. It does not fully account for match selection or unmeasured bias. Population is the participants, not every national business.
+:::
+
+## We create the matched result in R from the matched sample. {#d2s3-p09b .reader-slide .s1-review .d2s3-review}
+
+We create the table in R. The box shows the **R code** and the numbers it produces.
+
+```{r, echo=TRUE}
+# matched: each participant business and the comparison business selected for it,
+# stacked into one table. A comparison business can appear more than once.
+# took_part is 1 for participant businesses and 0 for comparison businesses.
+fit <- estimatr::lm_robust(cost_after ~ took_part, data = matched,
+  clusters = business, se_type = "stata")
+# The took_part row is participant businesses minus matched comparison businesses.
+round(cbind(estimate = coef(fit), confint(fit))["took_part", ])
+```
+
+::: {.ask}
+What does the took_part row compare, and how does clusters = business deal with reused comparison businesses?
+:::
+
+You do not need to write or run R. Q2 on your worksheet asks you to read the table.
+
+::: {.notes}
+4 minutes. Walk through the comments, not the syntax; participants do not code. Match each printed row to a row of the table on the next slide. Estimate -1,029; interval -1,200 to -859, as in Table R.
 :::
 
 ## We calculate the paired difference in R. {#d2s3-p10 .reader-slide .s1-review .d2s3-review}

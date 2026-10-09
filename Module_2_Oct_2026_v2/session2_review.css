@@ -14,3 +14,7 @@
 .reveal .s2-review.code-example .review-svg{max-height:230px}
 .reveal .s2-review.code-example .cell:has(.cell-code){display:grid;grid-template-columns:2fr 1fr;gap:25px;align-items:center}
 .reveal .s2-review.code-example .cell-output{font-size:21px}
+.s2-review .clean-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:10px 0}
+.s2-review .clean-panel{border:1px solid #D5DEE8;border-radius:8px;padding:8px 14px;background:#f4f7fb}
+.s2-review .clean-panel h3{font-size:22px;margin:0 0 4px;color:#063360}
+.s2-review .clean-panel p{font-size:19px;margin:3px 0;line-height:1.3}

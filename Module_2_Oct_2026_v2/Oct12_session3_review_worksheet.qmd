@@ -17,7 +17,7 @@ format:
         .review-svg{display:block;width:100%;height:210px}.comparison-table{border-collapse:collapse;width:100%;font-size:14px}.comparison-table td,.comparison-table th{border-bottom:1px solid #D5DEE8;padding:7px;text-align:left}.sheet-page .ai-source p{margin:8px 0}.sheet-page table{border-collapse:collapse;width:100%}.sheet-page th,.sheet-page td{border-bottom:1px solid #D5DEE8;padding:7px;text-align:left}.sheet-page thead{background:#063360;color:white}@media print{.review-svg{height:200px}.comparison-table{font-size:10pt}}
         .interval-visual{display:block;width:100%;height:160px}.draw-table{width:100%;border-collapse:collapse}
         </style>
-        <style>.writing.part{height:30px;margin:2px 0}.table-title{margin:10px 0 4px}@media print{.writing.part{height:8mm}}</style>
+        <style>.writing.part{height:30px;margin:2px 0}.table-title{margin:10px 0 4px}@media print{.writing.part{height:7mm}}</style>
 knitr:
   opts_chunk:
     echo: false
@@ -142,6 +142,14 @@ Use §5 and the table on page 2.
 <div class="writing part"></div>
 
 (e) Use both rows to work out the treatment group's mean cost.
+
+<div class="writing part"></div>
+
+(f) Box the 95% interval in the comparison row. Say what it describes.
+
+<div class="writing part"></div>
+
+(g) Read the p-value in that row. Say what it does and does not show.
 
 <div class="writing part"></div>
 

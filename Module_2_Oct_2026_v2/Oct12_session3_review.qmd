@@ -30,6 +30,22 @@ knitr:
 source('session3_review.R', encoding='UTF-8')
 ```
 
+## Who and what are we comparing? The pilot district. {#s3-map .reader-slide .s1-review .s3-review .case-map-slide}
+
+```{r, include=FALSE}
+map_highlight <- "pilot"
+```
+
+::: {.case-map}
+{{< include _case_map.qmd >}}
+:::
+
+<div class="map-facts"><div><strong>Unit</strong>one business</div><div><strong>Group</strong>400 businesses in the pilot district: 200 treatment group, 200 control group, chosen by lottery</div><div><strong>Outcome</strong>annual waste management cost, in AED per business</div><div><strong>Period</strong>before GreenWaste and 12 months after</div></div>
+
+::: {.notes}
+1 minute. Point to the pilot district only. The lottery is what makes this study different from the city comparisons. The same map appears in every methods session so that participants know the population before the details start.
+:::
+
 ## We have two city comparisons. Why would a lottery be better? {#s3-p01 .reader-slide .s1-review .s3-review}
 
 ```{webr}
@@ -160,6 +176,30 @@ The treatment group's mean annual waste management cost was lower, **12 months a
 
 ::: {.notes}
 8 minutes. H3-A findings on page 2. First axes/population/period, then two minutes calculate/interpret, then three minutes pair check and feedback. Unrounded 769.125-1783.48=-1014.355; display -1,014. Negative cost difference means positive saving. It is an after-period randomised group comparison, not participants before/after. Assignment equals participation here. Transition: the simple regression expresses this same comparison.
+:::
+
+## We create the regression table in R with one line of code. {#s3-p07b .reader-slide .s1-review .s3-review}
+
+We create the table in R. The box shows the **R code** and the numbers it produces.
+
+```{r, echo=TRUE}
+# pilot has one row per business (400 rows).
+# took_part is 1 for the treatment group and 0 for the control group.
+# cost_after is annual waste management cost 12 months after GreenWaste (AED).
+fit <- lm(cost_after ~ took_part, data = pilot)
+# Row 1 (Intercept): the control group's mean cost.
+# Row 2 (took_part): treatment group minus control group.
+round(cbind(estimate = coef(fit), confint(fit)))
+```
+
+::: {.ask}
+Which line of the code gives the control group row, and which gives the comparison row?
+:::
+
+You do not need to write or run R. Q2 on your worksheet asks you to read the table.
+
+::: {.notes}
+4 minutes. Walk through the comments, not the syntax; participants do not code. Match each printed row to a row of the table on the next slide. Estimates: 1,783 and -1,014; interval -1,167 to -862. This is the same two-group comparison as the previous slide.
 :::
 
 ## The regression table reports the same comparison. {#s3-p08 .reader-slide .s1-review .s3-review}

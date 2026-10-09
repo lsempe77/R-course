@@ -1,5 +1,15 @@
 # Handoff: moving Module 2 to the simple GreenWaste case
 
+## Section 8 additions applied to the previews, 9 October 2026
+
+Done in source: 8B code snippets (D1S2 exploration; regression-table code in D1S3, D2S1, D2S3), 8C reading the regression table (kept inside existing Q2 questions: only the 95% interval and p-value items were added for D1S3 and D2S1), 8E D1S2 data checking and cleaning (new slides s2-p01b, s2-p03b, s2-p06b, s2-p06c; worksheet page 7), 8G a "Who and what are we comparing?" map slide at the start of six decks, 8H scatter plot and forest plot in D3S2 (d3s2-p12b, d3s2-p12c). No time was cut, as Fiona agreed the buffer covers it.
+
+FOR LUCAS: the negative annual waste costs after the programme (734 city rows) are left unaddressed on purpose. See the comment block at the end of `session2_review.R`. The D1S2 cleaning examples are invented and do not use those rows.
+
+Handouts changed: D1S2 worksheet (new page 7), D1S3 worksheet (Q2 gains items f and g), D2S1 worksheet (Q2 gains items e and f). The D2S3, D3S1 and D3S2 worksheets are unchanged in content. In the four modified worksheets the print height of one-line answer spaces is now 7 mm (was 8 mm or 10 mm) to help the pages fit.
+
+Checks: all review decks and the four modified worksheets render with no R errors and no em dashes; new slides fit at 1280x720. Not checked: webR code boxes, fonts (Noto Kufi Arabic could not be fetched in the container) and A4 print fit (the container prints even untouched worksheets over A4, so check page 3 of D1S3, page 3 of D2S1 and page 7 of D1S2 in print preview on a full machine).
+
 ## Language pass applied to the seven preview sessions, 9 October 2026
 
 Fiona asked for the changes in `PREVIEW_CHANGE_NOTES.md` (sections 1 to 7) to be applied to every session that has a preview: Day 1 S1 to S3, Day 2 S1 and S3, Day 3 S1 and S2. The source files were edited (decks, worksheets, cards, slips, R helper files, `_case_map.qmd`, `AI_good_practice_review.qmd`). The live decks and the shared files `day1_case.R`, `day2_case.R`, `day3_case.R` and `greenwaste_case.R` were not touched; review-only wrapper functions (for example `review_table()`, `s3_interval_svg()`, `d7_scenarios`) carry the new labels.

@@ -30,6 +30,22 @@ knitr:
 source('day3_session2_review.R', encoding='UTF-8')
 ```
 
+## Who and what are we comparing? Which businesses does each chart describe? {#d3s2-map .reader-slide .s1-review .d3s2-review .case-map-slide}
+
+```{r, include=FALSE}
+map_highlight <- "none"
+```
+
+::: {.case-map}
+{{< include _case_map.qmd >}}
+:::
+
+<div class="map-facts"><div><strong>Unit</strong>one business</div><div><strong>Group</strong>check each chart: all 10,000 city businesses, the 4,794 participants, or the pilot</div><div><strong>Outcome</strong>annual waste management cost, in AED per business</div><div><strong>Period</strong>before GreenWaste and 12 months after</div></div>
+
+::: {.notes}
+1 minute. Before each chart, ask which businesses it describes. The same map appears in every methods session so that participants know the population before the details start.
+:::
+
 ## Which chart would you show the director? {#d3s2-p01 .reader-slide .s1-review .d3s2-review}
 
 <div id="d8-labels">
@@ -279,6 +295,38 @@ The interval shows **uncertainty about an estimated mean effect**, not the range
 
 ::: {.notes}
 5 minutes. Separate pilot: 400 businesses, 200 in the treatment group and 200 in the control group, annual waste management cost in AED at 12 months. The estimate is 1,014 and the interval 862 to 1,167 includes values below 1,000. H8-A §4, Figure P, page 7. The interval is not an individual range or an allowance for all bias; the earlier histogram has a different meaning. Predict before revealing the interval. No new inference lecture.
+:::
+
+## A scatter plot shows every business, not only the mean. {#d3s2-p12b .reader-slide .s1-review .d3s2-review}
+
+```{r, results='asis'}
+html_out(d8_scatter())
+```
+
+::: {.ask}
+What does each point show? What does the gap between the two fitted lines show? Does the gap show that GreenWaste caused the fall?
+:::
+
+Each point is one business in a random sample of 400 city businesses. A point below the dashed line had a lower cost 12 months later. The lines summarise the points. They do not show cause.
+
+::: {.notes}
+5 minutes. Random sample of 400 of the 10,000 city businesses, so that the points stay readable. Horizontal axis: annual cost before GreenWaste. Vertical axis: annual cost 12 months later. Both axes use the same scale, so the dashed line is the "no change" line at 45 degrees. Fitted lines come from all participant businesses and all comparison businesses separately. Some costs after GreenWaste are below zero in the data file. We read the graph as it is and do not interpret those points here. The gap between the lines is a description of two groups, not proof of cause: that depends on the comparison, as in the earlier sessions.
+:::
+
+## A forest plot puts every estimate and its interval on one axis. {#d3s2-p12c .reader-slide .s1-review .d3s2-review}
+
+```{r, results='asis'}
+html_out(d8_forest())
+```
+
+::: {.ask}
+Which intervals include 1,000 AED? Which method gives the strongest evidence for our rule, and why should we not simply average the four?
+:::
+
+Each line is a 95% interval. The dot is the estimate. The methods use different businesses and different comparisons.
+
+::: {.notes}
+5 minutes. Four methods from the course: pilot lottery (400 pilot businesses), city extra change (DiD, 10,000 city businesses), jump near score 58 (businesses close to the cutoff) and city matched comparison (participants and similar businesses). The dashed line is our rule of at least a 1,000 AED reduction in annual waste management cost per business per year. Estimates and intervals are the same ones used on earlier slides. The city methods reuse the same records, so they are not independent confirmations. The DiD interval is narrow because it uses all 10,000 businesses, not because it is more credible.
 :::
 
 ## AI Snapshot: which chart is fairer? {#d3s2-p13 .reader-slide .s1-review .d3s2-review}

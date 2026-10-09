@@ -7,6 +7,7 @@ d6_controls <- which(!took)
 d6_Xc <- t(d6_X[d6_controls, , drop=FALSE])
 d6_twins <- d6_controls[vapply(d6_ids, function(i)
   which.min(colSums((d6_Xc - d6_X[i, ])^2)), 1L)]
+matched <- rbind(city[d6_ids, ], city[d6_twins, ])
 stopifnot(length(unique(d6_twins)) == match_A$used,
   abs(mean(city$cost_after[d6_ids] - city$cost_after[d6_twins]) - match_A$est) < 1e-6)
 

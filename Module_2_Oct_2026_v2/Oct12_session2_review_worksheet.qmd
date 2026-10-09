@@ -16,7 +16,7 @@ format:
         @page{size:A4;margin:14mm}@media print{body{background:white;font-size:11pt;line-height:1.35}main{max-width:none}.sheet-page{padding:0;margin:0;min-height:0;break-after:page;box-shadow:none}.sheet-page:last-child{break-after:auto}header{display:none}h1{font-size:19pt}h2{font-size:17pt}h3{font-size:12pt}.reading-table{font-size:10pt}.writing{height:10mm}.writing.tall{height:17mm}.ai-source{font-size:11pt}.prompt{font-size:10pt}#title-block-header{display:none}}
         .review-svg{display:block;width:100%;height:210px}.comparison-table{border-collapse:collapse;width:100%;font-size:14px}.comparison-table td,.comparison-table th{border-bottom:1px solid #D5DEE8;padding:7px;text-align:left}.sheet-page .ai-source p{margin:8px 0}.sheet-page table{border-collapse:collapse;width:100%}.sheet-page th,.sheet-page td{border-bottom:1px solid #D5DEE8;padding:7px;text-align:left}.sheet-page thead{background:#063360;color:white}@media print{.review-svg{height:200px}.comparison-table{font-size:10pt}}
         </style>
-        <style>.writing.part{height:30px;margin:2px 0}.table-title{margin:10px 0 4px}@media print{.writing.part{height:8mm}}</style>
+        <style>.writing.part{height:30px;margin:2px 0}.table-title{margin:10px 0 4px}@media print{.writing.part{height:7mm}}</style>
 knitr:
   opts_chunk:
     echo: false
@@ -281,6 +281,44 @@ Check it against H2-A2, as you would check a live AI answer.
 <div class="writing part"></div>
 
 (c) What evidence is still needed before advising on expansion?
+
+<div class="writing part"></div>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 7 | Check the data before you calculate
+
+These questions go with the R slides on the file, the filter and the cleaning examples.
+
+### Q6 | What is in the file?
+
+(a) How many rows and columns does the GreenWaste file have, and what does each row represent?
+
+<div class="writing part"></div>
+
+(b) How many of the rows are city businesses and how many are pilot businesses?
+
+<div class="writing part"></div>
+
+### Q7 | Which businesses are in the calculation?
+
+(a) Why do we keep only the city rows before we calculate the city averages?
+
+<div class="writing part"></div>
+
+(b) A colleague included the pilot businesses by mistake. How could you tell from the number of participant businesses?
+
+<div class="writing part"></div>
+
+### Q8 | Invented cleaning examples
+
+(a) Choose one of the four problems on the slide. Write what went wrong and how it changes the answer.
+
+<div class="writing part"></div>
+
+(b) Why is a wrong structure in the data more dangerous than a calculation that stops with an error message?
 
 <div class="writing part"></div>
 

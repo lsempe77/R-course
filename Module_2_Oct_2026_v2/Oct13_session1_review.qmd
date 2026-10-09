@@ -30,6 +30,22 @@ knitr:
 source('day2_session1_review.R', encoding='UTF-8')
 ```
 
+## Who and what are we comparing? Participants and other businesses in the city. {#d2s1-map .reader-slide .s1-review .d2s1-review .case-map-slide}
+
+```{r, include=FALSE}
+map_highlight <- "city"
+```
+
+::: {.case-map}
+{{< include _case_map.qmd >}}
+:::
+
+<div class="map-facts"><div><strong>Unit</strong>one business</div><div><strong>Group</strong>4,794 participant businesses and 5,206 comparison businesses that did not receive GreenWaste</div><div><strong>Outcome</strong>annual waste management cost, in AED per business</div><div><strong>Period</strong>the same businesses measured before and 12 months after</div></div>
+
+::: {.notes}
+1 minute. Point to the city outside the pilot district. The same map appears in every methods session so that participants know the population before the details start.
+:::
+
 ## Yesterday we found a saving from a lottery. Today we use another method and ask what else changed. {#d2s1-p01 .reader-slide .s1-review .d2s1-review}
 
 ```{webr}
@@ -110,6 +126,32 @@ Paper equivalent: **−669 − (+143) ≈ −812 AED**. You do not need to write
 
 ::: {.notes}
 6 minutes. Prediction before trainer Run, then Q2 plain-language interpretation. Code comments explain purpose/units/rounding; no syntax lesson or participant code. Output same interaction estimate as saturated two-group/two-wave regression. This arithmetic does not assess the causal assumption. If runtime unavailable use printed arithmetic within same time. Transition: locate that extra change in a regression table.
+:::
+
+## We create the regression table in R from a file with two rows per business. {#d2s1-p04b .reader-slide .s1-review .d2s1-review}
+
+We create the table in R. The box shows the **R code** and the numbers it produces.
+
+```{r, echo=TRUE}
+# Stack the two periods so that each business has two rows.
+# after is 0 for before GreenWaste and 1 for 12 months after.
+long <- data.frame(business = rep(city$business, 2), after = rep(0:1, each = nrow(city)),
+  took_part = rep(city$took_part, 2), cost = c(city$cost_before, city$cost_after))
+# after * took_part gives the rows (Intercept), after, took_part and after:took_part.
+# clusters = business allows for each business being measured twice.
+fit <- estimatr::lm_robust(cost ~ after * took_part, data = long,
+  clusters = business, se_type = "stata")
+round(cbind(estimate = coef(fit), confint(fit)))
+```
+
+::: {.ask}
+Which part of the code makes the row for the difference between the two changes?
+:::
+
+You do not need to write or run R. Q2 on your worksheet asks you to read the table.
+
+::: {.notes}
+4 minutes. Walk through the comments, not the syntax; participants do not code. Match each printed row to a row of the table on the next slide. Estimates 2,258; 143; -826; -812. The after:took_part row is the DiD estimate. clusters = business is the reason the intervals allow for the repeated measurement.
 :::
 
 ## Which row of the table shows the difference between the two changes? {#d2s1-p05 .reader-slide .s1-review .d2s1-review}

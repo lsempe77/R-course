@@ -25,6 +25,22 @@ knitr:
 source('session2_review.R', encoding='UTF-8')
 ```
 
+## Who and what are we comparing? All the businesses in the city. {#s2-map .reader-slide .s1-review .s2-review .case-map-slide}
+
+```{r, include=FALSE}
+map_highlight <- "none"
+```
+
+::: {.case-map}
+{{< include _case_map.qmd >}}
+:::
+
+<div class="map-facts"><div><strong>Unit</strong>one business</div><div><strong>Group</strong>all 10,000 businesses in the city, outside the pilot district</div><div><strong>Outcome</strong>annual waste management cost, in AED per business</div><div><strong>Period</strong>before GreenWaste and 12 months after</div></div>
+
+::: {.notes}
+1 minute. Say "Let us consider all the businesses in the city." Participants are the blue businesses. The same map appears in every methods session so that participants know the population before the details start.
+:::
+
 ## We read that the mean annual waste cost fell by 669 AED. Was that fall the programme's effect? {#s2-p01 .reader-slide .s1-review .s2-review}
 
 GreenWaste offers equipment subsidies, installation help and staff training.
@@ -41,6 +57,31 @@ Write your reason on **worksheet page 2**. Keep it so that you can compare it wi
 
 ::: {.notes}
 4 minutes. One-minute reminder: city score rule, annual waste cost in AED, same businesses measured twice. Do not repeat the full case introduction. Opening judgement: one minute alone, one minute compare, one minute hear reasons without settling them. Ask for what is missing, rather than a technical label. Transition: we will inspect the records behind that mean.
+:::
+
+## The GreenWaste file has one row for each business. {#s2-p01b .reader-slide .s1-review .s2-review .code-example}
+
+We look at the file in R before we calculate anything. The box shows the **R code** and what it prints.
+
+```{r, echo=TRUE}
+# Read the whole GreenWaste file. Each row is one business.
+gw <- read.csv("evaluation_data_GreenWaste_simple.csv")
+dim(gw)            # number of rows and columns
+table(gw$setting)  # how many businesses are in the city and in the pilot
+```
+
+```{r, include=FALSE}
+gw <- case_env$gw
+```
+
+::: {.ask}
+How many businesses does the city study cover, and how many are in the separate pilot?
+:::
+
+The file has **10,400 rows and 12 columns**: 10,000 city businesses and 400 businesses in the separate pilot. Worksheet page 7 has the questions for this slide.
+
+::: {.notes}
+4 minutes. Show what is in the file before any mean is calculated. The 12 columns are business ID, setting, score, took_part, cost before and after, landfill before and after, manager age, staff, area and filtration. Do not teach syntax.
 :::
 
 ## Each row shows one business, measured twice. {#s2-p02 .reader-slide .s1-review .s2-review}
@@ -73,6 +114,30 @@ Add the population to your answer to **Q1**. The pilot lottery uses a different 
 
 ::: {.notes}
 3 minutes. Point to denominator of each group average. The score rule may make participants systematically different from others. This is not random assignment in the city. Do not teach the cutoff method now. Check that no one uses 10,000 as participant denominator or merges the pilot with city data. Transition: a group mean still hides the distribution inside that group.
+:::
+
+## Why do we remove the pilot businesses before we calculate? {#s2-p03b .reader-slide .s1-review .s2-review .code-example}
+
+```{r, echo=TRUE}
+# Keep only the city businesses. The pilot is a separate study with a lottery.
+city <- subset(gw, setting == "city")
+table(city$took_part)   # 0 = comparison businesses, 1 = participant businesses
+```
+
+```{r, include=FALSE}
+city <- case_env$city
+```
+
+```{r, results='asis'}
+html_out(s2_filter_table())
+```
+
+::: {.ask}
+The two results look similar. How would you notice the mistake?
+:::
+
+::: {.notes}
+4 minutes. Point: make sure the data are the subset and sample you want, with nothing extra. Including the pilot is wrong for three reasons: the pilot is a different population (all scores below 58, lottery assignment); the 200 pilot businesses that waited would sit in the city comparison group although they are not comparable with city businesses scoring above 58; the group sizes and answers change. The error is easy to miss because the result looks sensible. The group sizes (4,994 and 5,406 instead of 4,794 and 5,206) give it away. All course numbers use the city rows only.
 :::
 
 ## What do waste costs look like before the programme? {#s2-p04 .reader-slide .s1-review .s2-review}
@@ -127,6 +192,45 @@ The histogram shows all **4,794 participant businesses**. Bars to the left of ze
 
 ::: {.notes}
 5 minutes. Use H2-A3 on page 3. Read change axis, not before-cost axis from P04. Ask Q3 variation before opening record count: any values right of zero disprove everybody fell. Count 485 rising, 1 unchanged, 4,308 falling. These are recorded changes, not individual causal effects. Learner writes one supported statement in Q3; do not equate a histogram of changes with CI of the mean. Transition: even genuine falls can have more than one cause.
+:::
+
+## We explore the data in R before we interpret it. {#s2-p06b .reader-slide .s1-review .s2-review .code-example}
+
+The box shows the **R code** and what it prints for the city businesses.
+
+```{r, echo=TRUE}
+# Mean and median annual cost before GreenWaste (AED), all city businesses.
+round(c(mean = mean(city$cost_before), median = median(city$cost_before)))
+# Change in cost for each participant business: after minus before (AED).
+change <- tp$cost_after - tp$cost_before
+mean(change)       # mean change
+sum(change > 0)    # number of participant businesses whose cost rose
+```
+
+::: {.ask}
+What does the mean change hide? Which line of the code shows it?
+:::
+
+::: {.notes}
+3 minutes. The mean (1,862) is a little above the median (1,801). Mean change -669; 485 participant businesses had a rising cost. Link back to the histogram of changes.
+:::
+
+## Real datasets need cleaning before anyone calculates a mean. {#s2-p06c .reader-slide .s1-review .s2-review}
+
+These are **invented examples. They are not in the GreenWaste file.**
+
+```{r, results='asis'}
+html_out(s2_cleaning())
+```
+
+::: {.ask}
+Which of these problems would give you an error message? Which would not?
+:::
+
+Check what is in the data before you calculate anything. A wrong structure gives a wrong answer without any warning.
+
+::: {.notes}
+3 minutes. None of these examples produces an error message in R; the calculation runs and returns a plausible-looking number. The numbers are computed in session2_review.R. LUCAS (not addressed here): 734 city businesses have a negative annual cost after GreenWaste; if those values are not intended, a further cleaning slide and a data recheck would be needed.
 :::
 
 ## What else could have changed costs? {#s2-p07 .reader-slide .s1-review .s2-review}

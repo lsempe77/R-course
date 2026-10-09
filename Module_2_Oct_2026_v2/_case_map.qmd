@@ -17,9 +17,18 @@ city_shops  <- data.frame(
   y = c(80, 80, 80, 80, 195, 195, 195, 195, 330, 330, 330, 330, 330, 330, 330),
   score = c(72, 45, 88, 39, 56, 63, 29, 91, 47, 77, 52, 68, 35, 84, 58))
 city_shops$joined <- as.integer(city_shops$score <= 58)
+# Optional highlight, set before the include with map_highlight <- "..." (default "none"):
+# "pilot" = pilot district only; "city" = city outside the pilot district;
+# "participants" = city participants only; "rd" = businesses with scores 50 to 66.
+hl <- if (exists("map_highlight")) map_highlight else "none"
+pilot_shops$op <- if (hl %in% c("city", "participants", "rd")) 0.2 else 1
+city_shops$op <- 1
+if (hl == "pilot") city_shops$op <- 0.2
+if (hl == "participants") city_shops$op <- ifelse(city_shops$joined == 1, 1, 0.25)
+if (hl == "rd") city_shops$op <- ifelse(city_shops$score >= 50 & city_shops$score <= 66, 1, 0.2)
 shop_svg <- function(d) paste(sprintf(
-  '<use href="#shop" x="%d" y="%d" width="62" height="58" color="%s"/><text x="%d" y="%d" font-size="19" text-anchor="middle" fill="%s" font-weight="%s">%d</text>',
-  d$x, d$y, ifelse(d$joined == 1, SHOP_BLUE, SHOP_GREY), d$x + 31, d$y + 80,
+  '<g opacity="%s"><use href="#shop" x="%d" y="%d" width="62" height="58" color="%s"/><text x="%d" y="%d" font-size="19" text-anchor="middle" fill="%s" font-weight="%s">%d</text></g>',
+  d$op, d$x, d$y, ifelse(d$joined == 1, SHOP_BLUE, SHOP_GREY), d$x + 31, d$y + 80,
   ifelse(d$joined == 1, "#063360", "#545860"), ifelse(d$joined == 1, "700", "400"), d$score), collapse = "\n")
 map_fence <- strrep("`", 3)
 cat("\n", map_fence, "{=html}\n", paste0('

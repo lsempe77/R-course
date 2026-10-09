@@ -19,7 +19,7 @@ format:
         
         .trend-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}.trend-pair .review-svg{height:155px}.visual-reference .review-svg{height:185px}.visual-reference .trend-pair .review-svg{height:155px}.visual-reference .interval-figure .review-svg{height:135px}.blank-chart .review-svg{height:165px}.reading-table{font-size:13px}.reading-table td,.reading-table th{padding:6px}.source-note{font-size:12px}.source-page p{margin:6px 0}.source-page h3{margin:10px 0 5px}@media print{.source-page{font-size:10.5pt}.reading-table{font-size:9pt}.reading-table td,.reading-table th{padding:5px}.source-note{font-size:9pt}}
         </style>
-        <style>.writing.part{height:30px;margin:2px 0}.table-title{margin:10px 0 4px}@media print{.writing.part{height:8mm}}</style>
+        <style>.writing.part{height:30px;margin:2px 0}.table-title{margin:10px 0 4px}@media print{.writing.part{height:7mm}}</style>
 knitr:
   opts_chunk:
     echo: false
@@ -137,6 +137,14 @@ html_out(d4_lines(blank=TRUE))
 <div class="writing part"></div>
 
 (d) Why is the last row not the participant businesses' own change of -669 AED?
+
+<div class="writing part"></div>
+
+(e) Box the 95% interval in the last row. Say what it describes.
+
+<div class="writing part"></div>
+
+(f) Read the p-value in that row. Say what it does and does not show.
 
 <div class="writing part"></div>
 

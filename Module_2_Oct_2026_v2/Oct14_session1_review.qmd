@@ -30,6 +30,22 @@ knitr:
 source('day3_session1_review.R', encoding='UTF-8')
 ```
 
+## Who and what are we comparing? The participant businesses. {#d3s1-map .reader-slide .s1-review .d3s1-review .case-map-slide}
+
+```{r, include=FALSE}
+map_highlight <- "participants"
+```
+
+::: {.case-map}
+{{< include _case_map.qmd >}}
+:::
+
+<div class="map-facts"><div><strong>Unit</strong>one business</div><div><strong>Group</strong>4,794 participant businesses in the city</div><div><strong>Benefit</strong>the reduction in annual waste management cost per participant business, in AED</div><div><strong>Cost</strong>what delivering GreenWaste costs, in AED</div></div>
+
+::: {.notes}
+1 minute. The benefit-cost ratio is about the participants, so the blue businesses are the ones in view. The same map appears in every methods session so that participants know the population before the details start.
+:::
+
 ## A saving is only half the question {#d3s1-p01 .reader-slide .s1-review .d3s1-review}
 
 The city difference-in-differences (DiD) study found that the difference between the two changes is a reduction of **`r fmt(model$saving)` AED in annual waste management cost per participant business**.
