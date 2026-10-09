@@ -19,16 +19,16 @@ knitr:
 source('session3_review.R', encoding='UTF-8')
 ```
 
-**20 businesses, 10 places.** Cut one set per group along the dashed lines. Draw ten slips for join; the other ten wait. Calculate each group's mean age. Replace all slips before drawing again.
+There are 20 businesses and 10 places. Cut out the slips along the dashed lines (one set per group). Draw ten slips for the treatment group. The other ten slips are the control group. Calculate each group's mean manager age. Put all the slips back before you draw again.
 
 <button onclick="window.print()">Print age slips</button>
 
 ```{r, results='asis'}
-html_out(paste0('<div class="slips">',paste(vapply(1:20,function(i)paste0('<div class="slip"><p class="number">',i,'</p><p class="age">Age ',s3_ages[i],'</p><p class="id">',pilot$business[i],'</p></div>'),''),collapse=''),'</div>'))
+html_out(paste0('<div class="slips">',paste(vapply(1:20,function(i)paste0('<div class="slip"><p class="number">',i,'</p><p class="age">Age ',s3_ages[i],' years</p><p class="id">',pilot$business[i],'</p></div>'),''),collapse=''),'</div>'))
 ```
 
-This practice uses the first 20 actual pilot manager-age records. A draw compares **pre-programme ages**, not effects on costs. It is not the actual pilot assignment: that involved **400 businesses, 200 places**. Record both draws on worksheet page 3.
+The slips use manager ages from 20 businesses in the GreenWaste pilot data. A draw compares ages before the programme, not effects on cost. It is not the lottery used in the pilot, which involved 400 businesses and 200 places. Record both draws on worksheet page 3.
 
 ::: {.caption}
-GreenWaste is a fictional training case. Source: corrected pilot data. Ages are in years.
+GreenWaste is a fictional training case. Ages are in years.
 :::

@@ -1,4 +1,6 @@
-"""Build the separate review worksheet and comparison hub, never production decks."""
+"""SUPERSEDED on 9 October 2026: the worksheet text was revised directly in Oct13_session1_review_worksheet.qmd (see PREVIEW_CHANGE_NOTES.md).
+Do not re-run this script for the worksheet: it would overwrite those edits. Kept for the comparison hub only.
+Build the separate review worksheet and comparison hub, never production decks."""
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 template=(ROOT/'Oct12_session3_review_worksheet.qmd').read_text(encoding='utf-8')

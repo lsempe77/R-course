@@ -1,7 +1,7 @@
 ---
 title: "Did the programme make the difference?"
 subtitle: "Day 1 | Session 3: A pilot lottery, its uncertainty and the limits of expansion"
-author: "3ie · Review version"
+author: "3ie"
 always_allow_html: true
 format:
   live-revealjs:
@@ -30,7 +30,7 @@ knitr:
 source('session3_review.R', encoding='UTF-8')
 ```
 
-## Two city comparisons. Why a lottery? {#s3-p01 .reader-slide .s1-review .s3-review}
+## We have two city comparisons. Why would a lottery be better? {#s3-p01 .reader-slide .s1-review .s3-review}
 
 ```{webr}
 #| context: setup
@@ -43,25 +43,25 @@ ages <- pilot$manager_age[1:20]
 draw <- 0
 ```
 
-<div class="comparison-pair"><div><h3>City before/after: −669 AED</h3><p>Same participants over time.</p><p>What would have changed without GreenWaste?</p></div><div><h3>City with/without: −1,638 AED</h3><p>Different groups after a year.</p><p>Were the groups already different?</p></div></div>
+<div class="comparison-pair"><div><h3>Before and after: −669 AED</h3><p>The same participant businesses, measured over time.</p><p>What would have changed without GreenWaste?</p></div><div><h3>With and without: −1,638 AED</h3><p>Participant businesses and comparison businesses, after a year.</p><p>Were the groups already different?</p></div></div>
 
 ::: {.ask}
-What if chance, rather than the score rule, decided who joined?
+What if chance, rather than the score rule, decided which businesses took part?
 :::
 
-Refer to the **Session 2 comparison summary**. Now we move to the **pilot district**.
+Use the summary of the two comparisons from Session 2. Now we move to the **pilot district**.
 
 ::: {.notes}
 4 minutes. One minute recall, two minutes pairs explain the two missing comparisons, one minute bridge. No new city arithmetic or repeat baseline reveal. Pilot is a different population, not the city's known true effect. Start webR setup early for one optional trainer draw. Printed activity is independent of internet. Transition: there were 400 eligible businesses but only 200 places.
 :::
 
-## The pilot district: 400 businesses, 200 places {#s3-p02 .reader-slide .s1-review .s3-review}
+## The pilot had 400 eligible businesses but only 200 places in the programme. {#s3-p02 .reader-slide .s1-review .s3-review}
 
 ```{r, results='asis'}
 html_out(s3_flow())
 ```
 
-**H3-A §1–2 on worksheet page 1:** annual waste cost before and 12 months after.
+**H3-A, the pilot lottery study summary, §1 and §2 on worksheet page 1:** the outcome is annual waste management cost, measured before GreenWaste and 12 months after. A place is a place in the programme. 200 of the 400 businesses receive GreenWaste (the treatment group) and 200 do not (the control group). A lottery decides which.
 
 ::: {.ask}
 The lottery assigns **individual businesses**. It does not draw a sample of the country.
@@ -71,43 +71,45 @@ The lottery assigns **individual businesses**. It does not draw a sample of the 
 5 minutes. Read H3-A1/2 source paragraphs. Exactly 200/200, not roughly half; each eligible business has a place in join or wait. All scores at/below 58; city rule has not allocated these pilot places. Distinguish choosing the pilot district from randomly assigning inside it. Ask who the comparison will describe. Transition: why does the method of allocation matter?
 :::
 
-## What the lottery buys us {#s3-p03 .reader-slide .s1-review .s3-review}
+## What does a lottery give us? {#s3-p03 .reader-slide .s1-review .s3-review}
 
 <div class="comparison-pair"><div><h3>If managers choose</h3><p>More motivated managers might join first. That could also affect their costs.</p></div><div><h3>If the lottery chooses</h3><p>Managers' motivation does not decide which eligible business gets a place.</p></div></div>
 
-The first example is **hypothetical**. Random assignment avoids systematic selection, **across possible lotteries**.
+The first example is **hypothetical**. Random assignment avoids systematic selection **across all the lotteries that could have been drawn**.
 
 ::: {.ask}
-**Q1 on page 3:** Why is the waiting group a more credible comparison?
+**Q1 on page 3:** Why does the control group give a more reliable comparison than businesses that chose whether to join?
 :::
 
 ::: {.notes}
 7 minutes. Explain random assignment/RCT in plain language. Two minutes write Q1, then discuss. Chance balances observed and unobserved characteristics in expectation; one actual draw need not be identical. Design still needs implementation, comparable measurement/follow-up and no consequential effects on waiting businesses. Source §3 explicitly states assignment matches participation and all 400 costs observed in this fictional pilot. Avoid a long validity checklist. Transition: experience the difference between chance and perfect balance.
 :::
 
-## Draw the lottery, then draw again {#s3-p04 .reader-slide .s1-review .s3-review}
+## Draw the lottery, then draw it again. {#s3-p04 .reader-slide .s1-review .s3-review}
 
-**20 businesses, 10 places.** A practice lottery using **pre-programme manager ages**.
+This practice lottery has **20 businesses and 10 places**. The slips show **manager ages before the programme**.
 
-Draw ten age slips. Compare **join** and **wait** means. Replace all; draw again.
+Draw ten age slips for the treatment group. The other ten slips are the control group. Compare the mean manager age of the two groups. Put all the slips back, and draw again.
+
+**R code**
 
 ```{webr}
 #| echo: true
-# Each Run makes a new practice lottery.
+# Each run makes a new practice lottery.
 draw <- draw + 1
 set.seed(draw)
-# Ten join; ten wait, using the 20 age slips.
-group <- sample(rep(c('Join', 'Wait'), each = 10))
-# Compare mean ages, not programme effects.
+# Ten businesses go to the treatment group and ten to the control group.
+group <- sample(rep(c('Treatment', 'Control'), each = 10))
+# Compare the mean manager ages. These are not programme effects.
 round(tapply(ages, group, mean), 1)
 ```
 
 ::: {.ask}
-**Q1:** Did both lotteries produce exactly the same age averages?
+**Q1 (a):** Did both lotteries give exactly the same mean ages?
 :::
 
 ::: {.notes}
-12 minutes. Change of activity, not an extra break: distribute one cut slip set per group, two minutes assign roles/read, three minutes draw/calculate, three minutes replace/redraw, two minutes reflection, two minutes optional R/debrief. Physical slips use first 20 actual pilot manager-age records, not actual allocation. A reader checks IDs and a recorder logs both means on page 3. Trainer Run repeats the same pool with a different fixed seed; it need not reproduce a physical draw. Code comments explain operations; no participant code. A calculator or total/10 is enough. If runtime unavailable complete paper route within the same time. Transition: what might change with more businesses?
+12 minutes. Change of activity, not an extra break: distribute one cut slip set per group, two minutes assign roles/read, three minutes draw/calculate, three minutes replace/redraw, two minutes reflection, two minutes optional R/debrief. Physical slips use the first 20 pilot manager-age records; this is not the allocation used in the pilot. A reader checks IDs and a recorder logs both means on page 3. Trainer Run repeats the same pool with a different fixed seed; it need not reproduce a physical draw. Code comments explain operations; no participant code. A calculator or total/10 is enough. If runtime unavailable complete paper route within the same time. Transition: what might change with more businesses?
 :::
 
 ## Small lotteries can look different {#s3-p05 .reader-slide .s1-review .s3-review}
@@ -118,7 +120,7 @@ html_out(paste0('<div id="s3-sizes"><div data-variant>',s3_sizes(),'</div><div d
 
 <button data-swap="s3-sizes" data-closed="Show 400-business practice lotteries" data-opened="Show small lotteries only" aria-pressed="false">Show 400-business practice lotteries</button>
 
-Illustration: **200 practice lotteries per size**, using pilot manager-age records. These are not programme effects.
+In this illustration, we ran **200 practice lotteries of each size** using manager ages from the pilot records. The differences shown are not programme effects.
 
 ::: {.ask}
 Predict first: would the larger groups usually be closer in mean age?
@@ -128,13 +130,13 @@ Predict first: would the larger groups usually be closer in mean age?
 6 minutes. Each dot is join-minus-wait mean age in one practice allocation; same horizontal scale. For N=20, take a random 20-record subset from the full age pool each time; for N=400 use full pool. This isolates sample-size variation; the physical slips used a fixed selected 20. Explain the display, not probability formulas. Reveal large draws and have Q1 add a sample-size reflection. Larger groups usually closer, no guarantee for a specific draw; no p-value balance proof. Transition: inspect the actual pilot baseline rather than a redraw.
 :::
 
-## Were groups similar before GreenWaste? {#s3-p06 .reader-slide .s1-review .s3-review}
+## Were the treatment and control groups similar before GreenWaste? {#s3-p06 .reader-slide .s1-review .s3-review}
 
 ```{r, results='asis'}
 html_out(s3_baseline())
 ```
 
-The **actual pilot groups**: 200 join and 200 wait. Similar distributions, not identical businesses.
+The figure shows the two pilot groups as assigned: 200 businesses in the treatment group and 200 in the control group. The distributions are similar, but the groups are not identical.
 
 ::: {.ask}
 What reassurance does this give? What does it not prove?
@@ -144,52 +146,52 @@ What reassurance does this give? What does it not prove?
 6 minutes. Source H3-A §4 and figure, page 1. Means 1,390/1,411; side-by-side bars in each 250 AED band on common axes. Listen for starting distributions similar and small mean difference plausible under chance. No balance p-value, no significance testing to prove randomisation. Similar costs alone cannot establish unobserved balance or correct allocation; check assignment procedure in a real report. Add Q1 baseline reflection. Transition: the outcome comparison is after the programme.
 :::
 
-## The result is a difference of two averages {#s3-p07 .reader-slide .s1-review .s3-review}
+## The result is the difference between two averages. {#s3-p07 .reader-slide .s1-review .s3-review}
 
 ```{r, results='asis'}
 html_out(s3_after())
 ```
 
 ::: {.ask}
-**Q2 on page 3:** Join minus wait: 769 − 1,783 ≈ **−1,014 AED**.
+**Q2 on page 3:** The treatment group's mean cost minus the control group's mean cost is 769 − 1,783 ≈ **−1,014 AED**.
 :::
 
-Lower annual waste costs in the join group, **12 months after**, among eligible pilot businesses.
+The treatment group's mean annual waste management cost was lower, **12 months after GreenWaste**, among the eligible pilot businesses.
 
 ::: {.notes}
 8 minutes. H3-A findings on page 2. First axes/population/period, then two minutes calculate/interpret, then three minutes pair check and feedback. Unrounded 769.125-1783.48=-1014.355; display -1,014. Negative cost difference means positive saving. It is an after-period randomised group comparison, not participants before/after. Assignment equals participation here. Transition: the simple regression expresses this same comparison.
 :::
 
-## The regression reports that same comparison {#s3-p08 .reader-slide .s1-review .s3-review}
+## The regression table reports the same comparison. {#s3-p08 .reader-slide .s1-review .s3-review}
 
 ```{r, results='asis'}
-html_out(s3_regression())
+html_out(sub('<p class="caption">.*$', '', s3_regression()))
 ```
 
 <div class="review-annotate"><button data-table-column="1" aria-pressed="false">Coefficient</button><button data-table-column="2" aria-pressed="false">Interval</button><button data-table-column="3" aria-pressed="false">P-value</button></div>
 
 ::: {.ask}
-**Q2:** Which row is the comparison? What does the waiting-group row mean?
+**Q2:** Which row shows the comparison? What does the control group row show?
 :::
 
-1,783 + (−1,014) ≈ **769 AED**. The lottery design supports the effect reading, not the p-value alone.
+1,783 + (−1,014) ≈ **769 AED**, which is the treatment group's mean cost. The lottery design supports reading the difference as an effect. The p-value alone does not.
 
 ::: {.notes}
 6 minutes. Annotate H3-A table on page 2. Waiting-group intercept is mean after-cost for reference group; treatment coefficient is join-minus-wait difference. Actual CI -1,167 to -862; ordinary least squares model matches canonical pilot source. Point to code/model note for mechanics, no need fit models. Show each column with native highlights. A causal reading depends on assignment/implementation/measurement and interference assumptions, not regression magic. Transition: a convincing saving does not settle the exact policy minimum.
 :::
 
-## Does the interval clear our rule? {#s3-p09 .reader-slide .s1-review .s3-review}
+## Is the whole interval at or above our rule of a 1,000 AED reduction? {#s3-p09 .reader-slide .s1-review .s3-review}
 
 ```{r, results='asis'}
-html_out(interval_svg('trial',TRUE))
-html_out('<button data-open="interval-trial" data-closed="Show the 95% saving interval" data-opened="Hide the interval" aria-controls="interval-trial" aria-expanded="false">Show the 95% saving interval</button>')
+html_out(s3_interval_svg('trial',TRUE))
+html_out('<button data-open="interval-trial" data-closed="Show the 95% interval for the reduction" data-opened="Hide the interval" aria-controls="interval-trial" aria-expanded="false">Show the 95% interval for the reduction</button>')
 ```
 
 ::: {.ask}
-**Q3 on page 4:** Does evidence of some saving settle whether saving exceeds **1,000 AED**?
+**Q3 on page 4:** Does evidence of some reduction in cost show that the reduction is at least **1,000 AED**?
 :::
 
-The rule concerns annual saving per business. It is a **fictional decision rule**.
+Our rule is a reduction in annual waste management cost of at least 1,000 AED per business per year. GreenWaste is a fictional case, so the rule is fictional too.
 
 ::: {.notes}
 8 minutes. Predict from point estimate before reveal: 1,014 just above 1,000; reveal positive saving interval 862-1,167, which spans rule. Ask pairs for two statements: evidence of positive saving, uncertain whether minimum met. CI describes mean-effect uncertainty under model, not a probability statement about this fixed interval or individual businesses' savings. Convert negative effect interval by reversing endpoints. No value-for-money conclusion because full costs absent here. Transition: uncertainty is one limit; coverage is another.
@@ -197,7 +199,7 @@ The rule concerns annual saving per business. It is a **fictional decision rule*
 
 ## Who does this pilot describe? {#s3-p10 .reader-slide .s1-review .s3-review}
 
-<div class="comparison-pair"><div><h3>What the trial covers</h3><p>One pilot district.<br>Businesses with scores 58 or below.<br>Support delivered under pilot conditions.</p></div><div><h3>What wider use could change</h3><p>Other businesses and districts.<br>Delivery capacity and take-up.<br>Programme costs.</p></div></div>
+<div class="comparison-pair"><div><h3>What the pilot covers</h3><p>One pilot district.<br>Businesses with scores of 58 or below.<br>Support delivered under pilot conditions.</p></div><div><h3>What wider use could change</h3><p>Other businesses and districts.<br>Delivery capacity and take-up.<br>Programme costs.</p></div></div>
 
 ::: {.ask}
 **Q4:** What evidence would you request for the expansion being proposed?
@@ -209,78 +211,78 @@ A lottery allocates places within the pilot. It does not make the pilot represen
 6 minutes. Source §1/3/5. Two minutes specific reach request, then compare. Accept profile/cost/outcome differences, delivery capacity or representative next-stage evidence with purpose. Do not invent observed national outcomes or understate strength of the pilot. No claim result applies only to sampled individuals under all conditions; identify the eligible pilot context and transport assumptions. Transition: place the three estimates beside their actual comparisons.
 :::
 
-## Three numbers. Three comparisons. {#s3-p11 .reader-slide .s1-review .s3-review}
+## Each of the three numbers compares different groups. {#s3-p11 .reader-slide .s1-review .s3-review}
 
 ```{r, results='asis'}
 html_out(s3_comparisons())
 ```
 
 ::: {.ask}
-Which is better designed to estimate an effect? Which businesses does it describe?
+Which comparison is best designed to estimate an effect? Which businesses does it describe?
 :::
 
-The pilot result is **not automatically the true effect for the city**. Populations and delivery conditions differ.
+The pilot result does **not automatically apply to the city**, because the city's businesses and delivery conditions are different.
 
 ::: {.notes}
 6 minutes. Use compact reference on worksheet page 2. No new arithmetic. Ask for comparison and population, not just ranking numbers. Stronger pilot design for eligible pilot businesses; do not use its estimate to prove city's before/after bias or city's true effect. All three costs measured after 12 months; city before/after uses its own baseline. Transition: decide what action the actual pilot evidence supports.
 :::
 
-## Would you extend it now? {#s3-p12 .reader-slide .s1-review .s3-review}
+## Would you extend GreenWaste now? {#s3-p12 .reader-slide .s1-review .s3-review}
 
 <div data-choices><button data-choice aria-pressed="false">Extend</button><button data-choice aria-pressed="false">Do not extend</button><button data-choice aria-pressed="false">Ask first</button><p class="feedback" role="status"></p></div>
 
 ::: {.ask}
-**Q5 on page 4:** Give a design strength, an important limit, and a proportionate condition.
+**Q5 on page 4:** Write one strength of the pilot design, one limit that matters for the decision, and one condition that fits the size of the decision.
 :::
 
-Choose alone first. Then compare reasons with your group. The right action depends on the decision, costs and risk tolerance.
+Choose alone first. Then compare your reasons with your group. The right action depends on the decision, the costs and how much risk the authority will accept.
 
 ::: {.notes}
 8 minutes. Two minutes individual Q5, four minutes discuss, two minutes hear reasons. Native buttons record choice locally, not shared room voting. Paper labelled cards are equivalent. Do not award ask first by default or force consensus. Good reasons use randomised comparison, threshold uncertainty and reach; condition must address a consequential concern. Transition: turn this into advice the director can read.
 :::
 
-## Your recommendation in three sentences {#s3-p13 .reader-slide .s1-review .s3-review}
+## Write your recommendation in three sentences. {#s3-p13 .reader-slide .s1-review .s3-review}
 
 Use the writing space on **worksheet page 4**.
 
-1. **Finding:** result, comparison and source.
-2. **Action:** recommendation or condition.
-3. **Limit and request:** what matters most, and what evidence would help.
+1. **Finding:** the result, the comparison, and the table that shows it.
+2. **Action:** your recommendation, or the condition you set.
+3. **Limit and request:** the most important limit, and the evidence you would request.
 
 ::: {.ask}
-Exchange notes. Can your partner find source support for each claim?
+Swap notes with a partner. Can your partner find support in H3-A for each claim?
 :::
 
-Keep the result sheet open. Different recommendations can be defensible.
+Keep H3-A open. Different recommendations can be defensible.
 
 ::: {.notes}
 13 minutes. Seven minutes write alone, four minutes peer source-check, two minutes feedback. Partner checks units/period, lottery comparison, interval against rule, reach and specific request; circle a claim to strengthen, not grammar-only correction. Restore explanation time, not more content. Full costs absent, so do not assert value for money. No predetermined scale-up answer. Transition: compare your own advice with a plausible AI paragraph.
 :::
 
-## A plausible AI paragraph for the minister {#s3-p14 .reader-slide .s1-review .s3-review}
+## An AI writes a paragraph for the minister. Which claims does the pilot support? {#s3-p14 .reader-slide .s1-review .s3-review}
 
 ```{r, results='asis'}
-html_out(paste0('<div class="ai-reading">',s3_paragraphs(s3_ai),'</div>'))
+html_out(paste0('<p class="caption">Naive prompt (a prompt with no context, as a busy person might type it): “Our GreenWaste pilot saved 1,014 AED per business (p < 0.001). Write a short paragraph for the minister recommending expansion.” This response was written for the exercise. It is not a real AI answer.</p><div class="ai-reading">',s3_paragraphs(s3_ai),'</div>'))
 ```
 
 ::: {.ask}
-On **page 5**, underline supported claims and cross out overclaims. Check **H3-A on pages 1–2**.
+On **page 5**, underline the claims that H3-A supports. Cross out the claims it does not support.
 :::
 
 ::: {.notes}
-8 minutes. Five minutes mark individually/pairs, three minutes debrief; do not run naive prompt. Authored exercise adapted from old ministerial-paragraph device, current pilot result and clearer source. Supported: lottery N, after means, estimate/interval/p, stronger design, one-district qualification. Unsupported: significance proves minimum met, random allocation establishes city reach, national value for money without cost evidence. Monitoring sensible but cannot supply missing evidence retrospectively. Ask for supported passage and error. Transition: run a prompt constrained by actual source.
+8 minutes. Five minutes mark individually/pairs, three minutes debrief; do not run naive prompt. Written for the exercise, adapted from the older ministerial-paragraph device, the current pilot result and a clearer source. Supported: lottery N, after means, estimate/interval/p, stronger design, one-district qualification. Unsupported: significance proves minimum met, random allocation establishes city reach, national value for money without cost evidence. Monitoring sensible but cannot supply missing evidence retrospectively. Ask for supported passage and error. Transition: run a prompt constrained by actual source.
 :::
 
-## Ask for a recommendation the trial supports {#s3-p15 .reader-slide .s1-review .s3-review}
+## Ask the AI for a recommendation the pilot supports. {#s3-p15 .reader-slide .s1-review .s3-review}
 
 ```{r, results='asis'}
-html_out(paste0('<div class="better-prompt">',s3_paragraphs(s3_prompt),'</div>'))
+html_out(paste0('<p class="caption"><strong>Improved prompt</strong></p><div class="better-prompt">',s3_paragraphs(s3_prompt),'</div>'))
 ```
 
-Copy **page 5's prompt and H3-A** into **Microsoft Copilot**. Keep the AI good-practice card beside you.
+Copy **the prompt on page 5 and H3-A** into **Microsoft Copilot**. Keep your AI good-practice card beside you.
 
 ::: {.ask}
-What improved? Which advice still needs a source check?
+What improved? Which advice still needs checking against H3-A?
 :::
 
 ::: {.notes}
@@ -292,7 +294,7 @@ What improved? Which advice still needs a source check?
 Keep **H3-A open**. Close the AI responses and peer comments.
 
 ::: {.ask}
-Write your final recommendation and one specific evidence request. How could the answer change your advice?
+Write your final recommendation and one specific evidence request. How could the answer to your request change your advice?
 :::
 
 Use the **final box on worksheet page 4**. Tomorrow: what can the city comparison of changes tell us?

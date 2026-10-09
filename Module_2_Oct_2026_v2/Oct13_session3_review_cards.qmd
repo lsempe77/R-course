@@ -1,5 +1,5 @@
 ---
-title: "Matching activity: profiles and separate cost slips"
+title: "Matching activity: business profile cards and reveal slips"
 format:
   html:
     embed-resources: true
@@ -21,18 +21,18 @@ knitr:
 source('day2_session3_review.R', encoding='UTF-8')
 ```
 
-<header><button onclick="window.print()">Print both pages</button><p>Trainer: cut along dashed borders. Distribute page 1 only; retain page 2 until pairs are recorded.</p></header>
+<header><button onclick="window.print()">Print both pages</button></header>
 
 <div class="sheet-page">
 
-## Page 1 | Seven invented profile cards
+## Page 1 | Seven invented business profile cards
 
-Pair A, B and C with comparisons 1-4 using **manager age and size**. Use each comparison once. Record choices before receiving costs. This differs from full-city matching with replacement.
+Match businesses A, B and C to comparison businesses 1 to 4 using manager age and size. Use each comparison business at most once. Record your choices before you receive the reveal slips. In the city study, one comparison business can be used more than once. In this activity each can be used only once.
 
 ```{r, results='asis'}
 html_out(paste0('<div class="cards">', paste(vapply(seq_len(nrow(profiles)), function(i)
   paste0('<div class="card"><h3>Business ', profiles$id[i], '</h3><p>',
-    profiles$group[i], '</p><p>Manager age: ', profiles$age[i],
+    profiles$group[i], ' in GreenWaste</p><p>Manager age: ', profiles$age[i],
     '</p><p>Size: ', profiles$size[i], '</p></div>'), ''), collapse=''), '</div>'))
 ```
 
@@ -40,15 +40,15 @@ html_out(paste0('<div class="cards">', paste(vapply(seq_len(nrow(profiles)), fun
 
 <div class="sheet-page">
 
-## Page 2 | Cost slips: trainer holds until reveal
+## Page 2 | Reveal slips: keep these until you have recorded your pairs
 
-**Invented annual after-costs**, AED per business. Keep original pair choices. Compute participant minus comparison, then average the three differences.
+These are invented values for the exercise. Keep your original pairs. For each pair, calculate the participant's cost minus the comparison business's cost. Then calculate the mean of the three differences.
 
 ```{r, results='asis'}
 html_out(paste0('<div class="cards">', paste(vapply(seq_len(nrow(profiles)), function(i)
   paste0('<div class="card"><h3>Business ', profiles$id[i],
-    '</h3><p>Annual after-cost</p><p><strong>', fmt(profiles$cost[i]),
-    ' AED</strong></p><p>Invented activity value</p></div>'), ''), collapse=''), '</div>'))
+    '</h3><p>Annual waste management cost after GreenWaste:</p><p><strong>', fmt(profiles$cost[i]),
+    ' AED</strong></p><p>Invented value for this activity.</p></div>'), ''), collapse=''), '</div>'))
 ```
 
 </div>

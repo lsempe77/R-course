@@ -11,6 +11,7 @@ format:
         body{font:16px/1.4 Arial,sans-serif;color:#111418;margin:0;background:#eef2f6}main{max-width:850px;margin:auto}h1,h2,h3{color:#063360}h1{font-size:26px}h2{font-size:22px;margin:0 0 12px}h3{font-size:18px;margin:14px 0 6px}p{margin:8px 0}.sheet-page{background:white;padding:28px 40px;margin:20px 0;box-sizing:border-box;min-height:950px}.reading-table{width:100%;border-collapse:collapse;font-size:13px}.reading-table th,.reading-table td{padding:6px;border-bottom:1px solid #D5DEE8;text-align:left}.reading-table thead{background:#063360;color:white}.writing{height:45px;border-bottom:1px solid #c8d6e5;margin:6px 0}.writing.tall{height:75px}.writing.caption-space{height:110px}.review-svg{display:block;width:100%;height:175px}.review-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.review-grid h3{font-size:16px}.chart-pair .review-svg{height:180px}.caption{font-size:12px;color:#545860}.ai-source{border-left:3px solid #7da1c4;padding-left:16px}.prompt{border-top:2px solid #215a9e;padding-top:8px;font-size:14px}header button{font:inherit;padding:8px 15px;color:#063360;background:white;border:1px solid #215a9e;cursor:pointer}
         @page{size:A4;margin:14mm}@media print{body{background:white;font-size:11pt;line-height:1.3}main{max-width:none}.sheet-page{padding:0;margin:0;min-height:0;break-after:page}.sheet-page:last-child{break-after:auto}header,#title-block-header{display:none}h2{font-size:17pt}h3{font-size:12pt}.writing{height:10mm}.writing.tall{height:17mm}.writing.caption-space{height:24mm}.reading-table{font-size:9pt}.reading-table th,.reading-table td{padding:5px}.review-svg{height:165px}.chart-pair .review-svg{height:175px}.caption{font-size:9pt}.prompt{font-size:10pt}}
         </style>
+        <style>.writing.part{height:30px;margin:2px 0}.table-title{margin:10px 0 4px}@media print{.writing.part{height:8mm}}</style>
 knitr:
   opts_chunk:
     echo: false
@@ -22,160 +23,186 @@ knitr:
 source('day3_session2_review.R', encoding='UTF-8')
 ```
 
-<header><p>Separate Day 3 Session 2 review worksheet. Work on pages 3-4 as concepts are taught. Page 7 holds numerical references: open after the two-business task. Page 6 is the AI fallback: hold until Stage 1 is finished.</p><button onclick="window.print()">Print worksheet</button></header>
+<header><button onclick="window.print()">Print worksheet</button></header>
 
 <div class="sheet-page">
 
-## Page 1 | H8-A §1: read the cost bars
+## Page 1 | H8-A §1: Reading the cost bars
 
-**GreenWaste is a fictional training case.** This supplied source is the reference; there is no separate report to find.
+GreenWaste is a fictional training case. Use H8-A as your source for today's questions.
 
-### Figure C | Same participant means, two bar baselines
+### Figure C: Mean annual waste management cost of the same participant businesses, drawn twice. Chart A starts at zero. Chart B starts at 700 AED.
 
 ```{r, results='asis'}
 html_out(d8_pair())
 ```
 
-### Table C | Underlying values
-
 ```{r, results='asis'}
-html_out(d8_cost_table())
+html_out(d8_cost_table('Table C: The values behind Figure C: mean annual waste management cost of the same 4,794 city participant businesses (AED)'))
 ```
 
-**Source caption:** Mean annual waste cost in AED per business among the **same 4,794 city participants**, before and **12 months after** GreenWaste. Corrected city CSV. The bars compare two times for participants, not participants against nonparticipants. Values are rounded; the recorded mean fall is about **669 AED**.
+These are the mean annual waste management costs, in AED per business, of the same 4,794 city participant businesses before GreenWaste and 12 months after. The bars compare two times for participants. They do not compare participants with comparison businesses that did not receive GreenWaste. The values are rounded. The mean fall is about **669 AED**.
 
 ### What is supported, and what is not?
 
-The bars support a description of the participant mean before and after. They do not establish that GreenWaste caused the fall, that every participant's cost fell, or that the mean represents every business. Individual changes, a credible causal comparison and uncertainty about an estimated effect are not displayed.
+The bars describe the participants' mean cost before and after GreenWaste. They do not show that GreenWaste caused the fall. They do not show that every participant's cost fell, or that the mean describes every business. The bars do not show individual changes, a credible comparison for a causal reading, or the uncertainty of an estimated effect.
 
 ### Why does the baseline matter?
 
-A bar's length represents magnitude. A zero baseline normally preserves that visual comparison. Chart B starts at **700 AED**, so its bar lengths represent amounts above 700, not full costs. Labels retain the actual values, but do not necessarily undo a reader's first impression. A nonzero scale can be appropriate in other chart types or clearly justified contexts; it is not automatically dishonest.
+The length of a bar shows an amount. A baseline at zero keeps the lengths in proportion to the amounts. Chart B starts at 700 AED, so its bar lengths show the amounts above 700 AED, not the full costs. The labels give the values, but they may not change a reader's first impression. A baseline that does not start at zero can be appropriate for other types of chart, or when it is clearly explained. It is not automatically misleading.
 
-The intended sentence and audience matter. A dramatic bar-height drop does not establish a programme effect. A repaired caption cannot create missing causal evidence.
+The sentence and the audience also matter. A large drop in the height of the bars does not show an effect of the programme. A better caption cannot create evidence that is missing.
 
-<p class="caption">Source IDs: Figure C and Table C, H8-A §1. Calculations: day3_case.R and day3_session2_review.R. Both charts use the same upper bound, 1,600 AED; only the lower bound differs.</p>
+<p class="caption">Sources: Figure C and Table C in H8-A §1. Both charts have the same upper bound, 1,600 AED. Only the lower bound differs.</p>
 
 </div>
 
 <div class="sheet-page">
 
-## Page 2 | H8-A §2: distributions, not uncertainty
+## Page 2 | H8-A §2: Distributions show variation between businesses, not uncertainty
 
-### Figure D | All city participants' annual before-costs
+### Figure D: Annual waste management cost before GreenWaste of all 4,794 city participant businesses (AED)
 
 ```{r, results='asis'}
 html_out(d8_distribution())
 ```
 
-This histogram includes **all 4,794 city participants**. Bar heights count businesses within 300 AED bins on one cost scale. Mean **`r fmt(mean(tp$cost_before))` AED**, median **`r fmt(d8_quantiles[2])` AED**, middle 50% **`r paste(fmt(d8_quantiles[c(1,3)]),collapse='-')` AED**, range **`r paste(fmt(range(tp$cost_before)),collapse='-')` AED**. These describe pre-programme business variation, not an estimated effect or confidence interval.
+The histogram includes all 4,794 city participant businesses. Each bar counts the businesses whose cost falls within a 300 AED range. The mean is **`r fmt(mean(tp$cost_before))` AED** and the median is **`r fmt(d8_quantiles[2])` AED**. The middle 50% of businesses have costs from **`r fmt(d8_quantiles[1])` to `r fmt(d8_quantiles[3])` AED**. The range is **`r fmt(min(tp$cost_before))` to `r fmt(max(tp$cost_before))` AED**. These numbers describe how much costs varied between businesses before GreenWaste. They are not an estimated effect and not a confidence interval.
 
-### Figure E | Ten selected actual landfill records
+**The outcome changes on this page. Figure E shows landfill waste in tonnes per business per year, not annual waste management cost in AED.**
+
+### Figure E: Landfill waste before GreenWaste in ten selected records (tonnes per business per year)
 
 ```{r, results='asis'}
 html_out(d8_selected())
 ```
 
-Actual before-landfill values: **3, 4, 5, 5, 6, 7, 7, 8, 9, 46 tonnes** per business per year. Mean **10.0**, median **6.5**, range **3-46**. Nine values are below the mean. Repeated values are stacked as separate dots.
-
-These ten records were selected for teaching and are **not representative of the city**. The outcome is now landfill tonnes, not the AED costs in Figure D. A large value can shift the mean; that alone is not a reason to delete it.
+The ten values are 3, 4, 5, 5, 6, 7, 7, 8, 9 and 46 tonnes per business per year. The mean is **10.0 tonnes**, the median is **6.5 tonnes** and the range is **3 to 46 tonnes**. Nine of the ten values are below the mean. Repeated values are shown as separate stacked dots. We selected these ten records for teaching. They do not represent the city. One large value can raise the mean, but that alone is not a reason to delete it.
 
 ### Two different meanings of spread
 
-A distribution shows variation **between businesses**. The pilot interval on page 7 shows uncertainty **about an estimated mean effect**. Neither the middle 50% here nor the range of these ten records is that confidence interval.
+A distribution shows how much businesses differ from each other. The interval for the pilot on page 7 shows how uncertain we are about an estimated mean effect. The middle 50% in Figure D and the range of the ten records in Figure E are not that interval.
 
-<p class="caption">Source IDs: H8-A §2, Figures D/E. Figure D uses every participant before-cost; Figure E uses the same ten actual records selected earlier in the course. Page 7 changes population and outcome again for the pilot.</p>
+<p class="caption">Sources: H8-A §2, Figures D and E. Figure D uses the before-GreenWaste cost of every participant business. Figure E uses ten records chosen earlier in the course. Page 7 changes the group of businesses and the outcome again, for the pilot.</p>
 
 </div>
 
 <div class="sheet-page">
 
-## Page 3 | Q1-Q3: annotate and interpret
+## Page 3 | Q1 to Q3: mark the chart and interpret it
 
-### Q1 | Mark Figure C, page 1
+### Q1 | Mark Figure C on page 1
 
-Circle the **units** and mark each **axis start**. Underline the population, time period and comparison in the caption. Use Table C to check the bars.
+(a) Circle the units and mark where each axis starts.
 
-What changes when the baseline changes? What stays the same?
+(b) Underline the group of businesses, the time period and the comparison in the caption.
 
-<div class="writing tall"></div>
+(c) Use Table C to check the bars.
+
+(d) What changes when the baseline changes?
+
+<div class="writing part"></div>
+
+(e) What stays the same?
+
+<div class="writing part"></div>
 
 ### Q2 | What do the cost bars support?
 
-One supported descriptive statement, with a source ID:
+(a) Write one descriptive statement that the bars support, and the source you took it from.
 
-<div class="writing tall"></div>
+<div class="writing part"></div>
 
-One specific limit, and the evidence needed to address it:
+(b) Write one specific limit, and the evidence you would need to address it.
 
-<div class="writing tall"></div>
+<div class="writing part"></div>
 
-### Q3 | Read Figures D and E, page 2
+### Q3 | Read Figures D and E on page 2
 
-What does the full-participant histogram add to its mean? Explain the middle 50% without calling it a confidence interval.
+(a) What does the histogram of all participants add to the mean?
 
-<div class="writing tall"></div>
+<div class="writing part"></div>
 
-Why does the mean of the selected ten landfill records differ from the median? Why must this not be called a representative city result?
+(b) Explain the middle 50% without calling it a confidence interval.
 
-<div class="writing tall"></div>
+<div class="writing part"></div>
 
-Which changes between Figures D and E: outcome, units or population?
+(c) Why does the mean of the ten selected landfill records differ from their median?
 
-<div class="writing"></div>
+<div class="writing part"></div>
+
+(d) Why must we not call the ten records a result for the city?
+
+<div class="writing part"></div>
+
+(e) What changes between Figure D and Figure E: the outcome, the units, the group of businesses, or more than one of these?
+
+<div class="writing part"></div>
 
 </div>
 
 <div class="sheet-page">
 
-## Page 4 | Q4-Q7: denominators, caption and judgement
+## Page 4 | Q4 to Q7: percentages, the caption and your judgement
 
-### Q4 | Two invented businesses: calculate before page 7
+### Q4 | Two invented businesses. Calculate first, then open page 7.
 
-| Business | Before tonnes | After tonnes | Business fall |
+(a) Complete the table: the fall in tonnes for each business as a percentage of its starting amount.
+
+| Business | Before (tonnes) | After (tonnes) | Fall (%) |
 |---|---|---|---|
-| Small starting amount | 10 | 2 | __________ % |
-| Large starting amount | 90 | 54 | __________ % |
+| Business with a small starting amount | 10 | 2 | __________ |
+| Business with a large starting amount | 90 | 54 | __________ |
 
-Total before: _____. Total after: _____. Fall in total tonnes: _____ %.
+(b) Calculate the total tonnes before: _____ and after: _____, and the fall in the total as a percentage: _____ %.
 
-Mean of the two business percentage falls: _____ %. Why are they different?
+(c) Calculate the mean of the two business percentage falls: _____ %.
 
-<div class="writing"></div>
+(d) Why are the two percentages different?
 
-After the actual city summary is shown, explain what **49.5%** and **58.6%** measure and which denominator each uses:
+<div class="writing part"></div>
 
-<div class="writing"></div>
+(e) After you see the summary for the city on page 7, explain what 49.5% and 58.6% each measure. Which total is each percentage based on?
 
-### Q5 | Repair the cost-chart caption for the director
+<div class="writing part"></div>
 
-Draft: **"GreenWaste substantially reduced every participant's costs."**
+### Q5 | Repair the caption for the director
 
-Use Figure C. Include population, outcome, units, time, comparison, source and causal limit. Choose a baseline suited to your sentence.
+Draft caption: **"GreenWaste substantially reduced every participant's costs."**
+
+Use Figure C. Write a caption that names the group of businesses, the outcome, the units, the time, the comparison, the source and the limit on causal claims. Choose a baseline that suits your sentence, and say why.
 
 <div class="writing caption-space"></div>
 
-### Q6 | Read the pilot interval [page 7, Figure P]
+### Q6 | Read the pilot interval (page 7, Figure P)
 
-What uncertainty does the interval represent? Does it securely establish the 1,000 AED annual-saving minimum?
+(a) What uncertainty does the interval show?
 
-<div class="writing"></div>
+<div class="writing part"></div>
 
-### Q7 | Close the source: your first chart check
+(b) Does it show that our rule of at least a 1,000 AED reduction in annual waste management cost per business per year is met?
 
-Name a check and the error it prevents. Give one supported statement and one limit from today's evidence.
+<div class="writing part"></div>
 
-<div class="writing tall"></div>
+### Q7 | Close the source and give your first chart check
+
+(a) Name one check you will do before trusting a chart, and the mistake it prevents.
+
+<div class="writing part"></div>
+
+(b) Write one statement that today's evidence supports and one limit.
+
+<div class="writing part"></div>
 
 </div>
 
 <div class="sheet-page">
 
-## Page 5 | AI Snapshot: chart, claim and audience (15 minutes)
+## Page 5 | AI exercise: chart, claim and audience
 
-### Stage 1 | Mark the supplied response (8 minutes)
+### Stage 1: Mark the response
 
-Naive prompt: **"Which of these two charts better represents the difference, and why?"** The model was supplied Figure C and the draft claim. This is an **illustrative prepared response**, not a live Copilot transcript.
+Naive prompt (a prompt with no context, as a busy person might type it): "Which of these two charts better represents the difference, and why?" The AI was given Figure C and the draft claim. This response was written for the exercise. It is not a real AI answer.
 
 <div class="ai-source">
 ```{r, results='asis'}
@@ -183,90 +210,96 @@ html_out(paste0('<p>',gsub('\n\n','</p><p>',d8_ai,fixed=TRUE),'</p>'))
 ```
 </div>
 
-Keep supported readings. Cross out or qualify unsupported advice and inferences. Check whether each sentence answers the actual claim/audience question.
+Keep the readings that H8-A supports. Cross out the advice and conclusions that it does not support. Check whether each sentence answers the question about the claim and the audience.
 
-<div class="writing"></div>
+<div class="writing part"></div>
 
-### Stage 2 | Use the better prompt in Microsoft Copilot (7 minutes)
+### Stage 2: Run the improved prompt in Microsoft Copilot
 
 <div class="prompt">
 ```{r, results='asis'}
-html_out(paste0('<p>',d8_prompt,'</p>'))
+html_out(paste0('<strong>Improved prompt</strong><p>',d8_prompt,'</p>'))
 ```
 </div>
 
-Use fictional evidence only and the shared **AI good-practice card**. No device: open page 6 after Stage 1.
+Use only the information in H8-A, and keep your AI good-practice card beside you. If you are not using Copilot, read the prepared response on page 6 after you finish Stage 1.
 
-One verified correction and one useful missing-evidence question:
+(a) Record one correction you verified.
 
-<div class="writing tall"></div>
+<div class="writing part"></div>
+
+(b) Record one useful question the response asked about missing evidence.
+
+<div class="writing part"></div>
 
 </div>
 
 <div class="sheet-page">
 
-## Page 6 | Prepared paper alternative
+## Page 6 | Prepared response
 
-**Open only after marking page 5.** This is an example, not the exact response Copilot must give.
+Use this response if you are not using Copilot. Read it after you have marked the response on page 5. It was written for the exercise. It is not a real AI answer. An AI tool may answer differently.
 
 ### Questions before choosing the display
 
-What decision should the director make from this figure? Is there credible causal evidence elsewhere, or must this sentence remain descriptive? Is the claim about an average, every participant, or programme-wide value for money?
+What decision should the director make from this figure? Is there credible causal evidence elsewhere, or must this sentence remain a description? Is the claim about an average, about every participant, or about value for money for the whole programme?
 
-### Check the numbers and the visual claim
+### Check the numbers and what the chart claims
 
-H8-A §1, Table C and Figure C show the same before/after mean annual costs, about **1,432 and 763 AED**, among the same **4,794 city participants**. The recorded mean fall is about **669 AED**.
+H8-A §1, Table C and Figure C show the same mean annual waste management costs before and after, about **1,432 and 763 AED**, for the same **4,794 city participant businesses**. The mean fall is about **669 AED**.
 
-Chart B's 700 AED lower bound makes the after bar look small relative to the before bar. Its labels are numerically correct, but that does not make the dramatic shape appropriate beside a causal/every-participant claim for a non-technical reader.
+Chart B's lower bound of 700 AED makes the after bar look small compared with the before bar. Its labels are numerically correct, but that does not make the dramatic shape appropriate beside a claim about causes or about every participant, for a reader who is not an expert.
 
-For a bar comparison of these full cost magnitudes, Chart A's zero baseline is a safer choice. Other chart types may use a clearly justified nonzero axis; it is not necessary to prohibit all nonzero scales.
+For a bar chart of these full costs, Chart A's zero baseline is a safer choice. Other chart types may use a clearly explained axis that does not start at zero, so it is not necessary to ban every such axis.
 
 ### Correct the sentence, not just the chart
 
-"Among 4,794 city participants, mean annual waste cost was about 1,432 AED before and 763 AED 12 months after GreenWaste. Source: H8-A §1, corrected city records. This descriptive before/after comparison does not establish the programme's causal effect or a reduction for every participant."
+"Among 4,794 city participant businesses, mean annual waste management cost was about 1,432 AED before GreenWaste and 763 AED 12 months after. Source: H8-A §1. This description of two times does not show the causal effect of the programme, and it does not show a reduction for every participant."
 
-H8-A §2 shows variation in before-costs, not individual changes or uncertainty about a programme effect. To assess an expansion decision, request the relevant causal comparison and its assumptions, target population and economic evidence. A clearer plot cannot provide those missing facts.
+H8-A §2 shows variation in costs before GreenWaste. It does not show individual changes, or the uncertainty about an effect of the programme. To assess a decision about expansion, request the relevant causal comparison and its assumptions, the target population and the economic evidence. A clearer chart cannot provide those missing facts.
 
-### Verify the alternative yourself
+### Verify this response yourself
 
-One factual reading checked against its source:
+(a) Check one factual reading against its source.
 
-<div class="writing tall"></div>
+<div class="writing part"></div>
 
-One reason the chart choice fits the corrected claim, and one evidence request:
+(b) Write one reason the chart choice fits the corrected claim, and one request for evidence.
 
-<div class="writing tall"></div>
+<div class="writing part"></div>
 
 </div>
 
 <div class="sheet-page">
 
-## Page 7 | H8-A §§3-4: numerical references
+## Page 7 | H8-A §§3 and 4: numbers for reference
 
-**Open after completing the two-business calculation in Q4.** These references are not the prepared AI response on page 6.
+Open this page after you have completed the two-business calculation in Q4.
 
-### §3 | Hypothetical percentage example and actual city summary
+### §3 | Percentage falls: an invented example and the summary for the city
 
 ```{r, results='asis'}
 html_out(d8_toy_table(TRUE))
 ```
 
-Invented example: total tonnes fall from **100 to 56**, or **44%**. Mean business percentage fall is **(80% + 40%)/2 = 60%**. Total-tonne weighting gives **0.1 × 80% + 0.9 × 40% = 44%**. Every starting denominator here is positive.
+In the invented example, total tonnes fall from 100 to 56, which is a fall of **44%**. The mean of the two business percentage falls is (80% + 40%) / 2 = **60%**. Weighting each business by its starting tonnes gives 0.1 × 80% + 0.9 × 40% = **44%**. Every starting amount in this example is above zero, so each percentage can be calculated.
 
 ```{r, results='asis'}
-html_out(d8_land_table())
+html_out(d8_land_table('Landfill waste of the same 4,794 city participant businesses, before GreenWaste and 12 months after: two ways to summarise the fall'))
 ```
 
-Actual **same 4,794 city participants**, landfill tonnes before and 12 months after. Total before **`r fmt(sum(tp$landfill_before),1)` tonnes**, total after **`r fmt(sum(tp$landfill_after),1)` tonnes**. Every before value is positive. Neither summary alone establishes cause, nor a fall for every business. One summary weights by starting tonnes; the other gives every business equal weight.
+The total before GreenWaste was **`r fmt(sum(tp$landfill_before),1)` tonnes** and the total after was **`r fmt(sum(tp$landfill_after),1)` tonnes**. Every business had a landfill amount above zero before GreenWaste. Neither summary alone shows that GreenWaste caused the fall, or that every business fell. One summary gives more weight to businesses with larger starting amounts. The other gives every business the same weight.
 
-### §4 | Figure P: separate pilot, annual cost saving
+### §4 | Figure P: the separate pilot and annual waste management cost
 
 ```{r, results='asis'}
 html_out(d8_pilot())
 ```
 
-This is the separate **400-business pilot**, lottery-assigned 200 to join and 200 to wait, comparing annual waste costs after 12 months. Estimated mean reduction **1,014 AED**, 95% interval **862-1,167 AED**, crossing the fictional **1,000 AED annual-saving minimum**. The interval is uncertainty about the estimated mean effect, not the distribution of individual savings; it does not account for every source of bias.
+**Figure P: Estimated mean reduction in annual waste management cost in the pilot, with its 95% interval, compared with our rule (AED)**
 
-<p class="caption">Source IDs: H8-A §3 (two-business illustration, city summaries) and §4 Figure P (pilot). Calculations from day3_case.R/day3_session2_review.R. Do not attach these landfill percentages or pilot intervals to the descriptive cost bars on page 1.</p>
+This is the separate pilot of 400 businesses. A lottery assigned 200 businesses to the treatment group and 200 to the control group. The comparison is of annual waste management cost 12 months after GreenWaste. The estimated mean reduction is **1,014 AED**, with a 95% interval of **862 to 1,167 AED**. The interval includes values below our rule of at least a 1,000 AED reduction. The interval shows uncertainty about the estimated mean effect. It does not show the distribution of individual savings, and it does not allow for every source of bias.
+
+<p class="caption">Sources: H8-A §3 (the two-business example and the city summaries) and §4, Figure P (the pilot). Do not attach the landfill percentages or the pilot interval to the cost bars on page 1.</p>
 
 </div>

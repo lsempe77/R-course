@@ -32,11 +32,11 @@ Ask someone to check the reasoning and important omissions. Give them the source
 ## Try: role, task, context, format
 
 ::: {.prompt}
-I am a policy adviser deciding whether to expand a business waste programme. I need to understand what this evaluation result supports. I have pasted the results table. Our decision rule is a saving of at least 1,000 AED per business per year. The study compares the same businesses before and after. Ask me questions before you answer. Then give three short points: what the result shows, what it does not show, and one question for the evaluator.
+I am a policy adviser deciding whether to expand a business waste programme. I need to understand what this evaluation result supports. I have pasted the results table. Our decision rule is a reduction in annual waste management cost of at least 1,000 AED per business per year. The study compares the same businesses before and after. Ask me questions before you answer. Then give three short points: what the result shows, what it does not show, and one question for the evaluator.
 :::
 
 Avoid steering the answer: "recommend expansion" invites a conclusion before the evidence has been checked. Ask which claims are supported and what could change the advice.
 
 ::: {.caption}
-Separate review card | Day 1, Session 1 | GreenWaste is a fictional training case.
+AI good-practice card | GreenWaste is a fictional training case.
 :::

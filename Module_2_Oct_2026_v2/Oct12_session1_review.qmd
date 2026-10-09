@@ -1,7 +1,7 @@
 ---
 title: "What do the numbers actually say?"
-subtitle: "Day 1 | Session 1: Read a cost result using five terms"
-author: "3ie · Review version"
+subtitle: "Day 1 | Session 1: Read an evaluation result using five terms"
+author: "3ie"
 always_allow_html: true
 format:
   live-revealjs:
@@ -39,7 +39,7 @@ GreenWaste offers **equipment subsidies, installation help and staff training**.
 :::
 
 ::: {.ask}
-This morning: **annual waste cost, in AED per business**. What would count as success?
+The outcome we measure is each business's **annual waste management cost, in AED**. What would count as success for GreenWaste?
 :::
 
 ```{webr}
@@ -61,7 +61,7 @@ tp <- subset(gw, setting == 'city' & took_part == 1)
 <div><h3>Support</h3><p>Funds, equipment subsidies, advice and training</p></div>
 <div><h3>Delivery</h3><p>Businesses receive equipment and help</p></div>
 <div><h3>Use</h3><p>Equipment is installed; waste practices change</p></div>
-<div class="measured"><h3>Outcome we measure</h3><p><strong>Lower annual waste costs</strong></p></div>
+<div class="measured"><h3>Outcome we measure</h3><p><strong>Lower annual waste management cost</strong></p></div>
 </div>
 
 Each link depends on assumptions. Lower costs may contribute to wider environmental benefits.
@@ -77,13 +77,13 @@ Does distributing equipment show that the programme lowered costs?
 4 minutes. Say: “This is the theory of change you worked with in Module 1, simplified to the links we need today.” Walk through support, delivery, use and costs. State that recycling, landfill and environmental impacts are not all measured by the cost result. Ask the question; listen for delivery is not a caused outcome, then reveal. Explain that outcome measures and causal claims are different. Transition: “A report now offers a number. Can we read exactly what it says?”
 :::
 
-## A cost result lands on your desk {#s1-p03 .reader-slide .s1-review}
+## An impressive result lands on your desk. {#s1-p03 .reader-slide .s1-review}
 
-<p class="lead">“Participants' annual waste costs fell by <strong>669 AED</strong>.”</p>
+<p class="lead">“The mean annual waste management cost of participant businesses fell by <strong>669 AED</strong>.”</p>
 
 <div class="review-grid">
-<div class="review-stage"><h3>The source</h3><p><strong>H1-A</strong>, on page 1 of your review worksheet: the same <strong>4,794 city participants</strong>, before and 12 months after.</p></div>
-<div class="review-stage"><h3>The reading tools</h3><p>Mean · treatment effect · coefficient · confidence interval · p-value</p></div>
+<div class="review-stage"><h3>The source</h3><p><strong>H1-A</strong>, the before-and-after table for city participant businesses, is on page 1 of your worksheet. It shows the same <strong>4,794 participant businesses</strong>, measured before GreenWaste and 12 months after.</p></div>
+<div class="review-stage"><h3>The five terms we will use</h3><p>The mean, the treatment effect, the coefficient, the confidence interval and the p-value.</p></div>
 </div>
 
 ::: {.ask}
@@ -102,10 +102,10 @@ Which term could you explain already? Which would you need help with?
 html_out(paste0('<div class="cost-strip">',paste0('<span>',fmt(review_costs),'</span>',collapse=''),'</div>'))
 ```
 
-<p class="caption">Ten selected real records from the fictional city file. Annual waste cost before GreenWaste, AED. This selected set is not representative of the city.</p>
+<p class="caption">These are ten selected records of annual waste management cost before GreenWaste, in AED. We selected them from the GreenWaste data for teaching. They are not representative of all city businesses.</p>
 
 ::: {.ask}
-**Worksheet Q1:** calculate the mean. Does it describe most of these businesses? A calculator is fine.
+**Worksheet Q1:** Calculate the mean annual waste management cost of the ten businesses. Does the mean describe most of them? A calculator is fine.
 :::
 
 ```{r, results='asis'}
@@ -113,7 +113,7 @@ html_out(paste0('<button data-open="s1-mean-answer" data-closed="Show the calcul
 ```
 
 ::: {.notes}
-5 minutes. WORKSHEET Q1: two minutes individually, then compare with neighbour. Do not open answer until learners have attempted total/count. All ten figures are actual selected cost_before records; selection was for teaching. Key: total 13,906, mean 1,390.6; seven below mean. Ask if mean describes everyone; accept a request for distribution. Transition: “What happens if the largest business is missing?”
+5 minutes. WORKSHEET Q1: two minutes individually, then compare with neighbour. Do not open answer until learners have attempted total/count. All ten figures are selected cost_before records; selection was for teaching. Key: total 13,906, mean 1,390.6; seven below mean. Ask if mean describes everyone; accept a request for distribution. Transition: “What happens if the largest business is missing?”
 :::
 
 ## One large business changes the average {#s1-p05 .reader-slide .s1-review}
@@ -122,12 +122,12 @@ html_out(paste0('<button data-open="s1-mean-answer" data-closed="Show the calcul
 html_out(paste0('<div id="s1-cost-distribution"><div data-variant>',review_dots(FALSE),'</div><div data-variant hidden>',review_dots(TRUE),'</div></div>'))
 ```
 
-<button data-swap="s1-cost-distribution">Remove / restore the 4,306 AED business</button>
+<button data-swap="s1-cost-distribution">Remove or restore the business with the largest cost (4,306 AED)</button>
 
 The **median** is the middle of the ordered records; with ten records, average the two middle values.
 
 ::: {.ask}
-Predict the change before toggling. **Q1 follow-up:** which summary moves more, and why?
+Predict the change before you use the button. **Q1 (b) and (c):** Which changes more, the mean or the median, and why?
 :::
 
 ::: {.notes}
@@ -139,12 +139,12 @@ Predict the change before toggling. **Q1 follow-up:** which summary moves more, 
 **Treatment effect:** the outcome with GreenWaste minus the outcome that would have happened without it.
 
 <div class="review-grid">
-<div class="review-stage"><h3>What we recorded</h3><p>Participants' costs before → costs 12 months later</p><p class="equation">1,432 → 763 AED</p><p>That is a <strong>before/after change</strong>.</p></div>
-<div class="review-stage"><h3>What a causal claim needs</h3><p>Participants' later costs with GreenWaste → their later costs without it</p><p class="equation">763 → ?</p><p>The missing outcome is the <strong>counterfactual</strong>.</p></div>
+<div class="review-stage"><h3>What we recorded</h3><p>Mean annual waste management cost of participant businesses, before GreenWaste and 12 months after</p><p class="equation">1,432 → 763 AED</p><p>That is a <strong>before-and-after change</strong>.</p></div>
+<div class="review-stage"><h3>What a causal claim needs</h3><p>Cost of the same participant businesses 12 months after, with GreenWaste and without it</p><p class="equation">763 → ?</p><p>The missing outcome is the <strong>counterfactual</strong>.</p></div>
 </div>
 
 ::: {.ask}
-**Worksheet Q2:** does before/after supply the missing no-programme outcome?
+**Worksheet Q2:** Does the before-and-after comparison tell us what would have happened without GreenWaste?
 :::
 
 ::: {.notes}
@@ -154,17 +154,17 @@ Predict the change before toggling. **Q1 follow-up:** which summary moves more, 
 ## Coefficient: which row is the change? {#s1-p07 .reader-slide .s1-review}
 
 ```{r, results='asis'}
-html_out(review_table())
+html_out(sub('<p class="caption">.*$', '', review_table()))
 ```
 
 <div class="review-annotate" aria-label="Highlight an output column">
 <button data-table-column="1" aria-pressed="false">Coefficient</button><button data-table-column="2" aria-pressed="false">Interval</button><button data-table-column="3" aria-pressed="false">P-value</button>
 </div>
 
-The first coefficient is the **intercept**: the mean when after = 0. The second is the **after indicator**: the estimated change when after switches to 1.
+A coefficient is a number that the model estimates. The first coefficient is the **intercept**, which is the mean cost before GreenWaste (after = 0). The second is the **change after GreenWaste**: the estimated change when after becomes 1.
 
 ::: {.ask}
-**Worksheet Q3:** mark the change row. Read its number, units and comparison aloud.
+**Worksheet Q3:** Mark the row that shows the change. Read aloud its value, its units and what it compares.
 :::
 
 ::: {.notes}
@@ -176,20 +176,21 @@ The first coefficient is the **intercept**: the mean when after = 0. The second 
 <div class="review-grid">
 <div><p class="equation">After − before<br>763 − 1,432 ≈ −669 AED</p><p>Lower cost is a favourable change. Whether a minus sign is favourable depends on the outcome.</p></div>
 <div>
+<p class="code-label"><strong>R code</strong></p>
 ```{webr}
 #| echo: true
 #| autorun: false
-# Annual cost change per participant, in AED.
+# Work out the change in annual waste management cost for each participant business (AED).
 change <- tp$cost_after - tp$cost_before
-# Average the unrounded changes.
-# Round only the displayed result.
+# Take the mean of the changes in cost.
+# Round only the number we display.
 round(mean(change))
 ```
 </div>
 </div>
 
 ::: {.ask}
-**Q3 follow-up:** predict the output, then explain why this calculation matches the change coefficient.
+**Q3 (c):** Predict the output. Then explain why this calculation matches the change in the table.
 :::
 
 ::: {.notes}
@@ -201,78 +202,78 @@ round(mean(change))
 The **95% confidence interval** describes uncertainty around an estimated quantity under the statistical model and its assumptions.
 
 ```{r, results='asis'}
-html_out(paste0('<div id="s1-interval-views"><div data-variant>',review_intervals(case$before_after,ba_ci[1],ba_ci[2],'Mean change',xmax=-620,xmin=-720,rule=NULL),'<p class="caption">Cost change in AED. Zoomed axis: −720 to −620; zero is outside this view.</p></div><div data-variant hidden>',review_coverage(),'</div></div>'))
+html_out(paste0('<div id="s1-interval-views"><div data-variant>',review_intervals(case$before_after,ba_ci[1],ba_ci[2],'Mean change',xmax=-620,xmin=-720,rule=NULL),'<p class="caption">The change in annual waste management cost is in AED. The axis is zoomed to the range −720 to −620, so zero is outside this view.</p></div><div data-variant hidden>',review_coverage(),'</div></div>'))
 ```
 
 <button data-swap="s1-interval-views">Estimate / repeated-sample illustration</button>
 
 ::: {.ask}
-**Worksheet Q4:** does −684 to −654 AED describe individual business savings?
+**Worksheet Q4:** Does the interval of −684 to −654 AED describe the savings of individual businesses?
 :::
 
 ::: {.notes}
 5 minutes. State interval is for estimated MEAN CHANGE. WORKSHEET Q4: one minute to box interval and answer. Key: not individual range, not every source of bias. Toggle to clearly hypothetical repeated-sample intervals. Say the procedure covers a fixed true model quantity about 95% of the time across many repeated samples under assumptions; not 95% probability this particular interval contains it. This visual is an illustration, not additional GreenWaste estimates. Transition: “The same estimate can be reported with very different uncertainty.”
 :::
 
-## Same estimate. Different uncertainty. {#s1-p10 .reader-slide .s1-review}
+## Three estimates are identical. Is the uncertainty the same? {#s1-p10 .reader-slide .s1-review}
 
 ```{r, results='asis'}
 html_out(review_intervals(rep(1100,3),c(1080,900,400),c(1120,1300,1800),c('A: narrow','B: wider','C: much wider'),xmax=2000,rule=1000))
 ```
 
-<p class="caption">Hypothetical estimates of annual saving, AED. All three point estimates are 1,100; these are not additional GreenWaste results.</p>
+<p class="caption">These three estimates of the annual reduction in cost are invented. Each is 1,100 AED. They are not additional GreenWaste results.</p>
 
 ::: {.ask}
-**Q4 follow-up:** which interval stays above the minimum? What remains uncertain in B and C?
+**Q4 (d) and (e):** Which interval is entirely above our rule of a reduction of at least 1,000 AED? What is still uncertain for B and C?
 :::
 
 ::: {.notes}
 5 minutes. Ask pairs to read one row and compare. Key A above 1,000; B/C span it; all points are identical. Wider means less precision, not proof of no benefit. Design credibility still needs separate checking even for A. Do not teach A means automatically approve. Transition: “A p-value answers another, narrower question.”
 :::
 
-## P-value: what does small tell us? {#s1-p11 .reader-slide .s1-review}
+## What does a small p-value tell us? {#s1-p11 .reader-slide .s1-review}
 
-For the reported change, **p < 0.001**: data this extreme would be unusual under a **zero-mean-change model**, if its assumptions hold.
+For the reported change, **p < 0.001**. The p-value starts from the assumption that the mean change is zero. If that assumption and the model's other assumptions hold, data as extreme as these would be unusual.
 
 ```{r, results='asis'}
 html_out(review_null())
 ```
 
 ::: {.ask}
-**Worksheet Q5:** is the p-value the probability that GreenWaste works? Does it establish cause?
+**Worksheet Q5:** Is the p-value the probability that GreenWaste works? Does it show that GreenWaste caused the fall?
 :::
 
 ::: {.notes}
-5 minutes. Explain null illustration first: zero mean change at centre; p counts outcomes at least as extreme in both directions. The example p=.012 is hypothetical, not actual p<.001. WORKSHEET Q5: one minute individually. Key neither probability programme works nor proof of cause. No label shuffle pretending this before/after comparison was randomised. Do not say p is probability the result happened by chance. Transition: “Could an extremely clear change still be too small for a decision?”
+5 minutes. Explain null illustration first: zero mean change at centre; p counts outcomes at least as extreme in both directions. The example p=.012 is hypothetical, not the p<.001 in the GreenWaste table. WORKSHEET Q5: one minute individually. Key neither probability programme works nor proof of cause. No label shuffle pretending this before/after comparison was randomised. Do not say p is probability the result happened by chance. Transition: “Could an extremely clear change still be too small for a decision?”
 :::
 
-## Statistically clear. Large enough to matter? {#s1-p12 .reader-slide .s1-review}
+## A result can be statistically significant, but is it large enough to matter? {#s1-p12 .reader-slide .s1-review}
 
 ```{r, results='asis'}
 p_big <- 2*pnorm(-1100/(1200/1.96))
-html_out(review_intervals(c(50,1100),c(30,-100),c(70,2300),c('A: saving 50','B: saving 1,100'),xmax=2400,rule=1000))
+html_out(review_intervals(c(50,1100),c(30,-100),c(70,2300),c('A: reduction of 50 AED','B: reduction of 1,100 AED'),xmax=2400,rule=1000))
 ```
 
-**A: p < 0.001.** **B: p ≈ `r fmt(p_big,3)`.** These are hypothetical normal-model examples, not GreenWaste results.
+In these two invented examples, result A has **p < 0.001** and result B has **p ≈ `r fmt(p_big,3)`**. Neither is a GreenWaste result.
 
 ::: {.ask}
-**Q5 follow-up:** which is statistically clear? Which could be large enough? Does B prove no saving?
+**Q5 (d) to (f):** Which result is statistically significant? Which could be large enough to matter for our rule? Does result B prove that there is no reduction?
 :::
 
 ::: {.notes}
-4 minutes. Key A is clear but far below rule; B could be important but imprecise, interval crosses zero/rule. P-values and intervals computed coherently under hypothetical normal inference. Listen for absence of significance is not evidence of no effect. Neither supplies causal design by itself. Transition: “Return to the actual table and its decision rule.”
+4 minutes. Key A is statistically significant but far below our rule of at least a 1,000 AED reduction; B could be important but imprecise, interval crosses zero/rule. P-values and intervals computed coherently under hypothetical normal inference. Listen for absence of significance is not evidence of no effect. Neither supplies causal design by itself. Transition: “Return to the actual table and its decision rule.”
 :::
 
-## A lower cost. Enough saving? {#s1-p13 .reader-slide .s1-review}
+## Costs fell by 669 AED. Is that at least a 1,000 AED reduction? {#s1-p13 .reader-slide .s1-review}
 
 ```{r, results='asis'}
-html_out(interval_svg())
+html_out(review_interval_svg())
 ```
 
-Cost change **−669**, interval **−684 to −654** → saving **669**, interval **654 to 684 AED**.
+The change in cost is **−669 AED**, with a 95% interval of **−684 to −654 AED**. As a reduction in cost, this is **669 AED**, with an interval of **654 to 684 AED**.
 
 ::: {.ask}
-**Worksheet Q6:** is the recorded fall above the minimum? What would we still need before calling it an effect?
+**Worksheet Q6:** Is the recorded fall at least as large as our rule of a 1,000 AED reduction in annual waste management cost per business per year? What would we still need before calling it an effect of GreenWaste?
 :::
 
 ::: {.notes}
@@ -281,11 +282,11 @@ Cost change **−669**, interval **−684 to −654** → saving **669**, interv
 
 ## Pair check: what does the table support? {#s1-p14 .reader-slide .s1-review}
 
-Use **H1-A on worksheet page 1** and your completed Q1–Q5.
+Use **H1-A on worksheet page 1** and your answers to Q1 to Q5.
 
-1. Compare answers with a partner. Correct one explanation if needed.
-2. Finish Q6: change, units, period, uncertainty and causal limit.
-3. Name the comparison evidence needed next.
+1. Compare your answers with a partner, and correct one explanation if it needs it.
+2. Finish Q6. Explain what the estimate and the interval show, compare them with our rule, and explain why this table cannot show that GreenWaste caused the change.
+3. Name the comparison evidence you would ask for next.
 
 ::: {.ask}
 Can your partner trace each part of your interpretation to the source?
@@ -295,32 +296,32 @@ Can your partner trace each part of your interpretation to the source?
 10 minutes. WORKSHEET pair check: three minutes compare/correct Q1–Q5; four minutes write/check Q6; three minutes source-based feedback. Do not repeat every question as a new independent worksheet round. Listen for mean not everybody, effect not change, coefficient tied to row/model, CI not individual spread, p not causality. Model acceptable reading: mean costs fell 669 AED over 12 months among participants, interval 654–684 on saving scale; before/after alone cannot attribute this to programme. Transition: “An AI can quote every number correctly and still give misleading advice.”
 :::
 
-## A plausible AI reading of the table {#s1-p15 .reader-slide .s1-review}
+## An AI explains the table. Which parts does the table support? {#s1-p15 .reader-slide .s1-review}
 
-<p class="caption">Illustrative response to “Explain H1-A and advise whether to expand GreenWaste.” Also printed on worksheet page 3; this is authored exercise material.</p>
+<p class="caption">Naive prompt (a prompt with no context, as a busy person might type it): “Explain H1-A and advise whether to expand GreenWaste.” This response was written for the exercise. It is not a real AI answer. It is also printed on worksheet page 3.</p>
 
 ```{r, results='asis'}
 html_out(paste0('<div class="ai-reading">',review_paragraphs(review_ai),'</div>'))
 ```
 
 ::: {.ask}
-Underline supported claims. Cross out unsupported ones. **Use H1-A, not whether the paragraph sounds convincing.**
+Underline the claims that H1-A supports. Cross out the claims that H1-A does not support. **Use H1-A, not how convincing the paragraph sounds.**
 :::
 
 ::: {.notes}
 8 minutes. AI SNAPSHOT A: five minutes individually/pairs mark page 3; three minutes debrief. Do not run naive prompt. Supported: means, change, interval, p and recorded shortfall. Unsupported: before/after accounts for all other changes and establishes attribution; narrow CI proves robustness or individual savings; tiny p overrides rule and justifies expansion. Monitoring is sensible but does not repair unsupported attribution. Ask for a supported sentence as well as an error. No flags appear in participant copy. Transition: “Now use a prompt that makes the comparison limits explicit.”
 :::
 
-## Ask for a reading you can verify {#s1-p16 .reader-slide .s1-review}
+## Ask the AI for an explanation you can check. {#s1-p16 .reader-slide .s1-review}
 
 ```{r, results='asis'}
-html_out(paste0('<div class="better-prompt">',review_paragraphs(review_prompt),'</div>'))
+html_out(paste0('<p class="caption"><strong>Improved prompt</strong></p><div class="better-prompt">',review_paragraphs(review_prompt),'</div>'))
 ```
 
 Use **worksheet page 3** to copy the prompt and H1-A table into **Microsoft Copilot**. Keep the AI good-practice card beside you.
 
 ::: {.ask}
-Which clarifying question helps? Which claim still needs checking against the source?
+Which question that the AI asked helped you most? Which claim still needs checking against H1-A?
 :::
 
 ::: {.notes}
@@ -333,9 +334,9 @@ Keep **H1-A open**. Close the term explanations and AI responses.
 
 Write three sentences:
 
-1. The result, comparison, units and interval.
-2. What this table cannot establish.
-3. A specific evidence request and why it matters.
+1. What the table shows, with the units, the period and the interval.
+2. What the table cannot show.
+3. One piece of evidence you would ask for, and why it matters.
 
 ::: {.ask}
 Would your advice still be defensible if the AI had never been used?

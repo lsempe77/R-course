@@ -2,7 +2,7 @@
      recap slide). Self-contained: it defines its own shops and emitter. Same picture as
      the Day 1 decks and the picture card (GreenWaste_case_card.docx). -->
 
-<p style="font-size:0.85em; margin: 0 0 4px; max-width: none;">GreenWaste helps businesses cut their waste costs. Here is how it reached them.</p>
+<p style="font-size:0.85em; margin: 0 0 4px; max-width: none;">GreenWaste helps businesses reduce their annual waste management costs. This map shows how it reached them.</p>
 
 ```{r case-map, results="asis"}
 # ---- The case introduction: one illustrative city -----------------------------
@@ -24,7 +24,7 @@ shop_svg <- function(d) paste(sprintf(
 map_fence <- strrep("`", 3)
 cat("\n", map_fence, "{=html}\n", paste0('
 <svg viewBox="0 0 1200 470" width="100%" role="img"
-     aria-label="A city map. In the pilot district a lottery chose which shops joined. In the rest of the city, shops with an efficiency score of 58 or below joined."
+     aria-label="A city map. In the pilot district a lottery chose which businesses took part in GreenWaste. In the rest of the city, businesses with an efficiency score of 58 or below took part."
      style="font-family: \'Noto Kufi Arabic\', \'Segoe UI\', Arial, sans-serif;">
   <defs>
     <symbol id="shop" viewBox="0 0 60 56">
@@ -52,17 +52,17 @@ cat("\n", map_fence, "{=html}\n", paste0('
     <rect x="875" y="40" width="300" height="150" rx="12" fill="#fff" stroke="#215a9e" stroke-width="3" stroke-dasharray="12 8"/>
     <text x="895" y="82" font-weight="700" fill="#063360">In the pilot district</text>
     <text x="895" y="118">a <tspan font-weight="700">lottery</tspan> chose which</text>
-    <text x="895" y="148">shops joined</text>
+    <text x="895" y="148">businesses took part</text>
     <rect x="875" y="215" width="300" height="178" rx="12" fill="#fff" stroke="#D5DEE8" stroke-width="2"/>
     <text x="895" y="257" font-weight="700" fill="#063360">Everywhere else</text>
-    <text x="895" y="293">shops scoring <tspan font-weight="700">58 or below</tspan></text>
-    <text x="895" y="323">joined</text>
-    <text x="895" y="356" font-size="16" fill="#545860">the number under each shop</text>
+    <text x="895" y="293">businesses scoring <tspan font-weight="700">58 or below</tspan></text>
+    <text x="895" y="323">took part</text>
+    <text x="895" y="356" font-size="16" fill="#545860">the number under each business</text>
     <text x="895" y="377" font-size="16" fill="#545860">is its efficiency score</text>
   </g>
   <g font-size="19" fill="#111418">
-    <use href="#shop" x="878" y="404" width="30" height="28" color="', SHOP_BLUE, '"/><text x="918" y="425">joined GreenWaste</text>
-    <use href="#shop" x="878" y="436" width="30" height="28" color="', SHOP_GREY, '"/><text x="918" y="457">did not join</text>
+    <use href="#shop" x="878" y="404" width="30" height="28" color="', SHOP_BLUE, '"/><text x="918" y="425">took part in GreenWaste</text>
+    <use href="#shop" x="878" y="436" width="30" height="28" color="', SHOP_GREY, '"/><text x="918" y="457">did not take part</text>
   </g>
 </svg>'), "\n", map_fence, "\n", sep = "")
 ```

@@ -1,6 +1,6 @@
 # Preview versions: further changes and language review
 
-Draft for Fiona, 9 October 2026. Nothing in the decks, worksheets or cards has been edited. This file lists what to change, with proposed wording to confirm first.
+Draft for Fiona, 9 October 2026. **Status (9 October, later): sections 1 to 7 have been applied to the source files of all seven existing previews (Day 1 S1 to S3, Day 2 S1 and S3, Day 3 S1 and S2), including worksheets, cards, slips and R helper files. Section 8 additions are not started. The published copies in `docs/preview/` have not been re-rendered yet. See `HANDOFF.md` and `PRINT_SHEETS_TRAINER.md`.** This file lists what was to change, with the approved wording.
 
 Assumption: the `*_review` preview versions (Day 1 to Day 3 Session 2) become the base for the final materials, even though they are not yet published. The Day 2 Session 2 preview (regression discontinuity) and Day 3 Session 3 / Day 4 previews do not exist yet, so everything below must also be applied when those are built.
 
@@ -642,7 +642,7 @@ Rewrite as sentences, or label them clearly as table notes:
 
 ## 8. Additions to discuss and add to the previews
 
-### 8A. Process for the language pass (agreed, not started)
+### 8A. Process for the language pass (agreed; language pass done in source for the 7 existing previews on 9 Oct, not yet re-rendered or published)
 
 1. Work one session at a time in this order: Day 1 S1, S2, S3; Day 2 S1, S3; Day 3 S1, S2. Apply the same rules to Day 2 S2, Day 3 S3 and Day 4 when their previews are built.
 2. For each session, edit the review `.qmd` files (slides, worksheet, cards or slips) and the R helper files that produce text.
@@ -651,7 +651,7 @@ Rewrite as sentences, or label them clearly as table notes:
 5. Add a short entry to `HANDOFF.md` and tick the items in this file.
 6. Content additions (sections 8B to 8H) are proposed separately from the language pass, so the before-and-after lists stay readable.
 
-### 8B. R code snippets on slides
+### 8B. R code snippets on slides (NOT STARTED)
 
 Visible code already in the previews: D1S1 slide 8 (the minus-sign calculation), D1S2 slide 5 (`colMeans`), D2S1 slide 4 (change calculation), D2S3 slide 10 (paired difference), D3S1 slide 8 (model arithmetic), D3S2 slide 10 (denominators). Keep them, relabelled "R code" (section 6, item 4).
 
@@ -666,7 +666,7 @@ Add (Fiona, 9 Oct):
 - Participants do not need to run the code. Each snippet has a paper equivalent on the worksheet.
 - Explain the table on the next slide: what each column means, which row is the comparison, the reference group, the number of observations and the model note (`SLIDE_HANDOUT_REVIEW_PLAN.md` already proposes annotated tables for D1S1-P07, D2S1 slide 04 and D2S2 slide 05).
 
-### 8C. The "review and interpret the regression table" activity
+### 8C. The "review and interpret the regression table" activity (NOT STARTED)
 
 What happened: before the 6 October rebuild there were two full table tasks. Day 1 Session 2 ("Annotate this output") used a two-row before-and-after table: circle the change, box the interval, underline the baseline mean and say why it is not the effect, and write a question for the evaluator. Day 2 Session 1 ("Which row is the impact?") used the four-row table: circle the effect row, say what the "After" and "Took part" rows measure, check the smallest end of the interval against 1,000 AED, and say what cannot be checked with one before measure. The rebuild cut every deck and handout by roughly half (`REVIEW_NOTES.md` items 6b and 6c), moved "Annotate this output" into Day 1 S1's table reading, and removed the stand-alone tasks.
 
@@ -683,7 +683,7 @@ The previews restore only parts of it:
 
 Proposal: a boxed task called "Read the regression table" on the worksheet for Day 1 S3 and every Day 2 session (Day 1 S1 already has the pieces; make it the same box). Use the same six steps each time, written as full sentences, with a clean copy of the table to annotate: (a) circle the row that answers the question; (b) write its value, its units and what it compares; (c) say what each of the other rows describes; (d) box the interval and say what it describes; (e) read the p-value and say what it does and does not show; (f) say what the table cannot tell you. The same box makes the independent reading task at the end of each session easier to mark.
 
-### 8D. AI examples: keep the preview versions
+### 8D. AI examples: keep the preview versions (DONE: planted responses and prompts kept, language rules applied)
 
 **Decided (Fiona, 9 Oct):** keep the AI responses and the improved prompts exactly as they are in the previews. Do not shorten them or switch back to the earlier (pre-6 October) versions. The earlier responses were shorter (about 40 to 75 words) but had almost every sentence wrong, so there was little to mark as supported; the previews have a mix of supported claims and overclaims (Day 2 Session 1: 3 supported sentences, 1 neutral, 3 with errors).
 
@@ -691,7 +691,7 @@ The AI best-practice sheet is already settled (`REVIEW_NOTES.md` item 13) and is
 
 Only the language rules and the agreed terms apply to the AI pages (section 1; Fiona, 9 Oct: the planted responses use the agreed group names, e.g. "comparison businesses" in place of "nonparticipants", with the planted errors unchanged): full sentences, "Improved prompt" in place of "Better prompt" (keep "Naive prompt"), and one standard sentence in place of the "authored exercise material" wording (section 3).
 
-### 8E. Day 1 Session 2: more code, data exploration and cleaning
+### 8E. Day 1 Session 2: more code, data exploration and cleaning (NOT STARTED)
 
 Add code that shows how the numbers are produced:
 - **What is in the file?** `glimpse(data)` or `str(data)` and `table(data$setting)`: 10,400 rows and 12 columns, of which 10,000 are city businesses and 400 are in the separate pilot.
@@ -721,13 +721,13 @@ The differences are small here, which is a useful point in itself: the error is 
 
 Time: these additions cost minutes. Check the Day 1 S2 budget in `SLIDE_HANDOUT_REVIEW_PLAN.md` and decide what to shorten.
 
-### 8F. End of Day 1 Session 2: state both comparisons and hand over to Session 3
+### 8F. End of Day 1 Session 2: state both comparisons and hand over to Session 3 (DONE in source, 9 Oct: the final slide now states both comparisons)
 
 Current state: slide 10 names both comparisons (before and after, -669 AED; with and without, -1,638 AED) with "what each misses". Five slides then follow (cards, AI, final reading), so the two comparisons are not what participants see last. The closing slide asks only "Could the pilot's lottery give a fairer comparison?" Day 1 S3 slide 1 then restates both comparisons.
 
 Proposal: the final slide of Session 2 states both in full sentences, with the same labels used on Session 3 slide 1: "Before and after: for the same participants, the mean annual waste cost fell by 669 AED. With and without: after the programme, participants' mean cost was 1,638 AED lower than other businesses' mean cost. Neither tells us what would have happened without GreenWaste. Tomorrow's first question is: can a lottery give a fairer comparison?" Use "with and without" and "before and after" everywhere; drop "after-only gap" and "with/without" (section 3).
 
-### 8G. Show the GreenWaste map before every methods section
+### 8G. Show the GreenWaste map before every methods section (NOT STARTED; only "shops" was changed to "businesses" in the map)
 
 The case map (`_case_map.qmd`) appears only in the Day 1 S1 preview. Proposal: a standard "Who and what are we comparing?" slide built from the same map, shown at the start of every methods session, with a highlight option:
 
@@ -743,7 +743,7 @@ The case map (`_case_map.qmd`) appears only in the Day 1 S1 preview. Proposal: a
 
 Each slide states the unit, the group and its number, the outcome and its units, and the period, so participants know the population before details start. A small version of the same map can sit in the worksheet header. Fix the "shops" wording in the map at the same time (section 5).
 
-### 8H. Day 3 Session 2: add a scatter plot or another typical impact-evaluation graph
+### 8H. Day 3 Session 2: add a scatter plot or another typical impact-evaluation graph (NOT STARTED)
 
 Add at least one graph of the kind seen in evaluation papers, with a question about reading it. Options:
 1. **Scatter plot with a fitted line:** annual waste cost before (x axis) against after (y axis) for a random sample of city businesses, participants and others in different colours, with a fitted line for each group and a 45-degree "no change" line. Questions: What does each point represent? What does the line show? Does the line show cause? (Use a random sample or transparent points; 10,000 points would hide the pattern.)

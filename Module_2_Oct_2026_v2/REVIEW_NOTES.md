@@ -2,6 +2,12 @@
 
 > **From 7 October, `SLIDE_HANDOUT_REVIEW_PLAN.md` (Lucas) is the master plan.** These notes are Fiona's earlier review and are kept for reference; record new decisions and disagreements in the plan.
 
+### Where things stand (9 October 2026)
+
+- **Previews (`*_review.qmd`)**: language pass from `PREVIEW_CHANGE_NOTES.md` sections 1 to 7 is applied in source for the 7 existing previews (Day 1 S1 to S3, Day 2 S1 and S3, Day 3 S1 and S2). Not yet re-rendered on a full toolchain and not published: `docs/preview/` still shows the earlier versions.
+- **Still to do, in order**: (1) Fiona and Lucas review the edited sources; (2) re-render on a machine with Quarto, fonts and the webR extension, check slide fit (1280x720) and A4 worksheet fit, and run the webR code boxes; (3) copy to `docs/preview/`, then promote to the live routes with `review_2026_10_06/publish_live.py` once approved; (4) build the missing previews: **Day 2 S2 (regression discontinuity)**, Day 3 S3 and Day 4 S1 to S3, applying the same language rules; (5) section 8 content additions (see `PREVIEW_CHANGE_NOTES.md`); (6) open questions in section 9 (negative costs for Lucas, time budgets, snippet style).
+- **Where to look**: `HANDOFF.md` (latest entry at the top), `PREVIEW_CHANGE_NOTES.md` (rules, approved wording, section 8 additions), `PRINT_SHEETS_TRAINER.md` (print and cutting instructions for trainers).
+
 Running list of changes Fiona has flagged while reviewing each session and its
 worksheets. Open items are not implemented yet; implemented items are removed
 once they are rendered and published. When implementing, change the sources

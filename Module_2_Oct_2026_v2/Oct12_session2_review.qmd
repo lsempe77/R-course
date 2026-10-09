@@ -1,7 +1,7 @@
 ---
-title: "Good news. Enough to act?"
-subtitle: "Day 1 | Session 2: Descriptive statistics and the comparison behind a cost claim"
-author: "3ie · Review version"
+title: "We receive good news. Is it enough to act on?"
+subtitle: "Day 1 | Session 2: Descriptive statistics and the comparison behind a claim about GreenWaste"
+author: "3ie"
 always_allow_html: true
 format:
   revealjs:
@@ -25,35 +25,35 @@ knitr:
 source('session2_review.R', encoding='UTF-8')
 ```
 
-## We read -669. Was it the programme's effect? {#s2-p01 .reader-slide .s1-review .s2-review}
+## We read that the mean annual waste cost fell by 669 AED. Was that fall the programme's effect? {#s2-p01 .reader-slide .s1-review .s2-review}
 
 GreenWaste offers equipment subsidies, installation help and staff training.
 
 ::: {.lead}
-Participants' **mean annual waste cost fell by 669 AED**, over 12 months.
+The **mean annual waste management cost of participant businesses fell by 669 AED** over 12 months.
 :::
 
 ::: {.ask}
-Does that tell us how much GreenWaste caused costs to fall?
+Does that tell us how much of the fall GreenWaste caused?
 :::
 
-Record your reason on **worksheet page 2**. Keep it to compare with your final reading.
+Write your reason on **worksheet page 2**. Keep it so that you can compare it with your final reading.
 
 ::: {.notes}
 4 minutes. One-minute reminder: city score rule, annual waste cost in AED, same businesses measured twice. Do not repeat the full case introduction. Opening judgement: one minute alone, one minute compare, one minute hear reasons without settling them. Ask for what is missing, rather than a technical label. Transition: we will inspect the records behind that mean.
 :::
 
-## One row. One business. Two measurements. {#s2-p02 .reader-slide .s1-review .s2-review}
+## Each row shows one business, measured twice. {#s2-p02 .reader-slide .s1-review .s2-review}
 
 ```{r, results='asis'}
 html_out(s2_table(rows=TRUE))
 ```
 
 ::: {.ask}
-Describe business **B00402** in one sentence: participation, costs and period.
+Describe business **B00402** in one sentence. Say whether it took part, what its cost was before and after, and over what period.
 :::
 
-**Q1 on page 2.** These are four selected real records, not a representative sample.
+**Q1 on page 2.** We selected these four businesses from the GreenWaste data for reading practice. They are not representative of all city businesses.
 
 ::: {.notes}
 5 minutes. Use H2-A1 on page 1. Each row is one business, not one measurement; before and after are columns in the same row. Annual costs measured before and 12 months after. Expected B00402: did not take part, score 88.3, costs rose from 2,425 to 2,897 AED. Explain identifiers and score briefly, not the later RDD method. Ask where the learner sees participation rather than guessing from costs. Transition: four rows are an illustration; the averages use all city records in their groups.
@@ -69,13 +69,13 @@ html_out(s2_counts())
 The participant average describes **4,794 businesses**, not all 10,000.
 :::
 
-Add the population to your **Q1** sentence. The pilot lottery is a separate dataset.
+Add the population to your answer to **Q1**. The pilot lottery uses a different set of businesses.
 
 ::: {.notes}
 3 minutes. Point to denominator of each group average. The score rule may make participants systematically different from others. This is not random assignment in the city. Do not teach the cutoff method now. Check that no one uses 10,000 as participant denominator or merges the pilot with city data. Transition: a group mean still hides the distribution inside that group.
 :::
 
-## What do costs look like before the programme? {#s2-p04 .reader-slide .s1-review .s2-review}
+## What do waste costs look like before the programme? {#s2-p04 .reader-slide .s1-review .s2-review}
 
 ```{r, results='asis'}
 html_out(paste0('<div id="s2-hist"><div data-variant>',s2_hist(),'</div><div data-variant hidden>',s2_hist(markers=TRUE),'</div></div>'))
@@ -83,47 +83,47 @@ html_out(paste0('<div id="s2-hist"><div data-variant>',s2_hist(),'</div><div dat
 
 <button data-swap="s2-hist" data-closed="Show mean and median" data-opened="Hide mean and median" aria-pressed="false">Show mean and median</button>
 
-All **10,000 city businesses**; each bar counts businesses in a 250 AED cost band.
+The histogram shows all **10,000 city businesses**. Each bar counts the businesses whose annual waste management cost falls in a 250 AED band.
 
 ::: {.ask}
-**Q2:** What is common? What would a single average hide?
+**Q2:** Which costs are most common? What would a single average hide?
 :::
 
 ::: {.notes}
 6 minutes. Read axes first: horizontal costs, vertical number of businesses, not cost over time. All city baseline records, not H1's selected ten. Give two minutes to describe shape/spread before revealing mean 1,862 and median 1,801. The mean is a little higher; high-cost businesses stretch the right tail. Do not imply a dramatic mean/median difference or introduce a quartiles lesson. Learners write one supported description and one limit of the mean in Q2. Transition: now follow the participant group over time.
 :::
 
-## Participants: what changed after GreenWaste? {#s2-p05 .reader-slide .s1-review .s2-review .code-example}
+## Participant businesses: what changed after GreenWaste? {#s2-p05 .reader-slide .s1-review .s2-review .code-example}
 
 ```{r, results='asis'}
 html_out(s2_lines('participants'))
 ```
-**How the trainer obtains the two means**
+**We calculate the two means in R.** The box shows the R code.
 
 ```{r, echo=TRUE}
-# Same participants, two annual cost columns.
-# Average first; round the displayed results.
+# Both columns hold annual waste management cost (AED) for the same participant businesses.
+# Take the mean of each column, then round the results we display.
 round(colMeans(tp[c('cost_before', 'cost_after')]))
 ```
 
 ::: {.ask}
-**Q3:** After minus before: 763 − 1,432 ≈ **−669 AED**. What can we say?
+**Q3:** After minus before is 763 − 1,432 ≈ **−669 AED**. What can we say about participant businesses over this period?
 :::
 
 ::: {.notes}
-6 minutes. Walk through code comments, not syntax; participants need not read or run R. Source H2-A2 on page 1. Actual difference uses unrounded means: -669.138, displayed -669. This is a mean fall among participants over a year, not yet caused saving. Learners calculate/interpret Q3 as taught. Common vertical scale begins at zero. Ask who and when, then sign and units. Transition: does a falling average require every cost to fall?
+6 minutes. Walk through code comments, not syntax; participants need not read or run R. Source H2-A2 on page 1. The difference uses unrounded means: -669.138, displayed -669. This is a mean fall among participants over a year, not yet caused saving. Learners calculate/interpret Q3 as taught. Common vertical scale begins at zero. Ask who and when, then sign and units. Transition: does a falling average require every cost to fall?
 :::
 
-## Did every business's cost fall? {#s2-p06 .reader-slide .s1-review .s2-review}
+## Did the cost fall for every business? {#s2-p06 .reader-slide .s1-review .s2-review}
 
 ```{r, results='asis'}
 html_out(s2_hist(change=TRUE))
 ```
 
-**4,794 participants.** Left of zero: costs fell. Right of zero: costs rose.
+The histogram shows all **4,794 participant businesses**. Bars to the left of zero show businesses whose costs fell. Bars to the right of zero show businesses whose costs rose.
 
 <button data-open="s2-rises" data-closed="Check the records" data-opened="Hide the record check" aria-controls="s2-rises" aria-expanded="false">Check the records</button>
-<p id="s2-rises" hidden><strong>485 businesses had rising costs</strong>; one was unchanged. The mean fall does not describe everybody.</p>
+<p id="s2-rises" hidden><strong>485 businesses had rising costs</strong> and one was unchanged. The mean fall does not describe every business.</p>
 
 ::: {.notes}
 5 minutes. Use H2-A3 on page 3. Read change axis, not before-cost axis from P04. Ask Q3 variation before opening record count: any values right of zero disprove everybody fell. Count 485 rising, 1 unchanged, 4,308 falling. These are recorded changes, not individual causal effects. Learner writes one supported statement in Q3; do not equate a histogram of changes with CI of the mean. Transition: even genuine falls can have more than one cause.
@@ -131,80 +131,80 @@ html_out(s2_hist(change=TRUE))
 
 ## What else could have changed costs? {#s2-p07 .reader-slide .s1-review .s2-review}
 
-<div class="comparison-pair"><div><h3>What we observe</h3><p>Participants before: <strong>1,432 AED</strong><br>Participants after: <strong>763 AED</strong></p></div><div><h3>What is missing</h3><p>The same participants' costs after a year <strong>without GreenWaste</strong>.</p></div></div>
+<div class="comparison-pair"><div><h3>What we observe</h3><p>Participant businesses before GreenWaste: <strong>1,432 AED</strong><br>Participant businesses 12 months after: <strong>763 AED</strong></p></div><div><h3>What is missing</h3><p>The cost of the same participant businesses after a year <strong>without GreenWaste</strong>.</p></div></div>
 
-Suppose waste-service prices changed during that year. **This is a hypothetical possibility, not a case fact.**
+Suppose that waste-service prices changed during that year. **This is a hypothetical example, not a fact about the case.**
 
 ::: {.ask}
-**Q3:** What evidence would help separate the programme from other changes?
+**Q3 (c):** What evidence would help separate the effect of GreenWaste from the effect of other changes?
 :::
 
 ::: {.notes}
 5 minutes. Two minutes pairs propose a concrete request, then hear two. Accept service-price histories, other concurrent support, or a credible untreated comparison; ask how each would help. Do not tell learners a shock actually happened. Before/after cannot observe the counterfactual. Do not claim we know direction/size of bias. Transition: other city businesses may help us ask that question, but are they comparable?
 :::
 
-## Other city businesses: what changed? {#s2-p08 .reader-slide .s1-review .s2-review}
+## Comparison businesses: what happened to their costs? {#s2-p08 .reader-slide .s1-review .s2-review}
 
 ```{r, results='asis'}
 html_out(s2_lines('others'))
 ```
 
 ::: {.ask}
-**Q4:** 2,401 − 2,258 ≈ **+143 AED**. Does that prove what would have happened to participants?
+**Q4:** For comparison businesses, 2,401 − 2,258 ≈ **+143 AED**. Does that show what would have happened to participant businesses without GreenWaste?
 :::
 
-5,206 businesses above the participation score cutoff. Same period and cost units.
+**Comparison businesses** (also called controls) did not receive GreenWaste. These 5,206 businesses had efficiency scores above the cut-off of 58. The period and the units are the same as for participant businesses.
 
 ::: {.notes}
 6 minutes. Learners calculate other-group change Q4 then compare descriptions with Q3. A rise in the other group rules out describing these two group means as a common city-wide fall. It does not validate a counterfactual for participants: score selection and starting costs differ. Means rounded for display, change computed from unrounded values. Do not subtract changes as an unexplained causal DiD estimate. Transition: another tempting number is the gap after a year.
 :::
 
-## Lower than without. Already lower before. {#s2-p09 .reader-slide .s1-review .s2-review}
+## Participant businesses ended with lower costs. Were their costs already lower than the comparison businesses' costs before? {#s2-p09 .reader-slide .s1-review .s2-review}
 
 ```{r, results='asis'}
 html_out(paste0('<div id="s2-levels"><div data-variant>',s2_lines(baseline=FALSE),'</div><div data-variant hidden>',s2_lines(),'</div></div>'))
 ```
 
-<button data-swap="s2-levels" data-closed="Reveal their starting costs" data-opened="Show after only" aria-pressed="false">Reveal their starting costs</button>
+<button data-swap="s2-levels" data-closed="Reveal the starting costs" data-opened="Show the costs after the programme only" aria-pressed="false">Reveal the starting costs</button>
 
-**After-only gap:** 763 − 2,401 ≈ **−1,638 AED**.
+**With and without:** after the programme, the participant businesses' mean cost minus the comparison businesses' mean cost is 763 − 2,401 ≈ **−1,638 AED**.
 
 ::: {.ask}
-**Q4:** Would you credit GreenWaste with that whole gap? Why?
+**Q4 (c):** Would you credit GreenWaste with the whole difference? Explain why or why not.
 :::
 
 ::: {.notes}
 7 minutes. Predict judgement before reveal, then show participants already had lower mean costs before (1,432 versus 2,258). Actual rounded gap from unrounded means is -1,638. The rule selects groups; baseline difference is direct evidence that they were not identical in mean cost. It does not prove that all selection concerns are observed or establish true bias direction. Learners state one concern and one evidence request in Q4. Transition: both numbers are real; neither alone answers the causal question.
 :::
 
-## Two numbers. Two weak comparisons. {#s2-p10 .reader-slide .s1-review .s2-review}
+## Each number compares something different. Why is neither enough on its own? {#s2-p10 .reader-slide .s1-review .s2-review}
 
-<div class="comparison-pair"><div><h3>Before/after: −669 AED</h3><p><strong>Same participant group</strong><br>After minus before</p><p>Misses what would have changed without the programme.</p></div><div><h3>With/without: −1,638 AED</h3><p><strong>Different groups, after a year</strong><br>Participants minus nonparticipants</p><p>Misses differences the groups already had.</p></div></div>
+<div class="comparison-pair"><div><h3>Before and after: −669 AED</h3><p><strong>The same participant businesses</strong><br>Mean cost after minus mean cost before</p><p>This misses what would have changed without the programme.</p></div><div><h3>With and without: −1,638 AED</h3><p><strong>Different groups of businesses, after a year</strong><br>Participant businesses minus comparison businesses, after the programme</p><p>This misses differences that the groups already had before the programme.</p></div></div>
 
 ::: {.ask}
-Which comparison sits behind the claim? What makes it fair?
+Which comparison is behind the claim that GreenWaste lowered costs? What would make a comparison fair?
 :::
 
-Use the **page 3 summary** to check Q3 and Q4. Neither number alone is a caused saving.
+Use the **summary on page 3** to check your answers to Q3 and Q4. Neither number alone shows a saving caused by GreenWaste.
 
 ::: {.notes}
 5 minutes. Have pairs point to group/time in both comparisons and explain one missing piece. Counterfactual means participants' outcome without the programme at the same follow-up time. These descriptives do not establish true causal effect or actual bias directions. Preview that a fair design, not a preferred number, is needed; pilot next session. Transition: use this reading to triage the four cards.
 :::
 
-## Four cost claims. Which would you act on? {#s2-p11 .reader-slide .s1-review .s2-review}
+## Here are four statements about GreenWaste. Which would you act on? {#s2-p11 .reader-slide .s1-review .s2-review}
 
-Read the **four separate cost cards**. Use **Q5 on worksheet page 4**.
+Read the four **decision cards**. Each card shows one statement about GreenWaste and asks you to choose Act, Ask first or Do not act. Use **Q5 on worksheet page 4**.
 
 <div class="claim-steps"><strong>Act</strong><strong>Ask first</strong><strong>Do not act</strong></div>
 
-For each card, write the **source support**, your **missing question**, and why its answer matters.
+For each card, write what the source supports, write one question you would ask, and say why the answer would matter.
 
 ::: {.ask}
 Compared to what? How big? How sure?
 :::
 
 ::: {.notes}
-12 minutes. One set per group; preserve Fiona's triage grid. Two minutes read alone, seven minutes discuss/record, three minutes place card numbers and prepare a reason. Optional board has decision columns and question rows with words, not colour alone. Native board choices stay in this browser, are not a shared room poll; paper/card placement is the equivalent. Assign a reader and recorder but everyone states one reason. No extra AI wall. Cards use actual cost descriptives; card 2 deliberately mislabels before/after as effect. Do not introduce unexplained DiD. Transition: compare two disagreements rather than all presentations.
+12 minutes. One set per group; preserve Fiona's triage grid. Two minutes read alone, seven minutes discuss/record, three minutes place card numbers and prepare a reason. Optional board has decision columns and question rows with words, not colour alone. Native board choices stay in this browser, are not a shared room poll; paper/card placement is the equivalent. Assign a reader and recorder but everyone states one reason. No extra AI wall. Cards use descriptive statistics from the GreenWaste data; card 2 deliberately mislabels before/after as effect. Do not introduce unexplained DiD. Transition: compare two disagreements rather than all presentations.
 :::
 
 ## Which evidence supports your choice? {#s2-p12 .reader-slide .s1-review .s2-review}
@@ -215,36 +215,36 @@ Choose **two cards** that groups placed differently.
 Which words or numbers support the choice? Which do not?
 :::
 
-What answer could change your advice? **Correct or strengthen your Q5 reason.**
+What answer to your question could change your advice? **Correct or strengthen your reason in Q5.**
 
 ::: {.notes}
-5 minutes. Card 1: correct descriptive fall, ask causal comparison before expansion. Card 2: actual before/after interval but effect is unsupported; 669 below rule, statistical precision not attribution. Card 3: reject nationwide recommendation from p; reach, size and causal design matter. Card 4: both changes correct; ask comparability and uncertainty of the relevant causal estimate. How sure is a defensible primary placement, not the only one. Act on a descriptive finding may mean investigate, not expand; require scope of action. No single-answer placement test. Transition: see how AI can mix these same facts with unjustified advice.
+5 minutes. Card 1: correct descriptive fall, ask causal comparison before expansion. Card 2: the before-and-after interval is correct but the claim of an effect is unsupported; 669 below rule, statistical precision not attribution. Card 3: reject nationwide recommendation from p; reach, size and causal design matter. Card 4: both changes correct; ask comparability and uncertainty of the relevant causal estimate. How sure is a defensible primary placement, not the only one. Act on a descriptive finding may mean investigate, not expand; require scope of action. No single-answer placement test. Transition: see how AI can mix these same facts with unjustified advice.
 :::
 
-## Would you accept this AI chart reading? {#s2-p13 .reader-slide .s1-review .s2-review}
+## Would you accept this AI explanation of the chart? {#s2-p13 .reader-slide .s1-review .s2-review}
 
 ```{r, results='asis'}
-html_out(paste0('<div class="ai-reading">',s2_paragraphs(s2_ai),'</div>'))
+html_out(paste0('<p class="caption">Naive prompt (a prompt with no context, as a busy person might type it): “Explain H2-A2 and advise whether to expand GreenWaste.” This response was written for the exercise. It is not a real AI answer.</p><div class="ai-reading">',s2_paragraphs(s2_ai),'</div>'))
 ```
 
 ::: {.ask}
-On **page 5**, underline support; cross out overclaims. Check **H2-A2 on page 1**.
+On **page 5**, underline the passages that H2-A2 supports and cross out the claims that it does not support. Check against **H2-A2 on page 1**.
 :::
 
 ::: {.notes}
-8 minutes. AI Snapshot A: five minutes individual/pair markup, three minutes source-check debrief. Naive prompt on worksheet: explain chart and advise expansion. Authored exercise, not verified AI transcript. Supported means and changes, sensible caveat and monitoring. Unsupported attribution of whole after gap, other group automatically counterfactual, every participant improved, national transfer. The observation that these two means do not share a city-wide fall is correct; it does not by itself exclude other explanations. Ask for both a supported passage and an error. Transition: make the comparison explicit in the better prompt.
+8 minutes. AI Snapshot A: five minutes individual/pair markup, three minutes source-check debrief. Naive prompt on worksheet: explain chart and advise expansion. Written for the exercise; not a real AI answer. Supported means and changes, sensible caveat and monitoring. Unsupported attribution of whole after gap, other group automatically counterfactual, every participant improved, national transfer. The observation that these two means do not share a city-wide fall is correct; it does not by itself exclude other explanations. Ask for both a supported passage and an error. Transition: make the comparison explicit in the better prompt.
 :::
 
-## Ask for a comparison-aware explanation {#s2-p14 .reader-slide .s1-review .s2-review}
+## Ask the AI to name the comparison it is using. {#s2-p14 .reader-slide .s1-review .s2-review}
 
 ```{r, results='asis'}
-html_out(paste0('<div class="better-prompt">',s2_paragraphs(s2_prompt),'</div>'))
+html_out(paste0('<p class="caption"><strong>Improved prompt</strong></p><div class="better-prompt">',s2_paragraphs(s2_prompt),'</div>'))
 ```
 
-Copy **page 5's prompt and H2-A2** into **Microsoft Copilot**. Keep your AI good-practice card beside you.
+Copy **the prompt on page 5 and H2-A2** into **Microsoft Copilot**. Keep your AI good-practice card beside you.
 
 ::: {.ask}
-Which claim improved? Which still needs checking against the source?
+Which claim improved? Which claim still needs checking against H2-A2?
 :::
 
 ::: {.notes}
@@ -256,12 +256,12 @@ Which claim improved? Which still needs checking against the source?
 Keep **H2-A2 open**. Close the AI responses and turn over the cards.
 
 ::: {.ask}
-Write one supported conclusion and one evidence request that would help decide whether to expand.
+Write one conclusion that the data support. Then write one specific piece of evidence you would request to help decide whether to expand GreenWaste.
 :::
 
-On **page 4**, compare your final reason with your opening reason. What changed?
+On **page 4**, compare this with the reason you wrote on page 2. What changed?
 
-Next: the pilot used a lottery. Could that give us a fairer comparison?
+**Before and after:** for the same participant businesses, the mean annual waste management cost fell by 669 AED. **With and without:** after the programme, participant businesses' mean cost was 1,638 AED lower than comparison businesses' mean cost. Neither tells us what would have happened without GreenWaste. Our next question, in Session 3, is: can a lottery give a fairer comparison?
 
 ::: {.notes}
 6 minutes. Three minutes individual, one minute compare opening, two minutes feedback. Accept descriptive cost fall/after gap with explicit comparison and limit; request must identify evidence and decision purpose. Do not accept more data without explaining what it resolves. Bridge to pilot without teaching result or design here. Total 90 minutes. This is a separate review prototype; existing teaching source and handout unchanged.

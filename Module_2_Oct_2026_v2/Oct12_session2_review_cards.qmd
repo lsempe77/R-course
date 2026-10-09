@@ -1,5 +1,5 @@
 ---
-title: "Four cost claims: decide what is missing"
+title: "Four statements about GreenWaste: decide what is missing"
 format:
   html:
     embed-resources: true
@@ -20,23 +20,23 @@ knitr:
 source('session2_review.R', encoding='UTF-8')
 ```
 
-<div class="screen-controls"><p>Separate review cards and a local interactive triage board. Print blank copies for group use, or place cards on the board below.</p><button onclick="window.print()">Print cards and board</button><p><a href="Oct12_session2_review_worksheet.html">Open the worksheet and H2-A sources</a></p></div>
+<div class="screen-controls"><p>Read each statement about GreenWaste and decide whether to act on it.</p><button onclick="window.print()">Print cards and board</button><p><a href="Oct12_session2_review_worksheet.html">Open the worksheet and H2-A sources</a></p></div>
 
 ```{r, results='asis'}
 html_out(paste(vapply(1:4,function(i) paste0('<section class="claim-card"><p class="card-number">',i,
-  '</p><h2>What would you do with this claim?</h2><p class="claim-text">',s2_cards[i],
-  '</p><p class="card-source"><strong>Source supplied:</strong> ',s2_card_sources[i],
+  '</p><h2>What would you do with this statement?</h2><p class="claim-text">',s2_cards[i],
+  '</p><p class="card-source"><strong>Source:</strong> ',s2_card_sources[i],
   '</p><div class="choices"><span>Act</span><span>Ask first</span><span>Do not act</span></div>',
   '<p><strong>Compared to what? How big? How sure?</strong></p><p>What is missing, and why would the answer matter?</p><div class="writing"></div><div class="writing"></div>',
-  if(i==1)'<p class="caption">GreenWaste is a fictional training case. Claims are exercise material to check, not conclusions to accept.</p>' else '',
+  if(i==1)'<p class="caption">GreenWaste is a fictional training case. These statements are exercise material for you to check. Do not accept them as conclusions.</p>' else '',
   '</section>'),''),collapse=''))
 ```
 
 <section class="board-page">
 
-## Place the cards. Explain the reason.
+## Place each card, then explain your reason.
 
-Use words and card numbers. More than one missing question can be defensible. State what action you mean; acting on a descriptive finding need not mean expanding the programme.
+Place each card under Act, Ask first or Do not act. Explain your reason, using words and card numbers. More than one missing question can be a good answer. Say which action you mean: acting on a descriptive finding does not have to mean expanding the programme.
 
 <div class="screen-controls" id="placements">
 
@@ -48,7 +48,6 @@ html_out(paste(vapply(1:4,function(i)paste0('<div class="placement"><strong>Card
   '"><option value="">Choose main question</option><option>Compared to what?</option><option>How big?</option><option>How sure?</option></select></div>'),''),collapse=''))
 ```
 
-<p class="caption">Choices remain in this browser page. For group or room use, record reasons on Q5 and use printed cards or the existing A1 board.</p>
 </div>
 
 <table class="triage"><thead><tr><th>Missing question</th><th>Act</th><th>Ask first</th><th>Do not act</th></tr></thead><tbody>

@@ -1,7 +1,7 @@
 ---
 title: "What would have happened anyway?"
-subtitle: "Day 2 | Session 1: Difference-in-differences, the extra change and its assumption"
-author: "3ie · Review version"
+subtitle: "Day 2 | Session 1: Difference-in-differences: the difference between the two changes, and its assumption"
+author: "3ie"
 always_allow_html: true
 format:
   live-revealjs:
@@ -30,7 +30,7 @@ knitr:
 source('day2_session1_review.R', encoding='UTF-8')
 ```
 
-## Yesterday's saving. Today's question. {#d2s1-p01 .reader-slide .s1-review .d2s1-review}
+## Yesterday we found a saving from a lottery. Today we use another method and ask what else changed. {#d2s1-p01 .reader-slide .s1-review .d2s1-review}
 
 ```{webr}
 #| context: setup
@@ -43,19 +43,19 @@ change <- city$cost_after - city$cost_before
 joined <- city$took_part == 1
 ```
 
-Back to the **city**: 4,794 participants and 5,206 other businesses. Participation followed the score rule, **not the pilot lottery**.
+We return to the **city**, with 4,794 participant businesses and 5,206 comparison businesses that did not receive GreenWaste. Participation followed the score rule, **not a lottery**.
 
-<div class="comparison-pair"><div><h3>Before/after: −669 AED</h3><p>What else changed over the year?</p></div><div><h3>After-only gap: −1,638 AED</h3><p>How different were the groups already?</p></div></div>
+<div class="comparison-pair"><div><h3>Before and after: −669 AED</h3><p>What else changed over the year?</p></div><div><h3>With and without: −1,638 AED</h3><p>How different were the groups already?</p></div></div>
 
 ::: {.ask}
-Could comparing **changes in both groups** help?
+Could comparing **the changes in both groups** help?
 :::
 
 ::: {.notes}
-5 minutes. Two minutes independent recall, two minutes compare reasons, one minute city orientation. Programme is equipment subsidies, installation help and training. Same annual waste cost outcome, measured before and 12 months after. Do not treat pilot as city's true effect. Open webR early for one optional arithmetic demo. Transition: inspect what actually changed in both city groups.
+5 minutes. Two minutes independent recall, two minutes compare reasons, one minute city orientation. Programme is equipment subsidies, installation help and training. Same annual waste cost outcome, measured before and 12 months after. Say: "Today we use another method, with a different group of businesses that were not chosen at random, and ask what else changed." Do not treat the pilot as the city's true effect. Open webR early for one optional arithmetic demo. Transition: inspect what actually changed in both city groups.
 :::
 
-## Both groups changed. What was extra? {#d2s1-p02 .reader-slide .s1-review .d2s1-review}
+## Costs changed in both groups. How much more did participant businesses' costs fall? {#d2s1-p02 .reader-slide .s1-review .d2s1-review}
 
 ```{r, results='asis'}
 html_out(d4_lines())
@@ -65,45 +65,45 @@ html_out(d4_lines())
 Which change should we subtract from which?
 :::
 
-**H4-A on worksheet page 1** identifies the city comparison. Solid lines join observed means; there are only two measurement waves.
+**H4-A, the difference-in-differences study summary, on worksheet page 1** describes this comparison. Solid lines join the observed means. Each business was measured only twice.
 
 ::: {.notes}
 5 minutes. Read population, axes, period and both directions before arithmetic. Participant 1,432 to 763; others 2,258 to 2,401. Programme-start marker indicates between the two measurements, not an additional observed wave or precise start date. Different starting levels do not alone invalidate DiD. Ask predictions, not answers from a formula yet. Transition: work the two changes, then the difference.
 :::
 
-## Four numbers. What is the extra change? {#d2s1-p03 .reader-slide .s1-review .d2s1-review}
+## Use four numbers to find the difference in differences. {#d2s1-p03 .reader-slide .s1-review .d2s1-review}
 
 Use **Q1 on worksheet page 3**. Work alone, then compare.
 
-1. Participants: **763 − 1,432 ≈ −669 AED**.
-2. Other businesses: **2,401 − 2,258 ≈ ______ AED**.
-3. Extra change: **participant change − other-group change**.
+1. Participant businesses: **763 − 1,432 ≈ −669 AED**.
+2. Comparison businesses: **2,401 − 2,258 ≈ ______ AED**.
+3. The difference between the two changes: **participant change − comparison change**. This is the **difference-in-differences (DiD) estimate**.
 
-<button data-open="d4-arithmetic" data-closed="Check the extra change" data-opened="Hide the calculation" aria-controls="d4-arithmetic" aria-expanded="false">Check the extra change</button>
+<button data-open="d4-arithmetic" data-closed="Check the difference between the two changes" data-opened="Hide the calculation" aria-controls="d4-arithmetic" aria-expanded="false">Check the difference between the two changes</button>
 <p id="d4-arithmetic" class="calculation-output" hidden>−669 − (+143) ≈ <strong>−812 AED</strong>.</p>
 
 ::: {.ask}
-Is this the same as the after-only gap?
+Is this the same as the difference between the two groups after the programme?
 :::
 
 ::: {.notes}
-8 minutes. Preserve Fiona's four-number task. Two minutes work, three minutes pair/group check, three minutes collect signs/units and reveal. Use unrounded means for final -812.446; one-AED display discrepancies acceptable. Q1 includes a blank plot to annotate, not another method exercise. Negative extra change means extra reduction in costs. Not automatically an established effect. Transition: see the same arithmetic produced from individual records.
+8 minutes. Preserve Fiona's four-number task. Two minutes work, three minutes pair/group check, three minutes collect signs/units and reveal. Use unrounded means for final -812.446; one-AED display discrepancies acceptable. Q1 includes a blank plot to annotate, not another method exercise. A negative difference between the two changes means a larger reduction in costs for participant businesses. Not automatically an established effect. Transition: see the same arithmetic produced from individual records.
 :::
 
-## The same calculation, using all the records {#d2s1-p04 .reader-slide .s1-review .d2s1-review}
+## We repeat the same calculation in R using all the records. {#d2s1-p04 .reader-slide .s1-review .d2s1-review}
 
-The trainer compares mean **cost changes**, using the unrounded records.
+We compare the mean **changes in cost** in R, using all the records. The box shows the **R code**.
 
 ```{webr}
 #| echo: true
-# Participants' mean change minus others' mean change.
-# Costs are annual AED per business.
+# Mean change for participant businesses minus mean change for comparison businesses.
+# Costs are annual waste management costs, in AED per business.
 # Round the result after calculating both means.
 round(mean(change[joined]) - mean(change[!joined]))
 ```
 
 ::: {.ask}
-What comparison does **−812** describe? What does the calculation leave unanswered?
+What comparison does the result of **−812** describe? What does the calculation leave unanswered?
 :::
 
 Paper equivalent: **−669 − (+143) ≈ −812 AED**. You do not need to write or run R.
@@ -112,20 +112,20 @@ Paper equivalent: **−669 − (+143) ≈ −812 AED**. You do not need to write
 6 minutes. Prediction before trainer Run, then Q2 plain-language interpretation. Code comments explain purpose/units/rounding; no syntax lesson or participant code. Output same interaction estimate as saturated two-group/two-wave regression. This arithmetic does not assess the causal assumption. If runtime unavailable use printed arithmetic within same time. Transition: locate that extra change in a regression table.
 :::
 
-## Where is the extra change in this table? {#d2s1-p05 .reader-slide .s1-review .d2s1-review}
+## Which row of the table shows the difference between the two changes? {#d2s1-p05 .reader-slide .s1-review .d2s1-review}
 
 ```{r, results='asis'}
-html_out(d4_regression())
+html_out(sub('<p class="caption">.*$', '', d4_regression()))
 ```
 
 <div class="review-annotate"><button data-table-column="1" aria-pressed="false">Coefficient</button><button data-table-column="2" aria-pressed="false">Interval</button><button data-table-column="3" aria-pressed="false">P-value</button></div>
 
 ::: {.ask}
-**Q2:** Find the **interaction**: after × participant. Which question do the other rows answer?
+**Q2:** Find the last row, *after × took part*. It gives the DiD estimate, the difference between the two changes. What does each of the other rows show?
 :::
 
 ::: {.notes}
-5 minutes. H4-A table, page 1. Reference is other group before, 2,258. After row is other group's +143 change. Participant row is initial gap -826. Interaction -812 is the extra participant change, not their own -669 change or after mean. Highlight columns, then annotate row on paper. Intercept meanings depend on reference coding. Model cost ~ after*took_part, business-clustered robust interval -833 to -792. Avoid coefficients as causal magic. Transition: draw the missing no-programme participant outcome.
+5 minutes. H4-A table, page 1. Reference is other group before, 2,258. After row is other group's +143 change. Participant row is initial gap -826. Interaction -812 is the difference between the two changes, not the participants' own -669 change or their after mean. Highlight columns, then annotate row on paper. Intercept meanings depend on reference coding. Model cost ~ after*took_part, business-clustered robust interval -833 to -792. Avoid coefficients as causal magic. Transition: draw the missing no-programme participant outcome.
 :::
 
 ## The dashed line is an assumption {#d2s1-p06 .reader-slide .s1-review .d2s1-review}
@@ -136,24 +136,24 @@ html_out(paste0('<div id="d4-path"><div data-variant>',d4_lines(),'</div><div da
 
 <button data-swap="d4-path" data-closed="Show the assumed untreated path" data-opened="Show observed means only" aria-pressed="false">Show the assumed untreated path</button>
 
-Under **parallel trends**, participants' costs without GreenWaste would also rise by **143 AED**, to about **1,575 AED**.
+Under the **parallel trends assumption**, the participant businesses' cost without GreenWaste would also have risen by **143 AED**, to about **1,575 AED**.
 
 ::: {.ask}
-Is that dashed participant outcome observed, or estimated under an assumption?
+Is the dashed participant outcome observed, or is it assumed?
 :::
 
 ::: {.notes}
-6 minutes. Predict before reveal. Dashed path hypothetical counterfactual, not extra measured data. 1,432 +143 approximates1,575; assumed path to observed763 yields812 gap. Parallel trends concerns untreated changes, not equal cost levels. Source §3/page1 and visual/page2. Have learners add dashed path to Q1 blank plot and state assumption in Q3. Transition: what could make untreated changes differ?
+6 minutes. Predict before reveal. Dashed path hypothetical counterfactual, not additional measured data. 1,432 +143 approximates1,575; assumed path to observed763 yields812 gap. Parallel trends concerns untreated changes, not equal cost levels. Source §3/page1 and visual/page2. Have learners add dashed path to Q1 blank plot and state assumption in Q3. Transition: what could make untreated changes differ?
 :::
 
-## Same city. Different changes without GreenWaste? {#d2s1-p07 .reader-slide .s1-review .d2s1-review}
+## Could the two groups have changed differently even without GreenWaste? {#d2s1-p07 .reader-slide .s1-review .d2s1-review}
 
-<div class="comparison-pair"><div><h3>A shared change</h3><p>Suppose a service charge rises by the same AED amount for both groups.</p><p>The other group's change may help account for it.</p></div><div><h3>A different change</h3><p>Suppose a charge changes only for the kinds of businesses that tend to participate.</p><p>Their untreated change could differ.</p></div></div>
+<div class="comparison-pair"><div><h3>A shared change</h3><p>Suppose a service charge rises by the same AED amount for both groups.</p><p>The comparison businesses' change may help account for it.</p></div><div><h3>A different change</h3><p>Suppose a charge changes only for the kinds of businesses that tend to participate.</p><p>Their change without GreenWaste could differ.</p></div></div>
 
-These are **hypothetical examples**, not facts established in the GreenWaste file.
+These are **hypothetical examples**. They are not facts about the GreenWaste data.
 
 ::: {.ask}
-**Q3 on page 4:** What evidence would help check the second possibility?
+**Q3 (e) on page 4:** What evidence would help check the second possibility?
 :::
 
 ::: {.notes}
@@ -166,87 +166,87 @@ These are **hypothetical examples**, not facts established in the GreenWaste fil
 html_out(paste0('<div class="review-grid"><div><h3>A</h3>',d4_trend(1),'</div><div><h3>B</h3>',d4_trend(2),'</div></div>'))
 ```
 
-**Hypothetical histories**, identical scales. These are not extra GreenWaste observations.
+These two earlier cost histories, A and B, are **hypothetical** and use the same scales. They are not additional GreenWaste observations.
 
 <button data-open="d4-trend-answer" data-closed="Check your reason" data-opened="Hide feedback" aria-controls="d4-trend-answer" aria-expanded="false">Check your reason</button>
-<p id="d4-trend-answer" class="feedback" hidden>B was already changing differently. A is reassuring, but cannot prove future untreated trends.</p>
+<p id="d4-trend-answer" class="feedback" hidden>In history B, the two groups were already changing differently. History A is more reassuring, but it cannot prove what would have happened after the programme.</p>
 
 ::: {.notes}
 6 minutes. Q3: choose individually and explain feature to partner before feedback. A shows equal changes at different levels; B participant costs already falling while other group rising. Same cost and time axes. Do not infer real group histories from these examples. No significance test proves parallel trends; several earlier measures help credibility, not certainty. Transition: do we have those earlier measures in this actual file?
 :::
 
-## Can one before measure show a trend? {#d2s1-p09 .reader-slide .s1-review .d2s1-review}
+## Can one measurement before the programme show a trend? {#d2s1-p09 .reader-slide .s1-review .d2s1-review}
 
 ```{r, results='asis'}
 html_out(d4_timeline())
 ```
 
 ::: {.ask}
-Could this file show whether earlier cost trends were similar?
+Could the GreenWaste data show whether earlier cost trends were similar?
 :::
 
-Ask for **several earlier measures in both groups**, and an explanation of other changes. Reassuring histories still cannot prove the unobserved follow-up trend.
+We would ask for **several earlier measurements in both groups**, and for an explanation of any other changes. Even reassuring earlier histories cannot prove what would have happened after the programme.
 
 ::: {.notes}
 6 minutes. Q3 evidence request, then distinguish supplied/absent information in H4-A §4. One baseline is a level, not a trend. Do not invent a test or substitute pilot waiting-group changes as proof about this city's different population. Actual file has same records/two waves; stable composition doesn't establish parallel trends. Transition: separate causal credibility from the size needed for the decision.
 :::
 
-## A precise result. Enough to meet the rule? {#d2s1-p10 .reader-slide .s1-review .d2s1-review}
+## The estimate is precise. Does it meet our rule of at least a 1,000 AED reduction? {#d2s1-p10 .reader-slide .s1-review .d2s1-review}
 
 ```{r, results='asis'}
 html_out(d4_interval())
 ```
 
 ::: {.ask}
-**Q4:** Where do the estimate and interval sit relative to **1,000 AED**?
+**Q4:** How do the estimate and the interval compare with our rule of a reduction of at least **1,000 AED**?
 :::
 
-The interval describes statistical uncertainty **under the model**. It does not resolve parallel trends or include every source of bias.
+The interval describes statistical uncertainty **if the model's assumptions hold**. It does not settle whether parallel trends holds, and it does not allow for every source of bias.
 
 ::: {.notes}
 6 minutes. Estimate812, reductioninterval792-833, both below rule. Reverse negative interval endpoints when converting scale. p<.001/intervalexcludingzero are not proof of causal validity or practical sufficiency. Say conditional on model, not certainty of the true effect if assumptions fail. The fictional rule is annual saving per participant. Transition: read the source as a report reader, not just a calculator.
 :::
 
-## What does the source support? {#d2s1-p11 .reader-slide .s1-review .d2s1-review}
+## What does the study summary support? {#d2s1-p11 .reader-slide .s1-review .d2s1-review}
 
-Read the **City DiD study extract, H4-A, worksheet page 1**. Work alone first.
+Read **H4-A, the difference-in-differences study summary, on worksheet page 1**. Work alone first.
 
-Circle the **interaction coefficient**, its units and interval.
+Circle the last row of the table, which gives the difference between the two changes, with its units and its interval.
 
-Underline the **assumption**. Mark the **data limit** that prevents a claimed earlier-trend check.
+Underline the **assumption**. Mark the **limit of the data** that prevents a check of earlier trends.
 
 ::: {.ask}
-On **page 4**, write a supported interpretation and one consequential evidence request.
+On **page 4**, write one interpretation that H4-A supports and one specific evidence request.
 :::
 
 ::: {.notes}
 9 minutes. Five independent reading/annotation, two pair source-check, two feedback. Source identifies physical paragraphs/table rather than a separate unknown report. Do not reteach all questions; use completed Q1-Q4. Listen for extra recorded reduction conditional on credible untreated trends, not an established effect from arithmetic alone. Require request and decision purpose. Transition: AI can report correct numbers but fabricate assurance.
 :::
 
-## The AI says cause. Does the comparison? {#d2s1-p12 .reader-slide .s1-review .d2s1-review}
+## The AI says GreenWaste caused the change. Does the comparison support that? {#d2s1-p12 .reader-slide .s1-review .d2s1-review}
 
 ```{r, results='asis'}
-html_out(paste0('<div class="ai-reading">',d4_paragraphs(d4_ai),'</div>'))
+html_out(paste0('<p class="caption">Naive prompt (a prompt with no context, as a busy person might type it): “Explain the regression table to a policy adviser considering GreenWaste expansion. Say what they should check.” This response was written for the exercise. It is not a real AI answer.</p><div class="ai-reading">',d4_paragraphs(d4_ai),'</div>'))
 ```
 
 ::: {.ask}
-On **page 5**, underline support and cross out overclaims. Check **H4-A on page 1**.
+On **page 5**, underline the claims that H4-A supports and cross out the claims that it does not support. Check **H4-A on page 1**.
 :::
 
 ::: {.notes}
-8 minutes. Five markup, three source-based debrief. Restore old realistic table-explanation device with corrected812, interval792-833 and richer qualification. Authored exercise, no answer highlighting or naive-prompt run. Supported group changes/estimate/precision and benefit of comparing changes. Unsupported: same follow-up period proves parallel trends, interval proves robustness/attribution, clears1000rule/national guarantee. Different levels accounted for is legitimate mechanics, not proof of untreated trend. Monitoring caveat does not repair unsupported claims. Transition: constrain next prompt to source and missing evidence.
+8 minutes. Five markup, three source-based debrief. Restore old realistic table-explanation device with corrected812, interval792-833 and richer qualification. Written for the exercise, with no answer highlighting and no run of the naive prompt. Supported group changes/estimate/precision and benefit of comparing changes. Unsupported: same follow-up period proves parallel trends, interval proves robustness/attribution, clears1000rule/national guarantee. Different levels accounted for is legitimate mechanics, not proof of untreated trend. Monitoring caveat does not repair unsupported claims. Transition: constrain next prompt to source and missing evidence.
 :::
 
-## Ask for an explanation you can verify {#d2s1-p13 .reader-slide .s1-review .d2s1-review}
+## Ask the AI for an explanation you can check. {#d2s1-p13 .reader-slide .s1-review .d2s1-review}
 
 ```{r, results='asis'}
-html_out(paste0('<div class="better-prompt">',d4_paragraphs(d4_prompt),'</div>'))
+html_out(paste0('<p class="caption"><strong>Improved prompt</strong></p><div class="better-prompt">',d4_paragraphs(d4_prompt),'</div>'))
 ```
 
-Copy **page 5's prompt and H4-A** into **Microsoft Copilot**. Keep your AI good-practice card beside you.
+Copy **the prompt on page 5 and H4-A** into **Microsoft Copilot**. Keep your AI good-practice card beside you.
 
 ::: {.ask}
-Which claim improved? What still needs checking against the source?
+Which claim improved? What still needs checking against H4-A?
 :::
 
 ::: {.notes}
@@ -255,15 +255,15 @@ Which claim improved? What still needs checking against the source?
 
 ## What would you ask for next? {#d2s1-p14 .reader-slide .s1-review .d2s1-review}
 
-Keep **H4-A open**. Close AI responses and peer comments.
+Close the AI responses and your partner's comments, and keep **H4-A open**.
 
 ::: {.ask}
-Write one plain-language interpretation and one specific request. How could the answer change your advice?
+Write one interpretation that H4-A supports, in plain language, and one specific evidence request. How could the answer to your request change your advice?
 :::
 
 Use the **final box on page 4**. DiD compares changes; its causal reading depends on what would have changed without GreenWaste.
 
-Next: a different comparison, around the score cutoff.
+Next, we use a different comparison: businesses on either side of the score cut-off.
 
 ::: {.notes}
 6 minutes. Three independent response, one pair purpose check, two feedback. Require comparison/units/conditional effect/decision limit plus useful request, not only more data. Request earlier periods, competing changes or measurement/composition evidence with reason. No claim DiD resolves selection automatically. Total90minutes; new review source and worksheet leave production materials unchanged.

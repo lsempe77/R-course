@@ -1,5 +1,5 @@
 ---
-title: "GreenWaste: cost comparisons worksheet"
+title: "GreenWaste: comparing groups"
 format:
   html:
     embed-resources: true
@@ -16,6 +16,7 @@ format:
         @page{size:A4;margin:14mm}@media print{body{background:white;font-size:11pt;line-height:1.35}main{max-width:none}.sheet-page{padding:0;margin:0;min-height:0;break-after:page;box-shadow:none}.sheet-page:last-child{break-after:auto}header{display:none}h1{font-size:19pt}h2{font-size:17pt}h3{font-size:12pt}.reading-table{font-size:10pt}.writing{height:10mm}.writing.tall{height:17mm}.ai-source{font-size:11pt}.prompt{font-size:10pt}#title-block-header{display:none}}
         .review-svg{display:block;width:100%;height:210px}.comparison-table{border-collapse:collapse;width:100%;font-size:14px}.comparison-table td,.comparison-table th{border-bottom:1px solid #D5DEE8;padding:7px;text-align:left}.sheet-page .ai-source p{margin:8px 0}.sheet-page table{border-collapse:collapse;width:100%}.sheet-page th,.sheet-page td{border-bottom:1px solid #D5DEE8;padding:7px;text-align:left}.sheet-page thead{background:#063360;color:white}@media print{.review-svg{height:200px}.comparison-table{font-size:10pt}}
         </style>
+        <style>.writing.part{height:30px;margin:2px 0}.table-title{margin:10px 0 4px}@media print{.writing.part{height:8mm}}</style>
 knitr:
   opts_chunk:
     echo: false
@@ -27,42 +28,36 @@ knitr:
 source('session2_review.R', encoding='UTF-8')
 ```
 
-<header><p>Separate Session 2 review worksheet.</p><button onclick="window.print()">Print worksheet</button></header>
+<header><button onclick="window.print()">Print worksheet</button></header>
 
 <div class="sheet-page">
 
-## Page 1 | H2-A: city cost sources
+## Page 1 | H2-A: The city data tables and charts
 
-GreenWaste offers equipment subsidies, installation help and staff training. Annual waste cost is in **AED per business**, measured before and **12 months after**. GreenWaste is a fictional training case.
-
-### H2-A1 | Selected records: one row per business
+GreenWaste offers equipment subsidies, installation help and staff training. All costs are annual waste management cost, in AED per business, measured before GreenWaste and 12 months after. GreenWaste is a fictional training case.
 
 ```{r, results='asis'}
 html_out(s2_table(rows=TRUE))
 ```
 
-These are four actual city records selected for reading practice, not a representative sample. Participation followed the score rule: **58 or below took part**; above 58 did not. The pilot lottery is separate.
-
-### H2-A2 | Group means: the full city data
+These four businesses were selected from the GreenWaste data for reading practice. They are not representative of all city businesses. Businesses with a score of 58 or below took part in GreenWaste, and businesses with a score above 58 did not. The pilot lottery uses a different set of businesses.
 
 ```{r, results='asis'}
 html_out(s2_table())
 html_out(s2_lines())
 ```
 
-Each mean uses all businesses in the named group. Figures are rounded for display; changes and gaps use unrounded means. The groups were not assigned by lottery. Their starting costs were different.
+Each mean uses all the businesses in that group. Figures are rounded. A lottery did not decide which businesses took part, and the two groups had different costs before GreenWaste.
 
-**Before/after:** same participants, after minus before = **-669 AED**.
+**Before and after:** for the same participant businesses, the mean cost after minus the mean cost before is **-669 AED**.
 
-**With/without, after only:** participants minus nonparticipants = **-1,638 AED**.
+**With and without:** after the programme, the participant businesses' mean cost minus the comparison businesses' mean cost is **-1,638 AED**.
 
-Neither comparison alone establishes how much GreenWaste caused costs to fall. The authority's fictional rule is at least **1,000 AED annual saving caused by the programme**.
+Neither comparison alone shows how much of the fall GreenWaste caused. Our rule is a reduction in annual waste management cost of at least 1,000 AED per business per year, caused by the programme.
 
 ### Source key
 
-All sources use the corrected `evaluation_data_GreenWaste_simple.csv`, city records only.
-
-For the claim cards, the city before/after model compares the same 4,794 participants measured twice: change **-669 AED**, 95% interval **-684 to -654 AED**, **p < 0.001** for a zero-mean-change null. The interval concerns the mean change, not individual costs or programme attribution.
+Source: GreenWaste city data (10,000 businesses). Decision cards 2 and 3 use a before-and-after regression for the same 4,794 participant businesses, measured twice. It shows a change of **-669 AED**, with a 95% interval of **-684 to -654 AED** and **p < 0.001**. The interval describes the mean change. It does not describe individual businesses, and it does not show the effect of the programme.
 
 </div>
 
@@ -72,33 +67,39 @@ For the claim cards, the city before/after model compares the same 4,794 partici
 
 ### Opening judgement
 
-Participants' mean annual cost fell by 669 AED. Does this tell us the programme's effect? Give a reason to revisit later.
+The mean annual waste management cost of participant businesses fell by 669 AED. Does this tell us the effect of the programme? Write one reason. We will come back to it at the end of the session.
 
 <div class="writing"></div>
 
-### Q1 | Describe one business
+### Q1 | Describe one business and the group it belongs to
 
-Use H2-A1 on page 1. Describe B00402: participation, before/after annual costs and period.
+Use H2-A1 on page 1.
 
-<div class="writing"></div>
+(a) Write one sentence about business B00402. Say whether it took part, what its cost was before and after, and over what period.
 
-Which population does the participant average describe? How many businesses?
+<div class="writing part"></div>
 
-<div class="writing"></div>
+(b) Which group of businesses does the participant average describe, and how many businesses are in it?
 
-### H2-A: baseline cost distribution
+<div class="writing part"></div>
+
+### H2-A: Costs before GreenWaste
 
 ```{r, results='asis'}
 html_out(s2_hist(markers=TRUE))
 ```
 
-All **10,000 city businesses before GreenWaste**; 250 AED bands. Mean and median are shown here for your reference after the slide discussion.
+The mean and the median are marked on the histogram.
 
 ### Q2 | What does the average hide?
 
-Write one supported description of this distribution and one thing the mean alone cannot tell you.
+(a) Write one description of the histogram that the data support.
 
-<div class="writing tall"></div>
+<div class="writing part"></div>
+
+(b) Write one thing that the mean alone cannot tell you.
+
+<div class="writing part"></div>
 
 </div>
 
@@ -106,135 +107,181 @@ Write one supported description of this distribution and one thing the mean alon
 
 ## Page 3 | Read two comparisons
 
-### H2-A3 | Changes among participants
+### H2-A3
 
 ```{r, results='asis'}
 html_out(s2_hist(change=TRUE))
 ```
 
-All **4,794 city participants**. Each business's change is after minus before. This is a distribution of recorded changes, not a confidence interval or a distribution of individual causal effects.
+Each business's change is its cost after minus its cost before. The histogram shows the changes that were recorded. It is not a confidence interval, and it does not show the effect of GreenWaste on each business.
 
-### Q3 | Same participants, before and after
+### Q3 | The same participant businesses, before and after
 
-Use H2-A2 on page 1. Calculate the change and write what it shows, with units and period.
+(a) Use H2-A2 on page 1. Calculate the change in mean cost for participant businesses, and write what it shows, with units and period.
 
-<div class="writing"></div>
+<div class="writing part"></div>
 
-Did every business's cost fall? Use the figure. Suppose service prices changed: what evidence would help separate that from GreenWaste? This is a hypothetical possibility.
+(b) Use the histogram. Did the cost fall for every business?
 
-<div class="writing tall"></div>
+<div class="writing part"></div>
 
-### Q4 | Other businesses and the after-only gap
+(c) Suppose waste-service prices changed during the year. This is a hypothetical example, not a fact about the case. What evidence would help separate a price change from the effect of GreenWaste?
 
-Calculate the other group's change and the after-only participant/nonparticipant gap. Explain why the whole gap cannot automatically be credited to GreenWaste.
+<div class="writing part"></div>
 
-<div class="writing tall"></div>
+### Q4 | Comparison businesses and the difference after the programme
 
-### Two-comparison summary
+(a) Calculate the change in mean cost for comparison businesses.
+
+<div class="writing part"></div>
+
+(b) Calculate the difference between the mean cost of participant businesses and of comparison businesses after the programme.
+
+<div class="writing part"></div>
+
+(c) Explain why we cannot give GreenWaste the credit for the whole difference.
+
+<div class="writing part"></div>
+
+### The two comparisons
 
 | Comparison | What it compares | What is missing |
 |---|---|---|
-| Before/after: -669 AED | Same participants, after minus before | Their outcome after a year without GreenWaste |
-| With/without: -1,638 AED | Different groups, after a year | Whether these groups provide a fair comparison |
+| Before and after: -669 AED | The same participant businesses, cost after minus cost before | Their cost after a year without GreenWaste is not known. |
+| With and without: -1,638 AED | Participant businesses compared with comparison businesses, after a year | We do not know whether these two groups are a fair comparison. |
 
-Starting means were **1,432 and 2,258 AED**. Different recorded changes do not by themselves prove a causal effect or the direction of bias.
+Before GreenWaste, the mean cost was 1,432 AED for participant businesses and 2,258 AED for comparison businesses. Different recorded changes do not by themselves prove that GreenWaste caused a change, or show which way any bias goes.
 
 </div>
 
 <div class="sheet-page">
 
-## Page 4 | Q5: four cost claims
+## Page 4 | Q5: Four decision cards
 
-Use the separate cards and H2-A sources. For each: choose **Act / Ask first / Do not act**, give source support and a missing question with its purpose. Say what action you mean.
+Use the cards and H2-A. For each card: (a) choose Act, Ask first or Do not act; (b) write what the source supports; (c) write one question you would ask and why the answer matters; (d) say which action you mean.
 
 ### Card 1
 
-Decision and source support: _____________________________________
+Decision (Act, Ask first or Do not act) and the action you mean: _______________________________
 
-Missing question and why it matters:
+What the source supports:
 
-<div class="writing"></div>
+<div class="writing part"></div>
+
+Your question and why the answer matters:
+
+<div class="writing part"></div>
 
 ### Card 2
 
-Decision and source support: _____________________________________
+Decision (Act, Ask first or Do not act) and the action you mean: _______________________________
 
-Missing question and why it matters:
+What the source supports:
 
-<div class="writing"></div>
+<div class="writing part"></div>
+
+Your question and why the answer matters:
+
+<div class="writing part"></div>
 
 ### Card 3
 
-Decision and source support: _____________________________________
+Decision (Act, Ask first or Do not act) and the action you mean: _______________________________
 
-Missing question and why it matters:
+What the source supports:
 
-<div class="writing"></div>
+<div class="writing part"></div>
+
+Your question and why the answer matters:
+
+<div class="writing part"></div>
 
 ### Card 4
 
-Decision and source support: _____________________________________
+Decision (Act, Ask first or Do not act) and the action you mean: _______________________________
 
-Missing question and why it matters:
+What the source supports:
 
-<div class="writing"></div>
+<div class="writing part"></div>
+
+Your question and why the answer matters:
+
+<div class="writing part"></div>
 
 ### My final reading and request
 
-Close AI responses and turn over the cards; keep H2-A2 open. Write one supported conclusion and one specific evidence request that would help decide whether to expand.
+Close the AI responses and turn over the decision cards, and keep H2-A2 open.
 
-<div class="writing tall"></div>
+(a) Write one conclusion that the data support.
 
-Compare with your opening reason on page 2. What changed?
+<div class="writing part"></div>
 
-<div class="writing"></div>
+(b) Write one specific piece of evidence you would request to help decide whether to expand GreenWaste.
+
+<div class="writing part"></div>
+
+(c) Compare this with the reason you wrote on page 2. What changed?
+
+<div class="writing part"></div>
 
 </div>
 
 <div class="sheet-page">
 
-## Page 5 | AI Snapshot
+## Page 5 | AI exercise
 
-### A | Check a plausible chart reading
+### Part A: Mark the response
 
-Naive prompt: "Explain H2-A2 and advise whether to expand GreenWaste." This is authored exercise material, not a verified AI transcript. **Underline supported passages and cross out overclaims.** Check H2-A2 on page 1.
+Naive prompt (a prompt with no context, as a busy person might type it): "Explain H2-A2 and advise whether to expand GreenWaste." This response was written for the exercise. It is not a real AI answer. **Underline the passages that H2-A2 supports. Cross out the claims that H2-A2 does not support.**
 
 ```{r, results='asis'}
 html_out(paste0('<div class="ai-source">',s2_paragraphs(s2_ai),'</div>'))
 ```
 
-### B | Run a better prompt and compare
+### Part B: Run the improved prompt, then compare
 
-Copy the prompt below and H2-A2 into **Microsoft Copilot**. Keep your AI good-practice card beside you. If using paper, read page 6 after completing A.
+Copy the prompt below and H2-A2 into Microsoft Copilot, and keep your AI good-practice card beside you. If you are not using Copilot, read the prepared response on page 6 after you finish Part A.
 
 ```{r, results='asis'}
-html_out(paste0('<div class="prompt">',s2_paragraphs(s2_prompt),'</div>'))
+html_out(paste0('<div class="prompt"><strong>Improved prompt</strong>',s2_paragraphs(s2_prompt),'</div>'))
 ```
 
-What improved? What remains unsupported? Identify the relevant source.
+(a) What improved compared with Part A?
 
-<div class="writing tall"></div>
+<div class="writing part"></div>
+
+(b) Which claims are still unsupported?
+
+<div class="writing part"></div>
+
+(c) Which table or figure should you check each claim against?
+
+<div class="writing part"></div>
 
 </div>
 
 <div class="sheet-page">
 
-## Page 6 | Prepared comparison response
+## Page 6 | Prepared response
 
-Paper alternative for stage B, **after** marking page 5. This is one possible improved response, not a guarantee of a tool's answer.
+Use this response if you are not using Copilot. Read it after you have marked the response on page 5. It is an example of a better answer. An AI tool may answer differently.
 
 ```{r, results='asis'}
 html_out(paste0('<div class="ai-source">',s2_paragraphs(s2_fallback),'</div>'))
 ```
 
-Check it against H2-A2, just as you would check a live response. Does it distinguish observed change, a fair counterfactual and a decision?
+Check it against H2-A2, as you would check a live AI answer.
 
-<div class="writing tall"></div>
+(a) Does it separate what was observed, what a fair comparison would need, and what decision to make?
 
-### Your check
+<div class="writing part"></div>
 
-Identify a helpful clarification. State what evidence still needs to be supplied before advice on expansion.
+(b) Which clarifying question in the response is most helpful?
 
-<div class="writing tall"></div>
+<div class="writing part"></div>
+
+(c) What evidence is still needed before advising on expansion?
+
+<div class="writing part"></div>
 
 </div>

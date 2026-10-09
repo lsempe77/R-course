@@ -1,5 +1,17 @@
 # Handoff: moving Module 2 to the simple GreenWaste case
 
+## Language pass applied to the seven preview sessions, 9 October 2026
+
+Fiona asked for the changes in `PREVIEW_CHANGE_NOTES.md` (sections 1 to 7) to be applied to every session that has a preview: Day 1 S1 to S3, Day 2 S1 and S3, Day 3 S1 and S2. The source files were edited (decks, worksheets, cards, slips, R helper files, `_case_map.qmd`, `AI_good_practice_review.qmd`). The live decks and the shared files `day1_case.R`, `day2_case.R`, `day3_case.R` and `greenwaste_case.R` were not touched; review-only wrapper functions (for example `review_table()`, `s3_interval_svg()`, `d7_scenarios`) carry the new labels.
+
+Applied: full-sentence slide titles (section 5A); the approved worksheet and card text (B1 to B7); "participant businesses" and "comparison businesses that did not receive GreenWaste"; "treatment group" and "control group" in the pilot only; the full 1,000 AED rule wording; "Naive prompt" and "Improved prompt"; "This response was written for the exercise. It is not a real AI answer."; full table and figure titles; the Day 3 S2 outcome-change notice before Figure E; no em dashes; trainer, production and file-name wording removed from participant pages. Print and distribution instructions moved to `PRINT_SHEETS_TRAINER.md`.
+
+Next steps: (1) review by Fiona and Lucas; (2) full re-render and checks; (3) copy to `docs/preview/`, then publish live; (4) build the Day 2 S2 (regression discontinuity), Day 3 S3 and Day 4 previews. Not done: section 8 content additions (R-code snippets, cleaning slide, map slide, scatter plot, regression-reading box); the Day 2 S2, Day 3 S3 and Day 4 previews, which do not exist yet.
+
+Decisions to confirm: Day 3 S1 card names follow B6 ("Savings fade", "Hidden costs", "A higher discount rate", "A shorter life", "Savings fade and hidden costs") and not the older section 3A decision 9 titles. The Day 2 S3 text "Your trainer will now give you the reveal slips" became "You will now receive the reveal slips" to keep trainer wording off participant pages.
+
+Checks run: every worksheet, card set and slip set renders without errors and shows the expected numbers (-669, -812, -1,029, 585 and 440, 1.86, 0.66, 1.61, 49.5% and 58.6%). Decks render; slide fit at 1280x720 was checked and the regression-table slides in Day 1 S1, Day 1 S3 and Day 2 S1 were shortened (the table caption now appears on the worksheet only). Not checked: webR code boxes (no browser runtime here), A4 fit of the worksheets, and the published copies in `docs/preview/`, which still hold the earlier versions. Re-render the review QMDs on a machine with the fonts and the webR extension before copying them to `docs/preview/`.
+
 ## Separate Day 3 Session 2 comparison prototype, 8 October 2026
 
 Lucas requested continuation with chart reading and confirmed committing/pushing the separate preview. `Oct14_session2_review.qmd` supplies 16 content screens and a 90-minute facilitator script. `Oct14_session2.qmd`, existing handouts, production builder and live teaching route remain unchanged. The original is freshly rendered as `Oct14_session2_current_compare.html`; `day3_session2_compare.html` aligns sixteen related topics.
