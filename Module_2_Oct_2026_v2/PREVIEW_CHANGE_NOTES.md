@@ -43,11 +43,11 @@ Proposal:
 | **programme cost** or **delivery cost** | Only for the money the authority spends (Day 3 S1). Never use bare "cost" there for the outcome. |
 | **saving** | The positive version of a fall in the outcome. Say so once. |
 
-Replacements to confirm:
+Replacements:
 
 | Current | Proposed |
 |---|---|
-| "A cost result lands on your desk" (D1S1 slide) | "A GreenWaste result lands on your desk." |
+| "A cost result lands on your desk" (D1S1 slide) | "An impressive result lands on your desk." |
 | "GreenWaste cost reading worksheet" | "GreenWaste: reading an evaluation result" |
 | "GreenWaste: cost comparisons worksheet" | "GreenWaste: comparing groups" |
 | "Four cost claims. Which would you act on?"; cards "Four cost claims: decide what is missing" | "Here are four statements about GreenWaste. Which would you act on?"; cards "Four statements about GreenWaste: decide what is missing" |
@@ -64,7 +64,7 @@ Replacements to confirm:
 
 | Issue | Where | Proposal |
 |---|---|---|
-| "extra change", "extra reduction", "extra recorded reduction" for the difference-in-differences estimate | D2S1 title, slides, worksheet H4-A, Day 3 S1 | **Decided (Fiona, 9 Oct):** use "the difference between the two changes". Also state the method name where the estimate is first calculated: "This is called the difference-in-differences (DiD) estimate." Currently the full name appears in the D2S1 subtitle and in H4-A section 2 only. Add it to the slide where the four-number arithmetic is done (D2S1 slide 3), the regression slide (slide 5), and each later mention in Day 2 and Day 3 until it is routine. |
+| "extra change", "extra reduction", "extra recorded reduction" for the difference-in-differences estimate | D2S1 title, slides, worksheet H4-A, Day 3 S1 | **Decided (Fiona, 9 Oct):** use "the difference between the two changes". Also state the method name where the estimate is first calculated: "This is the difference-in-differences (DiD) estimate." Currently the full name appears in the D2S1 subtitle and in H4-A section 2 only. Add it to the slide where the four-number arithmetic is done (D2S1 slide 3), the regression slide (slide 5), and each later mention in Day 2 and Day 3 until it is routine. |
 | "real", "actual" records, "actual pilot groups", "actual landfill records" | D1S1, D1S2, D1S3, D2S3, D3S2 | **Decided (Fiona, 9 Oct):** the case is fictional, so replace with "records from the GreenWaste data" or "selected records". |
 | "Naive prompt" / "Better prompt" | All AI Snapshots | **Decided (Fiona, 9 Oct):** keep "Naive prompt" (it tells participants more than "First prompt"). Change "Better prompt" to "Improved prompt" for consistency. Explain "naive" in a few words on first use, e.g. "a prompt with no context, as a busy person might type it". |
 | "authored exercise material", "illustrative prepared response, not a live Copilot transcript", "authored practice response" | All AI Snapshots | One sentence everywhere: "This response was written for the exercise. It is not a real AI answer." |
@@ -75,6 +75,43 @@ Replacements to confirm:
 | Row labels in regression tables ("After minus before", "Participant gap, before", "Extra change: after x participant") | D1S1, D2S1 | See section 5. Each row gets a plain-language label with the model term in brackets. |
 | "Old habits", "Hidden costs", "A shorter life", "A higher discount rate" (scenario card titles) | D3S1 cards | Say what changes: "Savings shrink each year", "Added administration costs", "Savings last three years", "A discount rate of 8%". |
 | Document IDs (H1-A, H8-A, Table R) | all | Keep (useful for cross-reference), but always add a short description on first mention, e.g. "H4-A, the city study extract". |
+
+### 3A. Term decisions made on 9 October (these replace the matching proposals in the table above)
+
+| # | Term | Decision |
+|---|---|---|
+| 1 | Name for the comparison group | Use the technical terms. **Treatment and control** in the pilot lottery ("treatment group", "control group"; do not use "join group" or "waiting group"). In the city sessions: **"participant businesses"** (the treatment businesses) and **"comparison businesses that did not receive GreenWaste"** (the control businesses). Do not use "nonparticipants", "others", "other group" or "other businesses". In matching: "comparison businesses" (and "control" where the method is named). Gloss each term on first use in each session, e.g. "comparison businesses (also called controls) did not receive GreenWaste". |
+| 2 | Name for the 1,000 AED test | Say the full rule wherever it is applied, especially when it has not been stated for a while: "our rule of at least a 1,000 AED reduction in annual waste management cost per business per year". Never "the rule" on its own. "Threshold" and "target" are acceptable only next to the figure ("the 1,000 AED threshold"), and "a reduction in costs of at least 1,000 AED" is preferred to "saving" in the test itself. Titles and questions: "Does it meet our rule of at least a 1,000 AED reduction?" |
+| 3 | Names for the two Session 2 comparisons | Agreed: "before and after" and "with and without", each glossed on first use; drop "after-only gap". Because of decision 1, the gloss reads "participant businesses compared with comparison businesses, after the programme". |
+| 4 | "Authored exercise material" and variants | Agreed: "This response was written for the exercise. It is not a real AI answer." |
+| 5 | "Null model" | Agreed: "What does the p-value assume about the change?" |
+| 6 | "Denominator" | Say it with the plain wording in brackets: "denominator (the total that each percentage is based on)". |
+| 7 | Clustered robust intervals (Stata correction) | Agreed: notes only; on the page, "The intervals allow for each business being measured twice." |
+| 8 | Regression row labels | Agreed, with the group names from decision 1. Day 1 S1: "Mean cost before GreenWaste (intercept)"; "Change after GreenWaste: after minus before". Day 1 S3: "Control group: mean cost after 12 months"; "Treatment group minus control group". Day 2 S1: "Comparison businesses, before GreenWaste (intercept)"; "Change in comparison businesses (after)"; "Participant businesses minus comparison businesses, before GreenWaste (took part)"; "Difference between the two changes (after × took part)". |
+| 9 | Scenario card titles | Agreed: "Savings shrink each year", "Added administration costs", "Savings last three years", "A discount rate of 8%". |
+| 10 | Document IDs | Keep the IDs, and give each a short description tied to the method, stated on first mention on every slide, worksheet page and card (see below). |
+| 11 | Jargon in instructions | Agreed (replace "proportionate", "consequential", "attribution"; drop "unrounded"; keep taught terms). |
+| 12 | Cut-off spelling | Agreed: "cut-off". |
+| 13 | Fall, change, effect, saving | Agreed. |
+
+Document and table titles (proposed, for Fiona to confirm).
+
+**"Extract" is replaced by "summary".** What the previews call a "study extract" is a short written summary of one study (four numbered paragraphs on who and when, what was compared, what a causal reading needs, and what the data can establish) with its results table. Use "study summary" everywhere ("study extract" also appears in the Day 1 S3, Day 2 S1 and Day 2 S3 worksheets and slides). First mention on each slide, worksheet page and card: the ID plus the plain description.
+
+**Every table and figure gets a full descriptive title** that says what is measured, for which businesses (with the number), in what units, and when. No short names such as "Table F, the cash flows". The ID stays as a label for cross-reference only.
+
+| ID | Document (first mention) | Table or figure titles |
+|---|---|---|
+| H1-A | "H1-A, the before-and-after table for city participant businesses" | "Annual waste management cost of the same 4,794 participant businesses: mean before GreenWaste and change 12 months after (AED)" |
+| H2-A | "H2-A, the city data tables and charts" | H2-A1: "Four selected businesses: efficiency score, whether the business took part, and annual waste management cost before and 12 months after (AED)". H2-A2: "Mean annual waste management cost before and 12 months after GreenWaste, for participant businesses and comparison businesses (AED)". H2-A3: "Histogram of the change in annual waste management cost for the 4,794 participant businesses (AED)". Baseline chart: "Histogram of annual waste management cost before GreenWaste for all 10,000 city businesses (AED)". |
+| H3-A | "H3-A, the pilot lottery study summary" | "Annual waste management cost 12 months after GreenWaste: treatment group (200 businesses) compared with control group (200 businesses) (AED)" |
+| H4-A | "H4-A, the difference-in-differences study summary" | "Difference-in-differences regression: annual waste management cost of 10,000 city businesses, before and 12 months after GreenWaste, for participant businesses and comparison businesses (AED)". Charts: "Observed mean costs and the assumed path for participant businesses without GreenWaste"; "Two hypothetical earlier cost histories, A and B". |
+| H5-A (when built) | "H5-A, the regression discontinuity study summary" | To be written with the preview. |
+| H6-A | "H6-A, the matching study summary" | Table R: "Difference in annual waste management cost 12 months after GreenWaste between participant businesses and their matched comparison businesses, with and without manager age used for matching (AED)". Table B: "Average characteristics of participant businesses, all other businesses and matched comparison businesses before GreenWaste". |
+| H7-A | "H7-A, the cost-benefit model note" | Table I: "Inputs to the cost-benefit model: annual saving, delivery cost, year savings start, number of years and discount rate". Table P: "Which costs and benefits the model includes, for the authority and for businesses". Table F: "Delivery cost and annual saving per participant business in each year, with each saving converted to its value today (AED)". Table O: "Results per participant business: present value of savings, included cost, benefit-cost ratio and net present value (AED)". Table S: "Benefit-cost ratio for each of the five scenario cards". |
+| H8-A | "H8-A, the bar charts and distributions" | Figure C: "Two bar charts of the same data: mean annual waste management cost of the 4,794 participant businesses before GreenWaste and 12 months after, one with the vertical axis starting at zero and one starting at 700 AED". Table C: "The values behind Figure C (AED)". Figure D: "Histogram of annual waste management cost before GreenWaste for the 4,794 participant businesses (AED)". Figure E: "Dot plot of landfill waste before GreenWaste for ten selected businesses (tonnes per business per year)". Figure P: "Estimated reduction in annual waste management cost in the pilot, with its 95% interval, compared with our rule of at least a 1,000 AED reduction". |
+
+Exact numbers and wording to be checked against each table when the titles are applied.
 
 ---
 
@@ -96,8 +133,8 @@ Remove from slides and printed pages; keep only in speaker notes, a trainer prin
 - D3S1 cards: "For eight groups print Cards 1, 2 and 3 twice: allocation 1, 2, 3, 4, 5, 1, 2, 3. Retain page 7 until predictions are recorded."
 - D3S1 worksheet: "Table S (cards page 7) is held by the trainer until predictions are recorded."
 - "After the trainer distributes cost slips" (D2S3 Q1), "Table S ... distributed after predictions".
-- Slide titles: "The trainer computes the paired difference" (D2S3), "The trainer checks the two denominators" (D3S2). Reword as an activity: "Check the paired difference in R."
-- Slide text boxes: "How the trainer obtains the two means" (D1S2 p05), "The trainer compares mean cost changes" (D2S1 p04). Decide whether the R code boxes stay visible (see section 7); if so, label them "R code" without the trainer framing.
+- Slide titles: "The trainer computes the paired difference" (D2S3), "The trainer runs the model arithmetic" (D3S1), "The trainer checks the two denominators" (D3S2). Reword as "We [do the task] in R" (Fiona, 9 Oct), e.g. "We calculate the paired difference in R."
+- Slide text boxes: "How the trainer obtains the two means" (D1S2 p05), "The trainer compares mean cost changes" (D2S1 p04). Relabel as "We calculate the two means in R" / "We compare the mean changes in R", with the code box labelled "R code". The R code boxes stay visible (section 6, item 4).
 - Fix: put print and distribution instructions on a separate trainer print sheet (one per card or slip set), not on the participant pages.
 
 **Defensive caveats that read as notes to colleagues**
@@ -125,43 +162,251 @@ Status of the examples in Fiona's Language issues document:
 
 ### A. Slide and card titles (full sentences)
 
-| Where | Current | Proposed |
-|---|---|---|
-| D1S2 title | Good news. Enough to act? | We receive good news. Is it enough to act on? |
-| D1S2 slide 1 | We read -669. Was it the programme's effect? | We read that the mean annual waste cost fell by 669 AED. Was that fall the programme's effect? |
-| D1S2 slide 2 | One row. One business. Two measurements. | Each row shows one business, measured twice. |
-| D1S2 slide 9 | Lower than without. Already lower before. | Participants ended with lower costs. Were their costs already lower before? |
-| D1S2 slide 10 | Two numbers. Two weak comparisons. | Each number compares something different. Why is neither enough on its own? |
-| D1S2 slide 11 | Four cost claims. Which would you act on? | Here are four claims about GreenWaste. Which would you act on? |
-| D1S2 slide 14 | Ask for a comparison-aware explanation | Ask the AI to say which comparison it is using. |
-| D1S1 slide 12 | Statistically clear. Large enough to matter? | A result can be statistically clear. Is it large enough to matter? |
-| D1S1 slide 13 | A lower cost. Enough saving? | The cost fell. Is the saving enough? |
-| D1S1 slide 15 | A plausible AI reading of the table | Here is an AI explanation of the table. Do you agree with it? |
-| D1S1 slide 16 | Ask for a reading you can verify | Ask the AI for an explanation you can check. |
-| D1S3 slide 1 | Two city comparisons. Why a lottery? | We have two city comparisons. Why would a lottery be better? |
-| D1S3 slide 2 | The pilot district: 400 businesses, 200 places | The pilot district had 400 businesses and 200 places. |
-| D1S3 slide 3 | What the lottery buys us | What does a lottery give us? |
-| D1S3 slide 9 | Does the interval clear our rule? | Is the whole interval above our 1,000 AED rule? |
-| D1S3 slide 11 | Three numbers. Three comparisons. | Each of the three numbers compares different groups. |
-| D1S3 slide 12 | Would you extend it now? | Would you extend GreenWaste now? |
-| D2S1 slide 1 | Yesterday's saving. Today's question. | Yesterday we found a saving. Today we ask what else changed. |
-| D2S1 slide 2 | Both groups changed. What was extra? | Costs changed in both groups. How much more did participants' costs fall? |
-| D2S1 slide 3 | Four numbers. What is the extra change? | Use four numbers to find the difference between the two changes. |
-| D2S1 slide 7 | Same city. Different changes without GreenWaste? | Could the two groups have changed differently even without GreenWaste? |
-| D2S1 slide 9 | Can one before measure show a trend? | Can one measurement before the programme show a trend? |
-| D2S1 slide 10 | A precise result. Enough to meet the rule? | The estimate is precise. Does it meet the 1,000 AED rule? |
-| D2S1 slide 12 | The AI says cause. Does the comparison? | The AI says GreenWaste caused the change. Does the comparison support that? |
-| D2S3 | Similar on what we can see; Open the costs, not a new pairing; Closest available may still be too far; Above the rule. Certain enough? | Full-sentence versions needed: "How can we find businesses that look similar?"; "Reveal the outcomes without changing your pairs."; "Is the closest available business close enough?"; "The estimate is above the rule. Are we certain enough?" |
-| D2S3 | The trainer computes the paired difference | Calculate the paired difference in R. |
-| D3S1 | A ratio of 1.86. Approve? | The benefit-cost ratio is 1.86. Should we approve? |
-| D3S1 | Ratio and net present value answer different questions | Fine, but spell out "net present value (NPV)" on first use. |
-| D3S2 | A supported description is not a causal verdict | A description the data support is not proof that GreenWaste caused the fall. |
-| D3S2 | Why 44% and 60% both answer real questions | Why are 44% and 60% both correct answers? |
-| D3S2 | The trainer checks the two denominators | Check which total each percentage uses. |
-| D3S2 | Spread between businesses is not this interval | Variation between businesses is different from this confidence interval. |
-| D3S2 | Before trusting a chart, check what? | What should you check before trusting a chart? |
+Updated 9 Oct with the decisions in section 3A. Rule used: every title is a complete sentence or question. Titles about R code use the same form: "We [do the task] in R." (Fiona, 9 Oct), and the code box on the slide is labelled "R code", not "trainer". "Term: question" titles on the five Day 1 S1 terms are kept because each already contains a full question. "The trainer ..." titles become "R ..." or an instruction. Titles marked "keep" are already full sentences or questions. "Pending" means Fiona has not yet reviewed the row.
 
-### B. Worksheet questions and instructions (examples; same pattern applies to every Q)
+**Day 1 Session 1** (status: pending)
+
+| Slide | Current | Proposed |
+|---|---|---|
+| Subtitle | Read a cost result using five terms | Read an evaluation result using five terms |
+| 1 | The GreenWaste case study | keep (Fiona) |
+| 2 | Where does GreenWaste fit? | keep |
+| 3 | A cost result lands on your desk | An impressive result lands on your desk. (Fiona's edit) |
+| 4 | Mean: who looks like the average? | keep (term: question) |
+| 5 | One large business changes the average | keep |
+| 6 | Treatment effect: what did GreenWaste cause? | keep |
+| 7 | Coefficient: which row is the change? | keep |
+| 8 | What does the minus sign mean? | keep |
+| 9 | Confidence interval: how sure are we? | keep |
+| 10 | Same estimate. Different uncertainty. | Three estimates are identical. Is the uncertainty the same? |
+| 11 | P-value: what does small tell us? | What does a small p-value tell us? |
+| 12 | Statistically clear. Large enough to matter? | A result can be statistically significant, but is it large enough to matter? (Fiona's wording; "significant" replaces "clear". Confirm the slide body and notes also say "statistically significant".) |
+| 13 | A lower cost. Enough saving? | Costs fell by 669 AED. Is that at least a 1,000 AED reduction? |
+| 14 | Pair check: what does the table support? | keep |
+| 15 | A plausible AI reading of the table | An AI explains the table. Which parts does the table support? |
+| 16 | Ask for a reading you can verify | Ask the AI for an explanation you can check. |
+| 17 | What would you tell the director? | keep |
+
+**Day 1 Session 2** (status: pending)
+
+| Slide | Current | Proposed |
+|---|---|---|
+| Title | Good news. Enough to act? | We receive good news. Is it enough to act on? |
+| Subtitle | ...the comparison behind a cost claim | ...the comparison behind a claim about GreenWaste |
+| 1 | We read -669. Was it the programme's effect? | We read that the mean annual waste cost fell by 669 AED. Was that fall the programme's effect? |
+| 2 | One row. One business. Two measurements. | Each row shows one business, measured twice. |
+| 3 | Who is included in these averages? | keep |
+| 4 | What do costs look like before the programme? | What do waste costs look like before the programme? |
+| 5 | Participants: what changed after GreenWaste? | Participant businesses: what changed after GreenWaste? |
+| 6 | Did every business's cost fall? | Did the cost fall for every business? |
+| 7 | What else could have changed costs? | keep |
+| 8 | Other city businesses: what changed? | Comparison businesses: what happened to their costs? |
+| 9 | Lower than without. Already lower before. | Participant businesses ended with lower costs. Were their costs already lower than the comparison businesses' costs before? |
+| 10 | Two numbers. Two weak comparisons. | Each number compares something different. Why is neither enough on its own? |
+| 11 | Four cost claims. Which would you act on? | Here are four statements about GreenWaste. Which would you act on? |
+| 12 | Which evidence supports your choice? | keep |
+| 13 | Would you accept this AI chart reading? | Would you accept this AI explanation of the chart? |
+| 14 | Ask for a comparison-aware explanation | Ask the AI to name the comparison it is using. |
+| 15 | What comparison would you ask for next? | keep |
+
+**Day 1 Session 3** (status: pending)
+
+| Slide | Current | Proposed |
+|---|---|---|
+| 1 | Two city comparisons. Why a lottery? | We have two city comparisons. Why would a lottery be better? |
+| 2 | The pilot district: 400 businesses, 200 places | The pilot had 400 eligible businesses but only 200 places in the programme. ("Places" means programme places: 200 of the 400 businesses receive GreenWaste, the treatment group, and 200 do not, the control group. A lottery decides which.) |
+| 3 | What the lottery buys us | What does a lottery give us? |
+| 4 | Draw the lottery, then draw again | Draw the lottery, then draw it again. |
+| 5 | Small lotteries can look different | keep |
+| 6 | Were groups similar before GreenWaste? | Were the treatment and control groups similar before GreenWaste? |
+| 7 | The result is a difference of two averages | The result is the difference between two averages. |
+| 8 | The regression reports that same comparison | The regression table reports the same comparison. |
+| 9 | Does the interval clear our rule? | Is the whole interval at or above our rule of a 1,000 AED reduction? |
+| 10 | Who does this pilot describe? | keep |
+| 11 | Three numbers. Three comparisons. | Each of the three numbers compares different groups. |
+| 12 | Would you extend it now? | Would you extend GreenWaste now? |
+| 13 | Your recommendation in three sentences | Write your recommendation in three sentences. |
+| 14 | A plausible AI paragraph for the minister | An AI writes a paragraph for the minister. Which claims does the pilot support? |
+| 15 | Ask for a recommendation the trial supports | Ask the AI for a recommendation the pilot supports. |
+| 16 | Which evidence could change your decision? | keep |
+
+**Day 2 Session 1** (status: pending)
+
+| Slide | Current | Proposed |
+|---|---|---|
+| Subtitle | Difference-in-differences, the extra change and its assumption | Difference-in-differences: the difference between the two changes, and its assumption |
+| 1 | Yesterday's saving. Today's question. | Yesterday we found a saving from a lottery. Today we use another method and ask what else changed. (Fiona. Slide notes: "Today we use another method, with a different group of businesses that were not chosen at random, and ask what else changed.") |
+| 2 | Both groups changed. What was extra? | Costs changed in both groups. How much more did participant businesses' costs fall? |
+| 3 | Four numbers. What is the extra change? | Use four numbers to find the difference in differences. (Fiona. Then define it in the body: the difference between the two changes.) |
+| 4 | The same calculation, using all the records | We repeat the same calculation in R using all the records. |
+| 5 | Where is the extra change in this table? | Which row of the table shows the difference between the two changes? |
+| 6 | The dashed line is an assumption | keep |
+| 7 | Same city. Different changes without GreenWaste? | Could the two groups have changed differently even without GreenWaste? |
+| 8 | Which earlier history would make you hesitate? | keep |
+| 9 | Can one before measure show a trend? | Can one measurement before the programme show a trend? |
+| 10 | A precise result. Enough to meet the rule? | The estimate is precise. Does it meet our rule of at least a 1,000 AED reduction? |
+| 11 | What does the source support? | What does the study summary support? |
+| 12 | The AI says cause. Does the comparison? | The AI says GreenWaste caused the change. Does the comparison support that? |
+| 13 | Ask for an explanation you can verify | Ask the AI for an explanation you can check. |
+| 14 | What would you ask for next? | keep |
+
+**Day 2 Session 3** (status: pending)
+
+| Slide | Current | Proposed |
+|---|---|---|
+| 1 | Which comparison would you trust? | keep |
+| 2 | Similar on what we can see | How can we find businesses that look similar? |
+| 3 | Find the closest recorded comparisons | Find the closest comparison business for each participant business. |
+| 4 | Open the costs, not a new pairing | Reveal each business's cost, and keep your pairs unchanged. |
+| 5 | From seven cards to the full city | How does matching work for the full city? |
+| 6 | One comparison business can be reused | keep |
+| 7 | What changed in measured balance? | Did matching make the groups more alike on what we measured? |
+| 8 | Closest available may still be too far | The closest available business may still be too different. |
+| 9 | Read the full-city difference | Read the difference for the full city. |
+| 10 | The trainer computes the paired difference | We calculate the paired difference in R. |
+| 11 | Leave age out. Change the comparison. | What happens when manager age is left out of the matching? |
+| 12 | What if motivation is not recorded? | keep |
+| 13 | Read the source before trusting the summary | Read the study summary before trusting the headline. |
+| 14 | Above the rule. Certain enough? | The estimate is above 1,000 AED. Is the whole interval? |
+| 15 | AI Snapshot: what should a commissioner flag? | keep |
+| 16 | Ask Copilot for a reading you can verify | Ask Copilot for an explanation you can check. |
+| 17 | Close the source. Make a defensible request. | Close the study summary. Make a request you can defend. |
+
+**Day 3 Session 1** (status: pending)
+
+| Slide | Current | Proposed |
+|---|---|---|
+| 1 | A saving is only half the question | keep |
+| 2 | A ratio of 1.86. Approve? | The benefit-cost ratio is 1.86. Should we approve GreenWaste? |
+| 3 | What went into the number? | keep |
+| 4 | When do the costs and savings happen? | When do the programme costs and the savings happen? |
+| 5 | A later saving is worth less today | keep |
+| 6 | From five future savings to today's total | How do five future savings become one total in today's value? |
+| 7 | Ratio and net present value answer different questions | keep (spell out "net present value (NPV)" in the body) |
+| 8 | The trainer runs the model arithmetic | We run the model arithmetic in R. |
+| 9 | Whose costs and benefits are counted? | keep |
+| 10 | Change an assumption. Predict before the reveal. | Change one assumption. Predict the ratio before the results are shown. |
+| 11 | Where do the five scenarios land? | What ratio does each of the five scenarios give? |
+| 12 | Which change matters, over which range? | Which assumption matters most, and over what range? |
+| 13 | Read the model note, not just the headline | Read the model note, not just the headline ratio. |
+| 14 | AI Snapshot: find a scenario that breaks it | AI Snapshot: can the AI find a scenario that pushes the ratio below 1? |
+| 15 | Ask Copilot to identify and quantify assumptions | keep |
+| 16 | Close the source. Make a conditional recommendation. | Close the model note. Make a recommendation with a condition. |
+
+**Day 3 Session 2** (status: pending)
+
+| Slide | Current | Proposed |
+|---|---|---|
+| 1 | Which picture would you show the director? | Which chart would you show the director? |
+| 2 | Change the axis, not the values | Changing the axis changes the picture but not the values. |
+| 3 | Read the source under the bars | Check the table of values behind the bars. |
+| 4 | A supported description is not a causal verdict | A description the data support is not proof that GreenWaste caused the fall. |
+| 5 | How much does the mean hide? | keep |
+| 6 | One large record can pull the mean | keep |
+| 7 | Two businesses. Two percentage questions. | Two businesses give two different percentage answers. |
+| 8 | Why 44% and 60% both answer real questions | Why are 44% and 60% both correct answers? |
+| 9 | Same city participants. Two valid summaries. | The same participant businesses give two valid summaries. |
+| 10 | The trainer checks the two denominators | We check in R which total each percentage uses. |
+| 11 | Write the caption the chart deserves | Write a caption that fits what the chart shows. |
+| 12 | Spread between businesses is not this interval | Variation between businesses is different from this confidence interval. |
+| 13 | AI Snapshot: which chart is fairer? | keep |
+| 14 | Ask Copilot about the claim and its audience | keep |
+| 15 | Defend the chart. Defend its limit. | Defend your chart choice and state its limit. |
+| 16 | Before trusting a chart, check what? | What should you check before trusting a chart? |
+
+Also: in every title where "source" means the study summary, name it ("the study summary", "the model note"), per `REVIEW_NOTES.md` item 14.
+
+### B. Worksheet questions and instructions
+
+Reviewed session by session with Fiona, using the decisions in section 3A. Each session below is marked pending or approved. The older example table further down is superseded session by session as each one is approved.
+
+**B1. Day 1 Session 1 worksheet** (status: pending Fiona's review)
+
+| Item | Proposed text |
+|---|---|
+| Title and banner | Title: "GreenWaste: reading an evaluation result". Remove "Separate Session 1 review worksheet. The current published handout is unchanged." and "All pages below belong to the separate review version." |
+| Page 1 heading | "Page 1: The before-and-after table" |
+| Page 1 intro | "GreenWaste subsidises waste equipment and provides installation help and staff training. In the pilot district, a lottery chose which businesses took part. In the rest of the city, businesses with an efficiency score of 58 or below took part. In this session we read results about each business's annual waste management cost, in AED. GreenWaste is a fictional training case." |
+| H1-A heading and text | "H1-A: The before-and-after table for city participant businesses. The same 4,794 participant businesses were measured before GreenWaste and 12 months after. This table does not include any comparison businesses that did not receive GreenWaste. Our rule is a reduction in annual waste management cost of at least 1,000 AED per business per year. Meeting this rule does not by itself show that GreenWaste is good value for money." |
+| H1-A table title | "Annual waste management cost of the same 4,794 participant businesses: mean before GreenWaste and change 12 months after (AED)". Rows: "Mean cost before GreenWaste (intercept)" and "Change after GreenWaste: after minus before". Columns: "Coefficient (AED)", "95% interval (AED)", "p-value". |
+| H1-A caption and model note | "The table shows annual waste management cost in AED for the same participant businesses before and 12 months after GreenWaste. This comparison alone does not show the effect of the programme. Each of the 4,794 businesses is measured twice. The model is: cost = intercept + coefficient x after, where after is 0 before GreenWaste and 1 twelve months after. The intervals allow for each business being measured twice." |
+| Q1 intro | "These ten businesses were selected from the GreenWaste data. The dot plot shows their annual waste management cost before GreenWaste, in AED. They are not representative of all city businesses." |
+| Q1 tasks | "(a) Calculate the mean annual waste management cost of the ten businesses. (b) Calculate the mean and the median again after removing the business with the largest cost (4,306 AED). (c) Which changes more, the mean or the median, and why?" |
+| Q2 | "The costs of the participant businesses fell after GreenWaste. (a) Does this tell us what would have happened to these businesses without GreenWaste? (b) Explain what information is missing. This missing information is called the counterfactual." |
+| Q3 | "Use H1-A. (a) Mark the row that shows the change in cost. (b) Write its value, its units, what it compares, and whether it is positive or negative. (c) Use both rows of the table to work out the mean annual waste management cost 12 months after GreenWaste." |
+| Page 2 intro | "Page 2: Uncertainty and your own interpretation. Keep page 1 open, because you need H1-A. Answer each question when we reach that idea in the session." |
+| Q4 | "(a) Draw a box around the 95% interval in the change row of H1-A. (b) What does this interval describe? (c) Does it show how much each individual business saved? Explain. Now compare three invented estimates of the annual reduction in cost. Each estimate is 1,100 AED. Their 95% intervals are A: 1,080 to 1,120 AED, B: 900 to 1,300 AED, and C: 400 to 1,800 AED. (d) Which interval is entirely above our rule of a reduction of at least 1,000 AED? (e) What is still uncertain for B and C?" |
+| Q5 | "(a) Find the p-value in the change row of H1-A. (b) What does the p-value assume about the change? (c) Does the p-value show that GreenWaste caused the fall, or the probability that the programme works? Explain. Now compare two invented results. Result A is a reduction of 50 AED (interval 30 to 70 AED, p < 0.001). Result B is a reduction of 1,100 AED (interval -100 to 2,300 AED, p = 0.072). (d) Which result is statistically significant? (e) Which result could be large enough to matter for our rule? (f) Does Result B prove that there is no reduction? Explain." |
+| Q6 | "(a) Compare your answers to Q1 to Q5 with a partner. Correct one explanation if it needs it. (b) Explain what the estimate and the interval in H1-A show, and compare them with our rule of a reduction of at least 1,000 AED per business per year. (c) Explain why this table cannot show that GreenWaste caused the change." |
+| Your own reading | "Close the AI responses and your notes on the terms, and keep H1-A open. Write three sentences. (1) What the table shows, with the units and the period. (2) What the table cannot show. (3) One piece of evidence you would ask for, and why." |
+| Page 3 Part A | "Part A: Mark the response. Naive prompt (a prompt with no context, as a busy person might type it): 'Explain H1-A and advise whether to expand GreenWaste.' This response was written for the exercise. It is not a real AI answer. Underline the claims that H1-A supports. Cross out the claims that H1-A does not support." |
+| Page 3 Part B | "Part B: Run the improved prompt, then compare. Copy the prompt and the H1-A table into Microsoft Copilot, and keep your AI good-practice card beside you. If you are not using Copilot, read the prepared response on page 4 after you finish Part A. (a) Which question that the AI asked helped you most? (b) What improved compared with the response in Part A? (c) Which claim still needs checking against H1-A?" |
+| Improved prompt text | Unchanged, apart from the agreed terms ("participant businesses", "comparison businesses", and the full 1,000 AED rule wording). |
+| Page 4 | "Page 4: Prepared response. Use this response if you are not using Copilot. Read it after you have marked the response on page 3. It is an example of a better answer. An AI tool may answer differently. (a) Which sentences does H1-A support? (b) What additional evidence would answer the clarifying questions at the start of the response?" |
+| Source records | "Records used in Q1. These ten participant businesses were selected from the GreenWaste data for teaching. They are not representative of all participant businesses. Values are annual waste management cost before GreenWaste, in AED." Remove "Values come from cost_before". |
+
+**B1 status:** approved by Fiona, 9 Oct.
+
+**B2. Day 1 Session 2 worksheet and decision cards** (status: pending Fiona's review)
+
+| Item | Proposed text |
+|---|---|
+| Title and banner | "GreenWaste: comparing groups". Remove "Separate Session 2 review worksheet." |
+| Page 1 intro | "GreenWaste offers equipment subsidies, installation help and staff training. All costs are annual waste management cost, in AED per business, measured before GreenWaste and 12 months after. GreenWaste is a fictional training case." Heading: "H2-A: The city data tables and charts". |
+| H2-A1 | Title: "Four selected businesses: efficiency score, whether the business took part, and annual waste management cost before and 12 months after (AED)". Note: "These four businesses were selected from the GreenWaste data for reading practice. They are not representative of all city businesses. Businesses with a score of 58 or below took part in GreenWaste, and businesses with a score above 58 did not. The pilot lottery uses a different set of businesses." |
+| H2-A2 | Title: "Mean annual waste management cost before and 12 months after GreenWaste, for participant businesses and comparison businesses (AED)". Group labels: "Participant businesses (took part)" and "Comparison businesses (did not take part)". Note: "Each mean uses all the businesses in that group. Figures are rounded. A lottery did not decide which businesses took part, and the two groups had different costs before GreenWaste." |
+| Two comparisons (under H2-A2) | "Before and after: for the same participant businesses, the mean cost after minus the mean cost before is -669 AED. With and without: after the programme, the participant businesses' mean cost minus the comparison businesses' mean cost is -1,638 AED. Neither comparison alone shows how much of the fall GreenWaste caused. Our rule is a reduction in annual waste management cost of at least 1,000 AED per business per year, caused by the programme." |
+| Source key | "Source: GreenWaste city data (10,000 businesses). Decision cards 2 and 3 use a before-and-after regression for the same 4,794 participant businesses, measured twice. It shows a change of -669 AED, with a 95% interval of -684 to -654 AED and p < 0.001. The interval describes the mean change. It does not describe individual businesses, and it does not show the effect of the programme." Remove "corrected", the file name and "zero-mean-change null". |
+| Page 2 opening judgement | "The mean annual waste management cost of participant businesses fell by 669 AED. Does this tell us the effect of the programme? Write one reason. We will come back to it at the end of the session." |
+| Q1 | "Use H2-A1 on page 1. (a) Write one sentence about business B00402. Say whether it took part, what its cost was before and after, and over what period. (b) Which group of businesses does the participant average describe, and how many businesses are in it?" |
+| Baseline histogram | Title: "Histogram of annual waste management cost before GreenWaste for all 10,000 city businesses (AED, in bands of 250 AED). The mean and median are marked." Remove "after the slide discussion". |
+| Q2 | "(a) Write one description of the histogram that the data support. (b) Write one thing that the mean alone cannot tell you." |
+| Page 3 histogram | Title: "Histogram of the change in annual waste management cost for the 4,794 participant businesses (AED). Each business's change is its cost after minus its cost before. The histogram shows the changes that were recorded. It is not a confidence interval, and it does not show the effect of GreenWaste on each business." |
+| Q3 | "(a) Use H2-A2 on page 1. Calculate the change in mean cost for participant businesses, and write what it shows, with units and period. (b) Use the histogram. Did the cost fall for every business? (c) Suppose waste-service prices changed during the year. This is a hypothetical example, not a fact about the case. What evidence would help separate a price change from the effect of GreenWaste?" |
+| Q4 | "(a) Calculate the change in mean cost for comparison businesses. (b) Calculate the difference between the mean cost of participant businesses and of comparison businesses after the programme. (c) Explain why we cannot give GreenWaste the credit for the whole difference." |
+| Two-comparison summary table | Rows: "Before and after: -669 AED. Compares the same participant businesses, cost after minus cost before. Missing: their cost after a year without GreenWaste is not known." and "With and without: -1,638 AED. Compares participant businesses with comparison businesses, after a year. Missing: we do not know whether these two groups are a fair comparison." Below: "Before GreenWaste, the mean cost was 1,432 AED for participant businesses and 2,258 AED for comparison businesses. Different recorded changes do not by themselves prove that GreenWaste caused a change, or show which way any bias goes." |
+| Page 4, Q5 | "Q5: Four decision cards. Use the cards and H2-A. For each card: (a) choose Act, Ask first or Do not act; (b) write what the source supports; (c) write one question you would ask and why the answer matters; (d) say which action you mean." |
+| Closing box | "Close the AI responses and turn over the decision cards, and keep H2-A2 open. (a) Write one conclusion that the data support. (b) Write one specific piece of evidence you would request to help decide whether to expand GreenWaste. (c) Compare this with the reason you wrote on page 2. What changed?" |
+| Page 5 Part A | "Part A: Mark the response. Naive prompt (a prompt with no context, as a busy person might type it): 'Explain H2-A2 and advise whether to expand GreenWaste.' This response was written for the exercise. It is not a real AI answer. Underline the passages that H2-A2 supports. Cross out the claims that H2-A2 does not support." The planted response is updated to the agreed terms (Fiona, 9 Oct): "The chart shows a strong improvement: participant businesses' average annual waste cost fell from 1,432 to 763 AED, while costs for comparison businesses rose from 2,258 to 2,401 AED. The participant reduction of 669 AED is therefore unlikely to be just a city-wide fall in waste costs. After a year, participant businesses paid 1,638 AED less than comparison businesses. This is the saving attributable to GreenWaste, because the comparison businesses show what would have happened without it. It exceeds the authority's 1,000 AED annual saving rule. The two groups began at different cost levels, so caution is appropriate. However, the chart's diverging lines confirm that the programme worked across participant businesses. A wider rollout should deliver similar savings, with monitoring to check delivery quality." The planted errors are unchanged. |
+| Page 5 Part B | "Part B: Run the improved prompt, then compare. Copy the prompt below and H2-A2 into Microsoft Copilot, and keep your AI good-practice card beside you. If you are not using Copilot, read the prepared response on page 6 after you finish Part A. (a) What improved compared with Part A? (b) Which claims are still unsupported? (c) Which table or figure should you check each claim against?" |
+| Page 6 | "Prepared response. Use this response if you are not using Copilot. Read it after you have marked the response on page 5. It is an example of a better answer. An AI tool may answer differently. Check it against H2-A2, as you would check a live AI answer. (a) Does it separate what was observed, what a fair comparison would need, and what decision to make? (b) Which clarifying question in the response is most helpful? (c) What evidence is still needed before advising on expansion?" |
+| Decision cards: title and intro | Title: "Four statements about GreenWaste: decide what is missing". Intro: "Read each statement about GreenWaste and decide whether to act on it." Remove "Separate review cards and a local interactive triage board." Move "Print blank copies for group use" and "Choices remain in this browser page. For group or room use ... use printed cards or the existing A1 board" to the trainer print sheet. |
+| Card wording | Question on each card: "What would you do with this statement?" "Source supplied:" becomes "Source:". Card 1 keeps its wording: "Annual waste costs among GreenWaste participants fell by 669 AED per business in a year." (Fiona). Card 3 source: "The city before-and-after model, which tests whether the mean change among participant businesses is zero." Card 4 source: "H2-A2, the mean change in each of the two groups. This card gives no interval for the difference between the groups." Cards 2 and 3 statements stay as written. Keep the labels Act / Ask first / Do not act and Compared to what? How big? How sure? |
+| Card instructions | "Place each card under Act, Ask first or Do not act. Explain your reason, using words and card numbers. More than one missing question can be a good answer. Say which action you mean: acting on a descriptive finding does not have to mean expanding the programme." Footer: "GreenWaste is a fictional training case. These statements are exercise material for you to check. Do not accept them as conclusions." |
+
+**B2 status:** approved by Fiona, 9 Oct (planted AI response updated to the agreed terms; decision card 1 keeps "GreenWaste participants").
+
+**B3. Day 1 Session 3 worksheet and age slips** (status: approved 9 Oct). Terms: "trial" becomes "pilot"; "join/wait" becomes "treatment/control".
+
+| Item | Proposed text |
+|---|---|
+| Title and banner | Title: "GreenWaste pilot: evidence and recommendation". Remove "Separate Session 3 review worksheet." |
+| Page 1 heading and intro | "H3-A: The pilot lottery study summary (design and starting costs). GreenWaste is a fictional training case. Use this study summary as your source for today's questions." |
+| §1 Who and what? | "GreenWaste offers equipment subsidies, installation help and staff training. The pilot covered 400 eligible businesses in one district. All of them had efficiency scores of 58 or below. The outcome is annual waste management cost in AED per business, measured before GreenWaste and 12 months after." |
+| §2 How were places given out? | "The programme had 200 places for the 400 eligible businesses. A lottery assigned individual businesses: 200 to the treatment group, which received GreenWaste, and 200 to the control group, which did not receive GreenWaste during the study. Random assignment within this pilot is not the same as choosing a sample that represents the whole country." |
+| §3 What must be true for the comparison to be reliable? | "In this fictional pilot, every business took part according to its assignment, and all 400 businesses have cost records 12 months later. A causal reading of the result depends on three conditions: the lottery was carried out as described, costs were measured in the same way in both groups, and the programme did not affect the control group's costs. A real report should document these conditions." |
+| §4 Before the programme | "These are the two groups as assigned, 200 businesses each. Before GreenWaste, the mean annual waste management cost was 1,390 AED in the treatment group and 1,411 AED in the control group. The distributions were similar but not identical. Similar starting costs support the comparison. They do not prove that the lottery was carried out correctly or that the groups are balanced on everything." |
+| Source line | "Source: GreenWaste pilot data (400 businesses). The age-slip lottery in Q1 is a practice activity. It is not the allocation used in this pilot." Remove "corrected", the file name, the R script name and "the shared pilot model". |
+| Page 2 §5 | "Twelve months after GreenWaste, the treatment group's mean annual waste management cost was 769 AED and the control group's was 1,783 AED. The treatment group minus the control group is -1,014 AED. If the three conditions in §3 hold, this is an estimate of the effect of GreenWaste on the eligible pilot businesses." |
+| Results table | Title: "Annual waste management cost 12 months after GreenWaste: treatment group (200 businesses) compared with control group (200 businesses) (AED)". Rows: "Control group: mean cost after 12 months" and "Treatment group minus control group". Columns: "Coefficient (AED)", "95% interval (AED)", "p-value". |
+| Table note | "The pilot has 400 businesses, 200 in each group, with annual waste management cost measured 12 months after GreenWaste. The model compares the two group means (ordinary least squares). The control group is the reference, so the first row is the control group's mean cost. The second row is the difference between the treatment group and the control group. It is not the treatment group's own mean. A negative difference in cost means a reduction in cost, which is a saving." |
+| Rule box | Heading: "The same result as a reduction in cost". Text: "Our rule is a reduction in annual waste management cost of at least 1,000 AED per business per year. The estimated reduction is 1,014 AED. The 95% interval is 862 to 1,167 AED, so it includes values below 1,000 AED. The interval shows uncertainty about the mean effect if the model's assumptions hold. It does not show the savings of individual businesses." |
+| Three comparisons table | Heading: "Three comparisons from three groups of businesses". Rows: "City participant businesses: the same businesses, after minus before: -669"; "City participant and comparison businesses: participant minus comparison businesses, after the programme: -1,638"; "Eligible pilot businesses: treatment group minus control group, after 12 months: -1,014 (95% interval: -1,167 to -862)". Note: "The pilot result does not automatically apply to the city, because the city's businesses are different. One district does not show effects for the whole country. This study summary does not give the full programme costs, so these results alone cannot settle whether GreenWaste is good value for money." |
+| Page 3, Q1 | "Read §1 to §3 of H3-A on page 1. Why does the control group give a more reliable comparison than businesses that chose whether to join?" |
+| Practice lottery | "Practice lottery: 20 age slips and 10 places. Draw ten slips for the treatment group. The other ten slips are the control group. Calculate the mean manager age of each group. Put all the slips back and draw again. The slips show manager ages before the programme, not effects on cost. The pilot itself has 400 businesses, not 20." Table headings: "Treatment mean age", "Control mean age", "Treatment minus control". Questions: "(a) What changed between the two draws? (b) Would larger groups usually have mean ages closer to each other? (c) Use the starting costs in §4 on page 1. What reassurance do they give, and what do they not prove?" |
+| Q2 | "Use §5 and the table on page 2. (a) Calculate the treatment group's mean cost minus the control group's mean cost, 12 months after GreenWaste. (b) Explain what the sign, the units, the comparison and the group of businesses tell you. (c) Circle the row of the table that shows the comparison. (d) Explain what the control group row shows. (e) Use both rows to work out the treatment group's mean cost." |
+| Page 4, Q3 | "Use the interval on page 2. (a) What in the table suggests that GreenWaste reduces costs? (b) What is still uncertain about whether the reduction is at least 1,000 AED?" |
+| Q4 | "Use §1 to §3 and the final paragraph on page 2. (a) Which businesses does the pilot describe? (b) What evidence would you request before expanding GreenWaste to other businesses? (c) Say why that evidence matters." |
+| Q5 | "(a) Choose Extend, Do not extend or Ask first. (b) Write one strength of the pilot design. (c) Write one limit that matters for the decision. (d) Write one condition that fits the size of the decision. (e) Say which businesses your action covers." |
+| Three-sentence recommendation | "Write your recommendation in three sentences. (1) What the pilot found and which table shows it. (2) What you recommend, or the condition you set. (3) The most important limit and the evidence you would request. Then swap with a partner and check each other's sentences. Does each sentence name the comparison and the businesses? Does it give units and period? Does it compare the interval with our rule of at least a 1,000 AED reduction? Does it say how far the result reaches? Does it name a specific evidence request? Mark one claim that needs more support." |
+| Final box | "Your final recommendation and evidence request. Keep H3-A open, and close the AI responses and your partner's comments. Revise your recommendation on your own. What answer to your evidence request could change your advice, and how?" |
+| Page 5 Part A | "Part A: Mark the response. Naive prompt (a prompt with no context, as a busy person might type it): 'Our GreenWaste pilot saved 1,014 AED per business (p < 0.001). Write a short paragraph for the minister recommending expansion.' This response was written for the exercise. It is not a real AI answer. Underline the claims that H3-A supports. Cross out the claims that H3-A does not support. Check H3-A on pages 1 and 2." Planted response: only change "the programme group averaged 769 AED compared with 1,783 AED in the waiting group" to "the treatment group averaged 769 AED compared with 1,783 AED in the control group". Errors unchanged. |
+| Page 5 Part B | "Part B: Run the improved prompt, then compare. Copy the prompt and H3-A into Microsoft Copilot, and keep your AI good-practice card beside you. If you are not using Copilot, read the prepared response on page 6 after you finish Part A. (a) What improved compared with your own note? (b) Which claim still needs checking against H3-A?" Improved prompt: "individually assigned 200 to join and 200 to wait" becomes "individually assigned, 200 to the treatment group and 200 to the control group"; "Our fictional minimum is 1,000 AED annual saving" becomes "Our rule is a reduction in annual waste management cost of at least 1,000 AED per business per year"; "Distinguish evidence of some saving from certainty about the minimum" becomes "Separate evidence of some reduction from certainty that the reduction is at least 1,000 AED". |
+| Page 6 | "Prepared response. Use this response if you are not using Copilot. Read it after you have marked the response on page 5. It is an example of a better answer. An AI tool may answer differently." In the response, "the group assigned to join than in the waiting group" becomes "the treatment group than in the control group". Questions: "(a) Which clarifying question in the response helps most? (b) Does the advice separate some reduction in cost, our 1,000 AED rule, wider reach and full programme costs? (c) Which claim would you check or strengthen before sharing this advice?" |
+| Age slips | "A practice lottery: 20 manager-age slips. There are 20 businesses and 10 places. Cut out the slips along the dashed lines (one set per group). Draw ten slips for the treatment group. The other ten slips are the control group. Calculate each group's mean manager age. Put all the slips back before you draw again." Footer: "The slips use manager ages from 20 businesses in the GreenWaste pilot data. A draw compares ages before the programme, not effects on cost. It is not the lottery used in the pilot, which involved 400 businesses and 200 places. Record both draws on worksheet page 3. GreenWaste is a fictional training case. Ages are in years." Remove "Source: corrected pilot data." |
+
+Older rewrite examples (superseded as each session is approved; keep for reference):
+
 
 | Where | Current | Proposed |
 |---|---|---|
@@ -287,7 +532,7 @@ Proposal: a boxed task called "Read the regression table" on the worksheet for D
 
 The AI best-practice sheet is already settled (`REVIEW_NOTES.md` item 13) and is not repeated here.
 
-Only the language rules apply to the AI pages (section 1): full sentences, "Improved prompt" in place of "Better prompt" (keep "Naive prompt"), and one standard sentence in place of the "authored exercise material" wording (section 3).
+Only the language rules and the agreed terms apply to the AI pages (section 1; Fiona, 9 Oct: the planted responses use the agreed group names, e.g. "comparison businesses" in place of "nonparticipants", with the planted errors unchanged): full sentences, "Improved prompt" in place of "Better prompt" (keep "Naive prompt"), and one standard sentence in place of the "authored exercise material" wording (section 3).
 
 ### 8E. Day 1 Session 2: more code, data exploration and cleaning
 
