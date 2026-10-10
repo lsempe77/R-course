@@ -12,6 +12,26 @@ Day 1 worksheets for S1, S2 and S3 are at the printer. Decision (Fiona): S1 and 
 - **Not done:** speaker-note timings in the four decks still say 60 or 75 minutes; their worksheets and card packs (made by `make_session_materials.R`) still carry the old wording; S2 live hub text. Day 2 S2 has a 30 minute gap against the 90 minute slot.
 
 
+### Status at 10 October 2026, morning (read this first)
+
+**Done on this machine (all rendered; `apply` run for d1s1, d1s2, d1s3):**
+- Day 1 S1 and S3: hybrid decks (slides follow the printed worksheets) now in `docs/Oct12_session1_live.html` and `docs/Oct12_session3_live.html`. S1 slide 4 "Mean: who looks like the average?" carries the line "Worksheet, section 1 (Mean)"; other worksheet sections are slides 6, 8, 9, 11 and 13.
+- Day 1 S2: preview version now in `docs/Oct12_session2.html`; new worksheet and cards in `docs/handouts/`; hub link in `docs/index.html` repointed to `handouts/Oct12_session2_review_worksheet.html`.
+- AI handouts for S1 and S3 in `docs/handouts/` (`.docx`).
+- Wording pass (Day 2 S2, Day 3 S3, Day 4 S1, Day 4 S2): rendered by `render_new_decks.R` and moved to `docs/` (files `Oct13_session2_live`, `Oct14_session3_live`, `Oct15_session1`, `Oct15_session2_live`). No `apply` needed for these.
+- Originals of everything overwritten: `backups/switch_2026_10_10/`. Revert Session 2 with `python review_2026_10_06/switch_session.py revert d1s2`; the whole live version is also in git tag `live-v1-2026-10-10`.
+- Claude has not committed or pushed. Fiona commits and pushes (check `git status`, then push).
+
+**To check (open items):**
+- SLIDE FIT: some slides do not fit on the screen in the new/updated decks. Open each in `quarto preview` (or the rendered HTML at 1280x720) and list the slides that overflow, then shorten text or reduce figure heights. Not yet identified by number; start with the Day 1 S1 and S3 hybrid decks, the Day 1 S2 deck and the four wording-pass decks.
+- Check webR code boxes and the S1 AI handout page 2 (full) in Word print preview.
+- AI HANDOUTS NOT YET ON THE LIVE SITE PROPERLY: `Oct12_session1_ai_handout.docx` and `Oct12_session3_ai_handout.docx` were copied to `docs/handouts/` by `apply`, but `docs/index.html` does not link to them (and no PDFs are in `docs/`). Add hub links (preferably PDFs from `Module_2_Oct_2026_v2/`, copied to `docs/handouts/`) for S1 and S3.
+- Session 2 PDFs for the printer: `Oct12_session2_review_cards.pdf` (5 pages) and `Oct12_session2_review_worksheet_CHECK_FIT.pdf` made in the cloud container, which lacks the course fonts. The worksheet came out at 10 A4 pages instead of 7 (page 1, 3 and 4 spill onto a second sheet), so do not send it to the printer. Print it from Chrome on a full machine (A4, no headers/footers, margins default) from `Oct12_session2_review_worksheet.html`, check each "Page n" starts a new sheet, and replace/delete the CHECK_FIT file.
+- Printer: Fiona to request the new S2 worksheet and cards plus the two AI handouts. If they cannot be printed, run `revert d1s2`.
+- Lucas to approve the S1, S2 and S3 changes (his sessions).
+
+**Still to push to the live site ("the rest of the sessions"):** Day 2 S1 and S3, Day 3 S1 and S2 are still the older live versions with previews in `docs/preview/` (earlier copies). Re-render the review QMDs, then copy to `docs/`. Day 2 S2 (RDD), Day 3 S3 and Day 4 only have the wording-pass version, no full preview. Their worksheets and card packs still carry the old wording.
+
 ## Fixes of 10 October 2026 (review of the previews against PREVIEW_CHANGE_NOTES.md)
 
 Source files only; nothing has been re-rendered or published yet.
