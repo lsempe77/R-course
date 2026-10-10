@@ -41,7 +41,7 @@ html_out(d7_inputs('Table I: Inputs to the model and where each comes from'))
 
 ### §2 | How are future amounts combined?
 
-The model assumes that equipment delivery costs **1,800 AED per participant business now (year 0)**, that there is no saving in year 1, and that the same annual saving is made in each of **years 2 to 6**. Future savings are discounted at an assumed rate of 5% a year, so that every amount is shown at its value in year 0 (its value today). The city data do not show five years of savings. They show only the first 12 months. For year *t*, the value today of the saving is the annual saving divided by 1.05 raised to the power *t*. Table F and Table O are on page 2. The calculations use unrounded inputs.
+The model assumes that equipment delivery costs **1,800 AED per participant business now (year 0)**, that there is no saving in year 1, and that the same annual saving is made in each of **years 2 to 6**. Future savings are discounted at an assumed rate of 5% a year, so that every amount is shown at its value in year 0 (its value today). The city data do not show five years of savings. They show only the first 12 months. For year *t*, the value today of the saving is the annual saving divided by 1.05 raised to the power *t*. Table F and Table O are on page 2. The calculations use the exact inputs, and the figures shown are rounded.
 
 ### §3 | Whose perspective, and which costs and benefits?
 
@@ -79,7 +79,7 @@ html_out(d7_timeline())
 html_out(d7_cash_table('Table F: Delivery cost and annual saving per participant business in each year, with each saving converted to its value today (AED)'))
 ```
 
-One-year example: 812 divided by 1.05 is about 774 AED. The first saving in the model is in year 2: 812 divided by 1.05² is about **`r fmt(model$saving/1.05^2)` AED**. Add the values today for years 2 to 6. The rounded figures in the table may not add up exactly to the unrounded total.
+One-year example: 812 divided by 1.05 is about 774 AED. The first saving in the model is in year 2: 812 divided by 1.05² is about **`r fmt(model$saving/1.05^2)` AED**. Add the values today for years 2 to 6. The rounded figures in the table may not add up exactly to the exact total.
 
 ```{r, results='asis'}
 html_out(d7_output('Table O: Base case results per participant business: total benefits, cost, benefit-cost ratio and net present value (AED)'))
@@ -229,7 +229,7 @@ Prediction: ________ Above or below 1? ________
 
 ### Stage 1: Mark the response
 
-Naive prompt (a prompt with no context, as a busy person might type it): "Generate one plausible scenario where this programme's benefit-cost ratio falls below 1. Tell me whether it is realistic." Source: H7-A. This response was written for the exercise. It is not a real AI answer.
+Naive prompt (a prompt with no context, as a busy person might type it): "Generate one plausible scenario where this programme's benefit-cost ratio falls below 1. Tell me whether it is realistic." Source: H7-A (the economic model summary). This response was written for the exercise. It is not a real AI answer.
 
 <div class="ai-source">
 ```{r, results='asis'}

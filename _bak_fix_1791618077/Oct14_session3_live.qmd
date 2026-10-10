@@ -1,0 +1,241 @@
+---
+title: "The analyst is in the room"
+subtitle: "Day 3 | Session 3: Ask for evidence that could change your answer"
+author: "3ie"
+always_allow_html: true
+format:
+  live-revealjs:
+    theme: [theme_dge.scss, theme_live.scss, theme_reader.scss]
+    logo: assets/dge_logo_horizontal.svg
+    slide-number: true
+    width: 1280
+    height: 720
+    slide-level: 2
+    embed-resources: true
+    include-after-body: _reader_interactions.html
+webr:
+  render-df: kable
+  resources:
+    - evaluation_data_GreenWaste_simple.csv
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+
+```{r setup, include=FALSE}
+source('day3_case.R')
+```
+
+## Would you sign this note? {.reader-slide}
+
+```{webr}
+#| context: setup
+#| autorun: true
+#| echo: false
+#| include: false
+gw <- read.csv('evaluation_data_GreenWaste_simple.csv')
+pilot <- subset(gw, setting == 'pilot')
+```
+```{r, results='asis'}
+html_out(paste0('<p class="lead">',qa_note,'</p>',fiction))
+```
+```{=html}
+<div data-choices><button data-choice aria-pressed="false">Sign off</button><button data-choice aria-pressed="false">With conditions</button><button data-choice aria-pressed="false">Request evidence</button><p role="status" class="feedback"></p></div>
+```
+
+
+::: {.notes}
+4 minutes. The fictional note intentionally overclaims. Record the opening decision and reason before feedback. Optional course room poll with Before phase and hidden totals; no AI for this task.
+:::
+
+## Follow each claim back to its evidence. {.reader-slide}
+
+```{r, results='asis'}
+html_out(html_table(method_rows))
+```
+::: {.ask}
+Which result did the note choose, and who does each result describe?
+:::
+
+
+::: {.notes}
+5 minutes. Savings are positive and interval endpoints sorted. Pilot and matching intervals span the rule; DiD and RDD fall short. City methods share records and describe different comparisons. Four estimates are not four votes.
+:::
+
+## Only three questions. Which ones? {.reader-slide}
+
+```{r, results='asis'}
+html_out(paste0('<ol>',paste(sprintf('<li>%s</li>',read_questions),collapse=''),'</ol>'))
+```
+::: {.ask}
+Which three questions would most affect your sign-off decision?
+:::
+
+
+::: {.notes}
+6 minutes. Use the five-question QA sheet. Each question must request specific evidence. Individuals choose first, then groups. The full historical question battery is outside the teaching route.
+:::
+
+## Will 'is it reliable?' get a useful answer? {.reader-slide}
+
+A reviewer asks: **"Is the evidence robust?"**
+
+Rewrite it to request a specific result or check.
+
+::: {.ask}
+What answer would help you decide, and what would count as evidence?
+:::
+```{=html}
+<button data-open="qa-question" data-closed="Open an example" data-opened="Hide feedback" aria-controls="qa-question" aria-expanded="false">Open an example</button><div id="qa-question" class="feedback" hidden>Show the estimate and interval for the analysis you planned to rely on. Does its conclusion change under reasonable alternative choices?</div>
+```
+
+
+::: {.notes}
+5 minutes. Ask for a result or check that could change the decision. The example requests the planned analysis; it does not establish that a documented plan exists here.
+:::
+
+## Choose before the analyst arrives. {.reader-slide}
+
+Groups rank their questions. Choose a spokesperson.
+
+Write the evidence requested, before asking.
+
+Keep one follow-up question ready.
+
+::: {.ask}
+Which answer would you keep pressing for?
+:::
+
+
+::: {.notes}
+7 minutes. Eight groups rank questions. Assign comparison, assumptions, data and conclusions as focus areas if helpful. Use the fixed answer bank; say evidence is not supplied when it is absent.
+:::
+
+## Take a break {.reader-slide}
+
+Keep your questions ready.
+
+The trainer returns as the analyst.
+
+::: {.notes}
+5 minutes. Protect the five-minute break. Keep the questions ready and do not add extra analyses.
+:::
+
+## The analyst is here. What will you ask? {.reader-slide}
+
+Ask one specific question per group.
+
+Record the answer and its source on **Sheet 2**.
+
+Follow up when a claim has no supporting evidence.
+
+::: {.ask}
+Did the answer address the question you asked?
+:::
+
+
+::: {.notes}
+14 minutes. Allow one question and follow-up per group, about ninety seconds each. Answer briefly from the source bank. Ask which evidence is still missing; never invent fieldwork documentation.
+:::
+
+## Pilot estimate: 1,014. Enough to act? {.reader-slide}
+
+A reviewer asks whether the pilot settles the saving rule.
+
+Predict where the two interval limits sit.
+
+```{webr}
+#| echo: true
+#| autorun: false
+# Compare annual waste costs in the pilot lottery groups.
+fit <- lm(cost_after ~ took_part, data = pilot)
+# Find the 95% interval for their cost difference (AED).
+limits <- confint(fit)['took_part', ]
+# Turn the cost difference into saving; show lower then upper limit.
+sort(round(-unname(limits)))
+```
+::: {.ask}
+How does this answer change the recommendation?
+:::
+
+
+::: {.notes}
+6 minutes. One trainer demonstration. Output gives the lower and upper 95% interval limits for annual saving in AED. This answers the threshold question; paper answers serve other questions. The pilot cannot establish nationwide reach or full value for money.
+:::
+
+## An answer, a partial answer or no answer? {.reader-slide}
+
+For each answer choose:
+
+**Supported / Partial / Unanswered**
+
+Write the source or the evidence still missing.
+
+::: {.ask}
+Which answer deserves a supported rating?
+:::
+
+
+::: {.notes}
+6 minutes. Recognise strengths as well as missing evidence. The stated pilot comparison and interval are supported; fieldwork quality remains unanswered. Transparent disclosure does not itself resolve the concern.
+:::
+
+## What still stands between you and approval? {.reader-slide}
+
+::: {.ask}
+Which unresolved issue could most change your decision?
+:::
+Write the missing evidence and what you would do with it.
+
+Avoid an undirected list of concerns.
+
+::: {.notes}
+5 minutes. Work alone then in pairs. Choose a concrete evidence request and explain its decision relevance. Complete generated rows do not establish complete real-world follow-up.
+:::
+
+## Now would you sign? {.reader-slide}
+
+```{=html}
+<div data-choices><button data-choice aria-pressed="false">Sign off</button><button data-choice aria-pressed="false">With conditions</button><button data-choice aria-pressed="false">Request evidence</button><p role="status" class="feedback"></p></div>
+```
+::: {.ask}
+Which evidence changed your reason, or kept it the same?
+:::
+Write your final decision before comparing with your opening choice.
+
+::: {.notes}
+5 minutes. Optional room poll After phase: close before showing totals. Compare reasons, not a winning vote. Assess written evidence of reading. Different provisional decisions need clear limits.
+:::
+
+## The AI says four studies agree. Do they? {.reader-slide}
+
+Illustrative AI draft:
+
+"There are four independent studies. All intervals clear the saving rule. No businesses are missing, so data quality is established."
+
+::: {.ask}
+Which statements would you correct using the source?
+:::
+```{=html}
+<button data-open="qa-ai" data-closed="Open feedback" data-opened="Hide feedback" aria-controls="qa-ai" aria-expanded="false">Open feedback</button><div id="qa-ai" class="feedback" hidden>City methods share records and differ in reach. Two intervals span the rule and two fall short. A complete synthetic file does not establish fieldwork quality.</div>
+```
+
+
+::: {.notes}
+4 minutes. Authored AI draft, not a captured response. Correct claims using the result table and answer sources. No external AI account is required.
+:::
+
+## Ask for evidence you would actually use. {.reader-slide}
+
+::: {.ask}
+What specific evidence should the evaluator send next?
+:::
+Write a short request and explain how it would affect your decision. Work alone.
+
+::: {.notes}
+3 minutes. Independent close without AI. Look for a specific source request, its purpose and how it could affect the recommendation. Total 75 minutes.
+:::

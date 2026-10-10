@@ -1,0 +1,260 @@
+---
+title: "What do the numbers actually say?"
+subtitle: "Day 1 | Session 1: Five terms for reading a regression table"
+author: "3ie"
+always_allow_html: true
+format:
+  live-revealjs:
+    theme: [theme_dge.scss, theme_live.scss, theme_reader.scss]
+    logo: assets/dge_logo_horizontal.svg
+    slide-number: true
+    width: 1280
+    height: 720
+    slide-level: 2
+    embed-resources: true
+    include-after-body: _reader_interactions.html
+webr:
+  render-df: kable
+  resources:
+    - evaluation_data_GreenWaste_simple.csv
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+
+```{r setup, include=FALSE}
+source('day1_case.R')
+```
+
+## The GreenWaste case study {.reader-slide}
+
+{{< include _case_map.qmd >}}
+
+This week we read **annual waste cost** (AED) and **waste sent to landfill** (tonnes) per business.
+
+
+::: {.notes}
+3 minutes. Hand out the GreenWaste picture card. Say: GreenWaste is the case we will use all week. It is a fictional programme that gives businesses waste-saving technology, technical assistance and training. Point to the map: in the pilot district a lottery decided which shops joined; everywhere else, shops with an efficiency score of 58 or below joined. Do not explain either method yet; we come back to both later in the week. The map is illustrative, not the real counts.
+:::
+
+## Where does GreenWaste fit? {.reader-slide}
+
+```{=html}
+<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:6px;font-size:0.56em;line-height:1.3;">
+<div style="border:2px solid #D5DEE8;border-radius:10px;overflow:hidden;"><div style="background:#215a9e;color:#fff;font-weight:700;padding:8px 10px;">Inputs</div><div style="padding:10px;">Government funds, staff, technical know-how</div></div>
+<div style="border:2px solid #D5DEE8;border-radius:10px;overflow:hidden;"><div style="background:#215a9e;color:#fff;font-weight:700;padding:8px 10px;">Activities</div><div style="padding:10px;">Onboard eligible businesses; distribute GreenWaste technology; technical assistance; training</div></div>
+<div style="border:2px solid #D5DEE8;border-radius:10px;overflow:hidden;"><div style="background:#215a9e;color:#fff;font-weight:700;padding:8px 10px;">Outputs</div><div style="padding:10px;">Businesses enrolled; technology units distributed; assistance cases; trainings held</div></div>
+<div style="border:2px solid #D5DEE8;border-radius:10px;overflow:hidden;"><div style="background:#063360;color:#fff;font-weight:700;padding:8px 10px;">Short-term outcomes</div><div style="padding:10px;">More awareness and motivation; technology installed and used</div></div>
+<div style="border:4px solid #215a9e;border-radius:10px;overflow:hidden;background:#e3ebf5;"><div style="background:#063360;color:#fff;font-weight:700;padding:8px 10px;">Long-term outcomes</div><div style="padding:10px;"><strong>Lower waste management costs</strong>; more recycling, less waste to landfill; lasting practices<div style="margin-top:8px;font-weight:700;color:#063360;">&#9733; Measured this week</div></div></div>
+<div style="border:2px solid #D5DEE8;border-radius:10px;overflow:hidden;"><div style="background:#063360;color:#fff;font-weight:700;padding:8px 10px;">Impact</div><div style="padding:10px;">Less pollution and emissions; natural resources conserved</div></div>
+</div>
+<p class="caption" style="margin-top:6px;">The GreenWaste theory of change from Module 1, simplified. Each step depends on the one before it, and on assumptions.</p>
+```
+::: {.ask}
+Does the number of technology units distributed show that GreenWaste worked?
+:::
+```{=html}
+<button data-open="toc-check" data-closed="Show the answer" data-opened="Hide feedback" aria-controls="toc-check" aria-expanded="false">Show the answer</button><div id="toc-check" class="feedback" hidden>No. Outputs show delivery. An impact evaluation asks whether the programme <em>caused</em> the outcomes: how much lower costs are than they would have been without GreenWaste.</div>
+```
+
+
+::: {.notes}
+3 minutes. Say: you built this theory of change in Module 1. It is the programme's story of how money and staff become lower costs and less pollution. Walk left to right in one sentence per box. Point to the highlighted box: this week we read evidence on one link, whether GreenWaste lowered businesses' waste costs (and landfill waste). Ask the question on the slide and take two answers, then open the answer. Bridge: to know whether it worked, we need to read results tables, which is what this session is about. Optional: show the full Module 1 slide (assets/module1_greenwaste_toc.png) if participants want the detail and assumptions.
+:::
+
+## An impressive result lands on your desk {.reader-slide}
+
+
+```{webr}
+#| context: setup
+#| autorun: true
+#| echo: false
+#| include: false
+gw <- read.csv('evaluation_data_GreenWaste_simple.csv')
+tp <- subset(gw, setting == 'city' & took_part == 1)
+```
+Today we read **mean, treatment effect, coefficient, p-value and confidence interval**.
+
+::: {.ask}
+Which of these terms could you explain to a director?
+:::
+
+
+::: {.notes}
+2 minutes. Individual entry check, no AI. Ask for meanings rather than confidence alone. Five terms are essential reading vocabulary. Use the same fictional GreenWaste case; two-sided worksheet includes the regression table. One trainer Run later; no participant coding.
+:::
+
+## Mean: who looks like the average? {.reader-slide}
+
+```{r, results='asis'}
+html_out(paste0('<div class="ten-businesses">',paste(sprintf('<span>%s</span>',fmt(ten$landfill_before)),collapse=''),'</div><p class="caption">Waste sent to landfill by ten selected businesses, tonnes in one year</p>'))
+```
+**Mean = total divided by the number of records.**
+
+::: {.ask}
+On Sheet 1, question 1: work out the mean. Does it describe every business?
+:::
+```{=html}
+<button data-open="mean-answer" data-closed="Show the answer" data-opened="Hide feedback" aria-controls="mean-answer" aria-expanded="false">Show the answer</button><div id="mean-answer" class="feedback" hidden>These records total <strong>100 tonnes</strong>, so the mean is <strong>10 tonnes</strong>. Nine businesses are below 10 and one sends 46. One large business pulls the mean up, so it describes few of them.</div>
+```
+
+
+::: {.notes}
+6 minutes. WORKSHEET, Sheet 1 question 1. Give participants two minutes to add the ten values, divide by ten and write whether the mean describes every business. Then open the answer: 100 divided by 10 is 10 tonnes; nine of ten are below the mean; one large business (46) pulls it up. Ask how one unusual business moves the mean. This is a selected teaching set, not a representative city sample. Tell the room the next slides switch to a different outcome: annual waste cost in AED.
+:::
+
+## Treatment effect: what did GreenWaste cause? {.reader-slide}
+
+**Treatment effect**: the change the programme caused.
+
+Compare what happened with the programme with what would have happened without it.
+
+```{=html}
+<button data-open="effect-change" data-closed="Open the distinction" data-opened="Hide feedback" aria-controls="effect-change" aria-expanded="false">Open the distinction</button><div id="effect-change" class="feedback" hidden>An observed before/after change can include other changes over time. A programme effect requires a credible no-programme comparison.</div>
+```
+::: {.ask}
+Would a fall after GreenWaste, on its own, establish its effect?
+:::
+
+
+::: {.notes}
+5 minutes. Use plain counterfactual words, no estimator lecture. Observed change and programme effect are different quantities. The effect is estimated rather than directly observed for the same business in both states. Session 2 applies this distinction to claims, Session 3 uses the pilot lottery.
+:::
+
+## Coefficient: which row is the change? {.reader-slide}
+
+```{r, results='asis'}
+html_out(regression_table())
+```
+::: {.ask}
+Which row describes the starting mean, and which describes the change?
+:::
+
+
+::: {.notes}
+6 minutes. Table is an actual before/after regression of annual cost on after, clustering by business. Intercept labelled Before GreenWaste estimates the starting mean; after row is the change. Read named row, sign and units, not any number at random. 1432 baseline, -669 change, about 763 after. Negative means lower COST, not automatically a harmful outcome. A coefficient becomes an effect estimate only when the design supports causal interpretation.
+:::
+
+## What does the minus sign mean? {.reader-slide}
+
+```{webr}
+#| echo: true
+#| autorun: false
+# Find each business's change in annual waste cost (AED).
+change <- tp$cost_after - tp$cost_before
+# Show the average change, rounded to whole AED.
+data.frame(Result = 'After minus before', AED = round(mean(change)))
+```
+::: {.ask}
+The change is −669 AED. Is the minus sign good news or bad news here? Why?
+:::
+```{=html}
+<button data-open="sign-meaning" data-closed="Show the answer" data-opened="Hide feedback" aria-controls="sign-meaning" aria-expanded="false">Show the answer</button><div id="sign-meaning" class="feedback" hidden>Good news. The outcome is a cost, so −669 means annual costs fell by 669 AED per business. Always check what the outcome measures: for recycling, a minus would be bad news.</div>
+```
+
+
+::: {.notes}
+3 minutes. Ask the question on the slide and take two or three answers before opening the answer. Key point: the sign shows the direction of the change; whether that is good depends on what the outcome measures (lower cost is good; lower recycling would be bad). Then press Run to show where -669 comes from: each business's cost after minus cost before, averaged. If the internet fails, skip the Run; the table already shows -669.
+:::
+
+## Confidence interval: how sure are we? {.reader-slide}
+
+
+**95% confidence interval**: `r fmt(ba_ci[1])` to `r fmt(ba_ci[2])` AED for the change.
+
+A range compatible with the data and statistical model. It describes uncertainty around the estimate.
+
+::: {.ask}
+Is this the range of savings for individual businesses?
+:::
+```{=html}
+<button data-open="interval-meaning" data-closed="Open the reading check" data-opened="Hide feedback" aria-controls="interval-meaning" aria-expanded="false">Open the reading check</button><div id="interval-meaning" class="feedback" hidden>No. This interval concerns the estimated change. It does not cover every source of bias or establish cause.</div>
+```
+
+
+::: {.notes}
+7 minutes. Participants box the after-row interval and state its units. Do not interpret it as a 95% probability statement about this fixed interval. If asked: under assumptions, repeated intervals from this procedure cover the true model quantity about 95% of the time. No machinery lecture. Precision does not repair a weak comparison.
+:::
+
+## P-value: does small mean important? {.reader-slide}
+
+**p-value < 0.001** for the reported change.
+
+It asks how unusual a result this extreme would be under a **no-change model** and its assumptions.
+
+::: {.ask}
+Does a small p-value establish cause or enough saving?
+:::
+```{=html}
+<button data-open="p-reading" data-closed="Open the reading check" data-opened="Hide feedback" aria-controls="p-reading" aria-expanded="false">Open the reading check</button><div id="p-reading" class="feedback" hidden>Neither. It is not the probability that GreenWaste works. A non-significant result also does not prove no effect.</div>
+```
+
+
+::: {.notes}
+5 minutes. Find the p-value on the after row. Distinguish evidence against the tested null from causal credibility and policy importance. Do not call it the probability that the result is due to chance. No shuffle simulation or hypothesis-testing lecture.
+:::
+
+## A lower cost. Enough of a saving? {.reader-slide}
+
+```{r, results='asis'}
+html_out(interval_svg())
+```
+::: {.ask}
+Does the reported change reach an annual saving of 1,000 AED per business?
+:::
+
+
+::: {.notes}
+5 minutes. Read the same change on a positive SAVING scale. Estimate and interval fall below the invented rule. A statistically clear fall can still be below a policy minimum, and the comparison still does not isolate cause. Do not conclude the programme has no effect.
+:::
+
+## Your turn: what does the table say? {.reader-slide}
+
+On **Sheet 1**, circle the change coefficient, box its interval and find its p-value.
+
+On **Sheet 2**, explain all five terms using the source.
+
+::: {.ask}
+What can you say about the result, and what remains unanswered?
+:::
+
+
+::: {.notes}
+10 minutes. Five minutes independently, three minutes paired source check, two minutes feedback. Require mean as total/count, treatment effect as causal quantity needing no-programme comparison, coefficient as named row with units/sign, p-value not probability programme works, interval for estimate not individuals. Accept accurate plain words. This is core reading practice, not optional vocabulary.
+:::
+
+## A correct number. A wrong conclusion. {.reader-slide}
+
+```{r, results='asis'}
+html_out(sprintf('<p class="lead">Annual costs fell by %s AED. The tiny p-value proves GreenWaste caused enough saving to expand.</p>',fmt(abs(case$before_after))))
+```
+::: {.ask}
+Which parts can the table support?
+:::
+```{=html}
+<button data-open="table-ai" data-closed="Open the source check" data-opened="Hide feedback" aria-controls="table-ai" aria-expanded="false">Open the source check</button><div id="table-ai" class="feedback" hidden>Keep the reported fall and its interval. Remove the causal assurance and the claim that the 1,000 AED minimum is met.</div>
+```
+
+
+::: {.notes}
+3 minutes. Authored AI draft; no external account. Participants repair one sentence. A correct number can accompany an unsupported causal or policy conclusion.
+:::
+
+## What would you tell the director? {.reader-slide}
+
+Close the term explanations. Keep the regression table open.
+
+Write the change with its units, interval and comparison. State what its p-value does not establish.
+
+::: {.ask}
+What evidence would you request before calling this a programme effect?
+:::
+
+
+::: {.notes}
+2 minutes. Independent close without AI. Retrieve the five meanings, not five labels. Mark missed terms for brief feedback in Session 2. No formal certification claim. Total 60 minutes.
+:::

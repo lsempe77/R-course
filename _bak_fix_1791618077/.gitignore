@@ -1,0 +1,8 @@
+# Local versioned recovery copies and visual QA remain in this workspace.
+backups/
+review_2026_10_06/qa/
+review_2026_10_06/*.html
+__pycache__/
+# These HTML files are source components, not rendered Quarto decks.
+!room_poll.html
+!_reader_interactions.html

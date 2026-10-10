@@ -22,15 +22,16 @@ knitr:
 
 ```{r setup, include=FALSE}
 source('day4_case.R')
+source('wording_overrides.R', encoding = 'UTF-8')
 ```
 
 ## The corrected findings are on your desk. {.reader-slide}
 
 Open the **corrected findings reference**.
 
-Locate the pilot interval, city comparison limit and cost assumptions.
+Find the pilot interval, the limit of the city comparison and the cost assumptions.
 
-Use this source when drafting.
+Use this source when you draft.
 
 ::: {.ask}
 Which evidence would most affect the proposed action?
@@ -44,7 +45,7 @@ Which evidence would most affect the proposed action?
 ## What does the director need to decide? {.reader-slide}
 
 ```{=html}
-<div class="decision-checks"><div><h3>Saving rule</h3><p>Estimate and interval against 1,000 AED.</p></div><div><h3>Cause and reach</h3><p>Fair comparison and people described.</p></div><div><h3>Value for money</h3><p>Evidence about costs and duration.</p></div></div>
+<div class="decision-checks"><div><h3>Our rule</h3><p>Does the estimate, with its interval, reach a reduction of at least 1,000 AED?</p></div><div><h3>Cause and reach</h3><p>Is the comparison fair, and which businesses does it describe?</p></div><div><h3>Value for money</h3><p>What do we know about costs and how long savings last?</p></div></div>
 ```
 ::: {.ask}
 Which question remains unanswered for nationwide expansion?
@@ -69,11 +70,11 @@ Where are the finding, recommendation, risk and evidence request?
 5 minutes. Read the model as one possible conditional judgement, not the correct vote. Mark its four parts on the source reference. It is under 150 words and names the interval and reach. The request explains how the answer affects scale and budget.
 :::
 
-## 150 words. What should happen next? {.reader-slide}
+## In at most 150 words, what should happen next? {.reader-slide}
 
 Write **at most 150 words** for a director.
 
-Use **Sheet 1**: finding, recommendation, risk and next evidence.
+Use **Sheet 1** to write four parts: the finding, the recommendation, the risk and the next evidence you would request.
 
 Keep the corrected source open.
 
@@ -90,9 +91,9 @@ Can the director see what you recommend and why?
 
 A partner reviews your brief using **Sheet 2**.
 
-Point to the source for its strongest claim.
+Point to the source for the brief’s strongest claim.
 
-Check the interval, population and missing evidence.
+Check the interval, the businesses described and the missing evidence.
 
 ::: {.ask}
 What important limit would the director otherwise miss?
@@ -120,10 +121,10 @@ Does the revised action follow from the source?
 7 minutes. Accept different defensible choices. Check that a condition is meaningful, not a generic caveat. A recommendation to gather evidence needs a specific request and purpose. No automated word or number matching can prove faithful interpretation.
 :::
 
-## Which claim did the AI add? {.reader-slide}
+## Which claim did the AI add that the evidence does not support? {.reader-slide}
 
 ```{r, results='asis'}
-html_out(paste0('<p>',ai_brief,'</p>'))
+html_out(paste0('<p class="caption">This response was written for the exercise. It is not a real AI answer.</p><p>',ai_brief,'</p>'))
 ```
 ::: {.ask}
 How can an accurate number accompany an unsupported action?

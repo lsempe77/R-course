@@ -1,0 +1,385 @@
+---
+title: "How similar is similar enough?"
+subtitle: "Day 2 | Session 3: Matching, measured balance and missing influences"
+author: "3ie"
+always_allow_html: true
+format:
+  live-revealjs:
+    theme: [theme_dge.scss, theme_live.scss, theme_reader.scss]
+    css: [session1_review.css, day2_session3_review.css]
+    logo: assets/dge_logo_horizontal.svg
+    slide-number: true
+    width: 1280
+    height: 720
+    slide-level: 2
+    embed-resources: true
+    include-after-body: [_reader_interactions.html, _session1_review_interactions.html]
+webr:
+  render-df: kable
+  resources: [evaluation_data_GreenWaste_simple.csv]
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+
+```{r setup, include=FALSE}
+source('day2_session3_review.R', encoding='UTF-8')
+```
+
+## Who and what are we comparing? Participants and similar businesses. {#d2s3-map .reader-slide .s1-review .d2s3-review .case-map-slide}
+
+```{r, include=FALSE}
+map_highlight <- "participants"
+```
+
+::: {.case-map}
+{{< include _case_map.qmd >}}
+:::
+
+<div class="map-facts"><div><strong>Unit</strong>one business</div><div><strong>Group</strong>4,794 participant businesses, each compared with a similar business that did not receive GreenWaste</div><div><strong>Outcome</strong>annual waste management cost, in AED per business</div><div><strong>Period</strong>12 months after GreenWaste</div></div>
+
+::: {.notes}
+1 minute. The blue businesses are the participants. Matching looks for similar businesses among the grey ones. The same map appears in every methods session so that participants know the population before the details start.
+:::
+
+## Which comparison would you trust? {#d2s3-p01 .reader-slide .s1-review .d2s3-review}
+
+The city did **not** allocate GreenWaste by lottery. Taking part followed the efficiency-score rule.
+
+Matching selects comparison businesses that look similar to participant businesses on characteristics recorded **before** GreenWaste.
+
+::: {.ask}
+If two businesses look similar in the records, what can still be different?
+:::
+
+The outcome is annual waste management cost in **AED per business**, measured 12 months after GreenWaste. This city study is not the pilot lottery, and it is not the study of businesses near the score cut-off.
+
+::: {.notes}
+5 minutes. Retrieve comparison and population distinctions from DiD and RDD. Matching asks about participant businesses compared with selected comparison businesses, not the local jump. Start webR warming. Programme is equipment subsidies, installation help and training. Participants interpret, never write code.
+:::
+
+## How can we find businesses that look similar? {#d2s3-p02 .reader-slide .s1-review .d2s3-review}
+
+<div class="review-grid"><div><h3>Business A: took part in GreenWaste</h3><p>Manager age: 45<br>Size: small</p></div><div><h3>Business 2: did not take part in GreenWaste</h3><p>Manager age: 46<br>Size: small</p></div></div>
+
+::: {.ask}
+Would you pair these two businesses? Give one reason, and name one thing you do not know.
+:::
+
+These profiles are invented for the activity. Do not open the reveal slips yet.
+
+::: {.notes}
+6 minutes. Two minutes individual, two pair discussion, two collect. Similar recorded features do not mean identical businesses. These two cards teach the choice, not the four-feature distance used in the city study. Keep outcomes withheld.
+:::
+
+## Find the closest comparison business for each participant business. {#d2s3-p03 .reader-slide .s1-review .d2s3-review}
+
+Lay out the **seven profile cards**. Match participant businesses **A, B and C** to comparison businesses **1 to 4**.
+
+1. Use manager age and size, and use each comparison business at most once.
+2. Write your pairs and your reasons in **Q1 on worksheet page 3**.
+3. Write which comparison business is not used. Keep the reveal slips closed.
+
+::: {.ask}
+Where is your pairing convincing? Where would you ask for more information?
+:::
+
+::: {.notes}
+14 minutes. Distribute only page 1 of the cards (see the trainer print sheet). Optional seven volunteers with eighth group observing. Intended A2 B1 C3, comparison 4 unused. Ten minutes pair/record, four compare reasoning. Do not rematch on outcomes. Toy uses no replacement; full study permits reuse. This is a physical change of activity, not an additional scheduled break.
+:::
+
+## Reveal each business's cost, and keep your pairs unchanged. {#d2s3-p04 .reader-slide .s1-review .d2s3-review}
+
+You now receive the **reveal slips**. A reveal slip shows what one business's annual waste management cost was 12 months after GreenWaste.
+
+For each pair, calculate the **participant business's cost minus the comparison business's cost**.
+
+Write the three differences and their mean in **Q1 on page 3**.
+
+<button data-open="d6-toy" aria-controls="d6-toy" aria-expanded="false" data-closed="Check the arithmetic" data-opened="Hide the arithmetic">Check the arithmetic</button>
+<div id="d6-toy" class="feedback" hidden>A-2: 900 - 1,900 = -1,000. B-1: 1,400 - 2,300 = -900. C-3: 700 - 1,800 = -1,100. Mean: -1,000 AED.</div>
+
+::: {.ask}
+Does this arithmetic show what GreenWaste caused?
+:::
+
+::: {.notes}
+8 minutes. Hand out the reveal slips. Work one pair, then allow group calculation and reveal. These are invented costs, not city results. Correct subtraction is not causal identification. Unequal unrecorded influences could explain the gap. Pair choices must remain fixed.
+:::
+
+## How does matching work for the full city? {#d2s3-p05 .reader-slide .s1-review .d2s3-review}
+
+1. Record **manager age, staff, premises area and filtration** for every business before GreenWaste.
+2. Put the four features on a common scale.
+3. For each participant business, select the most similar comparison business.
+4. Compare annual waste management cost 12 months after GreenWaste, and allow a comparison business to be used again.
+
+::: {.ask}
+What does "most similar" guarantee, and what does it not guarantee?
+:::
+
+There was **no maximum acceptable distance**, and no participant business was excluded. Annual waste management cost before GreenWaste was **not** used for matching.
+
+::: {.notes}
+7 minutes. Explain standardisation as distance in city standard-deviation units, not four equal raw units. Squared distances choose a nearest neighbour; no propensity score is used. Matching with replacement differs from toy. Q2 page 3. Nearest is relative to available records; not necessarily adequate similarity. Transition to reuse.
+:::
+
+## One comparison business can be reused {#d2s3-p06 .reader-slide .s1-review .d2s3-review}
+
+```{r, results='asis'}
+html_out(d6_reuse())
+```
+
+**4,794 participant businesses were matched to 585 different comparison businesses.** The most-used comparison business appears **440 times**.
+
+::: {.ask}
+Why are 4,794 matched pairs not 9,588 separate businesses?
+:::
+
+::: {.notes}
+5 minutes. The diagram is an illustration; the counts come from the GreenWaste data. There are 9,588 rows in stacked matched sample but 5,379 unique businesses. Repeated controls contribute repeatedly to the comparison mean and require appropriate uncertainty accounting. Do not confuse a reused control with 440 separate measurements. Q2 page 3.
+:::
+
+## Did matching make the groups more alike on what we measured? {#d2s3-p07 .reader-slide .s1-review .d2s3-review}
+
+```{r, results='asis'}
+html_out(d6_balance())
+```
+
+::: {.ask}
+Q3 on page 4: which gaps became smaller, and which difference remains?
+:::
+
+The matched comparison column counts a business **each time it is used**. The last column is the participant mean minus the matched comparison mean, divided by the standard deviation across all city businesses.
+
+::: {.notes}
+7 minutes. Reference table is worksheet page 2. Full-city SD is descriptive scaling, not a universal pass/fail threshold or standard error. Filtration mean is the share of businesses with a filter. Age still differs by about 2.97 years; before-cost differs by about 161 AED. Cost was not matched on. Similar means are not identical distributions or evidence that all bias is absent.
+:::
+
+## The closest available business may still be too different. {#d2s3-p08 .reader-slide .s1-review .d2s3-review}
+
+```{r, results='asis'}
+html_out(d6_support())
+```
+
+The chart shows **manager age before GreenWaste** in participant businesses and in all comparison businesses. The bars show the share of businesses in each age group, on the same scale.
+
+::: {.ask}
+What else would you need to judge whether the matches are close enough?
+:::
+
+Imagine a manager aged 45 matched to a manager aged 46, and another aged 45 matched to one aged 70. Both could be the most similar business available, in different groups of businesses.
+
+::: {.notes}
+7 minutes. The plot uses all comparison businesses, not only matched ones; see page 2. It is a one-feature marginal illustration, not a joint four-feature overlap diagnosis. The 45/46 and 45/70 cases are hypothetical, not claimed city pairs. Request distance distributions, weak-support regions and sensitivity to an acceptable-distance rule. No caliper was applied here. Q3 page 4.
+:::
+
+## Read the difference for the full city. {#d2s3-p09 .reader-slide .s1-review .d2s3-review}
+
+```{r, results='asis'}
+html_out(d6_table(data.frame(
+  'Comparison'='Participant businesses minus matched comparison businesses',
+  'Difference (AED)'=fmt(match_A$est),
+  '95% interval (AED)'=paste(fmt(match_A$ci), collapse=' to '),
+  check.names=FALSE)))
+```
+
+::: {.ask}
+Q2: explain the sign, the comparison, the period and the units in one sentence.
+:::
+
+This is the difference in annual waste management cost **12 months after GreenWaste** between participant businesses and matched comparison businesses. It is not a before-and-after change, and it is not a lottery estimate.
+
+::: {.notes}
+6 minutes. H6-A section 2, page 1. About 1,029 AED lower annual waste management cost 12 months after GreenWaste among city participant businesses than among selected comparison businesses. Business-clustered robust interval accommodates reuse, treating matches as given. It does not fully account for match selection or unmeasured bias. Population is the participants, not every national business.
+:::
+
+## We create the matched result in R from the matched sample. {#d2s3-p09b .reader-slide .s1-review .d2s3-review}
+
+We create the table in R. The box shows the **R code** and the numbers it produces.
+
+```{r, echo=TRUE}
+# matched: each participant business and the comparison business selected for it,
+# stacked into one table. A comparison business can appear more than once.
+# took_part is 1 for participant businesses and 0 for comparison businesses.
+fit <- estimatr::lm_robust(cost_after ~ took_part, data = matched,
+  clusters = business, se_type = "stata")
+# The took_part row is participant businesses minus matched comparison businesses.
+round(cbind(estimate = coef(fit), confint(fit))["took_part", ])
+```
+
+::: {.ask}
+What does the took_part row compare, and how does clusters = business deal with reused comparison businesses?
+:::
+
+You do not need to write or run R. Q2 on your worksheet asks you to read the table.
+
+::: {.notes}
+4 minutes. Walk through the comments, not the syntax; participants do not code. Match each printed row to a row of the table on the next slide. Estimate -1,029; interval -1,200 to -859, as in Table R.
+:::
+
+## We calculate the paired difference in R. {#d2s3-p10 .reader-slide .s1-review .d2s3-review}
+
+```{webr}
+#| context: setup
+#| autorun: true
+#| include: false
+#| echo: false
+gw <- read.csv('evaluation_data_GreenWaste_simple.csv')
+city <- subset(gw, setting == 'city')
+X <- scale(city[, c('manager_age','staff','area','filtration')])
+participants <- which(city$took_part == 1)
+controls <- which(city$took_part == 0)
+Xc <- t(X[controls, , drop=FALSE])
+paired_difference <- function() {
+  twins <- controls[vapply(participants, function(i)
+    which.min(colSums((Xc-X[i, ])^2)), 1L)]
+  mean(city$cost_after[participants]-city$cost_after[twins])
+}
+```
+
+We calculate the paired difference in R. The box shows the **R code**.
+
+```{webr}
+#| echo: true
+# Compare each participant business with its selected comparison business.
+# Average the differences in annual waste management cost 12 months after GreenWaste, in AED.
+round(paired_difference())
+```
+
+The result on paper is **-1,029 AED**. You do not need to run R.
+
+::: {.ask}
+Does this calculation give us a difference, or does it prove the causal assumption?
+:::
+
+::: {.notes}
+5 minutes. Predict, then one Run by the trainer. Hidden setup uses same standardisation, nearest neighbour and replacement as shared source. Calculation reproduces coefficient, not displayed robust interval. If browser is slow use paper result and maintain allocation. No participant coding.
+:::
+
+## What happens when manager age is left out of the matching? {#d2s3-p11 .reader-slide .s1-review .d2s3-review}
+
+```{r, results='asis'}
+html_out(d6_results())
+```
+
+With all four features, the gap in manager age is **`r fmt(match_A$age_gap, 1)` years**. Without manager age in the matching, the gap is **`r fmt(match_B$age_gap, 1)` years**.
+
+::: {.ask}
+Q4 on page 4: why is a larger estimated reduction not necessarily better evidence?
+:::
+
+::: {.notes}
+6 minutes. Same city, same algorithm, three rather than four features. Controls change, not merely a row label. Baseline cost gaps 161 versus 540 AED. No-age result can balance retained features while missing age. Difference does not reveal true effect; fuller analysis also has limitations. Do not compare interval widths as overall credibility.
+:::
+
+## What if motivation is not recorded? {#d2s3-p12 .reader-slide .s1-review .d2s3-review}
+
+**Motivation is a hypothetical influence. It is not a measured GreenWaste variable.**
+
+Motivation could affect whether a business **takes part** and also its **waste-saving practices**.
+
+Matching on manager age, staff, premises area and filtration would not directly remove that path.
+
+::: {.ask}
+What would have to be true for the matched difference to show the effect of the programme?
+:::
+
+After we account for the recorded features, there must be **no important remaining difference that affects both taking part and costs**, and there must be enough similar comparison businesses.
+
+::: {.notes}
+6 minutes. Q4 page 4. Spell out no important unrecorded confounding; not proof or a claim that motivation actually drove results. Consistent measurement and no important spillovers also matter. Better measured balance cannot certify this assumption. Ask for selection process, omitted predictors and sensitivity evidence.
+:::
+
+## Read the study summary before trusting the headline. {#d2s3-p13 .reader-slide .s1-review .d2s3-review}
+
+Read **H6-A, the matching study summary (worksheet page 1)**, and Table B on **page 2**.
+
+In **Q5 on page 4**:
+
+1. Circle a finding and write the paragraph or table that shows it.
+2. Underline the assumption that a causal reading needs.
+3. Request one missing check and explain why it matters.
+
+::: {.ask}
+What does "every participant business was matched" show, and what is still unknown?
+:::
+
+::: {.notes}
+8 minutes. Four independent reading, two partner comparison, two debrief. H6-A section 2 supports coverage/reuse/result; section 3 assumption; section 4 missing distances/sensitivity and conditional interval. No external full report required. Accept concrete consequential requests, not generic more data.
+:::
+
+## The estimate is above 1,000 AED. Is the whole interval? {#d2s3-p14 .reader-slide .s1-review .d2s3-review}
+
+```{r, results='asis'}
+html_out(d6_interval())
+```
+
+::: {.ask}
+Q5: explain the difference between "the estimate is above 1,000 AED" and "our rule of at least a 1,000 AED reduction is securely met".
+:::
+
+The interval includes values below 1,000 AED, so it does not show that our rule of **at least a 1,000 AED reduction in annual waste management cost per business per year** is met. Whether the causal reading is credible, and the full programme costs, are separate questions.
+
+::: {.notes}
+7 minutes. Negative difference interval -1,200 to -859 becomes reduction 859 to 1,200. Estimate 1,029 above rule but uncertainty straddles it. Interval is not guarantee, individual range, probability of passing rule or allowance for all bias. Allow act/conditions/request with defensible reason, not mandatory policy answer.
+:::
+
+## AI Snapshot: what should a commissioner flag? {#d2s3-p15 .reader-slide .s1-review .d2s3-review}
+
+**Naive prompt** (a prompt with no context, as a busy person might type it): **"Compare these two matching evaluations and advise the commissioner."** Source: H6-A and Table B. This response was written for the exercise. It is not a real AI answer.
+
+<div class="ai-reading">
+```{r, results='asis'}
+html_out(paste0('<p>', gsub('\n\n', '</p><p>', d6_ai, fixed=TRUE), '</p>'))
+```
+</div>
+
+::: {.ask}
+Page 5: keep the claims that H6-A supports, and cross out the claims it does not support.
+:::
+
+::: {.notes}
+8 minutes. Stage 1 of 15-minute Snapshot. The response was written for the exercise; it is not a real AI answer. Three minutes individual, three discuss, two debrief. Keep features, coverage/reuse, estimates, costs caution. Cross out bias removed, closeness proved, rule securely achieved. Fuller model is not automatically definitive. Do not disclose prepared response yet.
+:::
+
+## Ask Copilot for an explanation you can check. {#d2s3-p16 .reader-slide .s1-review .d2s3-review}
+
+<div class="better-prompt">
+```{r, results='asis'}
+html_out(paste0('<strong>Improved prompt</strong><p>', d6_prompt, '</p>'))
+```
+</div>
+
+::: {.ask}
+Use the full prompt on page 5. Check Copilot's answer against H6-A, not against how confident it sounds.
+:::
+
+If you are not using Copilot, read the **prepared response on page 6** after you have marked the first response.
+
+::: {.notes}
+7 minutes. Stage 2. Two paste/run, three verify one correction and note one missing evidence request, two share. Participants use Microsoft Copilot; no setup required. Use fictional source only, shared AI good-practice card; do not upload sensitive records. No second-chat task. The paper alternative was written for the exercise, not an expected exact response. Check source citations, the numeric interval and the questions asked before any recommendation.
+:::
+
+## Close the study summary. Make a request you can defend. {#d2s3-p17 .reader-slide .s1-review .d2s3-review}
+
+Write in **Q6 on page 4**, without the study summary:
+
+- One sentence interpreting the matched result.
+- One strength of the comparison and one concern that matters for the decision.
+- Your choice of Act, Act with conditions or Ask first, and your reason.
+- One request for evidence about the matching, and how the answer could change your decision.
+
+::: {.ask}
+Which method's comparison best answers the decision you face next?
+:::
+
+**Lottery:** compares groups assigned by chance. **Difference-in-differences:** compares the difference between two changes. **Regression discontinuity:** compares businesses either side of the cut-off. **Matching:** compares businesses chosen because they look similar.
+
+::: {.notes}
+8 minutes. Three individual, three pair challenge, two collect targeted feedback. Accept different reasonable actions. These methods answer different comparisons for different populations; do not average their estimates or call the pilot the truth for the city. Total 120 minutes; daily 14:45-15:00 wrap-up/buffer is separate and needs no additional material.
+:::

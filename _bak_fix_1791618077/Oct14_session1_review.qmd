@@ -1,0 +1,337 @@
+---
+title: "Worth the money?"
+subtitle: "Day 3 | Session 1: Read the model, question its assumptions"
+author: "3ie"
+always_allow_html: true
+format:
+  live-revealjs:
+    theme: [theme_dge.scss, theme_live.scss, theme_reader.scss]
+    css: [session1_review.css, day3_session1_review.css]
+    logo: assets/dge_logo_horizontal.svg
+    slide-number: true
+    width: 1280
+    height: 720
+    slide-level: 2
+    embed-resources: true
+    include-after-body: [_reader_interactions.html, _session1_review_interactions.html]
+webr:
+  render-df: kable
+  resources: [evaluation_data_GreenWaste_simple.csv]
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+
+```{r setup, include=FALSE}
+source('day3_session1_review.R', encoding='UTF-8')
+```
+
+## Who and what are we comparing? The participant businesses. {#d3s1-map .reader-slide .s1-review .d3s1-review .case-map-slide}
+
+```{r, include=FALSE}
+map_highlight <- "participants"
+```
+
+::: {.case-map}
+{{< include _case_map.qmd >}}
+:::
+
+<div class="map-facts"><div><strong>Unit</strong>one business</div><div><strong>Group</strong>4,794 participant businesses in the city</div><div><strong>Benefit</strong>the reduction in annual waste management cost per participant business, in AED</div><div><strong>Cost</strong>what delivering GreenWaste costs, in AED</div></div>
+
+::: {.notes}
+1 minute. The benefit-cost ratio is about the participants, so the blue businesses are the ones in view. The same map appears in every methods session so that participants know the population before the details start.
+:::
+
+## A saving is only half the question {#d3s1-p01 .reader-slide .s1-review .d3s1-review}
+
+The city difference-in-differences (DiD) study found that the difference between the two changes is a reduction of **`r fmt(model$saving)` AED in annual waste management cost per participant business**.
+
+This is today's **provisional benefit input**. It is not a guaranteed causal saving, because the parallel trends assumption has not been verified.
+
+::: {.ask}
+What else would you need before approving the spending?
+:::
+
+Our rule of **at least a 1,000 AED reduction in annual waste management cost per business per year** and the question of whether **benefits exceed costs** are different questions.
+
+::: {.notes}
+4 minutes. Retrieve the city DiD result without another methods lecture. Pilot, cutoff and matching concern different comparisons/populations; do not swap or average them as model inputs. Programme remains equipment subsidies, help and training. Future savings, duration and all economic cost/rate inputs are fictional assumptions. Start webR warming.
+:::
+
+## The benefit-cost ratio is 1.86. Should we approve GreenWaste? {#d3s1-p02 .reader-slide .s1-review .d3s1-review}
+
+<p class="big-number">`r fmt(ratio(), 2)`</p>
+
+The benefit-cost ratio is the **modelled benefits divided by the included costs**, with both shown at their value today (year 0).
+
+<div data-choices><button data-choice aria-pressed="false">Approve</button><button data-choice aria-pressed="false">Ask first</button><button data-choice aria-pressed="false">Do not approve</button><p class="feedback" role="status"></p></div>
+
+::: {.ask}
+Give one reason for your choice before we look at the inputs.
+:::
+
+::: {.notes}
+4 minutes. The buttons do not collect votes from the room, so use physical cards or a show of hands. Above 1 means included modelled benefits exceed included modelled costs, not proof of programme effect or complete spending approval. Revisit judgement after scenarios.
+:::
+
+## What went into the number? {#d3s1-p03 .reader-slide .s1-review .d3s1-review}
+
+```{r, results='asis'}
+html_out(d7_inputs())
+```
+
+::: {.ask}
+Q1 on worksheet page 3: which inputs come from the city study, and which are assumptions?
+:::
+
+Source: **H7-A, the economic model summary (§1 and Table I, page 1)**. The costs, the number of years that savings last and the discount rate all need evidence.
+
+::: {.notes}
+6 minutes. Explicitly distinguish estimated observed extra change from projected benefits. 1,800 cost is assumed for equipment delivery per participant at time zero, not measured expenditure. Five saving years follow a one-year lag. Future causal benefit depends on both attribution and persistence. No attrition/fieldwork evidence or full cost audit supplied.
+:::
+
+## When do the programme costs and the savings happen? {#d3s1-p04 .reader-slide .s1-review .d3s1-review}
+
+```{r, results='asis'}
+html_out(d7_timeline())
+```
+
+::: {.ask}
+Q1: in how many years are savings made, and is there a saving in year 1?
+:::
+
+This schedule of costs and savings is **assumed**. It is not five years of follow-up data.
+
+::: {.notes}
+5 minutes. Cost now, no benefit year 1, five equal saving amounts in years 2-6. Distinguish programme before/after observation from economic projection. Timeline is not another observed outcome series. Worksheet page 1 reference. Learners mark start and end years before calculating.
+:::
+
+## A later saving is worth less today {#d3s1-p05 .reader-slide .s1-review .d3s1-review}
+
+```{r, results='asis'}
+html_out(d7_discount())
+```
+
+::: {.ask}
+At an assumed 5% rate, why is next year's 812 AED not counted as 812 AED today?
+:::
+
+Discounting expresses future amounts at a **common date**. It does not verify that savings will occur.
+
+::: {.notes}
+5 minutes. One-year worked illustration approximately 812/1.05=774. Explain opportunity cost/time value without finance lecture. Use unrounded saving in calculations. Rate is assumed, not claimed official guidance. First model saving is two years away and divides by 1.05 squared. Distinguish discounting from an explicit annual decay of benefits.
+:::
+
+## How do five future savings become one total in today's value? {#d3s1-p06 .reader-slide .s1-review .d3s1-review}
+
+<div class="cash-table">
+```{r, results='asis'}
+html_out(d7_cash_table())
+```
+</div>
+
+**Year 2:** `r fmt(model$saving)` / 1.05² ≈ **`r fmt(model$saving/1.05^2)` AED**.
+
+**Add years 2 to 6:** the benefits at value today are about **`r fmt(d7_benefits)` AED per participant business**.
+
+::: {.ask}
+Q2 on page 3: why can we not simply multiply 812 by five?
+:::
+
+::: {.notes}
+6 minutes. Read each discounted saving, not all rows aloud. Year 0 cost needs no discount; year 1 saving zero. Table F page 2. Q2 year2 amount and total. Printed rounded rows may not sum exactly; total uses unrounded records. Discounting reduces the sum, while duration and decay are separate model assumptions.
+:::
+
+## The ratio and the net present value (NPV) answer different questions {#d3s1-p07 .reader-slide .s1-review .d3s1-review}
+
+```{r, results='asis'}
+html_out(d7_output())
+```
+
+::: {.ask}
+Q2: explain what 1.86 and 1,550 AED each mean, without treating either as a proven outcome.
+:::
+
+**Ratio:** 3,350 divided by 1,800 is about 1.86. **Net present value:** 3,350 minus 1,800 is about 1,550 AED.
+
+::: {.notes}
+5 minutes. H7-A Table O page 2. Ratio unitless; NPV AED per participant at year0. Same model, same boundary. They do not rank programmes identically when scale/cost differs; no new comparison task. A positive model NPV/ratio above1 is not the separate 1,000 annual-saving rule or proof of value for money.
+:::
+
+## We run the model arithmetic in R. {#d3s1-p08 .reader-slide .s1-review .d3s1-review}
+
+```{webr}
+#| context: setup
+#| autorun: true
+#| echo: false
+#| include: false
+gw <- read.csv('evaluation_data_GreenWaste_simple.csv')
+city <- subset(gw, setting == 'city')
+change <- city$cost_after - city$cost_before
+joined <- city$took_part == 1
+saving <- -(mean(change[joined])-mean(change[!joined]))
+```
+
+```{webr}
+#| echo: true
+# Discount five assumed savings in years 2-6.
+benefits <- saving * sum(1 / 1.05^(2:6))
+# Compare with assumed year-0 equipment delivery cost.
+cost <- 1800
+round(c(ratio = benefits / cost, NPV_AED = benefits - cost), 2)
+```
+
+We run the calculation in R. The box shows the **R code**.
+
+The result on paper is **a ratio of 1.86 and a net present value of 1,549.97 AED**.
+
+::: {.ask}
+Does running the calculation check the assumptions behind it?
+:::
+
+::: {.notes}
+5 minutes. Predict, then one Run by the trainer; participants never code. Same input unrounded city saving, rate, lag, duration and cost as canonical source. Output has ratio and AED labelled. If browser is slow use paper result. No repeated live scenario calculations; subsequent scenarios prepared from same model.
+:::
+
+## Whose costs and benefits are counted? {#d3s1-p09 .reader-slide .s1-review .d3s1-review}
+
+<div class="review-grid"><div><h3>Authority</h3><p>Equipment delivery: included in the model as an assumed cost.<br>Staff and administration: not known whether included.</p></div><div><h3>Businesses and others</h3><p>Savings in businesses' waste management cost: included as a modelled benefit.<br>Business time, maintenance and wider effects: not known whether included.</p></div></div>
+
+::: {.ask}
+Q3 on page 3: whose point of view does this decision need, and what is already included?
+:::
+
+The headline ratio comes from a **limited model that mixes two points of view**. It is not a complete appraisal of the authority's budget or of society. Check what is already counted before you add costs.
+
+::: {.notes}
+6 minutes. Source §3 Table P page1. Authority cost versus business financial saving: cannot call ratio a return to government budget or complete social benefit. Waste-cost savings are not automatically net social gains; resource costs, charges/transfers, environmental benefits need appropriate treatment. Check amounts/timing/duplicates. Card2 assumes 600 additional non-duplicated year0 cost for exercise, not measured missing expenditure.
+:::
+
+## Change one assumption. Predict the ratio before the results are shown. {#d3s1-p10 .reader-slide .s1-review .d3s1-review}
+
+Each group receives one scenario card.
+
+Use **Q4 on worksheet page 4**:
+
+1. Write exactly what changes and what stays the same.
+2. Predict the ratio, and post your card number and prediction **above** the line on the board.
+3. Write what evidence would show whether the change is realistic.
+
+::: {.ask}
+Which change might bring the modelled benefits below the included costs?
+:::
+
+::: {.notes}
+9 minutes. Eight groups receive cards 1, 2, 3, 4, 5, 1, 2, 3 (see the trainer print sheet). Five cards: savings fade by 30% a year after the first year of saving; extra 600 AED at year 0; rate of 8%; three years of savings (years 2 to 4); fading savings plus extra 600 AED. Card5 deliberately combines two inputs. Use existing A1 board or separate review board page6 of cards. Do not hand out results before predictions. Allocation eight exact. Six group work, three post reasons; no walking break.
+:::
+
+## What ratio does each of the five scenarios give? {#d3s1-p11 .reader-slide .s1-review .d3s1-review}
+
+<button data-open="d7-results" aria-controls="d7-results" aria-expanded="false" data-closed="Open scenario results" data-opened="Hide scenario results">Open scenario results</button>
+<div id="d7-results" hidden>
+```{r, results='asis'}
+html_out(d7_scenario_table())
+```
+</div>
+
+::: {.ask}
+Post the results below the line. Which scenario falls below 1, and what makes it different?
+:::
+
+The base ratio is **1.86**. The board is on **page 6 of the scenario cards**. The scenario results table is on **page 7**, and you receive it after you have recorded your predictions.
+
+::: {.notes}
+7 minutes. Results for Cards 1 to 5: 1.07,1.40,1.67,1.17,.80; only5 below1, it combines costs and decay. Card1 comes closest among single-input changes. Distribute the scenario results table (cards page 7) only after predictions are recorded. Three reports, two compare predictions, two explain. Results under hypothetical settings, not measured failures. Q4 record result and evidence question. Existing A1 route unchanged.
+:::
+
+## Which assumption matters most, and over what range? {#d3s1-p12 .reader-slide .s1-review .d3s1-review}
+
+Among **Cards 1 to 4**, which each change one input, the card with savings that fade by 30% a year moves the ratio most: **from 1.86 to 1.07**.
+
+::: {.ask}
+Does this prove that fading savings is always the most important assumption?
+:::
+
+No. The ranking depends on the **ranges we tested**. Card 5 changes two inputs, so it is not part of this comparison.
+
+In **Q4 on page 4**, write which input you would investigate, what evidence you need and how the answer could change the decision.
+
+::: {.notes}
+5 minutes. Different scale/size perturbations cannot establish general global importance. No distributions or empirical ranges given. Do not claim largest slope/standardised sensitivity. Decay plausibility could use persistence/maintenance evidence; costs invoices/time records; rate applicable guidance. Attribution of benefit remains separate and potentially consequential.
+:::
+
+## Read the model note, not just the headline ratio. {#d3s1-p13 .reader-slide .s1-review .d3s1-review}
+
+Read **H7-A, the economic model summary (worksheet pages 1 and 2)**, on your own.
+
+In **Q5 on page 4**:
+
+- Write one input that comes from the city study and one assumption, and where each appears.
+- Write what the ratio supports **under those assumptions**.
+- Write what the ratio does not show.
+
+::: {.ask}
+Which part of the claim that GreenWaste is good value for money does the calculation not show?
+:::
+
+::: {.notes}
+4 minutes. Two independent source reading, one partner comparison, one collect. Tables I/F/O/P and §§1-4 clearly supplied; no external report. Look for provisional DiD, assumed persistence/cost/rate, limited boundary. Five-year observed data are not present. Use judgement to target later feedback, not compulsory single answer.
+:::
+
+## AI Snapshot: can the AI find a scenario that pushes the ratio below 1? {#d3s1-p14 .reader-slide .s1-review .d3s1-review}
+
+**Naive prompt** (a prompt with no context, as a busy person might type it): **"Generate one plausible scenario where this programme's benefit-cost ratio falls below 1. Tell me whether it is realistic."** This response was written for the exercise. It is not a real AI answer.
+
+<div class="ai-reading">
+```{r, results='asis'}
+html_out(paste0('<p>', gsub('\n\n', '</p><p>', d7_ai, fixed=TRUE), '</p>'))
+```
+</div>
+
+::: {.ask}
+Page 5: check the arithmetic, the timing and the claims about realism against H7-A.
+:::
+
+::: {.notes}
+8 minutes. Stage1 of15. The response was written for the exercise; it is not a real AI answer. Keep baseline and correct high-rate result. Reject unsupported rate guidance, unconditional no-funding, claim few years delay breaks ratio and five years established. Source §4 gives40% result and three-extra-year delay check, neither is plausibility evidence. No external rate lookup needed; no universal claim no agency uses40%. Three mark, three discuss, two feedback.
+:::
+
+## Ask Copilot to identify and quantify assumptions {#d3s1-p15 .reader-slide .s1-review .d3s1-review}
+
+<div class="better-prompt">
+```{r, results='asis'}
+html_out(paste0('<strong>Improved prompt</strong><p>', d7_prompt, '</p>'))
+```
+</div>
+
+::: {.ask}
+Run the full prompt on page 5. Check one figure, and check one question about missing evidence, against H7-A.
+:::
+
+If you are not using Copilot, read the **prepared response on page 6** after Stage 1.
+
+::: {.notes}
+7 minutes. Stage2. Adapt old v2 while correcting false measured-cost assertion; finite scenario ranges make ranking meaningful. Two prompt/run, three compare, two share. Microsoft Copilot expected, no setup. Fictional data only. Response should ask questions before recommendation. No second-chat exercise. Paper is example not exact expected wording.
+:::
+
+## Close the model note. Make a recommendation with a condition. {#d3s1-p16 .reader-slide .s1-review .d3s1-review}
+
+In **Q6 on worksheet page 4**, write:
+
+- What a benefit-cost ratio of **1.86** means under the stated model.
+- Your provisional action and one condition.
+- One request for evidence, and how the answer could change your action.
+
+::: {.ask}
+Which missing fact matters most for your decision?
+:::
+
+**Correct arithmetic is necessary. Credible benefits, a suitable boundary for the costs and assumptions you can defend are also necessary.**
+
+::: {.notes}
+4 minutes. Two independent, one pair check, one targeted feedback. No mandatory approve/reject answer. Costs, persistence, rate or benefit attribution requests acceptable if specific and consequential. Ratio break-even1 versus annual-saving1000 different. Total90 minutes, 09:00-10:30 proposed schedule; break follows session, not inside it.
+:::

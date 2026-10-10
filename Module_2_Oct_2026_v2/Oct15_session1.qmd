@@ -22,9 +22,10 @@ knitr:
 
 ```{r setup, include=FALSE}
 source('day4_case.R')
+source('wording_overrides.R', encoding = 'UTF-8')
 ```
 
-## Your own judgement first. No discussion. {.reader-slide}
+## Read the report and give your own judgement first, without discussion. {.reader-slide}
 
 Read **Pages 1 and 3** of the report.
 
@@ -41,7 +42,7 @@ What does the evidence support?
 8 minutes. Collect a name or identifier on the individual reading task. No AI or group discussion. Use the unfamiliar report presentation; this is the same GreenWaste case, not a different-programme transfer test. The fictional exercise contains planted overclaims, labelled on the report. Explain its design after this task. Score five abilities 0 to 2 from the trainer key; do not score room votes.
 :::
 
-## Your first verdict, with a reason. {.reader-slide}
+## What is your first verdict, and why? {.reader-slide}
 
 ```{=html}
 <div data-choices><button data-choice aria-pressed="false">Sign off</button><button data-choice aria-pressed="false">With conditions</button><button data-choice aria-pressed="false">Request evidence</button><p role="status" class="feedback"></p></div>
@@ -55,7 +56,7 @@ Write a source-based reason before comparing choices.
 4 minutes. After eight minutes explain the intentional strengths and faults. Require a section or sentence. Optional course room poll Before phase: hide totals until close; labelled cards work too. Decisions are provisional, not a test with one required vote.
 :::
 
-## Supported, concern or unsupported? {.reader-slide}
+## Is each claim supported, a concern or unsupported? {.reader-slide}
 
 ```{=html}
 <div class="rating-options"><div><h3>Supported</h3><p>Source supports the claim within its limits.</p></div><div><h3>Concern</h3><p>Name the uncertainty or missing check.</p></div><div><h3>Unsupported</h3><p>Claim exceeds or contradicts the source.</p></div></div>
@@ -69,10 +70,10 @@ Which passage supports your rating?
 4 minutes. Use words as well as Green/Amber/Red. Rate claims rather than a whole method or person. A section can have strengths and an unsupported conclusion. Record both; justify the overall rating for the claim being discussed.
 :::
 
-## What survives checking the summary? {.reader-slide}
+## Which claims in the summary survive checking? {.reader-slide}
 
 ```{r, results='asis'}
-html_out(sprintf('<p class="lead">The matched saving is %s AED. Four independent methods confirm the programme caused the saving. Nationwide expansion meets the standard.</p>%s',fmt(-match_A$est),fiction))
+html_out(sprintf('<p class="lead">The matched saving is %s AED. Four independent methods confirm that the programme caused the saving. Nationwide expansion meets our standard.</p>%s',fmt(-match_A$est),fiction))
 ```
 ::: {.ask}
 Which statement most needs checking against the rest of the report?
@@ -83,7 +84,7 @@ Mark one strength and one concern on **Sheet 2**.
 6 minutes. This is a shortened excerpt from the intentionally flawed Section 1. Everybody rates the summary independently before posting. Naming the rule and outcome is a strength. Trace the headline, independence, causal reach and model claims rather than objecting to every sentence.
 :::
 
-## Your section. One strength, one concern. {.reader-slide}
+## Read your section and find one strength and one concern. {.reader-slide}
 
 Groups read their assigned section: **3, 4, 5, 6 or 7**.
 
@@ -100,7 +101,7 @@ Which claim can you support, and which needs attention?
 10 minutes. For eight groups assign Sections 3/4/5/6/7/3/5/7. All participants have the same report and two-sided sheet. Groups work on a claim, not a colour competition. Section 6 offers real disclosures that should earn a supported rating. Protect the reading time.
 :::
 
-## Put the passage beside the judgement. {.reader-slide}
+## Post your rating on the wall, with the passage that supports it. {.reader-slide}
 
 Use the **two-sheet credibility grid**.
 
@@ -137,13 +138,13 @@ What evidence could resolve the disagreement?
 7 minutes. Use the trainer section key. Accept different overall ratings when the specific claim and reason are clear. Do not treat colour consensus as proof. Bring out a supported disclosure as well as the unsupported summary or recommendation.
 :::
 
-## Trace the headline to the finding. {.reader-slide}
+## Does the headline match the finding in the report? {.reader-slide}
 
 ```{r, results='asis'}
 html_out(html_table(method_rows[c(2,4),],compact=TRUE))
 ```
 ::: {.ask}
-Does selecting the largest point estimate settle the saving rule?
+Does selecting the largest point estimate settle our rule of at least a 1,000 AED reduction?
 :::
 ```{=html}
 <button data-open="headline-feedback" data-closed="Open the source check" data-opened="Hide feedback" aria-controls="headline-feedback" aria-expanded="false">Open the source check</button><div id="headline-feedback" class="feedback" hidden>The selected matching interval spans 1,000. The preferred city interval falls short. City methods share records and have different assumptions.</div>
@@ -154,10 +155,10 @@ Does selecting the largest point estimate settle the saving rule?
 5 minutes. Section 5 has all four rows; this screen selects the preferred city analysis and the headline for direct comparison. Positive numbers denote annual saving in AED. Do not count methods as independent votes; do not confuse the saving rule with full value for money. A point estimate above the rule does not guarantee the underlying saving clears it.
 :::
 
-## A confident AI verdict. A supported one? {.reader-slide}
+## The AI gives a confident verdict. Is it supported? {.reader-slide}
 
 ```{r, results='asis'}
-html_out(paste0('<p>',ai_verdict,'</p>'))
+html_out(paste0('<p class="caption">This response was written for the exercise. It is not a real AI answer.</p><p>',ai_verdict,'</p>'))
 ```
 ::: {.ask}
 Which claims would you correct against the report?
@@ -171,7 +172,7 @@ Which claims would you correct against the report?
 4 minutes. Authored AI draft; no account required. Cross out and repair on Sheet 2 before the reveal. The report already discloses the relevant evidence. Accuracy of one number does not make the verdict sound.
 :::
 
-## Your final verdict: what changed? {.reader-slide}
+## What is your final verdict, and what changed? {.reader-slide}
 
 ```{=html}
 <div data-choices><button data-choice aria-pressed="false">Sign off</button><button data-choice aria-pressed="false">With conditions</button><button data-choice aria-pressed="false">Request evidence</button><p role="status" class="feedback"></p></div>
@@ -185,7 +186,7 @@ Write your final judgement and any evidence still needed.
 3 minutes. Optional After phase of the room poll, closed before totals. Discuss reasons rather than the winning vote. A conditional proposal must state its limits. Assess the independent reading responses, not a colour or vote change.
 :::
 
-## One question you still need answered. {.reader-slide}
+## What is the one question you still need answered? {.reader-slide}
 
 ::: {.ask}
 What would you ask the evaluator next, and why?

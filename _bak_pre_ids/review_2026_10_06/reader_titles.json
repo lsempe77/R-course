@@ -1,0 +1,271 @@
+{
+  "days": [
+    {
+      "day": 1,
+      "date": "Monday 12 October",
+      "title": "Good news needs good questions"
+    },
+    {
+      "day": 2,
+      "date": "Tuesday 13 October",
+      "title": "Compared with what?"
+    },
+    {
+      "day": 3,
+      "date": "Wednesday 14 October",
+      "title": "Would you approve it?"
+    },
+    {
+      "day": 4,
+      "date": "Thursday 15 October",
+      "title": "Make the call. Show the evidence."
+    }
+  ],
+  "sessions": [
+    {
+      "day": 1,
+      "session": 1,
+      "minutes": 60,
+      "deck": "Oct12_session1_live",
+      "title": "What do the numbers actually say?",
+      "subtitle": "Five terms for reading a regression table",
+      "description": "Explain mean, treatment effect, coefficient, p-value and confidence interval.",
+      "headings": [
+        "The GreenWaste case study",
+        "Where does GreenWaste fit?",
+        "An impressive result lands on your desk",
+        "Mean: who looks like the average?",
+        "Treatment effect: what did GreenWaste cause?",
+        "Coefficient: which row is the change?",
+        "What does the minus sign mean?",
+        "Confidence interval: how sure are we?",
+        "P-value: does small mean important?",
+        "A lower cost. Enough of a saving?",
+        "Your turn: what does the table say?",
+        "A correct number. A wrong conclusion.",
+        "What would you tell the director?"
+      ]
+    },
+    {
+      "day": 1,
+      "session": 2,
+      "minutes": 60,
+      "deck": "Oct12_session2",
+      "title": "Good news. Enough to act?",
+      "subtitle": "Four claims. What evidence is missing?",
+      "description": "A fall in waste sounds promising. Decide what you still need to know.",
+      "headings": [
+        "That headline lands on your desk",
+        "Remember GreenWaste?",
+        "Would you extend it?",
+        "What does the headline leave out?",
+        "Who else saw waste fall?",
+        "Better than before. Better than without?",
+        "Who is hidden by the average?",
+        "Four claims. Which would you act on?",
+        "Which evidence supports your choice?",
+        "Would you accept the AI explanation?",
+        "Which answer do you need before acting?"
+      ]
+    },
+    {
+      "day": 1,
+      "session": 3,
+      "minutes": 75,
+      "deck": "Oct12_session3_live",
+      "title": "Did the programme make the difference?",
+      "subtitle": "A pilot lottery and the limits of its results",
+      "description": "Separate the programme effect from differences that were there already.",
+      "headings": [
+        "Two savings. Two weak comparisons.",
+        "Which comparison is fair?",
+        "How different were they at the start?",
+        "Could something else explain the fall?",
+        "What does the lottery protect us from?",
+        "A lottery. Perfectly balanced groups?",
+        "What did the pilot actually find?",
+        "Break",
+        "Does the interval clear our saving rule?",
+        "Would you extend it now?",
+        "Your recommendation in three sentences",
+        "The AI wants to expand. What is missing?",
+        "Which question could change your decision?"
+      ]
+    },
+    {
+      "day": 2,
+      "session": 1,
+      "minutes": 60,
+      "deck": "Oct13_session1",
+      "title": "What would have happened anyway?",
+      "subtitle": "Difference-in-differences: find the extra change",
+      "description": "Both groups changed. Work out what was extra, then question the trend assumption.",
+      "headings": [
+        "Yesterday's saving. Today's question.",
+        "Both groups changed. What was extra?",
+        "Four numbers. What is the extra change?",
+        "What does the extra change tell us?",
+        "What must we assume about the groups?",
+        "Which trend would make you hesitate?",
+        "Can one 'before' show a trend?",
+        "Does the report go beyond its evidence?",
+        "The AI says cause. Does the comparison?",
+        "What would you ask for next?"
+      ]
+    },
+    {
+      "day": 2,
+      "session": 2,
+      "minutes": 60,
+      "deck": "Oct13_session2_live",
+      "title": "What changes at the cutoff?",
+      "subtitle": "Regression discontinuity: inspect the score rule",
+      "description": "Compare nearby businesses and check what else changes at score 58.",
+      "headings": [
+        "Same city. Either side of the rule.",
+        "What do you expect at score 58?",
+        "Twelve nearby businesses. What do they show?",
+        "Why did our groups get different jumps?",
+        "Is the jump large enough to matter?",
+        "Change the window. Change the answer?",
+        "Waste costs jump. Manager age does too.",
+        "Does this cutoff make a fair comparison?",
+        "Local evidence. A citywide recommendation?",
+        "Which check is missing?"
+      ]
+    },
+    {
+      "day": 2,
+      "session": 3,
+      "minutes": 75,
+      "deck": "Oct13_session3",
+      "title": "How similar is similar enough?",
+      "subtitle": "Matching: similar records can hide differences",
+      "description": "Choose comparison businesses, then question what their profiles leave out.",
+      "headings": [
+        "Who would you choose as the comparison?",
+        "What can you tell before seeing costs?",
+        "Find the twins",
+        "Now open the costs. Still convinced?",
+        "Near the rule. Enough certainty?",
+        "Four characteristics. Still different?",
+        "Take a break",
+        "Drop one characteristic. A new answer?",
+        "What if motivation is missing?",
+        "What does 'everyone matched' prove?",
+        "Act now, add conditions or ask first?",
+        "The AI promises no bias. Where is the proof?",
+        "Close the sheet. What would you ask?"
+      ]
+    },
+    {
+      "day": 3,
+      "session": 1,
+      "minutes": 60,
+      "deck": "Oct14_session1_live",
+      "title": "Worth the money?",
+      "subtitle": "Costs, savings and the assumptions between them",
+      "description": "Test whether the saving justifies the cost, and which assumption could change that.",
+      "headings": [
+        "A saving is only half the question.",
+        "Benefits beat costs. Should we approve?",
+        "What is inside the headline ratio?",
+        "Benefits of 3,350. Against which costs?",
+        "Worth less if the saving arrives later?",
+        "Whose costs are missing?",
+        "One changed assumption. Your prediction?",
+        "Where does your scenario land?",
+        "Which assumption changes the verdict?",
+        "The ratio is above 1. Case closed?",
+        "Which missing fact matters most?"
+      ]
+    },
+    {
+      "day": 3,
+      "session": 2,
+      "minutes": 60,
+      "deck": "Oct14_session2",
+      "title": "Same numbers. Different story.",
+      "subtitle": "Charts, averages and the story behind the picture",
+      "description": "Find the choices that shape a chart, then write a caption its evidence supports.",
+      "headings": [
+        "Which chart would you show the director?",
+        "Same values. A different impression.",
+        "Where does the axis start?",
+        "Does anyone look like the average?",
+        "49.5% or 58.6%? Both can be right.",
+        "Does this interval settle the decision?",
+        "Write the caption the chart deserves.",
+        "The AI sees cause. Can you?",
+        "Defend your chart. Defend its limit.",
+        "Before trusting a chart, check what?"
+      ]
+    },
+    {
+      "day": 3,
+      "session": 3,
+      "minutes": 75,
+      "deck": "Oct14_session3_live",
+      "title": "The analyst is in the room",
+      "subtitle": "Ask for evidence that could change your answer",
+      "description": "Choose your questions, hear the answers and decide whether you would sign.",
+      "headings": [
+        "Would you sign this note?",
+        "Follow each claim back to its evidence.",
+        "Only three questions. Which ones?",
+        "Will 'is it reliable?' get a useful answer?",
+        "Choose before the analyst arrives.",
+        "Take a break",
+        "The analyst is here. What will you ask?",
+        "Pilot estimate: 1,014. Enough to act?",
+        "An answer, a partial answer or no answer?",
+        "What still stands between you and approval?",
+        "Now would you sign?",
+        "The AI says four studies agree. Do they?",
+        "Ask for evidence you would actually use."
+      ]
+    },
+    {
+      "day": 4,
+      "session": 1,
+      "minutes": 60,
+      "deck": "Oct15_session1",
+      "title": "Would you trust this report?",
+      "subtitle": "Read the report. Find support and weak links",
+      "description": "Make your own judgement and back it with passages from the report.",
+      "headings": [
+        "Your own judgement first. No discussion.",
+        "Your first verdict, with a reason.",
+        "Supported, concern or unsupported?",
+        "What survives checking the summary?",
+        "Your section. One strength, one concern.",
+        "Put the passage beside the judgement.",
+        "Why do our ratings differ?",
+        "Trace the headline to the finding.",
+        "A confident AI verdict. A supported one?",
+        "Your final verdict: what changed?",
+        "One question you still need answered."
+      ]
+    },
+    {
+      "day": 4,
+      "session": 2,
+      "minutes": 60,
+      "deck": "Oct15_session2_live",
+      "title": "What should the director do next?",
+      "subtitle": "A recommendation with evidence and conditions",
+      "description": "Write a short brief that makes the action, evidence and remaining risk clear.",
+      "headings": [
+        "The corrected findings are on your desk.",
+        "What does the director need to decide?",
+        "What makes this brief useful?",
+        "150 words. What should happen next?",
+        "Would you sign your partner's brief?",
+        "Which sentence needs changing?",
+        "Which claim did the AI add?",
+        "Defend the action and its conditions.",
+        "Ask for the next piece of evidence."
+      ]
+    }
+  ]
+}

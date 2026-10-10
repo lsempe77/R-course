@@ -1,0 +1,168 @@
+---
+title: "What should the director do next?"
+subtitle: "Day 4 | Session 2: A recommendation with evidence and conditions"
+author: "3ie"
+always_allow_html: true
+format:
+  revealjs:
+    theme: [theme_dge.scss, theme_reader.scss]
+    logo: assets/dge_logo_horizontal.svg
+    slide-number: true
+    width: 1280
+    height: 720
+    slide-level: 2
+    embed-resources: true
+    include-after-body: _reader_interactions.html
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+```{r setup, include=FALSE}
+source('day4_case.R')
+```
+
+## The corrected findings are on your desk. {.reader-slide}
+
+Open the **corrected findings reference**.
+
+Locate the pilot interval, city comparison limit and cost assumptions.
+
+Use this source when drafting.
+
+::: {.ask}
+Which evidence would most affect the proposed action?
+:::
+
+
+::: {.notes}
+5 minutes. The reference corrects the exercise report's planted claims. Four anchors replace the long six-findings tour and Tariff Shield case. Use the current GreenWaste figures; do not treat yesterday's flawed report as an unquestioned source. No coding or model demonstration.
+:::
+
+## What does the director need to decide? {.reader-slide}
+
+```{=html}
+<div class="decision-checks"><div><h3>Saving rule</h3><p>Estimate and interval against 1,000 AED.</p></div><div><h3>Cause and reach</h3><p>Fair comparison and people described.</p></div><div><h3>Value for money</h3><p>Evidence about costs and duration.</p></div></div>
+```
+::: {.ask}
+Which question remains unanswered for nationwide expansion?
+:::
+
+
+::: {.notes}
+5 minutes. These are separate decision considerations. Passing a numerical rule would not establish transportability or costs. Use familiar technical terms only as needed and explain them in ordinary language. Do not add a new method catalogue.
+:::
+
+## What makes this brief useful? {.reader-slide}
+
+```{r, results='asis'}
+html_out(paste0('<div class="sample-brief">',paste(sprintf('<p>%s</p>',example_brief),collapse=''),'</div>'))
+```
+::: {.ask}
+Where are the finding, recommendation, risk and evidence request?
+:::
+
+
+::: {.notes}
+5 minutes. Read the model as one possible conditional judgement, not the correct vote. Mark its four parts on the source reference. It is under 150 words and names the interval and reach. The request explains how the answer affects scale and budget.
+:::
+
+## 150 words. What should happen next? {.reader-slide}
+
+Write **at most 150 words** for a director.
+
+Use **Sheet 1**: finding, recommendation, risk and next evidence.
+
+Keep the corrected source open.
+
+::: {.ask}
+Can the director see what you recommend and why?
+:::
+
+
+::: {.notes}
+12 minutes. Individuals draft their own brief, then may discuss with a partner. Protect twelve minutes. One proportionate action with an explicit condition is enough. Each factual and causal claim must have a source. No AI in the first draft; do not demand jargon or estimator details.
+:::
+
+## Would you sign your partner's brief? {.reader-slide}
+
+A partner reviews your brief using **Sheet 2**.
+
+Point to the source for its strongest claim.
+
+Check the interval, population and missing evidence.
+
+::: {.ask}
+What important limit would the director otherwise miss?
+:::
+
+
+::: {.notes}
+8 minutes. Reviewer cites the finding anchor, not just a tick or a numerical match. Treat unsupported claims and material omissions as review issues. Give one concrete suggested repair. The author retains responsibility for the recommendation.
+:::
+
+## Which sentence needs changing? {.reader-slide}
+
+Revise one important sentence.
+
+Add the condition or limit that the evidence requires.
+
+Explain how the edit changes the recommendation.
+
+::: {.ask}
+Does the revised action follow from the source?
+:::
+
+
+::: {.notes}
+7 minutes. Accept different defensible choices. Check that a condition is meaningful, not a generic caveat. A recommendation to gather evidence needs a specific request and purpose. No automated word or number matching can prove faithful interpretation.
+:::
+
+## Which claim did the AI add? {.reader-slide}
+
+```{r, results='asis'}
+html_out(paste0('<p>',ai_brief,'</p>'))
+```
+::: {.ask}
+How can an accurate number accompany an unsupported action?
+:::
+```{=html}
+<button data-open="brief-ai" data-closed="Open the source check" data-opened="Hide feedback" aria-controls="brief-ai" aria-expanded="false">Open the source check</button><div id="brief-ai" class="feedback" hidden>The pilot interval spans the rule and describes one district. The ratio depends on fictional cost and duration inputs. Remove the national approval and no-more-evidence assurances.</div>
+```
+
+
+::: {.notes}
+6 minutes. Authored draft includes accurate point and ratio but false threshold, reach and cost conclusions. Mark and repair on Sheet 2 before revealing feedback. No external AI account or script needed. Compare each assertion with a source and a limit.
+:::
+
+## Defend the action and its conditions. {.reader-slide}
+
+Share the action and its condition.
+
+Point to the evidence behind it.
+
+Name an answer that could change it.
+
+::: {.ask}
+Would your recommendation still make sense if that answer changed?
+:::
+
+
+::: {.notes}
+6 minutes. Invite two or three short defences. Discuss evidence and proportionality rather than persuasive tone. Help participants recognise useful positive evidence as well as reasons to request more. Do not score agreement with the trainer's preferred action.
+:::
+
+## Ask for the next piece of evidence. {.reader-slide}
+
+::: {.ask}
+What specific evidence should the evaluator send, and how would you use it?
+:::
+Write independently.
+
+If you received a reading-item retry, answer it now using the source.
+
+::: {.notes}
+6 minutes. Give targeted feedback on the Session 1 reading task and a retry for the missing ability, including a before/after causal trap if needed. Record revised scores separately. The 8/10 target is a teaching check, not validated certification; a new presentation of one case does not demonstrate transfer to a different programme. The other provider owns the final simulation. Total 60 minutes.
+:::

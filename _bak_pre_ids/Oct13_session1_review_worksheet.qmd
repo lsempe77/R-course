@@ -1,0 +1,273 @@
+---
+title: "GreenWaste city: what was the difference between the two changes?"
+format:
+  html:
+    embed-resources: true
+    toc: false
+    html-math-method: plain
+    theme: none
+    include-in-header:
+      text: |
+        <style>
+        body{font:16px/1.45 Arial,sans-serif;color:#111418;margin:0;background:#eef2f6}
+        main{max-width:850px;margin:auto}h1{font-size:26px;color:#063360;margin:12px 0}h2{font-size:22px;color:#063360;margin:0 0 12px}h3{font-size:18px;margin:14px 0 6px}
+        .sheet-page{background:white;padding:28px 40px;margin:20px 0;box-sizing:border-box;min-height:950px}p{margin:8px 0}.caption{font-size:13px;color:#545860}.reading-table{border-collapse:collapse;width:100%;font-size:14px}.reading-table td,.reading-table th{padding:8px;border-bottom:1px solid #D5DEE8;text-align:left}.reading-table thead{background:#063360;color:white}.writing{height:44px;border-bottom:1px solid #c8d6e5;margin:6px 0}.writing.tall{height:75px}.costs{font-size:19px;word-spacing:9px;border-top:2px solid #215a9e;padding:12px 0}.ai-source{border-left:3px solid #7da1c4;padding-left:16px}.prompt{border-top:2px solid #215a9e;padding-top:8px;font-size:15px}.source-note{font-size:14px}
+        header button{font:inherit;margin:12px 0;padding:8px 15px;border:1px solid #215a9e;background:white;color:#063360;cursor:pointer}
+        @page{size:A4;margin:14mm}@media print{body{background:white;font-size:11pt;line-height:1.35}main{max-width:none}.sheet-page{padding:0;margin:0;min-height:0;break-after:page;box-shadow:none}.sheet-page:last-child{break-after:auto}header{display:none}h1{font-size:19pt}h2{font-size:17pt}h3{font-size:12pt}.reading-table{font-size:10pt}.writing{height:10mm}.writing.tall{height:17mm}.ai-source{font-size:11pt}.prompt{font-size:10pt}#title-block-header{display:none}}
+        .review-svg{display:block;width:100%;height:210px}.comparison-table{border-collapse:collapse;width:100%;font-size:14px}.comparison-table td,.comparison-table th{border-bottom:1px solid #D5DEE8;padding:7px;text-align:left}.sheet-page .ai-source p{margin:8px 0}.sheet-page table{border-collapse:collapse;width:100%}.sheet-page th,.sheet-page td{border-bottom:1px solid #D5DEE8;padding:7px;text-align:left}.sheet-page thead{background:#063360;color:white}@media print{.review-svg{height:200px}.comparison-table{font-size:10pt}}
+        .interval-visual{display:block;width:100%;height:160px}.draw-table{width:100%;border-collapse:collapse}
+        
+        .trend-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}.trend-pair .review-svg{height:155px}.visual-reference .review-svg{height:185px}.visual-reference .trend-pair .review-svg{height:155px}.visual-reference .interval-figure .review-svg{height:135px}.blank-chart .review-svg{height:165px}.reading-table{font-size:13px}.reading-table td,.reading-table th{padding:6px}.source-note{font-size:12px}.source-page p{margin:6px 0}.source-page h3{margin:10px 0 5px}@media print{.source-page{font-size:10.5pt}.reading-table{font-size:9pt}.reading-table td,.reading-table th{padding:5px}.source-note{font-size:9pt}}
+        </style>
+        <style>.writing.part{height:30px;margin:2px 0}.table-title{margin:10px 0 4px}@media print{.writing.part{height:7mm}}</style>
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+
+
+```{r, include=FALSE}
+source('day2_session1_review.R', encoding='UTF-8')
+```
+
+<header><button onclick="window.print()">Print worksheet</button></header>
+
+<div class="sheet-page source-page">
+
+## Page 1 | H4-A: The city difference-in-differences (DiD) study summary
+
+GreenWaste is a fictional training case. Use this study summary as your source for today's questions.
+
+### §1 | Who, what and when?
+
+GreenWaste provides equipment subsidies, installation help and staff training. The city study follows 10,000 businesses: 4,794 participant businesses and 5,206 comparison businesses that did not receive GreenWaste. Eligibility followed an efficiency-score rule, not a lottery. Annual waste management cost per business, in AED, was recorded once before GreenWaste and once 12 months after. These are city records. They are not the separate pilot of 400 businesses.
+
+### §2 | What was compared?
+
+The participant businesses' mean cost went from 1,432 to 763 AED, a change of -669 AED. The comparison businesses' mean cost went from 2,258 to 2,401 AED, a change of +143 AED. The difference-in-differences (DiD) estimate is the participants' change minus the comparison businesses' change, which is about **-812 AED**. The calculations use the exact records, and the figures shown are rounded. This is the difference between the two changes. It is not the participant businesses' own change, and it is not the gap between the two groups after the programme.
+
+```{r, results='asis'}
+html_out(d4_regression())
+```
+
+### §3 | What is needed for a causal reading?
+
+The parallel trends assumption means that, without GreenWaste, the two groups would have had the same mean change in cost over this period. They do not need to start at the same cost. Under this assumption, the participant businesses' mean cost after 12 months without GreenWaste would be about 1,575 AED, not the 763 AED we observe. A causal reading also needs comparable measurement, stable group membership and no important effect of the programme on the comparison businesses. A competing change that affected the groups differently could undermine the reading.
+
+### §4 | What can this study summary show?
+
+One measurement before GreenWaste cannot show earlier trends. The histories A and B on page 2 are hypothetical. They are not additional observations. The 95% interval for the difference between the two changes is a reduction of 792 to 833 AED, if the model's assumptions hold. A precise interval does not verify parallel trends. Both the estimate and the interval are smaller than our rule of at least a 1,000 AED reduction in annual waste management cost per business per year. This table alone does not show effects for the whole country or whether GreenWaste is good value for money, because the full programme costs are not given.
+
+<div class="source-note">Source: GreenWaste city data (10,000 businesses, measured before and 12 months after). The regression uses the same businesses at both times and allows for the repeated measurements on each business. The paragraphs and table above are the material to inspect.</div>
+
+</div>
+
+<div class="sheet-page visual-reference">
+
+## Page 2 | H4-A: Figures for reference
+
+### Observed means and an assumed path for participant businesses without GreenWaste
+
+```{r, results='asis'}
+html_out(d4_lines(TRUE))
+```
+
+Solid lines join the observed means. The dashed line shows the path the participant businesses would have followed under the parallel trends assumption.
+
+### Two hypothetical earlier histories, A and B
+
+```{r, results='asis'}
+html_out(paste0('<div class="trend-pair"><div><strong>A</strong>',d4_trend(1),'</div><div><strong>B</strong>',d4_trend(2),'</div></div>'))
+```
+
+Both histories use the same scales and both end before the programme. Groups can start at different levels and still change by similar amounts. Neither history comes from the GreenWaste data.
+
+### The difference between the two changes compared with our rule
+
+<div class="interval-figure">
+```{r, results='asis'}
+html_out(d4_interval())
+```
+</div>
+
+The interval shows uncertainty about the mean difference between the two changes, if the model's assumptions hold. It does not show the savings of each business, and it does not allow for every possible source of bias.
+
+</div>
+
+<div class="sheet-page">
+
+## Page 3 | Q1 and Q2: work on these as we teach each idea
+
+### Q1 | Four numbers, two changes, one difference between the changes
+
+Use §2 on page 1.
+
+(a) Calculate the change (after minus before) for each group in the table.
+
+| Group | Before (AED) | After (AED) | Change (AED) |
+|---|---|---|---|
+| Participant businesses | 1,432 | 763 | __________ |
+| Comparison businesses | 2,258 | 2,401 | __________ |
+
+(b) Subtract the comparison businesses' change from the participant businesses' change.
+
+Participant change minus comparison change (AED): __________________
+
+(c) Label the four observed means on the figure and connect each group's two points. After we explain the dashed line, add the assumed participant outcome and label it "assumed".
+
+<div class="blank-chart">
+```{r, results='asis'}
+html_out(d4_lines(blank=TRUE))
+```
+</div>
+
+### Q2 | Find the difference between the two changes in the regression table
+
+(a) Circle its row in the table on page 1.
+
+(b) Explain in your own words what its sign, its units, the comparison and the group of businesses tell you.
+
+<div class="writing part"></div>
+
+(c) What does each of the other three rows show?
+
+<div class="writing part"></div>
+
+(d) Why is the last row not the participant businesses' own change of -669 AED?
+
+<div class="writing part"></div>
+
+(e) Box the 95% interval in the last row. Say what it describes.
+
+<div class="writing part"></div>
+
+(f) Read the p-value in that row. Say what it does and does not show.
+
+<div class="writing part"></div>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 4 | Q3 and Q4: how credible is the result, and what should we advise?
+
+### Q3 | What would have happened without GreenWaste?
+
+Use §3 and §4 on page 1 and the figures on page 2.
+
+(a) Explain the parallel trends assumption for GreenWaste in your own words. The groups do not need to start at the same cost.
+
+<div class="writing part"></div>
+
+(b) Which hypothetical history, A or B, makes you hesitate? Describe what looks different.
+
+<div class="writing part"></div>
+
+(c) What does the more reassuring history still not prove?
+
+<div class="writing part"></div>
+
+(d) Could the GreenWaste data show earlier trends?
+
+<div class="writing part"></div>
+
+(e) Request one specific piece of evidence about earlier costs or about a competing change, and say why it matters.
+
+<div class="writing part"></div>
+
+### Q4 | Some reduction, or a large enough reduction?
+
+Use the interval on page 2.
+
+(a) How do the estimate and the interval compare with our rule of at least a 1,000 AED reduction in annual waste management cost per business per year?
+
+<div class="writing part"></div>
+
+(b) What does a narrow interval still leave unresolved?
+
+<div class="writing part"></div>
+
+### Check the source, then give your own reading
+
+In H4-A, circle the last row of the table and its interval, underline the assumption and mark the limit of the data. Compare your marks with a partner.
+
+Keep H4-A open, and close the AI responses and your partner's comments. Write one interpretation that H4-A supports and one specific evidence request. How could the answer change your advice?
+
+<div class="writing tall"></div>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 5 | AI exercise: check the numbers and the claims
+
+### Part A: Mark the response
+
+Naive prompt (a prompt with no context, as a busy person might type it): "Explain the regression table to a policy adviser considering GreenWaste expansion. Say what they should check." This response was written for the exercise. It is not a real AI answer. It mixes accurate readings with questionable conclusions. Do not run this prompt yourself.
+
+<div class="ai-source">
+```{r, results='asis'}
+html_out(d4_paragraphs(d4_ai))
+```
+</div>
+
+Underline the claims that H4-A supports. Cross out the claims that H4-A does not support. Check H4-A on page 1, not whether the writing sounds confident.
+
+### Part B: Run the improved prompt, then compare
+
+<div class="prompt">
+```{r, results='asis'}
+html_out(paste0('<strong>Improved prompt</strong>',d4_paragraphs(d4_prompt)))
+```
+</div>
+
+Copy this prompt and H4-A into Microsoft Copilot, and keep your AI good-practice card beside you. If you are not using Copilot, read the prepared response on page 6 after you finish Part A.
+
+(a) Which claim improved?
+
+<div class="writing part"></div>
+
+(b) What still needs checking against H4-A?
+
+<div class="writing part"></div>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 6 | Prepared response
+
+Use this response if you are not using Copilot. Read it after you have marked the response on page 5. It was written for the exercise in reply to the improved prompt. It is not additional evidence from the study. An AI tool may answer differently.
+
+<div class="ai-source">
+```{r, results='asis'}
+html_out(d4_paragraphs(d4_fallback))
+```
+</div>
+
+(a) Match its numbers to H4-A §2 and the table.
+
+<div class="writing part"></div>
+
+(b) Match its conditions and requests for evidence to §3 and §4.
+
+<div class="writing part"></div>
+
+(c) Does it separate the comparison, the credibility of the causal reading and the decision rule?
+
+<div class="writing part"></div>
+
+(d) Compare it with page 5. Which unsupported claim has been removed?
+
+<div class="writing part"></div>
+
+(e) Could any remaining wording be clearer?
+
+<div class="writing part"></div>
+
+Now return to page 4 and write your own interpretation and evidence request with the AI responses closed.
+
+</div>

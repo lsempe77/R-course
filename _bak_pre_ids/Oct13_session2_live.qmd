@@ -1,0 +1,206 @@
+---
+title: "What changes at the cutoff?"
+subtitle: "Day 2 | Session 2: Regression discontinuity: inspect the score rule"
+author: "3ie"
+always_allow_html: true
+format:
+  live-revealjs:
+    theme: [theme_dge.scss, theme_live.scss, theme_reader.scss]
+    logo: assets/dge_logo_horizontal.svg
+    slide-number: true
+    width: 1280
+    height: 720
+    slide-level: 2
+    embed-resources: true
+    include-after-body: _reader_interactions.html
+webr:
+  render-df: kable
+  resources:
+    - evaluation_data_GreenWaste_simple.csv
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+
+```{r setup, include=FALSE}
+source('day2_case.R')
+```
+
+## Same city. Either side of the rule. {.reader-slide}
+
+```{webr}
+#| context: setup
+#| autorun: true
+#| echo: false
+#| include: false
+gw <- read.csv('evaluation_data_GreenWaste_simple.csv')
+city <- subset(gw, setting == 'city')
+near <- subset(city, abs(score - 58) <= 2)
+near$below <- as.integer(near$score <= 58)
+near$distance <- near$score - 58
+```
+```{=html}
+<div class="score-rule"><div>Score 58 or below<br><strong>Took part</strong></div><div>Score above 58<br><strong>Did not take part</strong></div></div>
+```
+Compare businesses **close to 58**, after 12 months.
+
+::: {.ask}
+Why might neighbours either side make a useful comparison?
+:::
+
+
+::: {.notes}
+4 minutes. Name the score rule and nearby comparison. Regression discontinuity, or RDD, is the report term. The corrected fictional data now follow the displayed rule exactly. Avoid claiming proximity alone makes assignment random.
+:::
+
+## What do you expect at score 58? {.reader-slide}
+
+::: {.ask}
+Would costs be lower just below 58? By how much?
+:::
+```{=html}
+<div data-choices><button data-choice aria-pressed="false">Little difference</button><button data-choice aria-pressed="false">At least 1,000 AED lower</button><button data-choice aria-pressed="false">Need evidence</button><p class="feedback" role="status"></p></div>
+```
+Commit before opening the group card.
+
+::: {.notes}
+4 minutes. Local choices only; use course-owned room poll for room totals or labelled cards. No estimate on this screen. Explain below-minus-above sign if needed.
+:::
+
+## Twelve nearby businesses. What do they show? {.reader-slide}
+
+Each group has a different **Card A to H**.
+
+Find the mean cost on each side.
+
+Subtract: **at or below 58 minus above 58**.
+
+Write the difference and your card letter on a sticky note.
+
+::: {.ask}
+What does your small sample suggest?
+:::
+
+
+::: {.notes}
+10 minutes. Preserve Fiona's seeds A4 B11 C37 D22 E9 F21 G33 H5. Each has six businesses per side, costs rounded to ten AED. Give one different card per group and calculators. A small-sample gap is a rough exercise result, not the regression jump.
+:::
+
+## Why did our groups get different jumps? {.reader-slide}
+
+Put your sticky note on the **A1 number line**.
+
+Look for results far apart and a result with the opposite sign.
+
+::: {.ask}
+Why did the groups reach different answers?
+:::
+
+
+::: {.notes}
+6 minutes. One reporter per group. Cards sample different businesses, so costs and slopes vary. H may point in the other direction; use the generated key rather than memorised values. Draw the regression estimate and interval below the line on the next screen.
+:::
+
+## Is the jump large enough to matter? {.reader-slide}
+
+```{r, results='asis'}
+html_out(paste0(as.character(knitr::kable(report_row('rdd'),format='html',row.names=FALSE,table.attr='class="reading-table"')),fiction))
+```
+```{webr}
+#| echo: true
+#| autorun: false
+# Compare waste costs just below and above the score rule.
+# Allow costs to slope differently on either side.
+fit <- lm(cost_after ~ below * distance, data = near)
+# Show the estimated jump at the rule, in whole AED.
+round(coef(fit)['below'])
+```
+::: {.ask}
+Which businesses does this result describe?
+:::
+
+
+::: {.notes}
+5 minutes. One trainer demo after prediction. OLS and robust regression coefficients agree; the printed 95% interval uses estimatr HC2, consistently from greenwaste_case.R. Regression allows a slope on each side. Estimate is local near 58, not the whole city. Mark estimate/interval on wall and compare the saving rule.
+:::
+
+## Change the window. Change the answer? {.reader-slide}
+
+```{r, results='asis'}
+html_out(sprintf('<div class="evidence-pair"><div class="evidence"><h3>Within 2 points</h3><p class="big-number">%s</p><p>AED estimated jump</p></div><div class="evidence"><h3>Within 5 points</h3><button data-open="wider-window" data-closed="Open wider result" data-opened="Hide wider result" aria-controls="wider-window" aria-expanded="false">Open wider result</button><div id="wider-window" hidden><p class="big-number">%s</p><p>AED estimated jump</p></div></div></div>%s',fmt(rdd[1]),fmt(case$rdd5[1]),fiction))
+```
+::: {.ask}
+Does a wider window change the decision against the rule?
+:::
+
+
+::: {.notes}
+5 minutes. Predict before opening. Bandwidth means how far either side the evaluator looked. Both displayed point estimates are below the rule. Stability alone does not remove other discontinuities; omit full sweep, placebo lab and sliders.
+:::
+
+## Waste costs jump. Manager age does too. {.reader-slide}
+
+::: {.ask}
+What if managers just below the line are younger?
+:::
+```{r, results='asis'}
+html_out(sprintf('<button data-open="age-jump" data-closed="Open the age check" data-opened="Hide the age check" aria-controls="age-jump" aria-expanded="false">Open the age check</button><div id="age-jump" hidden><p class="big-number">%s years younger</p><p>Estimated age jump at 58, using a five-point window.</p></div>%s',fmt(abs(case$age_jump),1),fiction))
+```
+
+
+::: {.notes}
+7 minutes. Prediction, then reveal. Pre-programme manager age jumps at the same line. It offers another possible explanation for a cost jump. Adjusting for age does not automatically rescue the causal interpretation. Ask the evaluator to investigate how the score rule and age discontinuity arose.
+:::
+
+## Does this cutoff make a fair comparison? {.reader-slide}
+
+On **Sheet 2**, mark each check as supported, concern or unknown.
+
+- Did the score rule determine participation?
+- Are the compared businesses close to 58?
+- Does something else jump at the line?
+- Who could this result apply to?
+
+::: {.ask}
+Which check would most affect your decision?
+:::
+
+
+::: {.notes}
+9 minutes. Rule followed in generated data, width two points disclosed, manager-age discontinuity is a concern, result local. Sorting/manipulation checks have not been supplied in this shortened extract: ask for them, do not invent a pass. Work alone then in pairs.
+:::
+
+## Local evidence. A citywide recommendation? {.reader-slide}
+
+Illustrative AI draft:
+
+"The score rule proves GreenWaste saves money for every city business. The result justifies extending it to all eligible businesses."
+
+::: {.ask}
+Where does this recommendation go beyond the evidence?
+:::
+```{=html}
+<button data-open="rdd-ai" data-closed="Open feedback" data-opened="Hide feedback" aria-controls="rdd-ai" aria-expanded="false">Open feedback</button><div id="rdd-ai" class="feedback" hidden>The estimate describes businesses near 58. A manager-age jump weakens its causal interpretation. The estimated saving is below the rule.</div>
+```
+
+
+::: {.notes}
+6 minutes. Repair on paper, verify locally. Optional AI prompt: name the compared businesses, another possible explanation and the missing evidence; ask me questions first. Do not use an AI verdict as the credibility check.
+:::
+
+## Which check is missing? {.reader-slide}
+
+::: {.ask}
+What would you ask before accepting this jump as an effect?
+:::
+Close the sheets. Write your question and why the answer matters.
+
+**Regression discontinuity:** read the rule, the local comparison and what else jumps.
+
+::: {.notes}
+4 minutes. Independent exit. Prefer specific next evidence about score setting, age, manipulation or reach. Total 60 minutes.
+:::

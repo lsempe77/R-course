@@ -28,9 +28,10 @@ knitr:
 
 ```{r setup, include=FALSE}
 source('day3_case.R')
+source('wording_overrides.R', encoding = 'UTF-8')
 ```
 
-## Would you sign this note? {.reader-slide}
+## Would you sign this note as written? {.reader-slide}
 
 ```{webr}
 #| context: setup
@@ -66,7 +67,7 @@ Which result did the note choose, and who does each result describe?
 5 minutes. Savings are positive and interval endpoints sorted. Pilot and matching intervals span the rule; DiD and RDD fall short. City methods share records and describe different comparisons. Four estimates are not four votes.
 :::
 
-## Only three questions. Which ones? {.reader-slide}
+## You can ask only three questions. Which ones would you ask? {.reader-slide}
 
 ```{r, results='asis'}
 html_out(paste0('<ol>',paste(sprintf('<li>%s</li>',read_questions),collapse=''),'</ol>'))
@@ -80,9 +81,9 @@ Which three questions would most affect your sign-off decision?
 6 minutes. Use the five-question QA sheet. Each question must request specific evidence. Individuals choose first, then groups. The full historical question battery is outside the teaching route.
 :::
 
-## Will 'is it reliable?' get a useful answer? {.reader-slide}
+## Will the question “Is the evidence robust?” get a useful answer? {.reader-slide}
 
-A reviewer asks: **"Is the evidence robust?"**
+A reviewer asks: **“Is the evidence robust?”**
 
 Rewrite it to request a specific result or check.
 
@@ -98,11 +99,11 @@ What answer would help you decide, and what would count as evidence?
 5 minutes. Ask for a result or check that could change the decision. The example requests the planned analysis; it does not establish that a documented plan exists here.
 :::
 
-## Choose before the analyst arrives. {.reader-slide}
+## Rank your questions before the analyst arrives. {.reader-slide}
 
 Groups rank their questions. Choose a spokesperson.
 
-Write the evidence requested, before asking.
+Write the evidence you will request before you ask.
 
 Keep one follow-up question ready.
 
@@ -115,17 +116,17 @@ Which answer would you keep pressing for?
 7 minutes. Eight groups rank questions. Assign comparison, assumptions, data and conclusions as focus areas if helpful. Use the fixed answer bank; say evidence is not supplied when it is absent.
 :::
 
-## Take a break {.reader-slide}
+## Take a break. The analyst joins us afterwards. {.reader-slide}
 
 Keep your questions ready.
 
-The trainer returns as the analyst.
+After the break, the analyst answers your questions.
 
 ::: {.notes}
 5 minutes. Protect the five-minute break. Keep the questions ready and do not add extra analyses.
 :::
 
-## The analyst is here. What will you ask? {.reader-slide}
+## The analyst is here. What will your group ask? {.reader-slide}
 
 Ask one specific question per group.
 
@@ -142,11 +143,13 @@ Did the answer address the question you asked?
 14 minutes. Allow one question and follow-up per group, about ninety seconds each. Answer briefly from the source bank. Ask which evidence is still missing; never invent fieldwork documentation.
 :::
 
-## Pilot estimate: 1,014. Enough to act? {.reader-slide}
+## The pilot estimated a saving of 1,014 AED. Is that enough to act on? {.reader-slide}
 
-A reviewer asks whether the pilot settles the saving rule.
+A reviewer asks whether the pilot settles our rule of at least a 1,000 AED reduction.
 
-Predict where the two interval limits sit.
+Predict the lower and upper limits of the 95% interval for the saving.
+
+<p class="code-label"><strong>R code</strong></p>
 
 ```{webr}
 #| echo: true
@@ -167,9 +170,9 @@ How does this answer change the recommendation?
 6 minutes. One trainer demonstration. Output gives the lower and upper 95% interval limits for annual saving in AED. This answers the threshold question; paper answers serve other questions. The pilot cannot establish nationwide reach or full value for money.
 :::
 
-## An answer, a partial answer or no answer? {.reader-slide}
+## Is each answer supported, partial or unanswered? {.reader-slide}
 
-For each answer choose:
+For each answer the analyst gives, choose one rating:
 
 **Supported / Partial / Unanswered**
 
@@ -197,7 +200,7 @@ Avoid an undirected list of concerns.
 5 minutes. Work alone then in pairs. Choose a concrete evidence request and explain its decision relevance. Complete generated rows do not establish complete real-world follow-up.
 :::
 
-## Now would you sign? {.reader-slide}
+## Now that you have heard the analyst, would you sign? {.reader-slide}
 
 ```{=html}
 <div data-choices><button data-choice aria-pressed="false">Sign off</button><button data-choice aria-pressed="false">With conditions</button><button data-choice aria-pressed="false">Request evidence</button><p role="status" class="feedback"></p></div>
@@ -211,17 +214,17 @@ Write your final decision before comparing with your opening choice.
 5 minutes. Optional room poll After phase: close before showing totals. Compare reasons, not a winning vote. Assess written evidence of reading. Different provisional decisions need clear limits.
 :::
 
-## The AI says four studies agree. Do they? {.reader-slide}
+## The AI says four independent studies agree. Do they? {.reader-slide}
 
-Illustrative AI draft:
+Naive prompt (a prompt with no context, as a busy person might type it): “Summarise the evidence for GreenWaste.” This response was written for the exercise. It is not a real AI answer.
 
-"There are four independent studies. All intervals clear the saving rule. No businesses are missing, so data quality is established."
+"There are four independent studies. All intervals clear our rule of at least a 1,000 AED reduction. No businesses are missing, so data quality is established."
 
 ::: {.ask}
 Which statements would you correct using the source?
 :::
 ```{=html}
-<button data-open="qa-ai" data-closed="Open feedback" data-opened="Hide feedback" aria-controls="qa-ai" aria-expanded="false">Open feedback</button><div id="qa-ai" class="feedback" hidden>City methods share records and differ in reach. Two intervals span the rule and two fall short. A complete synthetic file does not establish fieldwork quality.</div>
+<button data-open="qa-ai" data-closed="Open feedback" data-opened="Hide feedback" aria-controls="qa-ai" aria-expanded="false">Open feedback</button><div id="qa-ai" class="feedback" hidden>City methods share records and differ in reach. Two intervals span our rule of at least a 1,000 AED reduction and two fall short. A complete synthetic file does not establish fieldwork quality.</div>
 ```
 
 
@@ -229,7 +232,7 @@ Which statements would you correct using the source?
 4 minutes. Authored AI draft, not a captured response. Correct claims using the result table and answer sources. No external AI account is required.
 :::
 
-## Ask for evidence you would actually use. {.reader-slide}
+## Ask the evaluator for evidence you would actually use. {.reader-slide}
 
 ::: {.ask}
 What specific evidence should the evaluator send next?

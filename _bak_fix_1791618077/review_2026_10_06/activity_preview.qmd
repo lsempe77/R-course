@@ -1,0 +1,297 @@
+---
+title: "Read the evidence"
+format:
+  html:
+    embed-resources: true
+    theme: none
+    page-layout: full
+    minimal: true
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+case_env <- new.env()
+case_env$gw <- read.csv("../evaluation_data_GreenWaste_simple.csv")
+sys.source("../greenwaste_case.R", envir = case_env)
+city <- case_env$city
+took <- city$took_part == 1
+reading <- list(
+  before = mean(city$cost_before[took]),
+  after = mean(city$cost_after[took]),
+  change = case_env$case$before_after,
+  other_change = mean(city$change[!took]),
+  starting_gap = abs(case_env$case$gap_before),
+  rule = case_env$RULE,
+  saving = abs(case_env$case$rct),
+  interval = sort(abs(case_env$case$rct_ci))
+)
+fmt <- function(x) formatC(x, digits = 0, format = "f", big.mark = ",")
+```
+
+```{=html}
+<style>
+:root { --blue:#215a9e; --navy:#063360; --pale:#eef4fa; --light:#7da1c4; --ink:#17212b; --muted:#545860; --line:#c9d7e5; --alert:#a22127; }
+* { box-sizing:border-box; }
+body { margin:0; background:#fff; color:var(--ink); font-family:"Noto Kufi Arabic","Segoe UI",Arial,sans-serif; font-size:18px; line-height:1.55; }
+main { max-width:1100px!important; margin:0 auto!important; padding:30px 30px 70px!important; }
+#reading-preview { max-width:1100px; margin:0 auto; padding:30px 30px 70px; }
+#quarto-document-content { width:100%; }
+#title-block-header { display:none; }
+h1,h2,h3 { color:var(--navy); line-height:1.2; font-weight:650; }
+h1 { font-size:clamp(30px,4vw,46px); max-width:800px; margin:30px 0 14px; }
+h2 { font-size:28px; margin:0 0 16px; }
+h3 { font-size:21px; margin:25px 0 10px; }
+p { margin:0 0 16px; }
+button { font:inherit; padding:11px 17px; border:1px solid var(--line); border-radius:6px; background:white; color:var(--navy); min-height:46px; cursor:pointer; }
+button:hover { background:var(--pale); }
+button:focus-visible,textarea:focus-visible { outline:3px solid var(--blue); outline-offset:3px; }
+button[aria-pressed="true"],button[aria-selected="true"] { background:var(--navy); color:white; border-color:var(--navy); }
+button:disabled { opacity:.5; cursor:default; }
+.brand { display:flex; justify-content:space-between; align-items:center; gap:20px; border-bottom:1px solid var(--line); padding-bottom:20px; }
+.brand img { width:200px; max-width:45%; }
+.meta { color:var(--muted); font-size:14px; }
+.intro { max-width:730px; color:var(--muted); }
+.tabs { display:flex; gap:8px; flex-wrap:wrap; margin:25px 0 32px; }
+.lead { font-size:23px; max-width:750px; }
+.evidence { border-left:4px solid var(--light); padding:14px 0 14px 22px; margin:25px 0; }
+.quotation { font-size:clamp(24px,3.4vw,37px); color:var(--navy); font-weight:600; margin:0; }
+.choices { display:flex; flex-wrap:wrap; gap:10px; margin:18px 0; }
+.primary { background:var(--blue); border-color:var(--blue); color:white; }
+.primary:hover { background:var(--navy); }
+.prompt { font-size:22px; font-weight:600; color:var(--navy); }
+.notice { color:var(--muted); font-size:14px; margin:20px 0; }
+.response { margin:18px 0; padding-left:18px; border-left:3px solid var(--blue); max-width:800px; }
+.number { font-size:clamp(38px,5vw,60px); font-weight:650; line-height:1.2; color:var(--blue); }
+.result-line { display:flex; gap:32px; flex-wrap:wrap; align-items:baseline; margin:20px 0; }
+.result-line > div { min-width:180px; }
+.small-label { font-size:16px; color:var(--muted); }
+.reveal { border-top:1px solid var(--line); padding-top:25px; margin-top:30px; }
+.result-chart { width:100%; display:block; }
+.claim-list { list-style:none; padding:0; margin:20px 0; counter-reset:claim; }
+.claim-list li { margin:0; border-bottom:1px solid var(--line); }
+.claim-list button { width:100%; text-align:left; border:0; border-radius:0; padding:19px 15px; }
+.claim-list button::before { counter-increment:claim; content:counter(claim) ". "; font-weight:650; }
+.claim-list button[aria-pressed="true"] { background:var(--pale); color:var(--navy); box-shadow:inset 4px 0 var(--blue); }
+.feedback { min-height:45px; margin:20px 0; }
+textarea { display:block; width:100%; min-height:110px; font:inherit; padding:13px; border:1px solid var(--line); border-radius:5px; margin:12px 0; resize:vertical; }
+.worksheet { max-width:780px; border:1px solid var(--line); padding:40px; background:white; margin:25px auto; }
+.worksheet h2 { font-size:30px; }
+.task-num { color:var(--blue); font-weight:650; font-size:16px; }
+.write-space { min-height:70px; border-bottom:1px solid var(--line); margin:8px 0 20px; }
+.paper-table { width:100%; border-collapse:collapse; margin:18px 0 20px; font-size:17px; }
+.paper-table th,.paper-table td { padding:12px 8px; border-bottom:1px solid var(--line); text-align:right; }
+.paper-table th:first-child,.paper-table td:first-child { text-align:left; }
+.paper-table th { color:var(--navy); }
+[hidden] { display:none!important; }
+@media(max-width:600px) { main { padding:0!important; } #reading-preview { padding:20px 18px 40px; } body { font-size:17px; } .brand { align-items:flex-start; } .brand img { width:160px; } .meta { max-width:135px; } .worksheet { padding:22px; } .choices button { flex:1 1 150px; } .lead { font-size:21px; } }
+@media print {
+ @page { size:A4; margin:15mm; }
+ body { font-family:Arial,sans-serif; font-size:12pt; }
+ main { max-width:none!important; padding:0!important; }
+ #reading-preview { max-width:none; padding:0; }
+ .brand,.page-heading,.tabs,#evidence-panel,#claims-panel,.print-controls,#preview-note { display:none!important; }
+ #paper-panel { display:block!important; }
+ .worksheet { border:0; margin:0; max-width:none; padding:0; }
+ .worksheet h2 { font-size:22pt; }
+ .worksheet p { margin-bottom:10px; }
+ .paper-table { font-size:12pt; }
+ .paper-table th,.paper-table td { padding:8px; }
+ .write-space { min-height:16mm; }
+ .task-num { font-size:12pt; }
+ .notice { font-size:9pt; }
+}
+</style>
+<div id="reading-preview">
+<div class="brand">
+ <img src="../assets/dge_logo_horizontal.svg" alt="Department of Government Enablement">
+ <div class="meta">Module 2 · Design preview<br>Local activity</div>
+</div>
+<div class="page-heading">
+ <h1>Would you approve the claim?</h1>
+ <p class="intro">Choose an answer. Open the evidence. Explain what changed your mind.</p>
+</div>
+<div class="tabs" role="tablist" aria-label="Activity">
+ <button id="evidence-tab" role="tab" aria-controls="evidence-panel" aria-selected="true" type="button">Open the evidence</button>
+ <button id="claims-tab" role="tab" aria-controls="claims-panel" aria-selected="false" type="button">Mark a summary</button>
+ <button id="paper-tab" role="tab" aria-controls="paper-panel" aria-selected="false" type="button">A4 worksheet</button>
+</div>
+<section id="evidence-panel" role="tabpanel" aria-labelledby="evidence-tab">
+ <p class="small-label">The programme</p>
+ <p class="lead">GreenWaste helps businesses cut waste costs. The city is deciding whether to extend it.</p>
+ <div class="evidence"><p class="quotation">“Costs fell after businesses joined GreenWaste. We should extend it.”</p></div>
+ <p class="prompt">Does that sentence justify extending the programme?</p>
+ <div class="choices" id="opening-choices" role="group" aria-label="Your initial judgement">
+  <button type="button" data-choice="yes" aria-pressed="false">Yes</button>
+  <button type="button" data-choice="no" aria-pressed="false">No</button>
+  <button type="button" data-choice="more" aria-pressed="false">I need more evidence</button>
+ </div>
+ <p id="choice-status" class="small-label" aria-live="polite">Your choice stays in this page. This preview does not collect room votes.</p>
+ <button type="button" class="primary" id="open-evidence" disabled>Open the evidence</button>
+ <div id="evidence-reveal" class="reveal" hidden>
+  <h2>A fall is an observed change</h2>
+  <div class="result-line">
+   <div><div class="number" id="cost-fall"></div><div class="small-label">AED lower after joining</div></div>
+   <div><div class="number" id="other-rise"></div><div class="small-label">AED rise for city businesses that did not join</div></div>
+  </div>
+  <p>The groups were already different before GreenWaste. Neither a fall over time nor a gap between these groups proves what the programme caused.</p>
+  <p class="prompt">What would make the comparison fair?</p>
+  <button type="button" id="open-pilot" class="primary">See the pilot lottery</button>
+  <div id="pilot-reveal" class="reveal" hidden>
+   <h2>The pilot used a lottery</h2>
+   <p>A lottery chose who took part in the pilot district. The evaluation compared their waste costs with those of the businesses the lottery did not choose.</p>
+   <svg class="result-chart" id="interval-chart" role="img" aria-label="Pilot estimated saving and confidence interval against the decision rule"></svg>
+   <p id="interval-text"></p>
+   <p class="prompt">The estimate is above the rule. Is the evidence enough for national roll-out?</p>
+   <label for="decision-reason">Write one reason and one question for the evaluator.</label>
+   <textarea id="decision-reason" placeholder="My reason… My next question…"></textarea>
+   <button type="button" id="show-reading">Compare with a careful reading</button>
+   <div id="careful-reading" class="response" hidden>
+    <p>The trial supports a reduction in costs for the pilot businesses. Its interval includes savings below the rule. A national decision also needs evidence about the businesses it would reach and the cost of delivery.</p>
+    <p>A useful question: “Why should this pilot's result apply to the businesses in a national roll-out?”</p>
+   </div>
+  </div>
+ </div>
+ <p class="notice">Illustrative GreenWaste case, with invented figures. Not a real programme.</p>
+</section>
+<section id="claims-panel" role="tabpanel" aria-labelledby="claims-tab" hidden>
+ <h2>Which claims does the evidence support?</h2>
+ <p>Use the before-and-after evidence below. Select every sentence that claims more than it shows.</p>
+ <p class="evidence" id="summary-evidence"></p>
+ <ol class="claim-list" id="claim-list">
+  <li><button type="button" data-claim="0" aria-pressed="false" id="claim-0"></button></li>
+  <li><button type="button" data-claim="1" aria-pressed="false">GreenWaste caused that fall.</button></li>
+  <li><button type="button" data-claim="2" aria-pressed="false">Every business saved money.</button></li>
+  <li><button type="button" data-claim="3" aria-pressed="false">The evidence is enough to recommend national roll-out.</button></li>
+ </ol>
+ <button type="button" class="primary" id="check-claims">Check my reading</button>
+ <p id="claim-feedback" class="feedback" aria-live="polite"></p>
+ <div id="claim-explanation" class="response" hidden>
+  <p><strong>Sentence 1</strong> reports the measured change.</p>
+  <p><strong>Sentences 2–4</strong> need evidence the extract does not give: a credible comparison, individual outcomes, and evidence relevant to the roll-out decision.</p>
+ </div>
+ <label for="rewrite">Rewrite the summary as one careful sentence.</label>
+ <textarea id="rewrite" placeholder="Costs were lower after… The extract does not establish…"></textarea>
+ <p class="notice">Illustrative evidence and a prepared summary for practice. The summary is not a captured AI response.</p>
+</section>
+<section id="paper-panel" role="tabpanel" aria-labelledby="paper-tab" hidden>
+ <div class="print-controls"><p>This is a participant sheet preview. It prints one side of A4.</p><button type="button" class="primary" id="print-sheet">Print the worksheet</button></div>
+ <article class="worksheet">
+  <p class="small-label">Module 2 · Day 1 · Read the result</p>
+  <h2>What does the report show?</h2>
+  <p>The city will extend GreenWaste if it reduces waste costs by at least <strong id="paper-rule"></strong> AED per business per year.</p>
+  <p>The extract below follows the same city businesses before they joined GreenWaste and 12 months later.</p>
+  <table class="paper-table"><thead><tr><th scope="col">Average waste cost</th><th scope="col">AED per business per year</th></tr></thead><tbody><tr><th scope="row">Before GreenWaste</th><td id="paper-before"></td></tr><tr><th scope="row">12 months later</th><td id="paper-after"></td></tr></tbody></table>
+  <p><span class="task-num">1 · Find the change</span><br>How much lower were costs after joining? ________ AED.</p>
+  <p><span class="task-num">2 · Check the recommendation</span><br>“GreenWaste caused the fall, so we should extend it.”<br>Underline any claim the extract does not establish.</p>
+  <p><span class="task-num">3 · Ask for evidence</span><br>What comparison would help you judge whether GreenWaste caused the fall?</p>
+  <div class="write-space"></div>
+  <p><span class="task-num">4 · Write one careful sentence</span><br>State what the extract shows and one limit.</p>
+  <div class="write-space"></div>
+  <p class="notice">Illustrative case, with invented figures. Not a real programme.</p>
+ </article>
+</section>
+<p class="notice" id="preview-note">Activity and layout proposal. The current teaching decks and handouts remain separate.</p>
+</div>
+```
+
+```{r results='asis'}
+cat('<script id="reading-data" type="application/json">',
+    jsonlite::toJSON(reading, auto_unbox = TRUE, digits = 6), '</script>')
+```
+
+```{=html}
+<script>
+(() => {
+ const root = document.getElementById('reading-preview');
+ const data = JSON.parse(document.getElementById('reading-data').textContent);
+ const el = id => document.getElementById(id);
+ const format = value => Math.round(value).toLocaleString('en-GB');
+ const tabs = [...root.querySelectorAll('[role="tab"]')];
+ function selectTab(tab) {
+  tabs.forEach(t => {
+   const active = t === tab;
+   t.setAttribute('aria-selected', String(active));
+   el(t.getAttribute('aria-controls')).hidden = !active;
+  });
+  if(tab.id === 'evidence-tab') drawInterval();
+ }
+ tabs.forEach((tab,index) => {
+  tab.addEventListener('click',() => selectTab(tab));
+  tab.addEventListener('keydown',event => {
+   if(!['ArrowRight','ArrowLeft','Home','End'].includes(event.key)) return;
+   event.preventDefault();
+   const next = event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : (index + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+   selectTab(tabs[next]); tabs[next].focus();
+  });
+ });
+ el('cost-fall').textContent = format(Math.abs(data.change));
+ el('other-rise').textContent = format(data.other_change);
+ const choices = [...el('opening-choices').querySelectorAll('button')];
+ choices.forEach(button => button.addEventListener('click',() => {
+  choices.forEach(b => b.setAttribute('aria-pressed',String(b===button)));
+  el('choice-status').textContent = `Your initial choice: ${button.textContent}. Give a reason before opening the evidence.`;
+  el('open-evidence').disabled = false;
+ }));
+ el('open-evidence').addEventListener('click',() => {
+  el('evidence-reveal').hidden = false;
+  el('open-evidence').hidden = true;
+ });
+ el('open-pilot').addEventListener('click',() => {
+  el('pilot-reveal').hidden = false;
+  el('open-pilot').hidden = true;
+  drawInterval();
+ });
+ el('show-reading').addEventListener('click',() => {
+  el('careful-reading').hidden = !el('careful-reading').hidden;
+  el('show-reading').textContent = el('careful-reading').hidden ? 'Compare with a careful reading' : 'Hide the reading';
+ });
+ el('interval-text').textContent = `Estimated saving: ${format(data.saving)} AED per business per year. Reported 95% confidence interval: ${format(data.interval[0])} to ${format(data.interval[1])} AED. Decision rule: ${format(data.rule)} AED.`;
+ function drawInterval() {
+  const svg = el('interval-chart');
+  if(el('pilot-reveal').hidden || el('evidence-panel').hidden) return;
+  const width = Math.max(250,Math.round(svg.getBoundingClientRect().width));
+  const height = width < 450 ? 210 : 195;
+  const left = 20, right = width - 35;
+  const max = Math.ceil(Math.max(data.rule,data.interval[1]) * 1.2 / 200) * 200;
+  const x = value => left + value / max * (right-left);
+  const tickValues = width < 450 ? [0,max/2,max] : [0,max/4,max/2,3*max/4,max];
+  const ticks = tickValues.map(value => `<line x1="${x(value)}" x2="${x(value)}" y1="116" y2="122" stroke="#545860"/><text x="${x(value)}" y="143" text-anchor="${value===0?'start':value===max?'end':'middle'}" font-size="14" fill="#17212b">${format(value)}</text>`).join('');
+  svg.setAttribute('viewBox',`0 0 ${width} ${height}`);
+  svg.innerHTML = `<title>Pilot trial saving and uncertainty</title><desc>The estimate is ${format(data.saving)} AED. The confidence interval, ${format(data.interval[0])} to ${format(data.interval[1])} AED, crosses the ${format(data.rule)} AED decision rule.</desc>
+   <line x1="${left}" x2="${right}" y1="116" y2="116" stroke="#c9d7e5"/>
+   <line x1="${x(data.rule)}" x2="${x(data.rule)}" y1="40" y2="116" stroke="#a22127" stroke-width="2" stroke-dasharray="5 4"/>
+   <text x="${x(data.rule)}" y="25" text-anchor="end" font-size="15" fill="#a22127">Rule: ${format(data.rule)}</text>
+   <line x1="${x(data.interval[0])}" x2="${x(data.interval[1])}" y1="73" y2="73" stroke="#215a9e" stroke-width="5"/>
+   <line x1="${x(data.interval[0])}" x2="${x(data.interval[0])}" y1="63" y2="83" stroke="#215a9e" stroke-width="3"/>
+   <line x1="${x(data.interval[1])}" x2="${x(data.interval[1])}" y1="63" y2="83" stroke="#215a9e" stroke-width="3"/>
+   <circle cx="${x(data.saving)}" cy="73" r="7" fill="#063360"/>
+   ${ticks}<text x="${left}" y="180" font-size="15" fill="#17212b">Annual saving per business (AED)</text>`;
+ }
+ const selected = new Set();
+ const claimButtons = [...el('claim-list').querySelectorAll('button')];
+ el('summary-evidence').textContent = `Average annual waste costs for the city businesses that took part: ${format(data.before)} AED before GreenWaste; ${format(data.after)} AED 12 months later.`;
+ el('claim-0').textContent = `Average costs were ${format(Math.abs(data.change))} AED lower after joining.`;
+ claimButtons.forEach(button => button.addEventListener('click',() => {
+  const id = Number(button.dataset.claim);
+  if(selected.has(id)) selected.delete(id); else selected.add(id);
+  button.setAttribute('aria-pressed',String(selected.has(id)));
+  el('claim-feedback').textContent = '';
+  el('claim-explanation').hidden = true;
+ }));
+ el('check-claims').addEventListener('click',() => {
+  const right = selected.size === 3 && [1,2,3].every(id=>selected.has(id));
+  el('claim-feedback').textContent = right ? 'Your reading matches the evidence: sentences 2, 3 and 4 overclaim.' : 'Compare each sentence with the extract. It reports an average change; it does not establish cause, individual savings or a national decision.';
+  el('claim-explanation').hidden = false;
+ });
+ el('paper-rule').textContent = format(data.rule);
+ el('paper-before').textContent = format(data.before);
+ el('paper-after').textContent = format(data.after);
+ el('print-sheet').addEventListener('click',()=>window.print());
+ if(window.ResizeObserver) new ResizeObserver(drawInterval).observe(el('interval-chart'));
+ window.addEventListener('resize',drawInterval);
+})();
+</script>
+```

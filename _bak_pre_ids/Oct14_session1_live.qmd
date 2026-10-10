@@ -1,0 +1,211 @@
+---
+title: "Worth the money?"
+subtitle: "Day 3 | Session 1: Costs, savings and the assumptions between them"
+author: "3ie"
+always_allow_html: true
+format:
+  live-revealjs:
+    theme: [theme_dge.scss, theme_live.scss, theme_reader.scss]
+    logo: assets/dge_logo_horizontal.svg
+    slide-number: true
+    width: 1280
+    height: 720
+    slide-level: 2
+    embed-resources: true
+    include-after-body: _reader_interactions.html
+webr:
+  render-df: kable
+  resources:
+    - evaluation_data_GreenWaste_simple.csv
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+
+```{r setup, include=FALSE}
+source('day3_case.R')
+```
+
+## A saving is only half the question. {.reader-slide}
+
+```{webr}
+#| context: setup
+#| autorun: true
+#| echo: false
+#| include: false
+gw <- read.csv('evaluation_data_GreenWaste_simple.csv')
+city <- subset(gw, setting == 'city')
+joined <- city$took_part == 1
+change <- city$cost_after - city$cost_before
+saving <- -(mean(change[joined]) - mean(change[!joined]))
+benefits <- saving * sum(1 / 1.05^(2:6))
+cost <- 1800
+```
+::: {.ask}
+What would you need beyond a saving estimate before approving spending?
+:::
+Recall the comparison and its limits. Add one cost you would want included.
+
+::: {.notes}
+4 minutes. No new method lecture. Retrieve the city DiD result; its causal interpretation remains uncertain. All costs and future-saving inputs today are fictional course assumptions. One trainer demo only, no participant coding.
+:::
+
+## Benefits beat costs. Should we approve? {.reader-slide}
+
+```{r, results='asis'}
+html_out(sprintf('<p class="big-number">%.2f</p><p>Benefits divided by costs, under the model assumptions.</p>%s',ratio(),fiction))
+```
+::: {.ask}
+Would this ratio justify approval?
+:::
+```{=html}
+<div data-choices><button data-choice aria-pressed="false">Approve</button><button data-choice aria-pressed="false">Ask first</button><button data-choice aria-pressed="false">Do not approve</button><p role="status" class="feedback"></p></div>
+```
+
+
+::: {.notes}
+4 minutes. Commit before opening assumptions. Local controls only; for room totals use course room poll configured to this question, hidden until close, or cards. A ratio above 1 means modelled benefits exceed included costs; it is not proof of cause or a complete approval rule.
+:::
+
+## What is inside the headline ratio? {.reader-slide}
+
+```{r, results='asis'}
+html_out(html_table(assumptions))
+```
+::: {.ask}
+Which inputs need evidence before we rely on them?
+:::
+
+
+::: {.notes}
+5 minutes. Each input has a source/status. The annual saving is an estimated extra change, not a guaranteed causal benefit. Cost 1800, five years, lag one year and rate 5% are assumptions, not programme records. This corrects the old model calling invented costs facts.
+:::
+
+## Benefits of 3,350. Against which costs? {.reader-slide}
+
+```{r, results='asis'}
+html_out(sprintf('<div class="evidence-pair"><div class="evidence"><h3>Modelled benefits</h3><p class="big-number">%s</p></div><div class="evidence"><h3>Included cost</h3><p class="big-number">%s</p></div></div><p class="caption">AED per business, at today&apos;s value. Fictional assumptions.</p>',fmt(model$saving*pv_factor()),fmt(model$cost)))
+```
+```{webr}
+#| echo: true
+#| autorun: false
+# Divide modelled benefits at today's value by the included cost.
+# Show the ratio to two decimal places; assumptions still matter.
+round(benefits / cost, 2)
+```
+::: {.ask}
+What does a ratio above 1 tell us about this model?
+:::
+
+
+::: {.notes}
+5 minutes. Predict before Run. Code divides the modelled benefit stream by cost. Benefits discounted over years 2 to 6 at 5%; no benefits year 1. Printed values rounded, actual calculation unrounded. Explain benefit-cost ratio in plain language; ask about source uncertainty separately.
+:::
+
+## Worth less if the saving arrives later? {.reader-slide}
+
+```{r, results='asis'}
+html_out(sprintf('<div class="evidence-pair"><div class="evidence"><h3>Next year</h3><p class="big-number">%s</p><p>AED saving assumed</p></div><div class="evidence"><h3>At today&apos;s value</h3><button data-open="discount" data-closed="Open today&apos;s value" data-opened="Hide today&apos;s value" aria-controls="discount" aria-expanded="false">Open today&apos;s value</button><div id="discount" hidden><p class="big-number">%s</p><p>AED, at a 5%% discount rate</p></div></div></div>%s',fmt(model$saving),fmt(model$saving/1.05),fiction))
+```
+::: {.ask}
+Why might a later saving count for less today?
+:::
+
+
+::: {.notes}
+5 minutes. This illustrates one year, not the first modelled benefit (year 2). Explain timing, opportunity cost and uncertainty without a finance lesson. Discount rate is the rate used to express future amounts at today's value. Negative/alternative rates are outside this task.
+:::
+
+## Whose costs are missing? {.reader-slide}
+
+The headline includes equipment delivery. A reviewer asks about:
+
+**Staff time, administration and businesses' own time.**
+
+::: {.ask}
+What would you request before accepting the cost total?
+:::
+Mark the missing costs on **Sheet 1**.
+
+::: {.notes}
+6 minutes. Fictional excerpt. Avoid double counting: ask what was included already, whose costs the study counts, amounts and timing. Adding costs can change the ratio even if the saving estimate stays fixed.
+:::
+
+## One changed assumption. Your prediction? {.reader-slide}
+
+Each group receives one **scenario card**.
+
+Read the change. Predict the ratio before seeing the answer.
+
+Post your card number and prediction above the A1 line.
+
+::: {.ask}
+What evidence would show whether your scenario is plausible?
+:::
+
+
+::: {.notes}
+8 minutes. Preserve cards 1 to 5 and eight allocations 1,2,3,4,5,1,2,3. One different setting per card. No repeated live code: all five results are computed from the same model and revealed next. Protect group prediction and reasons; calculators optional.
+:::
+
+## Where does your scenario land? {.reader-slide}
+
+```{r, results='asis'}
+html_out(paste0('<button data-open="scenario-results" data-closed="Open scenario results" data-opened="Hide scenario results" aria-controls="scenario-results" aria-expanded="false">Open scenario results</button><div id="scenario-results" hidden>',html_table(data.frame(Card=scenarios$card,Scenario=scenarios$name,Ratio=fmt(scenarios$value,2)),compact=TRUE),'</div>'))
+```
+::: {.ask}
+Which cards fall below 1?
+:::
+
+
+::: {.notes}
+7 minutes. Groups put cards in the lower lane at the actual ratio, leaving predictions above. Retain Fiona's A1 design, regenerate headline marker with corrected model. Values below 1 are scenario conclusions under assumptions, not observed programme failures.
+:::
+
+## Which assumption changes the verdict? {.reader-slide}
+
+Use **Sheet 2**. Write the assumption you would investigate first.
+
+State the evidence you need and how it could affect the decision.
+
+::: {.ask}
+Does the headline depend on a plausible saving lasting long enough?
+:::
+
+
+::: {.notes}
+6 minutes. Individual then pairs. Duration and decay matter, costs may be missing, benefit attribution unresolved. Ratio sensitivity helps find missing evidence; it cannot establish a scenario is realistic.
+:::
+
+## The ratio is above 1. Case closed? {.reader-slide}
+
+Illustrative AI draft:
+
+"The ratio exceeds 1, so GreenWaste is proven to be good value. The savings will last five years. Approval is justified."
+
+::: {.ask}
+Which assurances go beyond the source?
+:::
+```{=html}
+<button data-open="cost-ai" data-closed="Open feedback" data-opened="Hide feedback" aria-controls="cost-ai" aria-expanded="false">Open feedback</button><div id="cost-ai" class="feedback" hidden>The ratio exceeds 1 under stated assumptions. Five years is assumed; benefits and costs need evidence. An unconditional approval is unsupported.</div>
+```
+
+
+::: {.notes}
+6 minutes. Authored AI draft. Mark and repair on paper before reveal. Optional prompt asks for input sources, omitted costs and assumptions before a recommendation. No AI account required; verify claims against source.
+:::
+
+## Which missing fact matters most? {.reader-slide}
+
+::: {.ask}
+What would you ask before accepting a value for money claim?
+:::
+Close the sheets. Write your question and its purpose. Work alone.
+
+::: {.notes}
+4 minutes. Independent close. Saving threshold and benefit-cost ratio are different questions; neither settles the other. Total 60 minutes.
+:::

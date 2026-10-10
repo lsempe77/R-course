@@ -2,17 +2,21 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>GreenWaste city: read a matched comparison</title>
 <style>
-code{white-space: pre-wrap;}
+
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -470,12 +474,13 @@ margin: 0 0.8em 0.2em -1em;  vertical-align: middle;
 // @license-end</script>
 <style type="text/css">.tippy-box[data-animation=fade][data-state=hidden]{opacity:0}[data-tippy-root]{max-width:calc(100vw - 10px)}.tippy-box{position:relative;background-color:#333;color:#fff;border-radius:4px;font-size:14px;line-height:1.4;white-space:normal;outline:0;transition-property:transform,visibility,opacity}.tippy-box[data-placement^=top]>.tippy-arrow{bottom:0}.tippy-box[data-placement^=top]>.tippy-arrow:before{bottom:-7px;left:0;border-width:8px 8px 0;border-top-color:initial;transform-origin:center top}.tippy-box[data-placement^=bottom]>.tippy-arrow{top:0}.tippy-box[data-placement^=bottom]>.tippy-arrow:before{top:-7px;left:0;border-width:0 8px 8px;border-bottom-color:initial;transform-origin:center bottom}.tippy-box[data-placement^=left]>.tippy-arrow{right:0}.tippy-box[data-placement^=left]>.tippy-arrow:before{border-width:8px 0 8px 8px;border-left-color:initial;right:-7px;transform-origin:center left}.tippy-box[data-placement^=right]>.tippy-arrow{left:0}.tippy-box[data-placement^=right]>.tippy-arrow:before{left:-7px;border-width:8px 8px 8px 0;border-right-color:initial;transform-origin:center right}.tippy-box[data-inertia][data-state=visible]{transition-timing-function:cubic-bezier(.54,1.5,.38,1.11)}.tippy-arrow{width:16px;height:16px;color:#333}.tippy-arrow:before{content:"";position:absolute;border-color:transparent;border-style:solid}.tippy-content{position:relative;padding:5px 9px;z-index:1}</style>
 <style type="text/css">.tippy-box[data-theme~=light-border]{background-color:#fff;background-clip:padding-box;border:1px solid rgba(0,8,16,.15);color:#333;box-shadow:0 4px 14px -2px rgba(0,8,16,.08)}.tippy-box[data-theme~=light-border]>.tippy-backdrop{background-color:#fff}.tippy-box[data-theme~=light-border]>.tippy-arrow:after,.tippy-box[data-theme~=light-border]>.tippy-svg-arrow:after{content:"";position:absolute;z-index:-1}.tippy-box[data-theme~=light-border]>.tippy-arrow:after{border-color:transparent;border-style:solid}.tippy-box[data-theme~=light-border][data-placement^=top]>.tippy-arrow:before{border-top-color:#fff}.tippy-box[data-theme~=light-border][data-placement^=top]>.tippy-arrow:after{border-top-color:rgba(0,8,16,.2);border-width:7px 7px 0;top:17px;left:1px}.tippy-box[data-theme~=light-border][data-placement^=top]>.tippy-svg-arrow>svg{top:16px}.tippy-box[data-theme~=light-border][data-placement^=top]>.tippy-svg-arrow:after{top:17px}.tippy-box[data-theme~=light-border][data-placement^=bottom]>.tippy-arrow:before{border-bottom-color:#fff;bottom:16px}.tippy-box[data-theme~=light-border][data-placement^=bottom]>.tippy-arrow:after{border-bottom-color:rgba(0,8,16,.2);border-width:0 7px 7px;bottom:17px;left:1px}.tippy-box[data-theme~=light-border][data-placement^=bottom]>.tippy-svg-arrow>svg{bottom:16px}.tippy-box[data-theme~=light-border][data-placement^=bottom]>.tippy-svg-arrow:after{bottom:17px}.tippy-box[data-theme~=light-border][data-placement^=left]>.tippy-arrow:before{border-left-color:#fff}.tippy-box[data-theme~=light-border][data-placement^=left]>.tippy-arrow:after{border-left-color:rgba(0,8,16,.2);border-width:7px 0 7px 7px;left:17px;top:1px}.tippy-box[data-theme~=light-border][data-placement^=left]>.tippy-svg-arrow>svg{left:11px}.tippy-box[data-theme~=light-border][data-placement^=left]>.tippy-svg-arrow:after{left:12px}.tippy-box[data-theme~=light-border][data-placement^=right]>.tippy-arrow:before{border-right-color:#fff;right:16px}.tippy-box[data-theme~=light-border][data-placement^=right]>.tippy-arrow:after{border-width:7px 7px 7px 0;right:17px;top:1px;border-right-color:rgba(0,8,16,.2)}.tippy-box[data-theme~=light-border][data-placement^=right]>.tippy-svg-arrow>svg{right:11px}.tippy-box[data-theme~=light-border][data-placement^=right]>.tippy-svg-arrow:after{right:12px}.tippy-box[data-theme~=light-border]>.tippy-svg-arrow{fill:#fff}.tippy-box[data-theme~=light-border]>.tippy-svg-arrow:after{background-image:url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iNiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMCA2czEuNzk2LS4wMTMgNC42Ny0zLjYxNUM1Ljg1MS45IDYuOTMuMDA2IDggMGMxLjA3LS4wMDYgMi4xNDguODg3IDMuMzQzIDIuMzg1QzE0LjIzMyA2LjAwNSAxNiA2IDE2IDZIMHoiIGZpbGw9InJnYmEoMCwgOCwgMTYsIDAuMikiLz48L3N2Zz4=);background-size:16px 6px;width:16px;height:6px}</style>
-<link href="data:text/css,%2Etop%2Dright%7Bposition%3Aabsolute%3Btop%3A1em%3Bright%3A1em%7D%2Evisually%2Dhidden%7Bborder%3A0%3Bclip%3Arect%280%200%200%200%29%3Bheight%3Aauto%3Bmargin%3A0%3Boverflow%3Ahidden%3Bpadding%3A0%3Bposition%3Aabsolute%3Bwidth%3A1px%3Bwhite%2Dspace%3Anowrap%7D%2Ehidden%7Bdisplay%3Anone%20%21important%7D%2Ezindex%2Dbottom%7Bz%2Dindex%3A%2D1%20%21important%7Dfigure%2Efigure%7Bdisplay%3Ablock%7D%2Equarto%2Dlayout%2Dpanel%7Bmargin%2Dbottom%3A1em%7D%2Equarto%2Dlayout%2Dpanel%3Efigure%7Bwidth%3A100%25%7D%2Equarto%2Dlayout%2Dpanel%3Efigure%3Efigcaption%2C%2Equarto%2Dlayout%2Dpanel%3E%2Epanel%2Dcaption%7Bmargin%2Dtop%3A10pt%7D%2Equarto%2Dlayout%2Dpanel%3E%2Etable%2Dcaption%7Bmargin%2Dtop%3A0px%7D%2Etable%2Dcaption%20p%7Bmargin%2Dbottom%3A%2E5em%7D%2Equarto%2Dlayout%2Drow%7Bdisplay%3Aflex%3Bflex%2Ddirection%3Arow%3Balign%2Ditems%3Aflex%2Dstart%7D%2Equarto%2Dlayout%2Dvalign%2Dtop%7Balign%2Ditems%3Aflex%2Dstart%7D%2Equarto%2Dlayout%2Dvalign%2Dbottom%7Balign%2Ditems%3Aflex%2Dend%7D%2Equarto%2Dlayout%2Dvalign%2Dcenter%7Balign%2Ditems%3Acenter%7D%2Equarto%2Dlayout%2Dcell%7Bposition%3Arelative%3Bmargin%2Dright%3A20px%7D%2Equarto%2Dlayout%2Dcell%3Alast%2Dchild%7Bmargin%2Dright%3A0%7D%2Equarto%2Dlayout%2Dcell%20figure%2C%2Equarto%2Dlayout%2Dcell%3Ep%7Bmargin%3A%2E2em%7D%2Equarto%2Dlayout%2Dcell%20img%7Bmax%2Dwidth%3A100%25%7D%2Equarto%2Dlayout%2Dcell%20%2Ehtml%2Dwidget%7Bwidth%3A100%25%20%21important%7D%2Equarto%2Dlayout%2Dcell%20div%20figure%20p%7Bmargin%3A0%7D%2Equarto%2Dlayout%2Dcell%20figure%7Bdisplay%3Ablock%3Bmargin%2Dinline%2Dstart%3A0%3Bmargin%2Dinline%2Dend%3A0%7D%2Equarto%2Dlayout%2Dcell%20table%7Bdisplay%3Ainline%2Dtable%7D%2Equarto%2Dlayout%2Dcell%2Dsubref%20figcaption%2Cfigure%20%2Equarto%2Dlayout%2Drow%20figure%20figcaption%7Btext%2Dalign%3Acenter%3Bfont%2Dstyle%3Aitalic%7D%2Equarto%2Dfigure%7Bposition%3Arelative%3Bmargin%2Dbottom%3A1em%7D%2Equarto%2Dfigure%3Efigure%7Bwidth%3A100%25%3Bmargin%2Dbottom%3A0%7D%2Equarto%2Dfigure%2Dleft%3Efigure%3Ep%2C%2Equarto%2Dfigure%2Dleft%3Efigure%3Ediv%7Btext%2Dalign%3Aleft%7D%2Equarto%2Dfigure%2Dcenter%3Efigure%3Ep%2C%2Equarto%2Dfigure%2Dcenter%3Efigure%3Ediv%7Btext%2Dalign%3Acenter%7D%2Equarto%2Dfigure%2Dright%3Efigure%3Ep%2C%2Equarto%2Dfigure%2Dright%3Efigure%3Ediv%7Btext%2Dalign%3Aright%7D%2Equarto%2Dfigure%3Efigure%3Ediv%2Ecell%2Dannotation%2C%2Equarto%2Dfigure%3Efigure%3Ediv%20code%7Btext%2Dalign%3Aleft%7Dfigure%3Ep%3Aempty%7Bdisplay%3Anone%7Dfigure%3Ep%3Afirst%2Dchild%7Bmargin%2Dtop%3A0%3Bmargin%2Dbottom%3A0%7Dfigure%3Efigcaption%2Equarto%2Dfloat%2Dcaption%2Dbottom%7Bmargin%2Dbottom%3A%2E5em%7Dfigure%3Efigcaption%2Equarto%2Dfloat%2Dcaption%2Dtop%7Bmargin%2Dtop%3A%2E5em%7Ddiv%5Bid%5E%3Dtbl%2D%5D%7Bposition%3Arelative%7D%2Equarto%2Dfigure%3E%2Eanchorjs%2Dlink%7Bposition%3Aabsolute%3Btop%3A%2E6em%3Bright%3A%2E5em%7Ddiv%5Bid%5E%3Dtbl%2D%5D%3E%2Eanchorjs%2Dlink%7Bposition%3Aabsolute%3Btop%3A%2E7em%3Bright%3A%2E3em%7D%2Equarto%2Dfigure%3Ahover%3E%2Eanchorjs%2Dlink%2Cdiv%5Bid%5E%3Dtbl%2D%5D%3Ahover%3E%2Eanchorjs%2Dlink%2Ch2%3Ahover%3E%2Eanchorjs%2Dlink%2Ch3%3Ahover%3E%2Eanchorjs%2Dlink%2Ch4%3Ahover%3E%2Eanchorjs%2Dlink%2Ch5%3Ahover%3E%2Eanchorjs%2Dlink%2Ch6%3Ahover%3E%2Eanchorjs%2Dlink%2C%2Ereveal%2Danchorjs%2Dlink%3E%2Eanchorjs%2Dlink%7Bopacity%3A1%7D%23title%2Dblock%2Dheader%7Bmargin%2Dblock%2Dend%3A1rem%3Bposition%3Arelative%3Bmargin%2Dtop%3A%2D1px%7D%23title%2Dblock%2Dheader%20%2Eabstract%7Bmargin%2Dblock%2Dstart%3A1rem%7D%23title%2Dblock%2Dheader%20%2Eabstract%20%2Eabstract%2Dtitle%7Bfont%2Dweight%3A600%7D%23title%2Dblock%2Dheader%20a%7Btext%2Ddecoration%3Anone%7D%23title%2Dblock%2Dheader%20%2Eauthor%2C%23title%2Dblock%2Dheader%20%2Edate%2C%23title%2Dblock%2Dheader%20%2Edoi%7Bmargin%2Dblock%2Dend%3A%2E2rem%7D%23title%2Dblock%2Dheader%20%2Equarto%2Dtitle%2Dblock%3Ediv%7Bdisplay%3Aflex%7D%23title%2Dblock%2Dheader%20%2Equarto%2Dtitle%2Dblock%3Ediv%3Eh1%7Bflex%2Dgrow%3A1%7D%23title%2Dblock%2Dheader%20%2Equarto%2Dtitle%2Dblock%3Ediv%3Ebutton%7Bflex%2Dshrink%3A0%3Bheight%3A2%2E25rem%3Bmargin%2Dtop%3A0%7Dtr%2Eheader%3Eth%3Ep%3Alast%2Dof%2Dtype%7Bmargin%2Dbottom%3A0px%7Dtable%2Ctable%2Etable%7Bmargin%2Dtop%3A%2E5rem%3Bmargin%2Dbottom%3A%2E5rem%7Dcaption%2C%2Etable%2Dcaption%7Bpadding%2Dtop%3A%2E5rem%3Bpadding%2Dbottom%3A%2E5rem%3Btext%2Dalign%3Acenter%7Dfigure%2Equarto%2Dfloat%2Dtbl%20figcaption%2Equarto%2Dfloat%2Dcaption%2Dtop%7Bmargin%2Dtop%3A%2E5rem%3Bmargin%2Dbottom%3A%2E25rem%3Btext%2Dalign%3Acenter%7Dfigure%2Equarto%2Dfloat%2Dtbl%20figcaption%2Equarto%2Dfloat%2Dcaption%2Dbottom%7Bpadding%2Dtop%3A%2E25rem%3Bmargin%2Dbottom%3A%2E5rem%3Btext%2Dalign%3Acenter%7D%2Eutterances%7Bmax%2Dwidth%3Anone%3Bmargin%2Dleft%3A%2D8px%7Diframe%7Bmargin%2Dbottom%3A1em%7Ddetails%7Bmargin%2Dbottom%3A1em%7Ddetails%5Bshow%5D%7Bmargin%2Dbottom%3A0%7Ddetails%3Esummary%7Bcolor%3Argb%28110%2E5%2C110%2E5%2C110%2E5%29%7Ddetails%3Esummary%3Ep%3Aonly%2Dchild%7Bdisplay%3Ainline%7Dpre%2EsourceCode%2Ccode%2EsourceCode%7Bposition%3Arelative%7Ddd%20code%3Anot%28%2EsourceCode%29%2Cp%20code%3Anot%28%2EsourceCode%29%7Bwhite%2Dspace%3Apre%2Dwrap%7Dcode%7Bwhite%2Dspace%3Apre%7D%40media%20print%7Bcode%7Bwhite%2Dspace%3Apre%2Dwrap%7D%7Dpre%3Ecode%7Bdisplay%3Ablock%7Dpre%3Ecode%2EsourceCode%7Bwhite%2Dspace%3Apre%7Dpre%3Ecode%2EsourceCode%3Espan%3Ea%3Afirst%2Dchild%3A%3Abefore%7Btext%2Ddecoration%3Anone%7Dpre%2Ecode%2Doverflow%2Dwrap%3Ecode%2EsourceCode%7Bwhite%2Dspace%3Apre%2Dwrap%7Dpre%2Ecode%2Doverflow%2Dscroll%3Ecode%2EsourceCode%7Bwhite%2Dspace%3Apre%7Dcode%20a%3Aany%2Dlink%7Bcolor%3Ainherit%3Btext%2Ddecoration%3Anone%7Dcode%20a%3Ahover%7Bcolor%3Ainherit%3Btext%2Ddecoration%3Aunderline%7Dul%2Etask%2Dlist%7Bpadding%2Dleft%3A1em%7D%5Bdata%2Dtippy%2Droot%5D%7Bdisplay%3Ainline%2Dblock%7D%2Etippy%2Dcontent%20%2Efootnote%2Dback%7Bdisplay%3Anone%7D%2Efootnote%2Dback%7Bmargin%2Dleft%3A%2E2em%7D%2Etippy%2Dcontent%7Boverflow%2Dx%3Aauto%7D%2Equarto%2Dembedded%2Dsource%2Dcode%7Bdisplay%3Anone%7D%2Equarto%2Dunresolved%2Dref%7Bfont%2Dweight%3A600%7D%2Equarto%2Dcover%2Dimage%7Bmax%2Dwidth%3A35%25%3Bfloat%3Aright%3Bmargin%2Dleft%3A30px%7D%2Ecell%2Doutput%2Ddisplay%20%2Ewidget%2Dsubarea%7Bmargin%2Dbottom%3A1em%7D%2Ecell%2Doutput%2Ddisplay%3Anot%28%2Eno%2Doverflow%2Dx%29%2C%2Eknitsql%2Dtable%3Anot%28%2Eno%2Doverflow%2Dx%29%7Boverflow%2Dx%3Aauto%7D%2Epanel%2Dinput%7Bmargin%2Dbottom%3A1em%7D%2Epanel%2Dinput%3Ediv%2C%2Epanel%2Dinput%3Ediv%3Ediv%7Bdisplay%3Ainline%2Dblock%3Bvertical%2Dalign%3Atop%3Bpadding%2Dright%3A12px%7D%2Epanel%2Dinput%3Ep%3Alast%2Dchild%7Bmargin%2Dbottom%3A0%7D%2Elayout%2Dsidebar%7Bmargin%2Dbottom%3A1em%7D%2Elayout%2Dsidebar%20%2Etab%2Dcontent%7Bborder%3Anone%7D%2Etab%2Dcontent%3E%2Epage%2Dcolumns%2Eactive%7Bdisplay%3Agrid%7Ddiv%2EsourceCode%3Eiframe%7Bwidth%3A100%25%3Bheight%3A300px%3Bmargin%2Dbottom%3A%2D0%2E5em%7Da%7Btext%2Dunderline%2Doffset%3A3px%7D%2Ecallout%20pre%2EsourceCode%7Bpadding%2Dleft%3A0%7Ddiv%2Eansi%2Descaped%2Doutput%7Bfont%2Dfamily%3Amonospace%3Bdisplay%3Ablock%7D%2Eansi%2Dblack%2Dfg%7Bcolor%3A%233e424d%7D%2Eansi%2Dblack%2Dbg%7Bbackground%2Dcolor%3A%233e424d%7D%2Eansi%2Dblack%2Dintense%2Dblack%2C%2Eansi%2Dbright%2Dblack%2Dfg%7Bcolor%3A%23282c36%7D%2Eansi%2Dblack%2Dintense%2Dblack%2C%2Eansi%2Dbright%2Dblack%2Dbg%7Bbackground%2Dcolor%3A%23282c36%7D%2Eansi%2Dred%2Dfg%7Bcolor%3A%23e75c58%7D%2Eansi%2Dred%2Dbg%7Bbackground%2Dcolor%3A%23e75c58%7D%2Eansi%2Dred%2Dintense%2Dred%2C%2Eansi%2Dbright%2Dred%2Dfg%7Bcolor%3A%23b22b31%7D%2Eansi%2Dred%2Dintense%2Dred%2C%2Eansi%2Dbright%2Dred%2Dbg%7Bbackground%2Dcolor%3A%23b22b31%7D%2Eansi%2Dgreen%2Dfg%7Bcolor%3A%2300a250%7D%2Eansi%2Dgreen%2Dbg%7Bbackground%2Dcolor%3A%2300a250%7D%2Eansi%2Dgreen%2Dintense%2Dgreen%2C%2Eansi%2Dbright%2Dgreen%2Dfg%7Bcolor%3A%23007427%7D%2Eansi%2Dgreen%2Dintense%2Dgreen%2C%2Eansi%2Dbright%2Dgreen%2Dbg%7Bbackground%2Dcolor%3A%23007427%7D%2Eansi%2Dyellow%2Dfg%7Bcolor%3A%23ddb62b%7D%2Eansi%2Dyellow%2Dbg%7Bbackground%2Dcolor%3A%23ddb62b%7D%2Eansi%2Dyellow%2Dintense%2Dyellow%2C%2Eansi%2Dbright%2Dyellow%2Dfg%7Bcolor%3A%23b27d12%7D%2Eansi%2Dyellow%2Dintense%2Dyellow%2C%2Eansi%2Dbright%2Dyellow%2Dbg%7Bbackground%2Dcolor%3A%23b27d12%7D%2Eansi%2Dblue%2Dfg%7Bcolor%3A%23208ffb%7D%2Eansi%2Dblue%2Dbg%7Bbackground%2Dcolor%3A%23208ffb%7D%2Eansi%2Dblue%2Dintense%2Dblue%2C%2Eansi%2Dbright%2Dblue%2Dfg%7Bcolor%3A%230065ca%7D%2Eansi%2Dblue%2Dintense%2Dblue%2C%2Eansi%2Dbright%2Dblue%2Dbg%7Bbackground%2Dcolor%3A%230065ca%7D%2Eansi%2Dmagenta%2Dfg%7Bcolor%3A%23d160c4%7D%2Eansi%2Dmagenta%2Dbg%7Bbackground%2Dcolor%3A%23d160c4%7D%2Eansi%2Dmagenta%2Dintense%2Dmagenta%2C%2Eansi%2Dbright%2Dmagenta%2Dfg%7Bcolor%3A%23a03196%7D%2Eansi%2Dmagenta%2Dintense%2Dmagenta%2C%2Eansi%2Dbright%2Dmagenta%2Dbg%7Bbackground%2Dcolor%3A%23a03196%7D%2Eansi%2Dcyan%2Dfg%7Bcolor%3A%2360c6c8%7D%2Eansi%2Dcyan%2Dbg%7Bbackground%2Dcolor%3A%2360c6c8%7D%2Eansi%2Dcyan%2Dintense%2Dcyan%2C%2Eansi%2Dbright%2Dcyan%2Dfg%7Bcolor%3A%23258f8f%7D%2Eansi%2Dcyan%2Dintense%2Dcyan%2C%2Eansi%2Dbright%2Dcyan%2Dbg%7Bbackground%2Dcolor%3A%23258f8f%7D%2Eansi%2Dwhite%2Dfg%7Bcolor%3A%23c5c1b4%7D%2Eansi%2Dwhite%2Dbg%7Bbackground%2Dcolor%3A%23c5c1b4%7D%2Eansi%2Dwhite%2Dintense%2Dwhite%2C%2Eansi%2Dbright%2Dwhite%2Dfg%7Bcolor%3A%23a1a6b2%7D%2Eansi%2Dwhite%2Dintense%2Dwhite%2C%2Eansi%2Dbright%2Dwhite%2Dbg%7Bbackground%2Dcolor%3A%23a1a6b2%7D%2Eansi%2Ddefault%2Dinverse%2Dfg%7Bcolor%3A%23fff%7D%2Eansi%2Ddefault%2Dinverse%2Dbg%7Bbackground%2Dcolor%3A%23000%7D%2Eansi%2Dbold%7Bfont%2Dweight%3Abold%7D%2Eansi%2Dunderline%7Btext%2Ddecoration%3Aunderline%7D%3Aroot%7B%2D%2Dquarto%2Dbody%2Dbg%3A%20%23fff%3B%2D%2Dquarto%2Dbody%2Dcolor%3A%20%23222%3B%2D%2Dquarto%2Dtext%2Dmuted%3A%20rgb%28110%2E5%2C%20110%2E5%2C%20110%2E5%29%3B%2D%2Dquarto%2Dborder%2Dcolor%3A%20rgb%28110%2E5%2C%20110%2E5%2C%20110%2E5%29%3B%2D%2Dquarto%2Dborder%2Dwidth%3A%201px%3B%2D%2Dquarto%2Dborder%2Dradius%3A%204px%7Dtable%2Egt%5Ftable%7Bcolor%3Avar%28%2D%2Dquarto%2Dbody%2Dcolor%29%3Bfont%2Dsize%3A1em%3Bwidth%3A100%25%3Bbackground%2Dcolor%3Argba%280%2C0%2C0%2C0%29%3Bborder%2Dtop%2Dwidth%3Ainherit%3Bborder%2Dbottom%2Dwidth%3Ainherit%3Bborder%2Dcolor%3Avar%28%2D%2Dquarto%2Dborder%2Dcolor%29%7Dtable%2Egt%5Ftable%20th%2Egt%5Fcolumn%5Fspanner%5Fouter%7Bcolor%3Avar%28%2D%2Dquarto%2Dbody%2Dcolor%29%3Bbackground%2Dcolor%3Argba%280%2C0%2C0%2C0%29%3Bborder%2Dtop%2Dwidth%3Ainherit%3Bborder%2Dbottom%2Dwidth%3Ainherit%3Bborder%2Dcolor%3Avar%28%2D%2Dquarto%2Dborder%2Dcolor%29%7Dtable%2Egt%5Ftable%20th%2Egt%5Fcol%5Fheading%7Bcolor%3Avar%28%2D%2Dquarto%2Dbody%2Dcolor%29%3Bfont%2Dweight%3Abold%3Bbackground%2Dcolor%3Argba%280%2C0%2C0%2C0%29%7Dtable%2Egt%5Ftable%20thead%2Egt%5Fcol%5Fheadings%7Bborder%2Dbottom%3A1px%20solid%20currentColor%3Bborder%2Dtop%2Dwidth%3Ainherit%3Bborder%2Dtop%2Dcolor%3Avar%28%2D%2Dquarto%2Dborder%2Dcolor%29%7Dtable%2Egt%5Ftable%20thead%2Egt%5Fcol%5Fheadings%3Anot%28%3Afirst%2Dchild%29%7Bborder%2Dtop%2Dwidth%3A1px%3Bborder%2Dtop%2Dcolor%3Avar%28%2D%2Dquarto%2Dborder%2Dcolor%29%7Dtable%2Egt%5Ftable%20td%2Egt%5Frow%7Bborder%2Dbottom%2Dwidth%3A1px%3Bborder%2Dbottom%2Dcolor%3Avar%28%2D%2Dquarto%2Dborder%2Dcolor%29%3Bborder%2Dtop%2Dwidth%3A0px%7Dtable%2Egt%5Ftable%20tbody%2Egt%5Ftable%5Fbody%7Bborder%2Dtop%2Dwidth%3A1px%3Bborder%2Dbottom%2Dwidth%3A1px%3Bborder%2Dbottom%2Dcolor%3Avar%28%2D%2Dquarto%2Dborder%2Dcolor%29%3Bborder%2Dtop%2Dcolor%3AcurrentColor%7Ddiv%2Ecolumns%7Bdisplay%3Ainitial%3Bgap%3Ainitial%7Ddiv%2Ecolumn%7Bdisplay%3Ainline%2Dblock%3Boverflow%2Dx%3Ainitial%3Bvertical%2Dalign%3Atop%3Bwidth%3A50%25%7D%2Ecode%2Dannotation%2Dtip%2Dcontent%7Bword%2Dwrap%3Abreak%2Dword%7D%2Ecode%2Dannotation%2Dcontainer%2Dhidden%7Bdisplay%3Anone%20%21important%7Ddl%2Ecode%2Dannotation%2Dcontainer%2Dgrid%7Bdisplay%3Agrid%3Bgrid%2Dtemplate%2Dcolumns%3Amin%2Dcontent%20auto%7Ddl%2Ecode%2Dannotation%2Dcontainer%2Dgrid%20dt%7Bgrid%2Dcolumn%3A1%7Ddl%2Ecode%2Dannotation%2Dcontainer%2Dgrid%20dd%7Bgrid%2Dcolumn%3A2%7Dpre%2EsourceCode%2Ecode%2Dannotation%2Dcode%7Bpadding%2Dright%3A0%7Dcode%2EsourceCode%20%2Ecode%2Dannotation%2Danchor%7Bz%2Dindex%3A100%3Bposition%3Arelative%3Bfloat%3Aright%3Bbackground%2Dcolor%3Argba%280%2C0%2C0%2C0%29%7Dinput%5Btype%3Dcheckbox%5D%7Bmargin%2Dright%3A%2E5ch%7D%3Aroot%7B%2D%2Dmermaid%2Dbg%2Dcolor%3A%20%23fff%3B%2D%2Dmermaid%2Dedge%2Dcolor%3A%20%23999%3B%2D%2Dmermaid%2Dnode%2Dfg%2Dcolor%3A%20%23222%3B%2D%2Dmermaid%2Dfg%2Dcolor%3A%20%23222%3B%2D%2Dmermaid%2Dfg%2Dcolor%2D%2Dlighter%3A%20rgb%2859%2E5%2C%2059%2E5%2C%2059%2E5%29%3B%2D%2Dmermaid%2Dfg%2Dcolor%2D%2Dlightest%3A%20%23555555%3B%2D%2Dmermaid%2Dfont%2Dfamily%3A%20sans%2Dserif%3B%2D%2Dmermaid%2Dlabel%2Dbg%2Dcolor%3A%20%23fff%3B%2D%2Dmermaid%2Dlabel%2Dfg%2Dcolor%3A%20%23468%3B%2D%2Dmermaid%2Dnode%2Dbg%2Dcolor%3A%20rgba%2868%2C%20102%2C%20136%2C%200%2E1%29%3B%2D%2Dmermaid%2Dnode%2Dfg%2Dcolor%3A%20%23222%7D%40media%20print%7B%3Aroot%7Bfont%2Dsize%3A11pt%7D%23quarto%2Dsidebar%2C%23TOC%2C%2Enav%2Dpage%7Bdisplay%3Anone%7D%2Epage%2Dcolumns%20%2Econtent%7Bgrid%2Dcolumn%2Dstart%3Apage%2Dstart%7D%2Efixed%2Dtop%7Bposition%3Arelative%7D%2Epanel%2Dcaption%2C%2Efigure%2Dcaption%2Cfigcaption%7Bcolor%3A%23666%7D%7D%2Ecode%2Dcopy%2Dbutton%7Bposition%3Aabsolute%3Btop%3A0%3Bright%3A0%3Bborder%3A0%3Bmargin%2Dtop%3A5px%3Bmargin%2Dright%3A5px%3Bbackground%2Dcolor%3Argba%280%2C0%2C0%2C0%29%3Bz%2Dindex%3A3%7D%2Ecode%2Dcopy%2Dbutton%2Dtooltip%7Bfont%2Dsize%3A%2E75em%7Dpre%2EsourceCode%3Ahover%3E%2Ecode%2Dcopy%2Dbutton%3E%2Ebi%3A%3Abefore%7Bdisplay%3Ainline%2Dblock%3Bheight%3A1rem%3Bwidth%3A1rem%3Bcontent%3A%22%22%3Bvertical%2Dalign%3A%2D0%2E125em%3Bbackground%2Dimage%3Aurl%28%27data%3Aimage%2Fsvg%2Bxml%2C%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22rgb%28111%2C%20111%2C%20111%29%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M4%201%2E5H3a2%202%200%200%200%2D2%202V14a2%202%200%200%200%202%202h10a2%202%200%200%200%202%2D2V3%2E5a2%202%200%200%200%2D2%2D2h%2D1v1h1a1%201%200%200%201%201%201V14a1%201%200%200%201%2D1%201H3a1%201%200%200%201%2D1%2D1V3%2E5a1%201%200%200%201%201%2D1h1v%2D1z%22%2F%3E%3Cpath%20d%3D%22M9%2E5%201a%2E5%2E5%200%200%201%20%2E5%2E5v1a%2E5%2E5%200%200%201%2D%2E5%2E5h%2D3a%2E5%2E5%200%200%201%2D%2E5%2D%2E5v%2D1a%2E5%2E5%200%200%201%20%2E5%2D%2E5h3zm%2D3%2D1A1%2E5%201%2E5%200%200%200%205%201%2E5v1A1%2E5%201%2E5%200%200%200%206%2E5%204h3A1%2E5%201%2E5%200%200%200%2011%202%2E5v%2D1A1%2E5%201%2E5%200%200%200%209%2E5%200h%2D3z%22%2F%3E%3C%2Fsvg%3E%27%29%3Bbackground%2Drepeat%3Ano%2Drepeat%3Bbackground%2Dsize%3A1rem%201rem%7Dpre%2EsourceCode%3Ahover%3E%2Ecode%2Dcopy%2Dbutton%2Dchecked%3E%2Ebi%3A%3Abefore%7Bbackground%2Dimage%3Aurl%28%27data%3Aimage%2Fsvg%2Bxml%2C%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22rgb%28111%2C%20111%2C%20111%29%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M13%2E854%203%2E646a%2E5%2E5%200%200%201%200%20%2E708l%2D7%207a%2E5%2E5%200%200%201%2D%2E708%200l%2D3%2E5%2D3%2E5a%2E5%2E5%200%201%201%20%2E708%2D%2E708L6%2E5%2010%2E293l6%2E646%2D6%2E647a%2E5%2E5%200%200%201%20%2E708%200z%22%2F%3E%3C%2Fsvg%3E%27%29%7Dpre%2EsourceCode%3Ahover%3E%2Ecode%2Dcopy%2Dbutton%3Ahover%3E%2Ebi%3A%3Abefore%7Bbackground%2Dimage%3Aurl%28%27data%3Aimage%2Fsvg%2Bxml%2C%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22rgb%2813%2C%20110%2C%20253%29%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M4%201%2E5H3a2%202%200%200%200%2D2%202V14a2%202%200%200%200%202%202h10a2%202%200%200%200%202%2D2V3%2E5a2%202%200%200%200%2D2%2D2h%2D1v1h1a1%201%200%200%201%201%201V14a1%201%200%200%201%2D1%201H3a1%201%200%200%201%2D1%2D1V3%2E5a1%201%200%200%201%201%2D1h1v%2D1z%22%2F%3E%3Cpath%20d%3D%22M9%2E5%201a%2E5%2E5%200%200%201%20%2E5%2E5v1a%2E5%2E5%200%200%201%2D%2E5%2E5h%2D3a%2E5%2E5%200%200%201%2D%2E5%2D%2E5v%2D1a%2E5%2E5%200%200%201%20%2E5%2D%2E5h3zm%2D3%2D1A1%2E5%201%2E5%200%200%200%205%201%2E5v1A1%2E5%201%2E5%200%200%200%206%2E5%204h3A1%2E5%201%2E5%200%200%200%2011%202%2E5v%2D1A1%2E5%201%2E5%200%200%200%209%2E5%200h%2D3z%22%2F%3E%3C%2Fsvg%3E%27%29%7Dpre%2EsourceCode%3Ahover%3E%2Ecode%2Dcopy%2Dbutton%2Dchecked%3Ahover%3E%2Ebi%3A%3Abefore%7Bbackground%2Dimage%3Aurl%28%27data%3Aimage%2Fsvg%2Bxml%2C%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22rgb%2813%2C%20110%2C%20253%29%22%20%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M13%2E854%203%2E646a%2E5%2E5%200%200%201%200%20%2E708l%2D7%207a%2E5%2E5%200%200%201%2D%2E708%200l%2D3%2E5%2D3%2E5a%2E5%2E5%200%201%201%20%2E708%2D%2E708L6%2E5%2010%2E293l6%2E646%2D6%2E647a%2E5%2E5%200%200%201%20%2E708%200z%22%2F%3E%3C%2Fsvg%3E%27%29%7D%2Epanel%2Dtabset%20%5Brole%3Dtablist%5D%7Bborder%2Dbottom%3A1px%20solid%20%23dee2e6%3Blist%2Dstyle%3Anone%3Bmargin%3A0%3Bpadding%3A0%3Bwidth%3A100%25%7D%2Epanel%2Dtabset%20%5Brole%3Dtablist%5D%20%2A%7B%2Dwebkit%2Dbox%2Dsizing%3Aborder%2Dbox%3Bbox%2Dsizing%3Aborder%2Dbox%7D%40media%28min%2Dwidth%3A%2030em%29%7B%2Epanel%2Dtabset%20%5Brole%3Dtablist%5D%20li%7Bdisplay%3Ainline%2Dblock%7D%7D%2Epanel%2Dtabset%20%5Brole%3Dtab%5D%7Bborder%3A1px%20solid%20rgba%280%2C0%2C0%2C0%29%3Bborder%2Dtop%2Dcolor%3A%23dee2e6%3Bdisplay%3Ablock%3Bpadding%3A%2E5em%201em%3Btext%2Ddecoration%3Anone%7D%40media%28min%2Dwidth%3A%2030em%29%7B%2Epanel%2Dtabset%20%5Brole%3Dtab%5D%7Bborder%2Dtop%2Dcolor%3Argba%280%2C0%2C0%2C0%29%3Bdisplay%3Ainline%2Dblock%3Bmargin%2Dbottom%3A%2D1px%7D%7D%2Epanel%2Dtabset%20%5Brole%3Dtab%5D%5Baria%2Dselected%3Dtrue%5D%7Bbackground%2Dcolor%3A%23dee2e6%7D%40media%28min%2Dwidth%3A%2030em%29%7B%2Epanel%2Dtabset%20%5Brole%3Dtab%5D%5Baria%2Dselected%3Dtrue%5D%7Bbackground%2Dcolor%3Argba%280%2C0%2C0%2C0%29%3Bborder%3A1px%20solid%20%23dee2e6%3Bborder%2Dbottom%2Dcolor%3A%23fff%7D%7D%40media%28min%2Dwidth%3A%2030em%29%7B%2Epanel%2Dtabset%20%5Brole%3Dtab%5D%3Ahover%3Anot%28%5Baria%2Dselected%3Dtrue%5D%29%7Bborder%3A1px%20solid%20%23dee2e6%7D%7D%2Eimg%2Dfluid%7Bmax%2Dwidth%3A100%25%3Bheight%3Aauto%7D%3Aroot%7B%2D%2Dquarto%2Dscss%2Dexport%2Dbody%2Dbg%3A%20%23fff%3B%2D%2Dquarto%2Dscss%2Dexport%2Dbody%2Dcolor%3A%20%23222%3B%2D%2Dquarto%2Dscss%2Dexport%2Dtext%2Dmuted%3A%20rgb%28110%2E5%2C%20110%2E5%2C%20110%2E5%29%3B%2D%2Dquarto%2Dscss%2Dexport%2Dborder%2Dcolor%3A%20rgb%28110%2E5%2C%20110%2E5%2C%20110%2E5%29%3B%2D%2Dquarto%2Dscss%2Dexport%2Dtable%2Dborder%2Dcolor%3A%20rgb%28110%2E5%2C%20110%2E5%2C%20110%2E5%29%3B%2D%2Dquarto%2Dscss%2Dexport%2Dbtn%2Dcode%2Dcopy%2Dcolor%3A%20rgb%28110%2E5%2C%20110%2E5%2C%20110%2E5%29%3B%2D%2Dquarto%2Dscss%2Dexport%2Dbtn%2Dcode%2Dcopy%2Dcolor%2Dactive%3A%20%230d6efd%3B%2D%2Dquarto%2Dscss%2Dexport%2Dprimary%3A%20%23468%3B%2D%2Dquarto%2Dscss%2Dexport%2Dsecondary%3A%20%23999%3B%2D%2Dquarto%2Dscss%2Dexport%2Dmermaid%2Dbg%2Dcolor%3A%20%23fff%3B%2D%2Dquarto%2Dscss%2Dexport%2Dmermaid%2Dedge%2Dcolor%3A%20%23999%3B%2D%2Dquarto%2Dscss%2Dexport%2Dmermaid%2Dnode%2Dfg%2Dcolor%3A%20%23222%3B%2D%2Dquarto%2Dscss%2Dexport%2Dmermaid%2Dfg%2Dcolor%3A%20%23222%3B%2D%2Dquarto%2Dscss%2Dexport%2Dmermaid%2Dfg%2Dcolor%2D%2Dlighter%3A%20rgb%2859%2E5%2C%2059%2E5%2C%2059%2E5%29%3B%2D%2Dquarto%2Dscss%2Dexport%2Dmermaid%2Dfg%2Dcolor%2D%2Dlightest%3A%20%23555555%3B%2D%2Dquarto%2Dscss%2Dexport%2Dmermaid%2Dlabel%2Dbg%2Dcolor%3A%20%23fff%3B%2D%2Dquarto%2Dscss%2Dexport%2Dmermaid%2Dlabel%2Dfg%2Dcolor%3A%20%23468%3B%2D%2Dquarto%2Dscss%2Dexport%2Dmermaid%2Dnode%2Dbg%2Dcolor%3A%20rgba%2868%2C%20102%2C%20136%2C%200%2E1%29%3B%2D%2Dquarto%2Dscss%2Dexport%2Dtabset%2Dborder%2Dcolor%3A%20rgb%28222%2C%20226%2C%20230%29%7D" rel="stylesheet" append-hash="true" data-mode="light">
+<link href="data:text/css,%2Etop%2Dright%7Bposition%3Aabsolute%3Btop%3A1em%3Bright%3A1em%7D%2Evisually%2Dhidden%7Bborder%3A0%3Bclip%3Arect%280%200%200%200%29%3Bheight%3Aauto%3Bmargin%3A0%3Boverflow%3Ahidden%3Bpadding%3A0%3Bposition%3Aabsolute%3Bwidth%3A1px%3Bwhite%2Dspace%3Anowrap%7D%2Ehidden%7Bdisplay%3Anone%20%21important%7D%2Ezindex%2Dbottom%7Bz%2Dindex%3A%2D1%20%21important%7Dfigure%2Efigure%7Bdisplay%3Ablock%7D%2Equarto%2Dlayout%2Dpanel%7Bmargin%2Dbottom%3A1em%7D%2Equarto%2Dlayout%2Dpanel%3Efigure%7Bwidth%3A100%25%7D%2Equarto%2Dlayout%2Dpanel%3Efigure%3Efigcaption%2C%2Equarto%2Dlayout%2Dpanel%3E%2Epanel%2Dcaption%7Bmargin%2Dtop%3A10pt%7D%2Equarto%2Dlayout%2Dpanel%3E%2Etable%2Dcaption%7Bmargin%2Dtop%3A0px%7D%2Etable%2Dcaption%20p%7Bmargin%2Dbottom%3A%2E5em%7D%2Equarto%2Dlayout%2Drow%7Bdisplay%3Aflex%3Bflex%2Ddirection%3Arow%3Balign%2Ditems%3Aflex%2Dstart%7D%2Equarto%2Dlayout%2Dvalign%2Dtop%7Balign%2Ditems%3Aflex%2Dstart%7D%2Equarto%2Dlayout%2Dvalign%2Dbottom%7Balign%2Ditems%3Aflex%2Dend%7D%2Equarto%2Dlayout%2Dvalign%2Dcenter%7Balign%2Ditems%3Acenter%7D%2Equarto%2Dlayout%2Dcell%7Bposition%3Arelative%3Bmargin%2Dright%3A20px%7D%2Equarto%2Dlayout%2Dcell%3Alast%2Dchild%7Bmargin%2Dright%3A0%7D%2Equarto%2Dlayout%2Dcell%20figure%2C%2Equarto%2Dlayout%2Dcell%3Ep%7Bmargin%3A%2E2em%7D%2Equarto%2Dlayout%2Dcell%20img%7Bmax%2Dwidth%3A100%25%7D%2Equarto%2Dlayout%2Dcell%20%2Ehtml%2Dwidget%7Bwidth%3A100%25%20%21important%7D%2Equarto%2Dlayout%2Dcell%20div%20figure%20p%7Bmargin%3A0%7D%2Equarto%2Dlayout%2Dcell%20figure%7Bdisplay%3Ablock%3Bmargin%2Dinline%2Dstart%3A0%3Bmargin%2Dinline%2Dend%3A0%7D%2Equarto%2Dlayout%2Dcell%20table%7Bdisplay%3Ainline%2Dtable%7D%2Equarto%2Dlayout%2Dcell%2Dsubref%20figcaption%2Cfigure%20%2Equarto%2Dlayout%2Drow%20figure%20figcaption%7Btext%2Dalign%3Acenter%3Bfont%2Dstyle%3Aitalic%7D%2Equarto%2Dfigure%7Bposition%3Arelative%3Bmargin%2Dbottom%3A1em%7D%2Equarto%2Dfigure%3Efigure%7Bwidth%3A100%25%3Bmargin%2Dbottom%3A0%7D%2Equarto%2Dfigure%2Dleft%3Efigure%3Ep%2C%2Equarto%2Dfigure%2Dleft%3Efigure%3Ediv%7Btext%2Dalign%3Aleft%7D%2Equarto%2Dfigure%2Dcenter%3Efigure%3Ep%2C%2Equarto%2Dfigure%2Dcenter%3Efigure%3Ediv%7Btext%2Dalign%3Acenter%7D%2Equarto%2Dfigure%2Dright%3Efigure%3Ep%2C%2Equarto%2Dfigure%2Dright%3Efigure%3Ediv%7Btext%2Dalign%3Aright%7D%2Equarto%2Dfigure%3Efigure%3Ediv%2Ecell%2Dannotation%2C%2Equarto%2Dfigure%3Efigure%3Ediv%20code%7Btext%2Dalign%3Aleft%7Dfigure%3Ep%3Aempty%7Bdisplay%3Anone%7Dfigure%3Ep%3Afirst%2Dchild%7Bmargin%2Dtop%3A0%3Bmargin%2Dbottom%3A0%7Dfigure%3Efigcaption%2Equarto%2Dfloat%2Dcaption%2Dbottom%7Bmargin%2Dbottom%3A%2E5em%7Dfigure%3Efigcaption%2Equarto%2Dfloat%2Dcaption%2Dtop%7Bmargin%2Dtop%3A%2E5em%7Ddiv%5Bid%5E%3Dtbl%2D%5D%7Bposition%3Arelative%7D%2Equarto%2Dfigure%3E%2Eanchorjs%2Dlink%7Bposition%3Aabsolute%3Btop%3A%2E6em%3Bright%3A%2E5em%7Ddiv%5Bid%5E%3Dtbl%2D%5D%3E%2Eanchorjs%2Dlink%7Bposition%3Aabsolute%3Btop%3A%2E7em%3Bright%3A%2E3em%7D%2Equarto%2Dfigure%3Ahover%3E%2Eanchorjs%2Dlink%2Cdiv%5Bid%5E%3Dtbl%2D%5D%3Ahover%3E%2Eanchorjs%2Dlink%2Ch2%3Ahover%3E%2Eanchorjs%2Dlink%2Ch3%3Ahover%3E%2Eanchorjs%2Dlink%2Ch4%3Ahover%3E%2Eanchorjs%2Dlink%2Ch5%3Ahover%3E%2Eanchorjs%2Dlink%2Ch6%3Ahover%3E%2Eanchorjs%2Dlink%2C%2Ereveal%2Danchorjs%2Dlink%3E%2Eanchorjs%2Dlink%7Bopacity%3A1%7D%23title%2Dblock%2Dheader%7Bmargin%2Dblock%2Dend%3A1rem%3Bposition%3Arelative%3Bmargin%2Dtop%3A%2D1px%7D%23title%2Dblock%2Dheader%20%2Eabstract%7Bmargin%2Dblock%2Dstart%3A1rem%7D%23title%2Dblock%2Dheader%20%2Eabstract%20%2Eabstract%2Dtitle%7Bfont%2Dweight%3A600%7D%23title%2Dblock%2Dheader%20a%7Btext%2Ddecoration%3Anone%7D%23title%2Dblock%2Dheader%20%2Eauthor%2C%23title%2Dblock%2Dheader%20%2Edate%2C%23title%2Dblock%2Dheader%20%2Edoi%7Bmargin%2Dblock%2Dend%3A%2E2rem%7D%23title%2Dblock%2Dheader%20%2Equarto%2Dtitle%2Dblock%3Ediv%7Bdisplay%3Aflex%7D%23title%2Dblock%2Dheader%20%2Equarto%2Dtitle%2Dblock%3Ediv%3Eh1%7Bflex%2Dgrow%3A1%7D%23title%2Dblock%2Dheader%20%2Equarto%2Dtitle%2Dblock%3Ediv%3Ebutton%7Bflex%2Dshrink%3A0%3Bheight%3A2%2E25rem%3Bmargin%2Dtop%3A0%7Dtr%2Eheader%3Eth%3Ep%3Alast%2Dof%2Dtype%7Bmargin%2Dbottom%3A0px%7Dtable%2Ctable%2Etable%7Bmargin%2Dtop%3A%2E5rem%3Bmargin%2Dbottom%3A%2E5rem%7Dcaption%2C%2Etable%2Dcaption%7Bpadding%2Dtop%3A%2E5rem%3Bpadding%2Dbottom%3A%2E5rem%3Btext%2Dalign%3Acenter%7Dfigure%2Equarto%2Dfloat%2Dtbl%20figcaption%2Equarto%2Dfloat%2Dcaption%2Dtop%7Bmargin%2Dtop%3A%2E5rem%3Bmargin%2Dbottom%3A%2E25rem%3Btext%2Dalign%3Acenter%7Dfigure%2Equarto%2Dfloat%2Dtbl%20figcaption%2Equarto%2Dfloat%2Dcaption%2Dbottom%7Bpadding%2Dtop%3A%2E25rem%3Bmargin%2Dbottom%3A%2E5rem%3Btext%2Dalign%3Acenter%7D%2Eutterances%7Bmax%2Dwidth%3Anone%3Bmargin%2Dleft%3A%2D8px%7Diframe%7Bmargin%2Dbottom%3A1em%7Ddetails%7Bmargin%2Dbottom%3A1em%7Ddetails%5Bshow%5D%7Bmargin%2Dbottom%3A0%7Ddetails%3Esummary%7Bcolor%3Argb%28110%2E5%2C110%2E5%2C110%2E5%29%7Ddetails%3Esummary%3Ep%3Aonly%2Dchild%7Bdisplay%3Ainline%7Ddiv%2Ecode%2Dcopy%2Douter%2Dscaffold%7Bposition%3Arelative%7Ddd%20code%3Anot%28%2EsourceCode%29%2Cp%20code%3Anot%28%2EsourceCode%29%7Bwhite%2Dspace%3Apre%2Dwrap%7Dcode%7Bwhite%2Dspace%3Apre%7D%40media%20print%7Bcode%7Bwhite%2Dspace%3Apre%2Dwrap%7D%7Dpre%3Ecode%7Bdisplay%3Ablock%7Dpre%3Ecode%2EsourceCode%7Bwhite%2Dspace%3Apre%7Dpre%3Ecode%2EsourceCode%3Espan%3Ea%3Afirst%2Dchild%3A%3Abefore%7Btext%2Ddecoration%3Anone%7Dpre%2Ecode%2Doverflow%2Dwrap%3Ecode%2EsourceCode%7Bwhite%2Dspace%3Apre%2Dwrap%7Dpre%2Ecode%2Doverflow%2Dscroll%3Ecode%2EsourceCode%7Bwhite%2Dspace%3Apre%7Dcode%20a%3Aany%2Dlink%7Bcolor%3Ainherit%3Btext%2Ddecoration%3Anone%7Dcode%20a%3Ahover%7Bcolor%3Ainherit%3Btext%2Ddecoration%3Aunderline%7Dul%2Etask%2Dlist%7Bpadding%2Dleft%3A1em%7D%5Bdata%2Dtippy%2Droot%5D%7Bdisplay%3Ainline%2Dblock%7D%2Etippy%2Dcontent%20%2Efootnote%2Dback%7Bdisplay%3Anone%7D%2Efootnote%2Dback%7Bmargin%2Dleft%3A%2E2em%7D%2Etippy%2Dcontent%7Boverflow%2Dx%3Aauto%7D%2Equarto%2Dembedded%2Dsource%2Dcode%7Bdisplay%3Anone%7D%2Equarto%2Dunresolved%2Dref%7Bfont%2Dweight%3A600%7D%2Equarto%2Dcover%2Dimage%7Bmax%2Dwidth%3A35%25%3Bfloat%3Aright%3Bmargin%2Dleft%3A30px%7D%2Ecell%2Doutput%2Ddisplay%20%2Ewidget%2Dsubarea%7Bmargin%2Dbottom%3A1em%7D%2Ecell%2Doutput%2Ddisplay%3Anot%28%2Eno%2Doverflow%2Dx%29%2C%2Eknitsql%2Dtable%3Anot%28%2Eno%2Doverflow%2Dx%29%7Boverflow%2Dx%3Aauto%7D%2Epanel%2Dinput%7Bmargin%2Dbottom%3A1em%7D%2Epanel%2Dinput%3Ediv%2C%2Epanel%2Dinput%3Ediv%3Ediv%7Bdisplay%3Ainline%2Dblock%3Bvertical%2Dalign%3Atop%3Bpadding%2Dright%3A12px%7D%2Epanel%2Dinput%3Ep%3Alast%2Dchild%7Bmargin%2Dbottom%3A0%7D%2Elayout%2Dsidebar%7Bmargin%2Dbottom%3A1em%7D%2Elayout%2Dsidebar%20%2Etab%2Dcontent%7Bborder%3Anone%7D%2Etab%2Dcontent%3E%2Epage%2Dcolumns%2Eactive%7Bdisplay%3Agrid%7Ddiv%2EsourceCode%3Eiframe%7Bwidth%3A100%25%3Bheight%3A300px%3Bmargin%2Dbottom%3A%2D0%2E5em%7Da%7Btext%2Dunderline%2Doffset%3A3px%7D%2Ecallout%20pre%2EsourceCode%7Bpadding%2Dleft%3A0%7Ddiv%2Eansi%2Descaped%2Doutput%7Bfont%2Dfamily%3Amonospace%3Bdisplay%3Ablock%7D%2Eansi%2Dblack%2Dfg%7Bcolor%3A%233e424d%7D%2Eansi%2Dblack%2Dbg%7Bbackground%2Dcolor%3A%233e424d%7D%2Eansi%2Dblack%2Dintense%2Dblack%2C%2Eansi%2Dbright%2Dblack%2Dfg%7Bcolor%3A%23282c36%7D%2Eansi%2Dblack%2Dintense%2Dblack%2C%2Eansi%2Dbright%2Dblack%2Dbg%7Bbackground%2Dcolor%3A%23282c36%7D%2Eansi%2Dred%2Dfg%7Bcolor%3A%23e75c58%7D%2Eansi%2Dred%2Dbg%7Bbackground%2Dcolor%3A%23e75c58%7D%2Eansi%2Dred%2Dintense%2Dred%2C%2Eansi%2Dbright%2Dred%2Dfg%7Bcolor%3A%23b22b31%7D%2Eansi%2Dred%2Dintense%2Dred%2C%2Eansi%2Dbright%2Dred%2Dbg%7Bbackground%2Dcolor%3A%23b22b31%7D%2Eansi%2Dgreen%2Dfg%7Bcolor%3A%2300a250%7D%2Eansi%2Dgreen%2Dbg%7Bbackground%2Dcolor%3A%2300a250%7D%2Eansi%2Dgreen%2Dintense%2Dgreen%2C%2Eansi%2Dbright%2Dgreen%2Dfg%7Bcolor%3A%23007427%7D%2Eansi%2Dgreen%2Dintense%2Dgreen%2C%2Eansi%2Dbright%2Dgreen%2Dbg%7Bbackground%2Dcolor%3A%23007427%7D%2Eansi%2Dyellow%2Dfg%7Bcolor%3A%23ddb62b%7D%2Eansi%2Dyellow%2Dbg%7Bbackground%2Dcolor%3A%23ddb62b%7D%2Eansi%2Dyellow%2Dintense%2Dyellow%2C%2Eansi%2Dbright%2Dyellow%2Dfg%7Bcolor%3A%23b27d12%7D%2Eansi%2Dyellow%2Dintense%2Dyellow%2C%2Eansi%2Dbright%2Dyellow%2Dbg%7Bbackground%2Dcolor%3A%23b27d12%7D%2Eansi%2Dblue%2Dfg%7Bcolor%3A%23208ffb%7D%2Eansi%2Dblue%2Dbg%7Bbackground%2Dcolor%3A%23208ffb%7D%2Eansi%2Dblue%2Dintense%2Dblue%2C%2Eansi%2Dbright%2Dblue%2Dfg%7Bcolor%3A%230065ca%7D%2Eansi%2Dblue%2Dintense%2Dblue%2C%2Eansi%2Dbright%2Dblue%2Dbg%7Bbackground%2Dcolor%3A%230065ca%7D%2Eansi%2Dmagenta%2Dfg%7Bcolor%3A%23d160c4%7D%2Eansi%2Dmagenta%2Dbg%7Bbackground%2Dcolor%3A%23d160c4%7D%2Eansi%2Dmagenta%2Dintense%2Dmagenta%2C%2Eansi%2Dbright%2Dmagenta%2Dfg%7Bcolor%3A%23a03196%7D%2Eansi%2Dmagenta%2Dintense%2Dmagenta%2C%2Eansi%2Dbright%2Dmagenta%2Dbg%7Bbackground%2Dcolor%3A%23a03196%7D%2Eansi%2Dcyan%2Dfg%7Bcolor%3A%2360c6c8%7D%2Eansi%2Dcyan%2Dbg%7Bbackground%2Dcolor%3A%2360c6c8%7D%2Eansi%2Dcyan%2Dintense%2Dcyan%2C%2Eansi%2Dbright%2Dcyan%2Dfg%7Bcolor%3A%23258f8f%7D%2Eansi%2Dcyan%2Dintense%2Dcyan%2C%2Eansi%2Dbright%2Dcyan%2Dbg%7Bbackground%2Dcolor%3A%23258f8f%7D%2Eansi%2Dwhite%2Dfg%7Bcolor%3A%23c5c1b4%7D%2Eansi%2Dwhite%2Dbg%7Bbackground%2Dcolor%3A%23c5c1b4%7D%2Eansi%2Dwhite%2Dintense%2Dwhite%2C%2Eansi%2Dbright%2Dwhite%2Dfg%7Bcolor%3A%23a1a6b2%7D%2Eansi%2Dwhite%2Dintense%2Dwhite%2C%2Eansi%2Dbright%2Dwhite%2Dbg%7Bbackground%2Dcolor%3A%23a1a6b2%7D%2Eansi%2Ddefault%2Dinverse%2Dfg%7Bcolor%3A%23fff%7D%2Eansi%2Ddefault%2Dinverse%2Dbg%7Bbackground%2Dcolor%3A%23000%7D%2Eansi%2Dbold%7Bfont%2Dweight%3Abold%7D%2Eansi%2Dunderline%7Btext%2Ddecoration%3Aunderline%7D%3Aroot%7B%2D%2Dquarto%2Dbody%2Dbg%3A%20%23fff%3B%2D%2Dquarto%2Dbody%2Dcolor%3A%20%23222%3B%2D%2Dquarto%2Dtext%2Dmuted%3A%20rgb%28110%2E5%2C%20110%2E5%2C%20110%2E5%29%3B%2D%2Dquarto%2Dborder%2Dcolor%3A%20rgb%28110%2E5%2C%20110%2E5%2C%20110%2E5%29%3B%2D%2Dquarto%2Dborder%2Dwidth%3A%201px%3B%2D%2Dquarto%2Dborder%2Dradius%3A%204px%7Dtable%2Egt%5Ftable%7Bcolor%3Avar%28%2D%2Dquarto%2Dbody%2Dcolor%29%3Bfont%2Dsize%3A1em%3Bwidth%3A100%25%3Bbackground%2Dcolor%3Argba%280%2C0%2C0%2C0%29%3Bborder%2Dtop%2Dwidth%3Ainherit%3Bborder%2Dbottom%2Dwidth%3Ainherit%3Bborder%2Dcolor%3Avar%28%2D%2Dquarto%2Dborder%2Dcolor%29%7Dtable%2Egt%5Ftable%20th%2Egt%5Fcolumn%5Fspanner%5Fouter%7Bcolor%3Avar%28%2D%2Dquarto%2Dbody%2Dcolor%29%3Bbackground%2Dcolor%3Argba%280%2C0%2C0%2C0%29%3Bborder%2Dtop%2Dwidth%3Ainherit%3Bborder%2Dbottom%2Dwidth%3Ainherit%3Bborder%2Dcolor%3Avar%28%2D%2Dquarto%2Dborder%2Dcolor%29%7Dtable%2Egt%5Ftable%20th%2Egt%5Fcol%5Fheading%7Bcolor%3Avar%28%2D%2Dquarto%2Dbody%2Dcolor%29%3Bfont%2Dweight%3Abold%3Bbackground%2Dcolor%3Argba%280%2C0%2C0%2C0%29%7Dtable%2Egt%5Ftable%20thead%2Egt%5Fcol%5Fheadings%7Bborder%2Dbottom%3A1px%20solid%20currentColor%3Bborder%2Dtop%2Dwidth%3Ainherit%3Bborder%2Dtop%2Dcolor%3Avar%28%2D%2Dquarto%2Dborder%2Dcolor%29%7Dtable%2Egt%5Ftable%20thead%2Egt%5Fcol%5Fheadings%3Anot%28%3Afirst%2Dchild%29%7Bborder%2Dtop%2Dwidth%3A1px%3Bborder%2Dtop%2Dcolor%3Avar%28%2D%2Dquarto%2Dborder%2Dcolor%29%7Dtable%2Egt%5Ftable%20td%2Egt%5Frow%7Bborder%2Dbottom%2Dwidth%3A1px%3Bborder%2Dbottom%2Dcolor%3Avar%28%2D%2Dquarto%2Dborder%2Dcolor%29%3Bborder%2Dtop%2Dwidth%3A0px%7Dtable%2Egt%5Ftable%20tbody%2Egt%5Ftable%5Fbody%7Bborder%2Dtop%2Dwidth%3A1px%3Bborder%2Dbottom%2Dwidth%3A1px%3Bborder%2Dbottom%2Dcolor%3Avar%28%2D%2Dquarto%2Dborder%2Dcolor%29%3Bborder%2Dtop%2Dcolor%3AcurrentColor%7Ddiv%2Ecolumns%7Bdisplay%3Ainitial%3Bgap%3Ainitial%7Ddiv%2Ecolumn%7Bdisplay%3Ainline%2Dblock%3Boverflow%2Dx%3Ainitial%3Bvertical%2Dalign%3Atop%3Bwidth%3A50%25%7D%2Ecode%2Dannotation%2Dtip%2Dcontent%7Bword%2Dwrap%3Abreak%2Dword%7D%2Ecode%2Dannotation%2Dcontainer%2Dhidden%7Bdisplay%3Anone%20%21important%7Ddl%2Ecode%2Dannotation%2Dcontainer%2Dgrid%7Bdisplay%3Agrid%3Bgrid%2Dtemplate%2Dcolumns%3Amin%2Dcontent%20auto%7Ddl%2Ecode%2Dannotation%2Dcontainer%2Dgrid%20dt%7Bgrid%2Dcolumn%3A1%7Ddl%2Ecode%2Dannotation%2Dcontainer%2Dgrid%20dd%7Bgrid%2Dcolumn%3A2%7Dpre%2EsourceCode%2Ecode%2Dannotation%2Dcode%7Bpadding%2Dright%3A0%7Dcode%2EsourceCode%20%2Ecode%2Dannotation%2Danchor%7Bz%2Dindex%3A100%3Bposition%3Arelative%3Bfloat%3Aright%3Bbackground%2Dcolor%3Argba%280%2C0%2C0%2C0%29%7Dinput%5Btype%3Dcheckbox%5D%7Bmargin%2Dright%3A%2E5ch%7D%3Aroot%7B%2D%2Dmermaid%2Dbg%2Dcolor%3A%20%23fff%3B%2D%2Dmermaid%2Dedge%2Dcolor%3A%20%23999%3B%2D%2Dmermaid%2Dnode%2Dfg%2Dcolor%3A%20%23222%3B%2D%2Dmermaid%2Dfg%2Dcolor%3A%20%23222%3B%2D%2Dmermaid%2Dfg%2Dcolor%2D%2Dlighter%3A%20rgb%2859%2E5%2C%2059%2E5%2C%2059%2E5%29%3B%2D%2Dmermaid%2Dfg%2Dcolor%2D%2Dlightest%3A%20%23555555%3B%2D%2Dmermaid%2Dfont%2Dfamily%3A%20sans%2Dserif%3B%2D%2Dmermaid%2Dlabel%2Dbg%2Dcolor%3A%20%23fff%3B%2D%2Dmermaid%2Dlabel%2Dfg%2Dcolor%3A%20%23468%3B%2D%2Dmermaid%2Dnode%2Dbg%2Dcolor%3A%20rgba%2868%2C%20102%2C%20136%2C%200%2E1%29%3B%2D%2Dmermaid%2Dnode%2Dfg%2Dcolor%3A%20%23222%7D%40media%20print%7B%3Aroot%7Bfont%2Dsize%3A11pt%7D%23quarto%2Dsidebar%2C%23TOC%2C%2Enav%2Dpage%7Bdisplay%3Anone%7D%2Epage%2Dcolumns%20%2Econtent%7Bgrid%2Dcolumn%2Dstart%3Apage%2Dstart%7D%2Efixed%2Dtop%7Bposition%3Arelative%7D%2Epanel%2Dcaption%2C%2Efigure%2Dcaption%2Cfigcaption%7Bcolor%3A%23666%7D%7Dbody%2Equarto%2Dlight%20%2Edark%2Dcontent%7Bdisplay%3Anone%20%21important%7Dbody%2Equarto%2Ddark%20%2Elight%2Dcontent%7Bdisplay%3Anone%20%21important%7D%2Ecode%2Dcopy%2Dbutton%7Bposition%3Aabsolute%3Btop%3A0%3Bright%3A0%3Bborder%3A0%3Bmargin%2Dtop%3A5px%3Bmargin%2Dright%3A5px%3Bbackground%2Dcolor%3Argba%280%2C0%2C0%2C0%29%3Bz%2Dindex%3A3%7D%2Ecode%2Dcopy%2Dbutton%2Dtooltip%7Bfont%2Dsize%3A%2E75em%7Ddiv%2Ecode%2Dcopy%2Douter%2Dscaffold%3Ahover%3E%2Ecode%2Dcopy%2Dbutton%3E%2Ebi%3A%3Abefore%7Bdisplay%3Ainline%2Dblock%3Bheight%3A1rem%3Bwidth%3A1rem%3Bcontent%3A%22%22%3Bvertical%2Dalign%3A%2D0%2E125em%3Bbackground%2Dimage%3Aurl%28%27data%3Aimage%2Fsvg%2Bxml%2C%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22rgb%28111%2C%20111%2C%20111%29%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M4%201%2E5H3a2%202%200%200%200%2D2%202V14a2%202%200%200%200%202%202h10a2%202%200%200%200%202%2D2V3%2E5a2%202%200%200%200%2D2%2D2h%2D1v1h1a1%201%200%200%201%201%201V14a1%201%200%200%201%2D1%201H3a1%201%200%200%201%2D1%2D1V3%2E5a1%201%200%200%201%201%2D1h1v%2D1z%22%2F%3E%3Cpath%20d%3D%22M9%2E5%201a%2E5%2E5%200%200%201%20%2E5%2E5v1a%2E5%2E5%200%200%201%2D%2E5%2E5h%2D3a%2E5%2E5%200%200%201%2D%2E5%2D%2E5v%2D1a%2E5%2E5%200%200%201%20%2E5%2D%2E5h3zm%2D3%2D1A1%2E5%201%2E5%200%200%200%205%201%2E5v1A1%2E5%201%2E5%200%200%200%206%2E5%204h3A1%2E5%201%2E5%200%200%200%2011%202%2E5v%2D1A1%2E5%201%2E5%200%200%200%209%2E5%200h%2D3z%22%2F%3E%3C%2Fsvg%3E%27%29%3Bbackground%2Drepeat%3Ano%2Drepeat%3Bbackground%2Dsize%3A1rem%201rem%7Ddiv%2Ecode%2Dcopy%2Douter%2Dscaffold%3Ahover%3E%2Ecode%2Dcopy%2Dbutton%2Dchecked%3E%2Ebi%3A%3Abefore%7Bbackground%2Dimage%3Aurl%28%27data%3Aimage%2Fsvg%2Bxml%2C%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22rgb%28111%2C%20111%2C%20111%29%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M13%2E854%203%2E646a%2E5%2E5%200%200%201%200%20%2E708l%2D7%207a%2E5%2E5%200%200%201%2D%2E708%200l%2D3%2E5%2D3%2E5a%2E5%2E5%200%201%201%20%2E708%2D%2E708L6%2E5%2010%2E293l6%2E646%2D6%2E647a%2E5%2E5%200%200%201%20%2E708%200z%22%2F%3E%3C%2Fsvg%3E%27%29%7Ddiv%2Ecode%2Dcopy%2Douter%2Dscaffold%3Ahover%3E%2Ecode%2Dcopy%2Dbutton%3Ahover%3E%2Ebi%3A%3Abefore%7Bbackground%2Dimage%3Aurl%28%27data%3Aimage%2Fsvg%2Bxml%2C%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22rgb%2813%2C%20110%2C%20253%29%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M4%201%2E5H3a2%202%200%200%200%2D2%202V14a2%202%200%200%200%202%202h10a2%202%200%200%200%202%2D2V3%2E5a2%202%200%200%200%2D2%2D2h%2D1v1h1a1%201%200%200%201%201%201V14a1%201%200%200%201%2D1%201H3a1%201%200%200%201%2D1%2D1V3%2E5a1%201%200%200%201%201%2D1h1v%2D1z%22%2F%3E%3Cpath%20d%3D%22M9%2E5%201a%2E5%2E5%200%200%201%20%2E5%2E5v1a%2E5%2E5%200%200%201%2D%2E5%2E5h%2D3a%2E5%2E5%200%200%201%2D%2E5%2D%2E5v%2D1a%2E5%2E5%200%200%201%20%2E5%2D%2E5h3zm%2D3%2D1A1%2E5%201%2E5%200%200%200%205%201%2E5v1A1%2E5%201%2E5%200%200%200%206%2E5%204h3A1%2E5%201%2E5%200%200%200%2011%202%2E5v%2D1A1%2E5%201%2E5%200%200%200%209%2E5%200h%2D3z%22%2F%3E%3C%2Fsvg%3E%27%29%7Ddiv%2Ecode%2Dcopy%2Douter%2Dscaffold%3Ahover%3E%2Ecode%2Dcopy%2Dbutton%2Dchecked%3Ahover%3E%2Ebi%3A%3Abefore%7Bbackground%2Dimage%3Aurl%28%27data%3Aimage%2Fsvg%2Bxml%2C%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22rgb%2813%2C%20110%2C%20253%29%22%20%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M13%2E854%203%2E646a%2E5%2E5%200%200%201%200%20%2E708l%2D7%207a%2E5%2E5%200%200%201%2D%2E708%200l%2D3%2E5%2D3%2E5a%2E5%2E5%200%201%201%20%2E708%2D%2E708L6%2E5%2010%2E293l6%2E646%2D6%2E647a%2E5%2E5%200%200%201%20%2E708%200z%22%2F%3E%3C%2Fsvg%3E%27%29%7D%2Epanel%2Dtabset%20%5Brole%3Dtablist%5D%7Bborder%2Dbottom%3A1px%20solid%20%23dee2e6%3Blist%2Dstyle%3Anone%3Bmargin%3A0%3Bpadding%3A0%3Bwidth%3A100%25%7D%2Epanel%2Dtabset%20%5Brole%3Dtablist%5D%20%2A%7B%2Dwebkit%2Dbox%2Dsizing%3Aborder%2Dbox%3Bbox%2Dsizing%3Aborder%2Dbox%7D%40media%28min%2Dwidth%3A%2030em%29%7B%2Epanel%2Dtabset%20%5Brole%3Dtablist%5D%20li%7Bdisplay%3Ainline%2Dblock%7D%7D%2Epanel%2Dtabset%20%5Brole%3Dtab%5D%7Bborder%3A1px%20solid%20rgba%280%2C0%2C0%2C0%29%3Bborder%2Dtop%2Dcolor%3A%23dee2e6%3Bdisplay%3Ablock%3Bpadding%3A%2E5em%201em%3Btext%2Ddecoration%3Anone%7D%40media%28min%2Dwidth%3A%2030em%29%7B%2Epanel%2Dtabset%20%5Brole%3Dtab%5D%7Bborder%2Dtop%2Dcolor%3Argba%280%2C0%2C0%2C0%29%3Bdisplay%3Ainline%2Dblock%3Bmargin%2Dbottom%3A%2D1px%7D%7D%2Epanel%2Dtabset%20%5Brole%3Dtab%5D%5Baria%2Dselected%3Dtrue%5D%7Bbackground%2Dcolor%3A%23dee2e6%7D%40media%28min%2Dwidth%3A%2030em%29%7B%2Epanel%2Dtabset%20%5Brole%3Dtab%5D%5Baria%2Dselected%3Dtrue%5D%7Bbackground%2Dcolor%3Argba%280%2C0%2C0%2C0%29%3Bborder%3A1px%20solid%20%23dee2e6%3Bborder%2Dbottom%2Dcolor%3A%23fff%7D%7D%40media%28min%2Dwidth%3A%2030em%29%7B%2Epanel%2Dtabset%20%5Brole%3Dtab%5D%3Ahover%3Anot%28%5Baria%2Dselected%3Dtrue%5D%29%7Bborder%3A1px%20solid%20%23dee2e6%7D%7D%2Eimg%2Dfluid%7Bmax%2Dwidth%3A100%25%3Bheight%3Aauto%7D%3Aroot%7B%2D%2Dquarto%2Dscss%2Dexport%2Dbody%2Dbg%3A%20%23fff%3B%2D%2Dquarto%2Dscss%2Dexport%2Dbody%2Dcolor%3A%20%23222%3B%2D%2Dquarto%2Dscss%2Dexport%2Dtext%2Dmuted%3A%20rgb%28110%2E5%2C%20110%2E5%2C%20110%2E5%29%3B%2D%2Dquarto%2Dscss%2Dexport%2Dborder%2Dcolor%3A%20rgb%28110%2E5%2C%20110%2E5%2C%20110%2E5%29%3B%2D%2Dquarto%2Dscss%2Dexport%2Dtable%2Dborder%2Dcolor%3A%20rgb%28110%2E5%2C%20110%2E5%2C%20110%2E5%29%3B%2D%2Dquarto%2Dscss%2Dexport%2Dbtn%2Dcode%2Dcopy%2Dcolor%3A%20rgb%28110%2E5%2C%20110%2E5%2C%20110%2E5%29%3B%2D%2Dquarto%2Dscss%2Dexport%2Dbtn%2Dcode%2Dcopy%2Dcolor%2Dactive%3A%20%230d6efd%3B%2D%2Dquarto%2Dscss%2Dexport%2Dprimary%3A%20%23468%3B%2D%2Dquarto%2Dscss%2Dexport%2Dsecondary%3A%20%23999%3B%2D%2Dquarto%2Dscss%2Dexport%2Dmermaid%2Dbg%2Dcolor%3A%20%23fff%3B%2D%2Dquarto%2Dscss%2Dexport%2Dmermaid%2Dedge%2Dcolor%3A%20%23999%3B%2D%2Dquarto%2Dscss%2Dexport%2Dmermaid%2Dnode%2Dfg%2Dcolor%3A%20%23222%3B%2D%2Dquarto%2Dscss%2Dexport%2Dmermaid%2Dfg%2Dcolor%3A%20%23222%3B%2D%2Dquarto%2Dscss%2Dexport%2Dmermaid%2Dfg%2Dcolor%2D%2Dlighter%3A%20rgb%2859%2E5%2C%2059%2E5%2C%2059%2E5%29%3B%2D%2Dquarto%2Dscss%2Dexport%2Dmermaid%2Dfg%2Dcolor%2D%2Dlightest%3A%20%23555555%3B%2D%2Dquarto%2Dscss%2Dexport%2Dmermaid%2Dlabel%2Dbg%2Dcolor%3A%20%23fff%3B%2D%2Dquarto%2Dscss%2Dexport%2Dmermaid%2Dlabel%2Dfg%2Dcolor%3A%20%23468%3B%2D%2Dquarto%2Dscss%2Dexport%2Dmermaid%2Dnode%2Dbg%2Dcolor%3A%20rgba%2868%2C%20102%2C%20136%2C%200%2E1%29%3B%2D%2Dquarto%2Dscss%2Dexport%2Dtabset%2Dborder%2Dcolor%3A%20rgb%28222%2C%20226%2C%20230%29%7D" rel="stylesheet" append-hash="true" data-mode="light">
 <link href="data:text/css,%0A%3Aroot%20%7B%0A%2D%2Dquarto%2Dhl%2Dot%2Dcolor%3A%20%23003B4F%3B%0A%2D%2Dquarto%2Dhl%2Dat%2Dcolor%3A%20%23657422%3B%0A%2D%2Dquarto%2Dhl%2Dss%2Dcolor%3A%20%2320794D%3B%0A%2D%2Dquarto%2Dhl%2Dan%2Dcolor%3A%20%235E5E5E%3B%0A%2D%2Dquarto%2Dhl%2Dfu%2Dcolor%3A%20%234758AB%3B%0A%2D%2Dquarto%2Dhl%2Dst%2Dcolor%3A%20%2320794D%3B%0A%2D%2Dquarto%2Dhl%2Dcf%2Dcolor%3A%20%23003B4F%3B%0A%2D%2Dquarto%2Dhl%2Dop%2Dcolor%3A%20%235E5E5E%3B%0A%2D%2Dquarto%2Dhl%2Der%2Dcolor%3A%20%23AD0000%3B%0A%2D%2Dquarto%2Dhl%2Dbn%2Dcolor%3A%20%23AD0000%3B%0A%2D%2Dquarto%2Dhl%2Dal%2Dcolor%3A%20%23AD0000%3B%0A%2D%2Dquarto%2Dhl%2Dva%2Dcolor%3A%20%23111111%3B%0A%2D%2Dquarto%2Dhl%2Dbu%2Dcolor%3A%20inherit%3B%0A%2D%2Dquarto%2Dhl%2Dex%2Dcolor%3A%20inherit%3B%0A%2D%2Dquarto%2Dhl%2Dpp%2Dcolor%3A%20%23AD0000%3B%0A%2D%2Dquarto%2Dhl%2Din%2Dcolor%3A%20%235E5E5E%3B%0A%2D%2Dquarto%2Dhl%2Dvs%2Dcolor%3A%20%2320794D%3B%0A%2D%2Dquarto%2Dhl%2Dwa%2Dcolor%3A%20%235E5E5E%3B%0A%2D%2Dquarto%2Dhl%2Ddo%2Dcolor%3A%20%235E5E5E%3B%0A%2D%2Dquarto%2Dhl%2Dim%2Dcolor%3A%20%2300769E%3B%0A%2D%2Dquarto%2Dhl%2Dch%2Dcolor%3A%20%2320794D%3B%0A%2D%2Dquarto%2Dhl%2Ddt%2Dcolor%3A%20%23AD0000%3B%0A%2D%2Dquarto%2Dhl%2Dfl%2Dcolor%3A%20%23AD0000%3B%0A%2D%2Dquarto%2Dhl%2Dco%2Dcolor%3A%20%235E5E5E%3B%0A%2D%2Dquarto%2Dhl%2Dcv%2Dcolor%3A%20%235E5E5E%3B%0A%2D%2Dquarto%2Dhl%2Dcn%2Dcolor%3A%20%238f5902%3B%0A%2D%2Dquarto%2Dhl%2Dsc%2Dcolor%3A%20%235E5E5E%3B%0A%2D%2Dquarto%2Dhl%2Ddv%2Dcolor%3A%20%23AD0000%3B%0A%2D%2Dquarto%2Dhl%2Dkw%2Dcolor%3A%20%23003B4F%3B%0A%7D%0A%0A%3Aroot%20%7B%0A%2D%2Dquarto%2Dfont%2Dmonospace%3A%20SFMono%2DRegular%2C%20Menlo%2C%20Monaco%2C%20Consolas%2C%20%22Liberation%20Mono%22%2C%20%22Courier%20New%22%2C%20monospace%3B%0A%7D%0A%0Apre%20%3E%20code%2EsourceCode%20%3E%20span%20%7B%0Acolor%3A%20%23003B4F%3B%0A%7D%0Acode%2EsourceCode%20%3E%20span%20%7B%0Acolor%3A%20%23003B4F%3B%0A%7D%0Adiv%2EsourceCode%2C%0Adiv%2EsourceCode%20pre%2EsourceCode%20%7B%0Acolor%3A%20%23003B4F%3B%0A%7D%0A%0Acode%20span%20%7B%0Acolor%3A%20%23003B4F%3B%0A%7D%0A%0Acode%20span%2Eal%20%7B%0Acolor%3A%20%23AD0000%3B%0Afont%2Dstyle%3A%20inherit%3B%0A%7D%0A%0Acode%20span%2Ean%20%7B%0Acolor%3A%20%235E5E5E%3B%0Afont%2Dstyle%3A%20inherit%3B%0A%7D%0A%0Acode%20span%2Eat%20%7B%0Acolor%3A%20%23657422%3B%0Afont%2Dstyle%3A%20inherit%3B%0A%7D%0A%0Acode%20span%2Ebn%20%7B%0Acolor%3A%20%23AD0000%3B%0Afont%2Dstyle%3A%20inherit%3B%0A%7D%0A%0Acode%20span%2Ebu%20%7B%0Afont%2Dstyle%3A%20inherit%3B%0A%7D%0A%0Acode%20span%2Ecf%20%7B%0Acolor%3A%20%23003B4F%3B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dstyle%3A%20inherit%3B%0A%7D%0A%0Acode%20span%2Ech%20%7B%0Acolor%3A%20%2320794D%3B%0Afont%2Dstyle%3A%20inherit%3B%0A%7D%0A%0Acode%20span%2Ecn%20%7B%0Acolor%3A%20%238f5902%3B%0Afont%2Dstyle%3A%20inherit%3B%0A%7D%0A%0Acode%20span%2Eco%20%7B%0Acolor%3A%20%235E5E5E%3B%0Afont%2Dstyle%3A%20inherit%3B%0A%7D%0A%0Acode%20span%2Ecv%20%7B%0Acolor%3A%20%235E5E5E%3B%0Afont%2Dstyle%3A%20italic%3B%0A%7D%0A%0Acode%20span%2Edo%20%7B%0Acolor%3A%20%235E5E5E%3B%0Afont%2Dstyle%3A%20italic%3B%0A%7D%0A%0Acode%20span%2Edt%20%7B%0Acolor%3A%20%23AD0000%3B%0Afont%2Dstyle%3A%20inherit%3B%0A%7D%0A%0Acode%20span%2Edv%20%7B%0Acolor%3A%20%23AD0000%3B%0Afont%2Dstyle%3A%20inherit%3B%0A%7D%0A%0Acode%20span%2Eer%20%7B%0Acolor%3A%20%23AD0000%3B%0Afont%2Dstyle%3A%20inherit%3B%0A%7D%0A%0Acode%20span%2Eex%20%7B%0Afont%2Dstyle%3A%20inherit%3B%0A%7D%0A%0Acode%20span%2Efl%20%7B%0Acolor%3A%20%23AD0000%3B%0Afont%2Dstyle%3A%20inherit%3B%0A%7D%0A%0Acode%20span%2Efu%20%7B%0Acolor%3A%20%234758AB%3B%0Afont%2Dstyle%3A%20inherit%3B%0A%7D%0A%0Acode%20span%2Eim%20%7B%0Acolor%3A%20%2300769E%3B%0Afont%2Dstyle%3A%20inherit%3B%0A%7D%0A%0Acode%20span%2Ein%20%7B%0Acolor%3A%20%235E5E5E%3B%0Afont%2Dstyle%3A%20inherit%3B%0A%7D%0A%0Acode%20span%2Ekw%20%7B%0Acolor%3A%20%23003B4F%3B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dstyle%3A%20inherit%3B%0A%7D%0A%0Acode%20span%2Eop%20%7B%0Acolor%3A%20%235E5E5E%3B%0Afont%2Dstyle%3A%20inherit%3B%0A%7D%0A%0Acode%20span%2Eot%20%7B%0Acolor%3A%20%23003B4F%3B%0Afont%2Dstyle%3A%20inherit%3B%0A%7D%0A%0Acode%20span%2Epp%20%7B%0Acolor%3A%20%23AD0000%3B%0Afont%2Dstyle%3A%20inherit%3B%0A%7D%0A%0Acode%20span%2Esc%20%7B%0Acolor%3A%20%235E5E5E%3B%0Afont%2Dstyle%3A%20inherit%3B%0A%7D%0A%0Acode%20span%2Ess%20%7B%0Acolor%3A%20%2320794D%3B%0Afont%2Dstyle%3A%20inherit%3B%0A%7D%0A%0Acode%20span%2Est%20%7B%0Acolor%3A%20%2320794D%3B%0Afont%2Dstyle%3A%20inherit%3B%0A%7D%0A%0Acode%20span%2Eva%20%7B%0Acolor%3A%20%23111111%3B%0Afont%2Dstyle%3A%20inherit%3B%0A%7D%0A%0Acode%20span%2Evs%20%7B%0Acolor%3A%20%2320794D%3B%0Afont%2Dstyle%3A%20inherit%3B%0A%7D%0A%0Acode%20span%2Ewa%20%7B%0Acolor%3A%20%235E5E5E%3B%0Afont%2Dstyle%3A%20italic%3B%0A%7D%0A%2Eprevent%2Dinlining%20%7B%0Acontent%3A%20%22%3C%2F%22%3B%0A%7D%0A%0A" rel="stylesheet" id="quarto-text-highlighting-styles">
 <style>
 body{font:16px/1.4 Arial,sans-serif;color:#111418;margin:0;background:#eef2f6}main{max-width:850px;margin:auto}h1,h2,h3{color:#063360}h1{font-size:26px}h2{font-size:22px;margin:0 0 12px}h3{font-size:18px;margin:14px 0 6px}p{margin:8px 0}.sheet-page{background:white;padding:28px 40px;margin:20px 0;box-sizing:border-box;min-height:950px}.reading-table{width:100%;border-collapse:collapse;font-size:13px}.reading-table th,.reading-table td{padding:7px;border-bottom:1px solid #D5DEE8;text-align:left}.reading-table thead{background:#063360;color:white}.writing{height:45px;border-bottom:1px solid #c8d6e5;margin:6px 0}.writing.tall{height:70px}.review-svg{display:block;width:100%;height:180px}.caption{font-size:12px;color:#545860}.ai-source{border-left:3px solid #7da1c4;padding-left:16px}.prompt{border-top:2px solid #215a9e;padding-top:8px;font-size:14px}header button{font:inherit;padding:8px 15px;color:#063360;background:white;border:1px solid #215a9e;cursor:pointer}
 @page{size:A4;margin:14mm}@media print{body{background:white;font-size:11pt;line-height:1.3}main{max-width:none}.sheet-page{padding:0;margin:0;min-height:0;break-after:page}.sheet-page:last-child{break-after:auto}header,#title-block-header{display:none}h2{font-size:17pt}h3{font-size:12pt}.writing{height:10mm}.writing.tall{height:16mm}.reading-table{font-size:9pt}.reading-table th,.reading-table td{padding:5px}.review-svg{height:160px}.caption{font-size:9pt}.prompt{font-size:10pt}}
 </style>
+<style>.writing.part{height:30px;margin:2px 0}.table-title{margin:10px 0 4px}@media print{.writing.part{height:7mm}}</style>
 
 
 </head>
@@ -490,65 +495,63 @@ body{font:16px/1.4 Arial,sans-serif;color:#111418;margin:0;background:#eef2f6}ma
 
 
 <header>
-<p>
-Separate Day 2 Session 3 review worksheet. Use pages 3-4 as concepts are taught.
-</p>
 <button onclick="window.print()">
 Print worksheet
 </button>
 </header>
-<section id="page-1-h6-a-city-matching-study-extract" class="sheet-page">
-<h2 class="anchored">Page 1 | H6-A: city matching study extract</h2>
-<p><strong>GreenWaste is a fictional training case.</strong> This supplied extract is the source, not a separately distributed report.</p>
+<section id="page-1-h6-a-the-city-matching-study-summary" class="sheet-page">
+<h2 class="anchored">Page 1 | H6-A: The city matching study summary</h2>
+<p>GreenWaste is a fictional training case. Use this study summary as your source for today’s questions.</p>
 <h3 id="who-what-and-when" class="anchored">§1 | Who, what and when?</h3>
-<p>GreenWaste provides equipment subsidies, installation help and staff training. The city study records <strong>10,000 businesses: 4,794 participants and 5,206 nonparticipants</strong>. Participation followed an efficiency-score rule, not random assignment. Annual waste cost in <strong>AED per business</strong> was measured before and 12 months after. This is not the separate pilot or the local cutoff analysis.</p>
-<h3 id="how-were-comparisons-selected-table-r" class="anchored">§2 | How were comparisons selected? [Table R]</h3>
-<p>For each participant, the evaluator selected one nearest nonparticipant using pre-programme <strong>manager age, staff, premises area and filtration</strong>, standardised by full-city standard deviations. Distance is the sum of squared differences on these scaled features. The procedure allowed <strong>replacement</strong>: all 4,794 participants were matched to <strong>585 unique controls</strong>, with maximum reuse <strong>440</strong>. No maximum acceptable distance (caliper) or participant exclusion was imposed. Before-cost was not a matching feature.</p>
-<table class="reading-table caption-top" data-quarto-postprocess="true">
+<p>GreenWaste provides equipment subsidies, installation help and staff training. The city study records 10,000 businesses: 4,794 participant businesses and 5,206 comparison businesses that did not receive GreenWaste. Taking part followed an efficiency-score rule, not random assignment. Annual waste management cost per business, in AED, was measured before GreenWaste and 12 months after. This study is not the pilot lottery, and it is not the analysis of businesses near the score cut-off.</p>
+<h3 id="how-were-comparison-businesses-selected" class="anchored">§2 | How were comparison businesses selected?</h3>
+<p>For each participant business, the evaluator selected the one comparison business that was most similar before GreenWaste on four recorded features: manager age, number of staff, premises area and filtration. Each feature was scaled by its standard deviation across all city businesses. The distance between two businesses is the sum of the squared differences on these scaled features. The same comparison business could be selected more than once (matching with replacement). All 4,794 participant businesses were matched to <strong>585 different comparison businesses</strong>, and one comparison business was used up to <strong>440 times</strong>. There was no maximum acceptable distance (caliper), and no participant business was excluded. Annual waste management cost before GreenWaste was not used for matching.</p>
+<p class="table-title"><strong>Table R: Annual waste management cost 12 months after GreenWaste: participant businesses minus matched comparison businesses (AED)</strong></p>
+<table class="reading-table caption-top">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">Comparison</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">Difference AED</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">95% interval AED</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">Unique controls</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Difference (AED)</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">95% interval (AED)</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Different comparison businesses used</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Four recorded features</td>
+<td style="text-align: left;">Matched on four recorded features</td>
 <td style="text-align: left;">-1,029</td>
 <td style="text-align: left;">-1,200 to -859</td>
 <td style="text-align: left;">585</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Manager age omitted</td>
+<td style="text-align: left;">Matched without manager age</td>
 <td style="text-align: left;">-1,341</td>
 <td style="text-align: left;">-1,420 to -1,263</td>
 <td style="text-align: left;">623</td>
 </tr>
 </tbody>
 </table>
-<p>Table R reports <strong>participant minus selected control annual after-cost</strong>. The four-feature difference is <strong>-1,029 AED</strong>, or a reduction of <strong>1,029 AED</strong>, with a 95% reduction interval of <strong>859 to 1,200 AED</strong>. Omitting age changes which controls are selected; it is not evidence of the true effect.</p>
+<p>Table R shows the participant businesses’ mean annual cost after GreenWaste minus the matched comparison businesses’ mean annual cost. With four recorded features the difference is <strong>-1,029 AED</strong>, which is a reduction of <strong>1,029 AED</strong>. The 95% interval for the reduction is <strong>859 to 1,200 AED</strong>. Leaving out manager age changes which comparison businesses are selected. This does not show which estimate is closer to the true effect.</p>
 <h3 id="what-is-needed-for-a-causal-reading" class="anchored">§3 | What is needed for a causal reading?</h3>
-<p>After accounting for these recorded features, there must be no remaining important difference affecting both participation and costs, and sufficiently comparable controls must be available. Consistent measurement and no important programme effects on comparison businesses also matter. A hypothetical unrecorded influence such as motivation could violate the first condition. It is not a measured GreenWaste variable or an established explanation here.</p>
+<p>After we account for the recorded features, two things must hold. First, there is no important remaining difference that affects both taking part and costs. Second, there are enough comparison businesses that are similar to the participant businesses. Costs must also be measured in the same way, and the programme must not have a large effect on comparison businesses. An unrecorded influence, such as owner motivation, could break the first condition. Motivation is not a variable in the GreenWaste data, and we do not know that it explains the result.</p>
 <h3 id="what-can-and-cannot-be-concluded" class="anchored">§4 | What can and cannot be concluded?</h3>
-<p>Table B (page 2) shows measured balance, including a residual age gap of <strong>2.97 years</strong> and before-cost gap of <strong>161 AED</strong>. Without age, these gaps become <strong>17.12 years</strong> and <strong>540 AED</strong>. Finding a nearest control for every participant does not establish acceptable distances. A full joint-support diagnosis, distance distribution and unrecorded-confounding sensitivity analysis are not supplied.</p>
-<p>The business-clustered robust interval accounts for reused controls <strong>treating selected matches as given</strong>. It does not fully account for match selection or unmeasured bias. The four-feature reduction interval crosses the fictional <strong>1,000 AED annual-saving minimum</strong>; the estimate alone does not securely establish that minimum. Full programme costs and national effects are not supplied.</p>
+<p>Table B on page 2 shows how similar the groups are on the recorded features. After matching on four features, the participant businesses’ mean manager age is <strong>2.97 years</strong> lower than the matched comparison businesses’, and their mean cost before GreenWaste is <strong>161 AED</strong> lower. Without manager age, these gaps are <strong>17.12 years</strong> and <strong>540 AED</strong>. Finding a match for every participant does not show that the matches are close enough. This study summary does not give the distribution of distances, a check that the groups overlap on all features together, or an analysis of how strong an unrecorded influence would need to be to change the result.</p>
+<p>The 95% interval allows for the reuse of comparison businesses. It treats the selected matches as given, so it does not fully allow for how the matches were chosen or for bias from unrecorded influences. The 95% interval for the reduction (<strong>859 to 1,200 AED</strong>) includes values below 1,000 AED. So the estimate alone does not show that our rule of at least a 1,000 AED reduction in annual waste management cost per business per year is met. The full programme costs and the effects for the whole country are not given.</p>
 <p class="caption">
-Source: corrected evaluation_data_GreenWaste_simple.csv, city records; day2_case.R and day2_session3_review.R. Values use unrounded records. Tables R and B and §§1-4 are the source to inspect.
+Source: GreenWaste city data (10,000 businesses, measured before and 12 months after). All values are calculated from the exact records, and the figures shown are rounded. Tables R and B and paragraphs §1 to §4 are the material to inspect.
 </p>
 </section>
-<section id="page-2-h6-a-measured-balance-and-reference" class="sheet-page">
-<h2 class="anchored">Page 2 | H6-A: measured balance and reference</h2>
-<h3 id="table-b-actual-pre-programme-means" class="anchored">Table B | Actual pre-programme means</h3>
-<table class="reading-table caption-top" data-quarto-postprocess="true">
+<section id="page-2-h6-a-how-similar-the-matched-groups-are-and-what-the-figures-show" class="sheet-page">
+<h2 class="anchored">Page 2 | H6-A: How similar the matched groups are, and what the figures show</h2>
+<p class="table-title"><strong>Table B: Average characteristics before GreenWaste: participant businesses, all comparison businesses and matched comparison businesses</strong></p>
+<table class="reading-table caption-top">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">Feature</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">Participants</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">All controls</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">Matched controls</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">Gap / city SD</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Participant businesses</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">All comparison businesses</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Matched comparison businesses</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Gap in city standard deviations</th>
 </tr>
 </thead>
 <tbody>
@@ -567,21 +570,21 @@ Source: corrected evaluation_data_GreenWaste_simple.csv, city records; day2_case
 <td style="text-align: left;">-0.04</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Area (100 m2)</td>
+<td style="text-align: left;">Premises area (100 m²)</td>
 <td style="text-align: left;">1.81</td>
 <td style="text-align: left;">2.34</td>
 <td style="text-align: left;">1.82</td>
 <td style="text-align: left;">-0.01</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Filtration (share)</td>
+<td style="text-align: left;">Filtration (share of businesses)</td>
 <td style="text-align: left;">0.33</td>
 <td style="text-align: left;">0.52</td>
 <td style="text-align: left;">0.33</td>
 <td style="text-align: left;">0.00</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Before-cost (AED; not matched on)</td>
+<td style="text-align: left;">Annual cost before GreenWaste (AED; not used for matching)</td>
 <td style="text-align: left;">1,431.91</td>
 <td style="text-align: left;">2,257.58</td>
 <td style="text-align: left;">1,592.80</td>
@@ -589,25 +592,33 @@ Source: corrected evaluation_data_GreenWaste_simple.csv, city records; day2_case
 </tr>
 </tbody>
 </table>
-<p>Matched-control means count reused records. <strong>Gap / city SD</strong> is participant mean minus matched-control mean, divided by the full-city standard deviation. It is not a standard error or universal credibility threshold. Filtration is a proportion; before-cost was not matched on.</p>
-<h3 id="actual-age-overlap-not-a-joint-support-test" class="anchored">Actual age overlap, not a joint-support test</h3>
-<svg class="review-svg" viewbox="0 0 1100 250" role="img" aria-label="Actual pre-programme manager-age distributions for participants and all available controls; overlap in age alone does not establish joint support."><text x="120" y="28" font-size="24" fill="#215a9e">Participants</text><text x="620" y="28" font-size="24" fill="#545860">All available controls</text><rect x="120.0" y="114.3" width="56" height="0.7" fill="#215a9e" opacity=".8" /><rect x="180.0" y="107.6" width="56" height="7.4" fill="#215a9e" opacity=".8" /><rect x="240.0" y="82.8" width="56" height="32.2" fill="#215a9e" opacity=".8" /><rect x="300.0" y="51.7" width="56" height="63.3" fill="#215a9e" opacity=".8" /><rect x="360.0" y="53.6" width="56" height="61.4" fill="#215a9e" opacity=".8" /><rect x="420.0" y="81.8" width="56" height="33.2" fill="#215a9e" opacity=".8" /><rect x="480.0" y="104.4" width="56" height="10.6" fill="#215a9e" opacity=".8" /><rect x="540.0" y="113.8" width="56" height="1.2" fill="#215a9e" opacity=".8" /><rect x="600.0" y="115.0" width="56" height="0.0" fill="#215a9e" opacity=".8" /><rect x="660.0" y="115.0" width="56" height="0.0" fill="#215a9e" opacity=".8" /><rect x="720.0" y="115.0" width="56" height="0.0" fill="#215a9e" opacity=".8" /><rect x="780.0" y="115.0" width="56" height="0.0" fill="#215a9e" opacity=".8" /><rect x="840.0" y="115.0" width="56" height="0.0" fill="#215a9e" opacity=".8" /><rect x="900.0" y="115.0" width="56" height="0.0" fill="#215a9e" opacity=".8" /><rect x="120.0" y="205.0" width="56" height="0.0" fill="#545860" opacity=".8" /><rect x="180.0" y="205.0" width="56" height="0.0" fill="#545860" opacity=".8" /><rect x="240.0" y="205.0" width="56" height="0.0" fill="#545860" opacity=".8" /><rect x="300.0" y="204.8" width="56" height="0.2" fill="#545860" opacity=".8" /><rect x="360.0" y="201.8" width="56" height="3.2" fill="#545860" opacity=".8" /><rect x="420.0" y="188.9" width="56" height="16.1" fill="#545860" opacity=".8" /><rect x="480.0" y="162.4" width="56" height="42.6" fill="#545860" opacity=".8" /><rect x="540.0" y="140.6" width="56" height="64.4" fill="#545860" opacity=".8" /><rect x="600.0" y="152.2" width="56" height="52.8" fill="#545860" opacity=".8" /><rect x="660.0" y="181.5" width="56" height="23.5" fill="#545860" opacity=".8" /><rect x="720.0" y="198.6" width="56" height="6.4" fill="#545860" opacity=".8" /><rect x="780.0" y="204.2" width="56" height="0.8" fill="#545860" opacity=".8" /><rect x="840.0" y="204.9" width="56" height="0.1" fill="#545860" opacity=".8" /><rect x="900.0" y="205.0" width="56" height="0.0" fill="#545860" opacity=".8" /><text x="180.0" y="239" font-size="22" text-anchor="middle">20</text><text x="300.0" y="239" font-size="22" text-anchor="middle">30</text><text x="420.0" y="239" font-size="22" text-anchor="middle">40</text><text x="540.0" y="239" font-size="22" text-anchor="middle">50</text><text x="660.0" y="239" font-size="22" text-anchor="middle">60</text><text x="780.0" y="239" font-size="22" text-anchor="middle">70</text><text x="900.0" y="239" font-size="22" text-anchor="middle">80</text><text x="1030" y="239" font-size="21">Age</text></svg>
-<p>These are distributions for participants and <strong>all available controls</strong>; bar heights show within-group proportions, with identical scaling. Age overlap alone cannot establish adequate similarity on all four features.</p>
-<h3 id="reuse-and-the-decision-rule" class="anchored">Reuse and the decision rule</h3>
-<p><strong>4,794 pairs do not mean 4,794 different controls.</strong> There are 9,588 stacked matched rows but 5,379 unique businesses in the four-feature comparison. Some control outcomes contribute many times.</p>
-<svg class="review-svg" viewbox="0 0 1100 230" role="img" aria-label="Matched reduction 1,029 AED; interval 859 to 1,200 crosses the 1,000 AED rule."><line x1="120" x2="970" y1="150" y2="150" stroke="#545860"></line><line x1="651.2" x2="651.2" y1="45" y2="150" stroke="#B8272C" stroke-width="3" stroke-dasharray="7 5"></line><text x="651.2" y="30" text-anchor="middle" font-size="26">Rule 1,000</text><line x1="576.5" x2="757.3" y1="85" y2="85" stroke="#215a9e" stroke-width="8"></line><circle cx="666.9" cy="85" r="9" fill="#063360"></circle><text x="566.5" y="65" text-anchor="end" font-size="26">859</text><text x="767.3" y="65" font-size="26">1,200</text><text x="666.9" y="125" text-anchor="middle" font-size="26">Estimate 1,029</text><text x="120.0" y="182" text-anchor="middle" font-size="24">0</text><text x="332.5" y="182" text-anchor="middle" font-size="24">400</text><text x="545.0" y="182" text-anchor="middle" font-size="24">800</text><text x="757.5" y="182" text-anchor="middle" font-size="24">1,200</text><text x="970.0" y="182" text-anchor="middle" font-size="24">1,600</text><text x="550" y="222" text-anchor="middle" font-size="25">Matched annual cost reduction per participant (AED)</text></svg>
-<p>The interval concerns the mean matched difference under the model. It is not the saving range of individual businesses or an allowance for all bias.</p>
+<p>The matched comparison means count a business each time it is used. The gap is the participant mean minus the matched comparison mean, divided by the standard deviation across all city businesses. It is not a standard error and it is not a threshold for judging whether a match is good. Filtration is the share of businesses with a filter. Annual cost before GreenWaste was not used for matching.</p>
+<h3 id="figure-1-manager-age-in-participant-businesses-and-in-all-comparison-businesses" class="anchored">Figure 1: Manager age in participant businesses and in all comparison businesses</h3>
+<svg class="review-svg" viewbox="0 0 1100 250" role="img" aria-label="Manager age before GreenWaste in participant businesses and in all comparison businesses. Overlap in age alone does not show that the groups are similar on all four features together."><text x="120" y="28" font-size="24" fill="#215a9e">Participant businesses</text><text x="620" y="28" font-size="24" fill="#545860">All comparison businesses</text><rect x="120.0" y="114.3" width="56" height="0.7" fill="#215a9e" opacity=".8" /><rect x="180.0" y="107.6" width="56" height="7.4" fill="#215a9e" opacity=".8" /><rect x="240.0" y="82.8" width="56" height="32.2" fill="#215a9e" opacity=".8" /><rect x="300.0" y="51.7" width="56" height="63.3" fill="#215a9e" opacity=".8" /><rect x="360.0" y="53.6" width="56" height="61.4" fill="#215a9e" opacity=".8" /><rect x="420.0" y="81.8" width="56" height="33.2" fill="#215a9e" opacity=".8" /><rect x="480.0" y="104.4" width="56" height="10.6" fill="#215a9e" opacity=".8" /><rect x="540.0" y="113.8" width="56" height="1.2" fill="#215a9e" opacity=".8" /><rect x="600.0" y="115.0" width="56" height="0.0" fill="#215a9e" opacity=".8" /><rect x="660.0" y="115.0" width="56" height="0.0" fill="#215a9e" opacity=".8" /><rect x="720.0" y="115.0" width="56" height="0.0" fill="#215a9e" opacity=".8" /><rect x="780.0" y="115.0" width="56" height="0.0" fill="#215a9e" opacity=".8" /><rect x="840.0" y="115.0" width="56" height="0.0" fill="#215a9e" opacity=".8" /><rect x="900.0" y="115.0" width="56" height="0.0" fill="#215a9e" opacity=".8" /><rect x="120.0" y="205.0" width="56" height="0.0" fill="#545860" opacity=".8" /><rect x="180.0" y="205.0" width="56" height="0.0" fill="#545860" opacity=".8" /><rect x="240.0" y="205.0" width="56" height="0.0" fill="#545860" opacity=".8" /><rect x="300.0" y="204.8" width="56" height="0.2" fill="#545860" opacity=".8" /><rect x="360.0" y="201.8" width="56" height="3.2" fill="#545860" opacity=".8" /><rect x="420.0" y="188.9" width="56" height="16.1" fill="#545860" opacity=".8" /><rect x="480.0" y="162.4" width="56" height="42.6" fill="#545860" opacity=".8" /><rect x="540.0" y="140.6" width="56" height="64.4" fill="#545860" opacity=".8" /><rect x="600.0" y="152.2" width="56" height="52.8" fill="#545860" opacity=".8" /><rect x="660.0" y="181.5" width="56" height="23.5" fill="#545860" opacity=".8" /><rect x="720.0" y="198.6" width="56" height="6.4" fill="#545860" opacity=".8" /><rect x="780.0" y="204.2" width="56" height="0.8" fill="#545860" opacity=".8" /><rect x="840.0" y="204.9" width="56" height="0.1" fill="#545860" opacity=".8" /><rect x="900.0" y="205.0" width="56" height="0.0" fill="#545860" opacity=".8" /><text x="180.0" y="239" font-size="22" text-anchor="middle">20</text><text x="300.0" y="239" font-size="22" text-anchor="middle">30</text><text x="420.0" y="239" font-size="22" text-anchor="middle">40</text><text x="540.0" y="239" font-size="22" text-anchor="middle">50</text><text x="660.0" y="239" font-size="22" text-anchor="middle">60</text><text x="780.0" y="239" font-size="22" text-anchor="middle">70</text><text x="900.0" y="239" font-size="22" text-anchor="middle">80</text><text x="1030" y="239" font-size="21">Age (years)</text></svg>
+<p>The bars show the share of businesses in each age group, so the two groups can be compared even though they have different numbers. Overlap in age alone does not show that the groups are similar on all four features together.</p>
+<h3 id="reuse-of-comparison-businesses-and-our-rule" class="anchored">Reuse of comparison businesses and our rule</h3>
+<p>4,794 pairs does not mean 4,794 different comparison businesses. The four-feature comparison has 9,588 matched rows but only 5,379 different businesses, so some comparison businesses contribute many times.</p>
+<svg class="review-svg" viewbox="0 0 1100 230" role="img" aria-label="Matched reduction 1,029 AED; the interval of 859 to 1,200 AED includes values below our rule of at least a 1,000 AED reduction."><line x1="120" x2="970" y1="150" y2="150" stroke="#545860"></line><line x1="651.2" x2="651.2" y1="45" y2="150" stroke="#B8272C" stroke-width="3" stroke-dasharray="7 5"></line><text x="651.2" y="30" text-anchor="middle" font-size="26">Our rule: 1,000 AED</text><line x1="576.5" x2="757.3" y1="85" y2="85" stroke="#215a9e" stroke-width="8"></line><circle cx="666.9" cy="85" r="9" fill="#063360"></circle><text x="566.5" y="65" text-anchor="end" font-size="26">859</text><text x="767.3" y="65" font-size="26">1,200</text><text x="666.9" y="125" text-anchor="middle" font-size="26">Estimate 1,029</text><text x="120.0" y="182" text-anchor="middle" font-size="24">0</text><text x="332.5" y="182" text-anchor="middle" font-size="24">400</text><text x="545.0" y="182" text-anchor="middle" font-size="24">800</text><text x="757.5" y="182" text-anchor="middle" font-size="24">1,200</text><text x="970.0" y="182" text-anchor="middle" font-size="24">1,600</text><text x="550" y="222" text-anchor="middle" font-size="25">Estimated reduction in annual waste management cost per participant business (AED)</text></svg>
+<p>The interval shows uncertainty about the mean matched difference, if the model’s assumptions hold. It does not show the savings of individual businesses, and it does not allow for all sources of bias.</p>
 </section>
-<section id="page-3-q1-q2-pair-first-then-interpret" class="sheet-page">
-<h2 class="anchored">Page 3 | Q1-Q2: pair first, then interpret</h2>
-<h3 id="q1-seven-invented-profiles-not-the-city-study" class="anchored">Q1 | Seven invented profiles, not the city study</h3>
-<p>Use <strong>manager age and size</strong>. Each comparison profile is used once in this activity. Keep costs closed until your choices are recorded.</p>
+<section id="page-3-q1-and-q2-work-on-these-pages-as-we-teach-each-idea" class="sheet-page">
+<h2 class="anchored">Page 3 | Q1 and Q2: work on these pages as we teach each idea</h2>
+<h3 id="q1-match-three-participant-businesses-to-comparison-businesses" class="anchored">Q1 | Match three participant businesses to comparison businesses</h3>
+<p>The seven businesses in this activity are invented. They are not from the city study. Use the profile cards.</p>
+<ol type="a">
+<li>Match A, B and C to comparison businesses using manager age and size. Use each comparison business at most once.</li>
+</ol>
 <table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
 <thead>
 <tr class="header">
-<th>Participant</th>
-<th>Chosen comparison</th>
-<th>Why this pair?</th>
+<th>Participant business</th>
+<th>Comparison business chosen</th>
+<th>(b) Why did you choose this pair?</th>
 </tr>
 </thead>
 <tbody>
@@ -628,136 +639,216 @@ Source: corrected evaluation_data_GreenWaste_simple.csv, city records; day2_case
 </tr>
 </tbody>
 </table>
-<p>Unused comparison: __________. One unknown that could matter:</p>
-<div class="writing">
+<ol start="3" type="a">
+<li><p>Which comparison business is not used? __________</p></li>
+<li><p>Write one thing you do not know that could matter.</p></li>
+</ol>
+<div class="writing part">
 
 </div>
-<p><strong>After the trainer distributes cost slips</strong>, keep your pairs and calculate participant minus comparison annual after-cost:</p>
+<p>Keep the reveal slips closed until you have recorded your choices.</p>
+<p>You will now receive the reveal slips. A reveal slip shows a business’s annual waste management cost after GreenWaste. Keep your pairs. For each pair, calculate the participant’s cost minus the comparison business’s cost.</p>
 <table class="caption-top">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
 <thead>
 <tr class="header">
 <th>Pair</th>
-<th>Participant cost</th>
-<th>Comparison cost</th>
-<th>Difference AED</th>
+<th>Participant cost (AED)</th>
+<th>Comparison cost (AED)</th>
+<th>Difference (AED)</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>A-____</td>
+<td>A and ____</td>
 <td>__________</td>
 <td>__________</td>
 <td>__________</td>
 </tr>
 <tr class="even">
-<td>B-____</td>
+<td>B and ____</td>
 <td>__________</td>
 <td>__________</td>
 <td>__________</td>
 </tr>
 <tr class="odd">
-<td>C-____</td>
+<td>C and ____</td>
 <td>__________</td>
 <td>__________</td>
 <td>__________</td>
 </tr>
 </tbody>
 </table>
-<p>Mean of three differences: __________ AED. Does this establish causation? Why?</p>
-<div class="writing">
+<p>Calculate the mean of the three differences: __________ AED. Does this show that GreenWaste caused the difference? Explain why or why not.</p>
+<div class="writing part">
 
 </div>
-<h3 id="q2-read-the-actual-city-result-h6-a-2-table-r" class="anchored">Q2 | Read the actual city result [H6-A §2, Table R]</h3>
-<p>Explain the four-feature result’s <strong>sign, comparison, period and units</strong>:</p>
-<div class="writing tall">
+<h3 id="q2-read-the-result-for-the-city-study-h6-a-2-and-table-r" class="anchored">Q2 | Read the result for the city study (H6-A §2 and Table R)</h3>
+<ol type="a">
+<li>Explain the sign, the comparison, the period and the units of the four-feature result.</li>
+</ol>
+<div class="writing part">
 
 </div>
-<p>Which four features selected the controls? Was before-cost one of them?</p>
-<div class="writing">
+<ol start="2" type="a">
+<li>Which four features were used to select the comparison businesses? Was annual cost before GreenWaste one of them?</li>
+</ol>
+<div class="writing part">
 
 </div>
-<p>Why can 4,794 participants be matched to only 585 unique controls? What does reuse mean for interpreting the sample and its uncertainty?</p>
-<div class="writing tall">
+<ol start="3" type="a">
+<li>Why can 4,794 participant businesses be matched to only 585 different comparison businesses?</li>
+</ol>
+<div class="writing part">
+
+</div>
+<ol start="4" type="a">
+<li>What does this reuse mean for how we interpret the sample and the interval?</li>
+</ol>
+<div class="writing part">
 
 </div>
 </section>
-<section id="page-4-q3-q6-judge-the-comparison" class="sheet-page">
-<h2 class="anchored">Page 4 | Q3-Q6: judge the comparison</h2>
-<h3 id="q3-balance-and-adequate-similarity-page-2-table-b" class="anchored">Q3 | Balance and adequate similarity [page 2, Table B]</h3>
-<p>Identify one improvement and one remaining measured difference. What additional check would help judge whether matches are close enough?</p>
-<div class="writing tall">
+<section id="page-4-q3-to-q6-judge-the-comparison" class="sheet-page">
+<h2 class="anchored">Page 4 | Q3 to Q6: judge the comparison</h2>
+<h3 id="q3-how-similar-are-the-matched-groups-table-b-on-page-2" class="anchored">Q3 | How similar are the matched groups? (Table B on page 2)</h3>
+<ol type="a">
+<li>Write one measure on which the matched groups are more similar than all comparison businesses.</li>
+</ol>
+<div class="writing part">
 
 </div>
-<h3 id="q4-age-omitted-influences-unrecorded-table-r-3-4" class="anchored">Q4 | Age omitted; influences unrecorded [Table R, §§3-4]</h3>
-<p>Why could leaving age out change the estimate? Why does balancing recorded features not establish that unrecorded influences are absent?</p>
-<div class="writing tall">
+<ol start="2" type="a">
+<li>Write one difference that remains.</li>
+</ol>
+<div class="writing part">
 
 </div>
-<h3 id="q5-independent-source-reading-and-the-saving-rule" class="anchored">Q5 | Independent source reading and the saving rule</h3>
-<p>Finding with paragraph/table ID: ______________________________________</p>
-<p>Causal assumption with paragraph ID: _________________________________</p>
-<p>What does “everyone matched” establish? What does it not establish?</p>
-<div class="writing">
+<ol start="3" type="a">
+<li>Which extra check would help you judge whether the matches are close enough?</li>
+</ol>
+<div class="writing part">
 
 </div>
-<p>Does the <strong>interval</strong>, not just the estimate, securely establish the 1,000 AED minimum? Separate uncertainty from causal credibility.</p>
-<div class="writing">
+<h3 id="q4-what-changes-when-manager-age-is-left-out-and-what-is-not-recorded-table-r-3-and-4" class="anchored">Q4 | What changes when manager age is left out, and what is not recorded? (Table R, §3 and §4)</h3>
+<ol type="a">
+<li>Why could leaving out manager age change the estimate?</li>
+</ol>
+<div class="writing part">
 
 </div>
-<h3 id="q6-close-the-source-your-provisional-judgement" class="anchored">Q6 | Close the source: your provisional judgement</h3>
-<p>One interpretation, one strength and one consequential concern:</p>
-<div class="writing tall">
+<ol start="2" type="a">
+<li>Why does making the recorded features similar not show that unrecorded influences are absent?</li>
+</ol>
+<div class="writing part">
 
 </div>
-<p>Act, act with conditions or ask first: your reason, then one matching-specific evidence request and how it could change your decision.</p>
-<div class="writing tall">
+<h3 id="q5-read-the-source-yourself-then-check-our-rule" class="anchored">Q5 | Read the source yourself, then check our rule</h3>
+<ol type="a">
+<li>Write the main finding and the paragraph or table that shows it.</li>
+</ol>
+<div class="writing part">
 
 </div>
-<p><strong>Comparison reminder:</strong> lottery = assigned groups; DiD = extra change; RDD = fitted cutoff jump; matching = selected recorded similarities. Do not average these different comparisons.</p>
+<ol start="2" type="a">
+<li>Write the key assumption for a causal reading and the paragraph that states it.</li>
+</ol>
+<div class="writing part">
+
+</div>
+<ol start="3" type="a">
+<li>A match was found for every participant. What does that show, and what does it not show?</li>
+</ol>
+<div class="writing part">
+
+</div>
+<ol start="4" type="a">
+<li>Does the interval, and not only the estimate, show that our rule of at least a 1,000 AED reduction is met? Keep the uncertainty in the estimate separate from the question of whether a causal reading is credible.</li>
+</ol>
+<div class="writing part">
+
+</div>
+<h3 id="q6-close-the-source-and-give-your-first-judgement" class="anchored">Q6 | Close the source and give your first judgement</h3>
+<ol type="a">
+<li>Write one sentence interpreting the result, one strength of the comparison and one concern that matters for the decision.</li>
+</ol>
+<div class="writing part">
+
+</div>
+<ol start="2" type="a">
+<li>Choose Act, Act with conditions or Ask first, and give your reason.</li>
+</ol>
+<div class="writing part">
+
+</div>
+<ol start="3" type="a">
+<li>Request one piece of evidence about the matching and say how the answer could change your decision.</li>
+</ol>
+<div class="writing part">
+
+</div>
+<p>Four methods compare in four ways. A lottery compares groups assigned by chance. Difference-in-differences compares changes over time. Regression discontinuity compares businesses either side of a cut-off. Matching compares businesses chosen because they look similar. Do not average the results of these different comparisons.</p>
 </section>
-<section id="page-5-ai-snapshot-compare-then-verify-15-minutes" class="sheet-page">
-<h2 class="anchored">Page 5 | AI Snapshot: compare, then verify (15 minutes)</h2>
-<h3 id="stage-1-mark-the-supplied-response-8-minutes" class="anchored">Stage 1 | Mark the supplied response (8 minutes)</h3>
-<p>Naive prompt: <strong>“Compare these two matching evaluations and advise the commissioner.”</strong> Source: H6-A and Table B. The following is an <strong>illustrative prepared response</strong>, not a live Copilot transcript.</p>
+<section id="page-5-ai-exercise-compare-then-verify" class="sheet-page">
+<h2 class="anchored">Page 5 | AI exercise: compare, then verify</h2>
+<h3 id="stage-1-mark-the-response" class="anchored">Stage 1: Mark the response</h3>
+<p>Naive prompt (a prompt with no context, as a busy person might type it): “Compare these two matching evaluations and advise the commissioner.” Source: H6-A (the matching study summary) and Table B. This response was written for the exercise. It is not a real AI answer.</p>
 <div class="ai-source">
-<p>The four-feature evaluator compared participants with businesses similar in manager age, staff, premises area and filtration before GreenWaste. Every participant received a match, and controls could be reused. Annual after-cost was about 1,029 AED lower, with a 95% reduction interval of 859 to 1,200 AED.</p><p>The evaluator who omitted manager age found a larger reduction of 1,341 AED. A commissioner should prefer the fuller model: the extra feature removes selection bias, and finding a match for everyone shows that the comparisons are sufficiently close.</p><p>Both analyses point towards lower costs. The four-feature estimate exceeds the 1,000 AED minimum, so the minimum is securely achieved. Verify programme costs before deciding whether to expand.</p>
+<p>The four-feature evaluator compared participant businesses with comparison businesses that were similar in manager age, staff, premises area and filtration before GreenWaste. Every participant business received a match, and comparison businesses could be reused. Annual waste management cost 12 months after GreenWaste was about 1,029 AED lower, with a 95% interval for the reduction of 859 to 1,200 AED.</p><p>The evaluator who left out manager age found a larger reduction of 1,341 AED. A commissioner should prefer the fuller model: the extra feature removes selection bias, and finding a match for every participant business shows that the comparisons are sufficiently close.</p><p>Both analyses point towards lower costs. The four-feature estimate is above our rule of at least a 1,000 AED reduction, so the rule is securely met. Verify programme costs before deciding whether to expand.</p>
 </div>
-<p>Keep supported claims. Cross out unsupported assurances. Cite one source passage that changes the advice:</p>
-<div class="writing">
+<p>Keep the claims that H6-A supports. Cross out the claims it does not support. Write one passage from the source that changes the advice.</p>
+<div class="writing part">
 
 </div>
-<h3 id="stage-2-use-the-better-prompt-in-microsoft-copilot-7-minutes" class="anchored">Stage 2 | Use the better prompt in Microsoft Copilot (7 minutes)</h3>
+<h3 id="stage-2-run-the-improved-prompt-in-microsoft-copilot" class="anchored">Stage 2: Run the improved prompt in Microsoft Copilot</h3>
 <div class="prompt">
-<p>I commission a GreenWaste evaluation. Using only H6-A below, compare four-feature matching with the analysis omitting manager age. State the outcome, comparison, estimate and interval. Flag what was left off the matching list, whether costs were similar before, and how close the matches are. Distinguish control reuse, measured balance and unrecorded influences. Test the 1,000 AED annual-saving rule against the interval, not just the estimate. Ask me questions about missing information before recommending action. Do not invent diagnostics or treat matching as a lottery. Cite paragraph/table IDs for each factual claim. Here is H6-A: [paste worksheet page 1 and the balance table on page 2].</p>
+<strong>Improved prompt</strong><p>I commission a GreenWaste evaluation. Using only H6-A below, compare four-feature matching with the analysis that leaves out manager age. State the outcome, the comparison, the estimate and the interval. Tell me what was left off the matching list, whether costs were similar before GreenWaste, and how close the matches are. Separate the reuse of comparison businesses, the measured similarity and the unrecorded influences. Test our rule of at least a 1,000 AED reduction against the interval, not only the estimate. Ask me questions about missing information before you recommend action. Do not invent diagnostics, and do not treat matching as a lottery. Cite the paragraph or table for each fact. Here is H6-A: [paste page 1 of this worksheet and Table B from page 2].</p>
 </div>
-<p>Use only fictional course evidence. Apply the shared <strong>AI good-practice card</strong>. No device: use page 6 after completing Stage 1.</p>
-<p>Compare the reply with the source. Record one verified correction and one useful question Copilot asked about missing evidence:</p>
-<div class="writing tall">
+<p>Use only the information in H6-A, and keep your AI good-practice card beside you. If you are not using Copilot, read the prepared response on page 6 after you finish Stage 1.</p>
+<ol type="a">
+<li>Record one correction you verified.</li>
+</ol>
+<div class="writing part">
+
+</div>
+<ol start="2" type="a">
+<li>Record one useful question Copilot asked about missing evidence.</li>
+</ol>
+<div class="writing part">
 
 </div>
 </section>
-<section id="page-6-prepared-paper-alternative" class="sheet-page">
-<h2 class="anchored">Page 6 | Prepared paper alternative</h2>
-<p><strong>Open only after marking page 5.</strong> This is a prepared example, not the exact response Copilot must give.</p>
-<h3 id="a-source-grounded-comparison" class="anchored">A source-grounded comparison</h3>
-<p>H6-A §2 and Table R compare annual after-costs, not cost changes. The four-feature matched reduction is <strong>1,029 AED</strong>, with interval <strong>859 to 1,200</strong>. The no-age result is <strong>1,341 AED</strong>, with interval <strong>1,263 to 1,420</strong>. Different feature lists select different controls; the larger result is not automatically more credible.</p>
-<p>Every participant received a nearest control, but 4,794 participants used only 585 unique controls (§2). That establishes coverage under this algorithm, not acceptable match distances. Table B shows a remaining age difference and a before-cost difference even with four features. Before-cost was not on the matching list. Similar measured means cannot eliminate all selection bias (§3).</p>
-<p>The four-feature interval crosses 1,000 AED (§4), so the point estimate does not securely establish the annual-saving minimum. Its conditional uncertainty does not include every threat to causal credibility. Full programme costs and national effects are not provided.</p>
+<section id="page-6-prepared-response" class="sheet-page">
+<h2 class="anchored">Page 6 | Prepared response</h2>
+<p>Use this response if you are not using Copilot. Read it after you have marked the response on page 5. It was written for the exercise. It is not a real AI answer. An AI tool may answer differently.</p>
+<h3 id="a-comparison-grounded-in-the-source" class="anchored">A comparison grounded in the source</h3>
+<p>H6-A §2 and Table R compare annual waste management cost 12 months after GreenWaste. They do not compare changes over time. The four-feature matched reduction is <strong>1,029 AED</strong>, with an interval of <strong>859 to 1,200 AED</strong>. The result without manager age is <strong>1,341 AED</strong>, with an interval of <strong>1,263 to 1,420 AED</strong>. Different feature lists select different comparison businesses, and the larger result is not automatically more credible.</p>
+<p>Every participant business received a most similar comparison business, but 4,794 participant businesses were matched to only 585 different comparison businesses (§2). That shows coverage under this method. It does not show that the matches are close enough. Table B shows a remaining age difference and a difference in cost before GreenWaste, even with four features. Annual cost before GreenWaste was not on the matching list. Similar measured means cannot remove all selection bias (§3).</p>
+<p>The four-feature interval includes values below 1,000 AED (§4), so the estimate alone does not show that our rule of at least a 1,000 AED reduction is met. The interval does not allow for every threat to a causal reading. The full programme costs and the effects for the whole country are not provided.</p>
 <h3 id="questions-before-recommending-action" class="anchored">Questions before recommending action</h3>
 <ul>
-<li>Can you supply match-distance distributions and evidence about joint overlap or weak-support regions?</li>
-<li>Why was before-cost not included, and how do alternative defensible matching choices affect results?</li>
-<li>What is known about influences on participation absent from the records? Is there a sensitivity analysis?</li>
-<li>What decision population, full programme costs and tolerance for uncertainty should guide the recommendation?</li>
+<li>Can you supply the distribution of match distances and evidence about overlap on all features together, or about regions with few comparison businesses?</li>
+<li>Why was annual cost before GreenWaste not included, and how would other defensible matching choices affect the results?</li>
+<li>What is known about influences on taking part that are missing from the records? Is there an analysis of how strong such an influence would need to be?</li>
+<li>Which population should the decision cover, what are the full programme costs, and how much uncertainty can the decision tolerate?</li>
 </ul>
-<p>A conditional recommendation would distinguish the recorded association, the unverified causal assumption and the rule’s uncertainty. It should not promise bias removal or automatic expansion.</p>
+<p>A conditional recommendation would separate the recorded difference, the unverified causal assumption and the uncertainty about our rule of at least a 1,000 AED reduction. It should not promise to remove bias or to expand the programme automatically.</p>
 <h3 id="verify-the-alternative-yourself" class="anchored">Verify the alternative yourself</h3>
-<p>One factual claim checked against a named paragraph/table:</p>
-<div class="writing tall">
+<ol type="a">
+<li>Check one factual claim against a named paragraph or table.</li>
+</ol>
+<div class="writing part">
 
 </div>
-<p>One question that could change the decision, and why:</p>
-<div class="writing tall">
+<ol start="2" type="a">
+<li>Write one question that could change the decision, and why.</li>
+</ol>
+<div class="writing part">
 
 </div>
 </section>
@@ -817,13 +908,14 @@ Source: corrected evaluation_data_GreenWaste_simple.csv, city records; day2_case
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

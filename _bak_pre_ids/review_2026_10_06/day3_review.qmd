@@ -1,0 +1,37 @@
+---
+title: "Day 3 review"
+subtitle: "Test the claim, inspect the chart, question the evaluator"
+format:
+  html:
+    embed-resources: true
+    theme: cosmo
+    toc: false
+---
+
+The approved Day 3 route is built: 60 minutes for value for money, 60 for chart reading and 75 for the analyst clinic. Short explanations lead into predictions, evidence checks and decisions. Participants read results rather than write code.
+
+| Session | Content screens | Deck | Participant sheet | Trainer pack |
+|---|---:|---|---|---|
+| Worth the money? | 11 | [Open](Oct14_session1_live.html) | [Two sides](Oct14_session1_handouts.docx) | [Scenario cards and key](Oct14_session1_materials.docx) |
+| Same numbers. Different story. | 10 | [Open](Oct14_session2.html) | [Two sides](Oct14_session2_handouts.docx) | [Key](Oct14_session2_materials.docx) |
+| The analyst is in the room | 13 | [Open](Oct14_session3_live.html) | [Two sides](Oct14_session3_handouts.docx) | [Answer bank and key](Oct14_session3_materials.docx) |
+
+Counts exclude the title. The clinic includes a five-minute break. Each session has one short trainer calculation, with a prediction first. Print participant pages 1 and 2 double-sided; the longer trainer packs contain materials for distribution and the keys.
+
+## Activities and interactive visuals
+
+Fiona's five scenario cards and eight group allocations remain, with separate prediction and result lanes on the [A1 ratio wall](Oct14_session1_board_A1.pdf). The model headline is 1.86. Annual saving uses the corrected city DiD provisionally; cost, duration, timing and discount rate are explicitly fictional assumptions. A ratio above 1 describes the model, while approval still requires evidence about its inputs and causal credibility.
+
+In chart reading, toggle between two bar baselines while keeping recorded values fixed. Open the ten-business distribution behind its mean. Compare a 49.5% fall in total participant landfill tonnes with a 58.6% mean business percentage fall, then explain the different weights. Repair captions that claim cause or gains for every business.
+
+The analyst clinic uses a [five-question QA reference](Oct14_session3_qa_checklist.docx) and a fixed trainer answer bank. It discloses missing earlier trends, fieldwork records and score-manipulation evidence. A complete generated file cannot establish real measurement quality or follow-up. Participants rate answers as supported, partial or unanswered, revisit sign-off and write an independent evidence request.
+
+AI examples are authored drafts for checking against the source, usable without an external account. Native choices record the choice in one open page. For shared Before/After totals, use the [course-owned room tool](GreenWaste_room_poll.zip) and [classroom instructions](ROOM_POLL_README.md). Venue phone reachability needs rehearsal; labelled cards remain the fallback.
+
+## Review and print checks
+
+All three decks were walked at presentation size, with feedback open and trainer outputs checked. Native keyboard choices, the axis toggle and evidence reveals were exercised. Every print page was rendered through Word and inspected: participant sheets 2/2/2 pages, trainer packs 9/3/5, QA reference 1. Screen and paper read shared computed objects. The [exercise brief](Module2_exercise_plan_v3.docx) covers all eleven built sessions.
+
+[Day 4 is built](day4_review.html): two 60-minute sessions for report judgement and a defensible short recommendation. The other provider's final simulation is outside this rebuild.
+
+[Day 2 review](day2_review.html) | [Day 1 review](day1_review.html) | [Whole-week materials](week_ready.html)

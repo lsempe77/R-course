@@ -1,0 +1,1133 @@
+---
+title: "Spot the Problem: Naive Comparisons and Reading an RCT"
+subtitle: "Module 2 · Day 1, Session 3: Two Comparisons That Both Look Convincing"
+author: "3ie"
+always_allow_html: yes
+# revealjs only in this folder: the charts are interactive (plotly/htmlwidgets),
+# and pandoc cannot carry an htmlwidget into pptx. Export to PDF for a portable copy.
+format:
+  revealjs:
+    theme: [theme_editorial.scss]
+    slide-number: true
+    width: 1280
+    height: 720
+    fig-align: center
+    slide-level: 2
+    embed-resources: true
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+    dev: "png"
+    # dpi 96 is deliberate. knitr sizes every htmlwidget container as
+    # fig.width * dpi, so an inherited dpi: 200 silently inflated each chart
+    # tenfold (11.5in became 2300px) and pushed slide content off the bottom.
+    # At 96, fig.width in inches maps 1:1 onto CSS pixels. If a raster
+    # ggplot chunk is ever added, set its dpi per chunk.
+    dpi: 96
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup}
+library(tidyverse)
+library(plotly)
+library(knitr)
+library(kableExtra)
+library(estimatr)   # lm_robust, clustered standard errors
+library(qrcode)
+
+# ---- Palette (editorial theme; see theme_editorial.scss) -------------------
+ACCENT  <- "#0E6E80"   # series 1: programme / offered
+ACCENT2 <- "#A9561F"   # series 2: comparison / not offered
+ALERT   <- "#8E2413"   # decision rules and flagged errors, never a series
+INK     <- "#16181A"; MUTED <- "#61686D"; RULE <- "#E3E6E8"
+CHART_FONT <- "Segoe UI, Helvetica, Arial, sans-serif"
+
+# ---- Chart sizing ----------------------------------------------------------
+PL_W  <- 1100
+PL_WC <- 520
+PL_WT <- 340
+
+pl_m2 <- function(p, width = PL_W, height = 290, t = 30, b = 54,
+                  title = NULL, legend_y = 1.02) {
+  p <- p %>%
+    layout(
+      width = width, height = height,
+      font = list(family = CHART_FONT, size = 13, color = INK),
+      paper_bgcolor = "rgba(0,0,0,0)",
+      plot_bgcolor  = "rgba(0,0,0,0)",
+      margin = list(l = 70, r = 24, t = t, b = b),
+      legend = list(orientation = "h", x = 0.5, xanchor = "center",
+                    y = legend_y, yanchor = "bottom", title = list(text = "")),
+      hoverlabel = list(bgcolor = "white", bordercolor = RULE,
+                        font = list(color = INK, size = 12))
+    )
+  if (!is.null(title)) {
+    p <- p %>% layout(title = list(text = title, x = 0, xanchor = "left",
+                                   font = list(size = 12, color = MUTED)))
+  }
+  p %>% config(displayModeBar = FALSE)
+}
+
+ax <- function(title = "", ...) {
+  modifyList(list(
+    title = list(text = title, font = list(size = 12, color = MUTED)),
+    gridcolor = RULE, zerolinecolor = RULE, linecolor = RULE,
+    tickfont = list(size = 12, color = MUTED)
+  ), list(...))
+}
+
+tlev <- function(x) factor(x, levels = c("Before", "After"))
+gfmt <- function(x) format(round(x), big.mark = ",")
+
+# ---- Live Menti poll -------------------------------------------------------
+# ONE place to set the join code. Everything below reads from here.
+# This is the short JOIN code participants type at menti.com, NOT the long
+# alphanumeric ID in the editor URL. Confirm it while the Menti is live.
+MENTI_CODE <- "1234 5678"
+MENTI_JOIN <- paste0("https://www.menti.com/", gsub(" ", "", MENTI_CODE))
+MENTI_EMBED <- "https://www.mentimeter.com/app/presentation/al68xcnp6hm6zmc9k94rhbxwimzq6m29/embed"
+
+menti_qr <- function(path = "menti_qr.png", url = MENTI_JOIN) {
+  png(path, width = 900, height = 900, res = 300, bg = "white")
+  on.exit(dev.off(), add = TRUE)
+  par(mar = c(0, 0, 0, 0))
+  plot(qr_code(url, ecl = "H"))
+  path
+}
+MENTI_QR <- menti_qr()
+
+# ---- The decision rule, fixed for the whole week ---------------------------
+RULEBAR <- 1000    # must cut costs by at least this many AED
+
+# School-zone case (Section 5) is scored in a different unit: injury
+# collisions, not AED. It gets its own bar, named here rather than left as a
+# bare literal 2.0 scattered through the section.
+RULEBAR_SZ <- 2.0  # avoid at least this many injury collisions per zone per round
+
+# ---- GreenWaste: the three comparisons -------------------------------------
+gw <- read.csv("./evaluation_data_GreenWaste.csv")
+
+# A. Before-and-after, among businesses that enrolled.
+ba_before <- mean(gw$waste_management_costs[gw$enrolled == 1 & gw$round == 0])
+ba_after  <- mean(gw$waste_management_costs[gw$enrolled == 1 & gw$round == 1])
+ba_change <- ba_after - ba_before
+
+# The drift among businesses that did NOT enrol, over the same two rounds. This
+# is what "time was not standing still" looks like in this dataset.
+comp_before <- mean(gw$waste_management_costs[gw$treatment_neighborhood == 1 &
+                                              gw$eligible == 0 & gw$round == 0])
+comp_after  <- mean(gw$waste_management_costs[gw$treatment_neighborhood == 1 &
+                                              gw$eligible == 0 & gw$round == 1])
+
+# B. With-and-without at follow-up: businesses that took part (eligible and
+# enrolled, in treated neighbourhoods) vs businesses that did NOT take part.
+# The "did not take part" group is the INELIGIBLE businesses in the same
+# neighbourhoods: larger, less efficient and costlier from the outset, so this
+# comparison mixes any real effect with that head start and OVERSTATES the fall.
+# It must NOT be the eligible controls (enrolled == 0 among the eligible): those
+# are the randomised comparison group, and using them just reproduces the RCT.
+gw1     <- gw %>% filter(round == 1, eligible == 1)
+ww_prog <- mean(gw1$waste_management_costs[gw1$enrolled == 1])
+ww_comp <- mean(gw$waste_management_costs[gw$treatment_neighborhood == 1 &
+                                          gw$eligible == 0 & gw$round == 1])
+ww_gap  <- ww_prog - ww_comp
+# The head start already present at baseline (round 0), before the programme.
+ww_baseline_gap <- comp_before - ba_before
+
+# C. The randomised estimate: eligible businesses, treated vs control
+# neighbourhoods, at follow-up, errors clustered by neighbourhood.
+rct <- lm_robust(waste_management_costs ~ treatment_neighborhood,
+                 data = gw1, clusters = neighborhood_identifier)
+rct_est    <- coef(rct)[["treatment_neighborhood"]]
+rct_ci     <- confint(rct)["treatment_neighborhood", ]
+rct_p      <- rct$p.value[["treatment_neighborhood"]]
+rct_control <- coef(rct)[["(Intercept)"]]
+rct_treated <- rct_control + rct_est
+
+# The decision question, done properly. The rule asks the programme to AVOID at
+# least RULEBAR. It clears the bar only if even the interval's LEAST generous
+# end reaches RULEBAR. Here it does not: the -935 end falls short, so the honest
+# answer is that the estimate clears the bar and the interval spans it.
+#
+# SIGN TRAP. In an interval on a negative coefficient, conf.low is the LARGER
+# effect. abs(conf.low) is therefore the OPTIMISTIC end, not the pessimistic one.
+# Sorting the absolute values removes the ambiguity: the first element is always
+# the end closest to zero. (Session 3 originally took abs(ci[1]) and labelled it
+# "least it could be", which printed the most generous figure instead.)
+rct_avoided       <- sort(abs(rct_ci))
+rct_avoided_least <- rct_avoided[1]   # pessimistic end, closest to zero
+rct_avoided_most  <- rct_avoided[2]   # optimistic end
+rct_clears        <- rct_avoided_least >= RULEBAR
+
+# ---- Balance table values --------------------------------------------------
+# Built from the data so the slide cannot drift from the numbers.
+bal_vars <- c("age_manager", "educ_manager", "staff_size",
+              "foreign_owned", "recycling_center_distance")
+bal_labs <- c(age_manager = "Manager age (years)",
+              educ_manager = "Manager education (level)",
+              staff_size = "Staff size",
+              foreign_owned = "Foreign owned (share)",
+              recycling_center_distance = "Distance to recycling centre (m)")
+bal0 <- gw %>% filter(round == 0, eligible == 1)
+
+balance_tbl <- map_dfr(bal_vars, function(v) {
+  m <- lm_robust(bal0[[v]] ~ bal0$treatment_neighborhood)
+  tibble(Characteristic = bal_labs[[v]],
+         Treated   = mean(bal0[[v]][bal0$treatment_neighborhood == 1]),
+         Control   = mean(bal0[[v]][bal0$treatment_neighborhood == 0]),
+         Difference = coef(m)[2],
+         p = tidy(m)$p.value[2])
+})
+
+# ---- The RCT result table --------------------------------------------------
+rct_tbl <- rct %>% tidy() %>%
+  mutate(` ` = c("Control group average", "Package vs. control"),
+         CI = sprintf("[%s, %s]", gfmt(conf.low), gfmt(conf.high))) %>%
+  select(` `, estimate, std.error, p.value, CI)
+
+# ---- School-zone trial (the randomised case) ------------------------------
+# FICTIONAL data from make_school_zone_rct_data.R. Not an Abu Dhabi Police
+# trial and not any real programme. See that script's header for why the case
+# names no real body.
+pr <- read.csv("./evaluation_data_SchoolZoneRCT.csv") %>%
+  mutate(arm = factor(arm, levels = c("No package", "Package")))
+
+pr0 <- pr %>% filter(round == 0)
+pr1 <- pr %>% filter(round == 1)
+
+pr_ctl_before <- mean(pr0$injury_collisions[pr0$arm == "No package"])
+pr_ctl_after  <- mean(pr1$injury_collisions[pr1$arm == "No package"])
+pr_trt_before <- mean(pr0$injury_collisions[pr0$arm == "Package"])
+pr_trt_after  <- mean(pr1$injury_collisions[pr1$arm == "Package"])
+
+pr_fit <- lm_robust(injury_collisions ~ arm, data = pr1, clusters = segment_id)
+pr_est <- coef(pr_fit)[["armPackage"]]
+pr_ci  <- confint(pr_fit)["armPackage", ]
+pr_p   <- pr_fit$p.value[["armPackage"]]
+# Same sign trap as above: sort the absolute values so [1] is the pessimistic
+# end rather than whichever bound happens to be conf.low.
+pr_avoided       <- sort(abs(pr_ci))
+pr_avoided_least <- pr_avoided[1]
+pr_avoided_most  <- pr_avoided[2]
+
+# Balance check, to confirm the draw worked.
+pr_bal <- map_dfr(c("lanes", "road_length_km", "prior_collisions_3yr"),
+                  function(v) {
+  a <- pr0[[v]][pr0$arm == "Package"]; b <- pr0[[v]][pr0$arm == "No package"]
+  tibble(Characteristic = c(lanes = "Lanes",
+                            road_length_km = "Length (km)",
+                            prior_collisions_3yr = "Collisions, prior 3 yrs")[[v]],
+         Package = mean(a), Control = mean(b), p = t.test(a, b)$p.value)
+})
+```
+
+# 1 · Two comparisons, both convincing
+
+## The GreenWaste programme
+
+:::::: {.columns}
+
+::::: {.column width="54%"}
+The **GreenWaste Program** helped businesses cut their waste-management costs.
+A pilot ran, data was collected before and after, and someone now has to decide
+whether to take it national.
+
+The bar it must clear, fixed for the whole week: **cut costs by at least
+`r gfmt(RULEBAR)` AED**.
+:::::
+
+::::: {.column width="46%"}
+```{=html}
+<div class="facts">
+  <div class="k">Programme</div>   <div class="v">GreenWaste, waste-cost reduction</div>
+  <div class="k">Outcome</div>     <div class="v">Waste-management costs (AED)</div>
+  <div class="k">The decision</div><div class="v">Scale up nationally, or not</div>
+  <div class="k">The rule</div>    <div class="v">Cut at least 1,000 AED</div>
+</div>
+```
+:::::
+
+::::::
+
+::: {.ask}
+Session 1 taught you to ask **compared to what?** This session gives you two
+answers to that question, and both look convincing.
+
+You have to spot which is wrong, and why.
+:::
+
+## Comparison A: before and after
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+```{r fig.height=2.8, fig.width=5.6}
+tibble(Time = tlev(c("Before", "After")),
+       Cost = c(ba_before, ba_after)) %>%
+  plot_ly(x = ~Time, y = ~Cost, type = "bar",
+          marker = list(color = ACCENT, line = list(width = 0)),
+          text = ~gfmt(Cost), textposition = "outside",
+          textfont = list(size = 15, color = INK), showlegend = FALSE,
+          hovertemplate = "%{y:,.0f} AED<extra></extra>") %>%
+  layout(xaxis = ax("", zeroline = FALSE),
+         yaxis = ax("Waste costs (AED)", range = c(0, 1900))) %>%
+  pl_m2(width = PL_WC, height = 275, title = "Businesses that took part")
+```
+:::::
+
+::::: {.column width="50%"}
+::: {.panel}
+Businesses that took part paid **`r gfmt(ba_before)` AED** before and
+**`r gfmt(ba_after)` AED** after.
+:::
+
+```{r results='asis'}
+cat(sprintf('
+<div class="hero">
+  <div class="value">-%s</div>
+  <div class="label">AED, before to after</div>
+</div>', gfmt(abs(ba_change))))
+```
+
+::: {.warn}
+Read plainly: the programme cut costs by `r gfmt(abs(ba_change))` AED. That is not
+clear of the `r gfmt(RULEBAR)` bar. **Hold that thought.**
+:::
+:::::
+
+::::::
+
+## Comparison B: with and without
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+```{r fig.height=2.8, fig.width=5.6}
+tibble(Group = factor(c("Took part", "Did not"),
+                      levels = c("Took part", "Did not")),
+       Cost  = c(ww_prog, ww_comp)) %>%
+  plot_ly(x = ~Group, y = ~Cost, type = "bar",
+          marker = list(color = c(ACCENT, ACCENT2), line = list(width = 0)),
+          text = ~gfmt(Cost), textposition = "outside",
+          textfont = list(size = 15, color = INK), showlegend = FALSE,
+          hovertemplate = "%{y:,.0f} AED<extra></extra>") %>%
+  layout(xaxis = ax("", zeroline = FALSE),
+         yaxis = ax("Waste costs (AED)", range = c(0, 2600))) %>%
+  pl_m2(width = PL_WC, height = 275,
+        title = "At follow-up, same neighbourhoods")
+```
+:::::
+
+::::: {.column width="50%"}
+::: {.panel}
+At the end, businesses that took part paid **`r gfmt(ww_prog)` AED**; those
+that did not paid **`r gfmt(ww_comp)` AED**.
+:::
+
+```{r results='asis'}
+cat(sprintf('
+<div class="hero">
+  <div class="value">-%s</div>
+  <div class="label">AED, the gap between them</div>
+</div>', gfmt(abs(ww_gap))))
+```
+
+::: {.warn}
+The **same programme**, a bigger number. Two reasonable-looking readings:
+**-`r gfmt(abs(ba_change))`** and **-`r gfmt(abs(ww_gap))`**. They cannot both
+be right.
+:::
+:::::
+
+::::::
+
+## `[MENTI PLACEHOLDER]` Which would you trust?
+
+:::::: {.columns}
+
+::::: {.column width="62%"}
+::: {.ask style="font-size: 120%;"}
+Both comparisons say GreenWaste worked.
+
+**Which would you trust more, and why?**
+
+Before-and-after &nbsp;·&nbsp; With-and-without &nbsp;·&nbsp; Neither on its own
+:::
+
+Go to **menti.com** and enter code **`r MENTI_CODE`**, or scan the code on the
+right. Then give a reason.
+:::::
+
+::::: {.column width="38%"}
+```{r out.width='330px', out.extra='style="display:block; margin:0 auto;"'}
+knitr::include_graphics(MENTI_QR)
+```
+:::::
+
+::::::
+
+::: {.panel}
+A split room is the ideal starting point. Take two or three "why" answers out
+loud, and **do not correct them yet**.
+:::
+
+# 2 · The hidden problem in each
+
+## Before-and-after compares to the past
+
+::: {.panel}
+A before-and-after number compares the programme to **what came before**, not to
+what would have happened anyway. Anything else that changed over the same period
+is baked into it.
+:::
+
+```{r fig.height=3.2, fig.width=11.5}
+# Static: both lines together. Group is an ordered factor so the colours and
+# legend order stay put (Took part first).
+tibble(Time  = tlev(rep(c("Before", "After"), 2)),
+       Group = factor(rep(c("Took part", "Did not take part"), each = 2),
+                      levels = c("Took part", "Did not take part")),
+       Cost  = c(ba_before, ba_after, comp_before, comp_after)) %>%
+  plot_ly(x = ~Time, y = ~Cost, color = ~Group,
+          type = "scatter", mode = "lines+markers",
+          colors = c("Took part" = ACCENT, "Did not take part" = ACCENT2),
+          line = list(width = 3), marker = list(size = 11),
+          hovertemplate = "%{fullData.name}: %{y:,.0f} AED<extra></extra>") %>%
+  layout(xaxis = ax("", zeroline = FALSE),
+         yaxis = ax("Waste costs (AED)", range = c(0, 2700))) %>%
+  pl_m2(height = 320, t = 20, b = 54)
+```
+
+::: {.ask}
+Which way does the comparison line move, and what does that do to the
+`r gfmt(abs(ba_change))` figure: too big, or too small?
+:::
+
+::: {.warn .fragment}
+The businesses that did **not** take part moved from `r gfmt(comp_before)` to
+`r gfmt(comp_after)` AED on their own. Time was not standing still, so
+`r gfmt(abs(ba_change))` is not what the programme alone did.
+:::
+
+## With-and-without compares different groups
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+A with-and-without number compares people who took part to people who did not.
+But those two groups were **already different before the programme started**.
+
+The businesses that did not take part were not eligible. They were larger, less
+efficient, and more costly to run from the outset.
+:::
+
+::: {.warn}
+So the `r gfmt(abs(ww_gap))` gap mixes two things: any real effect of the
+programme, **and** the head start the eligible businesses already had: about
+`r gfmt(ww_baseline_gap)` AED before anything happened.
+
+It is not measuring the programme alone. Part of it is a pre-existing difference.
+:::
+:::::
+
+::::: {.column width="50%"}
+```{r fig.height=3, fig.width=5.6}
+tibble(Time  = tlev(rep(c("Before", "After"), 2)),
+       Group = factor(rep(c("Took part", "Did not take part"), each = 2),
+                      levels = c("Took part", "Did not take part")),
+       Cost  = c(ba_before, ba_after, comp_before, comp_after)) %>%
+  plot_ly(x = ~Time, y = ~Cost, color = ~Group, type = "bar",
+          colors = c("Took part" = ACCENT, "Did not take part" = ACCENT2),
+          text = ~gfmt(Cost), textposition = "outside",
+          textfont = list(size = 12, color = INK),
+          hovertemplate = "%{fullData.name}, %{x}: %{y:,.0f} AED<extra></extra>") %>%
+  layout(barmode = "group",
+         xaxis = ax("", zeroline = FALSE),
+         yaxis = ax("Waste costs (AED)", range = c(0, 2700))) %>%
+  pl_m2(width = PL_WC, height = 300)
+```
+:::::
+
+::::::
+
+## Two biases, opposite directions
+
+```{=html}
+<div class="facts">
+  <div class="k">Before-and-after</div>
+  <div class="v">Includes every other change over the same period &middot; here it UNDERSTATES the fall</div>
+  <div class="k">With-and-without</div>
+  <div class="v">Compares groups that already differed &middot; here it OVERSTATES it</div>
+  <div class="k">So the truth</div>
+  <div class="v">Sits between the two</div>
+</div>
+```
+
+::: {.ask}
+The two numbers **bracket** something. `r gfmt(abs(ba_change))` is too small,
+`r gfmt(abs(ww_gap))` is too big, and the true effect is likely in between.
+
+What would it take to land in the middle, deliberately?
+:::
+
+::: {.warn}
+Both problems share one root: **the group that took part and the group that did
+not were not comparable.** Randomization can fix that.
+:::
+
+## Five-minute break
+
+::: {.panel}
+Back in five minutes. When we return: the one design that removes the difference
+between the groups, instead of trying to adjust for it afterwards.
+:::
+
+# 3 · How randomisation fixes it
+
+## Random draw
+
+::: {.panel}
+Decide who is offered the programme by **random draw**: not by who is eligible,
+who is keen, or who is easy to reach.
+:::
+
+```{r fig.height=2.0, fig.width=11}
+set.seed(7)
+n_dot <- 60
+grid  <- expand.grid(x = 1:20, y = 1:3)[1:n_dot, ]
+grid$grp <- factor(sample(rep(c("Offered", "Not offered"), length.out = n_dot)),
+                   levels = c("Offered", "Not offered"))
+plot_ly(grid, x = ~x, y = ~y, color = ~grp, type = "scatter", mode = "markers",
+        colors = c("Offered" = ACCENT, "Not offered" = ACCENT2),
+        marker = list(size = 15),
+        hovertemplate = "%{fullData.name}<extra></extra>") %>%
+  layout(xaxis = ax("", showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE),
+         yaxis = ax("", showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE,
+                    range = c(0.3, 3.7))) %>%
+  pl_m2(height = 200, t = 24, b = 16)
+```
+
+::: {.panel}
+Every business had the same chance of landing in either colour, so the two groups
+balance what we **can** see (size, age, location) and, on average, what we
+**cannot** (management quality, motivation, luck). Those stop being an
+explanation.
+:::
+
+## Why it works: two people versus two crowds
+
+:::::: {.columns}
+
+::::: {.column width="44%"}
+::: {.panel}
+Pick **two people** at random: they could differ in almost every way.
+
+Pick **two large groups** at random: on average they look alike, including on
+what nobody measured.
+:::
+
+::: {.ask}
+With two large random groups, chance differences are small and everything else
+balances on average, so a clear difference in outcomes points to the programme.
+:::
+:::::
+
+::::: {.column width="56%"}
+```{r fig.height=3.2, fig.width=6}
+set.seed(1)
+pop   <- gw$waste_management_costs[gw$round == 0]
+sizes <- c(2, 5, 10, 25, 50, 100, 250, 500)
+conv  <- map_dfr(sizes, function(sz) {
+  d <- replicate(300, {
+    s <- sample(pop, 2 * sz)
+    abs(mean(s[1:sz]) - mean(s[(sz + 1):(2 * sz)]))
+  })
+  tibble(sz = sz, gap = mean(d))
+})
+conv %>%
+  plot_ly(x = ~sz, y = ~gap, type = "scatter", mode = "lines+markers",
+          line = list(color = ACCENT, width = 3),
+          marker = list(color = ACCENT, size = 8), showlegend = FALSE,
+          hovertemplate = "groups of %{x}: typical gap %{y:,.0f} AED<extra></extra>") %>%
+  layout(xaxis = ax("Size of each random group", type = "log",
+                    tickvals = sizes, ticktext = as.character(sizes)),
+         yaxis = ax("Typical gap between the groups (AED)", rangemode = "tozero")) %>%
+  pl_m2(width = 600, height = 300, b = 54)
+```
+:::::
+
+::::::
+
+::: {.panel .fragment}
+**The caveat.** This works *because* the draw was random. It says nothing about
+who took up the programme, or whether the effect would repeat elsewhere. It
+answers one question cleanly: what did this programme do, here?
+:::
+
+## `[MENTI PLACEHOLDER]` True or false?
+
+::: {.panel}
+**1.** Randomisation makes the groups similar only on things we can measure.
+
+**2.** With enough units, random assignment balances unmeasured things too.
+
+**3.** A randomised comparison still needs the groups to have started out alike.
+:::
+
+::: {.ask}
+Live quiz, revealed one at a time. Commit before I show each answer.
+:::
+
+::: {.panel .fragment}
+**1. False.** Measured *and* unmeasured, on average. This is the one most people
+get wrong.
+
+**2. True.** That is what "on average" is doing.
+
+**3. It creates that.** It does not need it to be true beforehand.
+:::
+
+# 4 · Reading the randomised result
+
+## First check: did the random draw work?
+
+:::::: {.columns}
+
+::::: {.column width="56%"}
+```{r}
+balance_tbl %>%
+  mutate(across(c(Treated, Control), ~ round(.x, 2)),
+         Difference = round(Difference, 2), p = round(p, 2)) %>%
+  kable(align = "lrrrr", digits = 2,
+        col.names = c("Characteristic", "Treated", "Control",
+                      "Difference", "p-value")) %>%
+  kable_styling(full_width = FALSE, font_size = 15)
+```
+:::::
+
+::::: {.column width="44%"}
+::: {.panel}
+A **balance table** compares the two groups on their starting characteristics,
+measured *before* anything happened.
+
+Read it for two things: are the differences **small**, and are the p-values
+**not tiny**?
+:::
+
+::: {.warn}
+A tiny p-value here would mean the draw failed: the groups differed at the
+start, and the comparison is compromised before it begins.
+:::
+:::::
+
+::::::
+
+## The estimate
+
+:::::: {.columns}
+
+::::: {.column width="52%"}
+```{r}
+rct_tbl %>%
+  mutate(across(c(estimate, std.error), ~ round(.x, 0)),
+         p.value = ifelse(p.value < 0.001, "<0.001", sprintf("%.3f", p.value))) %>%
+  kable(align = "lrrrr", digits = 2,
+        col.names = c("", "Coefficient", "Std. error", "p", "95% CI")) %>%
+  kable_styling(full_width = FALSE, font_size = 17) %>%
+  row_spec(2, bold = TRUE, background = "#E6F1F5")
+```
+:::::
+
+::::: {.column width="48%"}
+::: {.panel}
+**Row 2 is the impact.** The difference in costs at follow-up between the two
+randomly-formed groups.
+
+`r gfmt(rct_est)` AED, confidence interval
+[`r gfmt(rct_ci[1])`, `r gfmt(rct_ci[2])`].
+:::
+
+::: {.warn}
+**Not** the control group average. That is where the comparison group happened
+to sit. It is not an effect, and it is not attributable to anything.
+:::
+:::::
+
+::::::
+
+
+::: {.notes}
+Reminder for the room (vocab from Day 1 Session 1): the **coefficient** is the effect size, here in AED; the **standard error** is how much the estimate would move from sample to sample; the **95% confidence interval** is the range of plausible true values, not a margin of certainty; the **p-value** is how surprising this result would be if the programme had truly done nothing.
+:::
+
+## Which number is the impact?
+
+```{r results='asis'}
+cat(sprintf('
+<div class="facts">
+  <div class="k">The impact</div>
+  <div class="v">the Package vs. control row: -%s AED &middot; the difference the programme made</div>
+  <div class="k">Not the impact</div>
+  <div class="v">the control average, %s AED &middot; where the comparison group sat, not an effect</div>
+  <div class="k">Not sufficient either</div>
+  <div class="v">the p-value &middot; it says the effect is unlikely to be zero, not that it is big enough</div>
+</div>', gfmt(abs(rct_est)), gfmt(rct_control)))
+```
+
+::: {.ask}
+Three ways to misread this one table, and only the first row is the answer.
+
+Remember Session 1: **Statistically significant does not mean big
+enough.** Here that concept is again, on a clean randomised result.
+:::
+
+## Does it clear the rule?
+
+:::::: {.columns}
+
+::::: {.column width="52%"}
+```{r fig.height=2.5, fig.width=6}
+plot_ly() %>%
+  add_segments(data = tibble(x = rct_avoided_least, xend = rct_avoided_most, y = 1),
+               x = ~x, xend = ~xend, y = ~y, yend = ~y,
+               line = list(color = ACCENT, width = 6), showlegend = FALSE,
+               hoverinfo = "skip") %>%
+  add_markers(data = tibble(x = c(rct_avoided_least, rct_avoided_most), y = c(1, 1)),
+              x = ~x, y = ~y, marker = list(color = ACCENT, size = 10),
+              showlegend = FALSE,
+              hovertemplate = "interval end: %{x:,.0f} AED<extra></extra>") %>%
+  add_markers(data = tibble(x = abs(rct_est), y = 1), x = ~x, y = ~y,
+              marker = list(color = ACCENT, size = 17,
+                            line = list(color = "white", width = 2)),
+              showlegend = FALSE,
+              hovertemplate = "estimate: %{x:,.0f} AED<extra></extra>") %>%
+  layout(
+    xaxis = ax("AED avoided per business", range = c(800, 1200)),
+    yaxis = ax("", zeroline = FALSE, showticklabels = FALSE, range = c(0.4, 1.7)),
+    shapes = list(list(type = "line", x0 = RULEBAR, x1 = RULEBAR,
+                       y0 = 0, y1 = 1, yref = "paper",
+                       line = list(color = ALERT, width = 3, dash = "dash"))),
+    annotations = list(list(x = RULEBAR, y = 1, yref = "paper",
+                            yanchor = "bottom", showarrow = FALSE,
+                            text = sprintf("decision rule (%s)", gfmt(RULEBAR)),
+                            font = list(size = 12, color = ALERT)))
+  ) %>%
+  pl_m2(width = PL_WC, height = 250, b = 54)
+```
+:::::
+
+::::: {.column width="48%"}
+```{r results='asis'}
+cat(sprintf('
+<div class="hero">
+  <div class="value">-%s</div>
+  <div class="label">AED, the randomised estimate</div>
+</div>
+<div class="stat-row">
+  <div><span class="n">%s</span><span class="k">The rule</span></div>
+  <div><span class="n">%s</span><span class="k">Least it could be</span></div>
+</div>', gfmt(abs(rct_est)), gfmt(RULEBAR), gfmt(rct_avoided_least)))
+```
+
+::: {.warn}
+The estimate clears the bar. The confidence interval **spans** it: at its least generous,
+the programme avoids `r gfmt(rct_avoided_least)` AED, short of
+`r gfmt(RULEBAR)`.
+:::
+:::::
+
+::::::
+
+::: {.ask .fragment}
+Remember Session 1: **the confidence interval decides, not the point estimate.**
+
+Compare the two ends. Would you sign a national roll-out on this? Cast your vote
+on the next slide.
+:::
+
+## `[MENTI PLACEHOLDER]` Would you scale it?
+
+:::::: {.columns}
+
+::::: {.column width="62%"}
+::: {.ask style="font-size: 120%;"}
+The estimate clears the bar. The confidence interval does not.
+
+**On this randomised result, do you scale GreenWaste nationally?**
+
+Scale it &nbsp;·&nbsp; Do not scale &nbsp;·&nbsp; Not sure yet
+:::
+
+Go to **menti.com** and enter code **`r MENTI_CODE`**, or scan the code on the
+right. Then give a reason.
+:::::
+
+::::: {.column width="38%"}
+```{r out.width='330px', out.extra='style="display:block; margin:0 auto;"'}
+knitr::include_graphics(MENTI_QR)
+```
+:::::
+
+::::::
+
+::: {.panel}
+No single right answer: the point is that the **confidence interval**, not the point
+estimate, is what the decision turns on. Hold the vote; we test the same call on
+a second randomised programme next.
+:::
+
+## The picture
+
+```{r fig.height=3, fig.width=11.5}
+plot_ly() %>%
+  add_segments(data = tibble(x = rct_control, xend = rct_treated, y = 1, yend = 1),
+               x = ~x, xend = ~xend, y = ~y, yend = ~yend,
+               line = list(color = RULE, width = 6), showlegend = FALSE,
+               hoverinfo = "skip") %>%
+  add_markers(data = tibble(x = c(rct_control, rct_treated), y = c(1, 1)),
+              x = ~x, y = ~y,
+              marker = list(size = 22, color = c(ACCENT2, ACCENT)),
+              showlegend = FALSE,
+              hovertemplate = "%{x:,.0f} AED<extra></extra>") %>%
+  add_annotations(x = rct_control, y = 1, yshift = 30, showarrow = FALSE,
+                  text = sprintf("Control  %s", gfmt(rct_control)),
+                  font = list(size = 15, color = INK)) %>%
+  add_annotations(x = rct_treated, y = 1, yshift = 30, showarrow = FALSE,
+                  text = sprintf("Package  %s", gfmt(rct_treated)),
+                  font = list(size = 15, color = INK)) %>%
+  add_annotations(x = mean(c(rct_control, rct_treated)), y = 1, yshift = -32,
+                  showarrow = FALSE,
+                  text = sprintf("effect  %s AED", gfmt(abs(rct_est))),
+                  font = list(size = 15, color = ALERT)) %>%
+  layout(xaxis = ax("Waste costs at follow-up (AED)", range = c(0, 2200)),
+         yaxis = ax("", zeroline = FALSE, showticklabels = FALSE,
+                    range = c(0.6, 1.5))) %>%
+  pl_m2(height = 250, b = 54)
+```
+
+::: {.panel}
+Same programme as Section 1, but now the comparison is fair. The gap between two
+groups formed by a draw, and nothing else, is the effect.
+:::
+
+# 5 · The randomised case
+
+## The school-zone package, decided by lottery
+
+:::::: {.columns}
+
+::::: {.column width="54%"}
+Abu Dhabi's roads authority had a road-safety package for school zones: raised
+crossings, lower limits, crossing patrols. Four hundred zones needed it and only
+half could be done in the first year.
+
+Rather than pick the worst, it **drew lots**: 200 zones chosen at random for the
+first year, 200 held back.
+
+Like GreenWaste, the case comes with a decision bar set before the results: the
+package has to prevent at least `r sprintf("%.1f", RULEBAR_SZ)` injury collisions
+per zone per round to justify extending it to the zones held back.
+:::::
+
+::::: {.column width="46%"}
+```{=html}
+<div class="facts">
+  <div class="k">Programme</div>  <div class="v">School-zone safety package</div>
+  <div class="k">Allocation</div> <div class="v">Random draw, 200 vs 200</div>
+  <div class="k">Outcome</div>    <div class="v">Injury collisions</div>
+  <div class="k">The rule</div>   <div class="v">Avoid 2.0 per zone per round</div>
+</div>
+```
+:::::
+
+::::::
+
+::: {.warn .note-ctr}
+**Illustrative case, with invented figures.** This is not a real trial and the
+numbers are generated for this training.
+:::
+
+::: {.ask}
+Before the numbers: **why is this a stronger design than GreenWaste's?**
+:::
+
+## Did the draw work? The randomised zones
+
+:::::: {.columns}
+
+::::: {.column width="54%"}
+```{r}
+pr_bal %>%
+  mutate(across(c(Package, Control), ~ round(.x, 2)), p = round(p, 2)) %>%
+  kable(align = "lrrr", digits = 2,
+        col.names = c("Characteristic", "Package", "No package", "p-value")) %>%
+  kable_styling(full_width = FALSE, font_size = 16)
+```
+:::::
+
+::::: {.column width="46%"}
+::: {.panel}
+Same check as before, on the randomised zones.
+
+Differences are small, p-values are not tiny. The draw did its job: whatever you
+can see here, and whatever you cannot, the two sets of zones are alike on
+average.
+:::
+
+::: {.warn}
+This is the difference from Comparison B. There, the two groups **chose**
+themselves. Here, a lottery placed them.
+:::
+:::::
+
+::::::
+
+## The randomised result
+
+```{r results='asis'}
+cat(sprintf('
+<div class="hero">
+  <div class="value">%.2f</div>
+  <div class="label">Injury collisions avoided per zone per round</div>
+</div>
+<div class="stat-row">
+  <div><span class="n">%.1f</span><span class="k">No package, before</span></div>
+  <div><span class="n">%.1f</span><span class="k">No package, after</span></div>
+  <div><span class="n">%.1f</span><span class="k">Package, after</span></div>
+</div>', pr_est, pr_ctl_before, pr_ctl_after, pr_trt_after))
+```
+
+::: {.panel}
+Both arms fell: the national trend reached the school zones too. The package
+zones fell further.
+
+The difference is `r sprintf("%.2f", abs(pr_est))` per zone per round, confidence interval
+[`r sprintf("%.2f", pr_avoided_least)`, `r sprintf("%.2f", pr_avoided_most)`]
+in collisions avoided.
+:::
+
+## Does it clear the rule?
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+```{r fig.height=2.5, fig.width=5.6}
+plot_ly() %>%
+  add_segments(data = tibble(x = pr_avoided_least, xend = pr_avoided_most, y = 1),
+               x = ~x, xend = ~xend, y = ~y, yend = ~y,
+               line = list(color = ACCENT, width = 6), showlegend = FALSE,
+               hoverinfo = "skip") %>%
+  add_markers(data = tibble(x = c(pr_avoided_least, pr_avoided_most), y = c(1, 1)),
+              x = ~x, y = ~y, marker = list(color = ACCENT, size = 10),
+              showlegend = FALSE,
+              hovertemplate = "interval end: %{x:.2f}<extra></extra>") %>%
+  add_markers(data = tibble(x = abs(pr_est), y = 1), x = ~x, y = ~y,
+              marker = list(color = ACCENT, size = 17,
+                            line = list(color = "white", width = 2)),
+              showlegend = FALSE,
+              hovertemplate = "estimate: %{x:.2f}<extra></extra>") %>%
+  layout(
+    xaxis = ax("Collisions avoided per zone per round", range = c(0, 4.2)),
+    yaxis = ax("", zeroline = FALSE, showticklabels = FALSE, range = c(0.4, 1.7)),
+    shapes = list(list(type = "line", x0 = RULEBAR_SZ, x1 = RULEBAR_SZ,
+                       y0 = 0, y1 = 1, yref = "paper",
+                       line = list(color = ALERT, width = 3, dash = "dash"))),
+    annotations = list(list(x = RULEBAR_SZ, y = 1, yref = "paper",
+                            yanchor = "bottom", showarrow = FALSE,
+                            text = sprintf("decision rule (%.1f)", RULEBAR_SZ),
+                            font = list(size = 12, color = ALERT)))
+  ) %>%
+  pl_m2(width = PL_WC, height = 250, b = 54)
+```
+:::::
+
+::::: {.column width="50%"}
+```{r results='asis'}
+cat(sprintf('
+<div class="hero">
+  <div class="value">-%.2f</div>
+  <div class="label">Collisions avoided, per zone per round</div>
+</div>
+<div class="stat-row">
+  <div><span class="n">%.2f</span><span class="k">The rule</span></div>
+  <div><span class="n">%.2f</span><span class="k">Least it could be</span></div>
+</div>', abs(pr_est), RULEBAR_SZ, pr_avoided_least))
+```
+
+::: {.warn .fragment}
+Same shape as GreenWaste: the estimate clears the bar, the confidence interval straddles
+it. The least it could be is `r sprintf("%.2f", pr_avoided_least)`, under the
+`r sprintf("%.1f", RULEBAR_SZ)` required.
+:::
+:::::
+
+::::::
+
+# 6 · Put AI to work
+
+## AI Snapshot: a paragraph for the minister
+
+::: {.panel}
+Groups, paste this prompt, written the way a busy official might write it:
+
+**"Our pilot cut waste costs by 665 AED per business (costs before vs after,
+p < 0.001). Write a short paragraph for the minister on what this shows."**
+:::
+
+::: {.ai-output}
+*A response like this is possible, especially with a short or leading prompt:*
+
+The GreenWaste pilot produced a clear result: waste-management costs fell by 665
+AED per business, and [with p < 0.001 we can be confident the programme caused
+this reduction]{.flag}. [Because the same businesses were measured before and
+after, differences between businesses are already accounted for]{.flag}, so
+[the 665 AED saving can be attributed to the programme]{.flag}. [This makes a
+strong case for national scale-up]{.flag}. As with any pilot, results should be
+monitored as the programme expands.
+:::
+
+::: {.ask}
+Mark anything the evidence does not support. Three minutes, in your groups. Then
+run the same prompt yourselves: did your AI write something similar?
+:::
+
+## Debrief: four errors
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.warn}
+**1 · Significant is not causal.** p < 0.001 says the fall is unlikely to be
+chance. It says nothing about *what* caused it.
+:::
+
+::: {.warn}
+**2 · Half right, which makes it convincing.** Following the same businesses
+removes fixed differences between them. It does not remove what changed for
+everyone: costs for businesses that did not take part rose by about 150 AED.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.warn}
+**3 · It reported 665 as the effect.** That is the naive figure. The randomised
+estimate is `r gfmt(abs(rct_est))` AED, and the prompt gave the model no way to
+know that.
+:::
+
+::: {.warn}
+**4 · It recommended scale-up without asking** what bar the programme has to
+clear, or what 665 was compared to. The closing caveat is generic.
+:::
+:::::
+
+::::::
+
+::: {.panel}
+**The prompt did some of the pushing.** It supplied a p-value, the word "cut" and
+a request for the minister, so a model may write a confident summary instead of
+questioning the design. People asked for a quick paragraph for a minister often
+do the same.
+:::
+
+## The same question, a better prompt
+
+:::::: {.columns}
+
+::::: {.column width="50%"}
+::: {.panel}
+**What people actually type**
+
+> Our pilot cut waste costs by 665 AED per business (before vs after,
+> p < 0.001). Write a short paragraph for the minister.
+
+The prompt frames the fall as the programme's doing, and the model may follow
+that framing.
+:::
+:::::
+
+::::: {.column width="50%"}
+::: {.panel}
+**What to type instead**
+
+> Costs for participating businesses were 665 AED lower after the pilot than
+> before (p < 0.001). We also have businesses that did not take part and a
+> randomised comparison. The scale-up rule is at least 1,000 AED. Before writing
+> anything, tell me what this before-and-after number can and cannot show.
+> **Ask me questions before you answer.**
+:::
+:::::
+
+::::::
+
+::: {.ask}
+Run both. Which one questions the 665 before writing the paragraph? What did
+each explain well?
+
+Two habits: make the AI **ask you questions first**, and have a **second chat**
+review the first one's answer.
+:::
+
+::: {.notes}
+The outline's version of this snapshot asked AI to explain why before-and-after
+can mislead. Current models usually answer that general question well, so the
+exercise uses a leading, realistic prompt instead; the better prompt still asks
+the model to explain what a before-and-after number can and cannot show.
+:::
+
+# 7 · Close
+
+## Your turn: ask AI first
+
+::: {.ask style="font-size: 110%;"}
+Before we show our list of questions to ask someone presenting an RCT, ask an AI tool:
+
+**"I am a commissioner about to hear an evaluator present a randomised controlled trial (RCT) result. What are the key questions I should ask?"**
+:::
+
+::: {.panel}
+Three minutes. Then compare with our list on the next slide: what did it miss, what did it add, and is anything incorrect?
+:::
+
+::: {.notes}
+OPTIONAL. If time is short, skip this slide and go straight to the questions
+on the next one. If you run it: give three minutes, then reveal the list and
+ask what the AI missed, what it added that is worth keeping, and whether
+anything it suggested was incorrect.
+:::
+
+## Three questions to ask the evaluator
+
+```{=html}
+<div class="facts">
+  <div class="k">1</div> <div class="v">Compared to what? Before-and-after, with-and-without, or a fair comparison?</div>
+  <div class="k">2</div> <div class="v">If the groups were not randomised, how do you know they started out alike?</div>
+  <div class="k">3</div> <div class="v">Does the effect, and its confidence interval, clear our decision rule, not just zero?</div>
+</div>
+```
+
+::: {.panel}
+Question 2 separates a convincing number from a trustworthy one. Question 3
+separates a real effect from a decision.
+:::
+
+## What today gives you
+
+```{=html}
+<div class="facts">
+  <div class="k">Before-and-after</div> <div class="v">folds in everything else that changed &middot; can understate</div>
+  <div class="k">With-and-without</div>  <div class="v">compares groups that already differed &middot; can overstate</div>
+  <div class="k">Randomisation</div>     <div class="v">makes the groups alike on average, including on what nobody measured</div>
+  <div class="k">Reading the result</div><div class="v">find the impact row, then judge it against the rule and its confidence interval</div>
+</div>
+```
+
+::: {.panel}
+Next session we return to the GreenWaste data and ask what today's two
+comparisons were missing: **was the difference between the groups stable
+before the programme started?**
+:::

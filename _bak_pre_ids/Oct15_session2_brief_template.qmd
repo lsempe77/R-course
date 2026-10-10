@@ -1,0 +1,18 @@
+---
+title: "GreenWaste brief for a director"
+format:
+  docx:
+    reference-doc: reader_template.docx
+    toc: false
+---
+
+```{r setup, include=FALSE}
+source('day4_case.R')
+```
+
+```{r, results='asis', echo=FALSE}
+cat('Write at most 150 words using the corrected findings reference.\n\n')
+for(part in brief_parts)cat('## ',part,'\n\n__________________________________________________\n\n__________________________________________________\n\n',sep='')
+```
+
+The styled print copy is built by `Rscript make_session_materials.R --day4`.

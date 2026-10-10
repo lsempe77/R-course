@@ -1,0 +1,197 @@
+---
+title: "Same numbers. Different story."
+subtitle: "Day 3 | Session 2: Charts, averages and the story behind the picture"
+author: "3ie"
+always_allow_html: true
+format:
+  live-revealjs:
+    theme: [theme_dge.scss, theme_live.scss, theme_reader.scss]
+    logo: assets/dge_logo_horizontal.svg
+    slide-number: true
+    width: 1280
+    height: 720
+    slide-level: 2
+    embed-resources: true
+    include-after-body: _reader_interactions.html
+webr:
+  render-df: kable
+  resources:
+    - evaluation_data_GreenWaste_simple.csv
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+
+```{r setup, include=FALSE}
+source('day3_case.R')
+```
+
+## Which chart would you show the director? {.reader-slide}
+
+```{webr}
+#| context: setup
+#| autorun: true
+#| echo: false
+#| include: false
+gw <- read.csv('evaluation_data_GreenWaste_simple.csv')
+tp <- subset(gw, setting == 'city' & took_part == 1)
+```
+```{r, results='asis'}
+html_out(paste0('<div class="chart-pair"><div><h3>A</h3>',bar_svg(0,FALSE),'</div><div><h3>B</h3>',bar_svg(700,FALSE),'</div></div><p class="caption">Two draft charts of the same records. Labels are missing.</p>',fiction))
+```
+::: {.ask}
+Can you choose responsibly without the labels?
+:::
+
+
+::: {.notes}
+4 minutes. Retrieve source and comparison questions. These are deliberately incomplete drafts; accepting either shape alone is premature. Commit a reason. No room poll needed; pairs or local cards. Next screen supplies values and scales.
+:::
+
+## Same values. A different impression. {.reader-slide}
+
+```{r, results='asis'}
+html_out(paste0('<div id="axis-charts"><div data-variant>',bar_svg(700),'</div><div data-variant hidden>',bar_svg(0),'</div></div><button data-swap="axis-charts">Change the axis start</button>',fiction))
+```
+::: {.ask}
+Which impression changes, and which recorded values stay the same?
+:::
+
+
+::: {.notes}
+6 minutes. Predict before toggle. Truncated bar baseline starts at 700 versus 0; true mean values identical. Bars should ordinarily start at 0; a truncated axis needs explicit disclosure and a reason. This is descriptive before/after, not a causal effect chart. Keyboard button must not advance deck.
+:::
+
+## Where does the axis start? {.reader-slide}
+
+Use the printed chart on **Sheet 1**. Work alone first.
+
+Circle the units. Mark where the axis starts.
+
+Underline who is compared and when.
+
+::: {.ask}
+What can this chart support on its own?
+:::
+
+
+::: {.notes}
+7 minutes. Chart is full axis, participant before/after. Ask for source, annual AED, period 12 months and no causal comparison. Distribution and uncertainty absent, so do not infer everyone gained. The worksheet also includes its descriptive source caption.
+:::
+
+## Does anyone look like the average? {.reader-slide}
+
+```{r, results='asis'}
+html_out(sprintf('<p class="distribution-mean">Mean: %s tonnes</p><button data-open="distribution" data-closed="Open the individual values" data-opened="Hide the individual values" aria-controls="distribution" aria-expanded="false">Open the individual values</button><div id="distribution" hidden>%s</div>%s',fmt(mean(ten$landfill_before),1),distribution_svg(),fiction))
+```
+::: {.ask}
+Does the mean describe most of these ten businesses?
+:::
+
+
+::: {.notes}
+6 minutes. Predict before revealing Day 1 ten actual landfill records. Nine below the mean; one at 46 tonnes. Dot stacking makes repeated values visible. This is a small teaching selection, not a representative city distribution or a programme effect.
+:::
+
+## 49.5% or 58.6%? Both can be right. {.reader-slide}
+
+```{r, results='asis'}
+html_out(sprintf('<div class="percentage-pair"><div><h3>Change in total tonnes</h3><p>%s%%</p></div><div><h3>Mean business percentage</h3><p>%s%%</p></div></div>%s',fmt(percent_total,1),fmt(percent_average,1),fiction))
+```
+```{webr}
+#| echo: true
+#| autorun: false
+# Compare total landfill tonnes after GreenWaste with the total before.
+total_fall <- 100 * (1 - sum(tp$landfill_after) /
+  sum(tp$landfill_before))
+# Show the percentage fall, rounded to one decimal place.
+round(total_fall, 1)
+```
+::: {.ask}
+Why can these percentages differ for the same businesses?
+:::
+
+
+::: {.notes}
+7 minutes. One trainer demo after prediction. Total percentage weights businesses by their starting tonnes; mean business percentage gives each business equal weight. All before tonnes are positive. Two valid different summaries; neither alone establishes cause. Shorten variableline if editorclips. No school-zone or pie-chart case.
+:::
+
+## Does this interval settle the decision? {.reader-slide}
+
+```{r, results='asis'}
+html_out(interval_svg('trial',reveal=TRUE))
+```
+```{=html}
+<button data-open="interval-trial" data-closed="Open the interval" data-opened="Hide the interval" aria-controls="interval-trial" aria-expanded="false">Open the interval</button>
+```
+::: {.ask}
+Does the pilot chart settle the minimum saving rule?
+:::
+
+
+::: {.notes}
+6 minutes. Predict before interval opens. Pilot lottery after 12 months, annual AED saving. Interval crosses 1000. Teach units, compared population and reported uncertainty; intervals do not account for every bias. Use the existing computed SVG, not a new hand-coded result.
+:::
+
+## Write the caption the chart deserves. {.reader-slide}
+
+Pairs work on **Sheet 2**.
+
+Repair a chart caption that claims cause from a before/after fall.
+
+Name the source, units, comparison and one limit.
+
+::: {.ask}
+Would a decision-maker understand what the chart actually shows?
+:::
+
+
+::: {.notes}
+10 minutes. Protect repair task. Accept explicit source title and reference to worksheetfigure. No drawing software or code. Repairing caption alone cannot supply missing causal comparison; say so.
+:::
+
+## The AI sees cause. Can you? {.reader-slide}
+
+Illustrative AI draft:
+
+"GreenWaste caused a fall of almost half in every business's landfill waste. The before/after chart proves the programme works."
+
+::: {.ask}
+Which words would you keep, qualify or remove?
+:::
+```{=html}
+<button data-open="chart-ai" data-closed="Open feedback" data-opened="Hide feedback" aria-controls="chart-ai" aria-expanded="false">Open feedback</button><div id="chart-ai" class="feedback" hidden>The total fell by about half among participants. Every business is unsupported, and this descriptive comparison cannot establish cause.</div>
+```
+
+
+::: {.notes}
+6 minutes. Authored example applies to the total landfill result, not the cost bars. Participants verify source and denominator. Optional AI prompt asks it to describe visible evidence and missing context before recommending. No account required.
+:::
+
+## Defend your chart. Defend its limit. {.reader-slide}
+
+::: {.ask}
+What can your repaired caption help a reader conclude?
+:::
+Give one supported statement and one limit.
+
+Point to the chart evidence while explaining.
+
+::: {.notes}
+4 minutes. Pairs share a short defence. Require the actual values, comparison and denominator; accept different captions when faithful.
+:::
+
+## Before trusting a chart, check what? {.reader-slide}
+
+::: {.ask}
+What would you check first in a chart from an evaluation report?
+:::
+Close the sheet. Write the check and explain why it matters.
+
+::: {.notes}
+4 minutes. Independent close. Scales and labels, averages, comparison and uncertainty. Total 60minutes.
+:::

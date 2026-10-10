@@ -1,0 +1,20 @@
+/* This prototype reuses the established review type scale with a separate scope. */
+.reveal .s2-review .review-svg { max-height:300px; }
+.reveal .s2-review .reading-table { font-size:23px; }
+.reveal .s2-review .reading-table th,.reveal .s2-review .reading-table td { padding:10px; }
+.reveal .s2-review .comparison-pair { display:grid;grid-template-columns:1fr 1fr;gap:32px;margin:20px 0; }
+.reveal .s2-review .comparison-pair>div { border-top:3px solid #215a9e;padding-top:12px; }
+.reveal .s2-review .comparison-pair h3 { font-size:25px;margin:0 0 8px; }
+.reveal .s2-review .comparison-pair p { font-size:24px; }
+.reveal .s2-review pre { font-size:20px;line-height:1.4;width:100%;box-sizing:border-box; }
+.reveal .s2-review .mini-output { font-size:24px;color:#063360;border-top:1px solid #D5DEE8;padding-top:10px; }
+.reveal .s2-review .claim-steps { display:flex;gap:15px;align-items:center;margin:24px 0; }
+.reveal .s2-review .claim-steps strong { border-bottom:3px solid #7da1c4;padding:12px 18px; }
+
+.reveal .s2-review.code-example .review-svg{max-height:230px}
+.reveal .s2-review.code-example .cell:has(.cell-code){display:grid;grid-template-columns:2fr 1fr;gap:25px;align-items:center}
+.reveal .s2-review.code-example .cell-output{font-size:21px}
+.s2-review .clean-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:10px 0}
+.s2-review .clean-panel{border:1px solid #D5DEE8;border-radius:8px;padding:8px 14px;background:#f4f7fb}
+.s2-review .clean-panel h3{font-size:22px;margin:0 0 4px;color:#063360}
+.s2-review .clean-panel p{font-size:19px;margin:3px 0;line-height:1.3}

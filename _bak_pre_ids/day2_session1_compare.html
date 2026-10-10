@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Day 2 Session 1 comparison</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font:16px/1.5 Arial,sans-serif;color:#111418;background:#fff}header{padding:22px 30px 12px;border-bottom:1px solid #d5dee8}h1{font-size:28px;color:#063360;margin:0 0 6px}p{margin:6px 0}a{color:#215a9e}nav{display:flex;gap:8px;flex-wrap:wrap;padding:15px 30px;background:#f4f7fb}button{font:inherit;border:1px solid #7da1c4;background:white;border-radius:5px;padding:7px 12px;color:#063360;cursor:pointer}button:focus-visible,a:focus-visible{outline:3px solid #215a9e;outline-offset:3px}button[aria-pressed=true]{background:#063360;color:white}.versions{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:16px 24px}.version h2{font-size:19px;margin:0;color:#063360}.version p{font-size:14px;margin:4px 0 12px}.version iframe{display:block;width:100%;height:calc(100vh - 270px);min-height:430px;border:1px solid #d5dee8;background:white}footer{padding:0 30px 20px;font-size:14px;color:#545860}@media(max-width:850px){.versions{grid-template-columns:1fr}.version iframe{height:55vh;min-height:320px}header,nav{padding-left:18px;padding-right:18px}}
+</style>
+<header>
+<h1>Day 2 Session 1: compare the two versions</h1>
+<p>Choose a topic to bring both decks to the corresponding slide. Use each deck's arrows to explore its sequence.</p>
+<p><a href="Oct13_session1_review_worksheet.html" target="_blank" rel="noopener">Open the separate review worksheet</a> &middot; <a href="AI_good_practice_review.html" target="_blank" rel="noopener">Open the AI good-practice card</a> · <a href="https://github.com/lsempe77/R-course/blob/main/Module_2_Oct_2026_v2/Oct13_session1_review.qmd" target="_blank" rel="noopener">View proposed QMD source</a></p>
+</header>
+<nav aria-label="Compare a teaching topic">
+<button data-pair="1,1">City recap</button><button data-pair="2,2">Observed changes</button><button data-pair="3,3">Four numbers</button><button data-pair="4,5">Regression</button><button data-pair="5,6">Assumed path</button><button data-pair="6,8">Earlier histories</button><button data-pair="7,9">Data limit</button><button data-pair="8,11">Source reading</button><button data-pair="9,12">AI reading</button><button data-pair="10,14">Close</button>
+</nav>
+<main class="versions">
+<section class="version"><h2>Current source</h2><p>10 content slides · existing 60-minute notes · <a href="Oct13_session1_current_compare.html" target="_blank" rel="noopener">Open full size</a></p><iframe id="current" src="Oct13_session1_current_compare.html" title="Current Day 2 Session 1 source rendered for comparison" allow="clipboard-write"></iframe></section>
+<section class="version"><h2>Proposed Day 2 Session 1</h2><p>14 content slides · 90-minute facilitator script · <a href="Oct13_session1_review.html" target="_blank" rel="noopener">Open full size</a></p><iframe id="proposed" src="Oct13_session1_review.html" title="Proposed Day 2 Session 1 review deck" allow="clipboard-write"></iframe></section>
+</main>
+<footer><p>This is a separate review. The original QMD, existing handout and live teaching pages have not been replaced. The left deck renders the current source; it is not a snapshot of the previously published deck.</p><p id="comparison-status" role="status" aria-live="polite"></p></footer>
+<script>
+document.querySelectorAll('[data-pair]').forEach(button=>button.addEventListener('click',()=>{
+ const indices=button.dataset.pair.split(',').map(Number);let ready=true;
+ ['current','proposed'].forEach((id,i)=>{
+  const reveal=document.getElementById(id).contentWindow.Reveal;
+  if(!reveal?.isReady()){ready=false;return;}
+  const slide=reveal.getSlides()[indices[i]],position=reveal.getIndices(slide);
+  reveal.slide(position.h,position.v,-1);
+ });
+ document.querySelectorAll('[data-pair]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+ document.getElementById('comparison-status').textContent=ready?'Showing '+button.textContent+' in both versions.':'One deck is still loading. Select the topic again once both are visible.';
+}));
+</script>
+</html>

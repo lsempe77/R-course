@@ -47,7 +47,7 @@ GreenWaste provides equipment subsidies, installation help and staff training. T
 
 ### §2 | What was compared?
 
-The participant businesses' mean cost went from 1,432 to 763 AED, a change of -669 AED. The comparison businesses' mean cost went from 2,258 to 2,401 AED, a change of +143 AED. The difference-in-differences (DiD) estimate is the participants' change minus the comparison businesses' change, which is about **-812 AED**. The calculations use unrounded records. This is the difference between the two changes. It is not the participant businesses' own change, and it is not the gap between the two groups after the programme.
+The participant businesses' mean cost went from 1,432 to 763 AED, a change of -669 AED. The comparison businesses' mean cost went from 2,258 to 2,401 AED, a change of +143 AED. The difference-in-differences (DiD) estimate is the participants' change minus the comparison businesses' change, which is about **-812 AED**. The calculations use the exact records, and the figures shown are rounded. This is the difference between the two changes. It is not the participant businesses' own change, and it is not the gap between the two groups after the programme.
 
 ```{r, results='asis'}
 html_out(d4_regression())
@@ -192,7 +192,7 @@ Use the interval on page 2.
 
 ### Check the source, then give your own reading
 
-In H4-A, circle the last row of the table and its interval, underline the assumption and mark the limit of the data. Compare your marks with a partner.
+In H4-A (the difference-in-differences study summary), circle the last row of the table and its interval, underline the assumption and mark the limit of the data. Compare your marks with a partner.
 
 Keep H4-A open, and close the AI responses and your partner's comments. Write one interpretation that H4-A supports and one specific evidence request. How could the answer change your advice?
 
@@ -214,7 +214,7 @@ html_out(d4_paragraphs(d4_ai))
 ```
 </div>
 
-Underline the claims that H4-A supports. Cross out the claims that H4-A does not support. Check H4-A on page 1, not whether the writing sounds confident.
+Underline the claims that H4-A (the difference-in-differences study summary) supports. Cross out the claims that H4-A does not support. Check H4-A on page 1, not whether the writing sounds confident.
 
 ### Part B: Run the improved prompt, then compare
 
@@ -248,7 +248,7 @@ html_out(d4_paragraphs(d4_fallback))
 ```
 </div>
 
-(a) Match its numbers to H4-A §2 and the table.
+(a) Match its numbers to H4-A (the difference-in-differences study summary) §2 and the table.
 
 <div class="writing part"></div>
 

@@ -1,4 +1,33 @@
 # Handoff: moving Module 2 to the simple GreenWaste case
+## Day 1 hybrid, Session 2 switch and wording pass, 10 October 2026
+
+Day 1 worksheets for S1, S2 and S3 are at the printer. Decision (Fiona): S1 and S3 keep the printed worksheets and get new slides; S2 goes live as the preview version and needs its new worksheet and cards printed (revert S2 if the printer cannot).
+
+- **Safety net:** local git tag `live-v1-2026-10-10` holds the whole live version (live files were unmodified). Push the tag with `git push origin live-v1-2026-10-10`.
+- **New sources (not rendered; no Quarto here):** `Oct12_session1_hybrid.qmd` + `session1_hybrid.R`, `Oct12_session3_hybrid.qmd` + `session3_hybrid.R`. Slide order and wording follow the printed sheets (section names, printed row labels, "page 1 / page 2"). S1 mean slide uses the printed landfill tonnes (10.0 mean, 6.0 without the 46). Polls: S1 two (significant vs large enough; is the causal claim supported), S3 one (extend decision). All other extra questions are discussed on the slide.
+- **AI handouts:** `Oct12_session1_ai_handout.docx/.pdf`, `Oct12_session3_ai_handout.docx/.pdf` (one double-sided A4 each), built by `review_2026_10_06/make_ai_handouts.py` from the R helper texts. S1 page 2 is full: check in Word print preview. S3 stage 1 is the draft already printed on worksheet page 2.
+- **Switching:** `review_2026_10_06/switch_session.py status|apply|revert d1s1 d1s2 d1s3`. It refuses stale renders, backs up what it overwrites to `backups/switch_2026_10_10/`, and repoints the S2 worksheet link on the hub page. S2 uses `Oct12_session2_review.qmd`, `_review_worksheet.qmd` and `_review_cards.qmd` unchanged.
+- **Render first:** the two hybrid decks, the S2 deck, worksheet and cards (also the four decks below). Then run `apply`, copy to `docs/`, push, and check a phrase from the new content on the live page.
+- **Wording pass (sections 1 to 4 of PREVIEW_CHANGE_NOTES) on the four sessions with no preview:** `Oct13_session2_live.qmd`, `Oct14_session3_live.qmd`, `Oct15_session1.qmd`, `Oct15_session2_live.qmd`, plus new `wording_overrides.R` (sourced after the case file, so the shared case files and the other live sessions are unchanged). The generator scripts in `review_2026_10_06/build_day*_decks.py` would overwrite these four files if re-run.
+- **Not done:** speaker-note timings in the four decks still say 60 or 75 minutes; their worksheets and card packs (made by `make_session_materials.R`) still carry the old wording; S2 live hub text. Day 2 S2 has a 30 minute gap against the 90 minute slot.
+
+
+## Fixes of 10 October 2026 (review of the previews against PREVIEW_CHANGE_NOTES.md)
+
+Source files only; nothing has been re-rendered or published yet.
+
+- D2S1 map slide title now says "Participant businesses and comparison businesses in the city".
+- D3S2 forest plot label now reads "City: difference between the two changes (DiD)".
+- D1S1 slide 9 button, D1S3 slide 3 sentence and the D1S3 slide 5 figure caption rewritten as full sentences.
+- D1S1 worksheet Q1 no longer says "dot plot" (the worksheet lists the ten values).
+- Document IDs now carry their description on the first mention on each slide and worksheet page, in the form "H1-A (the before-and-after table)". Quoted naive prompts and the prepared AI responses are unchanged.
+- "Unrounded" replaced by "exact" ("The calculations use the exact records, and the figures shown are rounded."). Speaker notes still use "unrounded" for the trainer.
+- "Cost bars" changed to "bar charts" in the D3S2 deck and worksheet.
+- Day 3 S1 card names stay as in B6 ("Savings fade", "Hidden costs", "A higher discount rate", "A shorter life", "Savings fade and hidden costs"); the notes now match the source.
+- Old terms removed from speaker notes ("other group", "join-minus-wait", "waiting", "extra change", "actual", "separate review worksheet").
+- PREVIEW_CHANGE_NOTES.md status line updated.
+
+Open: re-render, rerun `day2_case.R` (the matching estimate depends on how ties between equally close comparison businesses are broken; an independent check gave about -1,032 to -1,038 AED against the printed -1,029), check webR boxes and A4 fit, then copy to `docs/preview/`.
 
 ## Section 8 additions applied to the previews, 9 October 2026
 
@@ -18,7 +47,7 @@ Applied: full-sentence slide titles (section 5A); the approved worksheet and car
 
 Next steps: (1) review by Fiona and Lucas; (2) full re-render and checks; (3) copy to `docs/preview/`, then publish live; (4) build the Day 2 S2 (regression discontinuity), Day 3 S3 and Day 4 previews. Not done: section 8 content additions (R-code snippets, cleaning slide, map slide, scatter plot, regression-reading box); the Day 2 S2, Day 3 S3 and Day 4 previews, which do not exist yet.
 
-Decisions to confirm: Day 3 S1 card names follow B6 ("Savings fade", "Hidden costs", "A higher discount rate", "A shorter life", "Savings fade and hidden costs") and not the older section 3A decision 9 titles. The Day 2 S3 text "Your trainer will now give you the reveal slips" became "You will now receive the reveal slips" to keep trainer wording off participant pages.
+Day 3 S1 card names follow B6 (confirmed 10 Oct; the notes now match). The Day 2 S3 text "Your trainer will now give you the reveal slips" became "You will now receive the reveal slips" to keep trainer wording off participant pages.
 
 Checks run: every worksheet, card set and slip set renders without errors and shows the expected numbers (-669, -812, -1,029, 585 and 440, 1.86, 0.66, 1.61, 49.5% and 58.6%). Decks render; slide fit at 1280x720 was checked and the regression-table slides in Day 1 S1, Day 1 S3 and Day 2 S1 were shortened (the table caption now appears on the worksheet only). Not checked: webR code boxes (no browser runtime here), A4 fit of the worksheets, and the published copies in `docs/preview/`, which still hold the earlier versions. Re-render the review QMDs on a machine with the fonts and the webR extension before copying them to `docs/preview/`.
 

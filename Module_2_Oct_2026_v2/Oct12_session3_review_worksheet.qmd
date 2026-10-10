@@ -98,7 +98,7 @@ The pilot result does not automatically apply to the city, because the city's bu
 
 ### Q1 | Why does chance help?
 
-Read §1 to §3 of H3-A on page 1. Why does the control group give a more reliable comparison than businesses that chose whether to join?
+Read §1 to §3 of H3-A (the pilot lottery study summary) on page 1. Why does the control group give a more reliable comparison than businesses that chose whether to join?
 
 <div class="writing tall"></div>
 
@@ -217,7 +217,7 @@ Then swap with a partner and check each other's sentences. Does each sentence na
 
 ### Your final recommendation and evidence request
 
-Keep H3-A open, and close the AI responses and your partner's comments. Revise your recommendation on your own. What answer to your evidence request could change your advice, and how?
+Keep H3-A (the pilot lottery study summary) open, and close the AI responses and your partner's comments. Revise your recommendation on your own. What answer to your evidence request could change your advice, and how?
 
 <div class="writing tall"></div>
 
@@ -229,7 +229,7 @@ Keep H3-A open, and close the AI responses and your partner's comments. Revise y
 
 ### Part A: Mark the response
 
-Naive prompt (a prompt with no context, as a busy person might type it): "Our GreenWaste pilot saved 1,014 AED per business (p < 0.001). Write a short paragraph for the minister recommending expansion." This response was written for the exercise. It is not a real AI answer. Underline the claims that H3-A supports. Cross out the claims that H3-A does not support. Check H3-A on pages 1 and 2.
+Naive prompt (a prompt with no context, as a busy person might type it): "Our GreenWaste pilot saved 1,014 AED per business (p < 0.001). Write a short paragraph for the minister recommending expansion." This response was written for the exercise. It is not a real AI answer. Underline the claims that H3-A (the pilot lottery study summary) supports. Cross out the claims that H3-A does not support. Check H3-A on pages 1 and 2.
 
 ```{r, results='asis'}
 html_out(paste0('<div class="ai-source">',s3_paragraphs(s3_ai),'</div>'))

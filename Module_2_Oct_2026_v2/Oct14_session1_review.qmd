@@ -91,7 +91,7 @@ Q1 on worksheet page 3: which inputs come from the city study, and which are ass
 Source: **H7-A, the economic model summary (§1 and Table I, page 1)**. The costs, the number of years that savings last and the discount rate all need evidence.
 
 ::: {.notes}
-6 minutes. Explicitly distinguish estimated observed extra change from projected benefits. 1,800 cost is assumed for equipment delivery per participant at time zero, not measured expenditure. Five saving years follow a one-year lag. Future causal benefit depends on both attribution and persistence. No attrition/fieldwork evidence or full cost audit supplied.
+6 minutes. Explicitly distinguish the estimated difference between the two changes from projected benefits. 1,800 cost is assumed for equipment delivery per participant at time zero, not measured expenditure. Five saving years follow a one-year lag. Future causal benefit depends on both attribution and persistence. No attrition/fieldwork evidence or full cost audit supplied.
 :::
 
 ## When do the programme costs and the savings happen? {#d3s1-p04 .reader-slide .s1-review .d3s1-review}
@@ -293,7 +293,7 @@ html_out(paste0('<p>', gsub('\n\n', '</p><p>', d7_ai, fixed=TRUE), '</p>'))
 </div>
 
 ::: {.ask}
-Page 5: check the arithmetic, the timing and the claims about realism against H7-A.
+Page 5: check the arithmetic, the timing and the claims about realism against H7-A (the economic model summary).
 :::
 
 ::: {.notes}
@@ -309,7 +309,7 @@ html_out(paste0('<strong>Improved prompt</strong><p>', d7_prompt, '</p>'))
 </div>
 
 ::: {.ask}
-Run the full prompt on page 5. Check one figure, and check one question about missing evidence, against H7-A.
+Run the full prompt on page 5. Check one figure, and check one question about missing evidence, against H7-A (the economic model summary).
 :::
 
 If you are not using Copilot, read the **prepared response on page 6** after Stage 1.

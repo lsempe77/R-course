@@ -1,0 +1,77 @@
+<!-- The GreenWaste case map, shared by the Day 2 to Day 4 decks (included on the
+     recap slide). Self-contained: it defines its own shops and emitter. Same picture as
+     the Day 1 decks and the picture card (GreenWaste_case_card.docx). -->
+
+<p style="font-size:0.85em; margin: 0 0 4px; max-width: none;">GreenWaste helps businesses reduce their annual waste management costs. This map shows how it reached them.</p>
+
+```{r case-map, results="asis"}
+# ---- The case introduction: one illustrative city -----------------------------
+# Shop position, efficiency score, and whether it joined. Inside the pilot
+# district every score is below 58 and a lottery decided; everywhere else a
+# score of 58 or below meant joining. Illustrative, not the real counts.
+SHOP_BLUE <- "#215a9e"; SHOP_GREY <- "#c9d6e6"
+pilot_shops <- data.frame(x = c(70, 165, 260, 70, 165, 260), y = c(98, 98, 98, 186, 186, 186),
+                          score = c(41, 52, 37, 48, 33, 55), joined = c(1, 0, 1, 0, 0, 1))
+city_shops  <- data.frame(
+  x = c(415, 525, 635, 745, 415, 525, 635, 745, 70, 180, 290, 415, 525, 635, 745),
+  y = c(80, 80, 80, 80, 195, 195, 195, 195, 330, 330, 330, 330, 330, 330, 330),
+  score = c(72, 45, 88, 39, 56, 63, 29, 91, 47, 77, 52, 68, 35, 84, 58))
+city_shops$joined <- as.integer(city_shops$score <= 58)
+# Optional highlight, set before the include with map_highlight <- "..." (default "none"):
+# "pilot" = pilot district only; "city" = city outside the pilot district;
+# "participants" = city participants only; "rd" = businesses with scores 50 to 66.
+hl <- if (exists("map_highlight")) map_highlight else "none"
+pilot_shops$op <- if (hl %in% c("city", "participants", "rd")) 0.2 else 1
+city_shops$op <- 1
+if (hl == "pilot") city_shops$op <- 0.2
+if (hl == "participants") city_shops$op <- ifelse(city_shops$joined == 1, 1, 0.25)
+if (hl == "rd") city_shops$op <- ifelse(city_shops$score >= 50 & city_shops$score <= 66, 1, 0.2)
+shop_svg <- function(d) paste(sprintf(
+  '<g opacity="%s"><use href="#shop" x="%d" y="%d" width="62" height="58" color="%s"/><text x="%d" y="%d" font-size="19" text-anchor="middle" fill="%s" font-weight="%s">%d</text></g>',
+  d$op, d$x, d$y, ifelse(d$joined == 1, SHOP_BLUE, SHOP_GREY), d$x + 31, d$y + 80,
+  ifelse(d$joined == 1, "#063360", "#545860"), ifelse(d$joined == 1, "700", "400"), d$score), collapse = "\n")
+map_fence <- strrep("`", 3)
+cat("\n", map_fence, "{=html}\n", paste0('
+<svg viewBox="0 0 1200 470" width="100%" role="img"
+     aria-label="A city map. In the pilot district a lottery chose which businesses took part in GreenWaste. In the rest of the city, businesses with an efficiency score of 58 or below took part."
+     style="font-family: \'Noto Kufi Arabic\', \'Segoe UI\', Arial, sans-serif;">
+  <defs>
+    <symbol id="shop" viewBox="0 0 60 56">
+      <path d="M4 14 L10 2 H50 L56 14 Z" fill="currentColor"/>
+      <path d="M4 14 q5 7 10 0 q5 7 10 0 q5 7 10 0 q5 7 10 0 q5 7 12 0" fill="currentColor"/>
+      <rect x="8" y="20" width="44" height="34" rx="2" fill="currentColor"/>
+      <rect x="14" y="30" width="12" height="24" fill="#fff" opacity="0.85"/>
+      <rect x="32" y="28" width="14" height="12" fill="#fff" opacity="0.85"/>
+    </symbol>
+  </defs>
+  <rect x="20" y="20" width="820" height="440" rx="18" fill="#f4f7fb" stroke="#D5DEE8" stroke-width="2"/>
+  <path d="M370 20 V460 M20 300 H840" stroke="#e3e9f1" stroke-width="10"/>
+  <text x="820" y="450" font-size="22" font-weight="700" fill="#7f97b5" text-anchor="end">THE CITY</text>
+  <rect x="45" y="45" width="305" height="245" rx="14" fill="#e3ebf5" stroke="#215a9e" stroke-width="3" stroke-dasharray="12 8"/>
+  <text x="62" y="80" font-size="22" font-weight="700" fill="#063360">Pilot district</text>
+  <g transform="translate(300,55)">
+    <rect width="38" height="38" rx="7" fill="#fff" stroke="#063360" stroke-width="2.5"/>
+    <circle cx="11" cy="11" r="3.5" fill="#063360"/><circle cx="27" cy="11" r="3.5" fill="#063360"/>
+    <circle cx="19" cy="19" r="3.5" fill="#063360"/>
+    <circle cx="11" cy="27" r="3.5" fill="#063360"/><circle cx="27" cy="27" r="3.5" fill="#063360"/>
+  </g>
+', shop_svg(pilot_shops), '
+', shop_svg(city_shops), '
+  <g font-size="21" fill="#111418">
+    <rect x="875" y="40" width="300" height="150" rx="12" fill="#fff" stroke="#215a9e" stroke-width="3" stroke-dasharray="12 8"/>
+    <text x="895" y="82" font-weight="700" fill="#063360">In the pilot district</text>
+    <text x="895" y="118">a <tspan font-weight="700">lottery</tspan> chose which</text>
+    <text x="895" y="148">businesses took part</text>
+    <rect x="875" y="215" width="300" height="178" rx="12" fill="#fff" stroke="#D5DEE8" stroke-width="2"/>
+    <text x="895" y="257" font-weight="700" fill="#063360">Everywhere else</text>
+    <text x="895" y="293">businesses scoring <tspan font-weight="700">58 or below</tspan></text>
+    <text x="895" y="323">took part</text>
+    <text x="895" y="356" font-size="16" fill="#545860">the number under each business</text>
+    <text x="895" y="377" font-size="16" fill="#545860">is its efficiency score</text>
+  </g>
+  <g font-size="19" fill="#111418">
+    <use href="#shop" x="878" y="404" width="30" height="28" color="', SHOP_BLUE, '"/><text x="918" y="425">took part in GreenWaste</text>
+    <use href="#shop" x="878" y="436" width="30" height="28" color="', SHOP_GREY, '"/><text x="918" y="457">did not take part</text>
+  </g>
+</svg>'), "\n", map_fence, "\n", sep = "")
+```

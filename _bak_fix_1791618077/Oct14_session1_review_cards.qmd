@@ -1,0 +1,73 @@
+---
+title: "GreenWaste: cost-benefit scenario cards"
+format:
+  html:
+    embed-resources: true
+    toc: false
+    theme: none
+    include-in-header:
+      text: |
+        <style>
+        body{font:20px/1.45 Arial,sans-serif;color:#111418;background:#eef2f6;margin:0}main{max-width:850px;margin:auto}.sheet-page{background:white;padding:35px;margin:20px 0;min-height:850px;box-sizing:border-box}h2,h3{color:#063360}h2{font-size:28px}h3{font-size:25px}.card-number{font-size:70px;font-weight:bold;color:#063360;margin:10px 0}.writing{height:70px;border-bottom:1px solid #7da1c4;margin:12px 0}.review-svg{width:100%;height:330px}.caption{font-size:16px}header button{font:inherit;padding:8px 15px}#title-block-header{display:none}@page{size:A4;margin:16mm}@media print{body{background:white;font-size:14pt}.sheet-page{padding:0;margin:0;min-height:0;break-after:page}.sheet-page:last-child{break-after:auto}header{display:none}.writing{height:15mm}.review-svg{height:85mm}}
+        .reading-table{border-collapse:collapse;width:100%;font-size:16px}.reading-table th,.reading-table td{padding:6px;border-bottom:1px solid #D5DEE8;text-align:left}.reading-table thead{background:#063360;color:white}@media print{.reading-table{font-size:11pt}}
+        </style>
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+```{r, include=FALSE}
+source('day3_session1_review.R', encoding='UTF-8')
+```
+
+<header><button onclick="window.print()">Print scenario cards, board and results table</button></header>
+
+```{r, results='asis'}
+cards_html <- vapply(seq_len(nrow(d7_scenarios)), function(i) paste0(
+  '<div class="sheet-page"><h2>Scenario Card ', d7_scenarios$card[i],
+  '</h2><p class="card-number">', d7_scenarios$card[i],
+  '</p><h3>', d7_scenarios$name[i], '</h3><p>', d7_scenarios$story[i],
+  '</p><p>All other inputs stay at the base values, which are on the board page.</p>',
+  '<p><strong>Change:</strong> ', d7_scenarios$short[i], '</p>',
+  '<p><strong>Base ratio: 1.86.</strong> Write your prediction of the new ratio before you see the results.</p>',
+  '<p>Prediction and reason:</p><div class="writing"></div>',
+  '<p>What evidence would show whether this change is realistic?</p><div class="writing"></div>',
+  '<p class="caption">This is a fictional scenario. It does not show how the programme actually performed. Post your card number and prediction above the line. After the results are given out, post your card number and the result below the line.</p></div>'), '')
+html_out(paste(cards_html, collapse='\n'))
+```
+
+<div class="sheet-page">
+
+## Page 6 | Two-lane board for the benefit-cost ratio
+
+Post your predictions above the line before the results. After the results are given out, post the card numbers and the results below the line.
+
+```{r, results='asis'}
+html_out(d7_board())
+```
+
+The base case is a benefit-cost ratio of 1.86, using the base inputs: annual saving 812 AED, equipment delivery cost 1,800 AED at year 0, no saving in year 1, savings in years 2 to 6, and a discount rate of 5%.
+
+A ratio of 1 is the break-even point: the benefits at value today equal the costs. A result below 1 is conditional on the scenario. It does not show that the programme failed.
+
+</div>
+
+<div class="sheet-page">
+
+## Page 7 | Scenario results table
+
+```{r, results='asis'}
+html_out(d7_scenario_table('Benefit-cost ratio in each scenario, compared with the base ratio of 1.86'))
+```
+
+Only Card 5 is below 1. It combines fading savings and hidden costs. Among Cards 1 to 4, which each change one input, Card 1 lowers the ratio most. This compares only these settings. It is not a ranking of the assumptions in general, and it does not show that the settings are realistic.
+
+```{r, results='asis'}
+html_out(d7_board(TRUE))
+```
+
+Write the results in Q4 on worksheet page 4. Keep your predictions visible above the line while you compare them with the results below it.
+
+</div>

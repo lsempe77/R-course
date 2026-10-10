@@ -1,0 +1,19 @@
+---
+title: "Read and rate a GreenWaste report"
+format:
+  docx:
+    reference-doc: reader_template.docx
+    toc: false
+---
+
+```{r setup, include=FALSE}
+source('day4_case.R')
+```
+
+```{r, results='asis', echo=FALSE}
+for(i in seq_along(assessment_questions))cat('## ',i,' ',assessment_questions[i],'\n\nAnswer and source ______________________________\n\n',sep='')
+cat('## Section rating\n\nUse Supported / Concern / Unsupported and cite a passage. Find a strength and a consequential concern.\n\n')
+cat(knitr::kable(rating_sections[,c('section','area')]),'\n\n')
+```
+
+The styled print copy is built by `Rscript make_session_materials.R --day4`.

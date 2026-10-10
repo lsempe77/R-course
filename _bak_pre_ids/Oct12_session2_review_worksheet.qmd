@@ -1,0 +1,325 @@
+---
+title: "GreenWaste: comparing groups"
+format:
+  html:
+    embed-resources: true
+    toc: false
+    html-math-method: plain
+    theme: none
+    include-in-header:
+      text: |
+        <style>
+        body{font:16px/1.45 Arial,sans-serif;color:#111418;margin:0;background:#eef2f6}
+        main{max-width:850px;margin:auto}h1{font-size:26px;color:#063360;margin:12px 0}h2{font-size:22px;color:#063360;margin:0 0 12px}h3{font-size:18px;margin:14px 0 6px}
+        .sheet-page{background:white;padding:28px 40px;margin:20px 0;box-sizing:border-box;min-height:950px}p{margin:8px 0}.caption{font-size:13px;color:#545860}.reading-table{border-collapse:collapse;width:100%;font-size:14px}.reading-table td,.reading-table th{padding:8px;border-bottom:1px solid #D5DEE8;text-align:left}.reading-table thead{background:#063360;color:white}.writing{height:44px;border-bottom:1px solid #c8d6e5;margin:6px 0}.writing.tall{height:75px}.costs{font-size:19px;word-spacing:9px;border-top:2px solid #215a9e;padding:12px 0}.ai-source{border-left:3px solid #7da1c4;padding-left:16px}.prompt{border-top:2px solid #215a9e;padding-top:8px;font-size:15px}.source-note{font-size:14px}
+        header button{font:inherit;margin:12px 0;padding:8px 15px;border:1px solid #215a9e;background:white;color:#063360;cursor:pointer}
+        @page{size:A4;margin:14mm}@media print{body{background:white;font-size:11pt;line-height:1.35}main{max-width:none}.sheet-page{padding:0;margin:0;min-height:0;break-after:page;box-shadow:none}.sheet-page:last-child{break-after:auto}header{display:none}h1{font-size:19pt}h2{font-size:17pt}h3{font-size:12pt}.reading-table{font-size:10pt}.writing{height:10mm}.writing.tall{height:17mm}.ai-source{font-size:11pt}.prompt{font-size:10pt}#title-block-header{display:none}}
+        .review-svg{display:block;width:100%;height:210px}.comparison-table{border-collapse:collapse;width:100%;font-size:14px}.comparison-table td,.comparison-table th{border-bottom:1px solid #D5DEE8;padding:7px;text-align:left}.sheet-page .ai-source p{margin:8px 0}.sheet-page table{border-collapse:collapse;width:100%}.sheet-page th,.sheet-page td{border-bottom:1px solid #D5DEE8;padding:7px;text-align:left}.sheet-page thead{background:#063360;color:white}@media print{.review-svg{height:200px}.comparison-table{font-size:10pt}}
+        </style>
+        <style>.writing.part{height:30px;margin:2px 0}.table-title{margin:10px 0 4px}@media print{.writing.part{height:7mm}}</style>
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+```{r, include=FALSE}
+source('session2_review.R', encoding='UTF-8')
+```
+
+<header><button onclick="window.print()">Print worksheet</button></header>
+
+<div class="sheet-page">
+
+## Page 1 | H2-A: The city data tables and charts
+
+GreenWaste offers equipment subsidies, installation help and staff training. All costs are annual waste management cost, in AED per business, measured before GreenWaste and 12 months after. GreenWaste is a fictional training case.
+
+```{r, results='asis'}
+html_out(s2_table(rows=TRUE))
+```
+
+These four businesses were selected from the GreenWaste data for reading practice. They are not representative of all city businesses. Businesses with a score of 58 or below took part in GreenWaste, and businesses with a score above 58 did not. The pilot lottery uses a different set of businesses.
+
+```{r, results='asis'}
+html_out(s2_table())
+html_out(s2_lines())
+```
+
+Each mean uses all the businesses in that group. Figures are rounded. A lottery did not decide which businesses took part, and the two groups had different costs before GreenWaste.
+
+**Before and after:** for the same participant businesses, the mean cost after minus the mean cost before is **-669 AED**.
+
+**With and without:** after the programme, the participant businesses' mean cost minus the comparison businesses' mean cost is **-1,638 AED**.
+
+Neither comparison alone shows how much of the fall GreenWaste caused. Our rule is a reduction in annual waste management cost of at least 1,000 AED per business per year, caused by the programme.
+
+### Source key
+
+Source: GreenWaste city data (10,000 businesses). Decision cards 2 and 3 use a before-and-after regression for the same 4,794 participant businesses, measured twice. It shows a change of **-669 AED**, with a 95% interval of **-684 to -654 AED** and **p < 0.001**. The interval describes the mean change. It does not describe individual businesses, and it does not show the effect of the programme.
+
+</div>
+
+<div class="sheet-page">
+
+## Page 2 | Meet the records and the distribution
+
+### Opening judgement
+
+The mean annual waste management cost of participant businesses fell by 669 AED. Does this tell us the effect of the programme? Write one reason. We will come back to it at the end of the session.
+
+<div class="writing"></div>
+
+### Q1 | Describe one business and the group it belongs to
+
+Use H2-A1 on page 1.
+
+(a) Write one sentence about business B00402. Say whether it took part, what its cost was before and after, and over what period.
+
+<div class="writing part"></div>
+
+(b) Which group of businesses does the participant average describe, and how many businesses are in it?
+
+<div class="writing part"></div>
+
+### H2-A: Costs before GreenWaste
+
+```{r, results='asis'}
+html_out(s2_hist(markers=TRUE))
+```
+
+The mean and the median are marked on the histogram.
+
+### Q2 | What does the average hide?
+
+(a) Write one description of the histogram that the data support.
+
+<div class="writing part"></div>
+
+(b) Write one thing that the mean alone cannot tell you.
+
+<div class="writing part"></div>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 3 | Read two comparisons
+
+### H2-A3
+
+```{r, results='asis'}
+html_out(s2_hist(change=TRUE))
+```
+
+Each business's change is its cost after minus its cost before. The histogram shows the changes that were recorded. It is not a confidence interval, and it does not show the effect of GreenWaste on each business.
+
+### Q3 | The same participant businesses, before and after
+
+(a) Use H2-A2 on page 1. Calculate the change in mean cost for participant businesses, and write what it shows, with units and period.
+
+<div class="writing part"></div>
+
+(b) Use the histogram. Did the cost fall for every business?
+
+<div class="writing part"></div>
+
+(c) Suppose waste-service prices changed during the year. This is a hypothetical example, not a fact about the case. What evidence would help separate a price change from the effect of GreenWaste?
+
+<div class="writing part"></div>
+
+### Q4 | Comparison businesses and the difference after the programme
+
+(a) Calculate the change in mean cost for comparison businesses.
+
+<div class="writing part"></div>
+
+(b) Calculate the difference between the mean cost of participant businesses and of comparison businesses after the programme.
+
+<div class="writing part"></div>
+
+(c) Explain why we cannot give GreenWaste the credit for the whole difference.
+
+<div class="writing part"></div>
+
+### The two comparisons
+
+| Comparison | What it compares | What is missing |
+|---|---|---|
+| Before and after: -669 AED | The same participant businesses, cost after minus cost before | Their cost after a year without GreenWaste is not known. |
+| With and without: -1,638 AED | Participant businesses compared with comparison businesses, after a year | We do not know whether these two groups are a fair comparison. |
+
+Before GreenWaste, the mean cost was 1,432 AED for participant businesses and 2,258 AED for comparison businesses. Different recorded changes do not by themselves prove that GreenWaste caused a change, or show which way any bias goes.
+
+</div>
+
+<div class="sheet-page">
+
+## Page 4 | Q5: Four decision cards
+
+Use the cards and H2-A. For each card: (a) choose Act, Ask first or Do not act; (b) write what the source supports; (c) write one question you would ask and why the answer matters; (d) say which action you mean.
+
+### Card 1
+
+Decision (Act, Ask first or Do not act) and the action you mean: _______________________________
+
+What the source supports:
+
+<div class="writing part"></div>
+
+Your question and why the answer matters:
+
+<div class="writing part"></div>
+
+### Card 2
+
+Decision (Act, Ask first or Do not act) and the action you mean: _______________________________
+
+What the source supports:
+
+<div class="writing part"></div>
+
+Your question and why the answer matters:
+
+<div class="writing part"></div>
+
+### Card 3
+
+Decision (Act, Ask first or Do not act) and the action you mean: _______________________________
+
+What the source supports:
+
+<div class="writing part"></div>
+
+Your question and why the answer matters:
+
+<div class="writing part"></div>
+
+### Card 4
+
+Decision (Act, Ask first or Do not act) and the action you mean: _______________________________
+
+What the source supports:
+
+<div class="writing part"></div>
+
+Your question and why the answer matters:
+
+<div class="writing part"></div>
+
+### My final reading and request
+
+Close the AI responses and turn over the decision cards, and keep H2-A2 open.
+
+(a) Write one conclusion that the data support.
+
+<div class="writing part"></div>
+
+(b) Write one specific piece of evidence you would request to help decide whether to expand GreenWaste.
+
+<div class="writing part"></div>
+
+(c) Compare this with the reason you wrote on page 2. What changed?
+
+<div class="writing part"></div>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 5 | AI exercise
+
+### Part A: Mark the response
+
+Naive prompt (a prompt with no context, as a busy person might type it): "Explain H2-A2 and advise whether to expand GreenWaste." This response was written for the exercise. It is not a real AI answer. **Underline the passages that H2-A2 supports. Cross out the claims that H2-A2 does not support.**
+
+```{r, results='asis'}
+html_out(paste0('<div class="ai-source">',s2_paragraphs(s2_ai),'</div>'))
+```
+
+### Part B: Run the improved prompt, then compare
+
+Copy the prompt below and H2-A2 into Microsoft Copilot, and keep your AI good-practice card beside you. If you are not using Copilot, read the prepared response on page 6 after you finish Part A.
+
+```{r, results='asis'}
+html_out(paste0('<div class="prompt"><strong>Improved prompt</strong>',s2_paragraphs(s2_prompt),'</div>'))
+```
+
+(a) What improved compared with Part A?
+
+<div class="writing part"></div>
+
+(b) Which claims are still unsupported?
+
+<div class="writing part"></div>
+
+(c) Which table or figure should you check each claim against?
+
+<div class="writing part"></div>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 6 | Prepared response
+
+Use this response if you are not using Copilot. Read it after you have marked the response on page 5. It is an example of a better answer. An AI tool may answer differently.
+
+```{r, results='asis'}
+html_out(paste0('<div class="ai-source">',s2_paragraphs(s2_fallback),'</div>'))
+```
+
+Check it against H2-A2, as you would check a live AI answer.
+
+(a) Does it separate what was observed, what a fair comparison would need, and what decision to make?
+
+<div class="writing part"></div>
+
+(b) Which clarifying question in the response is most helpful?
+
+<div class="writing part"></div>
+
+(c) What evidence is still needed before advising on expansion?
+
+<div class="writing part"></div>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 7 | Check the data before you calculate
+
+These questions go with the R slides on the file, the filter and the cleaning examples.
+
+### Q6 | What is in the file?
+
+(a) How many rows and columns does the GreenWaste file have, and what does each row represent?
+
+<div class="writing part"></div>
+
+(b) How many of the rows are city businesses and how many are pilot businesses?
+
+<div class="writing part"></div>
+
+### Q7 | Which businesses are in the calculation?
+
+(a) Why do we keep only the city rows before we calculate the city averages?
+
+<div class="writing part"></div>
+
+(b) A colleague included the pilot businesses by mistake. How could you tell from the number of participant businesses?
+
+<div class="writing part"></div>
+
+### Q8 | Invented cleaning examples
+
+(a) Choose one of the four problems on the slide. Write what went wrong and how it changes the answer.
+
+<div class="writing part"></div>
+
+(b) Why is a wrong structure in the data more dangerous than a calculation that stops with an error message?
+
+<div class="writing part"></div>
+
+</div>

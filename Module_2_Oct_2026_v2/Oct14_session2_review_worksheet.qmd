@@ -27,9 +27,9 @@ source('day3_session2_review.R', encoding='UTF-8')
 
 <div class="sheet-page">
 
-## Page 1 | H8-A §1: Reading the cost bars
+## Page 1 | H8-A §1: Reading the bar charts
 
-GreenWaste is a fictional training case. Use H8-A as your source for today's questions.
+GreenWaste is a fictional training case. Use H8-A (the bar charts and distributions) as your source for today's questions.
 
 ### Figure C: Mean annual waste management cost of the same participant businesses, drawn twice. Chart A starts at zero. Chart B starts at 700 AED.
 
@@ -83,7 +83,7 @@ The ten values are 3, 4, 5, 5, 6, 7, 7, 8, 9 and 46 tonnes per business per year
 
 A distribution shows how much businesses differ from each other. The interval for the pilot on page 7 shows how uncertain we are about an estimated mean effect. The middle 50% in Figure D and the range of the ten records in Figure E are not that interval.
 
-<p class="caption">Sources: H8-A §2, Figures D and E. Figure D uses the before-GreenWaste cost of every participant business. Figure E uses ten records chosen earlier in the course. Page 7 changes the group of businesses and the outcome again, for the pilot.</p>
+<p class="caption">Sources: H8-A (the bar charts and distributions) §2, Figures D and E. Figure D uses the before-GreenWaste cost of every participant business. Figure E uses ten records chosen earlier in the course. Page 7 changes the group of businesses and the outcome again, for the pilot.</p>
 
 </div>
 
@@ -107,7 +107,7 @@ A distribution shows how much businesses differ from each other. The interval fo
 
 <div class="writing part"></div>
 
-### Q2 | What do the cost bars support?
+### Q2 | What do the bar charts show?
 
 (a) Write one descriptive statement that the bars support, and the source you took it from.
 
@@ -210,7 +210,7 @@ html_out(paste0('<p>',gsub('\n\n','</p><p>',d8_ai,fixed=TRUE),'</p>'))
 ```
 </div>
 
-Keep the readings that H8-A supports. Cross out the advice and conclusions that it does not support. Check whether each sentence answers the question about the claim and the audience.
+Keep the readings that H8-A (the bar charts and distributions) supports. Cross out the advice and conclusions that it does not support. Check whether each sentence answers the question about the claim and the audience.
 
 <div class="writing part"></div>
 
@@ -300,6 +300,6 @@ html_out(d8_pilot())
 
 This is the separate pilot of 400 businesses. A lottery assigned 200 businesses to the treatment group and 200 to the control group. The comparison is of annual waste management cost 12 months after GreenWaste. The estimated mean reduction is **1,014 AED**, with a 95% interval of **862 to 1,167 AED**. The interval includes values below our rule of at least a 1,000 AED reduction. The interval shows uncertainty about the estimated mean effect. It does not show the distribution of individual savings, and it does not allow for every source of bias.
 
-<p class="caption">Sources: H8-A §3 (the two-business example and the city summaries) and §4, Figure P (the pilot). Do not attach the landfill percentages or the pilot interval to the cost bars on page 1.</p>
+<p class="caption">Sources: H8-A (the bar charts and distributions) §3 (the two-business example and the city summaries) and §4, Figure P (the pilot). Do not attach the landfill percentages or the pilot interval to the bar charts on page 1.</p>
 
 </div>

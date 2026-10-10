@@ -1,0 +1,197 @@
+---
+title: "Would you trust this report?"
+subtitle: "Day 4 | Session 1: Read the report. Find support and weak links"
+author: "3ie"
+always_allow_html: true
+format:
+  revealjs:
+    theme: [theme_dge.scss, theme_reader.scss]
+    logo: assets/dge_logo_horizontal.svg
+    slide-number: true
+    width: 1280
+    height: 720
+    slide-level: 2
+    embed-resources: true
+    include-after-body: _reader_interactions.html
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+```{r setup, include=FALSE}
+source('day4_case.R')
+```
+
+## Your own judgement first. No discussion. {.reader-slide}
+
+Read **Pages 1 and 3** of the report.
+
+Answer the five questions on **Sheet 1**. Work alone.
+
+Use the report as your source. Save discussion for afterwards.
+
+::: {.ask}
+What does the evidence support?
+:::
+
+
+::: {.notes}
+8 minutes. Collect a name or identifier on the individual reading task. No AI or group discussion. Use the unfamiliar report presentation; this is the same GreenWaste case, not a different-programme transfer test. The fictional exercise contains planted overclaims, labelled on the report. Explain its design after this task. Score five abilities 0 to 2 from the trainer key; do not score room votes.
+:::
+
+## Your first verdict, with a reason. {.reader-slide}
+
+```{=html}
+<div data-choices><button data-choice aria-pressed="false">Sign off</button><button data-choice aria-pressed="false">With conditions</button><button data-choice aria-pressed="false">Request evidence</button><p role="status" class="feedback"></p></div>
+```
+::: {.ask}
+Would you sign off on this report as written?
+:::
+Write a source-based reason before comparing choices.
+
+::: {.notes}
+4 minutes. After eight minutes explain the intentional strengths and faults. Require a section or sentence. Optional course room poll Before phase: hide totals until close; labelled cards work too. Decisions are provisional, not a test with one required vote.
+:::
+
+## Supported, concern or unsupported? {.reader-slide}
+
+```{=html}
+<div class="rating-options"><div><h3>Supported</h3><p>Source supports the claim within its limits.</p></div><div><h3>Concern</h3><p>Name the uncertainty or missing check.</p></div><div><h3>Unsupported</h3><p>Claim exceeds or contradicts the source.</p></div></div>
+```
+::: {.ask}
+Which passage supports your rating?
+:::
+
+
+::: {.notes}
+4 minutes. Use words as well as Green/Amber/Red. Rate claims rather than a whole method or person. A section can have strengths and an unsupported conclusion. Record both; justify the overall rating for the claim being discussed.
+:::
+
+## What survives checking the summary? {.reader-slide}
+
+```{r, results='asis'}
+html_out(sprintf('<p class="lead">The matched saving is %s AED. Four independent methods confirm the programme caused the saving. Nationwide expansion meets the standard.</p>%s',fmt(-match_A$est),fiction))
+```
+::: {.ask}
+Which statement most needs checking against the rest of the report?
+:::
+Mark one strength and one concern on **Sheet 2**.
+
+::: {.notes}
+6 minutes. This is a shortened excerpt from the intentionally flawed Section 1. Everybody rates the summary independently before posting. Naming the rule and outcome is a strength. Trace the headline, independence, causal reach and model claims rather than objecting to every sentence.
+:::
+
+## Your section. One strength, one concern. {.reader-slide}
+
+Groups read their assigned section: **3, 4, 5, 6 or 7**.
+
+Find one strength and one important concern.
+
+Cite the passage. Name evidence that could change your judgement.
+
+::: {.ask}
+Which claim can you support, and which needs attention?
+:::
+
+
+::: {.notes}
+10 minutes. For eight groups assign Sections 3/4/5/6/7/3/5/7. All participants have the same report and two-sided sheet. Groups work on a claim, not a colour competition. Section 6 offers real disclosures that should earn a supported rating. Protect the reading time.
+:::
+
+## Put the passage beside the judgement. {.reader-slide}
+
+Use the **two-sheet credibility grid**.
+
+Post your executive-summary rating on Sheet 1 of the wall.
+
+Post your group section rating on Sheet 2.
+
+Each note names a section and gives a reason.
+
+::: {.ask}
+Could another reader locate the evidence behind your note?
+:::
+
+
+::: {.notes}
+7 minutes. Retain Fiona's dedicated summary grid and five-section grid. About four small sticky notes per person, plus spares. Everyone posts the summary; pairs or groups post the assigned section. Words Supported/Concern/Unsupported match Green/Amber/Red. No names on the wall.
+:::
+
+## Why do our ratings differ? {.reader-slide}
+
+Choose a disagreement on the wall.
+
+Explain each rating using a source passage.
+
+::: {.ask}
+What evidence could resolve the disagreement?
+:::
+```{=html}
+<button data-open="rating-feedback" data-closed="Open an example" data-opened="Hide feedback" aria-controls="rating-feedback" aria-expanded="false">Open an example</button><div id="rating-feedback" class="feedback" hidden>Section 6 discloses meaningful limits. That disclosure is supported; it does not resolve the limits or validate Section 7.</div>
+```
+
+
+::: {.notes}
+7 minutes. Use the trainer section key. Accept different overall ratings when the specific claim and reason are clear. Do not treat colour consensus as proof. Bring out a supported disclosure as well as the unsupported summary or recommendation.
+:::
+
+## Trace the headline to the finding. {.reader-slide}
+
+```{r, results='asis'}
+html_out(html_table(method_rows[c(2,4),],compact=TRUE))
+```
+::: {.ask}
+Does selecting the largest point estimate settle the saving rule?
+:::
+```{=html}
+<button data-open="headline-feedback" data-closed="Open the source check" data-opened="Hide feedback" aria-controls="headline-feedback" aria-expanded="false">Open the source check</button><div id="headline-feedback" class="feedback" hidden>The selected matching interval spans 1,000. The preferred city interval falls short. City methods share records and have different assumptions.</div>
+```
+
+
+::: {.notes}
+5 minutes. Section 5 has all four rows; this screen selects the preferred city analysis and the headline for direct comparison. Positive numbers denote annual saving in AED. Do not count methods as independent votes; do not confuse the saving rule with full value for money. A point estimate above the rule does not guarantee the underlying saving clears it.
+:::
+
+## A confident AI verdict. A supported one? {.reader-slide}
+
+```{r, results='asis'}
+html_out(paste0('<p>',ai_verdict,'</p>'))
+```
+::: {.ask}
+Which claims would you correct against the report?
+:::
+```{=html}
+<button data-open="rating-ai" data-closed="Open feedback" data-opened="Hide feedback" aria-controls="rating-ai" aria-expanded="false">Open feedback</button><div id="rating-ai" class="feedback" hidden>Complete generated rows do not prove fieldwork quality. City methods share records. A matched point estimate above the rule cannot justify nationwide approval.</div>
+```
+
+
+::: {.notes}
+4 minutes. Authored AI draft; no account required. Cross out and repair on Sheet 2 before the reveal. The report already discloses the relevant evidence. Accuracy of one number does not make the verdict sound.
+:::
+
+## Your final verdict: what changed? {.reader-slide}
+
+```{=html}
+<div data-choices><button data-choice aria-pressed="false">Sign off</button><button data-choice aria-pressed="false">With conditions</button><button data-choice aria-pressed="false">Request evidence</button><p role="status" class="feedback"></p></div>
+```
+::: {.ask}
+Which evidence changed your reason or kept it the same?
+:::
+Write your final judgement and any evidence still needed.
+
+::: {.notes}
+3 minutes. Optional After phase of the room poll, closed before totals. Discuss reasons rather than the winning vote. A conditional proposal must state its limits. Assess the independent reading responses, not a colour or vote change.
+:::
+
+## One question you still need answered. {.reader-slide}
+
+::: {.ask}
+What would you ask the evaluator next, and why?
+:::
+Close the report. Write a specific request independently.
+
+::: {.notes}
+2 minutes. Collect the five-item reading task and the final request. Score 0 missing/wrong, 1 partial, 2 accurate with evidence. Provisional target 8/10 with no causal claim based solely on before/after or significance. Give feedback and a short targeted retry in Session 2. Total 60 minutes.
+:::

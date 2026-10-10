@@ -1,0 +1,12 @@
+.reveal .s3-review .review-svg{max-height:290px}
+.reveal .s3-review .reading-table{font-size:23px}
+.reveal .s3-review .reading-table td,.reveal .s3-review .reading-table th{padding:11px}
+.reveal .s3-review .comparison-pair{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin:24px 0}
+.reveal .s3-review .comparison-pair>div{border-top:3px solid #215a9e;padding-top:14px}
+.reveal .s3-review .comparison-pair h3{font-size:25px;margin:0 0 10px}
+.reveal .s3-review .comparison-pair p{font-size:24px}
+.reveal .s3-review .lottery-steps{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin:18px 0}
+.reveal .s3-review .lottery-steps h3{font-size:25px;margin:0 0 10px}
+.reveal .s3-review .lottery-steps p{font-size:24px}
+.reveal .s3-review .exercise-editor .cm-editor{font-size:20px}
+.reveal .s3-review .feedback{font-size:22px}

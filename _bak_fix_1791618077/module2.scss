@@ -1,0 +1,415 @@
+/*-- scss:defaults --*/
+
+// ============================================================
+// Module 2 theme (v2) — Abu Dhabi Impact Evaluation Training
+//
+// Extends the "clean" revealjs theme with a stronger single type
+// scale, card-based callouts with distinct silhouettes, an
+// editorial heading treatment and chapter badges.
+//
+// Loaded AFTER clean.scss, so rules here win on equal specificity.
+// Selector notes (from the rendered HTML, do not guess these):
+//   #title-slide            the deck title, standalone
+//   section.level1          a chapter divider. It CONTAINS the
+//                           level2 slides, so never put padding or
+//                           background here: it bleeds into them.
+//   section.level2          a content slide, a leaf. Safe to style.
+// ============================================================
+
+$ink:         #0F1113;   // primary text
+$ink-muted:   #5C6467;   // secondary text
+$accent:      #00789E;   // primary accent / series 1 (validated)
+$accent-deep: #005A76;   // darker step, headings and gradients
+$accent-lite: #12A0CC;   // lighter step, gradient end only
+$accent-2:    #B45309;   // series 2 (validated pair with $accent)
+$alert:       #9A2515;   // emphasis, decision rules — never a series
+$surface:     #FFFFFF;
+$surface-2:   #F4F6F7;   // panel background
+$surface-3:   #EAF0F2;
+$rule:        #DCE1E3;
+
+// Roboto from Google Fonts, with a real fallback stack: the CDN is
+// unreachable in some locked-down venues and a bare "sans-serif"
+// fallback changes the type metrics enough to break slide layouts.
+$font-stack: "Roboto", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+$font-family-sans-serif:           $font-stack;
+$presentation-heading-font:        $font-stack;
+$presentation-heading-color:       $ink;
+$presentation-heading-font-weight: 600;
+$presentation-font-size-root:      30px;   // these rooms are big
+
+$body-color:   $ink;
+$body-bg:      $surface;
+$link-color:   $accent-deep;
+$selection-bg: rgba(0, 120, 158, 0.25);
+
+/*-- scss:rules --*/
+
+// ---------- Deck chrome ---------------------------------------------------
+
+.reveal .progress {
+  height: 6px;
+  background: rgba(0, 120, 158, 0.12);
+  span { background: linear-gradient(90deg, $accent-deep, $accent-lite); }
+}
+
+.reveal .slide-number,
+.reveal.has-logo .slide-number {
+  color: $accent-deep !important;   // clean.scss pins this with !important
+  font-weight: 600 !important;
+  font-size: 0.5em !important;
+}
+
+// ---------- Title slide ---------------------------------------------------
+
+#title-slide {
+  max-width: 88%;
+  margin: 0 auto;
+  padding: 2.6em 2.4em;
+  box-sizing: border-box;
+  text-align: left;
+  border-radius: 20px;
+  background: linear-gradient(135deg, $accent-deep 0%, $accent 58%, $accent-lite 100%);
+  box-shadow: 0 22px 60px rgba(0, 90, 118, 0.28);
+
+  .title {
+    color: #fff;
+    font-size: 2.5em;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+  }
+  .subtitle {
+    color: rgba(255, 255, 255, 0.86);
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1em;
+    margin-top: 0.6em;
+    max-width: 22em;
+  }
+  .author, .quarto-title-author-name, .date, .institute, .quarto-title-affiliation {
+    color: rgba(255, 255, 255, 0.92);
+    font-style: normal;
+  }
+  .quarto-title-authors { display: block; }
+}
+
+// ---------- Chapter dividers ---------------------------------------------
+// Style the h1 only. The level1 section contains the level2 slides.
+
+.reveal section.level1 > h1 {
+  display: inline-block;
+  margin: 0;
+  padding: 0.42em 0.95em 0.5em;
+  font-size: 2em;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #fff;
+  border: none;
+  border-radius: 16px;
+  background: linear-gradient(120deg, $accent-deep 0%, $accent 70%, $accent-lite 100%);
+  box-shadow: 0 18px 44px rgba(0, 90, 118, 0.24);
+
+  .mins {
+    background: rgba(255, 255, 255, 0.22);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.38);
+  }
+}
+
+// ---------- Content slides ------------------------------------------------
+// Background only. Padding here would move the slide content.
+
+.reveal section.level2 {
+  background:
+    radial-gradient(120% 90% at 100% 0%, rgba(0, 120, 158, 0.07) 0%, rgba(0, 120, 158, 0) 58%),
+    linear-gradient(180deg, #FFFFFF 0%, #FBFCFD 100%);
+}
+
+// ---------- Type scale ----------------------------------------------------
+// One scale, applied consistently. clean.scss hardcodes 24px on lists,
+// which does not scale with the root; the em values below restore it.
+
+.reveal h1 { font-size: 2em; font-weight: 700; letter-spacing: -0.02em; }
+
+.reveal h2 {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  font-size: 1.32em;
+  font-weight: 600;
+  line-height: 1.18;
+  letter-spacing: -0.015em;
+  margin-bottom: 0.55em;
+  padding-bottom: 0.26em;
+  border-bottom: 3px solid $accent;   // fallback if border-image is unsupported
+  border-image: linear-gradient(90deg,
+      $accent 0%,
+      rgba(0, 120, 158, 0.18) 55%,
+      rgba(0, 120, 158, 0) 100%) 1;
+  text-wrap: balance;
+}
+
+.reveal h3 {
+  font-size: 1em;
+  font-weight: 600;
+  font-style: normal;
+  color: $accent-deep;
+}
+
+.reveal p, .reveal li { line-height: 1.5; font-weight: 400; }
+.reveal ul, .reveal ol { font-size: 0.86em; font-weight: 400; padding-left: 1.1em; }
+.reveal li { margin-bottom: 0.3em; }
+.reveal ul > li::marker { color: $accent; }
+.reveal ol > li::marker { color: $accent-deep; font-weight: 600; }
+.reveal strong { font-weight: 700; color: $ink; }
+
+.reveal a {
+  color: $accent-deep;
+  text-decoration-color: rgba(0, 120, 158, 0.4);
+  text-underline-offset: 2px;
+}
+
+// Slides are for headlines, not paragraphs. Cap the body block width so
+// long lines break where a reader expects.
+.reveal .slides section > p { max-width: 28em; }
+
+// ---------- Callout components -------------------------------------------
+// Use these instead of bold paragraphs. Each type gets a distinct
+// silhouette so a glance tells you what kind of block it is.
+
+.reveal .panel,
+.reveal .ask,
+.reveal .warn,
+.reveal .ai-output {
+  position: relative;
+  margin: 0.42em 0;
+  padding: 0.55em 0.85em;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(15, 17, 19, 0.05);
+}
+
+.reveal .panel {
+  background: linear-gradient(180deg, $surface-2 0%, $surface-3 100%);
+  border-left: 5px solid $accent;
+}
+
+.reveal .ask {
+  font-weight: 500;
+  border-left: 6px solid $accent;
+  background:
+    repeating-linear-gradient(135deg, rgba(0, 120, 158, 0.045) 0 10px,
+                                       rgba(0, 120, 158, 0) 10px 20px),
+    linear-gradient(180deg, rgba(0, 120, 158, 0.10), rgba(0, 120, 158, 0.04));
+}
+
+.reveal .warn {
+  border-left: 6px solid $alert;
+  background:
+    repeating-linear-gradient(135deg, rgba(154, 37, 21, 0.05) 0 10px,
+                                       rgba(154, 37, 21, 0) 10px 20px),
+    linear-gradient(180deg, rgba(154, 37, 21, 0.09), rgba(154, 37, 21, 0.03));
+}
+
+// AI output, shown verbatim so participants can mark it up
+.reveal .ai-output {
+  font-size: 0.74em;
+  line-height: 1.45;
+  color: #2b3134;
+  background: $surface-2;
+  border: 1px solid $rule;
+  border-top: 4px solid $accent-2;
+
+  p { max-width: none; margin: 0 0 0.5em 0; }
+  p:last-child { margin-bottom: 0; }
+}
+
+// A verbatim quote from an evaluation report, for participants to mark up
+.reveal .excerpt {
+  font-size: 0.72em;
+  line-height: 1.42;
+  color: #2b3134;
+  background: $surface-2;
+  border: 1px solid $rule;
+  border-left: 5px solid $accent-2;
+  border-radius: 12px;
+  padding: 0.5em 0.8em;
+  margin: 0.38em 0;
+
+  p { max-width: none; margin: 0; }
+}
+
+.reveal .ai-output .flag {
+  color: $alert;
+  font-weight: 700;
+  background: rgba(154, 37, 21, 0.10);
+  padding: 0 0.16em;
+  border-radius: 3px;
+}
+
+// ---------- Hero number ---------------------------------------------------
+// For the single figure a slide exists to deliver.
+
+.reveal .hero {
+  margin: 0.5em 0;
+  padding: 0.7em 1em 0.8em;
+  text-align: center;
+  border: 1px solid rgba(0, 120, 158, 0.18);
+  border-radius: 16px;
+  background:
+    radial-gradient(90% 140% at 50% 0%, rgba(0, 120, 158, 0.14) 0%,
+                                        rgba(0, 120, 158, 0.03) 70%),
+    linear-gradient(180deg, #FFFFFF, $surface-2);
+  box-shadow: 0 10px 30px rgba(0, 90, 118, 0.08);
+
+  .value {
+    font-size: 3.3em;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: $accent-deep;
+  }
+  .value.alert { color: $alert; }
+  .label {
+    margin-top: 0.4em;
+    font-size: 0.7em;
+    font-weight: 500;
+    color: $ink-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+}
+
+// Three-across stat row
+.reveal .stat-row {
+  display: flex;
+  gap: 0.7em;
+  margin: 0.7em 0;
+
+  > div {
+    flex: 1;
+    padding: 0.65em 0.5em;
+    text-align: center;
+    border: 1px solid $rule;
+    border-top: 4px solid $accent;
+    border-radius: 10px;
+    background: linear-gradient(180deg, #FFFFFF, $surface-2);
+    box-shadow: 0 6px 16px rgba(15, 17, 19, 0.05);
+  }
+  .n {
+    display: block;
+    font-size: 1.55em;
+    font-weight: 700;
+    line-height: 1.1;
+    color: $accent-deep;
+  }
+  .k {
+    display: block;
+    margin-top: 0.3em;
+    font-size: 0.6em;
+    font-weight: 500;
+    color: $ink-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+}
+
+// ---------- Fact strip (case-study "at a glance") -------------------------
+
+.reveal .facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5em 1.1em;
+  margin: 0.5em 0;
+  padding: 0.85em 1em;
+  font-size: 0.8em;
+  border: 1px solid $rule;
+  border-left: 5px solid $accent-2;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #FFFFFF, $surface-2);
+  box-shadow: 0 6px 18px rgba(15, 17, 19, 0.05);
+
+  .k {
+    color: $accent-deep;
+    font-size: 0.9em;
+    font-weight: 600;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .v { color: $ink; }
+}
+
+// ---------- Tables --------------------------------------------------------
+
+.reveal table {
+  margin: 0.5em auto;
+  font-size: 0.72em;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(15, 17, 19, 0.07);
+
+  th {
+    padding: 0.5em 0.8em;
+    text-align: right;
+    border: none;
+    font-weight: 500;
+    color: #fff;
+    background: $accent-deep;
+  }
+  th:first-child { text-align: left; }
+
+  td {
+    padding: 0.42em 0.8em;
+    text-align: right;
+    border-bottom: 1px solid $rule;
+    background: #fff;
+  }
+  td:first-child { text-align: left; }
+
+  tbody tr:nth-child(even) td { background: $surface-2; }
+  tbody tr:last-child td { border-bottom: none; }
+}
+
+// ---------- Chart cards ---------------------------------------------------
+// Every plotly widget sits in its own card, which is what makes the
+// interactive slides read as objects rather than as floating charts.
+
+.reveal .cell-output-display .html-widget {
+  padding: 0.3em 0.35em 0.15em;
+  border: 1px solid $rule;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 10px 26px rgba(15, 17, 19, 0.07);
+}
+
+// clean.scss leaves a lot of vertical air around chunks; these decks
+// need it back for the chart, not for the margin.
+.reveal .cell { margin-bottom: 0.5em; }
+.reveal .cell-output { margin-top: 0.35em; margin-bottom: 0.15em; }
+
+// ---------- Misc ----------------------------------------------------------
+
+.reveal .columns { align-items: flex-start; }
+.reveal figure figcaption { font-size: 0.62em; color: $ink-muted; }
+.reveal .footer { color: $ink-muted; font-size: 0.55em; }
+
+// Timing badge for facilitator-visible section headers
+.reveal .mins {
+  display: inline-block;
+  margin-left: 0.7em;
+  padding: 0.3em 0.75em;
+  font-size: 0.46em;
+  font-weight: 600;
+  color: $accent-deep;
+  background: rgba(0, 120, 158, 0.12);
+  border-radius: 999px;
+  vertical-align: middle;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}

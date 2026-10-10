@@ -30,7 +30,7 @@ knitr:
 source('day2_session1_review.R', encoding='UTF-8')
 ```
 
-## Who and what are we comparing? Participants and other businesses in the city. {#d2s1-map .reader-slide .s1-review .d2s1-review .case-map-slide}
+## Who and what are we comparing? Participant businesses and comparison businesses in the city. {#d2s1-map .reader-slide .s1-review .d2s1-review .case-map-slide}
 
 ```{r, include=FALSE}
 map_highlight <- "city"
@@ -84,7 +84,7 @@ Which change should we subtract from which?
 **H4-A, the difference-in-differences study summary, on worksheet page 1** describes this comparison. Solid lines join the observed means. Each business was measured only twice.
 
 ::: {.notes}
-5 minutes. Read population, axes, period and both directions before arithmetic. Participant 1,432 to 763; others 2,258 to 2,401. Programme-start marker indicates between the two measurements, not an additional observed wave or precise start date. Different starting levels do not alone invalidate DiD. Ask predictions, not answers from a formula yet. Transition: work the two changes, then the difference.
+5 minutes. Read population, axes, period and both directions before arithmetic. Participant businesses 1,432 to 763; comparison businesses 2,258 to 2,401. Programme-start marker indicates between the two measurements, not an additional observed wave or precise start date. Different starting levels do not alone invalidate DiD. Ask predictions, not answers from a formula yet. Transition: work the two changes, then the difference.
 :::
 
 ## Use four numbers to find the difference in differences. {#d2s1-p03 .reader-slide .s1-review .d2s1-review}
@@ -125,7 +125,7 @@ What comparison does the result of **−812** describe? What does the calculatio
 Paper equivalent: **−669 − (+143) ≈ −812 AED**. You do not need to write or run R.
 
 ::: {.notes}
-6 minutes. Prediction before trainer Run, then Q2 plain-language interpretation. Code comments explain purpose/units/rounding; no syntax lesson or participant code. Output same interaction estimate as saturated two-group/two-wave regression. This arithmetic does not assess the causal assumption. If runtime unavailable use printed arithmetic within same time. Transition: locate that extra change in a regression table.
+6 minutes. Prediction before the trainer run, then Q2 plain-language interpretation. Code comments explain purpose/units/rounding; no syntax lesson or participant code. Output same interaction estimate as saturated two-group/two-wave regression. This arithmetic does not assess the causal assumption. If runtime unavailable use printed arithmetic within same time. Transition: locate that difference between the two changes in a regression table.
 :::
 
 ## We create the regression table in R from a file with two rows per business. {#d2s1-p04b .reader-slide .s1-review .d2s1-review}
@@ -167,7 +167,7 @@ html_out(sub('<p class="caption">.*$', '', d4_regression()))
 :::
 
 ::: {.notes}
-5 minutes. H4-A table, page 1. Reference is other group before, 2,258. After row is other group's +143 change. Participant row is initial gap -826. Interaction -812 is the difference between the two changes, not the participants' own -669 change or their after mean. Highlight columns, then annotate row on paper. Intercept meanings depend on reference coding. Model cost ~ after*took_part, business-clustered robust interval -833 to -792. Avoid coefficients as causal magic. Transition: draw the missing no-programme participant outcome.
+5 minutes. H4-A table, page 1. Reference is comparison businesses before, 2,258. After row is the comparison businesses' +143 change. Participant row is initial gap -826. Interaction -812 is the difference between the two changes, not the participants' own -669 change or their after mean. Highlight columns, then annotate row on paper. Intercept meanings depend on reference coding. Model cost ~ after*took_part, business-clustered robust interval -833 to -792. Avoid coefficients as causal magic. Transition: draw the missing no-programme participant outcome.
 :::
 
 ## The dashed line is an assumption {#d2s1-p06 .reader-slide .s1-review .d2s1-review}
@@ -214,7 +214,7 @@ These two earlier cost histories, A and B, are **hypothetical** and use the same
 <p id="d4-trend-answer" class="feedback" hidden>In history B, the two groups were already changing differently. History A is more reassuring, but it cannot prove what would have happened after the programme.</p>
 
 ::: {.notes}
-6 minutes. Q3: choose individually and explain feature to partner before feedback. A shows equal changes at different levels; B participant costs already falling while other group rising. Same cost and time axes. Do not infer real group histories from these examples. No significance test proves parallel trends; several earlier measures help credibility, not certainty. Transition: do we have those earlier measures in this actual file?
+6 minutes. Q3: choose individually and explain feature to partner before feedback. A shows equal changes at different levels; B participant costs already falling while comparison businesses rising. Same cost and time axes. Do not infer real group histories from these examples. No significance test proves parallel trends; several earlier measures help credibility, not certainty. Transition: do we have those earlier measures in this file?
 :::
 
 ## Can one measurement before the programme show a trend? {#d2s1-p09 .reader-slide .s1-review .d2s1-review}
@@ -230,7 +230,7 @@ Could the GreenWaste data show whether earlier cost trends were similar?
 We would ask for **several earlier measurements in both groups**, and for an explanation of any other changes. Even reassuring earlier histories cannot prove what would have happened after the programme.
 
 ::: {.notes}
-6 minutes. Q3 evidence request, then distinguish supplied/absent information in H4-A §4. One baseline is a level, not a trend. Do not invent a test or substitute pilot waiting-group changes as proof about this city's different population. Actual file has same records/two waves; stable composition doesn't establish parallel trends. Transition: separate causal credibility from the size needed for the decision.
+6 minutes. Q3 evidence request, then distinguish supplied/absent information in H4-A §4. One baseline is a level, not a trend. Do not invent a test or substitute pilot control-group changes as proof about this city's different population. The file has the same records/two waves; stable composition doesn't establish parallel trends. Transition: separate causal credibility from the size needed for the decision.
 :::
 
 ## The estimate is precise. Does it meet our rule of at least a 1,000 AED reduction? {#d2s1-p10 .reader-slide .s1-review .d2s1-review}
@@ -262,7 +262,7 @@ On **page 4**, write one interpretation that H4-A supports and one specific evid
 :::
 
 ::: {.notes}
-9 minutes. Five independent reading/annotation, two pair source-check, two feedback. Source identifies physical paragraphs/table rather than a separate unknown report. Do not reteach all questions; use completed Q1-Q4. Listen for extra recorded reduction conditional on credible untreated trends, not an established effect from arithmetic alone. Require request and decision purpose. Transition: AI can report correct numbers but fabricate assurance.
+9 minutes. Five independent reading/annotation, two pair source-check, two feedback. Source identifies physical paragraphs/table rather than a separate unknown report. Do not reteach all questions; use completed Q1-Q4. Listen for the difference between the two changes, conditional on credible untreated trends, not an established effect from arithmetic alone. Require request and decision purpose. Transition: AI can report correct numbers but fabricate assurance.
 :::
 
 ## The AI says GreenWaste caused the change. Does the comparison support that? {#d2s1-p12 .reader-slide .s1-review .d2s1-review}
@@ -272,7 +272,7 @@ html_out(paste0('<p class="caption">Naive prompt (a prompt with no context, as a
 ```
 
 ::: {.ask}
-On **page 5**, underline the claims that H4-A supports and cross out the claims that it does not support. Check **H4-A on page 1**.
+On **page 5**, underline the claims that H4-A (the difference-in-differences study summary) supports and cross out the claims that it does not support. Check **H4-A on page 1**.
 :::
 
 ::: {.notes}
@@ -285,7 +285,7 @@ On **page 5**, underline the claims that H4-A supports and cross out the claims 
 html_out(paste0('<p class="caption"><strong>Improved prompt</strong></p><div class="better-prompt">',d4_paragraphs(d4_prompt),'</div>'))
 ```
 
-Copy **the prompt on page 5 and H4-A** into **Microsoft Copilot**. Keep your AI good-practice card beside you.
+Copy **the prompt on page 5 and H4-A (the difference-in-differences study summary)** into **Microsoft Copilot**. Keep your AI good-practice card beside you.
 
 ::: {.ask}
 Which claim improved? What still needs checking against H4-A?
@@ -297,7 +297,7 @@ Which claim improved? What still needs checking against H4-A?
 
 ## What would you ask for next? {#d2s1-p14 .reader-slide .s1-review .d2s1-review}
 
-Close the AI responses and your partner's comments, and keep **H4-A open**.
+Close the AI responses and your partner's comments, and keep **H4-A (the difference-in-differences study summary) open**.
 
 ::: {.ask}
 Write one interpretation that H4-A supports, in plain language, and one specific evidence request. How could the answer to your request change your advice?

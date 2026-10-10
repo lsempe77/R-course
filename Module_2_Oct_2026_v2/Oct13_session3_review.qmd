@@ -331,7 +331,7 @@ The interval includes values below 1,000 AED, so it does not show that our rule 
 
 ## AI Snapshot: what should a commissioner flag? {#d2s3-p15 .reader-slide .s1-review .d2s3-review}
 
-**Naive prompt** (a prompt with no context, as a busy person might type it): **"Compare these two matching evaluations and advise the commissioner."** Source: H6-A and Table B. This response was written for the exercise. It is not a real AI answer.
+**Naive prompt** (a prompt with no context, as a busy person might type it): **"Compare these two matching evaluations and advise the commissioner."** Source: H6-A (the matching study summary) and Table B. This response was written for the exercise. It is not a real AI answer.
 
 <div class="ai-reading">
 ```{r, results='asis'}
@@ -356,7 +356,7 @@ html_out(paste0('<strong>Improved prompt</strong><p>', d6_prompt, '</p>'))
 </div>
 
 ::: {.ask}
-Use the full prompt on page 5. Check Copilot's answer against H6-A, not against how confident it sounds.
+Use the full prompt on page 5. Check Copilot's answer against H6-A (the matching study summary), not against how confident it sounds.
 :::
 
 If you are not using Copilot, read the **prepared response on page 6** after you have marked the first response.

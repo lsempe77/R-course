@@ -1,0 +1,9 @@
+<script>
+document.addEventListener('click',event=>{
+ const button=event.target.closest('.d2s1-review button[data-swap]');
+ if(!button)return;
+ const on=button.getAttribute('aria-pressed')!=='true';
+ button.setAttribute('aria-pressed',String(on));
+ button.textContent=on?button.dataset.opened:button.dataset.closed;
+});
+</script>

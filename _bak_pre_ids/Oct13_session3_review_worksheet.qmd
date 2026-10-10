@@ -1,0 +1,283 @@
+---
+title: "GreenWaste city: read a matched comparison"
+format:
+  html:
+    embed-resources: true
+    toc: false
+    theme: none
+    include-in-header:
+      text: |
+        <style>
+        body{font:16px/1.4 Arial,sans-serif;color:#111418;margin:0;background:#eef2f6}main{max-width:850px;margin:auto}h1,h2,h3{color:#063360}h1{font-size:26px}h2{font-size:22px;margin:0 0 12px}h3{font-size:18px;margin:14px 0 6px}p{margin:8px 0}.sheet-page{background:white;padding:28px 40px;margin:20px 0;box-sizing:border-box;min-height:950px}.reading-table{width:100%;border-collapse:collapse;font-size:13px}.reading-table th,.reading-table td{padding:7px;border-bottom:1px solid #D5DEE8;text-align:left}.reading-table thead{background:#063360;color:white}.writing{height:45px;border-bottom:1px solid #c8d6e5;margin:6px 0}.writing.tall{height:70px}.review-svg{display:block;width:100%;height:180px}.caption{font-size:12px;color:#545860}.ai-source{border-left:3px solid #7da1c4;padding-left:16px}.prompt{border-top:2px solid #215a9e;padding-top:8px;font-size:14px}header button{font:inherit;padding:8px 15px;color:#063360;background:white;border:1px solid #215a9e;cursor:pointer}
+        @page{size:A4;margin:14mm}@media print{body{background:white;font-size:11pt;line-height:1.3}main{max-width:none}.sheet-page{padding:0;margin:0;min-height:0;break-after:page}.sheet-page:last-child{break-after:auto}header,#title-block-header{display:none}h2{font-size:17pt}h3{font-size:12pt}.writing{height:10mm}.writing.tall{height:16mm}.reading-table{font-size:9pt}.reading-table th,.reading-table td{padding:5px}.review-svg{height:160px}.caption{font-size:9pt}.prompt{font-size:10pt}}
+        </style>
+        <style>.writing.part{height:30px;margin:2px 0}.table-title{margin:10px 0 4px}@media print{.writing.part{height:7mm}}</style>
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+```{r, include=FALSE}
+source('day2_session3_review.R', encoding='UTF-8')
+```
+
+<header><button onclick="window.print()">Print worksheet</button></header>
+
+<div class="sheet-page">
+
+## Page 1 | H6-A: The city matching study summary
+
+GreenWaste is a fictional training case. Use this study summary as your source for today's questions.
+
+### §1 | Who, what and when?
+
+GreenWaste provides equipment subsidies, installation help and staff training. The city study records 10,000 businesses: 4,794 participant businesses and 5,206 comparison businesses that did not receive GreenWaste. Taking part followed an efficiency-score rule, not random assignment. Annual waste management cost per business, in AED, was measured before GreenWaste and 12 months after. This study is not the pilot lottery, and it is not the analysis of businesses near the score cut-off.
+
+### §2 | How were comparison businesses selected?
+
+For each participant business, the evaluator selected the one comparison business that was most similar before GreenWaste on four recorded features: manager age, number of staff, premises area and filtration. Each feature was scaled by its standard deviation across all city businesses. The distance between two businesses is the sum of the squared differences on these scaled features. The same comparison business could be selected more than once (matching with replacement). All 4,794 participant businesses were matched to **`r fmt(match_A$used)` different comparison businesses**, and one comparison business was used up to **`r fmt(match_A$max_reuse)` times**. There was no maximum acceptable distance (caliper), and no participant business was excluded. Annual waste management cost before GreenWaste was not used for matching.
+
+```{r, results='asis'}
+html_out(d6_results('Table R: Annual waste management cost 12 months after GreenWaste: participant businesses minus matched comparison businesses (AED)'))
+```
+
+Table R shows the participant businesses' mean annual cost after GreenWaste minus the matched comparison businesses' mean annual cost. With four recorded features the difference is **`r fmt(match_A$est)` AED**, which is a reduction of **`r fmt(-match_A$est)` AED**. The 95% interval for the reduction is **`r paste(fmt(sort(-match_A$ci)), collapse=' to ')` AED**. Leaving out manager age changes which comparison businesses are selected. This does not show which estimate is closer to the true effect.
+
+### §3 | What is needed for a causal reading?
+
+After we account for the recorded features, two things must hold. First, there is no important remaining difference that affects both taking part and costs. Second, there are enough comparison businesses that are similar to the participant businesses. Costs must also be measured in the same way, and the programme must not have a large effect on comparison businesses. An unrecorded influence, such as owner motivation, could break the first condition. Motivation is not a variable in the GreenWaste data, and we do not know that it explains the result.
+
+### §4 | What can and cannot be concluded?
+
+Table B on page 2 shows how similar the groups are on the recorded features. After matching on four features, the participant businesses' mean manager age is **`r fmt(match_A$age_gap, 2)` years** lower than the matched comparison businesses', and their mean cost before GreenWaste is **`r fmt(match_A$base_gap)` AED** lower. Without manager age, these gaps are **`r fmt(match_B$age_gap, 2)` years** and **`r fmt(match_B$base_gap)` AED**. Finding a match for every participant does not show that the matches are close enough. This study summary does not give the distribution of distances, a check that the groups overlap on all features together, or an analysis of how strong an unrecorded influence would need to be to change the result.
+
+The 95% interval allows for the reuse of comparison businesses. It treats the selected matches as given, so it does not fully allow for how the matches were chosen or for bias from unrecorded influences. The 95% interval for the reduction (**`r paste(fmt(sort(-match_A$ci)), collapse=' to ')` AED**) includes values below 1,000 AED. So the estimate alone does not show that our rule of at least a 1,000 AED reduction in annual waste management cost per business per year is met. The full programme costs and the effects for the whole country are not given.
+
+<p class="caption">Source: GreenWaste city data (10,000 businesses, measured before and 12 months after). All values are calculated from the exact records, and the figures shown are rounded. Tables R and B and paragraphs §1 to §4 are the material to inspect.</p>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 2 | H6-A: How similar the matched groups are, and what the figures show
+
+```{r, results='asis'}
+html_out(d6_balance('Table B: Average characteristics before GreenWaste: participant businesses, all comparison businesses and matched comparison businesses'))
+```
+
+The matched comparison means count a business each time it is used. The gap is the participant mean minus the matched comparison mean, divided by the standard deviation across all city businesses. It is not a standard error and it is not a threshold for judging whether a match is good. Filtration is the share of businesses with a filter. Annual cost before GreenWaste was not used for matching.
+
+### Figure 1: Manager age in participant businesses and in all comparison businesses
+
+```{r, results='asis'}
+html_out(d6_support())
+```
+
+The bars show the share of businesses in each age group, so the two groups can be compared even though they have different numbers. Overlap in age alone does not show that the groups are similar on all four features together.
+
+### Reuse of comparison businesses and our rule
+
+4,794 pairs does not mean 4,794 different comparison businesses. The four-feature comparison has 9,588 matched rows but only 5,379 different businesses, so some comparison businesses contribute many times.
+
+```{r, results='asis'}
+html_out(d6_interval())
+```
+
+The interval shows uncertainty about the mean matched difference, if the model's assumptions hold. It does not show the savings of individual businesses, and it does not allow for all sources of bias.
+
+</div>
+
+<div class="sheet-page">
+
+## Page 3 | Q1 and Q2: work on these pages as we teach each idea
+
+### Q1 | Match three participant businesses to comparison businesses
+
+The seven businesses in this activity are invented. They are not from the city study. Use the profile cards.
+
+(a) Match A, B and C to comparison businesses using manager age and size. Use each comparison business at most once.
+
+| Participant business | Comparison business chosen | (b) Why did you choose this pair? |
+|---|---|---|
+| A | __________ | __________________________________ |
+| B | __________ | __________________________________ |
+| C | __________ | __________________________________ |
+
+(c) Which comparison business is not used? __________
+
+(d) Write one thing you do not know that could matter.
+
+<div class="writing part"></div>
+
+Keep the reveal slips closed until you have recorded your choices.
+
+You will now receive the reveal slips. A reveal slip shows a business's annual waste management cost after GreenWaste. Keep your pairs. For each pair, calculate the participant's cost minus the comparison business's cost.
+
+| Pair | Participant cost (AED) | Comparison cost (AED) | Difference (AED) |
+|---|---|---|---|
+| A and ____ | __________ | __________ | __________ |
+| B and ____ | __________ | __________ | __________ |
+| C and ____ | __________ | __________ | __________ |
+
+Calculate the mean of the three differences: __________ AED. Does this show that GreenWaste caused the difference? Explain why or why not.
+
+<div class="writing part"></div>
+
+### Q2 | Read the result for the city study (H6-A §2 and Table R)
+
+(a) Explain the sign, the comparison, the period and the units of the four-feature result.
+
+<div class="writing part"></div>
+
+(b) Which four features were used to select the comparison businesses? Was annual cost before GreenWaste one of them?
+
+<div class="writing part"></div>
+
+(c) Why can 4,794 participant businesses be matched to only 585 different comparison businesses?
+
+<div class="writing part"></div>
+
+(d) What does this reuse mean for how we interpret the sample and the interval?
+
+<div class="writing part"></div>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 4 | Q3 to Q6: judge the comparison
+
+### Q3 | How similar are the matched groups? (Table B on page 2)
+
+(a) Write one measure on which the matched groups are more similar than all comparison businesses.
+
+<div class="writing part"></div>
+
+(b) Write one difference that remains.
+
+<div class="writing part"></div>
+
+(c) Which extra check would help you judge whether the matches are close enough?
+
+<div class="writing part"></div>
+
+### Q4 | What changes when manager age is left out, and what is not recorded? (Table R, §3 and §4)
+
+(a) Why could leaving out manager age change the estimate?
+
+<div class="writing part"></div>
+
+(b) Why does making the recorded features similar not show that unrecorded influences are absent?
+
+<div class="writing part"></div>
+
+### Q5 | Read the source yourself, then check our rule
+
+(a) Write the main finding and the paragraph or table that shows it.
+
+<div class="writing part"></div>
+
+(b) Write the key assumption for a causal reading and the paragraph that states it.
+
+<div class="writing part"></div>
+
+(c) A match was found for every participant. What does that show, and what does it not show?
+
+<div class="writing part"></div>
+
+(d) Does the interval, and not only the estimate, show that our rule of at least a 1,000 AED reduction is met? Keep the uncertainty in the estimate separate from the question of whether a causal reading is credible.
+
+<div class="writing part"></div>
+
+### Q6 | Close the source and give your first judgement
+
+(a) Write one sentence interpreting the result, one strength of the comparison and one concern that matters for the decision.
+
+<div class="writing part"></div>
+
+(b) Choose Act, Act with conditions or Ask first, and give your reason.
+
+<div class="writing part"></div>
+
+(c) Request one piece of evidence about the matching and say how the answer could change your decision.
+
+<div class="writing part"></div>
+
+Four methods compare in four ways. A lottery compares groups assigned by chance. Difference-in-differences compares changes over time. Regression discontinuity compares businesses either side of a cut-off. Matching compares businesses chosen because they look similar. Do not average the results of these different comparisons.
+
+</div>
+
+<div class="sheet-page">
+
+## Page 5 | AI exercise: compare, then verify
+
+### Stage 1: Mark the response
+
+Naive prompt (a prompt with no context, as a busy person might type it): "Compare these two matching evaluations and advise the commissioner." Source: H6-A and Table B. This response was written for the exercise. It is not a real AI answer.
+
+<div class="ai-source">
+```{r, results='asis'}
+html_out(paste0('<p>', gsub('\n\n', '</p><p>', d6_ai, fixed=TRUE), '</p>'))
+```
+</div>
+
+Keep the claims that H6-A supports. Cross out the claims it does not support. Write one passage from the source that changes the advice.
+
+<div class="writing part"></div>
+
+### Stage 2: Run the improved prompt in Microsoft Copilot
+
+<div class="prompt">
+```{r, results='asis'}
+html_out(paste0('<strong>Improved prompt</strong><p>', d6_prompt, '</p>'))
+```
+</div>
+
+Use only the information in H6-A, and keep your AI good-practice card beside you. If you are not using Copilot, read the prepared response on page 6 after you finish Stage 1.
+
+(a) Record one correction you verified.
+
+<div class="writing part"></div>
+
+(b) Record one useful question Copilot asked about missing evidence.
+
+<div class="writing part"></div>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 6 | Prepared response
+
+Use this response if you are not using Copilot. Read it after you have marked the response on page 5. It was written for the exercise. It is not a real AI answer. An AI tool may answer differently.
+
+### A comparison grounded in the source
+
+H6-A §2 and Table R compare annual waste management cost 12 months after GreenWaste. They do not compare changes over time. The four-feature matched reduction is **`r fmt(-match_A$est)` AED**, with an interval of **`r paste(fmt(sort(-match_A$ci)), collapse=' to ')` AED**. The result without manager age is **`r fmt(-match_B$est)` AED**, with an interval of **`r paste(fmt(sort(-match_B$ci)), collapse=' to ')` AED**. Different feature lists select different comparison businesses, and the larger result is not automatically more credible.
+
+Every participant business received a most similar comparison business, but 4,794 participant businesses were matched to only 585 different comparison businesses (§2). That shows coverage under this method. It does not show that the matches are close enough. Table B shows a remaining age difference and a difference in cost before GreenWaste, even with four features. Annual cost before GreenWaste was not on the matching list. Similar measured means cannot remove all selection bias (§3).
+
+The four-feature interval includes values below 1,000 AED (§4), so the estimate alone does not show that our rule of at least a 1,000 AED reduction is met. The interval does not allow for every threat to a causal reading. The full programme costs and the effects for the whole country are not provided.
+
+### Questions before recommending action
+
+- Can you supply the distribution of match distances and evidence about overlap on all features together, or about regions with few comparison businesses?
+- Why was annual cost before GreenWaste not included, and how would other defensible matching choices affect the results?
+- What is known about influences on taking part that are missing from the records? Is there an analysis of how strong such an influence would need to be?
+- Which population should the decision cover, what are the full programme costs, and how much uncertainty can the decision tolerate?
+
+A conditional recommendation would separate the recorded difference, the unverified causal assumption and the uncertainty about our rule of at least a 1,000 AED reduction. It should not promise to remove bias or to expand the programme automatically.
+
+### Verify the alternative yourself
+
+(a) Check one factual claim against a named paragraph or table.
+
+<div class="writing part"></div>
+
+(b) Write one question that could change the decision, and why.
+
+<div class="writing part"></div>
+
+</div>

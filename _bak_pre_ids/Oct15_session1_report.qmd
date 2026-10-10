@@ -1,0 +1,25 @@
+---
+title: "GreenWaste evaluation report for review"
+subtitle: "Fictional review exercise for Day 4"
+format:
+  docx:
+    reference-doc: reader_template.docx
+    toc: false
+---
+
+```{r setup, include=FALSE}
+source('day4_case.R')
+```
+
+```{r, results='asis', echo=FALSE}
+cat(report_label,'\n\n')
+for (i in seq_along(report_sections)) {
+  if (i %in% c(3,5,6)) cat('\\newpage\n\n')
+  cat('## ',report_sections[[i]]$title,'\n\n',sep='')
+  cat(report_sections[[i]]$paragraphs[1],'\n\n')
+  if(i==5)cat(knitr::kable(method_rows),'\n\n')
+  for(p in report_sections[[i]]$paragraphs[-1])cat(p,'\n\n')
+}
+```
+
+The styled four-page print copy is built by `Rscript make_session_materials.R --day4`.

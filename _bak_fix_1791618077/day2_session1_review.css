@@ -1,0 +1,10 @@
+.reveal .d2s1-review .review-svg{max-height:290px}
+.reveal .d2s1-review .reading-table{font-size:22px}
+.reveal .d2s1-review .reading-table th,.reveal .d2s1-review .reading-table td{padding:10px}
+.reveal .d2s1-review .comparison-pair{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin:22px 0}
+.reveal .d2s1-review .comparison-pair>div{border-top:3px solid #215a9e;padding-top:12px}
+.reveal .d2s1-review .comparison-pair h3{font-size:25px;margin:0 0 8px}
+.reveal .d2s1-review .comparison-pair p{font-size:24px}
+.reveal .d2s1-review .exercise-editor .cm-editor{font-size:21px}
+.reveal .d2s1-review .review-grid .review-svg{max-height:250px}
+.reveal .d2s1-review .calculation-output{font-size:26px;color:#063360;margin:14px 0}

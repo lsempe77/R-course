@@ -1,0 +1,69 @@
+---
+title: "Day 1 review"
+subtitle: "Shorter sessions and practice in reading evaluation reports"
+format:
+  html:
+    embed-resources: true
+    theme: cosmo
+    toc: false
+---
+
+The approved Day 1 route is built. Participants first read a regression table and practise the five core terms,
+then question a claim and judge a fair comparison. Each session has one
+two-sided worksheet. The trainer packs keep printing directions, cards and
+answer keys separate from those participant sheets.
+
+## Open the sessions
+
+| Session | Length | Content screens | Deck | Participant sheet | Trainer pack |
+|---|---:|---:|---|---|---|
+| What do the numbers actually say? | 60 minutes | 11 | [Open](Oct12_session1_live.html) | [Two sides](Oct12_session1_handouts.docx) | [Five-term key](Oct12_session1_materials.docx) |
+| Good news. Enough to act? | 60 minutes | 11 | [Open](Oct12_session2.html) | [Two sides](Oct12_session2_handouts.docx) | [Cards and key](Oct12_session2_materials.docx) |
+| Did the programme make the difference? | 75 minutes | 13 | [Open](Oct12_session3_live.html) | [Two sides](Oct12_session3_handouts.docx) | [Key](Oct12_session3_materials.docx) |
+
+Screen counts exclude the title. Session 3 includes a five-minute break.
+Session 1 teaches mean, treatment effect, coefficient, p-value and confidence interval explicitly. It uses ten landfill records for the mean and a two-row annual-cost regression table for reading. Session 2 applies these terms to claims. Only Sessions 1 and 3
+have a trainer-run R demonstration. Participants do not write or debug code.
+
+Fiona's four-claim triage is retained, with the [existing optional A1 board](Oct12_session2_board_A1.pdf).
+The RDD number line, matching cards, ratio wall and credibility grid from the
+other branch are already present and will be preserved in later daily rebuilds.
+
+## Try the interactions
+
+Use a choice before revealing comparison evidence. In Session 3, open the trial
+interval after reading the point estimate. In each session, select unsupported
+AI claims and check them against the extract. A single consistently styled fictional-case notice appears on each title slide. These native deck controls work
+in the open page; they do not display room totals.
+
+The course-owned room poll replaces the Day 1 Menti activity. It has a phone
+join page and QR, a facilitator page, hidden totals until voting closes, short
+anonymous reasons and Before/After phases. [Download the room tool](GreenWaste_room_poll.zip)
+and read its [classroom instructions](ROOM_POLL_README.md). This is a local
+classroom server; phones must be able to reach the trainer computer. Test the
+venue network before delivery. Labelled cards remain the working fallback.
+
+## What has been checked
+
+The three decks were rendered and walked sequentially at presentation size.
+Both trainer outputs, evidence reveals, correct and incorrect AI checks and
+keyboard choices were exercised. The slide count is 12/12/14 including titles,
+with no slide overflow or browser errors in the checks. The lottery can be
+drawn twice and its output names manager age.
+
+Word rendered all participant and trainer pages for visual inspection. Each
+participant sheet is two A4 pages; trainer packs are four, three and three
+pages. The room poll was checked with two browsers, narrow phone layouts,
+changed votes, closed and stale submissions, private facilitator control,
+escaped reasons and a working QR.
+
+These checks establish that the materials and interactions work in the tested
+environment. Classroom phone access still needs a venue test, and the reading
+tasks need feedback from the actual room. The participant tasks provide
+individual evidence of reading; a shift in poll totals alone does not.
+
+## What is next
+
+[Day 2 is built](day2_review.html), retaining Fiona's RDD wall and matching cards.
+The score-rule correction is complete and affected Day 1 figures and packs are refreshed.
+[Day 3 slide tables](day3_plan.html) are ready for the next daily review.

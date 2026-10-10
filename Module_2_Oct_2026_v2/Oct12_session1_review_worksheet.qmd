@@ -44,7 +44,7 @@ html_out(review_table())
 
 ### Q1 | Mean and what it hides
 
-These ten businesses were selected from the GreenWaste data. The dot plot shows their annual waste management cost before GreenWaste, in AED. They are not representative of all city businesses.
+These ten businesses were selected from the GreenWaste data. The values below are their annual waste management cost before GreenWaste, in AED. They are not representative of all city businesses.
 
 ```{r, results='asis'}
 html_out(paste0('<div class="costs">',paste(fmt(review_costs),collapse=' · '),'</div>'))
@@ -94,7 +94,7 @@ Use H1-A.
 
 ## Page 2: Uncertainty and your own interpretation
 
-Keep page 1 open, because you need H1-A. Answer each question when we reach that idea in the session.
+Keep page 1 open, because you need H1-A (the before-and-after table). Answer each question when we reach that idea in the session.
 
 ### Q4 | Confidence interval
 
@@ -208,7 +208,7 @@ Use this response if you are not using Copilot. Read it after you have marked th
 html_out(paste0('<div class="ai-source">',review_paragraphs(review_fallback),'</div>'))
 ```
 
-(a) Which sentences does H1-A support?
+(a) Which sentences does H1-A (the before-and-after table) support?
 
 <div class="writing part"></div>
 

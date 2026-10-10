@@ -55,7 +55,7 @@ Table B on page 2 shows how similar the groups are on the recorded features. Aft
 
 The 95% interval allows for the reuse of comparison businesses. It treats the selected matches as given, so it does not fully allow for how the matches were chosen or for bias from unrecorded influences. The 95% interval for the reduction (**`r paste(fmt(sort(-match_A$ci)), collapse=' to ')` AED**) includes values below 1,000 AED. So the estimate alone does not show that our rule of at least a 1,000 AED reduction in annual waste management cost per business per year is met. The full programme costs and the effects for the whole country are not given.
 
-<p class="caption">Source: GreenWaste city data (10,000 businesses, measured before and 12 months after). All values use unrounded records. Tables R and B and paragraphs §1 to §4 are the material to inspect.</p>
+<p class="caption">Source: GreenWaste city data (10,000 businesses, measured before and 12 months after). All values are calculated from the exact records, and the figures shown are rounded. Tables R and B and paragraphs §1 to §4 are the material to inspect.</p>
 
 </div>
 
@@ -215,7 +215,7 @@ Four methods compare in four ways. A lottery compares groups assigned by chance.
 
 ### Stage 1: Mark the response
 
-Naive prompt (a prompt with no context, as a busy person might type it): "Compare these two matching evaluations and advise the commissioner." Source: H6-A and Table B. This response was written for the exercise. It is not a real AI answer.
+Naive prompt (a prompt with no context, as a busy person might type it): "Compare these two matching evaluations and advise the commissioner." Source: H6-A (the matching study summary) and Table B. This response was written for the exercise. It is not a real AI answer.
 
 <div class="ai-source">
 ```{r, results='asis'}

@@ -1,0 +1,17 @@
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+ const decisions=['Act','Ask first','Do not act'],questions=['Compared to what?','How big?','How sure?'];
+ document.querySelectorAll('#placements select').forEach(select=>select.addEventListener('change',()=>{
+  document.querySelectorAll('[data-cell]').forEach(cell=>cell.replaceChildren());
+  let placed=0;
+  for(let i=1;i<=4;i++){
+   const d=decisions.indexOf(document.querySelector(`[data-decision="${i}"]`).value);
+   const q=questions.indexOf(document.querySelector(`[data-question="${i}"]`).value);
+   if(d<0||q<0)continue;
+   const badge=document.createElement('span');badge.className='badge';badge.textContent='Card '+i;
+   document.querySelector(`[data-cell="${q},${d}"]`).append(badge);placed++;
+  }
+  document.getElementById('board-status').textContent=placed+' of 4 cards placed. Record source-based reasons on Q5.';
+ }));
+});
+</script>

@@ -117,7 +117,7 @@ Each business's change is its cost after minus its cost before. The histogram sh
 
 ### Q3 | The same participant businesses, before and after
 
-(a) Use H2-A2 on page 1. Calculate the change in mean cost for participant businesses, and write what it shows, with units and period.
+(a) Use H2-A2 (the table of mean costs by group) on page 1. Calculate the change in mean cost for participant businesses, and write what it shows, with units and period.
 
 <div class="writing part"></div>
 
@@ -158,7 +158,7 @@ Before GreenWaste, the mean cost was 1,432 AED for participant businesses and 2,
 
 ## Page 4 | Q5: Four decision cards
 
-Use the cards and H2-A. For each card: (a) choose Act, Ask first or Do not act; (b) write what the source supports; (c) write one question you would ask and why the answer matters; (d) say which action you mean.
+Use the cards and H2-A (the city data tables and charts). For each card: (a) choose Act, Ask first or Do not act; (b) write what the source supports; (c) write one question you would ask and why the answer matters; (d) say which action you mean.
 
 ### Card 1
 
@@ -210,7 +210,7 @@ Your question and why the answer matters:
 
 ### My final reading and request
 
-Close the AI responses and turn over the decision cards, and keep H2-A2 open.
+Close the AI responses and turn over the decision cards, and keep H2-A2 (the table of mean costs by group) open.
 
 (a) Write one conclusion that the data support.
 
@@ -270,7 +270,7 @@ Use this response if you are not using Copilot. Read it after you have marked th
 html_out(paste0('<div class="ai-source">',s2_paragraphs(s2_fallback),'</div>'))
 ```
 
-Check it against H2-A2, as you would check a live AI answer.
+Check it against H2-A2 (the table of mean costs by group), as you would check a live AI answer.
 
 (a) Does it separate what was observed, what a fair comparison would need, and what decision to make?
 

@@ -1,0 +1,62 @@
+---
+title: "Day 4 approved slide tables"
+subtitle: "Read a report, then make a defensible recommendation"
+format:
+  html:
+    embed-resources: true
+    theme: cosmo
+    toc: true
+---
+
+Approved and built on 6 October 2026. [Open the built Day 4 review](day4_review.html). The tables below record the approved design; no daily approval remains pending.
+
+
+All eleven sessions are built. Day 4 has **two 60-minute sessions**. The former final session is excluded; another provider prepares its evaluation simulation. The tables below record the approved design.
+
+## Session 1 Judge a report section by section
+
+| Screen | Participant task | Minutes |
+|---|---|---:|
+| 1 Read independently | Read a previously unseen GreenWaste extract and table; answer five short reading questions before discussion or AI | 8 |
+| 2 Give your initial judgement | Choose sign-off, conditions or more evidence; give a source-based reason | 4 |
+| 3 Use the rating scale | Supported / Concern / Unsupported, with a sentence or table reference | 4 |
+| 4 Check the executive summary | Everyone marks a strength and the claim that most needs checking | 6 |
+| 5 Investigate your report section | Groups examine design, data, results, limitations or recommendation; identify a strength and a consequential concern | 10 |
+| 6 Post evidence on the credibility wall | Use Fiona's existing two-sheet A1 grid; cite the passage behind each rating | 7 |
+| 7 Compare the ratings | Explain one disagreement; open the matching source evidence | 7 |
+| 8 Follow the headline back to its source | Trace estimate, interval, population and saving rule; identify selective emphasis | 5 |
+| 9 Repair an AI verdict | Correct claims that confuse complete generated data, shared estimates or a point estimate with sufficient evidence | 4 |
+| 10 Revisit sign-off | Write what changed and the evidence still needed | 3 |
+| 11 Your question from memory | Individual request and purpose; collect the reading task for feedback | 2 |
+
+**Total 60 minutes, 11 content screens.** No new method lecture or live model lab. Native evidence reveals follow committed reasons; optional room voting hides totals until close. Paper cards and the wall remain usable without phones.
+
+Rewrite the report as a short, accessible GreenWaste document with numbered sections: executive summary, programme, design, data, results, limitations and recommendations. Keep it about four A4 pages at readable type, with a two-sided rating worksheet and trainer-only evidence key. Preserve the two A1 credibility boards, including a dedicated executive-summary panel and panels for Sections 3 to 7. Every group finds at least one strength as well as a concern.
+
+The report's estimates and intervals must use the corrected shared objects. Its planted faults should be conclusions that readers can check against supplied evidence: selecting a favourable headline, treating city analyses as independent confirmation, claiming cause from descriptive change, asserting an untested causal assumption, and recommending nationwide expansion without evidence of reach. The limitations section should contain useful disclosure so that a good rating is possible. Do not fabricate attrition counts, instrument changes, earlier trends or score manipulation as facts about the CSV. Label the document as an intentionally flawed fictional review exercise; explain this after the independent reading task.
+
+Use the five abilities from the whole-week review for the individual opening task: identify outcome and population; explain comparison; interpret estimate, interval and rule; cite a consequential limitation; give a proportionate recommendation and evaluator question. Score each 0 to 2. The proposed readiness target is 8/10, with no causal conclusion based solely on before/after change or significance. Give feedback and a short retry where needed. This checks a new presentation of the same case; it does not establish transfer to another programme.
+
+## Session 2 Write a recommendation the evidence can support
+
+| Screen | Participant task | Minutes |
+|---|---|---:|
+| 1 Start from the corrected evidence | Locate the pilot result and interval, city limitations, cost assumptions and missing evidence in a concise source sheet | 5 |
+| 2 What does the decision require | Separate the minimum saving rule, causal credibility, reach and value for money | 5 |
+| 3 Read a useful short brief | Mark its finding, recommendation, risk and next evidence request | 5 |
+| 4 Draft your brief | Write at most 150 words for a director using the four-part template | 12 |
+| 5 Swap and verify | A partner points to the source for each numerical and causal claim | 8 |
+| 6 Repair what the review found | Revise a headline, recommendation or condition using the cited evidence | 7 |
+| 7 Check an AI draft | Find an accurate number attached to an unsupported recommendation; repair it against the source | 6 |
+| 8 Defend one recommendation | Explain its condition and what evidence could change it | 6 |
+| 9 Make your final request independently | Write a specific evaluator request and explain its effect on the decision; retry a reading item if needed | 6 |
+
+**Total 60 minutes, 9 content screens.** Replace Tariff Shield with GreenWaste. Use a corrected findings sheet rather than treating the intentionally flawed report as an unquestioned source. Use a two-sided writing and peer-review worksheet, a one-page source reference and a separate trainer key. No participant coding, number-matching script or additional model demonstration is needed here.
+
+The short brief has four useful parts: what the evidence found, what action it can support, the consequential uncertainty or limit, and the specific next evidence needed. More than one recommendation can be reasonable if its conditions and limits are clear. An accurate estimate does not validate an unconditional approval. The AI example is an authored draft with a traceable error, usable without an external account.
+
+## Build after approval
+
+Rebuild both decks, report, rating sheet, findings reference, writing template, participant worksheets, trainer keys, two-sheet A1 board and exercise brief together. Use one source for screen and paper. Inspect all slides and print pages, exercise native controls and publish unlinked previews. Retain the former Session 3 files as historical reference; do not build or schedule that workshop.
+
+[Day 3 review](day3_review.html) | [Whole-week review](week_review.html)

@@ -1,0 +1,64 @@
+---
+title: "Four statements about GreenWaste: decide what is missing"
+format:
+  html:
+    embed-resources: true
+    toc: false
+    theme: none
+    include-after-body: _session2_board.html
+    header-includes: |
+      <style>
+      *{box-sizing:border-box}body{margin:0;font:18px/1.45 Arial,sans-serif;color:#111418;background:#eef2f6}main{max-width:900px;margin:auto}h1,h2,h3{color:#063360}h1{font-size:30px}h2{font-size:28px}.claim-card,.board-page{background:white;padding:38px;margin:24px 0;min-height:820px}.card-number{font-size:72px;font-weight:bold;color:#215a9e;margin:0}.claim-text{font-size:28px;line-height:1.45;border-top:3px solid #215a9e;padding-top:20px}.card-source{font-size:17px;color:#545860;border-top:1px solid #D5DEE8;padding-top:18px;margin-top:30px}.caption{font-size:14px;color:#545860}.choices{display:flex;gap:20px;flex-wrap:wrap;margin-top:25px}.choices span{border:1px solid #7da1c4;padding:8px 14px}.writing{border-bottom:1px solid #c8d6e5;height:65px}.triage{width:100%;table-layout:fixed;border-collapse:collapse;font-size:18px}.triage th,.triage td{border:1px solid #7da1c4;padding:12px;text-align:left;vertical-align:top}.triage td{height:100px}.triage thead{background:#063360;color:white}.placement{display:grid;grid-template-columns:80px 1fr 1fr;gap:10px;align-items:center;margin:12px 0}select,button{font:inherit;padding:7px;border:1px solid #7da1c4;color:#063360;background:white}.badge{display:inline-block;background:#e3ebf5;border:1px solid #215a9e;border-radius:4px;padding:4px 9px;margin:4px}button:focus-visible,select:focus-visible{outline:3px solid #215a9e;outline-offset:3px}@page{size:A4;margin:16mm}@media print{body{background:white;font-size:12pt}main{max-width:none}#title-block-header,.screen-controls{display:none}.claim-card,.board-page{padding:0;margin:0;min-height:0;break-after:page;box-shadow:none}.board-page{break-after:auto}h2{font-size:20pt}.card-number{font-size:50pt}.claim-text{font-size:19pt}.card-source{font-size:11pt}.caption{font-size:9pt}.triage{font-size:10pt}.triage th,.triage td{padding:7px}.triage td{height:27mm}.writing{height:16mm}.choices{font-size:12pt}}</style>
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+```{r, include=FALSE}
+source('session2_review.R', encoding='UTF-8')
+```
+
+<div class="screen-controls"><p>Read each statement about GreenWaste and decide whether to act on it.</p><button onclick="window.print()">Print cards and board</button><p><a href="Oct12_session2_review_worksheet.html">Open the worksheet and H2-A sources</a></p></div>
+
+```{r, results='asis'}
+html_out(paste(vapply(1:4,function(i) paste0('<section class="claim-card"><p class="card-number">',i,
+  '</p><h2>What would you do with this statement?</h2><p class="claim-text">',s2_cards[i],
+  '</p><p class="card-source"><strong>Source:</strong> ',s2_card_sources[i],
+  '</p><div class="choices"><span>Act</span><span>Ask first</span><span>Do not act</span></div>',
+  '<p><strong>Compared to what? How big? How sure?</strong></p><p>What is missing, and why would the answer matter?</p><div class="writing"></div><div class="writing"></div>',
+  if(i==1)'<p class="caption">GreenWaste is a fictional training case. These statements are exercise material for you to check. Do not accept them as conclusions.</p>' else '',
+  '</section>'),''),collapse=''))
+```
+
+<section class="board-page">
+
+## Place each card, then explain your reason.
+
+Place each card under Act, Ask first or Do not act. Explain your reason, using words and card numbers. More than one missing question can be a good answer. Say which action you mean: acting on a descriptive finding does not have to mean expanding the programme.
+
+<div class="screen-controls" id="placements">
+
+```{r, results='asis'}
+html_out(paste(vapply(1:4,function(i)paste0('<div class="placement"><strong>Card ',i,
+  '</strong><select aria-label="Decision for card ',i,'" data-decision="',i,
+  '"><option value="">Choose decision</option><option>Act</option><option>Ask first</option><option>Do not act</option></select>',
+  '<select aria-label="Missing question for card ',i,'" data-question="',i,
+  '"><option value="">Choose main question</option><option>Compared to what?</option><option>How big?</option><option>How sure?</option></select></div>'),''),collapse=''))
+```
+
+</div>
+
+<table class="triage"><thead><tr><th>Missing question</th><th>Act</th><th>Ask first</th><th>Do not act</th></tr></thead><tbody>
+<tr><th>Compared to what?</th><td data-cell="0,0"></td><td data-cell="0,1"></td><td data-cell="0,2"></td></tr>
+<tr><th>How big?</th><td data-cell="1,0"></td><td data-cell="1,1"></td><td data-cell="1,2"></td></tr>
+<tr><th>How sure?</th><td data-cell="2,0"></td><td data-cell="2,1"></td><td data-cell="2,2"></td></tr>
+</tbody></table>
+
+<p id="board-status" role="status" aria-live="polite"></p>
+
+Which evidence supports a disputed placement? What answer would change your advice?
+
+<div class="writing"></div>
+</section>

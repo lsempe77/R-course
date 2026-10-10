@@ -1,0 +1,123 @@
+---
+title: "Day 2 reading plan"
+subtitle: "Short sessions for reading evaluation reports"
+format:
+  html:
+    embed-resources: true
+    toc: true
+    theme: cosmo
+---
+
+**Approved and built on 6 October 2026.** See [the Day 2 review](day2_review.html). The data correction is complete; RDD uses the shared robust interval.
+
+
+Day 2 asks readers to judge three ways of constructing the missing comparison.
+The technical names remain, each attached to a plain question. Participants
+predict, read an extract, practise with physical materials, and explain a
+provisional judgement. The proposed screens below exclude a title slide.
+Timings belong in trainer notes.
+
+These tables record the approved daily review under `HANDOFF.md`. Days 1 and 2 are rebuilt. The historical pre-build notes below are retained; the Day 2 review reports the completed checks and corrected figures.
+
+## Session 1 Reading a difference in changes
+
+**60 minutes.** Keep one four-number comparison and one result row. Ask why
+changes would have been similar without GreenWaste. A similar starting level is
+not evidence of similar trends. The case has only one before-period; readers
+must recognise that the pre-trend assumption cannot be tested here.
+
+| Screen | Participant action and evidence | Minutes |
+|---|---|---:|
+| 1 A question from yesterday | Recall why before/after alone cannot establish impact | 3 |
+| 2 Two groups over time | Predict what subtracting the comparison group's change would add | 4 |
+| 3 Complete four numbers | Fill Fiona's four-number sheet; say what each subtraction means | 8 |
+| 4 Read the result row | Find the difference-in-differences coefficient, units and interval; one short trainer calculation | 5 |
+| 5 What has to be true | Explain parallel trends as similar change without the programme | 6 |
+| 6 Would you trust these pictures | Choose between similar trends, already diverging trends and a changing comparison; reveal feedback | 8 |
+| 7 What cannot be checked here | Identify the missing earlier observations, and explain why they matter | 5 |
+| 8 Mark up a report extract | Work alone, then compare in pairs; state result, assumption and a next question | 10 |
+| 9 Repair an AI claim | Remove “the assumption is satisfied” and a threshold conclusion the source does not support | 7 |
+| 10 Your evaluator question | Retrieve a concrete question and explain what its answer changes | 4 |
+
+Remove the second long tour through before/after and with/without, repeated
+regressions, the full lab visit and long explanations of estimator variants.
+Do not restore the reverted AI wall board. The room poll or labelled cards can
+capture the prediction; the core practice is on paper.
+
+## Session 2 Reading a jump at a rule
+
+**60 minutes.** Preserve Fiona's eight different jump cards A–H and the A1 wall
+number line. Each group handles one card; participants do not receive the full
+trainer packet. Reveal the comparison window and the manager-age discontinuity
+when each adds evidence to a judgement.
+
+| Screen | Participant action and evidence | Minutes |
+|---|---|---:|
+| 1 Who is being compared | Recall the city score rule and locate businesses near 58 | 4 |
+| 2 Predict the jump | Choose what a cost jump would suggest before opening the result | 4 |
+| 3 Read your six businesses | Use one of the eight group cards to estimate a local difference | 10 |
+| 4 Place it on the wall | Put card letter and estimated saving on Fiona's number line; explain variation | 6 |
+| 5 Read the reported jump | Find the regression-discontinuity result row, interval and local population | 5 |
+| 6 How close did they look | Compare two windows; introduce bandwidth as distance from the cut-off | 5 |
+| 7 Did something else jump | Predict, then reveal manager age; explain why this challenges the causal reading | 7 |
+| 8 Complete a short credibility check | Judge the rule, nearby comparison, other discontinuities and reach | 9 |
+| 9 Check an AI recommendation | Correct the claim that a local estimate supports the whole city | 6 |
+| 10 Your next question | Write one evidence-seeking question, independently | 4 |
+
+Keep one brief trainer demonstration, after a prediction. Drop repeated slope
+interpretations, extensive placebo runs, long sample-window sliders and a
+second AI exercise. Use the same computed model and interval on screen and
+paper. The existing handoff flags an ordinary-versus-robust interval discrepancy;
+resolve it explicitly in the shared calculation before building.
+
+### Data correction to decide before this session is built
+
+Eight city records printed with score 58 have non-participation because the
+generator assigns participation before rounding. The handoff requires approval
+before changing the CSV. A clean score-rule case would assign participation
+from the rounded score and regenerate those records' outcomes consistently,
+then refresh affected Day 1 and Day 2 figures and packs. The current Day 1
+rebuild leaves the CSV unchanged. Until corrected, do not describe observed
+compliance with the displayed score as perfect.
+
+## Session 3 Reading a matched comparison
+
+**75 minutes, including a five-minute break.** Preserve Fiona's seven profile
+cards per group and optional walking version. Let participants match on
+pre-programme characteristics before showing outcomes. Keep nearest-neighbour
+matching as the actual method; do not call it propensity-score matching.
+
+| Screen | Participant action and evidence | Minutes |
+|---|---|---:|
+| 1 Which comparison would be fair | Predict why an unmatched cost gap could mislead | 4 |
+| 2 Read the profiles | Find pre-programme characteristics that could affect costs | 5 |
+| 3 Find the twins | Groups use Fiona's seven profile cards; optional walking version | 12 |
+| 4 Open their costs | Reveal outcomes only after matching; calculate or read the difference | 5 |
+| 5 Read the matched result | Name who is compared, find the estimate and identify unmatched records | 6 |
+| 6 What was used to match | Explain the actual nearest-neighbour method in plain language; one trainer demo | 5 |
+| 7 Break | Protect the break | 5 |
+| 8 Leave out manager age | Predict, then reveal the changed estimate; connect the difference to selection | 6 |
+| 9 What remains unmeasured | Distinguish balanced observed characteristics from an unmeasured cause | 5 |
+| 10 Mark up the report extract | Individual reading, then pair feedback, using comparison and limitation | 8 |
+| 11 Write a provisional judgement | Support each conclusion with the source; name a useful next question | 6 |
+| 12 Repair an AI assurance | Remove claims that every business was matched and that matching removes all bias | 5 |
+| 13 Your question from memory | Independent close with the purpose of the question | 3 |
+
+Remove the traffic-camera comparison, extra matching variants, the second full
+case and repeated model runs. “Similar on recorded characteristics” must not
+become “identical” or “randomly assigned”. A matched comparison can be credible,
+but its causal interpretation still relies on the absence of important
+unmeasured differences and an adequate comparison pool.
+
+## Materials and review checks
+
+Use one two-sided participant sheet per session, with the shared reading layout
+from Day 1. Keep group cards and printing instructions in the trainer packet.
+Preserve the existing A1 activities and their distribution logic. Keep AI source
+checking in every session without requiring an AI account. Assess each reader's
+independent final question and reason; room vote movement alone is not a score.
+
+For each deck, check every screen, run the single trainer cell, open every
+evidence reveal and test keyboard controls. Render all changed print pages and
+compare their calculated figures with the deck. Publish unlinked previews after
+those checks. The shortened Day 2 route is pending review.

@@ -113,7 +113,7 @@ The participant average describes **4,794 businesses**, not all 10,000.
 Add the population to your answer to **Q1**. The pilot lottery uses a different set of businesses.
 
 ::: {.notes}
-3 minutes. Point to denominator of each group average. The score rule may make participants systematically different from others. This is not random assignment in the city. Do not teach the cutoff method now. Check that no one uses 10,000 as participant denominator or merges the pilot with city data. Transition: a group mean still hides the distribution inside that group.
+3 minutes. Point to denominator of each group average. The score rule may make participants systematically different from comparison businesses. This is not random assignment in the city. Do not teach the cutoff method now. Check that no one uses 10,000 as participant denominator or merges the pilot with city data. Transition: a group mean still hides the distribution inside that group.
 :::
 
 ## Why do we remove the pilot businesses before we calculate? {#s2-p03b .reader-slide .s1-review .s2-review .code-example}
@@ -260,7 +260,7 @@ html_out(s2_lines('others'))
 **Comparison businesses** (also called controls) did not receive GreenWaste. These 5,206 businesses had efficiency scores above the cut-off of 58. The period and the units are the same as for participant businesses.
 
 ::: {.notes}
-6 minutes. Learners calculate other-group change Q4 then compare descriptions with Q3. A rise in the other group rules out describing these two group means as a common city-wide fall. It does not validate a counterfactual for participants: score selection and starting costs differ. Means rounded for display, change computed from unrounded values. Do not subtract changes as an unexplained causal DiD estimate. Transition: another tempting number is the gap after a year.
+6 minutes. Learners calculate comparison-business change Q4 then compare descriptions with Q3. A rise in the comparison businesses rules out describing these two group means as a common city-wide fall. It does not validate a counterfactual for participants: score selection and starting costs differ. Means rounded for display, change computed from unrounded values. Do not subtract changes as an unexplained causal DiD estimate. Transition: another tempting number is the gap after a year.
 :::
 
 ## Participant businesses ended with lower costs. Were their costs already lower than the comparison businesses' costs before? {#s2-p09 .reader-slide .s1-review .s2-review}
@@ -278,7 +278,7 @@ html_out(paste0('<div id="s2-levels"><div data-variant>',s2_lines(baseline=FALSE
 :::
 
 ::: {.notes}
-7 minutes. Predict judgement before reveal, then show participants already had lower mean costs before (1,432 versus 2,258). Actual rounded gap from unrounded means is -1,638. The rule selects groups; baseline difference is direct evidence that they were not identical in mean cost. It does not prove that all selection concerns are observed or establish true bias direction. Learners state one concern and one evidence request in Q4. Transition: both numbers are real; neither alone answers the causal question.
+7 minutes. Predict judgement before reveal, then show participants already had lower mean costs before (1,432 versus 2,258). Rounded gap, calculated from the exact means, is -1,638. The rule selects groups; baseline difference is direct evidence that they were not identical in mean cost. It does not prove that all selection concerns are observed or establish true bias direction. Learners state one concern and one evidence request in Q4. Transition: both numbers are real; neither alone answers the causal question.
 :::
 
 ## Each number compares something different. Why is neither enough on its own? {#s2-p10 .reader-slide .s1-review .s2-review}
@@ -292,7 +292,7 @@ Which comparison is behind the claim that GreenWaste lowered costs? What would m
 Use the **summary on page 3** to check your answers to Q3 and Q4. Neither number alone shows a saving caused by GreenWaste.
 
 ::: {.notes}
-5 minutes. Have pairs point to group/time in both comparisons and explain one missing piece. Counterfactual means participants' outcome without the programme at the same follow-up time. These descriptives do not establish true causal effect or actual bias directions. Preview that a fair design, not a preferred number, is needed; pilot next session. Transition: use this reading to triage the four cards.
+5 minutes. Have pairs point to group/time in both comparisons and explain one missing piece. Counterfactual means participants' outcome without the programme at the same follow-up time. These descriptives do not establish true causal effect or the direction of any bias. Preview that a fair design, not a preferred number, is needed; pilot next session. Transition: use this reading to triage the four cards.
 :::
 
 ## Here are four statements about GreenWaste. Which would you act on? {#s2-p11 .reader-slide .s1-review .s2-review}
@@ -332,11 +332,11 @@ html_out(paste0('<p class="caption">Naive prompt (a prompt with no context, as a
 ```
 
 ::: {.ask}
-On **page 5**, underline the passages that H2-A2 supports and cross out the claims that it does not support. Check against **H2-A2 on page 1**.
+On **page 5**, underline the passages that H2-A2 (the table of mean costs by group) supports and cross out the claims that it does not support. Check against **H2-A2 on page 1**.
 :::
 
 ::: {.notes}
-8 minutes. AI Snapshot A: five minutes individual/pair markup, three minutes source-check debrief. Naive prompt on worksheet: explain chart and advise expansion. Written for the exercise; not a real AI answer. Supported means and changes, sensible caveat and monitoring. Unsupported attribution of whole after gap, other group automatically counterfactual, every participant improved, national transfer. The observation that these two means do not share a city-wide fall is correct; it does not by itself exclude other explanations. Ask for both a supported passage and an error. Transition: make the comparison explicit in the better prompt.
+8 minutes. AI Snapshot A: five minutes individual/pair markup, three minutes source-check debrief. Naive prompt on worksheet: explain chart and advise expansion. Written for the exercise; not a real AI answer. Supported means and changes, sensible caveat and monitoring. Unsupported attribution of whole after gap, comparison businesses automatically counterfactual, every participant improved, national transfer. The observation that these two means do not share a city-wide fall is correct; it does not by itself exclude other explanations. Ask for both a supported passage and an error. Transition: make the comparison explicit in the better prompt.
 :::
 
 ## Ask the AI to name the comparison it is using. {#s2-p14 .reader-slide .s1-review .s2-review}
@@ -345,7 +345,7 @@ On **page 5**, underline the passages that H2-A2 supports and cross out the clai
 html_out(paste0('<p class="caption"><strong>Improved prompt</strong></p><div class="better-prompt">',s2_paragraphs(s2_prompt),'</div>'))
 ```
 
-Copy **the prompt on page 5 and H2-A2** into **Microsoft Copilot**. Keep your AI good-practice card beside you.
+Copy **the prompt on page 5 and H2-A2 (the table of mean costs by group)** into **Microsoft Copilot**. Keep your AI good-practice card beside you.
 
 ::: {.ask}
 Which claim improved? Which claim still needs checking against H2-A2?
@@ -357,7 +357,7 @@ Which claim improved? Which claim still needs checking against H2-A2?
 
 ## What comparison would you ask for next? {#s2-p15 .reader-slide .s1-review .s2-review}
 
-Keep **H2-A2 open**. Close the AI responses and turn over the cards.
+Keep **H2-A2 (the table of mean costs by group) open**. Close the AI responses and turn over the cards.
 
 ::: {.ask}
 Write one conclusion that the data support. Then write one specific piece of evidence you would request to help decide whether to expand GreenWaste.

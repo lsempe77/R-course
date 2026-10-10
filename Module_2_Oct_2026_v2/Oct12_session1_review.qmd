@@ -52,7 +52,7 @@ tp <- subset(gw, setting == 'city' & took_part == 1)
 ```
 
 ::: {.notes}
-4 minutes. Hand out the case card and the separate Session 1 review worksheet, not the existing live worksheet. Say: “We will use this invented programme all week. It supports businesses with equipment, installation and training.” Point to pilot and city. Explain lottery versus score rule briefly; methods come later. The picture illustrates allocation, not exact sample counts. Name cost AED as this morning's outcome; landfill tonnes return later in the week. Ask what success means and take two answers. Listen for lower costs, not just equipment distributed. Transition: “How does programme delivery become the outcome we care about?”
+4 minutes. Hand out the case card and the Session 1 worksheet. Say: “We will use this invented programme all week. It supports businesses with equipment, installation and training.” Point to pilot and city. Explain lottery versus score rule briefly; methods come later. The picture illustrates allocation, not exact sample counts. Name cost AED as this morning's outcome; landfill tonnes return later in the week. Ask what success means and take two answers. Listen for lower costs, not just equipment distributed. Transition: “How does programme delivery become the outcome we care about?”
 :::
 
 ## Where does GreenWaste fit? {#s1-p02 .reader-slide .s1-review}
@@ -91,7 +91,7 @@ Which term could you explain already? Which would you need help with?
 :::
 
 ::: {.notes}
-2 minutes. Ask for meanings, not confidence scores. Take one term explanation and invite one uncertainty. Do not correct all five now. Locate H1-A on worksheet page 1 and say its comparison is participants before/after, not participants versus others. Keep the source available throughout. Transition: “Begin with the average: who does it describe?”
+2 minutes. Ask for meanings, not confidence scores. Take one term explanation and invite one uncertainty. Do not correct all five now. Locate H1-A on worksheet page 1 and say its comparison is participant businesses before and after, not participant businesses versus comparison businesses. Keep the source available throughout. Transition: “Begin with the average: who does it describe?”
 :::
 
 ## Mean: who looks like the average? {#s1-p04 .reader-slide .s1-review}
@@ -194,7 +194,7 @@ round(mean(change))
 :::
 
 ::: {.notes}
-4 minutes. Take sign interpretation before Run. Say: “The displayed group means are rounded; the code averages the unrounded business changes.” One optional trainer Run only. Key -669. Here arithmetic matches the regression with intercept and after indicator; it does not establish a causal effect. If internet fails, use printed H1-A and arithmetic. Transition: “How precise is the estimated mean change?”
+4 minutes. Take sign interpretation before Run. Say: “The displayed group means are rounded; the code averages the unrounded business changes.” One optional trainer run only. Key -669. Here arithmetic matches the regression with intercept and after indicator; it does not establish a causal effect. If internet fails, use printed H1-A and arithmetic. Transition: “How precise is the estimated mean change?”
 :::
 
 ## Confidence interval: how sure are we? {#s1-p09 .reader-slide .s1-review}
@@ -205,7 +205,7 @@ The **95% confidence interval** describes uncertainty around an estimated quanti
 html_out(paste0('<div id="s1-interval-views"><div data-variant>',review_intervals(case$before_after,ba_ci[1],ba_ci[2],'Mean change',xmax=-620,xmin=-720,rule=NULL),'<p class="caption">The change in annual waste management cost is in AED. The axis is zoomed to the range −720 to −620, so zero is outside this view.</p></div><div data-variant hidden>',review_coverage(),'</div></div>'))
 ```
 
-<button data-swap="s1-interval-views">Estimate / repeated-sample illustration</button>
+<button data-swap="s1-interval-views">Show the estimate, or show how it varies across repeated samples</button>
 
 ::: {.ask}
 **Worksheet Q4:** Does the interval of −684 to −654 AED describe the savings of individual businesses?
@@ -261,7 +261,7 @@ In these two invented examples, result A has **p < 0.001** and result B has **p 
 :::
 
 ::: {.notes}
-4 minutes. Key A is statistically significant but far below our rule of at least a 1,000 AED reduction; B could be important but imprecise, interval crosses zero/rule. P-values and intervals computed coherently under hypothetical normal inference. Listen for absence of significance is not evidence of no effect. Neither supplies causal design by itself. Transition: “Return to the actual table and its decision rule.”
+4 minutes. Key A is statistically significant but far below our rule of at least a 1,000 AED reduction; B could be important but imprecise, interval crosses zero/rule. P-values and intervals computed coherently under hypothetical normal inference. Listen for absence of significance is not evidence of no effect. Neither supplies causal design by itself. Transition: “Return to the table and its decision rule.”
 :::
 
 ## Costs fell by 669 AED. Is that at least a 1,000 AED reduction? {#s1-p13 .reader-slide .s1-review}
@@ -282,7 +282,7 @@ The change in cost is **−669 AED**, with a 95% interval of **−684 to −654 
 
 ## Pair check: what does the table support? {#s1-p14 .reader-slide .s1-review}
 
-Use **H1-A on worksheet page 1** and your answers to Q1 to Q5.
+Use **H1-A (the before-and-after table) on worksheet page 1** and your answers to Q1 to Q5.
 
 1. Compare your answers with a partner, and correct one explanation if it needs it.
 2. Finish Q6. Explain what the estimate and the interval show, compare them with our rule, and explain why this table cannot show that GreenWaste caused the change.
@@ -318,7 +318,7 @@ Underline the claims that H1-A supports. Cross out the claims that H1-A does not
 html_out(paste0('<p class="caption"><strong>Improved prompt</strong></p><div class="better-prompt">',review_paragraphs(review_prompt),'</div>'))
 ```
 
-Use **worksheet page 3** to copy the prompt and H1-A table into **Microsoft Copilot**. Keep the AI good-practice card beside you.
+Use **worksheet page 3** to copy the prompt and H1-A (the before-and-after table) into **Microsoft Copilot**. Keep the AI good-practice card beside you.
 
 ::: {.ask}
 Which question that the AI asked helped you most? Which claim still needs checking against H1-A?
@@ -330,7 +330,7 @@ Which question that the AI asked helped you most? Which claim still needs checki
 
 ## What would you tell the director? {#s1-p17 .reader-slide .s1-review}
 
-Keep **H1-A open**. Close the term explanations and AI responses.
+Keep **H1-A (the before-and-after table) open**. Close the term explanations and AI responses.
 
 Write three sentences:
 
@@ -343,5 +343,5 @@ Would your advice still be defensible if the AI had never been used?
 :::
 
 ::: {.notes}
-8 minutes. INDEPENDENT CLOSE: four minutes write, two minutes pair source-check, two minutes trainer feedback. No AI. Accept clear plain language and different proportionate requests. Require missing comparison, not vague more data. Return to questions missed during lesson; do not score agreement with a preferred action. Next session reads actual cost records, distributions and alternative comparisons; the pilot follows later. Total 90 minutes. This prototype is separate from the current source and does not replace the live deck.
+8 minutes. INDEPENDENT CLOSE: four minutes write, two minutes pair source-check, two minutes trainer feedback. No AI. Accept clear plain language and different proportionate requests. Require missing comparison, not vague more data. Return to questions missed during lesson; do not score agreement with a preferred action. Next session reads cost records from the GreenWaste data, distributions and alternative comparisons; the pilot follows later. Total 90 minutes. This prototype is separate from the current source and does not replace the live deck.
 :::

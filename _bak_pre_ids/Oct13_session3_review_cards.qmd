@@ -1,0 +1,54 @@
+---
+title: "Matching activity: business profile cards and reveal slips"
+format:
+  html:
+    embed-resources: true
+    toc: false
+    theme: none
+    include-in-header:
+      text: |
+        <style>
+        body{font:18px/1.4 Arial,sans-serif;color:#111418;background:#eef2f6;margin:0}main{max-width:850px;margin:auto}.sheet-page{background:white;padding:30px;margin:20px 0}h2,h3{color:#063360}h2{font-size:24px}.cards{display:grid;grid-template-columns:1fr 1fr;gap:14px}.card{border:1px dashed #7da1c4;padding:16px;min-height:145px;break-inside:avoid}.card h3{font-size:25px;margin:0 0 8px}.card p{margin:4px 0}header button{font:inherit;padding:8px 15px}#title-block-header{display:none}@page{size:A4;margin:16mm}@media print{body{background:white;font-size:12pt}.sheet-page{padding:0;margin:0;break-after:page}.sheet-page:last-child{break-after:auto}header{display:none}.card{min-height:36mm;padding:4mm}.cards{gap:4mm}}
+        </style>
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+```{r, include=FALSE}
+source('day2_session3_review.R', encoding='UTF-8')
+```
+
+<header><button onclick="window.print()">Print both pages</button></header>
+
+<div class="sheet-page">
+
+## Page 1 | Seven invented business profile cards
+
+Match businesses A, B and C to comparison businesses 1 to 4 using manager age and size. Use each comparison business at most once. Record your choices before you receive the reveal slips. In the city study, one comparison business can be used more than once. In this activity each can be used only once.
+
+```{r, results='asis'}
+html_out(paste0('<div class="cards">', paste(vapply(seq_len(nrow(profiles)), function(i)
+  paste0('<div class="card"><h3>Business ', profiles$id[i], '</h3><p>',
+    profiles$group[i], ' in GreenWaste</p><p>Manager age: ', profiles$age[i],
+    '</p><p>Size: ', profiles$size[i], '</p></div>'), ''), collapse=''), '</div>'))
+```
+
+</div>
+
+<div class="sheet-page">
+
+## Page 2 | Reveal slips: keep these until you have recorded your pairs
+
+These are invented values for the exercise. Keep your original pairs. For each pair, calculate the participant's cost minus the comparison business's cost. Then calculate the mean of the three differences.
+
+```{r, results='asis'}
+html_out(paste0('<div class="cards">', paste(vapply(seq_len(nrow(profiles)), function(i)
+  paste0('<div class="card"><h3>Business ', profiles$id[i],
+    '</h3><p>Annual waste management cost after GreenWaste:</p><p><strong>', fmt(profiles$cost[i]),
+    ' AED</strong></p><p>Invented value for this activity.</p></div>'), ''), collapse=''), '</div>'))
+```
+
+</div>

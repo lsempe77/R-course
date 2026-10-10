@@ -1,0 +1,278 @@
+---
+title: "GreenWaste pilot: evidence and recommendation"
+format:
+  html:
+    embed-resources: true
+    toc: false
+    html-math-method: plain
+    theme: none
+    include-in-header:
+      text: |
+        <style>
+        body{font:16px/1.45 Arial,sans-serif;color:#111418;margin:0;background:#eef2f6}
+        main{max-width:850px;margin:auto}h1{font-size:26px;color:#063360;margin:12px 0}h2{font-size:22px;color:#063360;margin:0 0 12px}h3{font-size:18px;margin:14px 0 6px}
+        .sheet-page{background:white;padding:28px 40px;margin:20px 0;box-sizing:border-box;min-height:950px}p{margin:8px 0}.caption{font-size:13px;color:#545860}.reading-table{border-collapse:collapse;width:100%;font-size:14px}.reading-table td,.reading-table th{padding:8px;border-bottom:1px solid #D5DEE8;text-align:left}.reading-table thead{background:#063360;color:white}.writing{height:44px;border-bottom:1px solid #c8d6e5;margin:6px 0}.writing.tall{height:75px}.costs{font-size:19px;word-spacing:9px;border-top:2px solid #215a9e;padding:12px 0}.ai-source{border-left:3px solid #7da1c4;padding-left:16px}.prompt{border-top:2px solid #215a9e;padding-top:8px;font-size:15px}.source-note{font-size:14px}
+        header button{font:inherit;margin:12px 0;padding:8px 15px;border:1px solid #215a9e;background:white;color:#063360;cursor:pointer}
+        @page{size:A4;margin:14mm}@media print{body{background:white;font-size:11pt;line-height:1.35}main{max-width:none}.sheet-page{padding:0;margin:0;min-height:0;break-after:page;box-shadow:none}.sheet-page:last-child{break-after:auto}header{display:none}h1{font-size:19pt}h2{font-size:17pt}h3{font-size:12pt}.reading-table{font-size:10pt}.writing{height:10mm}.writing.tall{height:17mm}.ai-source{font-size:11pt}.prompt{font-size:10pt}#title-block-header{display:none}}
+        .review-svg{display:block;width:100%;height:210px}.comparison-table{border-collapse:collapse;width:100%;font-size:14px}.comparison-table td,.comparison-table th{border-bottom:1px solid #D5DEE8;padding:7px;text-align:left}.sheet-page .ai-source p{margin:8px 0}.sheet-page table{border-collapse:collapse;width:100%}.sheet-page th,.sheet-page td{border-bottom:1px solid #D5DEE8;padding:7px;text-align:left}.sheet-page thead{background:#063360;color:white}@media print{.review-svg{height:200px}.comparison-table{font-size:10pt}}
+        .interval-visual{display:block;width:100%;height:160px}.draw-table{width:100%;border-collapse:collapse}
+        </style>
+        <style>.writing.part{height:30px;margin:2px 0}.table-title{margin:10px 0 4px}@media print{.writing.part{height:7mm}}</style>
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+```{r, include=FALSE}
+source('session3_review.R', encoding='UTF-8')
+```
+
+<header><button onclick="window.print()">Print worksheet</button></header>
+
+<div class="sheet-page">
+
+## Page 1 | H3-A: The pilot lottery study summary (design and starting costs)
+
+GreenWaste is a fictional training case. Use this study summary as your source for today's questions.
+
+### §1 | Who and what?
+
+GreenWaste offers equipment subsidies, installation help and staff training. The pilot covered 400 eligible businesses in one district. All of them had efficiency scores of 58 or below. The outcome is annual waste management cost in AED per business, measured before GreenWaste and 12 months after.
+
+### §2 | How were places given out?
+
+The programme had 200 places for the 400 eligible businesses. A lottery assigned individual businesses: 200 to the treatment group, which received GreenWaste, and 200 to the control group, which did not receive GreenWaste during the study. Random assignment within this pilot is not the same as choosing a sample that represents the whole country.
+
+### §3 | What must be true for the comparison to be reliable?
+
+In this fictional pilot, every business took part according to its assignment, and all 400 businesses have cost records 12 months later. A causal reading of the result depends on three conditions: the lottery was carried out as described, costs were measured in the same way in both groups, and the programme did not affect the control group's costs. A real report should document these conditions.
+
+### §4 | Before the programme
+
+```{r, results='asis'}
+html_out('<p class="table-title"><strong>Annual waste management cost before GreenWaste: treatment group (200 businesses) and control group (200 businesses) (AED, in bands of 250 AED)</strong></p>')
+html_out(s3_baseline())
+```
+
+These are the two groups as assigned, 200 businesses each. Before GreenWaste, the mean annual waste management cost was 1,390 AED in the treatment group and 1,411 AED in the control group. The distributions were similar but not identical. Similar starting costs support the comparison. They do not prove that the lottery was carried out correctly or that the groups are balanced on everything.
+
+<div class="source-note">Source: GreenWaste pilot data (400 businesses). The age-slip lottery in Q1 is a practice activity. It is not the allocation used in this pilot.</div>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 2 | H3-A: Findings and comparisons
+
+### §5 | Annual waste management cost 12 months after GreenWaste
+
+Twelve months after GreenWaste, the treatment group's mean annual waste management cost was 769 AED and the control group's was 1,783 AED. The treatment group minus the control group is **-1,014 AED**. If the three conditions in §3 hold, this is an estimate of the effect of GreenWaste on the eligible pilot businesses.
+
+```{r, results='asis'}
+html_out(s3_regression())
+```
+
+### The same result as a reduction in cost
+
+```{r, results='asis'}
+html_out(s3_interval_svg('trial'))
+```
+
+Our rule is a reduction in annual waste management cost of at least 1,000 AED per business per year. The estimated reduction is 1,014 AED. The 95% interval is 862 to 1,167 AED, so it includes values below 1,000 AED. The interval shows uncertainty about the mean effect if the model's assumptions hold. It does not show the savings of individual businesses.
+
+### Three comparisons from three groups of businesses
+
+```{r, results='asis'}
+html_out(s3_comparisons())
+```
+
+The pilot result does not automatically apply to the city, because the city's businesses are different. One district does not show effects for the whole country. This study summary does not give the full programme costs, so these results alone cannot settle whether GreenWaste is good value for money.
+
+</div>
+
+<div class="sheet-page">
+
+## Page 3 | Q1 and Q2: the comparison and the regression table
+
+### Q1 | Why does chance help?
+
+Read §1 to §3 of H3-A on page 1. Why does the control group give a more reliable comparison than businesses that chose whether to join?
+
+<div class="writing tall"></div>
+
+### Practice lottery: 20 age slips and 10 places
+
+Draw ten slips for the treatment group. The other ten slips are the control group. Calculate the mean manager age of each group. Put all the slips back and draw again. The slips show manager ages before the programme, not effects on cost. The pilot itself has 400 businesses, not 20.
+
+| Practice draw | Treatment mean age | Control mean age | Treatment minus control |
+|---|---|---|---|
+| 1 | __________ | __________ | __________ |
+| 2 | __________ | __________ | __________ |
+
+(a) What changed between the two draws?
+
+<div class="writing part"></div>
+
+(b) Would larger groups usually have mean ages closer to each other?
+
+<div class="writing part"></div>
+
+(c) Use the starting costs in §4 on page 1. What reassurance do they give, and what do they not prove?
+
+<div class="writing part"></div>
+
+### Q2 | Calculate, then read the regression table
+
+Use §5 and the table on page 2.
+
+(a) Calculate the treatment group's mean cost minus the control group's mean cost, 12 months after GreenWaste.
+
+<div class="writing part"></div>
+
+(b) Explain what the sign, the units, the comparison and the group of businesses tell you.
+
+<div class="writing part"></div>
+
+(c) Circle the row of the table that shows the comparison.
+
+(d) Explain what the control group row shows.
+
+<div class="writing part"></div>
+
+(e) Use both rows to work out the treatment group's mean cost.
+
+<div class="writing part"></div>
+
+(f) Box the 95% interval in the comparison row. Say what it describes.
+
+<div class="writing part"></div>
+
+(g) Read the p-value in that row. Say what it does and does not show.
+
+<div class="writing part"></div>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 4 | Q3 to Q5: what advice follows?
+
+### Q3 | Some reduction, or enough reduction?
+
+Use the interval on page 2.
+
+(a) What in the table suggests that GreenWaste reduces costs?
+
+<div class="writing part"></div>
+
+(b) What is still uncertain about whether the reduction is at least 1,000 AED?
+
+<div class="writing part"></div>
+
+### Q4 | Who does the pilot describe?
+
+Use §1 to §3 and the final paragraph on page 2.
+
+(a) Which businesses does the pilot describe?
+
+<div class="writing part"></div>
+
+(b) What evidence would you request before expanding GreenWaste to other businesses?
+
+<div class="writing part"></div>
+
+(c) Say why that evidence matters.
+
+<div class="writing part"></div>
+
+### Q5 | Your provisional action
+
+(a) Choose Extend, Do not extend or Ask first.
+
+(b) Write one strength of the pilot design.
+
+<div class="writing part"></div>
+
+(c) Write one limit that matters for the decision.
+
+<div class="writing part"></div>
+
+(d) Write one condition that fits the size of the decision.
+
+<div class="writing part"></div>
+
+(e) Say which businesses your action covers.
+
+<div class="writing part"></div>
+
+### Your recommendation in three sentences
+
+Write your recommendation in three sentences. (1) What the pilot found and which table shows it. (2) What you recommend, or the condition you set. (3) The most important limit and the evidence you would request.
+
+<div class="writing tall"></div>
+
+Then swap with a partner and check each other's sentences. Does each sentence name the comparison and the businesses? Does it give units and period? Does it compare the interval with our rule of at least a 1,000 AED reduction? Does it say how far the result reaches? Does it name a specific evidence request? Mark one claim that needs more support.
+
+### Your final recommendation and evidence request
+
+Keep H3-A open, and close the AI responses and your partner's comments. Revise your recommendation on your own. What answer to your evidence request could change your advice, and how?
+
+<div class="writing tall"></div>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 5 | AI exercise: advice for the minister
+
+### Part A: Mark the response
+
+Naive prompt (a prompt with no context, as a busy person might type it): "Our GreenWaste pilot saved 1,014 AED per business (p < 0.001). Write a short paragraph for the minister recommending expansion." This response was written for the exercise. It is not a real AI answer. Underline the claims that H3-A supports. Cross out the claims that H3-A does not support. Check H3-A on pages 1 and 2.
+
+```{r, results='asis'}
+html_out(paste0('<div class="ai-source">',s3_paragraphs(s3_ai),'</div>'))
+```
+
+### Part B: Run the improved prompt, then compare
+
+Copy the prompt and H3-A into Microsoft Copilot, and keep your AI good-practice card beside you. If you are not using Copilot, read the prepared response on page 6 after you finish Part A.
+
+```{r, results='asis'}
+html_out(paste0('<div class="prompt"><strong>Improved prompt</strong>',s3_paragraphs(s3_prompt),'</div>'))
+```
+
+(a) What improved compared with your own note?
+
+<div class="writing part"></div>
+
+(b) Which claim still needs checking against H3-A?
+
+<div class="writing part"></div>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 6 | Prepared response
+
+Use this response if you are not using Copilot. Read it after you have marked the response on page 5. It is an example of a better answer. An AI tool may answer differently.
+
+```{r, results='asis'}
+html_out(paste0('<div class="ai-source">',s3_paragraphs(s3_fallback),'</div>'))
+```
+
+(a) Which clarifying question in the response helps most?
+
+<div class="writing part"></div>
+
+(b) Does the advice separate some reduction in cost, our 1,000 AED rule, wider reach and full programme costs?
+
+<div class="writing part"></div>
+
+(c) Which claim would you check or strengthen before sharing this advice?
+
+<div class="writing part"></div>
+
+</div>

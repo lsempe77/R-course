@@ -1,0 +1,10 @@
+<script>
+// The shared handler switches the variants; this scoped handler labels that state.
+document.addEventListener('click',event=>{
+ const button=event.target.closest('.s2-review button[data-swap]');
+ if(!button)return;
+ const open=button.getAttribute('aria-pressed')!=='true';
+ button.setAttribute('aria-pressed',String(open));
+ button.textContent=open?button.dataset.opened:button.dataset.closed;
+});
+</script>

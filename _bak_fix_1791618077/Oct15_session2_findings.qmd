@@ -1,0 +1,17 @@
+---
+title: "Corrected GreenWaste evidence for a brief"
+format:
+  docx:
+    reference-doc: reader_template.docx
+    toc: false
+---
+
+```{r setup, include=FALSE}
+source('day4_case.R')
+```
+
+```{r, results='asis', echo=FALSE}
+for(i in 1:4)cat('## ',i,' ',finding_titles[i],'\n\n',finding_text[i],'\n\n',sep='')
+```
+
+The styled print copy is built by `Rscript make_session_materials.R --day4`.
