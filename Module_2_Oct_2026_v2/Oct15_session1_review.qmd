@@ -1,7 +1,7 @@
 ---
 title: "Would you trust this report?"
 subtitle: "Day 4 | Session 1: Read independently and defend your judgement"
-author: "3ie | Review version"
+author: "3ie"
 always_allow_html: true
 format:
   revealjs:
@@ -87,7 +87,7 @@ Read **R1.1-R1.3**, then follow its claims to **Section 5 and Section 6**.
 On **H10 page 3**, record:
 
 - One supported passage and its source.
-- One consequential concern or unsupported claim.
+- One important concern or unsupported claim.
 - Evidence that could change your judgement.
 
 ::: {.ask}
@@ -104,7 +104,7 @@ Can the reader locate both your strength and your concern?
 
 Read your section and related sources. Complete **H10 page 4**.
 
-Identify a supported passage, then a consequential concern **if warranted**.
+Identify a supported passage, then an important concern **if warranted**.
 
 ::: {.ask}
 If your section discloses genuine limits, how would you rate that disclosure?
@@ -157,13 +157,13 @@ html_out(d10_results_table())
 
 <div class="review-annotate"><button data-table-column="0" aria-pressed="false">Highlight comparison</button><button data-table-column="1" aria-pressed="false">Highlight estimate</button><button data-table-column="2" aria-pressed="false">Highlight interval</button><button data-open="d10-headline" data-closed="Check interpretation" data-opened="Hide the check" aria-controls="d10-headline" aria-expanded="false">Check interpretation</button></div>
 
-<p class="caption">Annual saving per business, AED. Headline: matching (R5.2). Preferred city analysis: extra change (R3.2).</p>
+<p class="caption">Annual saving per business, AED. Headline: matching (R5.2). Preferred city analysis: the difference between the two changes (R3.2).</p>
 
 ::: {.ask}
-Which intervals span 1,000? Does the chosen headline settle the rule?
+Which intervals span 1,000? Does the chosen headline settle our rule of at least a 1,000 AED reduction?
 :::
 
-<div id="d10-headline" class="feedback" hidden>Pilot and matching span 1,000; extra change and cutoff lie below it. All intervals are above zero. Shared city data and different comparisons do not establish a common national effect.</div>
+<div id="d10-headline" class="feedback" hidden>Pilot and matching span 1,000; the difference between the two changes and the cut-off result lie below it. All intervals are above zero. Shared city data and different comparisons do not establish a common national effect.</div>
 
 ::: {.notes}
 7 minutes. This reproduces complete T10, not just two convenient rows. Learners annotate their report before the reveal. Ask for the rationale linking the preferred city analysis to a different selected headline. Largest is not automatically most credible, and a lower estimate is not automatically better. Interpret every figure on its own comparison and assumptions. R5.3/R3.4 disclose shared city records. Do not turn a positive interval into proof of nationwide value for money. Highlight buttons aid locating columns; they are not answer flags.
@@ -173,7 +173,7 @@ Which intervals span 1,000? Does the chosen headline settle the rule?
 
 Read **R6.1-R6.3** beside **R7.1-R7.2**.
 
-Choose one unresolved issue: attribution, minimum saving, reach, data quality or full costs.
+Choose one unresolved issue: whether GreenWaste caused the change, the 1,000 AED minimum saving, reach, data quality or full costs.
 
 ::: {.ask}
 What evidence could change the action or its conditions?

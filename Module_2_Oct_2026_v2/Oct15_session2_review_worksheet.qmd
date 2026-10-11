@@ -64,13 +64,13 @@ Exact sentence and source:
 
 <div class="writing tall"></div>
 
-### One consequential repair
+### One important repair
 
 Sentence or omission, finding/paragraph ID, and why the advice needs changing:
 
 <div class="writing log-space"></div>
 
-<p class="caption">Check units/time and interval against the rule, not only the point estimate. Look for a proportionate scale/condition, a relevant limit and a specific request with decision purpose. Different actions can satisfy the same rubric.</p>
+<p class="caption">Check units/time and interval against our rule of at least a 1,000 AED reduction, not only the point estimate. Look for a scale and condition that fit the size of the decision, a relevant limit and a specific request with decision purpose. Different actions can satisfy the same rubric.</p>
 
 </div>
 
@@ -106,7 +106,7 @@ At most 150 words; preserve the first draft on page 1.
 
 ## Page 4 | Copilot Snapshot, Stage 1
 
-**8 minutes.** Prepared illustrative response, not a captured live transcript.
+**8 minutes.** This response was written for the exercise. It is not a real AI answer.
 
 ### The initial, leading prompt
 
@@ -170,7 +170,7 @@ One claim or omission I still need to verify, and how:
 
 ## Page 6 | Prepared paper alternative
 
-**Hold until Stage 1 is finished.** Use for Stage 2 when Copilot is unavailable, slow or not approved. This is authored training material, not additional evidence.
+**Hold until Stage 1 is finished.** Use for Stage 2 when Copilot is unavailable, slow or not approved. This response was written for the exercise. It is not a real AI answer.
 
 ### Clarifying questions
 

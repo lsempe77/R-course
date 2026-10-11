@@ -1,7 +1,7 @@
 ---
 title: "What should the director do next?"
 subtitle: "Day 4 | Session 2: A brief with evidence, action and conditions"
-author: "3ie | Review version"
+author: "3ie"
 always_allow_html: true
 format:
   revealjs:
@@ -34,7 +34,7 @@ html_out(html_table(d11_index))
 ```
 
 ::: {.ask}
-Find the pilot comparison, interval against the rule and assumed economic inputs.
+Find the pilot comparison, interval against our rule of at least a 1,000 AED reduction, and assumed economic inputs.
 :::
 
 **Use F1-F4 for the brief.** This morning's review report is not the drafting authority.
@@ -86,7 +86,7 @@ Repair the inference, not just its tone.
 :::
 
 <button data-open="d11-weak" data-closed="Show one substantive repair" data-opened="Hide the example" aria-controls="d11-weak" aria-expanded="false">Show one substantive repair</button>
-<div id="d11-weak" class="feedback" hidden>The pilot point exceeds 1,000, but its interval spans the rule and describes one district. Specify a limited next phase or another bounded action, with a checkpoint using delivery, cost and persistence evidence before wider commitment.</div>
+<div id="d11-weak" class="feedback" hidden>The pilot point exceeds 1,000, but its interval includes values below our rule of at least a 1,000 AED reduction, and it describes one district. Specify a limited next phase or another bounded action, with a checkpoint using delivery, cost and persistence evidence before wider commitment.</div>
 
 ::: {.notes}
 4 minutes. One minute alone, one minute pair rewrite, two minutes compare after reveal. A word such as cautious does not repair the unsupported threshold or reach claim. The example is one acceptable bounded response, not a compulsory recommendation. It adds a decision point and relevant evidence rather than generic monitoring. Do not supply a second full model on the draft sheet.
@@ -160,7 +160,7 @@ Keep a defensible sentence; correct two assurances; identify one important omiss
 
 ## Ask for a decision-focused revision {#d4s2-p09 .reader-slide .s1-review .d4s2-review}
 
-**Stage 2: 7 minutes.** Use the better prompt on **H11 page 5**.
+**Stage 2: 7 minutes.** Use the improved prompt on **H11 page 5**.
 
 ```{r, results='asis'}
 html_out(paste0('<div class="better-prompt"><p>',d11_prompt,'</p></div>'))

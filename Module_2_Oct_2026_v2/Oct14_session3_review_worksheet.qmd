@@ -41,9 +41,9 @@ html_out(d9_results_table())
 
 **Units:** AED per business per year. Positive numbers mean reduced waste cost. Interval endpoints are sorted on that saving scale. **Decision rule:** minimum annual saving of **1,000 AED**.
 
-The pilot is a separate district sample. City extra change, the score cutoff and matching use the same city records; they make different comparisons. H9-B on page 2 describes them. Source IDs point to the analyst cards, supplied during the clinic.
+The pilot is a separate district sample. The city difference between the two changes, the score cut-off and matching use the same city records; they make different comparisons. H9-B on page 2 describes them. Source IDs point to the analyst cards, supplied during the clinic.
 
-<p class="caption">Paragraph IDs N1-N3; table ID T9. Figures recomputed from the corrected fictional GreenWaste file. Pilot OLS interval; city extra-change business-clustered interval; cutoff HC2 interval; matching business-clustered interval treating selected matches as given. Do not substitute this draft for a verified national appraisal.</p>
+<p class="caption">Paragraph IDs N1-N3; table ID T9. Source: GreenWaste data. Each interval is the 95% interval for that method. Do not substitute this draft for a verified national appraisal.</p>
 
 </div>
 
@@ -191,7 +191,7 @@ Close the AI output. Name the evidence to send, its purpose and how your advice 
 
 <div class="writing log-space"></div>
 
-<p class="caption">An unchanged decision can reflect better reasoning. Your evidence use and limits matter, not agreement with a room vote. Complete Q6 only when the trainer asks, after the Snapshot debrief.</p>
+<p class="caption">An unchanged decision can reflect better reasoning. Your evidence use and limits matter, not agreement with a room vote. Complete Q6 after the Snapshot debrief.</p>
 
 </div>
 
@@ -199,7 +199,7 @@ Close the AI output. Name the evidence to send, its purpose and how your advice 
 
 ## Page 6 | Copilot Snapshot, Stage 1
 
-**8 minutes:** mark up the supplied response, then compare with a partner. Prepared illustrative response, not a live transcript.
+**8 minutes:** mark up the supplied response, then compare with a partner. This response was written for the exercise. It is not a real AI answer.
 
 ### The initial prompt
 
@@ -231,7 +231,7 @@ Do not open the paper alternative on page 8 until Stage 1 is finished.
 
 ## Page 7 | Copilot Snapshot, Stage 2
 
-**7 minutes:** use the better prompt in Copilot if available and approved. Answer its clarifying questions briefly, then verify the output. Use only this fictional case, not workplace or personal data.
+**7 minutes:** use the improved prompt in Copilot if available and approved. Answer its clarifying questions briefly, then verify the output. Use only this fictional case, not workplace or personal data.
 
 ### A decision-focused prompt
 
@@ -266,11 +266,11 @@ If access or response time fails, use the prepared paper alternative on page 8. 
 
 ## Page 8 | Prepared paper alternative
 
-**Hold until Stage 1 is finished.** Use for Stage 2 when Copilot is unavailable, slow or not approved. This is authored training material, not evidence newly supplied by an AI.
+**Hold until Stage 1 is finished.** Use for Stage 2 when Copilot is unavailable, slow or not approved. This response was written for the exercise. It is not a real AI answer.
 
 ### Possible clarifying questions
 
-What population and delivery conditions does expansion cover? What risk of failing to reach the 1,000 AED saving rule is acceptable? Is the binding concern attribution, national reach, data quality or total spending?
+What population and delivery conditions does expansion cover? What risk of failing to reach the 1,000 AED saving rule is acceptable? Is the main concern whether GreenWaste caused the change, national reach, data quality or total spending?
 
 ### A conditional response after the sources are supplied
 

@@ -1,5 +1,5 @@
 ---
-title: "GreenWaste cutoff: read the local comparison"
+title: "GreenWaste cut-off: read the local comparison"
 format:
   html:
     embed-resources: true
@@ -36,13 +36,13 @@ source('day2_session2_review.R', encoding='UTF-8')
 
 <div class="sheet-page source-page">
 
-## Page 1 | H5-A: cutoff study extract
+## Page 1 | H5-A: The cut-off study summary
 
-**GreenWaste is a fictional training case.** This supplied extract and page 2's figures are your source; there is no separate report to find.
+**GreenWaste is a fictional training case.** Use this study summary and the figures on page 2 as your source for today's questions.
 
 ### §1 | Who and what determined participation?
 
-GreenWaste offers equipment subsidies, installation help and training. The city file has **10,000 businesses**: 4,794 participants and 5,206 others. Businesses with efficiency scores **58 or below participated**; those above 58 did not. Higher scores mean more efficient. The running variable is the score; **58 is the cutoff**. This rule is followed in the file, but it is not a lottery.
+GreenWaste offers equipment subsidies, installation help and training. The city file has **10,000 businesses**: 4,794 participant businesses and 5,206 comparison businesses (businesses that did not receive GreenWaste). Businesses with efficiency scores **58 or below participated**; those above 58 did not. Higher scores mean more efficient. The running variable is the score; **58 is the cut-off**. This rule is followed in the file, but it is not a lottery.
 
 ### §2 | What does the fitted result compare?
 
@@ -58,9 +58,9 @@ A five-point window (scores 53-63) uses **1,260 businesses** and estimates **-78
 
 ### §4 | What follows for the decision?
 
-On a positive-reduction scale, the local estimate is **721 AED**, interval **498-943**. Both are below the fictional **1,000 AED annual-saving minimum**, conditional on the model. Precision does not resolve the design concern. Most city participants are outside this local window. A result at the cutoff is not an estimated average effect for typical participants or the whole city. Full programme costs and national effects are not supplied.
+On a positive-reduction scale, the local estimate is **721 AED**, interval **498-943**. Both are below the fictional **1,000 AED annual-saving minimum**, conditional on the model. Precision does not resolve the design concern. Most city participants are outside this local window. A result at the cut-off is not an estimated average effect for typical participants or the whole city. Full programme costs and national effects are not supplied.
 
-<div class="source-note">Source: corrected evaluation_data_GreenWaste_simple.csv, city records; calculations in day2_session2_review.R and shared case model. HC2 robust intervals. Figures are actual records and fitted lines except the explicitly hypothetical sorting illustration.</div>
+<div class="source-note">Source: GreenWaste city data (10,000 businesses). Figures show records from the GreenWaste data and fitted lines, except the sorting illustration, which is hypothetical.</div>
 
 </div>
 
@@ -74,7 +74,7 @@ On a positive-reduction scale, the local estimate is **721 AED**, interval **498
 html_out(d5_plot(2,TRUE))
 ```
 
-Dots are actual city businesses with scores 53-63. Shading marks scores 56-60 used in the main model. Lines approach the cutoff; the red gap is between their fitted limits.
+Dots are city businesses in the GreenWaste data with scores 53-63. Shading marks scores 56-60 used in the main model. Lines approach the cut-off; the red gap is between their fitted limits.
 
 ```{r, results='asis'}
 html_out(d5_windows())
@@ -98,7 +98,7 @@ This age discontinuity is a credibility concern, not a GreenWaste effect on age.
 
 ### Q1 | Record your group's raw card gap
 
-Card letter: ______. Use your **separate A-H card**, six businesses per side. Costs are rounded to ten AED. Scores are displayed to one decimal, but groups follow the unrounded score.
+Card letter: ______. Use your **separate A-H card**, six businesses per side. Costs are rounded to ten AED. Scores are displayed to one decimal, but each business is placed on its side using its exact score.
 
 | Calculation | At/below 58 | Above 58 |
 |---|---|---|
@@ -113,7 +113,7 @@ Place the letter and gap in the **raw-gap lane** on the number line. Why might o
 
 ### Q2 | Read the fitted local jump
 
-Use H5-A §2/table (page 1) and the fitted plot on page 2. Label the gap at the cutoff. Why need the fitted estimate not equal your card gap?
+Use H5-A §2/table (page 1) and the fitted plot on page 2. Label the gap at the cut-off. Why does the fitted estimate not equal your card gap?
 
 <div class="writing tall"></div>
 
@@ -169,7 +169,7 @@ Keep H5-A open; close AI responses and peer comments. Write one supported local-
 
 ## Page 5 | AI Snapshot: local result, wider claim
 
-An authored practice response to: **Explain without jargon who this result applies to, and what a policy adviser should check before expansion.** Do not run this first prompt.
+This response was written for the exercise. It is not a real AI answer. The prompt was: **Explain without jargon who this result applies to, and what a policy adviser should check before expansion.** Do not run this first prompt.
 
 <div class="ai-source">
 ```{r, results='asis'}
@@ -179,7 +179,7 @@ html_out(d5_paragraphs(d5_ai))
 
 Underline support and cross out overclaims. Check **H5-A, pages 1-2**. Does a sensible caveat repair an unsupported assurance?
 
-### Better prompt: run and compare
+### Improved prompt: run and compare
 
 <div class="prompt">
 ```{r, results='asis'}
@@ -199,7 +199,7 @@ Which claim improved? What still needs checking against the source?
 
 ## Page 6 | Prepared response: paper alternative
 
-Use this for the same task if Copilot is unavailable. This is an authored response to the better prompt, **not additional study evidence**.
+Use this for the same task if Copilot is unavailable. This response was written for the exercise. It is not a real AI answer, and it is not additional study evidence.
 
 <div class="ai-source">
 ```{r, results='asis'}

@@ -53,7 +53,7 @@ html_out(d10_section_html(4))
 html_out(d10_section_html(5))
 ```
 
-**Table source:** corrected synthetic GreenWaste case. Pilot OLS interval; city extra-change business-clustered interval; local cutoff HC2 interval; matching business-clustered interval treating the selected matches as given.
+**Table source:** the synthetic GreenWaste case. Each interval is a 95% interval for that method. The matching interval treats the selected matches as given.
 
 **Decision rule:** 1,000 AED annual saving per business. Sorted interval endpoints use the positive-saving scale; do not reverse the saving sign without also converting and sorting the endpoints.
 

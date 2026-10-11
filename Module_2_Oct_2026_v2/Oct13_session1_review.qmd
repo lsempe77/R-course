@@ -135,8 +135,8 @@ We create the table in R. The box shows the **R code** and the numbers it produc
 ```{r, echo=TRUE}
 # Stack the two periods so that each business has two rows.
 # after is 0 for before GreenWaste and 1 for 12 months after.
-long <- data.frame(business = rep(city$business, 2), after = rep(0:1, each = nrow(city)),
-  took_part = rep(city$took_part, 2), cost = c(city$cost_before, city$cost_after))
+long <- rbind(transform(city, after = 0, cost = cost_before),
+  transform(city, after = 1, cost = cost_after))
 # after * took_part gives the rows (Intercept), after, took_part and after:took_part.
 # clusters = business allows for each business being measured twice.
 fit <- estimatr::lm_robust(cost ~ after * took_part, data = long,

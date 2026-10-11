@@ -1,5 +1,16 @@
 # Handoff: moving Module 2 to the simple GreenWaste case
 
+## Preview check: slide fit, worksheet references and wording, 11 October 2026 (Claude, for Fiona)
+
+Source edits only. No R or Quarto was available, so nothing was re-rendered; originals of the edited files are in `backups/preview_fix_2026_10_11/`.
+
+- **Day 2 S1, slide 12 (timeline text clipped):** `d4_timeline()` in `day2_session1_review.R` now puts each end label on two lines and moves the dots inward. The same SVG was patched directly in `docs/preview/Oct13_session1_review.html`.
+- **Day 2 S1, slide 7 (R code):** the stacking step is now `rbind(transform(city, after = 0, cost = cost_before), transform(city, after = 1, cost = cost_after))`. The model line is unchanged, so the table is unchanged. A regression of the change on `took_part` gives the same -812 and 95% interval (-833 to -792), but has two rows instead of four, so it would not fit the four-row table on slide 8 or worksheet Q2. Checked in Python against `evaluation_data_GreenWaste_simple.csv`. The rendered HTML still shows the old code until the deck is re-rendered.
+- **Worksheet references fixed on slides:** Day 1 S1 (removed "Q3 (c)"), Day 1 S3 (Q1 (a) wording), Day 2 S3 (Q4 (a); Q5 steps now match Q5 (a) to (d), the evidence request belongs to Q6), Day 3 S1 (Q4 (e) and (f)).
+- **Language pass applied to the Day 2 S2, Day 3 S3, Day 4 S1 and Day 4 S2 previews** (decided terms only: cut-off, Improved prompt, study summary, participant and comparison businesses, "the difference between the two changes", full 1,000 AED rule, "We ... in R" titles, no source or script names, "written for the exercise" sentence). Not done: full-sentence titles and instructions, splitting questions into (a), (b), (c), and trainer-only files.
+- **Left alone on purpose:** the document name "Corrected GreenWaste findings" (Day 4 S2), "actual" meaning "the answer given" in Day 3 S3, trainer-only files, and speaker notes (the Day 2 S2 notes have missing spaces).
+- **Re-render needed:** Day 1 S1, Day 1 S3, Day 2 S1, Day 2 S2 (deck, worksheet, cards), Day 2 S3, Day 3 S1, Day 3 S3 (deck, worksheet, report and findings pages), Day 4 S1 and Day 4 S2.
+
 ## Day 1 regression-table origin and fitted-line explanations, 11 October 2026
 
 Lucas flagged that Session 1's table appeared without explaining its origin and that Session 3 needed a regression plot. The two hybrid teaching sources now add a four-minute visual bridge each, using the Day 1 buffer rather than changing printed worksheet questions or cutting independent/AI tasks.

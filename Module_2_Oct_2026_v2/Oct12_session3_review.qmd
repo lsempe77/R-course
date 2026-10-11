@@ -121,7 +121,7 @@ round(tapply(ages, group, mean), 1)
 ```
 
 ::: {.ask}
-**Q1 (a):** Did both lotteries give exactly the same mean ages?
+**Q1 (a):** What changed between the two draws? Did both lotteries give exactly the same mean ages?
 :::
 
 ::: {.notes}

@@ -190,7 +190,7 @@ round(mean(change))
 </div>
 
 ::: {.ask}
-**Q3 (c):** Predict the output. Then explain why this calculation matches the change in the table.
+**Predict the output.** Then explain why this calculation matches the change in the table.
 :::
 
 ::: {.notes}

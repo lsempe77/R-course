@@ -270,7 +270,7 @@ html_out(d6_results())
 With all four features, the gap in manager age is **`r fmt(match_A$age_gap, 1)` years**. Without manager age in the matching, the gap is **`r fmt(match_B$age_gap, 1)` years**.
 
 ::: {.ask}
-Q4 on page 4: why is a larger estimated reduction not necessarily better evidence?
+Q4 (a) on page 4: why could leaving out manager age change the estimate? Why is a larger estimated reduction not necessarily better evidence?
 :::
 
 ::: {.notes}
@@ -301,12 +301,12 @@ Read **H6-A, the matching study summary (worksheet page 1)**, and Table B on **p
 
 In **Q5 on page 4**:
 
-1. Circle a finding and write the paragraph or table that shows it.
-2. Underline the assumption that a causal reading needs.
-3. Request one missing check and explain why it matters.
+1. In (a), write the main finding and the paragraph or table that shows it.
+2. In (b), write the key assumption for a causal reading and the paragraph that states it.
+3. Answer (c) after the question below, and (d) on the next slide.
 
 ::: {.ask}
-What does "every participant business was matched" show, and what is still unknown?
+Q5 (c): what does "every participant business was matched" show, and what is still unknown?
 :::
 
 ::: {.notes}
@@ -320,7 +320,7 @@ html_out(d6_interval())
 ```
 
 ::: {.ask}
-Q5: explain the difference between "the estimate is above 1,000 AED" and "our rule of at least a 1,000 AED reduction is securely met".
+Q5 (d): explain the difference between "the estimate is above 1,000 AED" and "our rule of at least a 1,000 AED reduction is securely met".
 :::
 
 The interval includes values below 1,000 AED, so it does not show that our rule of **at least a 1,000 AED reduction in annual waste management cost per business per year** is met. Whether the causal reading is credible, and the full programme costs, are separate questions.

@@ -1,7 +1,7 @@
 ---
 title: "The analyst is in the room"
 subtitle: "Day 3 | Session 3: Request evidence and revise your advice"
-author: "3ie | Review version"
+author: "3ie"
 always_allow_html: true
 format:
   live-revealjs:
@@ -81,13 +81,13 @@ Which result supports N1? Which results are being counted as agreement in N2?
 ### Pilot lottery
 200 assigned to support versus 200 assigned to comparison in one district. Check lottery and follow-up.
 
-### City extra change
-Participant change minus nonparticipant change. Requires a credible parallel-trends counterfactual.
+### City: the difference between the two changes
+Participant businesses' change minus comparison businesses' change. Requires that, without GreenWaste, both groups would have changed by similar amounts (parallel trends).
 
 </div><div>
 
 ### Jump near score 58
-Businesses close to the rule. Requires continuity without support; scrutinise sorting and other jumps.
+Businesses close to the score cut-off of 58. Requires continuity without support; scrutinise sorting and other jumps.
 
 ### Matched comparison
 Similar recorded pre-programme features. Requires adequate support and no remaining outcome-relevant selection.
@@ -99,7 +99,7 @@ H9-B, page 2: which comparison and population does your decision need?
 :::
 
 ::: {.notes}
-7 minutes. Ask pairs to locate their chosen comparison in H9-B. Do not treat each design as resting on one sufficient assumption. These are main causal requirements, with measurement and delivery conditions still relevant. Pilot reach is one district; cutoff reach is local around 58; matching describes city participants with the available controls. Shared city data and different estimands explain why a common sign is not independent replication. No new calculation.
+7 minutes. Ask pairs to locate their chosen comparison in H9-B. Do not treat each design as resting on one sufficient assumption. These are main causal requirements, with measurement and delivery conditions still relevant. Pilot reach is one district; cut-off reach is local around 58; matching describes city participants with the available controls. Shared city data and different estimands explain why a common sign is not independent replication. No new calculation.
 :::
 
 ## Will "is it robust?" get useful evidence? {#d3s3-p04 .reader-slide .s1-review .d3s3-review}
@@ -112,7 +112,7 @@ Rewrite it: ask for a document or result, and state how you would use it.
 
 <button data-open="d9-question" data-closed="Show one worked request" data-opened="Hide the example" aria-controls="d9-question" aria-expanded="false">Show one worked request</button>
 <div id="d9-question" class="feedback" hidden>
-Send several earlier cost measures for city participants and nonparticipants, and a record of concurrent changes. I would check whether the counterfactual trend is plausible. If these challenge it, I would not rely on the extra-change estimate for attribution.
+Send several earlier cost measures for city participant businesses and comparison businesses, and a record of concurrent changes. I would check whether the counterfactual trend is plausible. If these challenge it, I would not rely on the difference-in-differences estimate as evidence that GreenWaste caused the change.
 </div>
 
 ::: {.notes}
@@ -135,7 +135,7 @@ Which answer would most change your advice? What would you press for next?
 12 minutes. Eight groups. Allow three minutes individual drafting, six minutes agreement and three minutes ranking/rehearsal. Families cover comparison, causal assumption, data quality, estimate/interval/rule and recommendation. Different groups can choose different priorities. Check that all three questions have room on page 3 and are not yes/no assurances. Tell listeners to record three substantial exchanges on page 4, including other groups' questions. Do not supply the evidence-bank answers during preparation.
 :::
 
-## Change roles: the trainer becomes the analyst {#d3s3-p06 .reader-slide .s1-review .d3s3-review}
+## Change roles: the analyst answers your questions {#d3s3-p06 .reader-slide .s1-review .d3s3-review}
 
 Keep your questions and **answer log, page 4**, ready.
 
@@ -164,7 +164,7 @@ Was that an answer to the question asked, or an assurance about something else?
 :::
 
 ::: {.notes}
-20 minutes. Eight groups receive about two minutes each; reserve four minutes to revisit the most consequential missing evidence. Map questions to E1 headline/population, E2 shared comparisons, E3 threshold, E4 trends, E5 cutoff, E6 matching, E7 data quality or E8 economic inputs. Read only relevant supplied evidence and its limits first; release the source ID or card. Suggested follow-ups are prompts for the trainer, not automatic answers to unasked questions. Do not say a score audit, overlap analysis or fieldwork protocol exists. Collect three exchanges per participant, not eight rushed summaries. After the clinic distribute the full source-bank pages 1-4 for checking and the AI task; page 5 stays trainer-only.
+20 minutes. Eight groups receive about two minutes each; reserve four minutes to revisit the most consequential missing evidence. Map questions to E1 headline/population, E2 shared comparisons, E3 threshold, E4 trends, E5 cut-off, E6 matching, E7 data quality or E8 economic inputs. Read only relevant supplied evidence and its limits first; release the source ID or card. Suggested follow-ups are prompts for the trainer, not automatic answers to unasked questions. Do not say a score audit, overlap analysis or fieldwork protocol exists. Collect three exchanges per participant, not eight rushed summaries. After the clinic distribute the full source-bank pages 1-4 for checking and the AI task; page 5 stays trainer-only.
 :::
 
 ## Pilot saving 1,014: what does the interval add? {#d3s3-p08 .reader-slide .s1-review .d3s3-review}
@@ -184,7 +184,7 @@ sort(round(-unname(limits)))
 ```
 
 ::: {.ask}
-How would you revise "the pilot clears the rule"?
+How would you revise the claim that "the pilot clears the 1,000 AED rule"?
 :::
 
 ::: {.notes}
@@ -262,7 +262,7 @@ Keep one useful question, correct two unsupported assurances and add one missing
 
 ## Ask Copilot for advice tied to the decision {#d3s3-p13 .reader-slide .s1-review .d3s3-review}
 
-**Stage 2: 7 minutes.** Use the better prompt on **page 7** and the supplied sources.
+**Stage 2: 7 minutes.** Use the improved prompt on **page 7** and the supplied sources.
 
 ```{r, results='asis'}
 html_out(paste0('<div class="better-prompt"><p>',d9_prompt,'</p></div>'))

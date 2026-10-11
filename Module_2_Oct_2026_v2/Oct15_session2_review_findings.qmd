@@ -39,7 +39,7 @@ html_out(d11_findings_html(2))
 html_out(html_table(method_rows))
 ```
 
-<p class="caption">Positive saving scale; sorted 95% limits. Pilot OLS, city extra-change business-clustered, cutoff HC2 and matching business-clustered intervals. Matching uncertainty treats the chosen matches as given. Read each row with its population/comparison and requirements, not as a vote.</p>
+<p class="caption">Positive saving scale; sorted 95% limits. Each interval is a 95% interval for that method. Matching uncertainty treats the chosen matches as given. Read each row with its population/comparison and requirements, not as a vote.</p>
 
 </div>
 

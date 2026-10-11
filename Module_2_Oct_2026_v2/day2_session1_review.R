@@ -61,11 +61,12 @@ d4_trend <- function(type=1) {
     '<line x1="80" x2="475" y1="205" y2="205" stroke="#545860"/><text x="80" y="238" text-anchor="middle" font-size="20">Earlier 2</text><text x="260" y="238" text-anchor="middle" font-size="20">Earlier 1</text><text x="440" y="238" text-anchor="middle" font-size="20">Before</text><text x="275" y="273" text-anchor="middle" font-size="21">Mean annual waste management cost (AED), all before the programme</text>'),
     if(type==1)'Hypothetical history A: the groups start at different levels and increase by the same amounts before the programme.' else 'Hypothetical history B: participant businesses were already falling while comparison businesses were rising before the programme.',550,285)
 }
-d4_timeline <- function() d4_svg(paste0('<line x1="200" x2="900" y1="110" y2="110" stroke="#7da1c4" stroke-width="4"/>',
-  '<circle cx="200" cy="110" r="12" fill="#063360"/><circle cx="900" cy="110" r="12" fill="#063360"/>',
-  '<text x="200" y="70" text-anchor="middle" font-size="28">One measurement before GreenWaste</text><text x="900" y="70" text-anchor="middle" font-size="28">One measurement 12 months after</text>',
-  '<text x="550" y="168" text-anchor="middle" font-size="27">There is no earlier sequence of measurements to compare.</text><text x="550" y="216" text-anchor="middle" font-size="25">The hypothetical histories A and B are not in the GreenWaste data.</text>'),
-  'The GreenWaste city data have one measurement before and one 12 months after, so earlier trends cannot be checked.',1100,250)
+d4_timeline <- function() d4_svg(paste0('<line x1="250" x2="850" y1="125" y2="125" stroke="#7da1c4" stroke-width="4"/>',
+  '<circle cx="250" cy="125" r="12" fill="#063360"/><circle cx="850" cy="125" r="12" fill="#063360"/>',
+  '<text x="250" y="60" text-anchor="middle" font-size="28">One measurement</text><text x="250" y="94" text-anchor="middle" font-size="28">before GreenWaste</text>',
+  '<text x="850" y="60" text-anchor="middle" font-size="28">One measurement</text><text x="850" y="94" text-anchor="middle" font-size="28">12 months after</text>',
+  '<text x="550" y="190" text-anchor="middle" font-size="27">There is no earlier sequence of measurements to compare.</text><text x="550" y="236" text-anchor="middle" font-size="25">The hypothetical histories A and B are not in the GreenWaste data.</text>'),
+  'The GreenWaste city data have one measurement before and one 12 months after, so earlier trends cannot be checked.',1100,262)
 d4_ai <- paste0('The regression reports a difference-in-differences estimate: participant businesses\' annual costs fell by 669 AED while comparison businesses\' costs rose by 143 AED. The difference between the two changes is a reduction of 812 AED per participant business, with a 95% interval of 792 to 833 AED and p < 0.001. Comparing changes is stronger than simply comparing cost levels after the programme.\n\n',
   'The different starting costs are accounted for, and parallel trends is satisfied because both groups were followed over the same period. The small p-value and interval excluding zero confirm that the finding is robust and GreenWaste caused the saving.\n\n',
   'Implementation should still be monitored, particularly in new districts. The result clears the city authority\'s 1,000 AED minimum, so expansion is justified; the precise estimate gives confidence that a wider rollout will meet this target.')

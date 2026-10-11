@@ -1,0 +1,389 @@
+---
+title: "We receive good news. Is it enough to act on?"
+subtitle: "Day 1 | Session 2: Question a claim"
+author: "3ie"
+always_allow_html: true
+format:
+  revealjs:
+    theme: [theme_dge.scss, theme_live.scss, theme_reader.scss]
+    css: [session1_review.css, session2_review.css]
+    logo: assets/dge_logo_horizontal.svg
+    slide-number: true
+    width: 1280
+    height: 720
+    slide-level: 2
+    embed-resources: true
+    include-after-body: [_reader_interactions.html, _session2_review_interactions.html]
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+<!--
+HYBRID PREVIEW (draft). Slide order and wording follow the PRINTED Day 1 Session 2 sheets:
+  Sheet 1: section 1 "Read alone first", section 2 "What could an average hide"
+  Sheet 2: "Triage four claims" and "My next question from memory"
+  Four claim cards (landfill statements), optional A1 board.
+Added from the longer review version: the file, the filter, data cleaning, the histograms and
+the R exploration. Their questions are NOT on the printed sheets, so they are asked on the slide
+or as a room poll. Everything is in landfill tonnes so that it matches the printed sheets.
+Source: session2_hybrid.R (builds on session2_review.R). Live version and review files unchanged.
+-->
+
+```{r setup, include=FALSE}
+source('session2_hybrid.R', encoding='UTF-8')
+```
+
+## A headline about GreenWaste lands on your desk. {#s2h-01 .reader-slide .s1-review .s2-review}
+
+::: {.lead}
+“Landfill waste from businesses in GreenWaste fell `r fmt(landfill_fall)`% in a year.”
+:::
+
+::: {.ask}
+Would this sentence justify extending the programme?
+:::
+
+Use the five terms from Session 1. Work alone first. On **Sheet 1, section 1 (Read alone first)**, tick your decision, write your reason and write your question for the evaluator.
+
+::: {.notes}
+7 minutes. SHEET 1, section 1. This is the entry task, not a lecture. Do not define terms or correct answers yet. Collect a few decisions and questions. Keep the sheets so participants can compare their own reading at the end of the session and at the end of the week. No AI for this task.
+:::
+
+## Who and what are we comparing? All the businesses in the city. {#s2h-02 .reader-slide .s1-review .s2-review .case-map-slide}
+
+```{r, include=FALSE}
+map_highlight <- "none"
+```
+
+::: {.case-map}
+{{< include _case_map.qmd >}}
+:::
+
+<div class="map-facts"><div><strong>Unit</strong>one business</div><div><strong>Group</strong>all 10,000 businesses in the city, outside the pilot district</div><div><strong>Outcome today</strong>landfill waste, in tonnes per business per year</div><div><strong>Period</strong>before GreenWaste and one year later</div></div>
+
+::: {.notes}
+1 minute. Quick reminder only: GreenWaste was introduced in Session 1 with the picture card and the theory of change. Say that Session 1 read annual waste management cost in AED, and that today we read landfill waste in tonnes, because the headline on Sheet 1 is about landfill. Point to the map: a lottery in the pilot district, the score rule everywhere else. Do not teach either method yet or reveal findings. The map shows an illustrative arrangement, not actual counts. The corrected city records follow the displayed rule: score 58 or below took part.
+:::
+
+## Would you extend it? {#s2h-03 .reader-slide .s1-review .s2-review}
+
+::: {.big-number}
+`r fmt(landfill_fall)`% lower
+:::
+
+Landfill among businesses that took part, one year later.
+
+```{=html}
+<div data-choices>
+  <button data-choice aria-pressed="false">Extend</button>
+  <button data-choice aria-pressed="false">Do not extend</button>
+  <button data-choice aria-pressed="false">Ask first</button>
+  <p role="status" class="feedback"></p>
+</div>
+```
+
+::: {.notes}
+3 minutes. ROOM POLL 1 (room_poll.py, Before phase): Extend, Do not extend, Ask first. Individual choice, then a reason. The buttons record only the choice in this open page; for shared phone voting use room_poll.py and its facilitator page. Keep results hidden until voting closes. Paper fallback: three labelled cards or a show of hands. Revisit the same question after the comparison (After phase). Invite a changed reason, not a winning answer.
+:::
+
+## What does the headline leave out? {#s2h-04 .reader-slide .s1-review .s2-review}
+
+::: {.lead}
+“Landfill fell after GreenWaste.”
+:::
+
+::: {.ask}
+What would you need to know before saying GreenWaste caused the fall?
+:::
+
+Write one question. Compare it with a partner’s.
+
+::: {.notes}
+4 minutes. Invite concrete questions, not a list of technical terms. Prompt only if needed: what else changed, what happened elsewhere, how were businesses selected? Participants can add the question to Sheet 1, section 1 if it differs from the one they wrote. Keep the next slides hidden until participants have committed. Transition: "Before we look for answers, where does this number come from?"
+:::
+
+```{r, include=FALSE}
+gw <- case_env$gw
+```
+
+## The GreenWaste file has one row for each business. {#s2h-05 .reader-slide .s1-review .s2-review .code-example}
+
+We look at the file in R before we calculate anything. The box shows the **R code** and what it prints.
+
+```{r, echo=TRUE}
+# Read the whole GreenWaste file. Each row is one business.
+gw <- read.csv("evaluation_data_GreenWaste_simple.csv")
+dim(gw)            # number of rows and columns
+table(gw$setting)  # how many businesses are in the city and in the pilot
+```
+
+```{r, include=FALSE}
+gw <- case_env$gw
+```
+
+::: {.ask}
+How many businesses does the city study cover, and how many are in the separate pilot?
+:::
+
+The file has **`r fmt(nrow(gw))` rows and `r ncol(gw)` columns**: `r fmt(sum(gw$setting == 'city'))` city businesses and `r fmt(sum(gw$setting == 'pilot'))` businesses in the separate pilot.
+
+::: {.notes}
+4 minutes. NO PRINTED QUESTION: discuss on the slide. Show what is in the file before any mean is calculated. The 12 columns are business ID, setting, score, took_part, cost before and after, landfill before and after, manager age, staff, area and filtration. Today we use landfill_before and landfill_after (tonnes). Do not teach syntax: participants need not read or run R. Ask them to point to the line of code that answers each question. Transition: "Which of these rows belong in the city comparison?"
+:::
+
+## Why do we keep only the city businesses before we calculate? {#s2h-06 .reader-slide .s1-review .s2-review .code-example}
+
+```{r, echo=TRUE}
+# Keep only the city businesses. The pilot is a separate study with a lottery.
+city <- subset(gw, setting == "city")
+table(city$took_part)   # 0 = comparison businesses, 1 = participant businesses
+```
+
+```{r, include=FALSE}
+city <- case_env$city
+```
+
+The city has **`r fmt(hy2_n_city_part)` participant businesses**. A colleague skips this step and reports **`r fmt(hy2_n_all_part)`**.
+
+::: {.ask}
+What most likely happened?
+:::
+
+```{=html}
+<div data-choices>
+  <button data-choice aria-pressed="false">The pilot businesses were included</button>
+  <button data-choice aria-pressed="false">Some city businesses were counted twice</button>
+  <button data-choice aria-pressed="false">Some city businesses were left out</button>
+  <p role="status" class="feedback"></p>
+</div>
+```
+
+::: {.notes}
+4 minutes. ROOM POLL 2 (room_poll.py, Before phase only; paper fallback: three labelled cards). This replaces the data-checking questions of the longer worksheet, which are not on the printed sheets. Close voting, hear one reason, then open the next slide to check. Key: the extra businesses are the pilot businesses that won the lottery. The error is easy to miss because the result looks sensible, so the group sizes are the clue. Transition: "Let us check the numbers."
+:::
+
+## Including the pilot businesses changes the group sizes and barely changes the answer. {#s2h-07 .reader-slide .s1-review .s2-review}
+
+```{r, results='asis'}
+html_out(hy2_filter_table())
+```
+
+::: {.ask}
+How would you notice this mistake, if the answer looks sensible?
+:::
+
+The pilot is a separate study with a lottery. Its waiting businesses would sit in the city comparison group, although they are not comparable with city businesses. **All numbers today use the city rows only.**
+
+::: {.notes}
+3 minutes. The extra `r fmt(hy2_n_pilot_winners)` participant businesses in the wrong column are the pilot lottery winners; the extra comparison businesses are the pilot businesses that waited. The two answers differ only in the second decimal place, so only the group sizes give it away. Make the point: make sure the data are the subset you want, with nothing extra. Check that nobody uses 10,000 as the participant denominator later. Transition: "Even the right rows can contain bad values."
+:::
+
+## Real datasets need cleaning before anyone calculates a mean. {#s2h-08 .reader-slide .s1-review .s2-review}
+
+These are **invented examples. They are not in the GreenWaste file.**
+
+```{r, results='asis'}
+html_out(hy2_cleaning())
+```
+
+::: {.ask}
+Which of these problems would give you an error message? Which would not?
+:::
+
+Check what is in the data before you calculate anything. A wrong structure gives a wrong answer without any warning.
+
+::: {.notes}
+3 minutes. NO PRINTED QUESTION: discuss on the slide, two or three answers. None of these examples produces an error message in R: the calculation runs and returns a plausible-looking number (a negative landfill mean of -14.2 tonnes is the one most people would notice). The numbers are computed in session2_hybrid.R. Why is a wrong structure more dangerous than an error message? Because nothing stops you. Transition: "Now the data are clean enough to compare. Who else saw waste fall?"
+:::
+
+## Who else saw landfill fall? {#s2h-09 .reader-slide .s1-review .s2-review}
+
+```{r landfill-comparison, results='asis'}
+html_out(sprintf('<div class="evidence-pair"><div class="evidence"><h3>Took part</h3><p class="big-number">%s &rarr; %s</p><p>Before &rarr; one year later</p></div><div class="evidence"><h3>Did not take part</h3><button data-open="other-landfill" data-closed="Open their result" data-opened="Hide their result" aria-controls="other-landfill" aria-expanded="false">Open their result</button><div id="other-landfill" hidden><p class="big-number">%s &rarr; %s</p><p>Before &rarr; one year later</p></div></div></div><p class="caption">Landfill, tonnes per business per year</p>%s', fmt(landfill['before'],1), fmt(landfill['after'],1), fmt(landfill['other_before'],1), fmt(landfill['other_after'],1), fiction))
+```
+
+::: {.ask}
+What can the first fall tell us on its own?
+:::
+
+::: {.notes}
+5 minutes. Ask participants to predict the other group's direction before opening it. The other group also improved, a little. This weakens a causal reading of before/after; it does not prove that these groups are a valid causal comparison. They started at different levels. Ask the same extension question again using the room poll's After phase or cards, and invite participants to compare with their decision on Sheet 1, section 1. Invite a changed reason, not a winning answer.
+:::
+
+## Better than before. Better than without? {#s2h-10 .reader-slide .s1-review .s2-review}
+
+::: {.lead}
+“Waste was lower **than it had been before**.”
+:::
+
+The **counterfactual** is what would have happened without GreenWaste.
+
+::: {.ask}
+Does this sentence tell us what would have happened without it?
+:::
+
+::: {.fragment}
+Ask how the evaluator estimated that missing outcome.
+:::
+
+::: {.notes}
+5 minutes. Point to the comparison words. Explain counterfactual once in plain language. We cannot observe the same business, at the same time, both with and without the programme. A comparison can help estimate the missing outcome if its assumptions are credible. Avoid launching a methods survey. Have pairs add comparison words to one claim.
+:::
+
+## Who is hidden by the average? {#s2h-11 .reader-slide .s1-review .s2-review}
+
+**Sheet 1, section 2 (What could an average hide).** Landfill before GreenWaste, tonnes per year, for ten businesses:
+
+```{r ten-businesses, results='asis'}
+html_out(paste0('<div class="ten-businesses">', paste(sprintf('<span>%s</span>', fmt(ten$landfill_before)), collapse=''), '</div>', fiction))
+```
+
+::: {.ask}
+Circle the business that would most affect the mean. Would the mean describe most of these businesses? Why?
+:::
+
+::: {.fragment}
+The **mean** is the total divided by ten: `r fmt(mean(ten$landfill_before),1)` tonnes. Nine businesses are below it.
+:::
+
+::: {.notes}
+5 minutes. SHEET 1, section 2: two minutes alone, then compare with a neighbour. Participants point to the large business before revealing the mean. No long arithmetic exercise. A mean can answer a useful total-related question, but it does not describe every business. Ask which extra information they would want about the spread. Do not introduce quartiles or a lesson on medians; the next slide shows the spread. Transition: "These ten came from the city file. What does the whole file look like?"
+:::
+
+## What does landfill waste look like before the programme? {#s2h-12 .reader-slide .s1-review .s2-review}
+
+```{r, results='asis'}
+html_out(paste0('<div id="s2-hist"><div data-variant>',hy2_hist_before(),'</div><div data-variant hidden>',hy2_hist_before(markers=TRUE),'</div></div>'))
+```
+
+<button data-swap="s2-hist" data-closed="Show mean and median" data-opened="Hide mean and median" aria-pressed="false">Show mean and median</button>
+
+The histogram shows all **10,000 city businesses**. Each bar counts the businesses whose landfill waste falls in a 2-tonne band. The ten businesses on Sheet 1 came from this file.
+
+::: {.ask}
+Which landfill amounts are most common? What would a single average hide?
+:::
+
+::: {.notes}
+5 minutes. NO PRINTED QUESTION: discuss on the slide. Read the axes first: horizontal is landfill tonnes, vertical is the number of businesses, not landfill over time. Give two minutes to describe shape and spread before using the button. Mean `r fmt(hy2_mean,1)` and median `r fmt(hy2_median,1)` tonnes: the mean is a little higher because a few very large businesses (the largest is 46 tonnes, like the largest of the ten on Sheet 1) stretch the right tail. Do not overstate the gap or start a quartiles lesson. Transition: "Now follow the participants over time."
+:::
+
+## Did landfill fall for every participant business? {#s2h-13 .reader-slide .s1-review .s2-review}
+
+```{r, results='asis'}
+html_out(hy2_hist_change())
+```
+
+Each business's change is its landfill one year later minus its landfill before. Bars to the left of zero are businesses whose landfill fell.
+
+::: {.ask}
+Did landfill fall for every one of the 4,794 participant businesses?
+:::
+
+```{=html}
+<div data-choices>
+  <button data-choice aria-pressed="false">Yes, every one</button>
+  <button data-choice aria-pressed="false">No, some did not fall</button>
+  <button data-choice aria-pressed="false">Cannot tell from the chart</button>
+  <p role="status" class="feedback"></p>
+</div>
+```
+
+```{r, results='asis'}
+html_out(sprintf('<button data-open="s2-rises" data-closed="Check the records" data-opened="Hide the record check" aria-controls="s2-rises" aria-expanded="false">Check the records</button><p id="s2-rises" hidden><strong>%s businesses had lower landfill, %s was unchanged and %s had higher landfill.</strong> The mean fall of %s tonnes does not describe every business.</p>', fmt(hy2_n_fall), fmt(hy2_n_same), fmt(hy2_n_rise), fmt(-mean(hy2_change), 1)))
+```
+
+::: {.notes}
+5 minutes. ROOM POLL 3 (room_poll.py, Before phase only; paper fallback: show of hands). This replaces the "did the cost fall for every business" question of the longer worksheet, which is not on the printed sheets. If a third poll is too many for the room, ask the question aloud and use the button. Read the change axis, not the before axis from the previous slide. The bars to the right of zero are too small to see, so "cannot tell from the chart" is a defensible answer. Key: almost every participant business had lower landfill, but not all; a mean fall does not mean every business improved. These are recorded changes, not individual causal effects, and the histogram is not a confidence interval. Transition: "Let us see how we would check this in R."
+:::
+
+## We explore the data in R before we interpret it. {#s2h-14 .reader-slide .s1-review .s2-review .code-example}
+
+The box shows the **R code** and what it prints for the city businesses.
+
+```{r, echo=TRUE}
+# Mean and median landfill before GreenWaste (tonnes), all city businesses.
+round(c(mean = mean(city$landfill_before), median = median(city$landfill_before)), 1)
+# Change in landfill for each participant business: after minus before (tonnes).
+change <- tp$landfill_after - tp$landfill_before
+round(mean(change), 2)   # mean change
+sum(change > 0)          # number of participant businesses whose landfill rose
+```
+
+::: {.ask}
+What does the mean change hide? Which line of the code shows it?
+:::
+
+::: {.notes}
+3 minutes. NO PRINTED QUESTION: discuss on the slide. Link back to the two histograms: the mean and median line shows the spread of the starting values, and the last line counts the businesses that went the other way. Do not teach syntax. Transition: "You now have the vocabulary and the numbers. Four claims are waiting."
+:::
+
+## Four claims. Which would you act on? {#s2h-15 .reader-slide .s1-review .s2-review}
+
+Read the four claim cards. For each, choose on **Sheet 2 (Triage four claims)**:
+
+**Act · Ask first · Do not act**
+
+Then name what is missing:
+
+**Compared to what? · How big? · How sure?**
+
+::: {.ask}
+What question would move your decision forward?
+:::
+
+::: {.notes}
+12 minutes. SHEET 2 and the four claim cards (print page 3 once per group and cut into four). Preserve Fiona's four cards and triage activity. Give one card set per group. Optional A1 board: one group-coloured marker per group; write card numbers into its question/decision grid. No extra AI wall board. Card 2's causal wording is intentionally open to challenge. Technical terms on cards can be glossed briefly; the full uncertainty lesson comes next session. Protect time for groups to write their reasons. Participants can now use the histograms and the R output on screen as evidence.
+:::
+
+## Which evidence supports your choice? {#s2h-16 .reader-slide .s1-review .s2-review}
+
+Choose a card that two groups placed differently.
+
+::: {.ask}
+Which words or numbers support your choice?
+:::
+
+Explain one missing piece of evidence that could change it.
+
+::: {.notes}
+6 minutes. Discuss two disagreements, not a tour through every group. Expected primary placements: card 1 compared to what/ask first; card 2 how big/ask first (it concerns landfill, not the cost rule; also ask about the causal comparison); card 3 do not act on the nationwide recommendation; card 4 how sure/ask first. More than one missing question can be justified. Do not treat grid placement as a single-answer test.
+:::
+
+## Would you accept the AI explanation? {#s2h-17 .reader-slide .s1-review .s2-review data-correct="The second sentence claims a cause the headline has not established. Ask what happened without GreenWaste."}
+
+An illustrative AI draft. Select the unsupported sentence.
+
+```{=html}
+<div class="claim-list">
+<button data-claim="supported" aria-pressed="false">Landfill fell among businesses that took part.</button>
+<button data-claim="unsupported" aria-pressed="false">GreenWaste caused the entire fall.</button>
+</div>
+<button data-check>Check against the evidence</button>
+<p data-feedback class="feedback" role="status"></p>
+```
+
+::: {.ask}
+What should the AI ask before writing that conclusion?
+:::
+
+::: {.notes}
+6 minutes. This is an authored example of a possible AI error, not a transcript of a verified tool response. Participants must point to source evidence. Optional live AI: provide only the headline and ask it to list the missing information before offering a conclusion. Review its questions yourselves. No AI account is required to complete the activity. The longer Copilot exercise of the review version needs its own handout and is not part of this version.
+:::
+
+## Which answer do you need before acting? {#s2h-18 .reader-slide .s1-review .s2-review}
+
+Close the cards and turn over the sheet.
+
+::: {.ask}
+What would you ask the evaluator before acting on a claim of improvement?
+:::
+
+On **Sheet 2, My next question from memory**, write one question and explain why the answer matters.
+
+::: {.notes}
+4 minutes. SHEET 2, My next question from memory. Individual retrieval, no list or AI. Look for a concrete comparison/counterfactual question, a decision-relevant size question or a useful uncertainty question, with a reason. Collect two answers. Total about 85 minutes (7+1+3+4+4+4+3+3+5+5+5+5+5+3+12+6+6+4); the remaining time of the 90-minute slot is the buffer. If time is short, drop slide 14 (R exploration) first, then slide 8 (cleaning). Do not add a summary lecture.
+:::

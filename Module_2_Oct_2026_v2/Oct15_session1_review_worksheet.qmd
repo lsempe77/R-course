@@ -48,13 +48,13 @@ Write the pilot estimate and 95% interval with consistent units and signs. Expla
 
 **Name or identifier:** __________________
 
-### Q4 | A consequential source-based concern
+### Q4 | An important concern from the source
 
 Name one important concern, cite the exact report passage and explain why it matters for the decision. Acceptable concerns need not all be the same.
 
 <div class="writing log-space"></div>
 
-### Q5 | Proportionate advice and an evidence request
+### Q5 | Advice that the evidence supports, and an evidence request
 
 Give a recommendation the stated evidence can support. Request one specific document or result and explain how its answer could change your advice.
 
@@ -92,7 +92,7 @@ Why this claim is supported:
 
 <div class="writing tall"></div>
 
-### A consequential concern or unsupported claim
+### An important concern or an unsupported claim
 
 Exact paragraph/claim and the checking source:
 
@@ -129,7 +129,7 @@ Paragraph ID, claim and source-based reason:
 
 <div class="writing log-space"></div>
 
-### Our consequential concern, if warranted
+### Our important concern, if warranted
 
 Paragraph ID, claim and reason. If the section only supplies supported disclosure, say so rather than inventing an error.
 
@@ -185,7 +185,7 @@ Close the report. Work alone without AI. Request a document/result and state its
 
 **Ability to revisit:** outcome/scope / comparison/fairness / interval/rule / source-based concern / advice/request
 
-**Trainer's targeted retry and source to reread:**
+**Targeted retry and source to reread (from your trainer):**
 
 <div class="writing"></div>
 
