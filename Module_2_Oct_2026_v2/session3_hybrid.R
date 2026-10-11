@@ -1,6 +1,13 @@
 # Texts for the Day 1 Session 3 deck that follows the printed worksheet.
 # Builds on session3_review.R; the review deck and review worksheet are not changed by this file.
 source('session3_review.R', encoding = 'UTF-8')
+source('day1_regression_visual.R', encoding = 'UTF-8')
+
+hy3_regression_plot <- function() day1_binary_fit_svg(
+  c(mean(s3_wait$cost_after), mean(s3_join$cost_after)),
+  c('0 = Control group', '1 = Treatment group'),
+  'Lottery assignment indicator',
+  'Fitted cost = 1,783 - 1,014 x took_part (rounded AED)')
 
 # The illustrative AI draft printed on page 2 of the worksheet.
 hy3_ai <- 'The pilot trial estimated an annual saving of 1,014 AED per business. The trial proves the minimum saving is met. Nationwide rollout is good value for money.'

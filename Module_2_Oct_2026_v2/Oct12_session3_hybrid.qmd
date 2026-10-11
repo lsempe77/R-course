@@ -178,6 +178,24 @@ The treatment group's mean annual waste management cost was lower, **12 months a
 8 minutes. The result table on page 1 of the worksheet reports this same comparison. First axes/population/period, then two minutes calculate/interpret, then three minutes pair check and feedback. Unrounded 769.125-1783.48=-1014.355; display -1,014. Negative cost difference means positive saving. It is an after-period randomised group comparison, not participants before/after. Assignment equals participation here. Transition: the simple regression expresses this same comparison.
 :::
 
+## The fitted line connects the two pilot means. {#s3-regression-plot .reader-slide .s1-review .s3-review}
+
+**400 businesses, one after-cost each.** Code lottery groups **0 = control**, **1 = treatment**.
+
+```{r, results='asis'}
+html_out(hy3_regression_plot())
+```
+
+<p class="caption">Dots are fitted group means, not individual businesses. Only 0 and 1 occur. The line is not a time trend or a dose-response curve. The slope is treatment minus control, not the treatment group's own cost.</p>
+
+::: {.ask}
+Where is the intercept? Why is the slope -1,014 AED while the treatment mean is 769 AED?
+:::
+
+::: {.notes}
+4 minutes from the Day 1 buffer; keep printed question 1 unchanged. Link the two bars on the preceding screen to two fitted points. Unlike Session 1, the horizontal indicator is group, not period: these are different lottery groups measured at the same 12-month point. The intercept at group 0 is the control mean 1,783 AED. Changing the indicator from 0 to 1 changes fitted cost by -1,014 AED; adding the slope gives treatment mean 769 AED. Labels use rounded numbers; fitting uses exact records. A binary-predictor regression with an intercept reproduces the group means, not a continuous relationship between individual businesses. No intermediate treatment values exist. Attribution comes from the lottery and credible implementation/measurement, not drawing the line. Next show the R code generating those same two coefficient rows.
+:::
+
 ## We create the regression table in R with one line of code. {#s3-p07b .reader-slide .s1-review .s3-review}
 
 We create the table in R. The box shows the **R code** and the numbers it produces.
@@ -193,7 +211,7 @@ round(cbind(estimate = coef(fit), confint(fit)))
 ```
 
 ::: {.ask}
-Which line of the code gives the control group row, and which gives the comparison row?
+Which output row is the intercept at group 0? Which is the slope from group 0 to group 1?
 :::
 
 You do not need to write or run R. The pilot trial box on your worksheet shows the second row of this table.
@@ -205,16 +223,16 @@ You do not need to write or run R. The pilot trial box on your worksheet shows t
 ## The regression table reports the same comparison. {#s3-p08 .reader-slide .s1-review .s3-review}
 
 ```{r, results='asis'}
-html_out(sub('<p class="caption">.*$', '', s3_regression()))
+html_out(sub('^<p[^>]*>.*?</p>', '<p class="caption">Pilot after-costs (AED): 200 treatment and 200 control businesses. Same fit as the preceding plot and code.</p>', sub('<p class="caption">.*$', '', s3_regression())))
 ```
 
 <div class="review-annotate"><button data-table-column="1" aria-pressed="false">Coefficient</button><button data-table-column="2" aria-pressed="false">Interval</button><button data-table-column="3" aria-pressed="false">P-value</button></div>
 
 ::: {.ask}
-**Worksheet, question 1:** Your worksheet shows one row, “Took part (lottery)”. Which row of this table is that? What does the control group row show?
+**Worksheet, question 1:** Which row is “Took part (lottery)”? Which is the intercept?
 :::
 
-1,783 + (−1,014) ≈ **769 AED**, which is the treatment group's mean cost. The lottery design supports reading the difference as an effect. The p-value alone does not.
+Intercept + slope: 1,783 − 1,014 ≈ **769 AED**. Attribution depends on the lottery design, not the p-value alone.
 
 ::: {.notes}
 6 minutes. Annotate the table. Control group intercept is the mean cost after 12 months for the reference group; treatment coefficient is the treatment minus control difference. CI -1,167 to -862; ordinary least squares model matches canonical pilot source. Point to code/model note for mechanics, no need fit models. Show each column with native highlights. A causal reading depends on assignment/implementation/measurement and interference assumptions, not regression magic. Transition: a convincing saving does not settle the exact policy minimum.

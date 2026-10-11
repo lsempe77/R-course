@@ -134,6 +134,25 @@ Predict the change before you use the button. If the 46-tonne business is remove
 4 minutes. Extension of worksheet section 1; no extra question on the sheet, so discuss it on the slide. Before the toggle ask which of the two measures will move more. Key: with all ten, mean 10.0 and median 6.5; without the 46-tonne business, mean 6.0 and median 6.0. The scale is the same in both states. The mean uses the size of every value; the median uses position. Do not claim the median is always better. Transition: "An average describes recorded values. A treatment effect asks a different question, but first let us read the regression table."
 :::
 
+## Where does the regression table come from? {#s1-regression-source .reader-slide .s1-review}
+
+**4,794 city participants, each measured twice:** 9,588 cost records.
+Code the period **0 = before**, **1 = after**, then fit **cost ~ after**.
+
+```{r, results='asis'}
+html_out(hy_regression_plot())
+```
+
+<p class="caption">Dots are fitted means, not individual businesses. Only 0 and 1 occur; the line connects the two means, not a continuous time trend. The table on worksheet page 1 reports the intercept and slope, with uncertainty allowing for two records per business.</p>
+
+::: {.ask}
+At 0, what is the fitted cost? At 1, what changes? There are no nonparticipant businesses in this comparison.
+:::
+
+::: {.notes}
+4 minutes from the Day 1 buffer; no printed worksheet changes. Start with the records: each city participant supplies business ID, annual cost before, and annual cost 12 months after. Stack the before and after costs as two rows per business, tagging the period 0 or 1. This is 9,588 observations from 4,794 businesses, not 9,588 independent businesses. The fitted intercept is the before mean, 1,432 AED; the slope is after minus before, -669 AED for one indicator step. Their sum is the after mean, 763 AED. The graph uses exact means before rounding labels. With one binary predictor and an intercept, least squares reproduces these two means. The shared source uses business-clustered uncertainty because costs are paired. The line has no observed intermediate periods and is not a trend estimate. No participant coding or new worksheet task. Ask learners to point to the starting level and the change before naming the two printed rows. Regression summarises the recorded fall; it does not supply the missing without-programme outcome.
+:::
+
 ## Coefficient: which row is the change? {#s1-h06 .reader-slide .s1-review}
 
 ```{r, results='asis'}
@@ -144,7 +163,7 @@ html_out(hy_table())
 <button data-table-column="1" aria-pressed="false">Coefficient</button><button data-table-column="2" aria-pressed="false">Interval</button><button data-table-column="3" aria-pressed="false">P-value</button>
 </div>
 
-A coefficient is a number that the model estimates. The row **Before GreenWaste** is the intercept: the mean annual waste management cost before the programme. The row **After minus before** is the change after GreenWaste.
+A **coefficient** is an estimated model number: **Before GreenWaste** is the intercept (starting mean); **After minus before** is the slope (change).
 
 ::: {.ask}
 **Worksheet, section 2 (Coefficient):** Circle the change row. Write its number, units and the meaning of the sign.
@@ -351,4 +370,3 @@ Would your advice still be defensible if the AI had never been used?
 ::: {.notes}
 8 minutes. INDEPENDENT CLOSE: four minutes write, two minutes pair source-check, two minutes trainer feedback. No AI. Accept clear plain language and different requests. Require the missing comparison, not a vague "more data". Return to questions missed during the lesson; do not score agreement with a preferred action. Next session reads records from the GreenWaste data, their distributions and two alternative comparisons; the pilot follows later. Total 90 minutes.
 :::
-

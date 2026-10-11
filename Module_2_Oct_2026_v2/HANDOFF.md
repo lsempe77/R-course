@@ -1,5 +1,17 @@
 # Handoff: moving Module 2 to the simple GreenWaste case
 
+## Day 1 regression-table origin and fitted-line explanations, 11 October 2026
+
+Lucas flagged that Session 1's table appeared without explaining its origin and that Session 3 needed a regression plot. The two hybrid teaching sources now add a four-minute visual bridge each, using the Day 1 buffer rather than changing printed worksheet questions or cutting independent/AI tasks.
+
+Session 1 shows the chain from 4,794 city participants measured twice to 9,588 paired cost observations, period coding (0 before, 1 after), and cost ~ after. The plotted fitted means are 1,432 and 763 AED: intercept is the before mean and slope is the -669 AED change. The caption distinguishes observations from businesses and notes paired-record uncertainty. No nonparticipant group or causal interpretation is invented.
+
+Session 3 inserts the matching pilot plot between the existing mean-cost bars and R-code/table screens. Its binary group indicator is 0 control and 1 treatment, both measured after 12 months: fitted means are 1,783 and 769 AED, with intercept 1,783 and slope -1,014. Both plots explicitly identify their dots as fitted means and their lines as binary comparisons, not intermediate time trends or dose-response relationships. The R-code screen remains, followed by the same worksheet-linked result rows.
+
+`day1_regression_visual.R` provides the shared SVG renderer, sourced by both hybrid helpers; the switch script now tracks this dependency to reject stale renders. Existing worksheet references, printed materials, AI content and causal caveats are preserved. Repeated explanatory text on the adjacent table screens was compacted so the whole question remains visible.
+
+Both hybrid decks render successfully. R checks verify observation/group counts and equality of fitted coefficients with the exact source means. Browser checks at 1280x720 cover both new plots, the Session 1 coefficient table, Session 3 R output/table, SVG text bounds, logo separation and keyboard table highlights. Screenshots were visually inspected. Matching rendered bytes are copied into the two existing `docs/Oct12_session*_live.html` outputs, each below 25 MiB. Lucas authorised committing and pushing these teaching-deck updates on 11 October. The existing public routes are retained; deployment status must be checked separately from the repository push.
+
 ## Combining Fiona's updates and the remaining review candidates, 11 October 2026
 
 Lucas authorised preserving Fiona's work and committing/pushing his additional review bundles. Local main was fast-forwarded to Fiona's `52224d1` (eight commits); both sets of handoff additions are retained below. Fiona's production HTML, hub, hybrid decks, printed-material choices and wording-pass sources are unchanged by this addition. Her historical statement that four sessions lacked full previews is superseded by the separate candidates below; it remains accurate for the production versions at that time.

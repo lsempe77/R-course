@@ -1,6 +1,13 @@
 # Values and figures for the Day 1 Session 1 deck that follows the printed worksheet.
 # Builds on session1_review.R; the review deck and review worksheet are not changed by this file.
 source('session1_review.R', encoding = 'UTF-8')
+source('day1_regression_visual.R', encoding = 'UTF-8')
+
+hy_regression_plot <- function() day1_binary_fit_svg(
+  c(mean(tp$cost_before), mean(tp$cost_after)),
+  c('0 = Before GreenWaste', '1 = 12 months after'),
+  'Before-and-after indicator',
+  'Fitted cost = 1,432 - 669 x after (rounded AED)')
 
 # Section 1 of the printed worksheet uses ten landfill records in tonnes.
 hy_tonnes <- as.numeric(ten$landfill_before)
@@ -33,8 +40,7 @@ hy_table <- function() {
   pf <- function(v) if (v < .001) '&lt; 0.001' else fmt(v, 3)
   rows <- paste(vapply(seq_along(est), function(i) paste0('<tr><th>', labs[i], '</th><td>', fmt(est[i]), '</td><td>',
     fmt(ci[i, 1]), ' to ', fmt(ci[i, 2]), '</td><td>', pf(pv[i]), '</td></tr>'), ''), collapse = '')
-  paste0('<p class="table-title"><strong>Annual waste cost regression</strong></p>',
-    '<p class="caption">The same 4,794 city participant businesses before GreenWaste and 12 months later. The outcome is annual waste management cost, in AED per business. The starting mean and the change are different rows. The intervals allow for each business being measured twice.</p>',
+  paste0('<p class="caption">Worksheet page 1: Annual waste cost regression. 4,794 city participants, before and 12 months after; paired-record intervals. Same model as the preceding plot.</p>',
     '<table class="reading-table"><thead><tr><th>Result row</th><th>Coefficient AED</th><th>95% interval AED</th><th>p-value</th></tr></thead><tbody>',
     rows, '</tbody></table>')
 }

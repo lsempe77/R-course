@@ -23,7 +23,7 @@ SESSIONS = {
  'd1s1': dict(label='Day 1 S1 (slides follow the printed worksheet) + AI handout',
    copy=[('Oct12_session1_hybrid.html', 'docs/Oct12_session1_live.html'),
          ('Oct12_session1_ai_handout.docx', 'docs/handouts/Oct12_session1_ai_handout.docx')],
-   sources={'Oct12_session1_hybrid.html': ['Oct12_session1_hybrid.qmd', 'session1_hybrid.R', 'session1_review.R', 'session1_review.css']}),
+   sources={'Oct12_session1_hybrid.html': ['Oct12_session1_hybrid.qmd', 'session1_hybrid.R', 'day1_regression_visual.R', 'session1_review.R', 'session1_review.css']}),
  'd1s2': dict(label='Day 1 S2 (preview version: new slides, worksheet and cards)',
    copy=[('Oct12_session2_review.html', 'docs/Oct12_session2.html'),
          ('Oct12_session2_review_worksheet.html', 'docs/handouts/Oct12_session2_review_worksheet.html'),
@@ -35,7 +35,7 @@ SESSIONS = {
  'd1s3': dict(label='Day 1 S3 (slides follow the printed worksheet) + AI handout',
    copy=[('Oct12_session3_hybrid.html', 'docs/Oct12_session3_live.html'),
          ('Oct12_session3_ai_handout.docx', 'docs/handouts/Oct12_session3_ai_handout.docx')],
-   sources={'Oct12_session3_hybrid.html': ['Oct12_session3_hybrid.qmd', 'session3_hybrid.R', 'session3_review.R', 'session1_review.css', 'session3_review.css']}),
+   sources={'Oct12_session3_hybrid.html': ['Oct12_session3_hybrid.qmd', 'session3_hybrid.R', 'day1_regression_visual.R', 'session3_review.R', 'session1_review.css', 'session3_review.css']}),
 }
 INDEX = 'docs/index.html'
 
