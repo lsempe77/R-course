@@ -105,6 +105,76 @@ s2_filter_table <- function() {
   paste0('<p class="table-title"><strong>The same calculation with and without the 400 pilot businesses</strong></p>',
     as.character(knitr::kable(df, format = 'html', row.names = FALSE, escape = TRUE, table.attr = 'class="reading-table"')))
 }
+# ---- Cleaning examples as data pictures: two slides, each flips from the data to the words ----
+s2_clean_bars <- function(vals, flag, means, labels, alt) {
+  ymin <- -200; ymax <- 1900; top <- 22; h <- 190
+  y <- function(v) top + (ymax - v) / (ymax - ymin) * h
+  x <- 95 + (0:4) * 85
+  rects <- paste(vapply(1:5, function(i) {
+    v <- vals[i]; y0 <- y(0); y1 <- y(v)
+    sprintf('<rect x="%d" y="%.1f" width="50" height="%.1f" fill="%s"/>', x[i] - 25, min(y0, y1), max(abs(y1 - y0), 1.5), if (i == flag) '#B8272C' else '#215a9e')
+  }, ''), collapse = '')
+  texts <- paste(vapply(1:5, function(i) {
+    v <- vals[i]; inside <- v > 500
+    ly <- if (inside) y(v) + 24 else if (v >= 0) y(v) - 6 else y(0) - 6
+    sprintf('<text x="%d" y="%.1f" text-anchor="middle" font-size="18" fill="%s" stroke="%s" stroke-width="5" paint-order="stroke">%s</text><text x="%d" y="236" text-anchor="middle" font-size="18" fill="#545860">B%d</text>',
+      x[i], ly, if (i == flag) '#B8272C' else if (inside) '#fff' else '#111418', if (inside) '#215a9e' else '#f4f7fb', fmt(v, if (abs(v) < 10) 1 else 0), x[i], i)
+  }, ''), collapse = '')
+  cols <- c('#B8272C', '#063360')
+  lines <- paste(vapply(1:2, function(j) sprintf('<line x1="60" x2="500" y1="%.1f" y2="%.1f" stroke="%s" stroke-width="3" stroke-dasharray="7 5"/>', y(means[j]), y(means[j]), cols[j]), ''), collapse = '')
+  legend <- paste(vapply(1:2, function(j) sprintf('<line x1="62" x2="102" y1="%d" y2="%d" stroke="%s" stroke-width="3" stroke-dasharray="7 5"/><text x="112" y="%d" font-size="17" fill="#111418">%s</text>',
+    266 + 24 * (j - 1), 266 + 24 * (j - 1), cols[j], 272 + 24 * (j - 1), labels[j]), ''), collapse = '')
+  paste0('<svg class="review-svg clean-svg" viewBox="0 0 520 305" role="img" aria-label="', alt, '">',
+    sprintf('<line x1="60" x2="500" y1="%.1f" y2="%.1f" stroke="#545860"/>', y(0), y(0)), rects, lines, texts, legend, '</svg>')
+}
+s2_clean_table <- function(df, mark = NULL) {
+  head <- paste0('<tr>', paste0('<th>', names(df), '</th>', collapse = ''), '</tr>')
+  rows <- vapply(seq_len(nrow(df)), function(i) paste0('<tr', if (i %in% mark) ' class="clean-dup"' else '', '>',
+    paste0('<td>', unlist(df[i, ]), '</td>', collapse = ''), '</tr>'), '')
+  paste0('<table class="reading-table clean-table"><thead>', head, '</thead><tbody>', paste(rows, collapse = ''), '</tbody></table>')
+}
+s2_clean_parts <- function() {
+  base_b <- c(2000, 1800, 2200, 1600, 2400); base_a <- c(1500, 1400, 1700, 1300, 1900)
+  m0 <- mean(base_a - base_b); dup <- mean(c(base_a, base_a[1]) - c(base_b, base_b[1]))
+  dupdf <- data.frame(Business = c('B1', 'B2', 'B3', 'B4', 'B5', 'B1'),
+    'Cost before' = fmt(c(base_b, base_b[1])), 'Cost after' = fmt(c(base_a, base_a[1])),
+    'Change' = fmt(c(base_a, base_a[1]) - c(base_b, base_b[1])), check.names = FALSE)
+  miss_a <- c(1500, 1400, -99, 1700, 1600); miss_clean <- mean(miss_a[miss_a != -99]); miss_bad <- mean(miss_a)
+  th_a <- c(1500, 1400, 1.7, 1700, 1600); th_bad <- mean(th_a); th_ok <- mean(c(1500, 1400, 1700, 1700, 1600))
+  labdf <- data.frame('took_part value' = c('No', 'Y', 'yes', 'Yes'), 'Number of businesses' = fmt(c(5206, 794, 1500, 2500)), check.names = FALSE)
+  panel <- function(title, body, caption) paste0('<div class="clean-panel"><h3>', title, '</h3>', body, '<p class="clean-caption">', caption, '</p></div>')
+  words <- function(title, messy, effect) paste0('<div class="clean-panel"><h3>', title, '</h3><p>', messy, '</p><p><strong>', effect, '</strong></p></div>')
+  list(
+    vis = list(
+      panel('Duplicate rows', s2_clean_table(dupdf, mark = 6),
+        paste0('Mean change: ', fmt(dup, 1), ' AED with 6 rows, ', fmt(m0, 1), ' AED with the duplicate removed.')),
+      panel('Missing values coded as -99', s2_clean_bars(miss_a, 3, c(miss_bad, miss_clean),
+          c(paste0('Mean ', fmt(miss_bad, 1), ' AED if -99 is counted as a cost'), paste0('Mean ', fmt(miss_clean, 1), ' AED if -99 is treated as missing')),
+          'Bar chart of five costs after GreenWaste. One bar is below zero because the cost is coded -99.'),
+        'Costs after GreenWaste, in AED. One value is -99.'),
+      panel('A cost in thousands of AED', s2_clean_bars(th_a, 3, c(th_bad, th_ok),
+          c(paste0('Mean ', fmt(th_bad, 1), ' AED as entered'), paste0('Mean ', fmt(th_ok, 1), ' AED with 1.7 corrected to 1,700')),
+          'Bar chart of five costs after GreenWaste. One bar is almost invisible because the cost was entered as 1.7.'),
+        'Costs after GreenWaste, in AED. One value is 1.7.'),
+      panel('Labels that differ', s2_clean_table(labdf),
+        'Invented counts. We expect two groups, and the table shows four.')),
+    txt = list(
+      words('Duplicate rows', 'Business B1 appears twice. The file has 6 rows for 5 businesses.',
+        paste0('Mean change: ', fmt(dup, 1), ' AED with the duplicate, ', fmt(m0, 1), ' AED without it.')),
+      words('Missing values coded as -99', 'Costs after: 1,500; 1,400; -99; 1,700; 1,600.',
+        paste0('Mean cost: ', fmt(miss_bad, 1), ' AED if -99 is treated as a cost, ', fmt(miss_clean, 1), ' AED if it is treated as missing.')),
+      words('A cost in thousands of AED', 'Costs after: 1,500; 1,400; 1.7; 1,700; 1,600. One value was entered in thousands.',
+        paste0('Mean cost: ', fmt(th_bad, 1), ' AED as entered, ', fmt(th_ok, 1), ' AED after correcting it to 1,700.')),
+      words('Labels that differ', 'The took_part column holds "Yes", "yes", "Y" and "No".',
+        'The table of counts shows four groups instead of two, so each group mean describes only some of the businesses.')))
+}
+# which = 1 gives duplicates and -99; which = 2 gives thousands and labels. The button flips the data to the words.
+s2_cleaning_flip <- function(which) {
+  p <- s2_clean_parts(); i <- if (which == 1) 1:2 else 3:4; id <- paste0('s2-clean-', which)
+  paste0('<div id="', id, '"><div data-variant><div class="clean-grid">', paste(p$vis[i], collapse = ''), '</div></div>',
+    '<div data-variant hidden><div class="clean-grid">', paste(p$txt[i], collapse = ''), '</div></div></div>',
+    '<button data-swap="', id, '" data-closed="Show what each example means" data-opened="Show the data again" aria-pressed="false">Show what each example means</button>')
+}
 s2_cleaning <- function() {
   ch <- function(b, a) a - b
   base_b <- c(2000, 1800, 2200, 1600, 2400); base_a <- c(1500, 1400, 1700, 1300, 1900)

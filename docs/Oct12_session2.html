@@ -562,7 +562,7 @@ code span.wa { color: #5e5e5e; font-style: italic; }
 .reveal .s1-review .map-facts strong { display:block; color:#063360; font-size:17px; text-transform:uppercase; letter-spacing:0.04em; }
 .reveal .s1-review .case-map-slide .case-map svg { max-height:330px; }
 </style>
-  <style type="text/css">.reveal .s2-review .review-svg { max-height:300px; }.reveal .s2-review .reading-table { font-size:23px; }.reveal .s2-review .reading-table th,.reveal .s2-review .reading-table td { padding:10px; }.reveal .s2-review .comparison-pair { display:grid;grid-template-columns:1fr 1fr;gap:32px;margin:20px 0; }.reveal .s2-review .comparison-pair>div { border-top:3px solid #215a9e;padding-top:12px; }.reveal .s2-review .comparison-pair h3 { font-size:25px;margin:0 0 8px; }.reveal .s2-review .comparison-pair p { font-size:24px; }.reveal .s2-review pre { font-size:20px;line-height:1.4;width:100%;box-sizing:border-box; }.reveal .s2-review .mini-output { font-size:24px;color:#063360;border-top:1px solid #D5DEE8;padding-top:10px; }.reveal .s2-review .claim-steps { display:flex;gap:15px;align-items:center;margin:24px 0; }.reveal .s2-review .claim-steps strong { border-bottom:3px solid #7da1c4;padding:12px 18px; }.reveal .s2-review.code-example .review-svg{max-height:230px}.reveal .s2-review.code-example .cell:has(.cell-code){display:grid;grid-template-columns:2fr 1fr;gap:25px;align-items:center}.reveal .s2-review.code-example .cell-output{font-size:21px}.s2-review .clean-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:10px 0}.s2-review .clean-panel{border:1px solid #D5DEE8;border-radius:8px;padding:8px 14px;background:#f4f7fb}.s2-review .clean-panel h3{font-size:22px;margin:0 0 4px;color:#063360}.s2-review .clean-panel p{font-size:19px;margin:3px 0;line-height:1.3}</style>
+  <style type="text/css">.reveal .s2-review .review-svg { max-height:300px; }.reveal .s2-review .reading-table { font-size:23px; }.reveal .s2-review .reading-table th,.reveal .s2-review .reading-table td { padding:10px; }.reveal .s2-review .comparison-pair { display:grid;grid-template-columns:1fr 1fr;gap:32px;margin:20px 0; }.reveal .s2-review .comparison-pair>div { border-top:3px solid #215a9e;padding-top:12px; }.reveal .s2-review .comparison-pair h3 { font-size:25px;margin:0 0 8px; }.reveal .s2-review .comparison-pair p { font-size:24px; }.reveal .s2-review pre { font-size:20px;line-height:1.4;width:100%;box-sizing:border-box; }.reveal .s2-review .mini-output { font-size:24px;color:#063360;border-top:1px solid #D5DEE8;padding-top:10px; }.reveal .s2-review .claim-steps { display:flex;gap:15px;align-items:center;margin:24px 0; }.reveal .s2-review .claim-steps strong { border-bottom:3px solid #7da1c4;padding:12px 18px; }.reveal .s2-review.code-example .review-svg{max-height:230px}.reveal .s2-review.code-example .cell:has(.cell-code){display:grid;grid-template-columns:2fr 1fr;gap:25px;align-items:center}.reveal .s2-review.code-example .cell-output{font-size:21px}.s2-review .clean-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:10px 0}.s2-review .clean-panel{border:1px solid #D5DEE8;border-radius:8px;padding:8px 14px;background:#f4f7fb}.s2-review .clean-panel h3{font-size:22px;margin:0 0 4px;color:#063360}.s2-review .clean-panel p{font-size:19px;margin:3px 0;line-height:1.3}.s2-review .clean-panel .clean-caption{font-size:17px;color:#545860;margin:4px 0 0}.s2-review .clean-svg{max-height:250px;width:100%}.reveal .s2-review .clean-table{font-size:17px;margin:0;width:100%}.reveal .s2-review .clean-table th,.reveal .s2-review .clean-table td{padding:3px 8px}.s2-review .clean-table tr.clean-dup td{background:#fde8e8;font-weight:700}.s2-review .clean-grid .clean-panel{min-height:0}</style>
   <style type="text/css">.reveal
 div.sourceCode
 pre
@@ -1133,8 +1133,8 @@ GreenWaste helps businesses reduce their annual waste management costs. This map
     <text x="895" y="148">businesses took part</text>
     <rect x="875" y="215" width="300" height="178" rx="12" fill="#fff" stroke="#D5DEE8" stroke-width="2" />
     <text x="895" y="257" font-weight="700" fill="#063360">Everywhere else</text>
-    <text x="895" y="293">businesses scoring <tspan font-weight="700">58 or below</tspan></text>
-    <text x="895" y="323">took part</text>
+    <text x="895" y="293">businesses scoring</text>
+    <text x="895" y="323"><tspan font-weight="700">58 or below</tspan> took part</text>
     <text x="895" y="356" font-size="16" fill="#545860">the number under each business</text>
     <text x="895" y="377" font-size="16" fill="#545860">is its efficiency score</text>
   </g>
@@ -1499,13 +1499,110 @@ display:block!important;
 <section id="s2-p06c" class="slide level2 reader-slide s1-review s2-review">
 <h2>Real datasets need cleaning before anyone calculates a mean.</h2>
 <p>These are <strong>invented examples. They are not in the GreenWaste file.</strong></p>
-<div class="clean-grid"><div class="clean-panel"><h3>Duplicate rows</h3><p>Business B1 appears twice. The file has 6 rows for 5 businesses.</p><p><strong>Mean change: -450.0 AED with the duplicate, -440.0 AED without it.</strong></p></div><div class="clean-panel"><h3>Missing values coded as -99</h3><p>Costs after: 1,500; 1,400; -99; 1,700; 1,600.</p><p><strong>Mean cost: 1,220.2 AED if -99 is treated as a cost, 1,550.0 AED if it is treated as missing.</strong></p></div><div class="clean-panel"><h3>A cost in thousands of AED</h3><p>Costs after: 1,500; 1,400; 1.7; 1,700; 1,600. One value was entered in thousands.</p><p><strong>Mean cost: 1,240.3 AED as entered, 1,580.0 AED after correcting it to 1,700.</strong></p></div><div class="clean-panel"><h3>Labels that differ</h3><p>The took_part column holds &quot;Yes&quot;, &quot;yes&quot;, &quot;Y&quot; and &quot;No&quot;.</p><p><strong>The table of counts shows four groups instead of two, so each group mean describes only some of the businesses.</strong></p></div></div>
+<div id="s2-clean-1"><div data-variant><div class="clean-grid"><div class="clean-panel"><h3>Duplicate rows</h3>
+<table class="reading-table clean-table caption-top">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Business</th>
+<th data-quarto-table-cell-role="th">Cost before</th>
+<th data-quarto-table-cell-role="th">Cost after</th>
+<th data-quarto-table-cell-role="th">Change</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>B1</td>
+<td>2,000</td>
+<td>1,500</td>
+<td>-500</td>
+</tr>
+<tr class="even">
+<td>B2</td>
+<td>1,800</td>
+<td>1,400</td>
+<td>-400</td>
+</tr>
+<tr class="odd">
+<td>B3</td>
+<td>2,200</td>
+<td>1,700</td>
+<td>-500</td>
+</tr>
+<tr class="even">
+<td>B4</td>
+<td>1,600</td>
+<td>1,300</td>
+<td>-300</td>
+</tr>
+<tr class="odd">
+<td>B5</td>
+<td>2,400</td>
+<td>1,900</td>
+<td>-500</td>
+</tr>
+<tr class="clean-dup even">
+<td>B1</td>
+<td>2,000</td>
+<td>1,500</td>
+<td>-500</td>
+</tr>
+</tbody>
+</table>
+<p class="clean-caption">Mean change: -450.0 AED with 6 rows, -440.0 AED with the duplicate removed.</p></div><div class="clean-panel"><h3>Missing values coded as -99</h3><svg class="review-svg clean-svg" viewbox="0 0 520 305" role="img" aria-label="Bar chart of five costs after GreenWaste. One bar is below zero because the cost is coded -99."><line x1="60" x2="500" y1="193.9" y2="193.9" stroke="#545860"></line><rect x="70" y="58.2" width="50" height="135.7" fill="#215a9e" /><rect x="155" y="67.2" width="50" height="126.7" fill="#215a9e" /><rect x="240" y="193.9" width="50" height="9.0" fill="#B8272C" /><rect x="325" y="40.1" width="50" height="153.8" fill="#215a9e" /><rect x="410" y="49.1" width="50" height="144.8" fill="#215a9e" /><line x1="60" x2="500" y1="83.5" y2="83.5" stroke="#B8272C" stroke-width="3" stroke-dasharray="7 5"></line><line x1="60" x2="500" y1="53.7" y2="53.7" stroke="#063360" stroke-width="3" stroke-dasharray="7 5"></line><text x="95" y="82.2" text-anchor="middle" font-size="18" fill="#fff" stroke="#215a9e" stroke-width="5" paint-order="stroke">1,500</text><text x="95" y="236" text-anchor="middle" font-size="18" fill="#545860">B1</text><text x="180" y="91.2" text-anchor="middle" font-size="18" fill="#fff" stroke="#215a9e" stroke-width="5" paint-order="stroke">1,400</text><text x="180" y="236" text-anchor="middle" font-size="18" fill="#545860">B2</text><text x="265" y="187.9" text-anchor="middle" font-size="18" fill="#B8272C" stroke="#f4f7fb" stroke-width="5" paint-order="stroke">-99</text><text x="265" y="236" text-anchor="middle" font-size="18" fill="#545860">B3</text><text x="350" y="64.1" text-anchor="middle" font-size="18" fill="#fff" stroke="#215a9e" stroke-width="5" paint-order="stroke">1,700</text><text x="350" y="236" text-anchor="middle" font-size="18" fill="#545860">B4</text><text x="435" y="73.1" text-anchor="middle" font-size="18" fill="#fff" stroke="#215a9e" stroke-width="5" paint-order="stroke">1,600</text><text x="435" y="236" text-anchor="middle" font-size="18" fill="#545860">B5</text><line x1="62" x2="102" y1="266" y2="266" stroke="#B8272C" stroke-width="3" stroke-dasharray="7 5"></line><text x="112" y="272" font-size="17" fill="#111418">Mean 1,220.2 AED if -99 is counted as a cost</text><line x1="62" x2="102" y1="290" y2="290" stroke="#063360" stroke-width="3" stroke-dasharray="7 5"></line><text x="112" y="296" font-size="17" fill="#111418">Mean 1,550.0 AED if -99 is treated as missing</text></svg><p class="clean-caption">Costs after GreenWaste, in AED. One value is -99.</p></div></div></div><div data-variant hidden><div class="clean-grid"><div class="clean-panel"><h3>Duplicate rows</h3><p>Business B1 appears twice. The file has 6 rows for 5 businesses.</p><p><strong>Mean change: -450.0 AED with the duplicate, -440.0 AED without it.</strong></p></div><div class="clean-panel"><h3>Missing values coded as -99</h3><p>Costs after: 1,500; 1,400; -99; 1,700; 1,600.</p><p><strong>Mean cost: 1,220.2 AED if -99 is treated as a cost, 1,550.0 AED if it is treated as missing.</strong></p></div></div></div></div><button data-swap="s2-clean-1" data-closed="Show what each example means" data-opened="Show the data again" aria-pressed="false">Show what each example means</button>
 <div class="ask">
-<p>Which of these problems would give you an error message? Which would not?</p>
+<p>Look at the data first. What is wrong in each example, and how does it change the mean?</p>
+</div>
+<aside class="notes">
+<p>2 minutes. Show the data, ask for the problem, then press the button to show the words. Duplicate: B1 counted twice pulls the mean change from -440.0 to -450.0 AED. Missing code: -99 is a code, not a cost, so the mean drops from 1,550.0 to 1,220.2 AED. The numbers are computed in session2_review.R.</p>
+<style type="text/css">
+span.MJX_Assistive_MathML {
+position:absolute!important;
+clip: rect(1px, 1px, 1px, 1px);
+padding: 1px 0 0 0!important;
+border: 0!important;
+height: 1px!important;
+width: 1px!important;
+overflow: hidden!important;
+display:block!important;
+}</style></aside>
+</section>
+<section id="s2-p06d" class="slide level2 reader-slide s1-review s2-review">
+<h2>Two more problems that do not give an error message.</h2>
+<p>These are <strong>invented examples. They are not in the GreenWaste file.</strong></p>
+<div id="s2-clean-2"><div data-variant><div class="clean-grid"><div class="clean-panel"><h3>A cost in thousands of AED</h3><svg class="review-svg clean-svg" viewbox="0 0 520 305" role="img" aria-label="Bar chart of five costs after GreenWaste. One bar is almost invisible because the cost was entered as 1.7."><line x1="60" x2="500" y1="193.9" y2="193.9" stroke="#545860"></line><rect x="70" y="58.2" width="50" height="135.7" fill="#215a9e" /><rect x="155" y="67.2" width="50" height="126.7" fill="#215a9e" /><rect x="240" y="193.8" width="50" height="1.5" fill="#B8272C" /><rect x="325" y="40.1" width="50" height="153.8" fill="#215a9e" /><rect x="410" y="49.1" width="50" height="144.8" fill="#215a9e" /><line x1="60" x2="500" y1="81.7" y2="81.7" stroke="#B8272C" stroke-width="3" stroke-dasharray="7 5"></line><line x1="60" x2="500" y1="51.0" y2="51.0" stroke="#063360" stroke-width="3" stroke-dasharray="7 5"></line><text x="95" y="82.2" text-anchor="middle" font-size="18" fill="#fff" stroke="#215a9e" stroke-width="5" paint-order="stroke">1,500</text><text x="95" y="236" text-anchor="middle" font-size="18" fill="#545860">B1</text><text x="180" y="91.2" text-anchor="middle" font-size="18" fill="#fff" stroke="#215a9e" stroke-width="5" paint-order="stroke">1,400</text><text x="180" y="236" text-anchor="middle" font-size="18" fill="#545860">B2</text><text x="265" y="187.8" text-anchor="middle" font-size="18" fill="#B8272C" stroke="#f4f7fb" stroke-width="5" paint-order="stroke">1.7</text><text x="265" y="236" text-anchor="middle" font-size="18" fill="#545860">B3</text><text x="350" y="64.1" text-anchor="middle" font-size="18" fill="#fff" stroke="#215a9e" stroke-width="5" paint-order="stroke">1,700</text><text x="350" y="236" text-anchor="middle" font-size="18" fill="#545860">B4</text><text x="435" y="73.1" text-anchor="middle" font-size="18" fill="#fff" stroke="#215a9e" stroke-width="5" paint-order="stroke">1,600</text><text x="435" y="236" text-anchor="middle" font-size="18" fill="#545860">B5</text><line x1="62" x2="102" y1="266" y2="266" stroke="#B8272C" stroke-width="3" stroke-dasharray="7 5"></line><text x="112" y="272" font-size="17" fill="#111418">Mean 1,240.3 AED as entered</text><line x1="62" x2="102" y1="290" y2="290" stroke="#063360" stroke-width="3" stroke-dasharray="7 5"></line><text x="112" y="296" font-size="17" fill="#111418">Mean 1,580.0 AED with 1.7 corrected to 1,700</text></svg><p class="clean-caption">Costs after GreenWaste, in AED. One value is 1.7.</p></div><div class="clean-panel"><h3>Labels that differ</h3>
+<table class="reading-table clean-table caption-top">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">took_part value</th>
+<th data-quarto-table-cell-role="th">Number of businesses</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>No</td>
+<td>5,206</td>
+</tr>
+<tr class="even">
+<td>Y</td>
+<td>794</td>
+</tr>
+<tr class="odd">
+<td>yes</td>
+<td>1,500</td>
+</tr>
+<tr class="even">
+<td>Yes</td>
+<td>2,500</td>
+</tr>
+</tbody>
+</table>
+<p class="clean-caption">Invented counts. We expect two groups, and the table shows four.</p></div></div></div><div data-variant hidden><div class="clean-grid"><div class="clean-panel"><h3>A cost in thousands of AED</h3><p>Costs after: 1,500; 1,400; 1.7; 1,700; 1,600. One value was entered in thousands.</p><p><strong>Mean cost: 1,240.3 AED as entered, 1,580.0 AED after correcting it to 1,700.</strong></p></div><div class="clean-panel"><h3>Labels that differ</h3><p>The took_part column holds &quot;Yes&quot;, &quot;yes&quot;, &quot;Y&quot; and &quot;No&quot;.</p><p><strong>The table of counts shows four groups instead of two, so each group mean describes only some of the businesses.</strong></p></div></div></div></div><button data-swap="s2-clean-2" data-closed="Show what each example means" data-opened="Show the data again" aria-pressed="false">Show what each example means</button>
+<div class="ask">
+<p>Which of these four problems would give you an error message? Which would not?</p>
 </div>
 <p>Check what is in the data before you calculate anything. A wrong structure gives a wrong answer without any warning.</p>
 <aside class="notes">
-<p>3 minutes. None of these examples produces an error message in R; the calculation runs and returns a plausible-looking number. The numbers are computed in session2_review.R. LUCAS (not addressed here): 734 city businesses have a negative annual cost after GreenWaste; if those values are not intended, a further cleaning slide and a data recheck would be needed.</p>
+<p>3 minutes. None of the four examples produces an error message in R; the calculation runs and returns a plausible-looking number. Thousands: 1.7 was typed instead of 1,700, so the mean falls from 1,580.0 to 1,240.3 AED. Labels: four groups instead of two, so each group mean describes only some of the businesses (the counts are invented). LUCAS (not addressed here): 734 city businesses have a negative annual cost after GreenWaste; if those values are not intended, a further cleaning slide and a data recheck would be needed.</p>
 <style type="text/css">
 span.MJX_Assistive_MathML {
 position:absolute!important;

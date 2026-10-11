@@ -64,8 +64,8 @@ cat("\n", map_fence, "{=html}\n", paste0('
     <text x="895" y="148">businesses took part</text>
     <rect x="875" y="215" width="300" height="178" rx="12" fill="#fff" stroke="#D5DEE8" stroke-width="2"/>
     <text x="895" y="257" font-weight="700" fill="#063360">Everywhere else</text>
-    <text x="895" y="293">businesses scoring <tspan font-weight="700">58 or below</tspan></text>
-    <text x="895" y="323">took part</text>
+    <text x="895" y="293">businesses scoring</text>
+    <text x="895" y="323"><tspan font-weight="700">58 or below</tspan> took part</text>
     <text x="895" y="356" font-size="16" fill="#545860">the number under each business</text>
     <text x="895" y="377" font-size="16" fill="#545860">is its efficiency score</text>
   </g>

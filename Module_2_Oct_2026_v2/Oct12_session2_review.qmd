@@ -220,17 +220,33 @@ What does the mean change hide? Which line of the code shows it?
 These are **invented examples. They are not in the GreenWaste file.**
 
 ```{r, results='asis'}
-html_out(s2_cleaning())
+html_out(s2_cleaning_flip(1))
 ```
 
 ::: {.ask}
-Which of these problems would give you an error message? Which would not?
+Look at the data first. What is wrong in each example, and how does it change the mean?
+:::
+
+::: {.notes}
+2 minutes. Show the data, ask for the problem, then press the button to show the words. Duplicate: B1 counted twice pulls the mean change from -440.0 to -450.0 AED. Missing code: -99 is a code, not a cost, so the mean drops from 1,550.0 to 1,220.2 AED. The numbers are computed in session2_review.R.
+:::
+
+## Two more problems that do not give an error message. {#s2-p06d .reader-slide .s1-review .s2-review}
+
+These are **invented examples. They are not in the GreenWaste file.**
+
+```{r, results='asis'}
+html_out(s2_cleaning_flip(2))
+```
+
+::: {.ask}
+Which of these four problems would give you an error message? Which would not?
 :::
 
 Check what is in the data before you calculate anything. A wrong structure gives a wrong answer without any warning.
 
 ::: {.notes}
-3 minutes. None of these examples produces an error message in R; the calculation runs and returns a plausible-looking number. The numbers are computed in session2_review.R. LUCAS (not addressed here): 734 city businesses have a negative annual cost after GreenWaste; if those values are not intended, a further cleaning slide and a data recheck would be needed.
+3 minutes. None of the four examples produces an error message in R; the calculation runs and returns a plausible-looking number. Thousands: 1.7 was typed instead of 1,700, so the mean falls from 1,580.0 to 1,240.3 AED. Labels: four groups instead of two, so each group mean describes only some of the businesses (the counts are invented). LUCAS (not addressed here): 734 city businesses have a negative annual cost after GreenWaste; if those values are not intended, a further cleaning slide and a data recheck would be needed.
 :::
 
 ## What else could have changed costs? {#s2-p07 .reader-slide .s1-review .s2-review}

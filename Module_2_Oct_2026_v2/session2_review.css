@@ -18,3 +18,9 @@
 .s2-review .clean-panel{border:1px solid #D5DEE8;border-radius:8px;padding:8px 14px;background:#f4f7fb}
 .s2-review .clean-panel h3{font-size:22px;margin:0 0 4px;color:#063360}
 .s2-review .clean-panel p{font-size:19px;margin:3px 0;line-height:1.3}
+.s2-review .clean-panel .clean-caption{font-size:17px;color:#545860;margin:4px 0 0}
+.s2-review .clean-svg{max-height:250px;width:100%}
+.reveal .s2-review .clean-table{font-size:17px;margin:0;width:100%}
+.reveal .s2-review .clean-table th,.reveal .s2-review .clean-table td{padding:3px 8px}
+.s2-review .clean-table tr.clean-dup td{background:#fde8e8;font-weight:700}
+.s2-review .clean-grid .clean-panel{min-height:0}
