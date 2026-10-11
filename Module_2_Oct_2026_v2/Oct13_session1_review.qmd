@@ -157,13 +157,13 @@ You do not need to write or run R. Q2 on your worksheet asks you to read the tab
 ## Which row of the table shows the difference between the two changes? {#d2s1-p05 .reader-slide .s1-review .d2s1-review}
 
 ```{r, results='asis'}
-html_out(sub('<p class="caption">.*$', '', d4_regression()))
+html_out(sub('^<p[^>]*>.*?</p>', '<p class="caption">City annual cost (AED), before and after. Reference: comparison businesses before GreenWaste.</p>', sub('<p class="caption">.*$', '', d4_regression())))
 ```
 
 <div class="review-annotate"><button data-table-column="1" aria-pressed="false">Coefficient</button><button data-table-column="2" aria-pressed="false">Interval</button><button data-table-column="3" aria-pressed="false">P-value</button></div>
 
 ::: {.ask}
-**Q2:** Find the last row, *after × took part*. It gives the DiD estimate, the difference between the two changes. What does each of the other rows show?
+**Q2:** Find *after × took part*: the difference between the two changes. What do the other rows show?
 :::
 
 ::: {.notes}
@@ -268,11 +268,11 @@ On **page 4**, write one interpretation that H4-A supports and one specific evid
 ## The AI says GreenWaste caused the change. Does the comparison support that? {#d2s1-p12 .reader-slide .s1-review .d2s1-review}
 
 ```{r, results='asis'}
-html_out(paste0('<p class="caption">Naive prompt (a prompt with no context, as a busy person might type it): “Explain the regression table to a policy adviser considering GreenWaste expansion. Say what they should check.” This response was written for the exercise. It is not a real AI answer.</p><div class="ai-reading">',d4_paragraphs(d4_ai),'</div>'))
+html_out(paste0('<p class="caption">Authored exercise response, not a real AI answer. Read the full prompt and response on worksheet page 5.</p><div class="ai-reading">',d4_paragraphs(d4_ai),'</div>'))
 ```
 
 ::: {.ask}
-On **page 5**, underline the claims that H4-A (the difference-in-differences study summary) supports and cross out the claims that it does not support. Check **H4-A on page 1**.
+**Page 5:** Mark supported claims and overclaims. Check H4-A, the study summary on **page 1**.
 :::
 
 ::: {.notes}
@@ -282,10 +282,8 @@ On **page 5**, underline the claims that H4-A (the difference-in-differences stu
 ## Ask the AI for an explanation you can check. {#d2s1-p13 .reader-slide .s1-review .d2s1-review}
 
 ```{r, results='asis'}
-html_out(paste0('<p class="caption"><strong>Improved prompt</strong></p><div class="better-prompt">',d4_paragraphs(d4_prompt),'</div>'))
+html_out(paste0('<p class="caption"><strong>Improved prompt, worksheet page 5.</strong> Copy it and H4-A, the study summary, into Microsoft Copilot.</p><div class="better-prompt">',d4_paragraphs(d4_prompt),'</div>'))
 ```
-
-Copy **the prompt on page 5 and H4-A (the difference-in-differences study summary)** into **Microsoft Copilot**. Keep your AI good-practice card beside you.
 
 ::: {.ask}
 Which claim improved? What still needs checking against H4-A?

@@ -1,5 +1,35 @@
 # Handoff: moving Module 2 to the simple GreenWaste case
 
+## Correcting the Day 2 Session 1 teaching route, 11 October 2026
+
+Lucas identified that the teaching route still served the old eleven-screen deck rather than the revised seventeen-screen deck. Fiona's latest commit `8079760` was fast-forwarded into main before rendering; her revised stacking code, timeline and wording are preserved.
+
+The teaching source is now `Oct13_session1_review.qmd`, rendered to `docs/Oct13_session1.html`: sixteen content slides plus the title, seventeen Reveal screens. The matching six-page source is `Oct13_session1_review_worksheet.qmd`, published as `docs/handouts/Oct13_session1_review_worksheet.html`. The hub and Days 1-2 deck download must use those same outputs. The old production HTML and old source-comparison render are preserved byte-for-byte in `docs/preview/archive/day2_session1/`; the old comparison bookmark now displays a historical-version notice. The comparison hub uses the canonical teaching route, corrected counts and corrected topic indices.
+
+Browser validation exposed overflow on the regression-table and two AI slides. Shorter on-screen captions/instructions retain the full prompt and source material in the worksheet; a scoped table style retains all four coefficients and columns. No model, worksheet question or timing was changed. Other days' teaching routes are not promoted by this correction.
+
+This publishing batch also includes the previously requested Day 1 opening-slide layout, runnable Session 3 regression and old Session 2 preview notices. Fiona's new Day 1 Session 2 hybrid/flex alternatives remain alternatives; this change does not select or overwrite them. The older entries below record local status at the time they were written; this batch supersedes that status once pushed and successfully deployed.
+
+Validation passes: seventeen actual Reveal screens, all screen bounds at 1280x720, real webR arithmetic output -812, four model coefficients (2,258; 143; -826; -812), interaction interval -833 to -792, and exact equality with the difference between the two changes. The worksheet prints to exactly six A4 pages. Table-column controls, ten comparison topic pairs, mobile hub and archive links pass. Production/preview deck and worksheet bytes match; relevant downloaded decks match the teaching outputs byte-for-byte. The print download replaces the old Day 2 Session 1 worksheet, removes its obsolete trainer pack and explains the six-page worksheet and ninety-minute embedded trainer notes in its README. Other print materials remain unchanged.
+
+## Runnable Session 3 regression example, 11 October 2026
+
+Lucas identified that `s3-p07b` used an ordinary render-time R chunk, leaving static code/output instead of a Run Code box. Converted that chunk to webR, using the pilot records already loaded by the hidden opening setup. Compact comments preserve group coding and coefficient interpretation. The trainer clicks Run Code; participants still do not need to code, and the next table remains the offline fallback within the same four minutes.
+
+The deck renders successfully. A real browser Run Code click produced intercept 1,783 (interval 1,676-1,891) and treatment-minus-control -1,014 (interval -1,167 to -862). Expanded output fits 1280x720; code editor width and scroll width both equal 1,276px. Saved teaching HTML is updated locally, not pushed. This remains alongside the pending opening-slide layout and Session 2 archive changes.
+
+## Simplifying Session 1's opening result slide, 11 October 2026
+
+Lucas flagged `s1-h03` as unclear. The hybrid source now uses a single reading order: the 669 AED claim, explicit worksheet page/table reference, same-business before/after comparison, five numbered terms in two short rows, and the opening discussion question. Removed dense side-by-side source/terms prose; no worksheet, numeric result or timing changes. The deck renders and the complete slide passes 1280x720 bounds/logo checks, with a visually inspected screenshot. The saved teaching HTML matches the revised render. This change remains local alongside the pending Session 2 archive/navigation changes; neither has been pushed.
+
+## Removing ambiguous Day 1 Session 2 preview links, 11 October 2026
+
+Lucas requested preventing mistakes between old and current Session 2 decks. The committed production `docs/Oct12_session2.html` and revised `docs/preview/Oct12_session2_review.html` are byte-identical (20 content slides); this file comparison is not an authenticated fetch of the public responses.
+
+The two older eleven-slide preview/current-comparison HTML files are preserved byte-for-byte under `docs/preview/archive/day1_session2/`. Their former URLs now show explicit historical-version notices and a prominent link to the canonical teaching deck, so existing bookmarks no longer silently open an obsolete deck. The comparison hub labels its left-hand source archived and uses the canonical teaching deck on the right. Its obsolete fifteen-slide description and topic indices are corrected to the twenty-slide revision. Other sessions' review candidates remain untouched.
+
+Local browser validation passes for notices, links, nine paired-topic controls and mobile layout. The production deck and revised preview remain unchanged and identical. These archive/navigation changes are local, not yet committed or pushed.
+
 ## Preview check: slide fit, worksheet references and wording, 11 October 2026 (Claude, for Fiona)
 
 Source edits only. No R or Quarto was available, so nothing was re-rendered; originals of the edited files are in `backups/preview_fix_2026_10_11/`.

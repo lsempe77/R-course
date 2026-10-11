@@ -198,15 +198,14 @@ Where is the intercept? Why is the slope -1,014 AED while the treatment mean is 
 
 ## We create the regression table in R with one line of code. {#s3-p07b .reader-slide .s1-review .s3-review}
 
-We create the table in R. The box shows the **R code** and the numbers it produces.
+The trainer clicks **Run Code** to fit the pilot comparison.
 
-```{r, echo=TRUE}
-# pilot has one row per business (400 rows).
-# took_part is 1 for the treatment group and 0 for the control group.
-# cost_after is annual waste management cost 12 months after GreenWaste (AED).
+```{webr}
+#| echo: true
+# 400 pilot businesses; outcome: annual cost after 12 months (AED).
+# Lottery group: 0 = control, 1 = treatment.
 fit <- lm(cost_after ~ took_part, data = pilot)
-# Row 1 (Intercept): the control group's mean cost.
-# Row 2 (took_part): treatment group minus control group.
+# Intercept = control mean; took_part = treatment minus control.
 round(cbind(estimate = coef(fit), confint(fit)))
 ```
 
@@ -217,7 +216,7 @@ Which output row is the intercept at group 0? Which is the slope from group 0 to
 You do not need to write or run R. The pilot trial box on your worksheet shows the second row of this table.
 
 ::: {.notes}
-4 minutes. Walk through the comments, not the syntax; participants do not code. Match each printed row to a row of the table on the next slide. Estimates: 1,783 and -1,014; interval -1,167 to -862. This is the same two-group comparison as the previous slide.
+4 minutes. Ask for the two rows before the trainer clicks Run Code. The hidden opening setup loads the pilot records into webR. Walk through the comments, not the syntax; participants do not code. Match each output row to the table on the next slide. Estimates: 1,783 and -1,014; interval -1,167 to -862. This is the same two-group comparison as the previous slide. If webR is unavailable, use the next slide's identical paper result without extending the activity.
 :::
 
 ## The regression table reports the same comparison. {#s3-p08 .reader-slide .s1-review .s3-review}

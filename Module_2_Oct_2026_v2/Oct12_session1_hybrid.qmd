@@ -81,10 +81,15 @@ Does distributing equipment show that the programme lowered costs?
 
 <p class="lead">“The mean annual waste management cost of participant businesses fell by <strong>669 AED</strong>.”</p>
 
-<div class="review-grid">
-<div class="review-stage"><h3>The source</h3><p>The regression table is on <strong>page 1 of your worksheet</strong>, under the heading “Annual waste cost regression”. It shows the same <strong>4,794 participant businesses</strong>, measured before GreenWaste and 12 months after.</p></div>
-<div class="review-stage"><h3>The five terms</h3><p>The sections on your worksheet follow this session: <strong>1 Mean, 2 Coefficient, 3 Treatment effect, 4 Confidence interval, 5 P value</strong>. Section 6 and the last box ask for your own reading.</p></div>
-</div>
+**Find the evidence:** worksheet **page 1**, “Annual waste cost regression”.
+
+It compares the **same 4,794 city participants**, before GreenWaste and **12 months after**.
+
+**Five terms to help you read it** — in worksheet order:
+
+**1** Mean · **2** Coefficient · **3** Treatment effect
+
+**4** Confidence interval · **5** P value
 
 ::: {.ask}
 Which term could you explain already? Which would you need help with?
