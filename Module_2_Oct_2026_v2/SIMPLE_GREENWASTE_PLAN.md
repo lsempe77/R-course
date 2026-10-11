@@ -1,4 +1,12 @@
-> Latest Day 1 order: Session 1 teaches mean, treatment effect, coefficient, p-value and confidence interval through a regression table; Session 2 applies these terms to claim checking. Both are 60 minutes. Generic case notices appear once per deck with shared typography. See HANDOFF.md for the current build and validation.
+## Current status, 12 October 2026
+
+The eleven selected teaching sessions are deployed in `89c2577`, with successful Cloudflare/GitHub checks. Use [README.md](README.md) and the [current teaching guide](../docs/teaching_materials.html) for sources, routes, counts, matching materials and publishing safeguards. Day 1 S1/S3 retain Fiona's worksheet-aligned hybrids; Day 1 S2 retains her latest revised deck and seven-page worksheet. Days 2-4 use their revised sources.
+
+Everything below records the earlier rebuild. Its 60/60/75-minute schedules, source-selection statements, two-page worksheet assumptions and `publish_live.py` instructions are historical and superseded. Use current embedded speaker scripts for timings. Do not rerun the October 6 publisher or legacy print generator to restore the current week.
+
+## Historical rebuild notes, 6 October 2026
+
+> Earlier Day 1 order: Session 1 teaches mean, treatment effect, coefficient, p-value and confidence interval through a regression table; Session 2 applies these terms to claim checking. Both were 60 minutes in that build. Generic case notices appear once per deck with shared typography. See HANDOFF.md for the current build and validation.
 
 > Live publication authorised on 6 October 2026. The rebuilt eleven-session week and revised working course hub are being promoted to `docs/` on main, behind the existing password gate. Prior preview-only notes below are historical. Build and promote with `review_2026_10_06/publish_live.py`.
 

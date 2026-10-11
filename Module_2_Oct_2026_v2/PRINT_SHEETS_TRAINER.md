@@ -2,6 +2,28 @@
 
 This sheet holds the print, cutting and distribution instructions that were taken off the participant pages (PREVIEW_CHANGE_NOTES.md, section 4). Participants do not see it.
 
+## Current print bundle, 12 October 2026
+
+The selected teaching versions are deployed in `89c2577`. Use the [folder README](README.md), [current teaching guide](../docs/teaching_materials.html) and [print download](../docs/downloads/GreenWaste_week_materials.zip), not the old classroom brief or legacy Word trainer packs for revised sessions. Print HTML at A4 using its print control. PDF pagination was checked; keep default page styles rather than applying browser scaling to force a different count.
+
+| Session | Worksheet pages | Separate material pages |
+|---|---:|---|
+| Day 1 S1 | 2, original Word | Retain original printed pack |
+| Day 1 S2 | 7, revised Word or HTML | 4 decision cards + board = 5 |
+| Day 1 S3 | 2, original Word | Retain original printed pack and age-slip activity |
+| Day 2 S1 | 6 | H4-A included in worksheet |
+| Day 2 S2 | 6 | 8 group cards + number line = 9 |
+| Day 2 S3 | 6 | Profile/cost cards = 2 |
+| Day 3 S1 | 6 | 5 scenario cards + board + results = 7 |
+| Day 3 S2 | 7 | No separate cards |
+| Day 3 S3 | 8 | Question bank = 2; evidence pack = 5 |
+| Day 4 S1 | 5 | Flawed report = 4; private trainer key = 5 |
+| Day 4 S2 | 7 | Corrected findings = 2; retries = 3; private trainer key = 4 |
+
+The two Day 4 S1 A1 wall sheets are separate from worksheet pages. Keep keys private. Give the Day 3 S3 question bank after independent work and its evidence pack to the analyst role, not as an advance answer sheet. Give Day 4 S2 retries after feedback; use corrected findings for drafting, not the earlier flawed report.
+
+For Day 2 S2, give one group card per group and use the A1 board or number line for the room activity. Preserve the Day 1 S1/S3 hybrids' original printed sheets. Coordinate any Day 1 S2 old-sheet contingency with Fiona before changing a worksheet link or deck.
+
 ## Day 1 Session 2: decision cards (`Oct12_session2_review_cards.qmd`)
 
 - Print the four decision cards, one set per pair or group (adjust to room size).
@@ -33,4 +55,4 @@ This sheet holds the print, cutting and distribution instructions that were take
 
 ## Timings given aloud (removed from the worksheets)
 
-- AI exercise in every session: 15 minutes in total. Stage 1 (mark the response) 8 minutes, Stage 2 (run the improved prompt in Microsoft Copilot) 7 minutes.
+- Use each selected deck's embedded speaker script for current timings. Where an AI Snapshot is present, its two stages total 15 minutes: mark the supplied response (8), then run/check the improved Microsoft Copilot prompt (7). Day 4 S1 has an independent reading check, not a separate AI Snapshot. Do not apply older 60/60/75-minute schedules to the deployed decks.

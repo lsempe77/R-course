@@ -1,5 +1,11 @@
 # Preview versions: further changes and language review
 
+## Current status, 12 October 2026
+
+These are historical language-review notes. All eleven selected teaching bundles have now been built, rendered, validated and deployed in `89c2577`; the "missing previews" and "not re-rendered" statements below describe 9 October only. Day 1 S1/S3 deliberately use Fiona's printed-worksheet hybrids; Day 1 S2 uses her latest 22-screen revised deck; Days 2-4 use the selected review sources. See [README.md](README.md), [HANDOFF.md](HANDOFF.md) and the [current teaching guide](../docs/teaching_materials.html). Preserve the language rules below, but do not use historical preview status to select or publish a deck.
+
+## Historical review, 9 October 2026
+
 Draft for Fiona, 9 October 2026. **Status (9 October, later): sections 1 to 7 have been applied to the source files of all seven existing previews (Day 1 S1 to S3, Day 2 S1 and S3, Day 3 S1 and S2), including worksheets, cards, slips and R helper files. Section 8 additions (8B to 8H) are also applied in source. A review on 10 October found and fixed a few leftovers (see "Fixes of 10 October" in `HANDOFF.md`). The published copies in `docs/preview/` have not been re-rendered yet. See `HANDOFF.md` and `PRINT_SHEETS_TRAINER.md`.** This file lists what was to change, with the approved wording.
 
 Assumption: the `*_review` preview versions (Day 1 to Day 3 Session 2) become the base for the final materials, even though they are not yet published. The Day 2 Session 2 preview (regression discontinuity) and Day 3 Session 3 / Day 4 previews do not exist yet, so everything below must also be applied when those are built.

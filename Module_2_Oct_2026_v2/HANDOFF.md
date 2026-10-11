@@ -1,5 +1,13 @@
 # Handoff: moving Module 2 to the simple GreenWaste case
 
+## Deployment confirmed, 12 October 2026
+
+The complete teaching reconciliation below was committed and pushed as [`89c2577`](https://github.com/lsempe77/R-course/commit/89c25776e12aac9928d080bf7785f7ec5fe0336b); the remote `main` SHA matched. Cloudflare Workers `module2`, GitHub build, deploy and report-build-status checks all succeeded by 00:55:54 UAE (11 October, 20:55:54 UTC). The applied rollout safety stash was dropped only after the commit/push succeeded. Unrelated local files were not staged.
+
+Final validation passed all eleven canonical source/output mappings and screen counts, six alternate routes, comparison topic pairs, material links and mobile hub/guide. Retained Day 1 hybrids and Day 2 S1 additionally passed bounds/logo/control checks; the S3 webR regression again returned -1,014. The refreshed ZIPs were checked byte-for-byte for 34 current deck/material entries, with exactly six plus five decks and no obsolete revised-session Word packs. The earlier broader package check also covered the bundled dataset. All worksheet/supplementary exact print counts and seven promoted-session webR checks passed during the rollout.
+
+Use [README.md](README.md) and the [current teaching guide](../docs/teaching_materials.html) for selected source names, routes, counts and delivery instructions. Deployment success is verified; authenticated public content was not independently inspected because of the password gate. Earlier statements below saying "local", "pending" or "not pushed" describe their historical checkpoint, not current status.
+
 ## Full teaching-version reconciliation, 11 October 2026
 
 Lucas requested auditing all sessions and pushing all revised teaching versions. Main was refreshed before work; Fiona's `8079760` and the subsequent seventeen-screen Day 2 Session 1 correction are retained. During validation Fiona pushed `834aa05`, correcting the shared map and splitting the Day 1 Session 2 cleaning exercise into two data/words-flip slides. Pending work was safely stashed, main fast-forwarded, and changes reapplied. Source changes merged cleanly; the only conflict was generated Day 1 Session 2 HTML, resolved by rendering the merged source. All selected decks that use the shared map were rerendered. Her new cleaning activity is preserved.
