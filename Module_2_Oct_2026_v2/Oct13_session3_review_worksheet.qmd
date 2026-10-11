@@ -11,7 +11,7 @@ format:
         body{font:16px/1.4 Arial,sans-serif;color:#111418;margin:0;background:#eef2f6}main{max-width:850px;margin:auto}h1,h2,h3{color:#063360}h1{font-size:26px}h2{font-size:22px;margin:0 0 12px}h3{font-size:18px;margin:14px 0 6px}p{margin:8px 0}.sheet-page{background:white;padding:28px 40px;margin:20px 0;box-sizing:border-box;min-height:950px}.reading-table{width:100%;border-collapse:collapse;font-size:13px}.reading-table th,.reading-table td{padding:7px;border-bottom:1px solid #D5DEE8;text-align:left}.reading-table thead{background:#063360;color:white}.writing{height:45px;border-bottom:1px solid #c8d6e5;margin:6px 0}.writing.tall{height:70px}.review-svg{display:block;width:100%;height:180px}.caption{font-size:12px;color:#545860}.ai-source{border-left:3px solid #7da1c4;padding-left:16px}.prompt{border-top:2px solid #215a9e;padding-top:8px;font-size:14px}header button{font:inherit;padding:8px 15px;color:#063360;background:white;border:1px solid #215a9e;cursor:pointer}
         @page{size:A4;margin:14mm}@media print{body{background:white;font-size:11pt;line-height:1.3}main{max-width:none}.sheet-page{padding:0;margin:0;min-height:0;break-after:page}.sheet-page:last-child{break-after:auto}header,#title-block-header{display:none}h2{font-size:17pt}h3{font-size:12pt}.writing{height:10mm}.writing.tall{height:16mm}.reading-table{font-size:9pt}.reading-table th,.reading-table td{padding:5px}.review-svg{height:160px}.caption{font-size:9pt}.prompt{font-size:10pt}}
         </style>
-        <style>.writing.part{height:30px;margin:2px 0}.table-title{margin:10px 0 4px}@media print{.writing.part{height:7mm}}</style>
+        <style>.writing.part{height:30px;margin:2px 0}.table-title{margin:10px 0 4px}@media print{body{font-size:10.5pt;line-height:1.2}p{margin:6px 0}.writing.part{height:7mm}.question-page{font-size:10pt;line-height:1.16}.question-page p{margin:5px 0}.question-page h3{margin:8px 0 4px}.question-page .writing.part{height:6mm}}</style>
 knitr:
   opts_chunk:
     echo: false
@@ -145,7 +145,7 @@ Calculate the mean of the three differences: __________ AED. Does this show that
 
 </div>
 
-<div class="sheet-page">
+<div class="sheet-page question-page">
 
 ## Page 4 | Q3 to Q6: judge the comparison
 
@@ -163,7 +163,7 @@ Calculate the mean of the three differences: __________ AED. Does this show that
 
 <div class="writing part"></div>
 
-### Q4 | What changes when manager age is left out, and what is not recorded? (Table R, §3 and §4)
+### Q4 | Leaving out age and unrecorded influences (Table R, §3 and §4)
 
 (a) Why could leaving out manager age change the estimate?
 
@@ -187,7 +187,7 @@ Calculate the mean of the three differences: __________ AED. Does this show that
 
 <div class="writing part"></div>
 
-(d) Does the interval, and not only the estimate, show that our rule of at least a 1,000 AED reduction is met? Keep the uncertainty in the estimate separate from the question of whether a causal reading is credible.
+(d) Does the whole interval meet the 1,000 AED reduction rule? Distinguish estimation uncertainty from whether a causal reading is credible.
 
 <div class="writing part"></div>
 
@@ -205,7 +205,7 @@ Calculate the mean of the three differences: __________ AED. Does this show that
 
 <div class="writing part"></div>
 
-Four methods compare in four ways. A lottery compares groups assigned by chance. Difference-in-differences compares changes over time. Regression discontinuity compares businesses either side of a cut-off. Matching compares businesses chosen because they look similar. Do not average the results of these different comparisons.
+Lottery: random groups. Difference-in-differences: changes over time. Regression discontinuity: either side of a cut-off. Matching: similar businesses. Do not average these different comparisons.
 
 </div>
 

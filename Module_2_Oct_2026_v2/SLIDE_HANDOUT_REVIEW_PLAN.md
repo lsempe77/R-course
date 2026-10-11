@@ -1,5 +1,16 @@
 # Module 2 slide and handout revision plan
 
+## Teaching-version rollout approved, 11 October 2026
+
+Lucas requested checking every session for mismatched live/review versions and publishing all revised sessions. This supersedes the historical preview-only status below, not the deliberately retained printed-worksheet choices.
+
+- Day 1 Sessions 1 and 3 use Fiona's `Oct12_session1_hybrid.qmd` and `Oct12_session3_hybrid.qmd`, aligned with the original printed worksheets. Their different review-preview counts are intentional.
+- Day 1 Session 2 uses its revised deck and seven-page worksheet. Fiona's hybrid/flex alternatives remain unselected.
+- Days 2-4 use the corresponding `*_review.qmd` teaching sources, their matching worksheets and separate cards/report/evidence/findings materials. The final simulation remains separately provided.
+- [Current teaching versions and materials](../docs/teaching_materials.html) lists canonical routes, source names, screen counts, print page counts and distribution guidance. [Historical decks](../docs/preview/archive/index.html) are explicitly not for teaching.
+- Old comparison bookmarks must not silently serve obsolete decks. Current downloads must match the canonical teaching outputs. Use the current materials guide and embedded speaker scripts, not the older Word packs or classroom brief.
+- The October 6 `publish_live.py` restores the baseline bundle; it is not the publisher for these revised sources. Do not rerun it to deploy the revised week.
+
 **Discussion draft for Lucas, Fiona and colleagues — 7 October 2026. This is a proposal, not approval to implement it.**
 
 Restore explanatory depth while keeping a manageable number of slides. By the end of the week, officials should be able to identify an evaluation's comparison and assumptions, interpret its tables and figures, and judge whether its recommendations follow from the evidence. Plain language should support that technical understanding.

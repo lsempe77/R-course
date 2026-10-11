@@ -25,7 +25,7 @@ knitr:
 source('session2_review.R', encoding='UTF-8')
 ```
 
-## Who and what are we comparing? All the businesses in the city. {#s2-map .reader-slide .s1-review .s2-review .case-map-slide}
+## We are reading all the city businesses. {#s2-map .reader-slide .s1-review .s2-review .case-map-slide}
 
 ```{r, include=FALSE}
 map_highlight <- "none"
@@ -94,7 +94,7 @@ html_out(s2_table(rows=TRUE))
 Describe business **B00402** in one sentence. Say whether it took part, what its cost was before and after, and over what period.
 :::
 
-**Q1 on page 2.** We selected these four businesses from the GreenWaste data for reading practice. They are not representative of all city businesses.
+**Q1, page 2:** Four selected records, not representative of the city.
 
 ::: {.notes}
 5 minutes. Use H2-A1 on page 1. Each row is one business, not one measurement; before and after are columns in the same row. Annual costs measured before and 12 months after. Expected B00402: did not take part, score 88.3, costs rose from 2,425 to 2,897 AED. Explain identifiers and score briefly, not the later RDD method. Ask where the learner sees participation rather than guessing from costs. Transition: four rows are an illustration; the averages use all city records in their groups.
@@ -116,7 +116,7 @@ Add the population to your answer to **Q1**. The pilot lottery uses a different 
 3 minutes. Point to denominator of each group average. The score rule may make participants systematically different from comparison businesses. This is not random assignment in the city. Do not teach the cutoff method now. Check that no one uses 10,000 as participant denominator or merges the pilot with city data. Transition: a group mean still hides the distribution inside that group.
 :::
 
-## Why do we remove the pilot businesses before we calculate? {#s2-p03b .reader-slide .s1-review .s2-review .code-example}
+## Why must we remove the separate pilot? {#s2-p03b .reader-slide .s1-review .s2-review .code-example}
 
 ```{r, echo=TRUE}
 # Keep only the city businesses. The pilot is a separate study with a lottery.
@@ -148,7 +148,7 @@ html_out(paste0('<div id="s2-hist"><div data-variant>',s2_hist(),'</div><div dat
 
 <button data-swap="s2-hist" data-closed="Show mean and median" data-opened="Hide mean and median" aria-pressed="false">Show mean and median</button>
 
-The histogram shows all **10,000 city businesses**. Each bar counts the businesses whose annual waste management cost falls in a 250 AED band.
+All **10,000 city businesses**. Each bar counts businesses in a **250 AED annual-cost band**.
 
 ::: {.ask}
 **Q2:** Which costs are most common? What would a single average hide?
@@ -215,7 +215,7 @@ What does the mean change hide? Which line of the code shows it?
 3 minutes. The mean (1,862) is a little above the median (1,801). Mean change -669; 485 participant businesses had a rising cost. Link back to the histogram of changes.
 :::
 
-## Real datasets need cleaning before anyone calculates a mean. {#s2-p06c .reader-slide .s1-review .s2-review}
+## Clean the data before calculating a mean. {#s2-p06c .reader-slide .s1-review .s2-review}
 
 These are **invented examples. They are not in the GreenWaste file.**
 
@@ -242,8 +242,6 @@ html_out(s2_cleaning_flip(2))
 ::: {.ask}
 Which of these four problems would give you an error message? Which would not?
 :::
-
-Check what is in the data before you calculate anything. A wrong structure gives a wrong answer without any warning.
 
 ::: {.notes}
 3 minutes. None of the four examples produces an error message in R; the calculation runs and returns a plausible-looking number. Thousands: 1.7 was typed instead of 1,700, so the mean falls from 1,580.0 to 1,240.3 AED. Labels: four groups instead of two, so each group mean describes only some of the businesses (the counts are invented). LUCAS (not addressed here): 734 city businesses have a negative annual cost after GreenWaste; if those values are not intended, a further cleaning slide and a data recheck would be needed.
@@ -279,7 +277,7 @@ html_out(s2_lines('others'))
 6 minutes. Learners calculate comparison-business change Q4 then compare descriptions with Q3. A rise in the comparison businesses rules out describing these two group means as a common city-wide fall. It does not validate a counterfactual for participants: score selection and starting costs differ. Means rounded for display, change computed from unrounded values. Do not subtract changes as an unexplained causal DiD estimate. Transition: another tempting number is the gap after a year.
 :::
 
-## Participant businesses ended with lower costs. Were their costs already lower than the comparison businesses' costs before? {#s2-p09 .reader-slide .s1-review .s2-review}
+## Were participants' costs already lower? {#s2-p09 .reader-slide .s1-review .s2-review}
 
 ```{r, results='asis'}
 html_out(paste0('<div id="s2-levels"><div data-variant>',s2_lines(baseline=FALSE),'</div><div data-variant hidden>',s2_lines(),'</div></div>'))
@@ -297,7 +295,7 @@ html_out(paste0('<div id="s2-levels"><div data-variant>',s2_lines(baseline=FALSE
 7 minutes. Predict judgement before reveal, then show participants already had lower mean costs before (1,432 versus 2,258). Rounded gap, calculated from the exact means, is -1,638. The rule selects groups; baseline difference is direct evidence that they were not identical in mean cost. It does not prove that all selection concerns are observed or establish true bias direction. Learners state one concern and one evidence request in Q4. Transition: both numbers are real; neither alone answers the causal question.
 :::
 
-## Each number compares something different. Why is neither enough on its own? {#s2-p10 .reader-slide .s1-review .s2-review}
+## Why is neither comparison enough on its own? {#s2-p10 .reader-slide .s1-review .s2-review}
 
 <div class="comparison-pair"><div><h3>Before and after: −669 AED</h3><p><strong>The same participant businesses</strong><br>Mean cost after minus mean cost before</p><p>This misses what would have changed without the programme.</p></div><div><h3>With and without: −1,638 AED</h3><p><strong>Different groups of businesses, after a year</strong><br>Participant businesses minus comparison businesses, after the programme</p><p>This misses differences that the groups already had before the programme.</p></div></div>
 
@@ -311,7 +309,7 @@ Use the **summary on page 3** to check your answers to Q3 and Q4. Neither number
 5 minutes. Have pairs point to group/time in both comparisons and explain one missing piece. Counterfactual means participants' outcome without the programme at the same follow-up time. These descriptives do not establish true causal effect or the direction of any bias. Preview that a fair design, not a preferred number, is needed; pilot next session. Transition: use this reading to triage the four cards.
 :::
 
-## Here are four statements about GreenWaste. Which would you act on? {#s2-p11 .reader-slide .s1-review .s2-review}
+## Which of these four statements would you act on? {#s2-p11 .reader-slide .s1-review .s2-review}
 
 Read the four **decision cards**. Each card shows one statement about GreenWaste and asks you to choose Act, Ask first or Do not act. Use **Q5 on worksheet page 4**.
 
@@ -358,10 +356,8 @@ On **page 5**, underline the passages that H2-A2 (the table of mean costs by gro
 ## Ask the AI to name the comparison it is using. {#s2-p14 .reader-slide .s1-review .s2-review}
 
 ```{r, results='asis'}
-html_out(paste0('<p class="caption"><strong>Improved prompt</strong></p><div class="better-prompt">',s2_paragraphs(s2_prompt),'</div>'))
+html_out(paste0('<p class="caption"><strong>Improved prompt, page 5.</strong> Copy it and H2-A2, the group-mean table, into Microsoft Copilot.</p><div class="better-prompt">',s2_paragraphs(s2_prompt),'</div>'))
 ```
-
-Copy **the prompt on page 5 and H2-A2 (the table of mean costs by group)** into **Microsoft Copilot**. Keep your AI good-practice card beside you.
 
 ::: {.ask}
 Which claim improved? Which claim still needs checking against H2-A2?
@@ -384,5 +380,5 @@ On **page 4**, compare this with the reason you wrote on page 2. What changed?
 **Before and after:** for the same participant businesses, the mean annual waste management cost fell by 669 AED. **With and without:** after the programme, participant businesses' mean cost was 1,638 AED lower than comparison businesses' mean cost. Neither tells us what would have happened without GreenWaste. Our next question, in Session 3, is: can a lottery give a fairer comparison?
 
 ::: {.notes}
-6 minutes. Three minutes individual, one minute compare opening, two minutes feedback. Accept descriptive cost fall/after gap with explicit comparison and limit; request must identify evidence and decision purpose. Do not accept more data without explaining what it resolves. Bridge to pilot without teaching result or design here. Total 90 minutes. This is a separate review prototype; existing teaching source and handout unchanged.
+6 minutes. Three minutes individual, one minute compare opening, two minutes feedback. Accept descriptive cost fall/after gap with explicit comparison and limit; request must identify evidence and decision purpose. Do not accept more data without explaining what it resolves. Bridge to pilot without teaching result or design here. Total 90 minutes. Use this selected teaching deck with the revised seven-page worksheet.
 :::

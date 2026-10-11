@@ -30,7 +30,7 @@ knitr:
 source('day3_session1_review.R', encoding='UTF-8')
 ```
 
-## Who and what are we comparing? The participant businesses. {#d3s1-map .reader-slide .s1-review .d3s1-review .case-map-slide}
+## This model concerns participant businesses. {#d3s1-map .reader-slide .s1-review .d3s1-review .case-map-slide}
 
 ```{r, include=FALSE}
 map_highlight <- "participants"
@@ -62,7 +62,7 @@ Our rule of **at least a 1,000 AED reduction in annual waste management cost per
 4 minutes. Retrieve the city DiD result without another methods lecture. Pilot, cutoff and matching concern different comparisons/populations; do not swap or average them as model inputs. Programme remains equipment subsidies, help and training. Future savings, duration and all economic cost/rate inputs are fictional assumptions. Start webR warming.
 :::
 
-## The benefit-cost ratio is 1.86. Should we approve GreenWaste? {#d3s1-p02 .reader-slide .s1-review .d3s1-review}
+## The ratio is 1.86. Should we approve GreenWaste? {#d3s1-p02 .reader-slide .s1-review .d3s1-review}
 
 <p class="big-number">`r fmt(ratio(), 2)`</p>
 
@@ -126,7 +126,7 @@ Discounting expresses future amounts at a **common date**. It does not verify th
 5 minutes. One-year worked illustration approximately 812/1.05=774. Explain opportunity cost/time value without finance lecture. Use unrounded saving in calculations. Rate is assumed, not claimed official guidance. First model saving is two years away and divides by 1.05 squared. Distinguish discounting from an explicit annual decay of benefits.
 :::
 
-## How do five future savings become one total in today's value? {#d3s1-p06 .reader-slide .s1-review .d3s1-review}
+## What are five future savings worth today? {#d3s1-p06 .reader-slide .s1-review .d3s1-review}
 
 <div class="cash-table">
 ```{r, results='asis'}
@@ -146,7 +146,7 @@ Q2 on page 3: why can we not simply multiply 812 by five?
 6 minutes. Read each discounted saving, not all rows aloud. Year 0 cost needs no discount; year 1 saving zero. Table F page 2. Q2 year2 amount and total. Printed rounded rows may not sum exactly; total uses unrounded records. Discounting reduces the sum, while duration and decay are separate model assumptions.
 :::
 
-## The ratio and the net present value (NPV) answer different questions {#d3s1-p07 .reader-slide .s1-review .d3s1-review}
+## What do the ratio and net present value tell us? {#d3s1-p07 .reader-slide .s1-review .d3s1-review}
 
 ```{r, results='asis'}
 html_out(d7_output())
@@ -242,7 +242,7 @@ html_out(d7_scenario_table())
 Post the results below the line. Which scenario falls below 1, and what makes it different?
 :::
 
-The base ratio is **1.86**. The board is on **page 6 of the scenario cards**. The scenario results table is on **page 7**, and you receive it after you have recorded your predictions.
+Base ratio: **1.86**. Cards **page 6**: board. **Page 7**: results, given out after predictions.
 
 ::: {.notes}
 7 minutes. Results for Cards 1 to 5: 1.07,1.40,1.67,1.17,.80; only5 below1, it combines costs and decay. Card1 comes closest among single-input changes. Distribute the scenario results table (cards page 7) only after predictions are recorded. Three reports, two compare predictions, two explain. Results under hypothetical settings, not measured failures. Q4 record result and evidence question. Existing A1 route unchanged.
@@ -282,9 +282,9 @@ Which part of the claim that GreenWaste is good value for money does the calcula
 4 minutes. Two independent source reading, one partner comparison, one collect. Tables I/F/O/P and §§1-4 clearly supplied; no external report. Look for provisional DiD, assumed persistence/cost/rate, limited boundary. Five-year observed data are not present. Use judgement to target later feedback, not compulsory single answer.
 :::
 
-## AI Snapshot: can the AI find a scenario that pushes the ratio below 1? {#d3s1-p14 .reader-slide .s1-review .d3s1-review}
+## Can the AI find a scenario with a ratio below 1? {#d3s1-p14 .reader-slide .s1-review .d3s1-review}
 
-**Naive prompt** (a prompt with no context, as a busy person might type it): **"Generate one plausible scenario where this programme's benefit-cost ratio falls below 1. Tell me whether it is realistic."** This response was written for the exercise. It is not a real AI answer.
+Authored exercise response, not a real AI answer. The full prompt is on **worksheet page 5**.
 
 <div class="ai-reading">
 ```{r, results='asis'}
@@ -293,7 +293,7 @@ html_out(paste0('<p>', gsub('\n\n', '</p><p>', d7_ai, fixed=TRUE), '</p>'))
 </div>
 
 ::: {.ask}
-Page 5: check the arithmetic, the timing and the claims about realism against H7-A (the economic model summary).
+**Page 5:** Check arithmetic, timing and realism claims against H7-A, the model summary.
 :::
 
 ::: {.notes}
@@ -309,16 +309,16 @@ html_out(paste0('<strong>Improved prompt</strong><p>', d7_prompt, '</p>'))
 </div>
 
 ::: {.ask}
-Run the full prompt on page 5. Check one figure, and check one question about missing evidence, against H7-A (the economic model summary).
+Run the prompt on **page 5**. Check one figure and one evidence request against H7-A.
 :::
 
-If you are not using Copilot, read the **prepared response on page 6** after Stage 1.
+Paper alternative after Stage 1: **prepared response, page 6**.
 
 ::: {.notes}
 7 minutes. Stage2. Adapt old v2 while correcting false measured-cost assertion; finite scenario ranges make ranking meaningful. Two prompt/run, three compare, two share. Microsoft Copilot expected, no setup. Fictional data only. Response should ask questions before recommendation. No second-chat exercise. Paper is example not exact expected wording.
 :::
 
-## Close the model note. Make a recommendation with a condition. {#d3s1-p16 .reader-slide .s1-review .d3s1-review}
+## Close the model note. Give advice with a condition. {#d3s1-p16 .reader-slide .s1-review .d3s1-review}
 
 In **Q6 on worksheet page 4**, write:
 
