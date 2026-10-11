@@ -1,0 +1,75 @@
+---
+title: "GreenWaste programme: evaluation report"
+format:
+  html:
+    embed-resources: true
+    toc: false
+    theme: none
+    css: [day3_session3_print.css, day4_session1_print.css]
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+```{r, include=FALSE}
+source('day4_session1_review.R', encoding='UTF-8')
+```
+
+<header><p>Separately supplied report for Day 4 Session 1. Read Sections 1, 2 and 5 for the independent opening task. Section and paragraph IDs take precedence over page numbers. Scrutinise the claims using the stated evidence.</p><button onclick="window.print()">Print four-page report</button></header>
+
+<div class="sheet-page">
+
+## Page 1 | GreenWaste evaluation report
+
+**Prepared for:** the commissioning authority  
+**Purpose:** expansion and spending decision  
+**Status:** fictional training report, supplied for review
+
+```{r, results='asis'}
+html_out(d10_section_html(1))
+html_out(d10_section_html(2))
+```
+
+</div>
+
+<div class="sheet-page">
+
+## Page 2 | Design and data
+
+```{r, results='asis'}
+html_out(d10_section_html(3))
+html_out(d10_section_html(4))
+```
+
+</div>
+
+<div class="sheet-page">
+
+## Page 3 | Results and uncertainty
+
+```{r, results='asis'}
+html_out(d10_section_html(5))
+```
+
+**Table source:** corrected synthetic GreenWaste case. Pilot OLS interval; city extra-change business-clustered interval; local cutoff HC2 interval; matching business-clustered interval treating the selected matches as given.
+
+**Decision rule:** 1,000 AED annual saving per business. Sorted interval endpoints use the positive-saving scale; do not reverse the saving sign without also converting and sorting the endpoints.
+
+<p class="caption">T10 is the source table for this report. The three city rows use shared records; each row must be read with its comparison and requirements in Section 3.</p>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 4 | Limitations and recommendations
+
+```{r, results='asis'}
+html_out(d10_section_html(6))
+html_out(d10_section_html(7))
+```
+
+<p class="caption">End of supplied report. This fictional source is a reading task, not an approved national appraisal. No additional fieldwork or diagnostic annex is supplied.</p>
+
+</div>

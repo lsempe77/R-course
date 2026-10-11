@@ -1,0 +1,89 @@
+---
+title: "Questions to ask an evaluator"
+format:
+  html:
+    embed-resources: true
+    toc: false
+    theme: none
+    css: day3_session3_print.css
+---
+
+<header><p>Optional workplace reference for the separate Day 3 Session 3 review. Use after the independent close, not as a duplicate compulsory worksheet. Examples request evidence; they do not say it already exists.</p><button onclick="window.print()">Print question reference</button></header>
+
+<div class="sheet-page">
+
+## Page 1 | Comparison, assumptions and data
+
+### 1. Who was compared, and how were they chosen?
+
+**Worked request:** Send the assignment/recruitment protocol, the population studied and the businesses intended for expansion. I would check whether the comparison is credible and whether its result can guide the proposed delivery setting.
+
+**Follow-up:** If delivery or population changes, which feature might change the result, and how could the next phase test it?
+
+My evidence request and decision purpose:
+
+<div class="writing tall"></div>
+
+### 2. What supports a claim of cause?
+
+**Worked request for city DiD:** Send several earlier cost measures for both groups and a record of other changes affecting them. I would assess whether a parallel-trends counterfactual is plausible; conflicting trends would weaken reliance on the estimate.
+
+**Follow-up:** If earlier data are absent, which alternative comparison or prospective design would reduce the decision uncertainty? Similar earlier trends alone would not prove the assumption.
+
+My evidence request and decision purpose:
+
+<div class="writing tall"></div>
+
+### 3. Where do data come from, and who is missing?
+
+**Worked request:** Send recruitment and follow-up counts by group, reasons for missing outcomes and the measurement-validation process. I would check whether missingness or measurement could distort the comparison.
+
+**Follow-up:** Does the conclusion change under plausible assumptions about unavailable outcomes? A complete supplied file does not by itself answer this.
+
+My evidence request and decision purpose:
+
+<div class="writing tall"></div>
+
+<p class="caption">Use examples to frame your own request, not to imply that checks have been done. In the GreenWaste training case, source cards E1/E2, E4-E6 and E7 address these families.</p>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 2 | Uncertainty and the recommendation
+
+### 4. What are the estimate, interval and decision rule?
+
+**Worked request:** Show the planned decision-relevant estimate and its interval next to the 1,000 AED saving rule, with population, period and units. I would distinguish a positive reduction from a settled minimum-saving claim.
+
+**Follow-up:** If the interval spans the rule, what risk is acceptable and what further evidence could change the action? Statistical significance alone does not decide this.
+
+My evidence request and decision purpose:
+
+<div class="writing tall"></div>
+
+### 5. Does the recommendation go beyond the evidence?
+
+**Worked request:** Send the intended expansion population, delivery conditions, full cost boundary and evidence for how long benefits last. I would compare those with the study and the assumed model before endorsing national spending.
+
+**Follow-up:** Which unverified input could reverse the advice under plausible settings, and what evidence could resolve it?
+
+My evidence request and decision purpose:
+
+<div class="writing tall"></div>
+
+### After the answer
+
+Rate **Supported / Partial / Unanswered** against your actual request. Cite the source, identify what is still absent and choose a follow-up or action.
+
+The source I would use and the remaining question:
+
+<div class="writing tall"></div>
+
+### Using AI to help
+
+Provide only authorised, non-sensitive sources. State the decision, units, population and rule; ask for clarifying questions and source IDs. Check facts and omissions yourself. Do not let fluent advice create missing evidence.
+
+<p class="caption">Fictional GreenWaste examples: E3 addresses the rule; E1/E2 and E8 address reach and economic advice. This optional desk reference does not replace the clinic answer log or independent reading assessment.</p>
+
+</div>

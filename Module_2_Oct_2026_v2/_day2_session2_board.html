@@ -1,0 +1,23 @@
+<script>
+(()=>{
+const fields=[...document.querySelectorAll('[data-card]')],ns='http://www.w3.org/2000/svg';
+const group=document.getElementById('raw-markers'),status=document.getElementById('rdd-board-status');
+function update(){
+ group.replaceChildren();let count=0,outside=0;
+ fields.forEach((field,i)=>{
+  if(field.value==='')return;const value=Number(field.value);
+  if(!Number.isFinite(value)||value < -2000||value>1000){outside++;return;}
+  const x=100+(value+2000)/3000*900,circle=document.createElementNS(ns,'circle'),label=document.createElementNS(ns,'text');
+  circle.setAttribute('cx',x);circle.setAttribute('cy','85');circle.setAttribute('r','5');circle.setAttribute('fill','#215a9e');
+  label.setAttribute('x',x);label.setAttribute('y',[47,71,147,171][i%4]);label.setAttribute('text-anchor','middle');label.setAttribute('font-size','23');label.textContent=field.dataset.card;
+  group.append(circle,label);count++;
+ });status.textContent=count+' card gaps placed.'+(outside?' Values outside the line: '+outside+'. Use the wall or check the calculation.':'');
+}
+fields.forEach(f=>f.addEventListener('input',update));
+document.getElementById('clear-rdd-board').addEventListener('click',()=>{fields.forEach(f=>f.value='');update();});
+document.getElementById('reveal-rdd-fit').addEventListener('click',event=>{
+ const button=event.currentTarget,on=button.getAttribute('aria-expanded')!=='true';
+ document.getElementById('fit-marker').toggleAttribute('hidden',!on);button.setAttribute('aria-expanded',String(on));button.textContent=on?'Hide fitted estimate and interval':'Show fitted estimate and interval';
+});
+})();
+</script>

@@ -1,0 +1,288 @@
+---
+title: "What changes at the cutoff?"
+subtitle: "Day 2 | Session 2: Regression discontinuity, a local jump and its credibility"
+author: "3ie · Review version"
+always_allow_html: true
+format:
+  live-revealjs:
+    theme: [theme_dge.scss, theme_live.scss, theme_reader.scss]
+    css: [session1_review.css, day2_session2_review.css]
+    logo: assets/dge_logo_horizontal.svg
+    slide-number: true
+    width: 1280
+    height: 720
+    slide-level: 2
+    embed-resources: true
+    include-after-body: [_reader_interactions.html, _session1_review_interactions.html, _day2_session2_review_interactions.html]
+webr:
+  render-df: kable
+  resources: [evaluation_data_GreenWaste_simple.csv]
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+
+```{r setup, include=FALSE}
+source('day2_session2_review.R', encoding='UTF-8')
+```
+
+## Same city. Either side of the rule. {#d2s2-p01 .reader-slide .s1-review .d2s2-review}
+
+```{webr}
+#| context: setup
+#| autorun: true
+#| echo: false
+#| include: false
+gw <- read.csv('evaluation_data_GreenWaste_simple.csv')
+city <- subset(gw, setting == 'city')
+near <- subset(city, abs(score - 58) <= 2)
+near$below <- as.integer(near$score <= 58)
+near$distance <- near$score - 58
+```
+
+```{r, results='asis'}
+html_out(d5_plot())
+```
+
+**Efficiency score** is the running variable: it determines which side of **58** a business falls on. At or below 58 participated; above 58 did not.
+
+::: {.ask}
+Why compare businesses close to the rule?
+:::
+
+::: {.notes}
+5 minutes. Orient from DiD to local post-period comparison. Programme remains equipment subsidies/help/training; outcome annual after-cost at 12 months. Higher score means more efficient. Plot shows actual records scores53-63, shaded56-60. Full city10000; shaded545. Explain score, threshold, local comparison in that order. Proximity alone does not establish random assignment. Start webR warming. Q2/source page1 later links population. Transition: predict a fitted jump before lines appear.
+:::
+
+## What do you expect at score 58? {#d2s2-p02 .reader-slide .s1-review .d2s2-review}
+
+::: {.ask}
+Will fitted costs just below 58 be lower? Would the reduction reach 1,000 AED?
+:::
+
+<div data-choices><button data-choice aria-pressed="false">Little difference</button><button data-choice aria-pressed="false">At least 1,000 lower</button><button data-choice aria-pressed="false">Need evidence</button><p class="feedback" role="status"></p></div>
+
+Give a reason before opening **Card A-H**. These buttons record a local choice; use labelled cards for room voting.
+
+::: {.notes}
+4 minutes. One minute choose, two discuss reasons, one collect. Do not present cost patterns as proof of an effect. No fitted estimate revealed. Below-minus-above negative means lower cost. Transition: work with different small samples on either side.
+:::
+
+## Twelve nearby businesses. What do they show? {#d2s2-p03 .reader-slide .s1-review .d2s2-review}
+
+Each group receives a different **Card A-H**: six businesses on each side. Use **Q1, worksheet page 3**.
+
+1. Find each side's mean annual after-cost.
+2. Subtract: **at/below 58 minus above 58**.
+3. Put your card letter and gap on a sticky note.
+
+::: {.ask}
+What does your small raw mean gap suggest?
+:::
+
+::: {.notes}
+10 minutes. Preserve Fiona's seeds A4 B11 C37 D22 E9 F21 G33 H5 and costs rounded to ten AED. Calculators allowed. Eight minutes calculate/pair-check, two check one subtraction. Seeds sample six records score57-58 versus58-59; display scores roundedone decimal can show58.0 for above-cutoff records, side basedunrounded score. Cards state this. Answers from source objects, not obsolete values: `r paste(names(d5_cards), vapply(d5_cards,function(x)paste(fmt(x$below),'-',fmt(x$above),'=',fmt(x$below-x$above)),''),collapse='; ')`. Raw gap is not fitted RDD or established effect. Transition: compare samples on two-lane board.
+:::
+
+## Why did our groups get different gaps? {#d2s2-p04 .reader-slide .s1-review .d2s2-review}
+
+```{r, results='asis'}
+html_out(d5_board(TRUE))
+```
+
+<button data-open="raw-markers" data-closed="Compare the eight card gaps" data-opened="Hide card gaps" aria-controls="raw-markers" aria-expanded="false">Compare the eight card gaps</button>
+
+::: {.ask}
+Put raw gaps on the upper lane of the A1 line. Why are they spread out?
+:::
+
+::: {.notes}
+6 minutes. Three minutes one reporterpergroup, two discuss samples/slope/noise, one reveal keyedletterpositions. Keeplowerlaneempty untilfittedresult. H canpointopposite direction; cardsnotindependentidentical experiments. Use existingA1poster or newprintableboard/browserboard linkedcomparisonhub. Localbrowserboarddoesnotcollectroomvotes. Q1 recordcomparison. Transition: fittedlines answerdifferentquestion.
+:::
+
+## A gap between averages is not the fitted jump {#d2s2-p05 .reader-slide .s1-review .d2s2-review}
+
+```{r, results='asis'}
+html_out(d5_plot(fit=TRUE))
+```
+
+::: {.ask}
+Where do the two fitted lines meet the cutoff? Which vertical gap is the reported jump?
+:::
+
+The fitted comparison allows costs to **slope differently on each side**. It uses **545 businesses**, not your card's twelve.
+
+::: {.notes}
+6 minutes. Explain separate lines approaching58, redverticalgapnotoverallmean difference. Window56-60. No actual observation at exactly58 required: fittedlimitsestimated. Cardmeanincludesdistributionofscorewithinonesideandnoise; fitallows slopesanddifferentrecords. Q2 page3 label fittedjump onreferencefigurepage2. Transition: findcorrespondingrow, units, referenceandinterval.
+:::
+
+## Which number is the local jump? {#d2s2-p06 .reader-slide .s1-review .d2s2-review}
+
+```{r, results='asis'}
+html_out(d5_table())
+```
+
+<div class="review-annotate"><button data-table-column="1" aria-pressed="false">Coefficient</button><button data-table-column="2" aria-pressed="false">Interval</button><button data-table-column="3" aria-pressed="false">Sample</button></div>
+
+::: {.ask}
+Q2: explain -721 in one sentence. Who is compared, at what point, and in which units?
+:::
+
+::: {.notes}
+6 minutes. SourceH5-Apage1, Q2page3. Belowcoefficientcomparesfittedlimitsat58, notmeancostofallparticipants. Negativeis721AEDlower annualafter-cost. HC2interval-943to-498; savingpositive498-943. Markfittedestimate/intervalinboardlowerlane. Uncertaintyunderlocalmodel; concernaboutcausalitystillopen. Transition: shorttrainerfit showsrowgeneratedfromindividualrecords.
+:::
+
+## The trainer fits the two local slopes {#d2s2-p07 .reader-slide .s1-review .d2s2-review}
+
+```{webr}
+#| echo: true
+# Compare annual after-costs within two points of score 58.
+# Allow a different cost slope on each side of the rule.
+fit <- lm(cost_after ~ below * distance, data = near)
+# Report the fitted jump at 58, in whole AED.
+round(coef(fit)['below'])
+```
+
+::: {.ask}
+Does this calculate your card average, or a fitted gap at the rule?
+:::
+
+Paper result: **-721 AED**. Participants do not need to write or run R.
+
+::: {.notes}
+5 minutes. Predictthenone trainerRun. OLScoefficientidenticaltorobustcoefficient; displayedCIcomesHC2estimatr, notdefaultlmCI. Codecommentsdescribeunits/window/slopes/output. Noparticipantcoding. If delayedusepaperresultsame time. Transition: evaluatorchooseswindow; ask sensitivity.
+:::
+
+## Change the window. Change the answer? {#d2s2-p08 .reader-slide .s1-review .d2s2-review}
+
+```{r, results='asis'}
+html_out(paste0('<div id="d5-window"><div data-variant>',d5_plot(2,TRUE),'</div><div data-variant hidden>',d5_plot(5,TRUE),'</div></div>'))
+```
+
+<button data-swap="d5-window" data-closed="Show the five-point window" data-opened="Show the two-point window" aria-pressed="false">Show the five-point window</button>
+
+::: {.ask}
+Within 2 points: -721 AED, N=545. Within 5: -784 AED, N=1,260. What changes?
+:::
+
+**Bandwidth** is how far either side the evaluator looks. See both intervals on worksheet page 2.
+
+::: {.notes}
+6 minutes. Sameaxesandactualdots53-63; shadingandfittedlineschangewindow. Q3page4: localityversusinformation/modeldependence. Widerresultinterval-934to-634. Extraobservationsmayreduceuncertaintybutfurtherbusinessesmaybelesscomparable andlinearfitlesscredible. Stabilitydoesnotprovevalidity; bothpointandintervalbelowrule. Transition: lookatsomethingprogrammeshouldnotcause.
+:::
+
+## Waste costs jump. Manager age does too. {#d2s2-p09 .reader-slide .s1-review .d2s2-review}
+
+```{r, results='asis'}
+html_out(d5_plot(5,TRUE,TRUE))
+```
+
+<button data-open="d5-adjust" data-closed="Optional: what if we adjust for age?" data-opened="Hide adjusted result" aria-controls="d5-adjust" aria-expanded="false">Optional: what if we adjust for age?</button>
+<p id="d5-adjust" class="feedback" hidden>With age adjustment, the two-point estimate is -632 AED (interval -857 to -407). Adjustment alone does not establish a valid local comparison.</p>
+
+::: {.ask}
+Q3: why does a pre-programme age jump matter for a causal reading?
+:::
+
+::: {.notes}
+6 minutes. Agejumpabout-5.3yearsusingfivepointwindow. Actualpreprogrammedata; do not confuse withprogrammeageeffect. Suggestsdifferentbusinesscompositionatcutoff/possibleotherexplanation; doesnotproveaspecificbiasdirection. Investigatescoresetting/ageconnection. Optionaladjustedestimate-632HC2interval-857to-407 within2, only ifuseful; not automaticrepair, avoids extra fittingdemo. Transition: compliancewithruleisnotproofbusinessescouldnotinfluencescores.
+:::
+
+## Could businesses influence their score? {#d2s2-p10 .reader-slide .s1-review .d2s2-review}
+
+```{r, results='asis'}
+html_out(d5_sorting())
+```
+
+::: {.ask}
+Who set the scores, when, and could businesses appeal or alter them?
+:::
+
+**No score-setting or manipulation diagnostic is supplied.** A rule followed exactly can still yield a questionable comparison.
+
+::: {.notes}
+5 minutes. HypotheticalcountsarenotGreenWastedataandnotatest. Illustratebunchingjustbeloweligibilitywhenpeoplecaninfluencescores; patternsalonecouldhaveotherexplanations. Q3requestdocumentedscoringprocess,timing,distributionnearcutoff andevaluatorinvestigation. No inventedpassorfail. Transition: classify suppliedchecks/sourceevidence.
+:::
+
+## What does the cutoff study actually support? {#d2s2-p11 .reader-slide .s1-review .d2s2-review}
+
+Read **H5-A, worksheet page 1**, with the visual reference on page 2. Complete **Q3 on page 4**.
+
+Mark each check **supported, concern or unknown**, and cite the source.
+
+Rule followed; local comparison; pre-programme age; score setting; citywide reach.
+
+::: {.ask}
+Which evidence request could most change your judgement?
+:::
+
+::: {.notes}
+5 minutes. Threeindependenttwo paircheck. Rulefollowedsupported; windowdisclosed/localpopulationclear; ageconcern; manipulationunknown; citywideeffectnotestablished. Cross-referenceparagraphs1-4. Nosingleforcedpolicyanswer. Findreasonsnotonlyticks. Transition: separatecredibilityfromthedecisionminimum.
+:::
+
+## Local reduction. Enough for the rule? {#d2s2-p12 .reader-slide .s1-review .d2s2-review}
+
+```{r, results='asis'}
+html_out(d5_interval())
+```
+
+::: {.ask}
+Q2: where are the estimate and interval relative to 1,000 AED?
+:::
+
+The interval is conditional on the fitted model. It does not settle the age concern or show what happens far from 58.
+
+::: {.notes}
+5 minutes. 721and498-943below1000, allannualAEDperbusinesslocallyatcutoff. Negativeintervalbecomespositiveendpointsreversed. Do notclaimtrueeffectcertainbelowruleifdesignfails. AIexamplesnextcontainnumbersrightbutassurancewrong. Transition: sourcecheckingplausibleAIexplanation.
+:::
+
+## Local evidence. A citywide recommendation? {#d2s2-p13 .reader-slide .s1-review .d2s2-review}
+
+```{r, results='asis'}
+html_out(paste0('<div class="ai-reading">',d5_paragraphs(d5_ai),'</div>'))
+```
+
+::: {.ask}
+Page 5: underline support and cross out overclaims. Check H5-A and the plots.
+:::
+
+::: {.notes}
+8 minutes. Fiveminutesmarkthreefeedback. Naivepromptcontextexplainwithoutjargonwhothisresultappliesto. Supportedcoefficient/interval/windowcomparison. Unsupportedproximityprovesinterchangeability, ageirrelevant/adjustmentremovesbias,stabilityconfirmscausality, localresulttypical/citywide,1000minimum. Plausiblecost/capacityqualificationdoesnotrepairclaims. No highlightedanswers. Transition: betterprompt sourceandmissingchecks.
+:::
+
+## Ask for an explanation you can verify {#d2s2-p14 .reader-slide .s1-review .d2s2-review}
+
+```{r, results='asis'}
+html_out(paste0('<div class="better-prompt">',d5_paragraphs(d5_prompt),'</div>'))
+```
+
+Copy **page 5's prompt and H5-A** into **Microsoft Copilot**. Keep your AI good-practice card beside you.
+
+::: {.ask}
+What improved? What still needs checking against the source?
+:::
+
+::: {.notes}
+7 minutes. Fourrunthreecompare;Snapshot15total. Noaccountsetup. Page6preparedresponse same-taskpaperalternativeifdelayed. Copilotaskquestionsfirstbutnotautomaticsecondchat. Checklocalpopulation,interval,age/manipulationunknowns,rule. Do not relyonAIagreement. Transition: ownreadingwithsourceavailablebutAIclosed.
+:::
+
+## Which check would change your advice? {#d2s2-p15 .reader-slide .s1-review .d2s2-review}
+
+Keep **H5-A open**. Close AI responses and peer comments.
+
+::: {.ask}
+Write one local-result interpretation and one specific evidence request. How could the answer change your advice?
+:::
+
+Use the **final box on worksheet page 4**.
+
+Next: finding comparisons with similar recorded characteristics.
+
+::: {.notes}
+6 minutes. Threeindependentonepairpurposechecktwofeedback. Requirelocalfittedcomparisonat58,units,conditionalcausalreadingandthresholdlimit. Requestscoresetting/influence,agejump/otherpredeterminedchecks,windowortransportabilitywithreason. Noclaimcutoffislotteryorrepresentative. Total90. ProductionQMD/handout/routesunchanged.
+:::
+

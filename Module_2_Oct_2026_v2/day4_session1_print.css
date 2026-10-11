@@ -1,0 +1,14 @@
+.report-section h3 { font-size:20px; margin-top:18px; }
+.report-section h4 { color:#063360; font-size:17px; margin:14px 0 8px; }
+.rubric-item { border-top:2px solid #7da1c4; margin-top:12px; padding-top:4px; }
+.rating-word { font-weight:bold; }
+.rating-word.supported { color:#2E7D4F; }
+.rating-word.concern { color:#A9561F; }
+.rating-word.unsupported { color:#B8272C; }
+.source-box { border-left:3px solid #7da1c4; padding-left:16px; }
+.key-table { font-size:12px; }
+@media print {
+  .report-section h3 { font-size:13pt; }
+  .report-section h4 { font-size:11pt; }
+  .key-table { font-size:9pt; }
+}

@@ -1,0 +1,240 @@
+---
+title: "What should the director do next?"
+subtitle: "Day 4 | Session 2: A brief with evidence, action and conditions"
+author: "3ie | Review version"
+always_allow_html: true
+format:
+  revealjs:
+    theme: [theme_dge.scss, theme_reader.scss]
+    css: [session1_review.css, day4_session2_review.css]
+    logo: assets/dge_logo_horizontal.svg
+    slide-number: true
+    width: 1280
+    height: 720
+    slide-level: 2
+    embed-resources: true
+    include-after-body: _reader_interactions.html
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+```{r setup, include=FALSE}
+source('day4_session2_review.R', encoding='UTF-8')
+```
+
+## A new drafting source is on your desk {#d4s2-p01 .reader-slide .s1-review .d4s2-review}
+
+Open **Corrected GreenWaste findings**, separately supplied pages 1-2.
+
+```{r, results='asis'}
+html_out(html_table(d11_index))
+```
+
+::: {.ask}
+Find the pilot comparison, interval against the rule and assumed economic inputs.
+:::
+
+**Use F1-F4 for the brief.** This morning's review report is not the drafting authority.
+
+::: {.notes}
+5 minutes. Distribute the two-page corrected findings and H11 worksheet pages 1-3. Name the physical document, not only finding IDs. This corrects interpretation of the same case; no new empirical national result is introduced. The report was read this morning, not yesterday. Keep worked-answer/trainer pages and AI fallback withheld. The original report remains available only for individually assigned reading retries. No code or model demonstration.
+:::
+
+## What exactly is the director deciding? {#d4s2-p02 .reader-slide .s1-review .d4s2-review}
+
+**D11, findings page 2:**
+
+Authorise **national rollout for scores at or below 58**, and commit a proposed **1,800 AED delivery allowance per business**?
+
+You may recommend a **limited next phase or deferral**, with a clear scale and condition.
+
+::: {.ask}
+What is still unknown about minimum-saving risk, eligible numbers, delivery and total spending?
+:::
+
+**The allowance is a hypothetical planning proposal, not measured cost evidence.**
+
+::: {.notes}
+5 minutes. Three minutes individual decision orientation, two minutes pairs. Distinguish the proposed allowance from F3's assumed model cost: neither is a verified full budget. National eligible count and total spending are unknown. Saving rule, attribution/reach and value for money are separate considerations. Learners need not endorse a particular option; require a proportionate action with decision-relevant limits. Keep eligibility consistent with the corrected data: at or below 58.
+:::
+
+## Four elements in one connected brief {#d4s2-p03 .reader-slide .s1-review .d4s2-review}
+
+```{r, results='asis'}
+html_out(d11_model_html())
+```
+
+<p class="caption">One possible judgement, not the required action. Sources: F1.1-F1.2; D11/F4.2; F3.1-F3.2. Annotation labels explain the four parts.</p>
+
+::: {.ask}
+How does the evidence constrain the action and its conditions?
+:::
+
+::: {.notes}
+6 minutes. Read the worked brief, then ask pairs to identify finding, action, important limit and evidence request/purpose. Model body is under 150 words; source references sit outside that count. Four parts must connect, not become a list of disconnected facts. The limit changes scale/budget advice rather than merely adding a caveat. Keep the model off the independent draft worksheet and move to the next screen before drafting. Alternative defensible actions remain acceptable.
+:::
+
+## A caveat that leaves the action unchanged {#d4s2-p04 .reader-slide .s1-review .d4s2-review}
+
+**Weak sentence:** "Expand nationally because the pilot exceeds 1,000 AED; monitor uncertainty."
+
+::: {.ask}
+Repair the inference, not just its tone.
+:::
+
+<button data-open="d11-weak" data-closed="Show one substantive repair" data-opened="Hide the example" aria-controls="d11-weak" aria-expanded="false">Show one substantive repair</button>
+<div id="d11-weak" class="feedback" hidden>The pilot point exceeds 1,000, but its interval spans the rule and describes one district. Specify a limited next phase or another bounded action, with a checkpoint using delivery, cost and persistence evidence before wider commitment.</div>
+
+::: {.notes}
+4 minutes. One minute alone, one minute pair rewrite, two minutes compare after reveal. A word such as cautious does not repair the unsupported threshold or reach claim. The example is one acceptable bounded response, not a compulsory recommendation. It adds a decision point and relevant evidence rather than generic monitoring. Do not supply a second full model on the draft sheet.
+:::
+
+## Your first draft: 150 words, without AI {#d4s2-p05 .reader-slide .s1-review .d4s2-review}
+
+Write **connected prose of at most 150 words** on **H11 page 1**.
+
+Include **finding, action/condition, important limit and next evidence/purpose**.
+
+Keep **Corrected findings F1-F4 and D11** open.
+
+::: {.ask}
+Can the director see what you recommend, for whom, and why?
+:::
+
+**Put source references on a separate line outside the word limit.**
+
+::: {.notes}
+12 minutes. Protect the full individual drafting time. No AI and no partner rewriting the initial draft. A brief may use one main comparison rather than catalogue four methods, but must retain relevant uncertainty, population and economic limits. Count whitespace-separated words in the body; headings/labels included if used in that body, while the separate source line is excluded. Do not automate faithfulness with keyword checks. Retain or copy this first draft before later revisions.
+:::
+
+## Would you sign your partner's brief? {#d4s2-p06 .reader-slide .s1-review .d4s2-review}
+
+Use the **six-check peer rubric on H11 page 2**.
+
+Locate the source for the strongest claim. Check comparison, uncertainty, reach, action, limit and request.
+
+::: {.ask}
+What unsupported claim or material omission would the director otherwise miss?
+:::
+
+Give **one specific repair with its finding/paragraph reference**.
+
+::: {.notes}
+8 minutes. Swap drafts after the independent first attempt. Four minutes source checking and four minutes written feedback/discussion. A number match or a tick is not enough: reviewers identify an exact sentence, source and consequence. Check omitted population, interval/rule, full costs or request purpose as well as incorrect wording. Different actions can pass the same rubric. The author remains accountable for the recommendation.
+:::
+
+## Revise the advice, then explain the change {#d4s2-p07 .reader-slide .s1-review .d4s2-review}
+
+On **H11 page 3**, record the old sentence, revised sentence and source.
+
+Explain what changed in **scale, condition, confidence or next evidence**.
+
+Then write the **final connected brief**, still at most **150 words**.
+
+::: {.ask}
+Did the edit change the advice or only make it sound more polished?
+:::
+
+::: {.notes}
+7 minutes. Three minutes substantive sentence repair, four minutes complete revised prose. Allow an unchanged action with a better justified condition. Retain the first draft and source line; the revised version must not silently replace it. A recommendation to obtain evidence needs a particular document/result and decision purpose. This peer-revised brief precedes the AI task so the participant's own reasoning remains visible.
+:::
+
+## Copilot Snapshot: read the whole supplied brief {#d4s2-p08 .reader-slide .s1-review .d4s2-review}
+
+**Stage 1: 8 minutes.** Open **H11 page 4**.
+
+```{r, results='asis'}
+html_out(paste0('<div class="ai-reading"><p>',d11_ai[1],'</p><p>',d11_ai[3],'</p></div>'))
+```
+
+::: {.ask}
+Keep a defensible sentence; correct two assurances; identify one important omission. Cite F1-F4.
+:::
+
+::: {.notes}
+8 minutes. Distribute the complete four-paragraph supplied brief and its leading Prompt A on page 4. This screen shows two paragraphs; participants mark the whole text on paper. It is an authored illustration, not a captured transcript. Four minutes individual markup, three minutes pairs, one minute share. Accurate pilot numbers and a reduction in that district are useful; national threshold assurance, spending proof and generic monitoring need scrutiny. Check omissions as well as incorrect statements. Do not reveal the key or fallback before the attempt. No second-chat task.
+:::
+
+## Ask for a decision-focused revision {#d4s2-p09 .reader-slide .s1-review .d4s2-review}
+
+**Stage 2: 7 minutes.** Use the better prompt on **H11 page 5**.
+
+```{r, results='asis'}
+html_out(paste0('<div class="better-prompt"><p>',d11_prompt,'</p></div>'))
+```
+
+::: {.ask}
+Compare one substantive change with your own draft and verify it against the corrected findings.
+:::
+
+::: {.notes}
+7 minutes. Use Copilot only if available/approved. Paste this fictional source bundle and brief prose, not identifiers or scores. Allow two short clarifying questions about decision priorities/risk and answer briefly. Two minutes prompt/context, three minutes source checking, two minutes comparison. If access or response timing fails, distribute H11 page 6 now as the prepared alternative; keep the same seven-minute task. AI does not add evidence. Use the shared AI good-practice card; no required second chat or live analysis.
+:::
+
+## Did the revision preserve the evidence and the action? {#d4s2-p10 .reader-slide .s1-review .d4s2-review}
+
+Compare **your draft, the supplied brief and the revised output**.
+
+**Source traceable? Interval/rule accurate? Reach and cost assumptions retained?**
+
+::: {.ask}
+Keep one improvement and identify one claim or omission you would still check.
+:::
+
+<button data-open="d11-ai-key" data-closed="Open the source checks" data-opened="Hide the checks" aria-controls="d11-ai-key" aria-expanded="false">Open the source checks</button>
+<div id="d11-ai-key" class="feedback" hidden>F1: pilot interval spans 1,000 and is district-specific. F2: city comparisons share data and require assumptions. F3: 1.86 is conditional, not verified national value. F4: request missing evidence tied to the action; routine monitoring alone does not supply it.</div>
+
+::: {.notes}
+4 minutes. Debrief is outside the fifteen-minute Snapshot, not an additional AI run. Hear source checks before opening feedback. Recognise accurate positive evidence, not blanket rejection. If a learner's own draft is stronger than the output, retain it. Word count and matching figures are necessary checks, not proof of faithful interpretation. Record any AI-assisted change without overwriting the peer-revised version.
+:::
+
+## Defend the action and its condition {#d4s2-p11 .reader-slide .s1-review .d4s2-review}
+
+Share **the action, its scale and an accountable condition**.
+
+Point to the finding that constrains it.
+
+::: {.ask}
+Which answer could change the scale, timing or budget?
+:::
+
+Different recommendations can be defensible when their **sources, limits and decision consequences** are clear.
+
+::: {.notes}
+7 minutes. Invite two or three short contrasting defences. Challenge each with an evidence request and a possible changed answer, not a demand to agree with the trainer. Recognise useful savings evidence as well as limits. Ask whether the condition would actually constrain expenditure or rollout, and whether the request can be acted on. No persuasive-tone competition; the source/decision connection is the criterion.
+:::
+
+## Your independent request to the evaluator {#d4s2-p12 .reader-slide .s1-review .d4s2-review}
+
+Close the AI output. Work alone on **H11 page 7**.
+
+Write **the evidence to send, why you need it and how your advice could change**.
+
+::: {.ask}
+Would the evaluator know what to send and which decision it informs?
+:::
+
+Keep the corrected findings open if needed; **no AI or partner help**.
+
+::: {.notes}
+4 minutes. Collect this individual request separately from AI-assisted writing. Accept different priorities that match the recommendation: target-population/delivery comparison, complete costs/persistence, attribution or fieldwork concerns. Generic more research or confirm robustness is insufficient. Assess specific evidence, purpose and possible change in advice, not whether it reproduces the model answer.
+:::
+
+## Targeted retry, then hand over to the simulation {#d4s2-p13 .reader-slide .s1-review .d4s2-review}
+
+If assigned, open your **separate numbered reading-retry slip**.
+
+Use the named source, work independently, and record the **retry score separately**.
+
+The **other provider owns the simulation**. Keep your source-based brief and evidence request ready.
+
+::: {.ask}
+Which reading ability improved, and what remains to practise?
+:::
+
+::: {.notes}
+13 minutes. Ten minutes targeted retry/source rereading, two minutes feedback, one minute handover orientation. Assign the slip matching the missed Session 1 ability, including outcome/population and comparison, not only the interval. Original report R IDs/T10 are used only for that reading retry; the brief uses corrected F findings. Do not give the retry check before the attempt. If no retry is needed, check the final brief against the six-point rubric without AI. Record original and revised scores separately; the proposed 8/10 guide is not certification or evidence of transfer to another programme. Total 90 minutes. No reinstated Session 3, extra break or additional daily handover task; the fixed timetable includes separate feedback/handover and the other provider's 13:00 simulation.
+:::

@@ -1,0 +1,238 @@
+---
+title: "H11: a defensible GreenWaste brief"
+format:
+  html:
+    embed-resources: true
+    toc: false
+    theme: none
+    css: [day3_session3_print.css, day4_session2_print.css]
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+```{r, include=FALSE}
+source('day4_session2_review.R', encoding='UTF-8')
+```
+
+<header><p>Begin with pages 1-3 and the separately supplied Corrected GreenWaste findings. Retain your first draft. Use pages 4-5 for the Copilot Snapshot; hold page 6 until Stage 1 is finished. Complete page 7 independently when instructed.</p><button onclick="window.print()">Print worksheet</button></header>
+
+<div class="sheet-page">
+
+## Page 1 | My first draft, without AI
+
+**Name or identifier:** __________________
+
+Use **Corrected GreenWaste findings F1-F4/T11** and **D11**, separately supplied pages 1-2. This morning's report is not the drafting authority.
+
+**Decision:** national rollout for scores at or below 58 and a proposed 1,800 AED allowance per business; limited next phase or deferral is also possible. Allowance and national total are not measured cost evidence.
+
+Write **connected prose, at most 150 words**. Include:
+
+**Finding and source → action/condition → important limit → next evidence/purpose.**
+
+<div class="writing draft-space"></div>
+
+**Brief body word count:** ___ / 150  
+**Sources, on a separate line outside the word limit:**
+
+<div class="writing"></div>
+
+<p class="caption">Work independently before peer review or AI. Keep this version. Count whitespace-separated body words; headings/labels count if included in the body. The worked model is deliberately not printed on this drafting sheet.</p>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 2 | My partner checks the source
+
+**Author:** __________ **Reviewer:** __________
+
+For each check write an exact sentence/source or an omission. Use **Supported / Revise / Missing**, with a reason; a tick or number match is not enough.
+
+```{r, results='asis'}
+html_out(paste0('<table class="reading-table peer-table"><thead><tr><th>Check</th><th>Sentence/source, rating and reason</th></tr></thead><tbody>',
+  paste(sprintf('<tr><td>%s</td><td>________________________</td></tr>',d11_peer),collapse=''),
+  '</tbody></table>'))
+```
+
+### The strongest supported claim
+
+Exact sentence and source:
+
+<div class="writing tall"></div>
+
+### One consequential repair
+
+Sentence or omission, finding/paragraph ID, and why the advice needs changing:
+
+<div class="writing log-space"></div>
+
+<p class="caption">Check units/time and interval against the rule, not only the point estimate. Look for a proportionate scale/condition, a relevant limit and a specific request with decision purpose. Different actions can satisfy the same rubric.</p>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 3 | My substantive revision
+
+**Old sentence:**
+
+<div class="writing"></div>
+
+**Revised sentence and source:**
+
+<div class="writing"></div>
+
+**How the advice changes in scale, condition, confidence or next evidence:**
+
+<div class="writing"></div>
+
+### My revised connected brief
+
+At most 150 words; preserve the first draft on page 1.
+
+<div class="writing draft-space"></div>
+
+**Body word count:** ___ / 150 **Separate sources:** ______________________
+
+<p class="caption">Complete this peer-informed revision before the AI task. Record any later AI-assisted change separately rather than replacing your own version without a record.</p>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 4 | Copilot Snapshot, Stage 1
+
+**8 minutes.** Prepared illustrative response, not a captured live transcript.
+
+### The initial, leading prompt
+
+```{r, results='asis'}
+html_out(paste0('<p class="prompt">',d11_prompt_a,'</p>'))
+```
+
+### The complete supplied brief
+
+```{r, results='asis'}
+html_out(paste0('<div class="ai-source">',paste(sprintf('<p>%s</p>',d11_ai),collapse=''),'</div>'))
+```
+
+### Your source-based markup
+
+Keep one defensible sentence. Correct two unsupported assurances. Identify one material omission and its decision consequence. Use F1-F4, not AI confidence.
+
+<div class="writing log-space"></div>
+
+**A source ID and the claim it checks:**
+
+<div class="writing"></div>
+
+Do not open the paper alternative on page 6 until Stage 1 is finished.
+
+</div>
+
+<div class="sheet-page">
+
+## Page 5 | Copilot Snapshot, Stage 2
+
+**7 minutes.** Use Copilot if available/approved; otherwise use page 6 after Stage 1. Paste only this fictional case and your brief prose, not identifiers or scores.
+
+### A decision-focused prompt
+
+```{r, results='asis'}
+html_out(paste0('<p class="prompt">',d11_prompt,'</p>'))
+```
+
+**Source bundle:** separately supplied Corrected GreenWaste findings, pages 1-2: D11, F1-F4 and Table T11.
+
+**I used:** Copilot / prepared paper alternative
+
+### Compare with my own draft
+
+One substantive change, its source and its effect on the advice:
+
+<div class="writing tall"></div>
+
+One claim or omission I still need to verify, and how:
+
+<div class="writing tall"></div>
+
+**Output body word count:** ___ / 150 **Sources separated?** Yes / No
+
+<p class="caption">Answer at most two clarifying questions briefly. If the response is slow, use the prepared alternative without extending the task. No second chat is required. Word count is a format check, not a source-faithfulness judgement.</p>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 6 | Prepared paper alternative
+
+**Hold until Stage 1 is finished.** Use for Stage 2 when Copilot is unavailable, slow or not approved. This is authored training material, not additional evidence.
+
+### Clarifying questions
+
+```{r, results='asis'}
+html_out(paste0('<p>',d11_fallback[1],'</p>'))
+```
+
+### One possible conditional revision
+
+```{r, results='asis'}
+html_out(paste0('<div class="ai-source"><p>',d11_fallback[2],'</p></div><p class="caption">',d11_fallback[3],'</p>'))
+```
+
+The source line is outside the brief's 150-word body. The action is one defensible option, not a required vote.
+
+### Verify it against F1-F4
+
+One useful change compared with the supplied brief:
+
+<div class="writing tall"></div>
+
+One omission, condition or remaining claim I would challenge:
+
+<div class="writing tall"></div>
+
+Record your comparison on page 5. Do not copy this text into the independent request on page 7.
+
+</div>
+
+<div class="sheet-page">
+
+## Page 7 | Independent request and reading retry
+
+Close the AI output. Work alone; corrected findings may remain open.
+
+### My evaluator request
+
+The document/result to send:
+
+<div class="writing"></div>
+
+Why I need it:
+
+<div class="writing"></div>
+
+How a favourable or unfavourable answer could change my advice:
+
+<div class="writing tall"></div>
+
+### Targeted reading feedback
+
+**Assigned separate retry slip:** ___ **Ability:** _____________________
+
+Use the source named on that slip. The Session 1 report is for the reading retry only, not your brief's drafting evidence.
+
+**Original reading result:** ___ / 10  
+**Retry item result(s), recorded separately:** ______________________
+
+What improved and what remains to practise:
+
+<div class="writing tall"></div>
+
+<p class="caption">Retry checks remain trainer-held until your attempt. The proposed readiness guide is a teaching check, not certification or proof of transfer to a different programme. The other provider owns the final simulation; no additional Session 3 is added.</p>
+
+</div>

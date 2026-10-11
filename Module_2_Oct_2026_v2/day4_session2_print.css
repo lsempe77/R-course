@@ -1,0 +1,10 @@
+.finding-section h3 { color:#063360; font-size:20px; margin-top:18px; }
+.writing.draft-space { height:400px; }
+.peer-table td { height:40px; }
+.retry-card { border-top:2px dashed #7da1c4; margin-top:20px; padding-top:12px; }
+.model-brief { border-left:3px solid #7da1c4; padding-left:16px; }
+@media print {
+  .finding-section h3 { font-size:13pt; }
+  .writing.draft-space { height:100mm; }
+  .peer-table td { height:10mm; }
+}

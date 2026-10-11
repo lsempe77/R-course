@@ -1,0 +1,69 @@
+---
+title: "Corrected GreenWaste findings for a director's brief"
+format:
+  html:
+    embed-resources: true
+    toc: false
+    theme: none
+    css: [day3_session3_print.css, day4_session2_print.css]
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+```{r, include=FALSE}
+source('day4_session2_review.R', encoding='UTF-8')
+```
+
+<header><p>NEW drafting source for Day 4 Session 2. Use corrected findings F1-F4, Table T11 and hypothetical decision D11 instead of this morning's review report. This is the same fictional case, with no new measured national result.</p><button onclick="window.print()">Print corrected findings</button></header>
+
+<div class="sheet-page">
+
+## Page 1 | Corrected findings: comparison and uncertainty
+
+**GreenWaste is a fictional training case.** The outcome is recorded annual waste cost in AED per business at 12 months.
+
+### Source index
+
+```{r, results='asis'}
+html_out(html_table(d11_index))
+html_out(d11_findings_html(1))
+html_out(d11_findings_html(2))
+```
+
+### Table T11 | Estimated annual saving per business, AED
+
+```{r, results='asis'}
+html_out(html_table(method_rows))
+```
+
+<p class="caption">Positive saving scale; sorted 95% limits. Pilot OLS, city extra-change business-clustered, cutoff HC2 and matching business-clustered intervals. Matching uncertainty treats the chosen matches as given. Read each row with its population/comparison and requirements, not as a vote.</p>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 2 | Corrected findings: spending and next evidence
+
+```{r, results='asis'}
+html_out(d11_findings_html(3))
+html_out(d11_findings_html(4))
+```
+
+### D11 | The director's hypothetical decision
+
+```{r, results='asis'}
+html_out(paste0('<p>',d11_decision,'</p>'))
+```
+
+### Drafting requirement
+
+Write connected prose of **at most 150 words**, including finding, action/condition, important limit and next evidence/purpose. Put **source references on a separate line outside the word limit**.
+
+Count whitespace-separated words in the brief body, including headings/labels if you use them there. A correct word count or matching number does not establish faithful interpretation. Different bounded actions can be defensible.
+
+<p class="caption">F1-F4 are the drafting evidence. D11 is a hypothetical decision scenario, not an empirical finding or a verified budget. The proposed 1,800 AED allowance does not establish full cost or total national spending.</p>
+
+</div>

@@ -1,0 +1,234 @@
+---
+title: "Would you trust this report?"
+subtitle: "Day 4 | Session 1: Read independently and defend your judgement"
+author: "3ie | Review version"
+always_allow_html: true
+format:
+  revealjs:
+    theme: [theme_dge.scss, theme_reader.scss]
+    css: [session1_review.css, day4_session1_review.css]
+    logo: assets/dge_logo_horizontal.svg
+    slide-number: true
+    width: 1280
+    height: 720
+    slide-level: 2
+    embed-resources: true
+    include-after-body: [_reader_interactions.html, _session1_review_interactions.html]
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+```{r setup, include=FALSE}
+source('day4_session1_review.R', encoding='UTF-8')
+```
+
+## Your own judgement first. No discussion. {#d4s1-p01 .reader-slide .s1-review .d4s1-review}
+
+Read **Sections 1, 2 and 5** of the separately supplied **GreenWaste evaluation report**.
+
+Answer **Q1-Q5 on H10 worksheet pages 1-2**. Work alone, with the report open.
+
+Use **paragraph IDs R1.1, R2.1… and Table T10**, not memory of yesterday's figures.
+
+::: {.ask}
+Identify what the report supports and what you would need before acting.
+:::
+
+::: {.notes}
+18 minutes. Give the four-page report and H10 worksheet pages 1-2 first; keep later task pages and the trainer key separate. This is a new report presentation of the same fictional GreenWaste case, not an unfamiliar-programme transfer test. Say it contains claims to scrutinise, without identifying errors. No AI or discussion. Allow about six minutes source reading and twelve minutes writing. Section 2 supplies the pilot comparison; section IDs take precedence over pagination. Collect or copy Q1-Q5 at the end so later revisions cannot replace the opening assessment. Keep a name/identifier on these private pages, never on wall notes.
+:::
+
+## Your first verdict, with a source {#d4s1-p02 .reader-slide .s1-review .d4s1-review}
+
+```{=html}
+<div data-choices><button data-choice aria-pressed="false">Sign off</button><button data-choice aria-pressed="false">With conditions</button><button data-choice aria-pressed="false">Request evidence</button><p role="status" class="feedback"></p></div>
+```
+
+::: {.ask}
+Would you sign the report as written? Record a paragraph or table row and your reason.
+:::
+
+On **H10 page 2**, finish your opening reason before comparing choices.
+
+::: {.notes}
+5 minutes. Opening choice is independent; it is not scored as right or wrong. Q1-Q5 use a five-ability rubric, 0-2 per ability, separate from room votes. After recording the opening reason, distribute worksheet pages 3-5 and explain claim-level rating. Do not announce a list of planted mistakes or require everyone to request evidence. The report mixes supported statements with consequential overclaims. Collect/copy page 2 after the opening reason, retaining or returning a copy for comparison.
+:::
+
+## Rate a claim, not a whole section {#d4s1-p03 .reader-slide .s1-review .d4s1-review}
+
+<div class="rating-grid">
+<div class="supported"><h3>Supported</h3><p>The source supports this claim within its limits.</p></div>
+<div class="concern"><h3>Concern</h3><p>A named uncertainty or missing check could change the judgement.</p></div>
+<div class="unsupported"><h3>Unsupported</h3><p>The claim exceeds or contradicts its source.</p></div>
+</div>
+
+```{r, results='asis'}
+html_out(paste0('<p class="report-excerpt">',d10_rating_example,'</p>'))
+```
+
+::: {.ask}
+Which rating fits this sentence, and why?
+:::
+
+<button data-open="d10-neutral" data-closed="Show the worked rating" data-opened="Hide the example" aria-controls="d10-neutral" aria-expanded="false">Show the worked rating</button>
+<div id="d10-neutral" class="feedback" hidden>Supported for the stated outcome, units and timing: R2.2 defines these and T10 uses that scale. This rating does not establish reliable fieldwork or validate the report's recommendation.</div>
+
+::: {.notes}
+7 minutes. Give two minutes independent rating, two minutes pair explanation and three minutes model/debrief. Use the neutral outcome sentence, not an assessment fault that would supply Q4's answer. Reveal only after an attempt. Green/amber/red accompany words, never replace them. Different claims in the same section may merit different ratings. Concern names an unresolved check; Unsupported identifies an assertion beyond evidence. Avoid grading an entire method or analyst as a colour.
+:::
+
+## What survives checking the summary? {#d4s1-p04 .reader-slide .s1-review .d4s1-review}
+
+Read **R1.1-R1.3**, then follow its claims to **Section 5 and Section 6**.
+
+On **H10 page 3**, record:
+
+- One supported passage and its source.
+- One consequential concern or unsupported claim.
+- Evidence that could change your judgement.
+
+::: {.ask}
+Can the reader locate both your strength and your concern?
+:::
+
+::: {.notes}
+7 minutes. Three minutes alone tracing sources, two minutes pairs and two minutes share. Everyone rates an executive-summary claim before posting to Wall Sheet 1. A strength may be the explicit outcome and minimum-saving rule. Relevant concerns include independent confirmations, a selected headline as sufficient proof, average as every business, reach or costs. Do not demand criticism of every sentence. Report citations identify the passage being rated and the supporting/checking source separately.
+:::
+
+## Your assigned section: look for support first {#d4s1-p05 .reader-slide .s1-review .d4s1-review}
+
+**Eight groups:** 3 / 4 / 5 / 6 / 7 / 3 / 5 / 7.
+
+Read your section and related sources. Complete **H10 page 4**.
+
+Identify a supported passage, then a consequential concern **if warranted**.
+
+::: {.ask}
+If your section discloses genuine limits, how would you rate that disclosure?
+:::
+
+::: {.notes}
+12 minutes. Preserve the eight allocations exactly. Allow eight minutes source reading and four minutes writing/rehearsal. Groups focus on a claim and cite paragraph IDs. Section 6 may legitimately receive Supported; do not force a fabricated error. Its disclosures leave issues to investigate, but stating a real limitation is not itself an unsupported claim. Assess the individual opening pages while groups work; record five scores and a target for feedback. Learners write on page 4 whether evidence is missing or a claim exceeds the supplied evidence.
+:::
+
+## Put the passage beside the judgement {#d4s1-p06 .reader-slide .s1-review .d4s1-review}
+
+Use the **existing two-sheet A1 credibility grid**:
+
+**Wall Sheet 1:** executive-summary claims, Section 1.
+
+**Wall Sheet 2:** assigned sections, 3-7.
+
+Each sticky note: **paragraph/claim → rating word → reason**. No names.
+
+::: {.ask}
+Could someone find the evidence from your note alone?
+:::
+
+::: {.notes}
+7 minutes. Wall sheets are not H10 worksheet pages 1-2: say the physical location explicitly. Existing Oct15_session1_board_A1.pdf contains two landscape A1 pages; retain it unchanged. Everyone posts a summary judgement; groups post their assigned claim. Supply about four small sticky notes per person plus spares. Cite R IDs/T10 and distinguish the passage rated from the checking evidence. Use Supported/Concern/Unsupported beside colours. A paper-table discussion is a fallback if a wall/printer is unavailable; preserve source/reason writing rather than replacing it with votes.
+:::
+
+## Why do the ratings differ? {#d4s1-p07 .reader-slide .s1-review .d4s1-review}
+
+Choose a disagreement on the wall.
+
+Read **both cited passages** before defending a rating.
+
+::: {.ask}
+Are you rating the same claim? What evidence could resolve a genuine disagreement?
+:::
+
+<button data-open="d10-disclosure" data-closed="Check a disclosure example" data-opened="Hide the example" aria-controls="d10-disclosure" aria-expanded="false">Check a disclosure example</button>
+<div id="d10-disclosure" class="feedback" hidden>R6.1-R6.3 disclose reach, untested checks and assumed economic inputs. Those disclosures can be Supported. They do not resolve the limits or supply evidence for R7's national and spending assurances.</div>
+
+::: {.notes}
+7 minutes. Hear two different ratings before opening feedback. Establish whether they refer to different sentences in one section. Accept alternative colours if the named claim, source and reason are sound. A Supported disclosure and an Unsupported recommendation can coexist. Consensus is not evidence. If every Section 6 note is negative, ask readers to distinguish honest reporting from the unresolved underlying issue.
+:::
+
+## Trace the chosen headline to all four rows {#d4s1-p08 .reader-slide .s1-review .d4s1-review}
+
+```{r, results='asis'}
+html_out(d10_results_table())
+```
+
+<div class="review-annotate"><button data-table-column="0" aria-pressed="false">Highlight comparison</button><button data-table-column="1" aria-pressed="false">Highlight estimate</button><button data-table-column="2" aria-pressed="false">Highlight interval</button><button data-open="d10-headline" data-closed="Check interpretation" data-opened="Hide the check" aria-controls="d10-headline" aria-expanded="false">Check interpretation</button></div>
+
+<p class="caption">Annual saving per business, AED. Headline: matching (R5.2). Preferred city analysis: extra change (R3.2).</p>
+
+::: {.ask}
+Which intervals span 1,000? Does the chosen headline settle the rule?
+:::
+
+<div id="d10-headline" class="feedback" hidden>Pilot and matching span 1,000; extra change and cutoff lie below it. All intervals are above zero. Shared city data and different comparisons do not establish a common national effect.</div>
+
+::: {.notes}
+7 minutes. This reproduces complete T10, not just two convenient rows. Learners annotate their report before the reveal. Ask for the rationale linking the preferred city analysis to a different selected headline. Largest is not automatically most credible, and a lower estimate is not automatically better. Interpret every figure on its own comparison and assumptions. R5.3/R3.4 disclose shared city records. Do not turn a positive interval into proof of nationwide value for money. Highlight buttons aid locating columns; they are not answer flags.
+:::
+
+## Which limit changes the advice? {#d4s1-p09 .reader-slide .s1-review .d4s1-review}
+
+Read **R6.1-R6.3** beside **R7.1-R7.2**.
+
+Choose one unresolved issue: attribution, minimum saving, reach, data quality or full costs.
+
+::: {.ask}
+What evidence could change the action or its conditions?
+:::
+
+Write the issue and its consequence on **H10 page 5**.
+
+::: {.notes}
+4 minutes. Work alone for two minutes, discuss one example for two. Do not require an exhaustive list. If a learner selects the economic model, the saving threshold and ratio answer different questions; measured full costs/persistence and credible benefit attribution are needed. If reach is selected, request target-population and delivery evidence. A real disclosure is useful but does not resolve the issue. This session has no AI Snapshot; independent reading takes priority.
+:::
+
+## Would your condition actually constrain the action? {#d4s1-p10 .reader-slide .s1-review .d4s1-review}
+
+Compare:
+
+**"Approve, and monitor implementation."**
+
+**"Authorise a limited next phase; revisit scale and budget when the specified evidence is available."**
+
+::: {.ask}
+What evidence and decision point would make your own condition accountable?
+:::
+
+::: {.notes}
+5 minutes. Pairs write a more specific condition without copying one mandatory recommendation. The second sentence is an illustrative bounded action, not a supplied national-effect finding. Learners specify what evidence is needed, who will review it and what can change. Accept different actions with proportionate limits. Generic monitoring alone need not address causal attribution, minimum-saving risk or full costs. No live AI and no new calculation.
+:::
+
+## Your final verdict, with an independent request {#d4s1-p11 .reader-slide .s1-review .d4s1-review}
+
+```{=html}
+<div data-choices><button data-choice aria-pressed="false">Sign off</button><button data-choice aria-pressed="false">With conditions</button><button data-choice aria-pressed="false">Request evidence</button><p role="status" class="feedback"></p></div>
+```
+
+On **H10 page 5**, give your final source-based reason and compare it with the opening one.
+
+::: {.ask}
+Then close the report: request one document/result and explain how your advice could change.
+:::
+
+::: {.notes}
+5 minutes. Three minutes verdict with sources open; two minutes independent request with report closed. No AI or discussion. An unchanged button can accompany improved reasoning. Collect/copy the final response without overwriting the opening assessment. Judge source use, limits and an actionable request independently of the choice selected. Do not reward a vote change. Specific alternatives are acceptable, including earlier trends, fieldwork/follow-up, support checks, delivery reach or full cost/persistence evidence.
+:::
+
+## Use feedback to choose your next reading task {#d4s1-p12 .reader-slide .s1-review .d4s1-review}
+
+Receive **private feedback on Q1-Q5**, not a public wall score.
+
+Record the ability to revisit and the targeted retry on **H10 page 5**.
+
+**Session 2:** a corrected findings document becomes the drafting source.
+
+::: {.ask}
+Which source will you reread, and what must your next answer explain?
+:::
+
+::: {.notes}
+6 minutes. Return marked opening responses or specific feedback; finish any remaining marking before Session 2's targeted retries. The trainer-only rubric scores five abilities 0-2. Proposed readiness guide: 8/10 and no causal claim relying solely on before/after change or significance. This is a teaching check, not validated certification or a required recommendation. Keep opening and retry scores separate. Give a retry for the actual missed ability, including outcome/population or comparison, not only uncertainty. Do not distribute retry answers before the attempt. The next session uses corrected findings, not this report as authoritative drafting evidence. Total script 90 minutes, no in-session break or compulsory AI activity.
+:::

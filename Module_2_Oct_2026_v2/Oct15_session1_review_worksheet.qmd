@@ -1,0 +1,197 @@
+---
+title: "H10: read and rate the GreenWaste report"
+format:
+  html:
+    embed-resources: true
+    toc: false
+    theme: none
+    css: [day3_session3_print.css, day4_session1_print.css]
+---
+
+<header><p>Separate Day 4 Session 1 worksheet. Begin with pages 1-2 independently and use the separately supplied four-page report. Later use pages 3-5 for source-based ratings and feedback. No AI exercise is required.</p><button onclick="window.print()">Print worksheet</button></header>
+
+<div class="sheet-page" id="H10-independent-a">
+
+## Page 1 | Independent reading, Q1-Q3
+
+**Name or identifier:** __________________ **Date:** __________________
+
+Read **Sections 1, 2 and 5** of the separately supplied **GreenWaste evaluation report**. Work alone, without AI or discussion. Keep the report open and cite paragraphs such as **R2.1** or **Table T10**.
+
+### Q1 | Outcome and scope
+
+Using the pilot row, name the outcome, units, period and population described. Cite the source.
+
+<div class="writing log-space"></div>
+
+### Q2 | Comparison and fairness
+
+Who is compared in the pilot? Explain why that comparison can be fair, rather than only naming the groups. Cite the source.
+
+<div class="writing log-space"></div>
+
+### Q3 | Estimate, interval and rule
+
+Write the pilot estimate and 95% interval with consistent units and signs. Explain what the interval says about the authority's 1,000 AED rule.
+
+<div class="writing log-space"></div>
+
+**Continue with Q4-Q5 on page 2 before discussing your answers.**
+
+<p class="caption">These responses assess reading from a source, not recall of yesterday's numbers. Positive-saving or negative-cost-difference wording is acceptable when the interval and meaning are consistent.</p>
+
+</div>
+
+<div class="sheet-page" id="H10-independent-b">
+
+## Page 2 | Independent reading, Q4-Q5
+
+**Name or identifier:** __________________
+
+### Q4 | A consequential source-based concern
+
+Name one important concern, cite the exact report passage and explain why it matters for the decision. Acceptable concerns need not all be the same.
+
+<div class="writing log-space"></div>
+
+### Q5 | Proportionate advice and an evidence request
+
+Give a recommendation the stated evidence can support. Request one specific document or result and explain how its answer could change your advice.
+
+<div class="writing log-space"></div>
+
+### My opening judgement
+
+**Sign off / With conditions / Request evidence**
+
+My source-based reason:
+
+<div class="writing tall"></div>
+
+<p class="caption">Finish independently before comparing choices. Your recommendation is judged by its evidence and limits, not by selecting a required option. These opening responses will be collected or copied; later revisions are recorded separately.</p>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 3 | Rate an executive-summary claim
+
+Read **R1.1-R1.3** and follow the selected claim to its sources.
+
+**Supported:** the source supports the claim within its limits.  
+**Concern:** a specific uncertainty or missing check could change the judgement.  
+**Unsupported:** the claim exceeds or contradicts its source.
+
+### A supported passage
+
+Exact paragraph/claim and the checking source:
+
+<div class="writing tall"></div>
+
+Why this claim is supported:
+
+<div class="writing tall"></div>
+
+### A consequential concern or unsupported claim
+
+Exact paragraph/claim and the checking source:
+
+<div class="writing tall"></div>
+
+Rating and reason:
+
+<div class="writing tall"></div>
+
+Evidence that could change my judgement:
+
+<div class="writing tall"></div>
+
+### My Wall Sheet 1 note
+
+**Paragraph/claim → rating word → reason.** No name on the wall.
+
+<div class="writing"></div>
+
+<p class="caption">Wall Sheet 1 is the executive-summary A1 grid. It is not worksheet page 1. Rate a named claim; another claim in the same section may deserve a different rating.</p>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 4 | Our assigned section and source
+
+**Group:** ___ **Assigned section:** ___  
+Eight allocations: **3 / 4 / 5 / 6 / 7 / 3 / 5 / 7**.
+
+### Our strongest supported passage
+
+Paragraph ID, claim and source-based reason:
+
+<div class="writing log-space"></div>
+
+### Our consequential concern, if warranted
+
+Paragraph ID, claim and reason. If the section only supplies supported disclosure, say so rather than inventing an error.
+
+<div class="writing log-space"></div>
+
+### What evidence could change the judgement?
+
+Name a document/result and its decision purpose.
+
+<div class="writing tall"></div>
+
+### Our Wall Sheet 2 note
+
+**Paragraph/claim → rating word → reason.** No names.
+
+<div class="writing tall"></div>
+
+### During the wall discussion
+
+Are we rating the same claim? Which passage explains any difference?
+
+<div class="writing tall"></div>
+
+<p class="caption">Wall Sheet 2 is the A1 grid for Sections 3-7. A Supported disclosure can coexist with an unresolved issue; the rating does not mean every limitation is resolved.</p>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 5 | Final judgement and targeted feedback
+
+### The unresolved issue that matters most
+
+Evidence needed, source and how it could change the action or conditions:
+
+<div class="writing tall"></div>
+
+### My final verdict, with the report open
+
+**Sign off / With conditions / Request evidence**
+
+Reason and source; what changed or stayed the same from my opening judgement?
+
+<div class="writing tall"></div>
+
+### My independent evaluator request
+
+Close the report. Work alone without AI. Request a document/result and state its purpose and decision consequence.
+
+<div class="writing tall"></div>
+
+### Private reading feedback
+
+**Ability to revisit:** outcome/scope / comparison/fairness / interval/rule / source-based concern / advice/request
+
+**Trainer's targeted retry and source to reread:**
+
+<div class="writing"></div>
+
+**Opening score:** ___ / 10 **Retry score:** ___ / ___  
+Keep these separate. A readiness guide is not a certification.
+
+<p class="caption">Do the retry when instructed in Session 2; do not replace your opening response. Session 2 supplies corrected findings for drafting, distinct from this review report. No AI Snapshot forms part of this session's assessment.</p>
+
+</div>

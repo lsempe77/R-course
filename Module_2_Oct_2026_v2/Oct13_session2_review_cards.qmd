@@ -1,0 +1,60 @@
+---
+title: "Twelve businesses: eight different samples"
+format:
+  html:
+    embed-resources: true
+    toc: false
+    theme: none
+    include-after-body: _day2_session2_board.html
+    header-includes: |
+      <style>
+      [hidden]{display:none!important}
+      *{box-sizing:border-box}body{margin:0;font:18px/1.45 Arial,sans-serif;color:#111418;background:#eef2f6}main{max-width:900px;margin:auto}h1,h2,h3{color:#063360}h1{font-size:30px}h2{font-size:28px}.claim-card,.board-page{background:white;padding:38px;margin:24px 0;min-height:820px}.card-number{font-size:72px;font-weight:bold;color:#215a9e;margin:0}.claim-text{font-size:28px;line-height:1.45;border-top:3px solid #215a9e;padding-top:20px}.card-source{font-size:17px;color:#545860;border-top:1px solid #D5DEE8;padding-top:18px;margin-top:30px}.caption{font-size:14px;color:#545860}.choices{display:flex;gap:20px;flex-wrap:wrap;margin-top:25px}.choices span{border:1px solid #7da1c4;padding:8px 14px}.writing{border-bottom:1px solid #c8d6e5;height:65px}.triage{width:100%;table-layout:fixed;border-collapse:collapse;font-size:18px}.triage th,.triage td{border:1px solid #7da1c4;padding:12px;text-align:left;vertical-align:top}.triage td{height:100px}.triage thead{background:#063360;color:white}.placement{display:grid;grid-template-columns:80px 1fr 1fr;gap:10px;align-items:center;margin:12px 0}select,button{font:inherit;padding:7px;border:1px solid #7da1c4;color:#063360;background:white}.badge{display:inline-block;background:#e3ebf5;border:1px solid #215a9e;border-radius:4px;padding:4px 9px;margin:4px}button:focus-visible,select:focus-visible{outline:3px solid #215a9e;outline-offset:3px}@page{size:A4;margin:16mm}@media print{body{background:white;font-size:12pt}main{max-width:none}#title-block-header,.screen-controls{display:none}.claim-card,.board-page{padding:0;margin:0;min-height:0;break-after:page;box-shadow:none}.board-page{break-after:auto}h2{font-size:20pt}.card-number{font-size:50pt}.claim-text{font-size:19pt}.card-source{font-size:11pt}.caption{font-size:9pt}.triage{font-size:10pt}.triage th,.triage td{padding:7px}.triage td{height:27mm}.writing{height:16mm}.choices{font-size:12pt}} .reading-table{width:100%;border-collapse:collapse;font-size:22px}.reading-table td,.reading-table th{padding:9px;border-bottom:1px solid #d5dee8;text-align:left}.reading-table thead{background:#063360;color:white}.card-number{font-size:54px}.rdd-inputs{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.rdd-inputs label{display:block}.rdd-inputs input{width:100%;font:inherit;padding:6px}#rdd-board{width:100%;display:block;margin:25px 0}.board-page h2{font-size:24px}@media print{.reading-table{font-size:12pt}.card-number{font-size:40pt}#rdd-board{height:75mm}.rdd-inputs{display:none}}@media(max-width:600px){.rdd-inputs{grid-template-columns:repeat(2,1fr)}.claim-card,.board-page{padding:24px 18px}.reading-table{font-size:16px}.reading-table td,.reading-table th{padding:6px}}
+      </style>
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+
+```{r, include=FALSE}
+source('day2_session2_review.R', encoding='UTF-8')
+```
+
+<div class="screen-controls"><p>Eight group cards plus a printable/local number line. Print one different card per group. Use the existing A1 poster for room work.</p><button onclick="window.print()">Print cards and number line</button><p><a href="Oct13_session2_review_worksheet.html">Open the worksheet</a> | <a href="Oct13_session2_board_A1.pdf">Existing A1 poster</a></p></div>
+
+```{r, results='asis'}
+html_out(paste(vapply(names(d5_cards),function(letter)paste0('<section class="claim-card"><p class="card-number">Card ',letter,'</p><h2>Twelve businesses near score 58</h2><p>Each row lists one business on each side. Compare <strong>mean annual after-costs</strong>, in AED per business.</p>',as.character(knitr::kable(d5_cards[[letter]]$rows,format='html',row.names=FALSE,table.attr='class="reading-table"')),'<p class="caption">Six actual city records per side, independently sampled for this card. Costs rounded to ten AED; scores displayed to one decimal. Side membership uses the unrounded score, so an above-cutoff score can display as 58.0.</p><p>Find each side\'s mean, then subtract <strong>at/below minus above</strong>.</p><p>Mean at/below: __________ AED. Mean above: __________ AED.</p><p>Raw gap: __________ AED. Put your letter and gap on a sticky note.</p><div class="writing"></div><p class="caption">This small raw gap is not the fitted cutoff jump or an established effect. Record your work on worksheet Q1, page 3.</p>',if(letter=='A')'<p class="caption">GreenWaste is a fictional training case.</p>' else '', '</section>'),''),collapse=''))
+```
+
+<section class="board-page">
+
+## Place raw gaps. Compare the fitted jump.
+
+Use the upper lane for A-H sticky notes and the lower lane for the fitted result. Keep the comparison questions distinct.
+
+<div class="screen-controls">
+<p>Optional local board: enter group gaps, then reveal the fitted result after the explanation. Entries stay in this open browser page.</p>
+<div class="rdd-inputs">
+```{r, results='asis'}
+html_out(paste0('<label>Card ',names(d5_cards),'<input type="number" step="any" data-card="',names(d5_cards),'" aria-label="Raw gap for card ',names(d5_cards),'"></label>',collapse=''))
+```
+</div>
+<button id="clear-rdd-board">Clear entries</button>
+<button id="reveal-rdd-fit" aria-expanded="false" aria-controls="fit-marker">Show fitted estimate and interval</button>
+<p id="rdd-board-status" role="status" aria-live="polite"></p>
+</div>
+
+```{r, results='asis'}
+html_out(d5_board())
+```
+
+Why do raw card gaps vary? Why is the fitted jump a different comparison?
+
+<div class="writing"></div>
+
+<p class="caption">Print this blank A4 backup or use the existing A1 poster. Negative below-minus-above values mean lower costs; this is not the positive-saving scale. The line covers -2,000 to +1,000 AED.</p>
+
+</section>

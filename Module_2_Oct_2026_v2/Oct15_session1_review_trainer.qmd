@@ -1,0 +1,146 @@
+---
+title: "Day 4 Session 1: trainer-only reading and rating key"
+format:
+  html:
+    embed-resources: true
+    toc: false
+    theme: none
+    css: [day3_session3_print.css, day4_session1_print.css]
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+```{r, include=FALSE}
+source('day4_session1_review.R', encoding='UTF-8')
+```
+
+<header><p>Trainer-only key. Do not include these pages in the opening participant packet. Score independent Q1-Q5 before feedback, retain opening responses and record targeted retries separately.</p><button onclick="window.print()">Print trainer key</button></header>
+
+<div class="sheet-page">
+
+## Page 1 | Rubric: outcome, comparison and uncertainty
+
+Each ability scores **0, 1 or 2**. Use the response, not a sign-off vote. Accept equivalent wording and consistently converted signs.
+
+### Q1 | Outcome and scope
+
+**2:** recorded annual waste-cost reduction, AED per business, at 12 months, among 400 businesses in one pilot district; source R2.1-R2.2/T10.  
+**1:** some components are correct, but a unit, period or population is missing or ambiguous.  
+**0:** outcome or scope is absent or materially wrong, such as national landfill tonnes.
+
+### Q2 | Comparison and fairness
+
+**2:** 200 lottery assigned to join versus 200 assigned to wait; explains how lottery reduces systematic starting selection; source R2.1/R3.1.  
+**1:** names the groups but gives no explanation of why assignment helps, or has an incomplete comparison.  
+**0:** wrong comparison or fairness rests only on sample size or before/after change.
+
+Accept a relevant caveat about follow-up or district reach as a strength; do not require it for full credit when comparison/fairness are accurately explained.
+
+### Q3 | Estimate, interval and rule
+
+**2:** 1,014 AED saving, interval 862-1,167; point above 1,000 but interval spans it, so the minimum is not settled; source T10.  
+**1:** correct figures with incomplete interpretation, or correct crossing interpretation with a minor transcription/sign error.  
+**0:** materially wrong result or claims the interval establishes the minimum.
+
+Equivalent cost-difference presentation: -1,014 AED, interval -1,167 to -862; compares with the -1,000 cost-change rule correctly. Do not reward a reversed interval or an inconsistent sign. The interval also lies above zero on the saving scale; uncertainty about the minimum is not absence of evidence of a reduction.
+
+<p class="caption">This is an instructional reading rubric, not a validated certification test. Numeric rounding follows the supplied report. Do not insist learners recall figures without its source.</p>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 2 | Rubric: concern, advice and readiness
+
+### Q4 | Consequential source-based concern
+
+**2:** a specific concern with a locatable passage and decision relevance. Examples include R1.2/R5.2 selected headline and minimum; R1.3 mean as each business; R3.2 untested trends; R4.2 fieldwork assurance; R7 reach/cost advice. Accept another well-supported concern.  
+**1:** a plausible concern without a precise source or consequence.  
+**0:** absent, unrelated or blanket criticism contradicted by the source.
+
+### Q5 | Recommendation and evaluator request
+
+**2:** a bounded, proportionate action plus a specific result/document request, with its decision purpose. Accept different actions if limits are clear; relevant anchors include R6.1-R6.3 and the learner's cited concern.  
+**1:** advice is partly bounded or a relevant request is given, but its scope, source or purpose is incomplete.  
+**0:** unconditional assurance unsupported by the evidence, or no actionable request.
+
+### Proposed readiness guide
+
+**8/10**, with no causal conclusion relying solely on a before/after change or statistical significance. Record this misconception flag separately from the total. This guide supports feedback, not a compulsory recommendation or certification.
+
+Choose a retry for the missed ability, including outcome/scope and comparison if needed. Keep opening scores and retry scores separate. A changed room vote is not evidence of reading improvement.
+
+### Collection and feedback
+
+Give report pages 1-4 and H10 pages 1-2 first. Collect/copy Q1-Q5 after the independent task and opening reason. Give H10 pages 3-5 afterwards. Mark during the group/wall work; return specific feedback in the final six minutes. Finish any remaining marking before Session 2 retries.
+
+Private opening pages carry an identifier. Wall notes do not. Final decisions and the closed-report request are independent. The optional AI paragraph on page 5 is not an assessment item.
+
+</div>
+
+<div class="sheet-page">
+
+## Page 3 | Balanced section key and wall setup
+
+Rate a **named claim**, not every sentence in a section as one colour.
+
+```{r, results='asis'}
+html_out(html_table(d10_section_key))
+```
+
+### Existing two-sheet A1 grid
+
+Use **Oct15_session1_board_A1.pdf**, unchanged. Print its two pages at landscape A1. Wall Sheet 1 is the summary grid; Wall Sheet 2 contains Sections 3-7. These are not H10 worksheet pages 1-2.
+
+Eight group allocations: **3 / 4 / 5 / 6 / 7 / 3 / 5 / 7**. Everyone posts a summary rating, then groups post their assigned claim. Supply about four small sticky notes per person plus spares. Each note has paragraph/claim, rating word and reason; no name.
+
+Section 6 contains genuine disclosure and can be Supported. Its unresolved issues do not turn truthful disclosure into an error. Accept other ratings when they refer to a different claim and are justified.
+
+</div>
+
+<div class="sheet-page">
+
+## Page 4 | Targeted retries for Session 2
+
+Give only the task/source for the missed ability before the retry. Keep the check below trainer-held until the learner attempts it.
+
+```{r, results='asis'}
+for(i in seq_len(nrow(d10_retry))) {
+  html_out(paste0('<div class="rubric-item"><h3>',i,'. ',d10_retry$Ability[i],
+    '</h3><p><strong>Task to give:</strong> ',d10_retry$Task[i],
+    '</p><p><strong>Trainer check:</strong> ',d10_retry$Check[i],'</p></div>'))
+}
+```
+
+Record the original and revised score separately. If several abilities need work, prioritise the one most consequential to the advice, then plan further feedback. Do not quietly replace the opening assessment.
+
+Session 2 uses corrected findings as the drafting source, not this report. These retry instructions prepare that handover; they do not implement the Session 2 revision.
+
+</div>
+
+<div class="sheet-page">
+
+## Page 5 | Optional brief AI-verdict discussion
+
+**Not part of the core 90-minute script or independent assessment.** No Copilot Snapshot, account or second chat is required. Omit if time is needed for feedback. If used, substitute for a short debrief segment rather than adding minutes.
+
+### Prepared illustrative review paragraph
+
+```{r, results='asis'}
+html_out(paste0('<div class="source-box"><p>',d10_optional_ai,'</p></div>'))
+```
+
+### Trainer check
+
+The review recognises real strengths: outcome definition, multiple comparisons, uncertainty and disclosure. It also rejects independent replication of shared city records. Its remaining error is consequential: a largest matched point and intervals excluding zero do not settle the 1,000 minimum nationally or justify full spending.
+
+Use T10/R5.2 for the rule, R6.1 for reach and R6.3 for assumed inputs. Ask whether an otherwise fluent review checked the completeness of the recommendation's evidence, not only its correctly quoted facts.
+
+### Core timing
+
+18 / 5 / 7 / 7 / 12 / 7 / 7 / 7 / 4 / 5 / 5 / 6 minutes = **90**. No added break, live R demonstration or compulsory AI exercise. Preserve quiet independent reading and targeted feedback.
+
+</div>

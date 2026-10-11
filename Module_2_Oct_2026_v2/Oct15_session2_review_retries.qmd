@@ -1,0 +1,60 @@
+---
+title: "Day 4: numbered reading-retry slips"
+format:
+  html:
+    embed-resources: true
+    toc: false
+    theme: none
+    css: [day3_session3_print.css, day4_session2_print.css]
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+```{r, include=FALSE}
+source('day4_session2_review.R', encoding='UTF-8')
+```
+
+<header><p>Print and cut the five numbered slips across three pages. Give only the slip(s) matching the learner's Session 1 feedback. Use the separately supplied Day 4 Session 1 review report for this retry, not as authority for the director's brief. No answer key is printed here.</p><button onclick="window.print()">Print retry slips</button></header>
+
+<div class="sheet-page">
+
+## Page 1 | Reading retries 1-2
+
+**Source:** Day 4 Session 1 GreenWaste review report, R paragraph IDs and Table T10. Work independently without AI. Retain opening scores.
+
+```{r, results='asis'}
+html_out(d11_retry_html(1))
+html_out(d11_retry_html(2))
+```
+
+</div>
+
+<div class="sheet-page">
+
+## Page 2 | Reading retries 3-4
+
+**Source:** Day 4 Session 1 GreenWaste review report, R paragraph IDs and Table T10. Work independently without AI. Retain opening scores.
+
+```{r, results='asis'}
+html_out(d11_retry_html(3))
+html_out(d11_retry_html(4))
+```
+
+</div>
+
+<div class="sheet-page">
+
+## Page 3 | Reading retry 5
+
+**Source:** Day 4 Session 1 GreenWaste review report, R paragraph IDs and Table T10. Work independently without AI. Retain opening scores.
+
+```{r, results='asis'}
+html_out(d11_retry_html(5))
+```
+
+The trainer provides feedback after the attempt. The brief uses **Corrected GreenWaste findings F1-F4**, not this morning's report as unquestioned evidence.
+
+</div>

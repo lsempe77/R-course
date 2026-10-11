@@ -1,0 +1,222 @@
+---
+title: "GreenWaste cutoff: read the local comparison"
+format:
+  html:
+    embed-resources: true
+    toc: false
+    html-math-method: plain
+    theme: none
+    include-in-header:
+      text: |
+        <style>
+        body{font:16px/1.45 Arial,sans-serif;color:#111418;margin:0;background:#eef2f6}
+        main{max-width:850px;margin:auto}h1{font-size:26px;color:#063360;margin:12px 0}h2{font-size:22px;color:#063360;margin:0 0 12px}h3{font-size:18px;margin:14px 0 6px}
+        .sheet-page{background:white;padding:28px 40px;margin:20px 0;box-sizing:border-box;min-height:950px}p{margin:8px 0}.caption{font-size:13px;color:#545860}.reading-table{border-collapse:collapse;width:100%;font-size:14px}.reading-table td,.reading-table th{padding:8px;border-bottom:1px solid #D5DEE8;text-align:left}.reading-table thead{background:#063360;color:white}.writing{height:44px;border-bottom:1px solid #c8d6e5;margin:6px 0}.writing.tall{height:75px}.costs{font-size:19px;word-spacing:9px;border-top:2px solid #215a9e;padding:12px 0}.ai-source{border-left:3px solid #7da1c4;padding-left:16px}.prompt{border-top:2px solid #215a9e;padding-top:8px;font-size:15px}.source-note{font-size:14px}
+        header button{font:inherit;margin:12px 0;padding:8px 15px;border:1px solid #215a9e;background:white;color:#063360;cursor:pointer}
+        @page{size:A4;margin:14mm}@media print{body{background:white;font-size:11pt;line-height:1.35}main{max-width:none}.sheet-page{padding:0;margin:0;min-height:0;break-after:page;box-shadow:none}.sheet-page:last-child{break-after:auto}header{display:none}h1{font-size:19pt}h2{font-size:17pt}h3{font-size:12pt}.reading-table{font-size:10pt}.writing{height:10mm}.writing.tall{height:17mm}.ai-source{font-size:11pt}.prompt{font-size:10pt}#title-block-header{display:none}}
+        .review-svg{display:block;width:100%;height:210px}.comparison-table{border-collapse:collapse;width:100%;font-size:14px}.comparison-table td,.comparison-table th{border-bottom:1px solid #D5DEE8;padding:7px;text-align:left}.sheet-page .ai-source p{margin:8px 0}.sheet-page table{border-collapse:collapse;width:100%}.sheet-page th,.sheet-page td{border-bottom:1px solid #D5DEE8;padding:7px;text-align:left}.sheet-page thead{background:#063360;color:white}@media print{.review-svg{height:200px}.comparison-table{font-size:10pt}}
+        .interval-visual{display:block;width:100%;height:160px}.draw-table{width:100%;border-collapse:collapse}
+        
+        .trend-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}.trend-pair .review-svg{height:155px}.visual-reference .review-svg{height:185px}.visual-reference .trend-pair .review-svg{height:155px}.visual-reference .interval-figure .review-svg{height:135px}.blank-chart .review-svg{height:165px}.reading-table{font-size:13px}.reading-table td,.reading-table th{padding:6px}.source-note{font-size:12px}.source-page p{margin:6px 0}.source-page h3{margin:10px 0 5px}@media print{.source-page{font-size:10.5pt}.reading-table{font-size:9pt}.reading-table td,.reading-table th{padding:5px}.source-note{font-size:9pt}}
+        .visual-reference .review-svg{height:205px}.visual-reference .age-figure .review-svg{height:190px}.sorting-figure .review-svg{height:125px}.source-page .reading-table{font-size:12px}</style>
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+
+
+```{r, include=FALSE}
+source('day2_session2_review.R', encoding='UTF-8')
+```
+
+<header><p>Separate Day 2 Session 2 review worksheet.</p><button onclick="window.print()">Print worksheet</button></header>
+
+<div class="sheet-page source-page">
+
+## Page 1 | H5-A: cutoff study extract
+
+**GreenWaste is a fictional training case.** This supplied extract and page 2's figures are your source; there is no separate report to find.
+
+### §1 | Who and what determined participation?
+
+GreenWaste offers equipment subsidies, installation help and training. The city file has **10,000 businesses**: 4,794 participants and 5,206 others. Businesses with efficiency scores **58 or below participated**; those above 58 did not. Higher scores mean more efficient. The running variable is the score; **58 is the cutoff**. This rule is followed in the file, but it is not a lottery.
+
+### §2 | What does the fitted result compare?
+
+The local model uses **545 businesses within two points of 58 (scores 56-60)**. The outcome is annual waste cost in AED per business, measured **12 months after**. Separate straight cost/score slopes are fitted on either side. The coefficient compares the fitted costs approaching 58 from the participating side versus the non-participating side. It is not the average gap across the whole city, or the small raw mean gap on a card.
+
+```{r, results='asis'}
+html_out(d5_table())
+```
+
+### §3 | Which checks are supplied or missing?
+
+A five-point window (scores 53-63) uses **1,260 businesses** and estimates **-784 AED**, interval **-934 to -634**. This sensitivity comparison does not prove causal validity. **Pre-programme manager age also jumps at 58: about -5.3 years in the five-point window.** It raises a concern about who is compared and other explanations for a cost jump. It does not prove a particular bias. No score-setting or manipulation diagnostic is supplied. The evaluator should investigate the scoring process, who could influence scores and other discontinuities. A causal reading requires comparable businesses immediately either side apart from programme access, without relevant sorting or other important jumps.
+
+### §4 | What follows for the decision?
+
+On a positive-reduction scale, the local estimate is **721 AED**, interval **498-943**. Both are below the fictional **1,000 AED annual-saving minimum**, conditional on the model. Precision does not resolve the design concern. Most city participants are outside this local window. A result at the cutoff is not an estimated average effect for typical participants or the whole city. Full programme costs and national effects are not supplied.
+
+<div class="source-note">Source: corrected evaluation_data_GreenWaste_simple.csv, city records; calculations in day2_session2_review.R and shared case model. HC2 robust intervals. Figures are actual records and fitted lines except the explicitly hypothetical sorting illustration.</div>
+
+</div>
+
+<div class="sheet-page visual-reference">
+
+## Page 2 | H5-A: visual reference
+
+### The fitted jump at 58: two-point window
+
+```{r, results='asis'}
+html_out(d5_plot(2,TRUE))
+```
+
+Dots are actual city businesses with scores 53-63. Shading marks scores 56-60 used in the main model. Lines approach the cutoff; the red gap is between their fitted limits.
+
+```{r, results='asis'}
+html_out(d5_windows())
+```
+
+### A pre-programme characteristic: manager age
+
+<div class="age-figure">
+```{r, results='asis'}
+html_out(d5_plot(5,TRUE,TRUE))
+```
+</div>
+
+This age discontinuity is a credibility concern, not a GreenWaste effect on age. Optional extension: adding age to the two-point model gives **-632 AED**, HC2 interval **-857 to -407**. Adjustment alone does not establish a valid local comparison.
+
+</div>
+
+<div class="sheet-page">
+
+## Page 3 | Q1-Q2: arithmetic and interpretation
+
+### Q1 | Record your group's raw card gap
+
+Card letter: ______. Use your **separate A-H card**, six businesses per side. Costs are rounded to ten AED. Scores are displayed to one decimal, but groups follow the unrounded score.
+
+| Calculation | At/below 58 | Above 58 |
+|---|---|---|
+| Sum of six costs | __________ | __________ |
+| Mean: sum divided by 6 | __________ | __________ |
+
+At/below mean minus above mean: __________________ AED.
+
+Place the letter and gap in the **raw-gap lane** on the number line. Why might other groups get different gaps?
+
+<div class="writing tall"></div>
+
+### Q2 | Read the fitted local jump
+
+Use H5-A §2/table (page 1) and the fitted plot on page 2. Label the gap at the cutoff. Why need the fitted estimate not equal your card gap?
+
+<div class="writing tall"></div>
+
+Interpret the coefficient: comparison, sign, units, timing and local population. Name what must be credible before calling it an effect.
+
+<div class="writing tall"></div>
+
+Convert the negative interval to positive reduction. Where are the estimate and interval relative to 1,000 AED? What remains unresolved?
+
+<div class="writing tall"></div>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 4 | Q3: what would make this credible?
+
+Use H5-A §1-4 (page 1) and page 2's figures. Mark **supported, concern or unknown**, citing evidence and a reason.
+
+| Check | Judgement, source and reason |
+|---|---|
+| Score rule followed | ______________________________ |
+| Local comparison/window disclosed | ______________________________ |
+| Other pre-programme differences | ______________________________ |
+| Score setting/manipulation investigated | ______________________________ |
+| Whole-city effect established | ______________________________ |
+
+What changes when the window widens? What does stability still not prove?
+
+<div class="writing"></div>
+
+Why does the age jump matter? What would you ask the evaluator to investigate?
+
+<div class="writing"></div>
+
+<div class="sorting-figure">
+```{r, results='asis'}
+html_out(d5_sorting())
+```
+</div>
+
+This is hypothetical, not a supplied manipulation test. Ask who set scores, when and whether businesses could influence which side they landed on.
+
+### Your independent reading and request
+
+Keep H5-A open; close AI responses and peer comments. Write one supported local-result interpretation and one specific request. Explain how the answer could change your advice.
+
+<div class="writing tall"></div>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 5 | AI Snapshot: local result, wider claim
+
+An authored practice response to: **Explain without jargon who this result applies to, and what a policy adviser should check before expansion.** Do not run this first prompt.
+
+<div class="ai-source">
+```{r, results='asis'}
+html_out(d5_paragraphs(d5_ai))
+```
+</div>
+
+Underline support and cross out overclaims. Check **H5-A, pages 1-2**. Does a sensible caveat repair an unsupported assurance?
+
+### Better prompt: run and compare
+
+<div class="prompt">
+```{r, results='asis'}
+html_out(d5_paragraphs(d5_prompt))
+```
+</div>
+
+Copy this prompt and H5-A into **Microsoft Copilot**. Keep your AI good-practice card beside you. Page 6 is the prepared paper alternative.
+
+Which claim improved? What still needs checking against the source?
+
+<div class="writing"></div>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 6 | Prepared response: paper alternative
+
+Use this for the same task if Copilot is unavailable. This is an authored response to the better prompt, **not additional study evidence**.
+
+<div class="ai-source">
+```{r, results='asis'}
+html_out(d5_paragraphs(d5_fallback))
+```
+</div>
+
+### Check even a careful response
+
+Match its comparison and numbers to H5-A §2 and page 2. Match design concerns and reach to §3-4. Does it distinguish recorded evidence, missing checks and an assumption?
+
+<div class="writing tall"></div>
+
+Which assurance from page 5 has been removed? Is any wording still too strong or unclear?
+
+<div class="writing tall"></div>
+
+Return to page 4 for your **own** interpretation and request, with AI responses closed.
+
+</div>

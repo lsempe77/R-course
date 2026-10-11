@@ -1,0 +1,119 @@
+---
+title: "Day 4 Session 2: trainer-only brief and retry key"
+format:
+  html:
+    embed-resources: true
+    toc: false
+    theme: none
+    css: [day3_session3_print.css, day4_session2_print.css]
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+```{r, include=FALSE}
+source('day4_session2_review.R', encoding='UTF-8')
+```
+
+<header><p>Trainer-only. Keep the worked model off the independent drafting sheet and retry checks away from learners until attempts. Preserve the first draft, peer revision and any later AI-assisted change separately.</p><button onclick="window.print()">Print trainer key</button></header>
+
+<div class="sheet-page">
+
+## Page 1 | Worked brief and decision boundary
+
+### One possible connected brief
+
+```{r, results='asis'}
+html_out(paste0('<div class="model-brief"><p>',paste(d11_model,collapse=' '),'</p></div>'))
+html_out(paste0('<p><strong>Body word count:</strong> ',d11_words(d11_model),
+  '. Sources, outside the count: ',paste(d11_model_sources,collapse='; '),'.</p>'))
+```
+
+### How the four parts connect
+
+The finding retains the comparison, district, time, units and interval/rule. The action specifies limited commitment rather than claiming national assurance. The important limit affects scale and budget. The evidence request has a decision checkpoint and purpose.
+
+The model is shown during the explanation, not printed on H11 page 1. Do not treat it as the only acceptable recommendation. An alternative may prioritise attribution, fieldwork or full costs if it explains how these constrain the action.
+
+### Hypothetical decision is not new evidence
+
+```{r, results='asis'}
+html_out(paste0('<p>',d11_decision,'</p>'))
+```
+
+Corrected F findings replace the Session 1 report for drafting. The report is retained only for the independently assigned reading retry.
+
+</div>
+
+<div class="sheet-page">
+
+## Page 2 | Peer review and substantive revision
+
+```{r, results='asis'}
+html_out(html_table(data.frame(Check=d11_peer,
+  'Look for'=c('Locatable F paragraph or T11; D11 only for the proposal',
+    'Who was compared and who the result describes',
+    'Correct scale/time and interval against 1,000, not only point/significance',
+    'A proportionate next step with scale and decision checkpoint',
+    'A consequential limit, not boilerplate uncertainty',
+    'A document/result and what its answer could change'),check.names=FALSE)))
+```
+
+Reviewers name an exact sentence or omission and cite its source. No automated keyword or number checklist proves interpretation. Count the connected body separately from the source line; maximum 150 words.
+
+### What counts as a substantive change?
+
+A repair alters attribution, reach, minimum-saving confidence, spending scope or an accountable condition. Adding cautiously to unconditional national approval is not enough. Preserve the first draft and peer-informed revision; later AI-assisted changes should be recorded separately.
+
+### Acceptable advice
+
+Do not require the trainer's chosen action. Check the comparison/population, estimate/interval, proportionality, important limit and specific request. A condition must constrain a decision, not merely promise routine monitoring. Unsupported certainty remains a problem even with correct numbers.
+
+</div>
+
+<div class="sheet-page">
+
+## Page 3 | Copilot Snapshot key and withholding
+
+Stage 1 is eight minutes; Stage 2 seven. Distribute H11 pages 4-5 at those stages. Hold page 6 until Stage 1 is finished. It is a prepared alternative, not a live transcript. No compulsory second chat.
+
+### Supplied brief: keep, correct and add
+
+Keep the correctly quoted pilot comparison, time, point estimate/interval and evidence of a reduction in that district. Correct the inference that a point above 1,000 settles the minimum nationally (F1.1-F1.2), and that 1.86 validates the proposed allowance (F3.1-F3.2).
+
+The leading prompt asks for rollout before weighing the evidence. The output does not give a specific missing-evidence request with a decision purpose. It reduces risks to implementation despite uncertainty about reach, full costs and persistence (F4/F3). Generic monitoring does not supply those missing facts.
+
+### Better prompt/output checks
+
+Use only the fictional source and brief prose; omit identifiers/scores. At most two clarifying questions should concern decision priorities and acceptable uncertainty. Check the resulting brief against F1-F4 and D11; do not mistake fluent advice for new evidence.
+
+The source line is outside the 150-word count. The prepared alternative's brief body has **`r d11_words(d11_fallback[2])` words**; the supplied AI brief has **`r d11_words(d11_ai)` words**. These format checks do not establish correctness.
+
+### Timing and alternatives
+
+If access or response time fails, use the paper alternative within the same seven minutes. Debrief separately for four minutes. A participant can retain a stronger own draft rather than adopt the AI suggestion. Collect the final independent request without AI.
+
+</div>
+
+<div class="sheet-page">
+
+## Page 4 | Reading retries and simulation handover
+
+Assign numbered slips 1-5 according to the actual missed Session 1 ability. Give only the participant task before the attempt; keep these checks trainer-held.
+
+```{r, results='asis'}
+for(i in seq_len(nrow(d10_retry))) {
+  html_out(paste0('<div class="retry-card"><h3>Retry ',i,' | ',d10_retry$Ability[i],
+    '</h3><p><strong>Trainer check:</strong> ',d10_retry$Check[i],'</p></div>'))
+}
+```
+
+Keep opening and retry item scores separate; apply the same 0/1/2 rubric as Session 1. The proposed 8/10 guide includes the causal-misconception flag and is not validated certification. If several abilities need feedback, prioritise the most consequential and record what remains.
+
+Use the original review report only for those reading tasks. Use corrected F findings for the brief. The other provider owns the final simulation. Do not add a replacement Session 3 or extend the fixed timetable.
+
+**Core timing:** 5 / 5 / 6 / 4 / 12 / 8 / 7 / 8 / 7 / 4 / 7 / 4 / 13 = **90 minutes**. Preserve independent drafting, peer review, the fifteen-minute Snapshot and targeted retry time.
+
+</div>
