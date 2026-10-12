@@ -14,3 +14,4 @@ The items below were deliberately not pushed. Everything else in the old preview
 4. **Previews for D2S2 to D4S2** (language pass, R snippets, map slides, extra charts) exist only as review decks; the live decks for those sessions are still the old ones.
    Not yet promoted. Promoting means swapping each deck and its worksheet, as was done for D2S1.
 5. **Handoff:** the HANDOFF.md entries about the map fix and the cleaning split were dropped when pulling; add a short entry if wanted.
+6. **PDF/PPT slide downloads (`docs/exports/*.pdf` and `*.pptx`, 12 Oct 2026):** these were built from earlier deck versions and are not linked from the hub. Re-export all 11 selected decks from the final live HTML, then decide where to link them (the hub currently has only the two HTML deck zips). Update `GreenWaste_decks_days*.zip` at the same time if any deck changes.
