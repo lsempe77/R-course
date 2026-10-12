@@ -1,5 +1,6 @@
 /* This prototype reuses the established review type scale with a separate scope. */
 .reveal .s2-review .review-svg { max-height:300px; }
+.reveal #s2-p04 .review-svg { max-height:260px; }
 .reveal .s2-review .reading-table { font-size:23px; }
 .reveal .s2-review .reading-table th,.reveal .s2-review .reading-table td { padding:10px; }
 .reveal .s2-review .comparison-pair { display:grid;grid-template-columns:1fr 1fr;gap:32px;margin:20px 0; }

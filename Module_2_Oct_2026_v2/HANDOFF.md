@@ -1,5 +1,47 @@
 # Handoff: moving Module 2 to the simple GreenWaste case
 
+## Deployment confirmed, 12 October 2026
+
+The complete teaching reconciliation below was committed and pushed as [`89c2577`](https://github.com/lsempe77/R-course/commit/89c25776e12aac9928d080bf7785f7ec5fe0336b); the remote `main` SHA matched. Cloudflare Workers `module2`, GitHub build, deploy and report-build-status checks all succeeded by 00:55:54 UAE (11 October, 20:55:54 UTC). The applied rollout safety stash was dropped only after the commit/push succeeded. Unrelated local files were not staged.
+
+Final validation passed all eleven canonical source/output mappings and screen counts, six alternate routes, comparison topic pairs, material links and mobile hub/guide. Retained Day 1 hybrids and Day 2 S1 additionally passed bounds/logo/control checks; the S3 webR regression again returned -1,014. The refreshed ZIPs were checked byte-for-byte for 34 current deck/material entries, with exactly six plus five decks and no obsolete revised-session Word packs. The earlier broader package check also covered the bundled dataset. All worksheet/supplementary exact print counts and seven promoted-session webR checks passed during the rollout.
+
+Use [README.md](README.md) and the [current teaching guide](../docs/teaching_materials.html) for selected source names, routes, counts and delivery instructions. Deployment success is verified; authenticated public content was not independently inspected because of the password gate. Earlier statements below saying "local", "pending" or "not pushed" describe their historical checkpoint, not current status.
+
+## Full teaching-version reconciliation, 11 October 2026
+
+Lucas requested auditing all sessions and pushing all revised teaching versions. Main was refreshed before work; Fiona's `8079760` and the subsequent seventeen-screen Day 2 Session 1 correction are retained. During validation Fiona pushed `834aa05`, correcting the shared map and splitting the Day 1 Session 2 cleaning exercise into two data/words-flip slides. Pending work was safely stashed, main fast-forwarded, and changes reapplied. Source changes merged cleanly; the only conflict was generated Day 1 Session 2 HTML, resolved by rendering the merged source. All selected decks that use the shared map were rerendered. Her new cleaning activity is preserved.
+
+The audit measured actual Reveal screens, including each title:
+
+| Session | Old teaching screens | Current screens | Teaching source |
+|---|---:|---:|---|
+| Day 1 S1 | 19 | 19 | `Oct12_session1_hybrid.qmd` |
+| Day 1 S2 | 21 | 22 | `Oct12_session2_review.qmd` |
+| Day 1 S3 | 20 | 20 | `Oct12_session3_hybrid.qmd` |
+| Day 2 S1 | 17 | 17 | `Oct13_session1_review.qmd` |
+| Day 2 S2 | 11 | 16 | `Oct13_session2_review.qmd` |
+| Day 2 S3 | 14 | 20 | `Oct13_session3_review.qmd` |
+| Day 3 S1 | 12 | 18 | `Oct14_session1_review.qmd` |
+| Day 3 S2 | 11 | 20 | `Oct14_session2_review.qmd` |
+| Day 3 S3 | 14 | 17 | `Oct14_session3_review.qmd` |
+| Day 4 S1 | 12 | 13 | `Oct15_session1_review.qmd` |
+| Day 4 S2 | 10 | 14 | `Oct15_session2_review.qmd` |
+
+Seven additional canonical routes were stale. The alternate Day 3 S1/S3 and Day 4 S2 `_live` routes also served older decks and now match their canonical outputs. Day 1 S1/S3 are intentionally different from the separate review candidates: retain Fiona's hybrids and the original printed worksheets. Day 1 S2 retains Fiona's revised seven-page Word worksheet; its hybrid/flex alternatives remain unselected. Fresh Day 1 S2 deck and worksheet text was compared with the selected published version before changing layout: the text matched. Its Word worksheet content is unchanged; the HTML print typography now also fits seven pages. Decision-card source labels are refreshed from Fiona's latest source.
+
+Latest sources for the seven promoted sessions and all related worksheets/cards/questions/evidence/report/findings/retries/trainer keys were rendered. Canonical worksheet links, report/findings links, trainer references, downloaded decks and full-week print package now use the same versions. The obsolete trainer packs and classroom brief are no longer advertised for revised sessions. Use `docs/teaching_materials.html`, linked from the main hub, for source names, exact screen/print counts and distribution guidance; embedded speaker scripts provide current timings.
+
+Old canonical decks, alternate live decks and old plain/live preview HTMLs are preserved byte-for-byte under `docs/preview/archive/`. Former preview/current-comparison bookmarks now show explicit historical-version notices. All comparison hubs use the current canonical deck on the right and the archived source on the left; topic indices and labels are reconciled, including the intentional Day 1 hybrids.
+
+The full audit exposed logo collisions, overflowing questions and HTML worksheets spilling onto extra pages after wording changes. Compact headings/captions and scoped table/figure spacing repair those slides without removing model rows or tasks. Print typography and concise redundant wording preserve the source facts and question numbering. All seven promoted decks pass 1280x720 bounds, logo, reveal/choice/swap/table-control checks. Five actual webR runs produced the required -721 RDD jump, -1,029 matched difference, ratio 1.86 / NPV 1,549.97, percentage summaries 49.5 / 58.6, and pilot saving interval 862 to 1,167 AED. Exact PDF page counts are checked for every worksheet and supplementary output. R assertions verify the underlying results, five economic scenarios, eight-item evidence bank, score-at-or-below-58 eligibility and worked brief within its 150-word limit.
+
+The Days 1-2 and Days 3-4 download archives contain exactly six and five current browser decks, respectively. Obsolete alternate deck entries are removed, not left as duplicate historical presentations. Revised-session worksheets and keys are checked byte-for-byte against published outputs; current package instructions distinguish participant sources from private trainer keys and delayed results. Original Day 1 printed materials remain available as required.
+
+Final checks also cover all nineteen Day 1 S1 hybrid screens, twenty Day 1 S3 hybrid screens and seventeen Day 2 S1 screens, including heading/logo clearance and opened controls. Dense AI-prompt paragraph spacing is scoped to the retained S1 hybrid; the full prompt remains intact. The S3 regression Run Code box again produced the pilot coefficient -1,014. These layout corrections do not change the printed Day 1 worksheets, model results or screen counts.
+
+The older status entries below are historical. In particular, the October 6 `publish_live.py` restores baseline preview/Word bundles and must not be used to publish this revised week.
+
 ## Correcting the Day 2 Session 1 teaching route, 11 October 2026
 
 Lucas identified that the teaching route still served the old eleven-screen deck rather than the revised seventeen-screen deck. Fiona's latest commit `8079760` was fast-forwarded into main before rendering; her revised stacking code, timeline and wording are preserved.

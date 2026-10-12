@@ -1,8 +1,14 @@
 # Abu Dhabi Impact Evaluation Training — Module 2
 
-> **Revision plan:** `SLIDE_HANDOUT_REVIEW_PLAN.md` (this folder) is the master plan for revising slides and handouts; read it before editing any session. `REVIEW_NOTES.md` holds Fiona's earlier review notes for reference.
+> **Current entry point:** [README.md](README.md) lists the selected teaching sources, routes, screen counts and safe publishing workflow. [SLIDE_HANDOUT_REVIEW_PLAN.md](SLIDE_HANDOUT_REVIEW_PLAN.md) records the rollout and historical review decisions; [REVIEW_NOTES.md](REVIEW_NOTES.md) preserves Fiona's earlier notes.
 
-## Where things stand (9 October 2026)
+## Where things stand (12 October 2026)
+
+All eleven selected teaching sessions are deployed in `89c2577`; Cloudflare and GitHub checks succeeded at 00:55:54 UAE. Day 1 S1/S3 use the retained worksheet-aligned hybrids, Day 1 S2 uses Fiona's latest 22-screen review deck and seven-page worksheet, and Days 2-4 use the selected review sources. The final simulation is supplied separately. Matching materials, downloads, comparisons and archives are reconciled. Local browser/webR/print validation passed; authenticated live content was not independently inspected behind the password gate.
+
+The [current teaching guide](../docs/teaching_materials.html) and [README.md](README.md) supersede older source maps, print-generator instructions, timing proposals and incomplete-preview lists below. Do not run the October 6 publisher or session reverts to publish the revised week.
+
+### Historical status (9 October 2026)
 
 - **Previews (`*_review.qmd`)**: language pass from `PREVIEW_CHANGE_NOTES.md` sections 1 to 7 is applied in source for the 7 existing previews (Day 1 S1 to S3, Day 2 S1 and S3, Day 3 S1 and S2). Not yet re-rendered on a full toolchain and not published: `docs/preview/` still shows the earlier versions. Section 8 additions (8B, 8C, 8E, 8G, 8H) are also applied in source. Added slides: D1S2 four (file, pilot removal, exploration, cleaning), D1S3, D2S1 and D2S3 one regression-code slide each, six map slides, D3S2 scatter and forest plot. Review decks rendered in the container with no errors; webR code boxes, fonts and A4 print fit still need checking on a full toolchain.
 - **Still to do, in order**: (1) Fiona and Lucas review the edited sources; (2) re-render on a machine with Quarto, fonts and the webR extension, check slide fit (1280x720) and A4 worksheet fit, and run the webR code boxes; (3) copy to `docs/preview/`, then promote to the live routes with `review_2026_10_06/publish_live.py` once approved; (4) build the missing previews: **Day 2 S2 (regression discontinuity)**, Day 3 S3 and Day 4 S1 to S3, applying the same language rules; (5) section 8 content additions (see `PREVIEW_CHANGE_NOTES.md`); (6) open questions in section 9 (negative costs for Lucas, time budgets, snippet style).
@@ -34,7 +40,7 @@ In general, we should try to include some real examples of AI making mistakes wh
 
 - **Show code on the slides that teach the mechanics** (computing the estimator, running the regression, visualising the result, testing an assumption): set `echo: true` on those chunks so the code is visible, and let the chunk produce its table or figure. Keep those code chunks short and readable, and use a two-column layout (code beside the output) so a code slide still fits within 1280x720.
 - **Keep the rest of the deck clean.** Framing, hero numbers, questions, the AI snapshot and closing slides carry no code (leave the YAML default `echo: false` and opt in per chunk).
-- **Running code live is optional for now.** Showing the code on the slide is enough. A real "press play" (via the `quarto-live` / webr extension, which runs R in the browser) is a possible future add-on, not required; running chunks from RStudio is not a clean presentation view.
+- **Trainer Run Code boxes are implemented.** Use webR for the selected live demonstrations, rehearse on the venue network and retain printed result tables as the offline fallback. Static render-time R chunks do not provide a runnable box. Participants still do not need to code.
 - Participants are never asked to write, run, or debug anything.
 
 **The test for any slide:** would a director-general who has never opened R get value from this slide? Seeing the code run and being walked through what it does counts as value; being expected to write or fix it does not.
@@ -43,7 +49,9 @@ In general, we should try to include some real examples of AI making mistakes wh
 
 ---
 
-## Session Map
+## Historical Session Map
+
+Do not select teaching sources from this older table. Use the eleven source/route mappings in [README.md](README.md); a `_live` URL does not imply a `_live.qmd` source.
 
 Filenames follow `[Monthday]_session[#].qmd`. **Lucas's six sessions (1, 3, 5, 7, 9, 11) now live in `[Monthday]_session[#]_live.qmd`**: those are the sources that publish, and the plain `.qmd` of the same session is retired (kept for reference, not published; its old URL forwards to the live deck). "Legacy source" is the file in `sessions_in_Abu_Dhabi` to adapt from — several sessions have no legacy source and are built from scratch.
 
@@ -109,28 +117,24 @@ Run `setup_packages.R` once in RStudio (`source("setup_packages.R")`) before ren
 
 ### Rendering and Publishing
 
-**One copy of each deck, in `docs/`.** GitHub Pages serves `docs/` on `main` (legacy source; it cannot be set to the repo root while `docs/` is used). The deck is **not** also kept beside the `.qmd` — that duplicate was removed on 2026-09-22. Render, then move the file into `docs/`:
+**Publish the selected source to its canonical route.** Cloudflare Workers `module2` serves `docs/` at 3ie.academy behind a password gate. Pushes to `main` trigger deployment checks. Render in place, then copy to the route mapped in [README.md](README.md), refreshing its review output and matching materials where applicable:
 
 ```powershell
 $env:PATH = "C:\Program Files\R\R-4.4.1\bin;C:\Users\LucasSempe\AppData\Local\Programs\Quarto\bin;" + $env:PATH
 Push-Location Module_2_Oct_2026_v2
-quarto render Oct12_session1.qmd
-Move-Item Oct12_session1.html ..\docs\ -Force
+quarto render Oct13_session1_review.qmd
+if ($LASTEXITCODE -ne 0) { throw "Quarto render failed" }
+Copy-Item Oct13_session1_review.html ..\docs\Oct13_session1.html -Force
+Copy-Item Oct13_session1_review.html ..\docs\preview\Oct13_session1_review.html -Force
 Pop-Location
 ```
 
-- **Render only the decks whose content changed.** Each is 3.4–7 MB, so a full re-render is ~50 MB of git churn for no benefit; an untouched deck renders byte-identical.
+- **Render affected sources only.** Shared helper, map or stylesheet changes require every affected selected deck to be rerendered. Do not assume untouched outputs are byte-identical across toolchains.
 - **Do not use `--output-dir ../docs`.** It does write to `docs/`, but on this OneDrive path it reliably exits 1 with `unable to open database file ... deno-kv-file` (SQLITE_CANTOPEN), which makes a real render failure indistinguishable from a spurious one. Render in place and move.
 - **The exit code is the only trustworthy signal.** `Select-String` and grep-style tools truncate these decks' 3.5 M-character minified lines and report 0 matches regardless; use `[IO.File]::ReadAllText($p).Contains($s)` instead.
-- **Confirm the live page, do not assume the push worked.** Pages builds take ~30–60 s:
-
-```powershell
-$r = Invoke-WebRequest https://sempe.dev/R-course/Oct12_session1.html -UseBasicParsing
-$r.StatusCode; $r.Content.Contains("a phrase only the new content has")
-```
-
-- **Add every new deck to `docs/index.html`.** The landing page is hand-maintained and does not discover files; a deck that is published but unlinked is invisible. Lucas's six sessions link to `docs/<deck>_live.html`; `docs/<deck>.html` for those six is a small page that forwards to the live deck, so old links keep working.
-- **Checking a live deck.** Serve it (`quarto preview`, or any local web server); a live cell does not run from a double-clicked file. After a render, check every slide still fits 1280x720 with all fragments shown, and open each Run-button slide on a fresh page to prove it runs on its own (the setup cell defines everything a later slide needs).
+- **Confirm deployment separately from pushing.** Check remote SHA and successful Cloudflare/GitHub checks for that SHA. A password-gated response does not verify authenticated contents; disclose that limitation.
+- **Keep distribution surfaces aligned.** Update hub, teaching guide, matching handouts/private keys, alternate routes, comparison topic indices and affected ZIP entries together. Do not restore old hub backups or select sources using filename suffixes alone.
+- **Checking a live deck.** Serve it (`quarto preview`, or a local web server). Check actual Reveal screen count, 1280x720 bounds with fragments/controls opened, heading/logo clearance and code-editor width. Click Run Code and verify the actual output. Check exact worksheet/supplementary A4 PDF page counts and ZIP entry bytes.
 
 ### Presenting — no R needed on the day
 
@@ -139,7 +143,7 @@ The rendered `.html` **is** the presentation. R and Quarto are only needed to *b
 - **To present:** double-click the `.html`. It opens in any browser, on any machine, online or offline. Arrow keys move between slides.
 - **Speaker notes:** press **S** for presenter view — notes, timer, and next-slide preview on your laptop while the projector shows the slides.
 - **Overview of all slides:** press **Esc** or **O**.
-- **To send it to someone:** send the single `.html` file. Nothing else. (This only works because of `embed-resources: true` above.)
+- **To send it to someone:** use the current deck ZIPs, including the bundled GreenWaste CSV. Embedded visual assets support static viewing offline, but webR and external packages still need internet; use the printed results when unavailable.
 - **For a PDF:** append `?print-pdf` to the URL in Chrome, then Print → Save as PDF.
 
 ### The pptx export is lossy — design around it

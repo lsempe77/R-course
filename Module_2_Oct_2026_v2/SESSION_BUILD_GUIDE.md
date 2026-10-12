@@ -1,5 +1,17 @@
 # Module 2 · Session Build Guide
 
+## Current teaching build, 12 October 2026
+
+The eleven selected teaching bundles are deployed in `89c2577`, with successful Cloudflare/GitHub checks. Start with [README.md](README.md) for the selected source/route/count table and safe publishing workflow, and [HANDOFF.md](HANDOFF.md) for validation evidence. Do not build from a plain or `_live.qmd` source merely because its name resembles the URL.
+
+Day 1 S1/S3 retain Fiona's printed-worksheet hybrids; Day 1 S2 uses her latest 22-screen review deck; Days 2-4 use selected review sources. All use the fictional simple GreenWaste case. The outline, Police/traffic cases and "remaining decks" descriptions below are historical examples, not the current teaching plan. Use embedded speaker scripts for timings and [PRINT_SHEETS_TRAINER.md](PRINT_SHEETS_TRAINER.md) for print distribution.
+
+Validate actual Reveal screens, content bounds and logo clearance at 1280x720, all opened controls and required webR outputs. Verify exact A4 PDF pagination and matching download bytes. Shared map/helper/style changes require rerendering every affected selected deck. Static R chunks do not create a runnable R box.
+
+Do not run the historical October 6 publisher, whole-hub reverts or blanket legacy Word generator to publish the revised week. Keep canonical decks, matching materials, hub/guide, comparisons and ZIPs synchronized; confirm remote SHA and successful deployment checks. Password-gated HTTP responses do not prove authenticated deck contents.
+
+## Historical build reference
+
 Reference for building the remaining Module 2 decks (Day 1 Session 3 onward) so
 they match the Session 1 deck we built. Everything here was verified against a
 rendering deck, not assumed. Where a fact was checked, the check is named.

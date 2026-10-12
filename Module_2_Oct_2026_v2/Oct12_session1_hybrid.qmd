@@ -239,7 +239,7 @@ html_out(paste0('<div id="s1-interval-views"><div data-variant>',review_interval
 5 minutes. WORKSHEET section 4: one minute to box the interval and answer. State that the interval is for the estimated MEAN CHANGE. Key: it is not the range for individual businesses, and it does not cover every source of bias. The toggle shows clearly hypothetical repeated-sample intervals: the procedure covers a fixed true quantity about 95% of the time across many repeated samples, under assumptions; it is not a 95% probability for this particular interval. Transition: "Does the same estimate always carry the same uncertainty?"
 :::
 
-## Three estimates are identical. Is the uncertainty the same? {#s1-h10 .reader-slide .s1-review}
+## Same estimate. Same uncertainty? {#s1-h10 .reader-slide .s1-review}
 
 ```{r, results='asis'}
 html_out(review_intervals(rep(1100,3),c(1080,900,400),c(1120,1300,1800),c('A: narrow','B: wider','C: much wider'),xmax=2000,rule=1000))
@@ -271,7 +271,7 @@ html_out(review_null())
 5 minutes. WORKSHEET section 5: one minute individually. Explain the hypothetical illustration first: zero mean change at the centre; the p-value counts outcomes at least as extreme in both directions. The example p of 0.012 is hypothetical and is not the p < 0.001 in the GreenWaste table. Key: it is neither the probability that GreenWaste works nor proof of cause. Do not say it is the probability that the result happened by chance. Transition: "A small p-value and a large effect are different things."
 :::
 
-## A result can be statistically significant, but is it large enough to matter? {#s1-h12 .reader-slide .s1-review}
+## Statistically significant. Large enough to matter? {#s1-h12 .reader-slide .s1-review}
 
 ```{r, results='asis'}
 p_big <- 2*pnorm(-1100/(1200/1.96))
@@ -290,7 +290,7 @@ Discuss with your neighbour. Which result is statistically significant? Which co
 4 minutes. ROOM POLL 1 (room_poll.py, Before phase only): choices A, B, Neither; ask for a short reason. Close voting, then discuss. If phones cannot reach the server, use three labelled cards. No worksheet question. Key: A is statistically significant but far below our rule of at least a 1,000 AED reduction; B could matter but is imprecise, and its interval crosses zero and the rule. Absence of statistical significance is not evidence of no effect. Neither result supplies a causal design by itself. Transition: "Return to the GreenWaste table and our rule."
 :::
 
-## Costs fell by 669 AED. Is that at least a 1,000 AED reduction? {#s1-h13 .reader-slide .s1-review}
+## Does a 669 AED fall meet our 1,000 AED rule? {#s1-h13 .reader-slide .s1-review}
 
 ```{r, results='asis'}
 html_out(review_interval_svg())
@@ -322,19 +322,19 @@ Can your partner trace each part of your interpretation to the table?
 10 minutes. Three minutes compare and correct sections 1 to 5; three minutes check section 6; four minutes source-based feedback. Do not repeat every question as a new worksheet round. Listen for: the mean does not describe everybody; an effect is not a change; a coefficient belongs to a named row with units; the interval is not the spread of individual businesses; the p-value is not causality. Model reading: mean annual waste management cost fell by 669 AED over 12 months among participant businesses, interval 654 to 684 AED, below our rule, and without comparison businesses the table cannot show that GreenWaste caused the fall.
 :::
 
-## An AI explains the table. Which parts does the table support? {#s1-h15 .reader-slide .s1-review}
+## Which AI claims does the table support? {#s1-h15 .reader-slide .s1-review}
 
-<p class="caption">Naive prompt (a prompt with no context, as a busy person might type it): “Explain this table and advise whether to expand GreenWaste.” This response was written for the exercise. It is not a real AI answer. It is also printed on the AI handout.</p>
+<p class="caption">Authored exercise response, not a real AI answer. Full prompt and response: AI handout.</p>
 
 ```{r, results='asis'}
 html_out(paste0('<div class="ai-reading">',review_paragraphs(hy_ai),'</div>'))
 ```
 
 ::: {.ask}
-On the AI handout, underline the claims that the regression table supports. Cross out the claims that it does not support. **Use the table, not how convincing the paragraph sounds.**
+On the AI handout, mark supported claims and cross out overclaims. **Check the table.**
 :::
 
-<p class="caption"><strong>Room vote after marking:</strong> The second paragraph says the programme can be credited with the reduction. Does the table support that claim: yes, no or not sure?</p>
+<p class="caption"><strong>Room vote:</strong> Does the table credit GreenWaste with the fall: yes, no or not sure?</p>
 
 ::: {.notes}
 8 minutes. AI SNAPSHOT, stage 1: four minutes individually or in pairs on the AI handout, then ROOM POLL 2 (room_poll.py: yes, no, not sure; close voting before showing totals), then three minutes debrief. Do not run the naive prompt. Supported: the means, the change, the interval and the p-value, and that the recorded fall is below the rule. Unsupported: that a before-and-after comparison accounts for all other changes and credits the programme; that a narrow interval proves robustness or that individual businesses can expect savings in this range; that a tiny p-value overrides the rule and justifies expansion. Monitoring is sensible but does not repair the unsupported claims.
@@ -343,13 +343,11 @@ On the AI handout, underline the claims that the regression table supports. Cros
 ## Ask the AI for an explanation you can check. {#s1-h16 .reader-slide .s1-review}
 
 ```{r, results='asis'}
-html_out(paste0('<p class="caption"><strong>Improved prompt</strong></p><div class="better-prompt">',review_paragraphs(hy_prompt),'</div>'))
+html_out(paste0('<p class="caption">Copy the improved prompt and table from the AI handout into Microsoft Copilot.</p><div class="better-prompt">',review_paragraphs(hy_prompt),'</div>'))
 ```
 
-Use the **AI handout** to copy the prompt and the table into **Microsoft Copilot**. Keep the AI good-practice card beside you.
-
 ::: {.ask}
-Which question that the AI asked helped you most? Which claim still needs checking against the table?
+Which AI question helped? Which claim still needs a table check?
 :::
 
 ::: {.notes}

@@ -11,7 +11,7 @@ format:
         body{font:16px/1.4 Arial,sans-serif;color:#111418;margin:0;background:#eef2f6}main{max-width:850px;margin:auto}h1,h2,h3{color:#063360}h1{font-size:26px}h2{font-size:22px;margin:0 0 12px}h3{font-size:18px;margin:14px 0 6px}p{margin:8px 0}.sheet-page{background:white;padding:28px 40px;margin:20px 0;box-sizing:border-box;min-height:950px}.reading-table{width:100%;border-collapse:collapse;font-size:13px}.reading-table th,.reading-table td{padding:6px;border-bottom:1px solid #D5DEE8;text-align:left}.reading-table thead{background:#063360;color:white}.writing{height:45px;border-bottom:1px solid #c8d6e5;margin:6px 0}.writing.tall{height:70px}.review-svg{display:block;width:100%;height:130px}.caption{font-size:12px;color:#545860}.ai-source{border-left:3px solid #7da1c4;padding-left:16px}.prompt{border-top:2px solid #215a9e;padding-top:8px;font-size:14px}header button{font:inherit;padding:8px 15px;color:#063360;background:white;border:1px solid #215a9e;cursor:pointer}
         @page{size:A4;margin:14mm}@media print{body{background:white;font-size:11pt;line-height:1.3}main{max-width:none}.sheet-page{padding:0;margin:0;min-height:0;break-after:page}.sheet-page:last-child{break-after:auto}header,#title-block-header{display:none}h2{font-size:17pt}h3{font-size:12pt}.writing{height:10mm}.writing.tall{height:16mm}.reading-table{font-size:9pt}.reading-table th,.reading-table td{padding:5px}.review-svg{height:115px}.caption{font-size:9pt}.prompt{font-size:10pt}}
         </style>
-        <style>.writing.part{height:30px;margin:2px 0}.table-title{margin:10px 0 4px}@media print{.writing.part{height:8mm}}</style>
+        <style>.writing.part{height:30px;margin:2px 0}.table-title{margin:10px 0 4px}@media print{body{font-size:10.5pt;line-height:1.2}p{margin:6px 0}h3{margin:10px 0 5px}.writing.part{height:7mm}.source-page{line-height:1.15}.sheet-page table{width:100%;border-collapse:collapse;font-size:9pt;margin:4px 0}.sheet-page th,.sheet-page td{padding:5px;border-bottom:1px solid #D5DEE8}}</style>
 knitr:
   opts_chunk:
     echo: false
@@ -25,7 +25,7 @@ source('day3_session1_review.R', encoding='UTF-8')
 
 <header><button onclick="window.print()">Print worksheet</button></header>
 
-<div class="sheet-page">
+<div class="sheet-page source-page">
 
 ## Page 1 | H7-A: The economic model summary
 
@@ -33,7 +33,7 @@ GreenWaste is a fictional training case. Use this model summary as your source f
 
 ### §1 | Where does the benefit input come from?
 
-The city difference-in-differences study compares the change in annual waste management cost in 4,794 participant businesses with the change in 5,206 comparison businesses that did not receive GreenWaste. The difference between the two changes is a reduction of **`r fmt(model$saving)` AED per participant business**, measured 12 months after GreenWaste. To call this a causal saving, we need the parallel trends assumption and the other conditions for the comparison. The estimate is provisional and is not a guarantee. The other methods compare different groups of businesses in different ways.
+The city difference-in-differences study compares annual waste-cost changes for 4,794 participant businesses and 5,206 comparison businesses without GreenWaste, at 12 months. The difference is a reduction of **`r fmt(model$saving)` AED per participant business**. A causal reading needs parallel trends and the other conditions for the comparison. This is a provisional estimate, not a guarantee. Other methods compare different groups in different ways.
 
 ```{r, results='asis'}
 html_out(d7_inputs('Table I: Inputs to the model and where each comes from'))
@@ -47,7 +47,7 @@ The model assumes that equipment delivery costs **1,800 AED per participant busi
 
 This model mixes two points of view. It compares a cost to the authority (equipment delivery) with savings to businesses. It is not a full appraisal of the authority's budget, and it is not a full social cost-benefit analysis.
 
-**Table P: Costs and benefits in the model: who bears each one and whether the model includes it**
+**Table P: Who bears the costs and benefits, and what is included?**
 
 | Who and what | Included in the model? | Evidence we would need |
 |---|---|---|
@@ -63,7 +63,7 @@ The scenarios change the model's inputs. They do not change any observed fact ab
 
 An extra check shows that a discount rate of 40% would give a ratio of **`r fmt(ratio(rate=.4),2)`**, with all other inputs unchanged. Delaying the savings by three more years (years 5 to 9) at 5% gives a ratio of **`r fmt(ratio()/1.05^3,2)`**, which is still above 1. These checks do not show which discount rate the government would use, or how long a delay is realistic. A ratio above 1, or a positive net present value, depends on the model and does not prove value for money. Our rule of at least a 1,000 AED reduction in annual waste management cost is a different test and is not a benefit-cost ratio threshold.
 
-<p class="caption">Source: GreenWaste city data and the economic model. The model inputs, the cost boundary and the scenarios are fictional. Paragraphs §1 to §4 and Tables I, P, F and O, and the scenario results table, are the material to inspect.</p>
+<p class="caption">Source: synthetic GreenWaste city records and fictional economic assumptions. Inspect §§1 to 4, Tables I, P, F and O, and the scenario results table.</p>
 
 </div>
 

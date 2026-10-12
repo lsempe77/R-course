@@ -30,7 +30,7 @@ knitr:
 source('day2_session2_review.R', encoding='UTF-8')
 ```
 
-## We compare businesses on either side of the score cut-off of 58. {#d2s2-p01 .reader-slide .s1-review .d2s2-review}
+## We compare businesses just below and above score 58. {#d2s2-p01 .reader-slide .s1-review .d2s2-review}
 
 ```{webr}
 #| context: setup
@@ -224,7 +224,7 @@ Which evidence request could most change your judgement?
 5 minutes. Threeindependenttwo paircheck. Rulefollowedsupported; windowdisclosed/localpopulationclear; ageconcern; manipulationunknown; citywideeffectnotestablished. Cross-referenceparagraphs1-4. Nosingleforcedpolicyanswer. Findreasonsnotonlyticks. Transition: separatecredibilityfromthedecisionminimum.
 :::
 
-## Does the local reduction meet our rule of at least a 1,000 AED reduction? {#d2s2-p12 .reader-slide .s1-review .d2s2-review}
+## Does the local reduction meet our 1,000 AED rule? {#d2s2-p12 .reader-slide .s1-review .d2s2-review}
 
 ```{r, results='asis'}
 html_out(d5_interval())
@@ -283,6 +283,5 @@ Use the **final box on worksheet page 4**.
 Next: finding comparisons with similar recorded characteristics.
 
 ::: {.notes}
-6 minutes. Threeindependentonepairpurposechecktwofeedback. Requirelocalfittedcomparisonat58,units,conditionalcausalreadingandthresholdlimit. Requestscoresetting/influence,agejump/otherpredeterminedchecks,windowortransportabilitywithreason. Noclaimcutoffislotteryorrepresentative. Total90. ProductionQMD/handout/routesunchanged.
+6 minutes. Threeindependentonepairpurposechecktwofeedback. Requirelocalfittedcomparisonat58,units,conditionalcausalreadingandthresholdlimit. Requestscoresetting/influence,agejump/otherpredeterminedchecks,windowortransportabilitywithreason. Noclaimcutoffislotteryorrepresentative. Total90. Use this teaching source with its matching six-page worksheet and eight group cards.
 :::
-

@@ -46,7 +46,7 @@ map_highlight <- "pilot"
 1 minute. Point to the pilot district only. The lottery is what makes this study different from the city comparisons. The same map appears in every methods session so that participants know the population before the details start.
 :::
 
-## We have two city comparisons. Why would a lottery be better? {#s3-p01 .reader-slide .s1-review .s3-review}
+## Why would a lottery give a fairer comparison? {#s3-p01 .reader-slide .s1-review .s3-review}
 
 ```{webr}
 #| context: setup
@@ -71,7 +71,7 @@ Use the summary of the two comparisons from Session 2. Now we move to the **pilo
 4 minutes. One minute recall, two minutes pairs explain the two missing comparisons, one minute bridge. No new city arithmetic or repeat baseline reveal. Pilot is a different population, not the city's known true effect. Start webR setup early for one optional trainer draw. Printed activity is independent of internet. Transition: there were 400 eligible businesses but only 200 places.
 :::
 
-## The pilot had 400 eligible businesses but only 200 places in the programme. {#s3-p02 .reader-slide .s1-review .s3-review}
+## The pilot had 400 businesses and 200 places. {#s3-p02 .reader-slide .s1-review .s3-review}
 
 ```{r, results='asis'}
 html_out(s3_flow())
@@ -105,9 +105,7 @@ Discuss with your group; there is no written question for this slide. Why does t
 
 This practice lottery has **20 businesses and 10 places**. The slips show **manager ages before the programme**.
 
-Draw ten age slips for the treatment group. The other ten slips are the control group. Compare the mean manager age of the two groups. Put all the slips back, and draw again.
-
-**R code**
+Draw ten treatment slips; the rest are controls. Compare mean ages. Replace all slips and redraw.
 
 ```{webr}
 #| echo: true
@@ -146,7 +144,7 @@ Predict first: would the larger groups usually be closer in mean age?
 6 minutes. Each dot is the treatment mean age minus the control mean age in one practice allocation; same horizontal scale. For N=20, take a random 20-record subset from the full age pool each time; for N=400 use full pool. This isolates sample-size variation; the physical slips used a fixed selected 20. Explain the display, not probability formulas. Reveal large draws and ask for a sample-size reflection. Larger groups usually closer, no guarantee for a specific draw; no p-value balance proof. Transition: inspect the pilot baseline rather than a redraw.
 :::
 
-## Were the treatment and control groups similar before GreenWaste? {#s3-p06 .reader-slide .s1-review .s3-review}
+## Were the groups similar before GreenWaste? {#s3-p06 .reader-slide .s1-review .s3-review}
 
 ```{r, results='asis'}
 html_out(s3_baseline())
@@ -237,7 +235,7 @@ Intercept + slope: 1,783 − 1,014 ≈ **769 AED**. Attribution depends on the l
 6 minutes. Annotate the table. Control group intercept is the mean cost after 12 months for the reference group; treatment coefficient is the treatment minus control difference. CI -1,167 to -862; ordinary least squares model matches canonical pilot source. Point to code/model note for mechanics, no need fit models. Show each column with native highlights. A causal reading depends on assignment/implementation/measurement and interference assumptions, not regression magic. Transition: a convincing saving does not settle the exact policy minimum.
 :::
 
-## Is the whole interval at or above our rule of a 1,000 AED reduction? {#s3-p09 .reader-slide .s1-review .s3-review}
+## Does the whole interval meet our 1,000 AED rule? {#s3-p09 .reader-slide .s1-review .s3-review}
 
 ```{r, results='asis'}
 html_out(s3_interval_svg('trial',TRUE))
@@ -278,7 +276,7 @@ html_out(s3_comparisons())
 Which comparison is best designed to estimate an effect? Which businesses does it describe?
 :::
 
-The pilot result does **not automatically apply to the city**, because the city's businesses and delivery conditions are different.
+<p class="caption">The pilot does <strong>not automatically describe the city</strong>: businesses and delivery differ.</p>
 
 ::: {.notes}
 6 minutes. This comparison table is on the slide only. No new arithmetic. Ask for comparison and population, not just ranking numbers. Stronger pilot design for eligible pilot businesses; do not use its estimate to prove city's before/after bias or city's true effect. All three costs measured after 12 months; city before/after uses its own baseline. Transition: decide what action the pilot evidence supports.
@@ -333,13 +331,11 @@ html_out(paste0('<p class="caption">Naive prompt (a prompt with no context, as a
 ## Ask the AI for a recommendation the pilot supports. {#s3-p15 .reader-slide .s1-review .s3-review}
 
 ```{r, results='asis'}
-html_out(paste0('<p class="caption"><strong>Improved prompt</strong></p><div class="better-prompt">',s3_paragraphs(hy3_prompt),'</div>'))
+html_out(paste0('<p class="caption"><strong>Improved prompt.</strong> Copy it from the AI handout into Microsoft Copilot.</p><div class="better-prompt">',s3_paragraphs(hy3_prompt),'</div>'))
 ```
 
-Use the **AI handout** to copy the prompt into **Microsoft Copilot**. Keep your AI good-practice card beside you.
-
 ::: {.ask}
-What improved compared with the draft you marked and with your own decision note? Which advice still needs checking against the pilot trial box on page 1?
+What improved? Check the advice against the **pilot trial box on page 1** and your own note.
 :::
 
 ::: {.notes}

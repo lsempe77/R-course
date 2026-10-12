@@ -30,7 +30,7 @@ knitr:
 source('day2_session3_review.R', encoding='UTF-8')
 ```
 
-## Who and what are we comparing? Participants and similar businesses. {#d2s3-map .reader-slide .s1-review .d2s3-review .case-map-slide}
+## We compare participants with similar businesses. {#d2s3-map .reader-slide .s1-review .d2s3-review .case-map-slide}
 
 ```{r, include=FALSE}
 map_highlight <- "participants"
@@ -92,7 +92,7 @@ Where is your pairing convincing? Where would you ask for more information?
 14 minutes. Distribute only page 1 of the cards (see the trainer print sheet). Optional seven volunteers with eighth group observing. Intended A2 B1 C3, comparison 4 unused. Ten minutes pair/record, four compare reasoning. Do not rematch on outcomes. Toy uses no replacement; full study permits reuse. This is a physical change of activity, not an additional scheduled break.
 :::
 
-## Reveal each business's cost, and keep your pairs unchanged. {#d2s3-p04 .reader-slide .s1-review .d2s3-review}
+## Reveal costs without changing your pairs. {#d2s3-p04 .reader-slide .s1-review .d2s3-review}
 
 You now receive the **reveal slips**. A reveal slip shows what one business's annual waste management cost was 12 months after GreenWaste.
 
@@ -144,7 +144,7 @@ Why are 4,794 matched pairs not 9,588 separate businesses?
 5 minutes. The diagram is an illustration; the counts come from the GreenWaste data. There are 9,588 rows in stacked matched sample but 5,379 unique businesses. Repeated controls contribute repeatedly to the comparison mean and require appropriate uncertainty accounting. Do not confuse a reused control with 440 separate measurements. Q2 page 3.
 :::
 
-## Did matching make the groups more alike on what we measured? {#d2s3-p07 .reader-slide .s1-review .d2s3-review}
+## Did matching make the measured features more alike? {#d2s3-p07 .reader-slide .s1-review .d2s3-review}
 
 ```{r, results='asis'}
 html_out(d6_balance())
@@ -154,7 +154,7 @@ html_out(d6_balance())
 Q3 on page 4: which gaps became smaller, and which difference remains?
 :::
 
-The matched comparison column counts a business **each time it is used**. The last column is the participant mean minus the matched comparison mean, divided by the standard deviation across all city businesses.
+Reused businesses count **each time they are used**. The gap is participant mean minus matched mean, in city standard deviations.
 
 ::: {.notes}
 7 minutes. Reference table is worksheet page 2. Full-city SD is descriptive scaling, not a universal pass/fail threshold or standard error. Filtration mean is the share of businesses with a filter. Age still differs by about 2.97 years; before-cost differs by about 161 AED. Cost was not matched on. Similar means are not identical distributions or evidence that all bias is absent.
@@ -198,7 +198,7 @@ This is the difference in annual waste management cost **12 months after GreenWa
 6 minutes. H6-A section 2, page 1. About 1,029 AED lower annual waste management cost 12 months after GreenWaste among city participant businesses than among selected comparison businesses. Business-clustered robust interval accommodates reuse, treating matches as given. It does not fully account for match selection or unmeasured bias. Population is the participants, not every national business.
 :::
 
-## We create the matched result in R from the matched sample. {#d2s3-p09b .reader-slide .s1-review .d2s3-review}
+## We create the matched result in R. {#d2s3-p09b .reader-slide .s1-review .d2s3-review}
 
 We create the table in R. The box shows the **R code** and the numbers it produces.
 
@@ -261,7 +261,7 @@ Does this calculation give us a difference, or does it prove the causal assumpti
 5 minutes. Predict, then one Run by the trainer. Hidden setup uses same standardisation, nearest neighbour and replacement as shared source. Calculation reproduces coefficient, not displayed robust interval. If browser is slow use paper result and maintain allocation. No participant coding.
 :::
 
-## What happens when manager age is left out of the matching? {#d2s3-p11 .reader-slide .s1-review .d2s3-review}
+## What changes when matching leaves out manager age? {#d2s3-p11 .reader-slide .s1-review .d2s3-review}
 
 ```{r, results='asis'}
 html_out(d6_results())
@@ -365,7 +365,7 @@ If you are not using Copilot, read the **prepared response on page 6** after you
 7 minutes. Stage 2. Two paste/run, three verify one correction and note one missing evidence request, two share. Participants use Microsoft Copilot; no setup required. Use fictional source only, shared AI good-practice card; do not upload sensitive records. No second-chat task. The paper alternative was written for the exercise, not an expected exact response. Check source citations, the numeric interval and the questions asked before any recommendation.
 :::
 
-## Close the study summary. Make a request you can defend. {#d2s3-p17 .reader-slide .s1-review .d2s3-review}
+## Close the source. Make a request you can defend. {#d2s3-p17 .reader-slide .s1-review .d2s3-review}
 
 Write in **Q6 on page 4**, without the study summary:
 

@@ -25213,7 +25213,7 @@ border-color: rgba(220, 220, 220, 0.3);
 
 </section>
 <section id="d2s1-map" class="slide level2 reader-slide s1-review d2s1-review case-map-slide">
-<h2>Who and what are we comparing? Participant businesses and comparison businesses in the city.</h2>
+<h2>We compare two groups of city businesses.</h2>
 <div class="case-map">
 <!-- The GreenWaste case map, shared by the Day 2 to Day 4 decks (included on the
      recap slide). Self-contained: it defines its own shops and emitter. Same picture as
@@ -25271,8 +25271,8 @@ GreenWaste helps businesses reduce their annual waste management costs. This map
     <text x="895" y="148">businesses took part</text>
     <rect x="875" y="215" width="300" height="178" rx="12" fill="#fff" stroke="#D5DEE8" stroke-width="2" />
     <text x="895" y="257" font-weight="700" fill="#063360">Everywhere else</text>
-    <text x="895" y="293">businesses scoring <tspan font-weight="700">58 or below</tspan></text>
-    <text x="895" y="323">took part</text>
+    <text x="895" y="293">businesses scoring</text>
+    <text x="895" y="323"><tspan font-weight="700">58 or below</tspan> took part</text>
     <text x="895" y="356" font-size="16" fill="#545860">the number under each business</text>
     <text x="895" y="377" font-size="16" fill="#545860">is its efficiency score</text>
   </g>
@@ -25311,7 +25311,7 @@ display:block!important;
 }</style></aside>
 </section>
 <section id="d2s1-p01" class="slide level2 reader-slide s1-review d2s1-review">
-<h2>Yesterday we found a saving from a lottery. Today we use another method and ask what else changed.</h2>
+<h2>Beyond the lottery: what else changed?</h2>
 <div class="cell" data-context="setup" data-autorun="true">
 <div>
 <div id="webr-1" class="exercise-cell">
@@ -25359,7 +25359,7 @@ display:block!important;
 }</style></aside>
 </section>
 <section id="d2s1-p02" class="slide level2 reader-slide s1-review d2s1-review">
-<h2>Costs changed in both groups. How much more did participant businesses’ costs fall?</h2>
+<h2>How much more did participants’ costs fall?</h2>
 <svg class="review-svg" viewbox="0 0 1100 330" role="img" aria-label="City mean annual waste management cost: participant businesses 1,432 to 763 AED; comparison businesses 2,258 to 2,401 AED. Two measurements only."><text x="150" y="28" fill="#215a9e" font-size="26">Participant businesses (4,794)</text><text x="620" y="28" fill="#545860" font-size="26">Comparison businesses (5,206)</text><line x1="150" x2="1020" y1="255.0" y2="255.0" stroke="#D5DEE8"></line><text x="130" y="262.0" text-anchor="end" font-size="25">0</text><line x1="150" x2="1020" y1="195.0" y2="195.0" stroke="#D5DEE8"></line><text x="130" y="202.0" text-anchor="end" font-size="25">1,000</text><line x1="150" x2="1020" y1="135.0" y2="135.0" stroke="#D5DEE8"></line><text x="130" y="142.0" text-anchor="end" font-size="25">2,000</text><line x1="150" x2="1020" y1="75.0" y2="75.0" stroke="#D5DEE8"></line><text x="130" y="82.0" text-anchor="end" font-size="25">3,000</text><line x1="500" x2="500" y1="60" y2="255" stroke="#7da1c4" stroke-dasharray="5 5"></line><text x="500" y="54" text-anchor="middle" font-size="22">Programme starts</text><line x1="260" x2="795" y1="169.1" y2="209.2" stroke="#215a9e" stroke-width="5"></line><circle cx="260" cy="169.1" r="7" fill="#215a9e"></circle><text x="260" y="155.1" text-anchor="middle" font-size="29" fill="#215a9e">1,432</text><circle cx="795" cy="209.2" r="7" fill="#215a9e"></circle><text x="795" y="241.2" text-anchor="middle" font-size="29" fill="#215a9e">763</text><line x1="260" x2="795" y1="119.5" y2="110.9" stroke="#545860" stroke-width="5"></line><circle cx="260" cy="119.5" r="7" fill="#545860"></circle><text x="260" y="105.5" text-anchor="middle" font-size="29" fill="#545860">2,258</text><circle cx="795" cy="110.9" r="7" fill="#545860"></circle><text x="795" y="96.9" text-anchor="middle" font-size="29" fill="#545860">2,401</text><text x="260" y="294" text-anchor="middle" font-size="26">Before</text><text x="795" y="294" text-anchor="middle" font-size="26">12 months after</text><text x="580" y="327" text-anchor="middle" font-size="25">Mean annual waste management cost per business (AED)</text></svg>
 <div class="ask">
 <p>Which change should we subtract from which?</p>
@@ -25411,7 +25411,7 @@ display:block!important;
 }</style></aside>
 </section>
 <section id="d2s1-p04" class="slide level2 reader-slide s1-review d2s1-review">
-<h2>We repeat the same calculation in R using all the records.</h2>
+<h2>We repeat the calculation in R.</h2>
 <p>We compare the mean <strong>changes in cost</strong> in R, using all the records. The box shows the <strong>R code</strong>.</p>
 <div class="cell">
 <div>
@@ -25442,7 +25442,7 @@ display:block!important;
 }</style></aside>
 </section>
 <section id="d2s1-p04b" class="slide level2 reader-slide s1-review d2s1-review">
-<h2>We create the regression table in R from a file with two rows per business.</h2>
+<h2>We create the regression table from paired records.</h2>
 <p>We create the table in R. The box shows the <strong>R code</strong> and the numbers it produces.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href></a><span class="co"># Stack the two periods so that each business has two rows.</span></span>
@@ -25481,7 +25481,7 @@ display:block!important;
 }</style></aside>
 </section>
 <section id="d2s1-p05" class="slide level2 reader-slide s1-review d2s1-review">
-<h2>Which row of the table shows the difference between the two changes?</h2>
+<h2>Which row shows the difference between changes?</h2>
 <p class="caption">City annual cost (AED), before and after. Reference: comparison businesses before GreenWaste.</p>
 <table class="reading-table caption-top" data-quarto-postprocess="true">
 <thead>
@@ -25572,7 +25572,7 @@ display:block!important;
 }</style></aside>
 </section>
 <section id="d2s1-p07" class="slide level2 reader-slide s1-review d2s1-review">
-<h2>Could the two groups have changed differently even without GreenWaste?</h2>
+<h2>Could the groups differ without GreenWaste?</h2>
 <div class="comparison-pair">
 <div>
 <h3>
@@ -25640,7 +25640,7 @@ display:block!important;
 }</style></aside>
 </section>
 <section id="d2s1-p09" class="slide level2 reader-slide s1-review d2s1-review">
-<h2>Can one measurement before the programme show a trend?</h2>
+<h2>Can one earlier measurement show a trend?</h2>
 <svg class="review-svg" viewbox="0 0 1100 262" role="img" aria-label="The GreenWaste city data have one measurement before and one 12 months after, so earlier trends cannot be checked."><line x1="250" x2="850" y1="125" y2="125" stroke="#7da1c4" stroke-width="4"></line><circle cx="250" cy="125" r="12" fill="#063360"></circle><circle cx="850" cy="125" r="12" fill="#063360"></circle><text x="250" y="60" text-anchor="middle" font-size="28">One measurement</text><text x="250" y="94" text-anchor="middle" font-size="28">before GreenWaste</text><text x="850" y="60" text-anchor="middle" font-size="28">One measurement</text><text x="850" y="94" text-anchor="middle" font-size="28">12 months after</text><text x="550" y="190" text-anchor="middle" font-size="27">There is no earlier sequence of measurements to compare.</text><text x="550" y="236" text-anchor="middle" font-size="25">The hypothetical histories A and B are not in the GreenWaste data.</text></svg>
 <div class="ask">
 <p>Could the GreenWaste data show whether earlier cost trends were similar?</p>
@@ -25661,7 +25661,7 @@ display:block!important;
 }</style></aside>
 </section>
 <section id="d2s1-p10" class="slide level2 reader-slide s1-review d2s1-review">
-<h2>The estimate is precise. Does it meet our rule of at least a 1,000 AED reduction?</h2>
+<h2>Precise estimate. Does it meet the 1,000 AED rule?</h2>
 <svg class="review-svg" viewbox="0 0 1100 240" role="img" aria-label="The difference between the two changes, shown as a reduction: 812 AED, 95 percent interval 792 to 833. Both are below our rule of at least a 1,000 AED reduction."><line x1="120" x2="1010" y1="150" y2="150" stroke="#545860"></line><text x="120.0" y="181" text-anchor="middle" font-size="26">0</text><text x="268.3" y="181" text-anchor="middle" font-size="26">200</text><text x="416.7" y="181" text-anchor="middle" font-size="26">400</text><text x="565.0" y="181" text-anchor="middle" font-size="26">600</text><text x="713.3" y="181" text-anchor="middle" font-size="26">800</text><text x="861.7" y="181" text-anchor="middle" font-size="26">1,000</text><text x="1010.0" y="181" text-anchor="middle" font-size="26">1,200</text><line x1="861.7" x2="861.7" y1="45" y2="150" stroke="#B8272C" stroke-width="3" stroke-dasharray="7 5"></line><text x="861.7" y="28" text-anchor="middle" font-size="26" fill="#B8272C">Our rule: 1,000</text><line x1="707.6" x2="737.6" y1="85" y2="85" stroke="#215a9e" stroke-width="8"></line><circle cx="722.6" cy="85" r="9" fill="#063360"></circle><text x="698.6" y="65" text-anchor="end" font-size="27">792</text><text x="746.6" y="65" font-size="27">833</text><text x="722.6" y="125" text-anchor="middle" font-size="27" font-weight="bold">Estimate 812</text><text x="565" y="229" text-anchor="middle" font-size="23">Reduction in annual waste management cost: difference between the two changes (AED)</text></svg>
 <div class="ask">
 <p><strong>Q4:</strong> How do the estimate and the interval compare with our rule of a reduction of at least <strong>1,000 AED</strong>?</p>
@@ -25704,7 +25704,7 @@ display:block!important;
 }</style></aside>
 </section>
 <section id="d2s1-p12" class="slide level2 reader-slide s1-review d2s1-review">
-<h2>The AI says GreenWaste caused the change. Does the comparison support that?</h2>
+<h2>Does the comparison support the AI’s causal claim?</h2>
 <p class="caption">Authored exercise response, not a real AI answer. Read the full prompt and response on worksheet page 5.</p><div class="ai-reading"><p>The regression reports a difference-in-differences estimate: participant businesses&#39; annual costs fell by 669 AED while comparison businesses&#39; costs rose by 143 AED. The difference between the two changes is a reduction of 812 AED per participant business, with a 95% interval of 792 to 833 AED and p &lt; 0.001. Comparing changes is stronger than simply comparing cost levels after the programme.</p><p>The different starting costs are accounted for, and parallel trends is satisfied because both groups were followed over the same period. The small p-value and interval excluding zero confirm that the finding is robust and GreenWaste caused the saving.</p><p>Implementation should still be monitored, particularly in new districts. The result clears the city authority&#39;s 1,000 AED minimum, so expansion is justified; the precise estimate gives confidence that a wider rollout will meet this target.</p></div>
 <div class="ask">
 <p><strong>Page 5:</strong> Mark supported claims and overclaims. Check H4-A, the study summary on <strong>page 1</strong>.</p>
@@ -25752,7 +25752,7 @@ display:block!important;
 <p>Use the <strong>final box on page 4</strong>. DiD compares changes; its causal reading depends on what would have changed without GreenWaste.</p>
 <p>Next, we use a different comparison: businesses on either side of the score cut-off.</p>
 <aside class="notes">
-<p>6 minutes. Three independent response, one pair purpose check, two feedback. Require comparison/units/conditional effect/decision limit plus useful request, not only more data. Request earlier periods, competing changes or measurement/composition evidence with reason. No claim DiD resolves selection automatically. Total90minutes; new review source and worksheet leave production materials unchanged.</p>
+<p>6 minutes. Three independent response, one pair purpose check, two feedback. Require comparison/units/conditional effect/decision limit plus useful request, not only more data. Request earlier periods, competing changes or measurement/composition evidence with reason. No claim DiD resolves selection automatically. Total90minutes; use this teaching source with its matching six-page worksheet.</p>
 <style type="text/css">
 span.MJX_Assistive_MathML {
 position:absolute!important;

@@ -16,7 +16,7 @@ format:
         @page{size:A4;margin:14mm}@media print{body{background:white;font-size:11pt;line-height:1.35}main{max-width:none}.sheet-page{padding:0;margin:0;min-height:0;break-after:page;box-shadow:none}.sheet-page:last-child{break-after:auto}header{display:none}h1{font-size:19pt}h2{font-size:17pt}h3{font-size:12pt}.reading-table{font-size:10pt}.writing{height:10mm}.writing.tall{height:17mm}.ai-source{font-size:11pt}.prompt{font-size:10pt}#title-block-header{display:none}}
         .review-svg{display:block;width:100%;height:210px}.comparison-table{border-collapse:collapse;width:100%;font-size:14px}.comparison-table td,.comparison-table th{border-bottom:1px solid #D5DEE8;padding:7px;text-align:left}.sheet-page .ai-source p{margin:8px 0}.sheet-page table{border-collapse:collapse;width:100%}.sheet-page th,.sheet-page td{border-bottom:1px solid #D5DEE8;padding:7px;text-align:left}.sheet-page thead{background:#063360;color:white}@media print{.review-svg{height:200px}.comparison-table{font-size:10pt}}
         </style>
-        <style>.writing.part{height:30px;margin:2px 0}.table-title{margin:10px 0 4px}@media print{.writing.part{height:7mm}}</style>
+        <style>.writing.part{height:30px;margin:2px 0}.table-title{margin:10px 0 4px}@media print{body{font-size:10.5pt;line-height:1.2}p{margin:6px 0}h3{margin:8px 0 4px}.writing.part{height:6mm}.sheet-page table{font-size:9pt;margin:4px 0}.sheet-page td,.sheet-page th{padding:5px}.review-svg{height:165px}.source-page{line-height:1.15}.question-page{font-size:10pt;line-height:1.16}.question-page p{margin:5px 0}}</style>
 knitr:
   opts_chunk:
     echo: false
@@ -30,7 +30,7 @@ source('session2_review.R', encoding='UTF-8')
 
 <header><button onclick="window.print()">Print worksheet</button></header>
 
-<div class="sheet-page">
+<div class="sheet-page source-page">
 
 ## Page 1 | H2-A: The city data tables and charts
 
@@ -103,7 +103,7 @@ The mean and the median are marked on the histogram.
 
 </div>
 
-<div class="sheet-page">
+<div class="sheet-page question-page">
 
 ## Page 3 | Read two comparisons
 
@@ -154,7 +154,7 @@ Before GreenWaste, the mean cost was 1,432 AED for participant businesses and 2,
 
 </div>
 
-<div class="sheet-page">
+<div class="sheet-page question-page">
 
 ## Page 4 | Q5: Four decision cards
 
