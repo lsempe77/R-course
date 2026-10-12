@@ -186,17 +186,33 @@ The pilot is a separate study with a lottery. Its waiting businesses would sit i
 These are **invented examples. They are not in the GreenWaste file.**
 
 ```{r, results='asis'}
-html_out(hy2_cleaning())
+html_out(s2_cleaning_flip(1))
 ```
 
 ::: {.ask}
-Which of these problems would give you an error message? Which would not?
+Look at the data first. What is wrong in each example, and how does it change the mean?
+:::
+
+::: {.notes}
+2 minutes. Show the data, ask for the problem, then press the button to show the words. Duplicate: B1 counted twice pulls the mean change from -440.0 to -450.0 AED. Missing code: -99 is a code, not a cost, so the mean drops from 1,550.0 to 1,220.2 AED. The numbers are computed in session2_review.R.
+:::
+
+## Two more problems that do not give an error message. {#s2h-08b .reader-slide .s1-review .s2-review}
+
+These are **invented examples. They are not in the GreenWaste file.**
+
+```{r, results='asis'}
+html_out(s2_cleaning_flip(2))
+```
+
+::: {.ask}
+Which of these four problems would give you an error message? Which would not?
 :::
 
 Check what is in the data before you calculate anything. A wrong structure gives a wrong answer without any warning.
 
 ::: {.notes}
-3 minutes. NO PRINTED QUESTION: discuss on the slide, two or three answers. None of these examples produces an error message in R: the calculation runs and returns a plausible-looking number (a negative landfill mean of -14.2 tonnes is the one most people would notice). The numbers are computed in session2_hybrid.R. Why is a wrong structure more dangerous than an error message? Because nothing stops you. Transition: "Now the data are clean enough to compare. Who else saw waste fall?"
+4 minutes in all (two slides). NO PRINTED QUESTION: discuss on the slides. None of the four examples produces an error message in R: the calculation runs and returns a plausible-looking number. Thousands: 1.7 was typed instead of 1,700, so the mean falls from 1,580.0 to 1,240.3 AED. Labels: four groups instead of two. Why is a wrong structure more dangerous than an error message? Because nothing stops you. The numbers are computed in session2_review.R. Transition: "Now the data are clean enough to compare. Who else saw waste fall?"
 :::
 
 ## Who else saw landfill fall? {#s2h-09 .reader-slide .s1-review .s2-review}
