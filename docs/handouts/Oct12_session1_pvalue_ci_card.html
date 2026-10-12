@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>p-values and confidence intervals: a reading card</title>
+<style>
+:root{--ink:#152d42;--blue:#215a9e;--navy:#063360;--muted:#526576;--rule:#d9e3ed;--pale:#f3f7fb;--amber:#d58d22;--amberdk:#8a5410;--amberbg:#fdf3e1;--grey:#7b8794}
+*{box-sizing:border-box}
+html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{margin:0;background:#f7f9fc;color:var(--ink);font:15px/1.5 "Segoe UI",Inter,system-ui,Arial,sans-serif}
+.sheet{max-width:880px;margin:0 auto;background:#fff;padding:26px 34px 30px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;border-bottom:1px solid var(--rule);padding-bottom:12px;margin-bottom:14px}
+.topbar img{width:200px;height:48px;object-fit:contain;object-position:left}
+.topbar p{margin:0;color:var(--muted);font-size:12.5px;text-align:right}
+h1{font-size:27px;line-height:1.15;letter-spacing:-.02em;margin:0 0 4px;color:var(--navy)}
+.sub{margin:0 0 14px;color:var(--muted);font-size:14px}
+h2{font-size:15.5px;margin:16px 0 8px;color:var(--navy);display:flex;align-items:center;gap:8px}
+h2 .n{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;font-size:12.5px;font-weight:700;flex:none}
+p{margin:0 0 7px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.card{border:1px solid var(--rule);border-radius:10px;padding:11px 14px;background:#fff}
+.card h3{margin:0 0 4px;font-size:14.5px;color:var(--navy)}
+.card .is{font-size:13.5px}
+.card .isnt{font-size:13px;color:var(--muted);border-top:1px dashed var(--rule);margin-top:7px;padding-top:6px}
+.card .isnt b{color:var(--amberdk)}
+.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--blue)}
+.panel{border:1px solid var(--rule);border-radius:10px;padding:10px 12px;background:#fff}
+.panel .cap{font-size:12.5px;font-weight:700;color:var(--navy);margin-bottom:2px}
+.panel .stats{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:2px}
+.panel .stats b{color:var(--ink)}
+svg{display:block;width:100%;height:auto}
+svg text{font-family:"Segoe UI",Inter,system-ui,Arial,sans-serif;fill:var(--ink)}
+svg .ts{font-size:11.5px;fill:var(--muted)}
+svg .t{font-size:13px}
+svg .th{font-size:13px;font-weight:600}
+.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+.rules div{background:var(--pale);border-radius:8px;padding:8px 11px;font-size:13px}
+.rules b{display:block;color:var(--navy);font-size:13.5px}
+.tryit{margin:10px 0 0;border:1px solid var(--rule);border-radius:10px;padding:12px 14px;background:var(--pale)}
+.controls{display:flex;gap:22px;flex-wrap:wrap;margin:0 0 4px;font-size:13.5px;color:var(--muted)}
+.controls label{display:flex;align-items:center;gap:8px;flex:1;min-width:230px}
+.controls output{min-width:30px;color:var(--ink);font-weight:600}
+input[type=range]{flex:1;accent-color:var(--blue)}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}
+.metrics div{background:#fff;border:1px solid var(--rule);border-radius:8px;padding:8px 11px}
+.metrics span{display:block;font-size:12px;color:var(--muted)}
+.metrics strong{font-size:20px}
+table.read{width:100%;border-collapse:collapse;margin:2px 0 4px;font-size:14px}
+table.read th{background:var(--navy);color:#fff;text-align:left;padding:6px 10px;font-weight:600;font-size:13px}
+table.read td{padding:8px 10px;border-bottom:1px solid var(--rule)}
+table.read td.num{font-variant-numeric:tabular-nums}
+.badge{display:inline-flex;align-items:center;justify-content:center;width:19px;height:19px;border-radius:50%;background:var(--amber);color:#fff;font-size:11.5px;font-weight:700;margin-right:5px;flex:none}
+.legend{display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;font-size:13px;margin:6px 0 0}
+.legend div{display:flex;align-items:flex-start;gap:2px}
+.say{border-left:4px solid var(--blue);background:var(--pale);padding:8px 12px;margin:0 0 8px;border-radius:0 8px 8px 0;font-size:13.5px}
+.say .lbl{display:block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--blue);margin-bottom:2px}
+.frame{font-size:13px;color:var(--muted);margin:0 0 8px}
+.slips{width:100%;border-collapse:collapse;font-size:13px}
+.slips th{text-align:left;font-size:12px;padding:5px 10px}
+.slips th.no{background:#fbeceb;color:#8a2b22}
+.slips th.yes{background:#e6f1e9;color:#1f5a35}
+.slips td{padding:6px 10px;border-bottom:1px solid var(--rule);vertical-align:top;width:50%}
+.slips td.no{background:#fffafa}
+.ai{margin-top:12px;border:1px solid var(--rule);border-radius:10px;padding:9px 13px;font-size:13px;background:var(--amberbg)}
+.ai b{color:var(--amberdk)}
+.foot{margin-top:12px;font-size:11.5px;color:var(--muted);border-top:1px solid var(--rule);padding-top:7px}
+.printbtn{border:1px solid var(--blue);background:#fff;color:var(--blue);border-radius:8px;padding:6px 13px;font:inherit;font-size:13px;cursor:pointer}
+.printbtn:hover{background:var(--pale)}
+.print-only{display:none}
+.pagebreak{height:0}
+@media(max-width:700px){.two,.rules,.metrics,.legend{grid-template-columns:1fr}.sheet{padding:18px}.topbar p{display:none}.slips td{display:block;width:auto}.slips tr{display:block;margin-bottom:6px}.slips thead{display:none}}
+@media print{
+  @page{size:A4;margin:10mm 11mm}
+  body{background:#fff;font-size:12px;line-height:1.4}
+  .sheet{max-width:none;padding:0}
+  .screen-only,.printbtn{display:none!important}
+  .print-only{display:block}
+  .two.print-only{display:grid}
+  .pagebreak{break-before:page}
+  h1{font-size:23px}
+  h2{margin:11px 0 6px;font-size:14px;break-after:avoid}
+  .card,.panel,.say,.rules div,.ai,table.read,.slips tr{break-inside:avoid}
+  .topbar{padding-bottom:8px;margin-bottom:8px}
+  .topbar img{width:170px;height:40px}
+  .sub{margin-bottom:8px}
+  .card .is{font-size:12.5px}.card .isnt{font-size:12px}
+  .say{font-size:12.5px;padding:6px 10px;margin-bottom:6px}
+  .frame{font-size:12px}
+  .slips{font-size:12px}.slips td{padding:5px 8px}
+  .foot{margin-top:8px}
+}
+</style>
+</head>
+<body>
+<div class="sheet">
+
+<div class="topbar">
+  <img src="../assets/dge_logo_horizontal.svg" alt="Department of Government Enablement">
+  <p>Module 2 &middot; Day 1, Session 1<br>Reading a regression table</p>
+</div>
+
+<h1>p-values and confidence intervals</h1>
+<p class="sub">A reading card. Keep it beside you when you look at the Estimate, interval and p-value in a results table. <button class="printbtn" onclick="window.print()">Print or save as PDF</button></p>
+
+<h2><span class="n">1</span>Two numbers that answer two questions</h2>
+<div class="two">
+  <div class="card">
+    <span class="tag">p-value</span>
+    <h3>Is zero still a believable answer?</h3>
+    <p class="is">It starts by assuming the true effect is zero. It then asks how unusual data as extreme as ours would be. A small p-value means those data would be unusual if the effect were zero.</p>
+    <p class="isnt"><b>It does not tell you</b> how big the effect is, whether the programme works, or whether the comparison behind the number is fair.</p>
+  </div>
+  <div class="card">
+    <span class="tag">95% confidence interval</span>
+    <h3>Which effect sizes fit the data?</h3>
+    <p class="is">A range around the estimate that shows its uncertainty, given the model and its assumptions. A narrow range is a precise estimate. A wide range is an imprecise one.</p>
+    <p class="isnt"><b>It does not tell you</b> where each business will land. It describes the average effect, not individual businesses.</p>
+  </div>
+</div>
+
+<h2><span class="n">2</span>How they fit together</h2>
+<p class="frame">The curve shows what we would expect to see if the true effect were zero. The shaded tails are the p-value. The bar underneath is the confidence interval.</p>
+
+<div class="tryit screen-only">
+  <div class="controls">
+    <label>Estimate (effect) <input type="range" id="est" min="0" max="3" step="0.1" value="1.2"><output id="estv">1.2</output></label>
+    <label>Standard error (noise) <input type="range" id="se" min="0.3" max="1.2" step="0.1" value="0.5"><output id="sev">0.5</output></label>
+  </div>
+  <svg id="explorer" role="img" aria-label="Interactive chart: null distribution with shaded tails for the p-value and a 95 percent confidence interval bar"></svg>
+  <div class="metrics" aria-live="polite">
+    <div><span>p-value</span><strong id="pv"></strong></div>
+    <div><span>95% confidence interval</span><strong id="civ"></strong></div>
+    <div><span>Does the interval include 0?</span><strong id="inc"></strong></div>
+  </div>
+</div>
+
+<div class="two print-only" style="margin-top:0">
+  <div class="panel">
+    <div class="cap">Precise estimate, interval excludes 0</div>
+    <svg id="figA" role="img" aria-label="Null distribution with small shaded tails and a confidence interval that does not cross zero"></svg>
+    <div class="stats" id="statA"></div>
+  </div>
+  <div class="panel">
+    <div class="cap">Noisy estimate, interval includes 0</div>
+    <svg id="figB" role="img" aria-label="Null distribution with large shaded tails and a confidence interval that crosses zero"></svg>
+    <div class="stats" id="statB"></div>
+  </div>
+</div>
+
+<div class="rules">
+  <div><b>Interval excludes 0</b>The p-value is below 0.05 (for a 95% interval).</div>
+  <div><b>Interval includes 0</b>The p-value is above 0.05. Zero stays a believable answer.</div>
+  <div><b>Wide interval</b>The estimate is imprecise, whatever the p-value says.</div>
+</div>
+
+<h2><span class="n">3</span>Reading several results at once</h2>
+<p class="frame">Four hypothetical results. Filled dots have an interval that excludes 0. Hollow dots have an interval that crosses 0.</p>
+<svg viewBox="0 0 680 196" role="img" aria-label="Four hypothetical estimates with confidence intervals against the zero line" style="max-width:660px">
+  <title>Four hypothetical estimates with confidence intervals compared to zero</title>
+  <text class="th" x="12" y="16">Result</text>
+  <text class="th" x="170" y="16">Estimate and 95% interval</text>
+  <text class="th" x="470" y="16">Estimate [interval]</text>
+  <text class="th" x="610" y="16">p-value</text>
+  <line x1="260" y1="28" x2="260" y2="158" stroke="#7b8794" stroke-width="1" stroke-dasharray="4 4"/>
+  <text class="ts" x="260" y="176" text-anchor="middle">0 = no effect</text>
+  <g><text class="t" x="12" y="50">Result 1</text>
+    <line x1="290" y1="46" x2="380" y2="46" stroke="#215a9e" stroke-width="3" stroke-linecap="round"/><circle cx="335" cy="46" r="6" fill="#215a9e"/>
+    <text class="t" x="470" y="50">1.5 [0.6, 2.4]</text><text class="t" x="610" y="50">0.001</text></g>
+  <g><text class="t" x="12" y="82">Result 2</text>
+    <line x1="265" y1="78" x2="345" y2="78" stroke="#215a9e" stroke-width="3" stroke-linecap="round"/><circle cx="305" cy="78" r="6" fill="#215a9e"/>
+    <text class="t" x="470" y="82">0.9 [0.1, 1.7]</text><text class="t" x="610" y="82">0.03</text></g>
+  <g><text class="t" x="12" y="114">Result 3</text>
+    <line x1="250" y1="110" x2="340" y2="110" stroke="#7b8794" stroke-width="3" stroke-linecap="round"/><circle cx="295" cy="110" r="6" fill="#fff" stroke="#7b8794" stroke-width="2"/>
+    <text class="t" x="470" y="114">0.7 [-0.2, 1.6]</text><text class="t" x="610" y="114">0.13</text></g>
+  <g><text class="t" x="12" y="146">Result 4</text>
+    <line x1="215" y1="142" x2="315" y2="142" stroke="#7b8794" stroke-width="3" stroke-linecap="round"/><circle cx="265" cy="142" r="6" fill="#fff" stroke="#7b8794" stroke-width="2"/>
+    <text class="t" x="470" y="146">0.1 [-0.9, 1.1]</text><text class="t" x="610" y="146">0.85</text></g>
+</svg>
+
+<div class="pagebreak"></div>
+
+<h2><span class="n">4</span>Find them in the table</h2>
+<p class="frame">The GreenWaste before-and-after result for participating businesses, as in the Session 1 table.</p>
+<table class="read">
+  <thead><tr><th>Row</th><th>Estimate</th><th>95% interval</th><th>p-value</th></tr></thead>
+  <tbody><tr>
+    <td><span class="badge">1</span>Change in annual waste cost (AED)</td>
+    <td class="num"><span class="badge">2</span>-669</td>
+    <td class="num"><span class="badge">3</span>-684 to -654</td>
+    <td class="num"><span class="badge">4</span>&lt; 0.001</td>
+  </tr></tbody>
+</table>
+<div class="legend">
+  <div><span class="badge">1</span> Name the row and its units. Negative means lower cost.</div>
+  <div><span class="badge">2</span> The estimate: its size and sign.</div>
+  <div><span class="badge">3</span> The interval: how precise the estimate is.</div>
+  <div><span class="badge">4</span> The p-value: is zero still believable?</div>
+</div>
+
+<h2><span class="n">5</span>Say it in a sentence</h2>
+<p class="frame">Pattern: <b>[Outcome] [rose or fell] by [estimate] [units] (95% CI: [low] to [high], p = [p]). [What the interval allows.] [What the design allows.]</b></p>
+
+<div class="say"><span class="lbl">Interval excludes zero (GreenWaste)</span>Annual waste cost fell by 669 AED per business (95% CI: 654 to 684 AED, p &lt; 0.001). Zero change is hard to square with these data. The comparison is the same businesses before and after, so it does not by itself show that GreenWaste caused the fall.</div>
+<div class="say"><span class="lbl">Interval includes zero (hypothetical result B)</span>The estimated reduction was 1,100 AED (95% CI: -100 to 2,300 AED, p = 0.072). The interval includes zero, so we cannot rule out no reduction. It also includes reductions well above our 1,000 AED rule, so the evidence is inconclusive.</div>
+<div class="say"><span class="lbl">Precise but small (hypothetical result A)</span>The estimated reduction was 50 AED (95% CI: 30 to 70 AED, p &lt; 0.001). The estimate is precise, and every value in the interval is far below our 1,000 AED rule.</div>
+
+<h2><span class="n">6</span>Common slips and what to say instead</h2>
+<table class="slips">
+  <thead><tr><th class="no">Avoid</th><th class="yes">Say instead</th></tr></thead>
+  <tbody>
+    <tr><td class="no">p = 0.072, so GreenWaste has no effect.</td><td>The data do not rule out zero, and the interval also allows large reductions.</td></tr>
+    <tr><td class="no">p &lt; 0.001 means there is a 99.9% chance the programme works.</td><td>The p-value starts from zero effect. It is not the probability that the programme works.</td></tr>
+    <tr><td class="no">p &lt; 0.001, so the saving is big.</td><td>Compare the estimate and its interval with the decision rule (1,000 AED).</td></tr>
+    <tr><td class="no">95% of businesses saved between 654 and 684 AED.</td><td>The interval describes the average change, not each business.</td></tr>
+  </tbody>
+</table>
+
+<div class="ai"><b>Try with AI.</b> Paste the table row and ask: "Explain this row for a director. Say what the p-value does not tell us, and ask me which decision rule applies before you conclude." Then check each number against the table yourself.</div>
+
+<p class="foot">All figures are fictional training data from the GreenWaste case. Results A, B and Results 1 to 4 are hypothetical.</p>
+
+</div>
+
+<script>
+(function(){
+  function erf(x){var s=x<0?-1:1;x=Math.abs(x);var t=1/(1+0.3275911*x);var y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);return s*y;}
+  function Phi(z){return 0.5*(1+erf(z/Math.SQRT2));}
+  function fmtp(p){return p<0.001?'< 0.001':p.toFixed(3);}
+  function f2(v){return (Math.round(v*100)/100).toFixed(2).replace('-0.00','0.00');}
+  function draw(svg,est,se,o){
+    var W=o.W,H=o.H,D=o.D,cx=W/2,sc=(W-80)/(2*D),base=o.base,h=o.h,ciy=o.ciy;
+    var X=function(v){return cx+v*sc;};
+    var Y=function(v){return base-h*Math.exp(-v*v/(2*se*se));};
+    var d='',i;
+    for(i=-D;i<=D+0.0001;i+=0.05){d+=(i===-D?'M':'L')+X(i).toFixed(1)+' '+Y(i).toFixed(1);}
+    var tails='';
+    if(est>0){
+      tails+='M'+X(est).toFixed(1)+' '+base;
+      for(i=est;i<=D+0.0001;i+=0.05){tails+='L'+X(i).toFixed(1)+' '+Y(i).toFixed(1);}
+      tails+='L'+X(D).toFixed(1)+' '+base+'Z';
+      tails+='M'+X(-est).toFixed(1)+' '+base;
+      for(i=-est;i>=-D-0.0001;i-=0.05){tails+='L'+X(i).toFixed(1)+' '+Y(i).toFixed(1);}
+      tails+='L'+X(-D).toFixed(1)+' '+base+'Z';
+    }
+    var lo=est-1.96*se,hi=est+1.96*se;
+    var s='';
+    s+='<line x1="'+X(-D)+'" y1="'+base+'" x2="'+X(D)+'" y2="'+base+'" stroke="#d9e3ed" stroke-width="1"/>';
+    s+='<path d="'+tails+'" fill="#d58d22" opacity="0.6"/>';
+    s+='<path d="'+d+'" fill="none" stroke="#526576" stroke-width="1.5"/>';
+    s+='<line x1="'+cx+'" y1="'+(base-h-8)+'" x2="'+cx+'" y2="'+(ciy+14)+'" stroke="#7b8794" stroke-width="1" stroke-dasharray="4 4"/>';
+    s+='<text class="ts" x="'+(cx+5)+'" y="'+(base-h)+'">0 = no effect</text>';
+    s+='<line x1="'+X(est)+'" y1="'+(base-h*0.62)+'" x2="'+X(est)+'" y2="'+base+'" stroke="#215a9e" stroke-width="2"/>';
+    s+='<text class="ts" x="'+(base?X(est)+5:0)+'" y="'+(base-h*0.62+4)+'" fill="#215a9e" style="fill:#215a9e">estimate</text>';
+    s+='<line x1="'+X(lo)+'" y1="'+ciy+'" x2="'+X(hi)+'" y2="'+ciy+'" stroke="#215a9e" stroke-width="4" stroke-linecap="round"/>';
+    s+='<circle cx="'+X(est)+'" cy="'+ciy+'" r="6" fill="#215a9e"/>';
+    s+='<text class="ts" x="'+X(lo)+'" y="'+(ciy+22)+'" text-anchor="middle">'+f2(lo)+'</text>';
+    s+='<text class="ts" x="'+X(hi)+'" y="'+(ciy+22)+'" text-anchor="middle">'+f2(hi)+'</text>';
+    svg.setAttribute('viewBox','0 0 '+W+' '+H);
+    svg.innerHTML=s;
+    var z=est/se,p=2*(1-Phi(Math.abs(z)));
+    return {p:p,lo:lo,hi:hi,inc:(lo<=0&&hi>=0)};
+  }
+  var big={W:680,H:240,D:6,base:128,h:92,ciy:192};
+  var ex=document.getElementById('explorer');
+  function update(){
+    var est=+document.getElementById('est').value,se=+document.getElementById('se').value;
+    document.getElementById('estv').textContent=est.toFixed(1);
+    document.getElementById('sev').textContent=se.toFixed(1);
+    var r=draw(ex,est,se,big);
+    document.getElementById('pv').textContent=fmtp(r.p);
+    document.getElementById('civ').textContent='['+f2(r.lo)+', '+f2(r.hi)+']';
+    var ie=document.getElementById('inc');
+    ie.textContent=r.inc?'Yes':'No';
+    ie.style.color=r.inc?'#8a2b22':'#1f5a35';
+  }
+  document.getElementById('est').addEventListener('input',update);
+  document.getElementById('se').addEventListener('input',update);
+  update();
+  var small={W:340,H:158,D:4,base:84,h:54,ciy:126};
+  function stat(el,r,est,se){
+    el.innerHTML='<span>Estimate <b>'+est.toFixed(1)+'</b></span><span>p-value <b>'+fmtp(r.p)+'</b></span><span>95% CI <b>'+f2(r.lo)+' to '+f2(r.hi)+'</b></span>';
+  }
+  var a=draw(document.getElementById('figA'),0.8,0.25,small); stat(document.getElementById('statA'),a,0.8,0.25);
+  var b=draw(document.getElementById('figB'),1.2,0.7,small);  stat(document.getElementById('statB'),b,1.2,0.7);
+})();
+</script>
+</body>
+</html>
