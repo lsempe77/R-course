@@ -15,6 +15,7 @@ format:
     embed-resources: true
     include-after-body: [_reader_interactions.html, _session1_review_interactions.html, _day2_session1_review_interactions.html]
 webr:
+  packages: [estimatr]
   render-df: kable
   resources: [evaluation_data_GreenWaste_simple.csv]
 knitr:
@@ -53,10 +54,16 @@ map_highlight <- "city"
 #| autorun: true
 #| echo: false
 #| include: false
+library(estimatr)
 gw <- read.csv('evaluation_data_GreenWaste_simple.csv')
 city <- subset(gw, setting == 'city')
-change <- city$cost_after - city$cost_before
-joined <- city$took_part == 1
+# Stack the two periods: each business has two rows (after = 0 before GreenWaste, after = 1 twelve months after).
+long <- data.frame(business = rep(city$business, 2),
+  after = rep(0:1, each = nrow(city)),
+  took_part = rep(city$took_part, 2),
+  cost = c(city$cost_before, city$cost_after))
+# Warm up estimatr while the opening slides are discussed: its first call in the browser is slow.
+invisible(lm_robust(cost ~ after, data = long[1:200, ], clusters = business))
 ```
 
 We return to the **city**, with 4,794 participant businesses and 5,206 comparison businesses that did not receive GreenWaste. Participation followed the score rule, **not a lottery**.
@@ -103,55 +110,32 @@ Is this the same as the difference between the two groups after the programme?
 :::
 
 ::: {.notes}
-8 minutes. Preserve Fiona's four-number task. Two minutes work, three minutes pair/group check, three minutes collect signs/units and reveal. Use unrounded means for final -812.446; one-AED display discrepancies acceptable. Q1 includes a blank plot to annotate, not another method exercise. A negative difference between the two changes means a larger reduction in costs for participant businesses. Not automatically an established effect. Transition: see the same arithmetic produced from individual records.
+8 minutes. Preserve Fiona's four-number task. Two minutes work, three minutes pair/group check, three minutes collect signs/units and reveal. Use unrounded means for final -812.446; one-AED display discrepancies acceptable. Q1 includes a blank plot to annotate, not another method exercise. A negative difference between the two changes means a larger reduction in costs for participant businesses. Not automatically an established effect. Transition: run the regression that gives the same difference from individual records.
 :::
 
-## We repeat the calculation in R. {#d2s1-p04 .reader-slide .s1-review .d2s1-review}
+## We run the regression in R. {#d2s1-p04b .reader-slide .s1-review .d2s1-review}
 
-We compare the mean **changes in cost** in R, using all the records. The box shows the **R code**.
+We create the **interaction variable** and run the regression. The trainer runs the box and the table appears below it.
 
 ```{webr}
 #| echo: true
-# Mean change for participant businesses minus mean change for comparison businesses.
-# Costs are annual waste management costs, in AED per business.
-# Round the result after calculating both means.
-round(mean(change[joined]) - mean(change[!joined]))
-```
-
-::: {.ask}
-What comparison does the result of **−812** describe? What does the calculation leave unanswered?
-:::
-
-Paper equivalent: **−669 − (+143) ≈ −812 AED**. You do not need to write or run R.
-
-::: {.notes}
-6 minutes. Prediction before the trainer run, then Q2 plain-language interpretation. Code comments explain purpose/units/rounding; no syntax lesson or participant code. Output same interaction estimate as saturated two-group/two-wave regression. This arithmetic does not assess the causal assumption. If runtime unavailable use printed arithmetic within same time. Transition: locate that difference between the two changes in a regression table.
-:::
-
-## We create the regression table from paired records. {#d2s1-p04b .reader-slide .s1-review .d2s1-review}
-
-We create the table in R. The box shows the **R code** and the numbers it produces.
-
-```{r, echo=TRUE}
-# Stack the two periods so that each business has two rows.
-# after is 0 for before GreenWaste and 1 for 12 months after.
-long <- rbind(transform(city, after = 0, cost = cost_before),
-  transform(city, after = 1, cost = cost_after))
-# after * took_part gives the rows (Intercept), after, took_part and after:took_part.
+# long has two rows per business: after = 0 before GreenWaste, after = 1 twelve months after.
+# The interaction is 1 only for participant businesses in the after period.
+long$after_x_took_part <- long$after * long$took_part
 # clusters = business allows for each business being measured twice.
-fit <- estimatr::lm_robust(cost ~ after * took_part, data = long,
-  clusters = business, se_type = "stata")
-round(cbind(estimate = coef(fit), confint(fit)))
+fit <- lm_robust(cost ~ after + took_part + after_x_took_part,
+  data = long, clusters = business, se_type = "stata")
+summary(fit)
 ```
 
 ::: {.ask}
-Which part of the code makes the row for the difference between the two changes?
+Which row of the table is the difference between the two changes, and which line of code creates it?
 :::
 
 You do not need to write or run R. Q2 on your worksheet asks you to read the table.
 
 ::: {.notes}
-4 minutes. Walk through the comments, not the syntax; participants do not code. Match each printed row to a row of the table on the next slide. Estimates 2,258; 143; -826; -812. The after:took_part row is the DiD estimate. clusters = business is the reason the intervals allow for the repeated measurement.
+5 minutes. Prediction first, then one Run by the trainer. Walk through the comments, not the syntax; participants do not code. The stacked table `long` and the estimatr package are prepared in the hidden setup cell, so the box is only the interaction and the regression. The after_x_took_part row is the DiD estimate, -812 AED, interval -833 to -792. Estimates 2,258 (Intercept), 143 (after), -826 (took_part), -812 (after_x_took_part). The same four numbers appear in the printed table on the next slide. clusters = business is the reason the interval allows for the repeated measurement. If the runtime is slow or unavailable, go straight to the printed table on the next slide within the same time.
 :::
 
 ## Which row shows the difference between changes? {#d2s1-p05 .reader-slide .s1-review .d2s1-review}
@@ -178,28 +162,30 @@ html_out(paste0('<div id="d4-path"><div data-variant>',d4_lines(),'</div><div da
 
 <button data-swap="d4-path" data-closed="Show the assumed untreated path" data-opened="Show observed means only" aria-pressed="false">Show the assumed untreated path</button>
 
-Under the **parallel trends assumption**, the participant businesses' cost without GreenWaste would also have risen by **143 AED**, to about **1,575 AED**.
+Under the **parallel trends assumption**, the participant businesses' cost without GreenWaste would also have risen by **143 AED**, to about **1,575 AED**. The numbers on the graph are the rows of the regression table on the previous slide.
 
 ::: {.ask}
 Is the dashed participant outcome observed, or is it assumed?
 :::
 
 ::: {.notes}
-6 minutes. Predict before reveal. Dashed path hypothetical counterfactual, not additional measured data. 1,432 +143 approximates1,575; assumed path to observed763 yields812 gap. Parallel trends concerns untreated changes, not equal cost levels. Source §3/page1 and visual/page2. Have learners add dashed path to Q1 blank plot and state assumption in Q3. Transition: what could make untreated changes differ?
+6 minutes. Predict before reveal. After the reveal, point out that the graph carries the regression rows: 2,258 is the Intercept (comparison businesses before), +143 is the after row, -826 is the took_part row (the gap before) and -812 is the after:took_part row (observed 763 minus the assumed 1,575). Dashed path hypothetical counterfactual, not additional measured data. 1,432 +143 approximates1,575; assumed path to observed763 yields812 gap. Parallel trends concerns untreated changes, not equal cost levels. Source §3/page1 and visual/page2. Have learners add dashed path to Q1 blank plot and state assumption in Q3. Transition: what could make untreated changes differ?
 :::
 
 ## Could the groups differ without GreenWaste? {#d2s1-p07 .reader-slide .s1-review .d2s1-review}
 
-<div class="comparison-pair"><div><h3>A shared change</h3><p>Suppose a service charge rises by the same AED amount for both groups.</p><p>The comparison businesses' change may help account for it.</p></div><div><h3>A different change</h3><p>Suppose a charge changes only for the kinds of businesses that tend to participate.</p><p>Their change without GreenWaste could differ.</p></div></div>
+```{r, results='asis'}
+html_out(paste0('<div class="review-grid"><div><h3>A shared change</h3>',d4_scenario(1),'<p>Both groups\' costs move together, for example when a service charge rises for every business.</p></div><div><h3>A different change</h3>',d4_scenario(2),'<p>A service charge only for the kinds of business that did not take part, for example different pricing or a tax on equipment they already have.</p></div></div>'))
+```
 
-These are **hypothetical examples**. They are not facts about the GreenWaste data.
+These are **hypothetical costs without GreenWaste**. They are not facts about the GreenWaste data.
 
 ::: {.ask}
 **Q3 (e) on page 4:** What evidence would help check the second possibility?
 :::
 
 ::: {.notes}
-7 minutes. Two minutes think/request, three minutes pair explanation, two minutes feedback. Need comparable absolute untreated changes for this additive cost DiD, not automatically equal percentage rises. Accept charge schedules linked to business types, concurrent policies, changing business mix or measurement. Note composition/measurement and anticipation/spillovers alongside parallel trends when relevant; no new checklist lecture. A city's shared time period alone is insufficient. Transition: earlier histories could help assess plausibility.
+7 minutes. Two minutes think/request, three minutes pair explanation, two minutes feedback. Read the pictures before the question: same axes, same programme start, no GreenWaste in either. Left: both groups spike at the same point after the start and then level out at a higher cost, so the comparison businesses' change is a fair stand-in and the difference between the two changes would be close to zero. Right: only the comparison businesses spike, for example from different pricing or a tax on equipment they already have, and then level out higher while participant businesses stay flat. A difference-in-differences calculation would show participants' costs falling relative to the comparison even though GreenWaste did nothing. The lines look alike before the start in both pictures, which is why earlier history helps but does not settle the question. Need comparable absolute untreated changes for this additive cost DiD, not automatically equal percentage rises. Accept charge schedules linked to business types, concurrent policies, changing business mix or measurement. Note composition/measurement and anticipation/spillovers alongside parallel trends when relevant; no new checklist lecture. A city's shared time period alone is insufficient. Transition: earlier histories could help assess plausibility.
 :::
 
 ## Which earlier history would make you hesitate? {#d2s1-p08 .reader-slide .s1-review .d2s1-review}
@@ -289,22 +275,10 @@ html_out(paste0('<p class="caption"><strong>Improved prompt, worksheet page 5.</
 Which claim improved? What still needs checking against H4-A?
 :::
 
-::: {.notes}
-7 minutes. Four run, three compare; Snapshot total15. No account setup. Page6 prepared response is same-task paper alternative if delayed/unavailable. Ask questions first; source/correctness, not AI agreement, is check. No mandatory second chat or extra best-practice slide. Compare interaction interpretation, causal assumptions, uncheckable pre-trend claim and threshold. Transition: give your own reading and evidence request.
-:::
-
-## What would you ask for next? {#d2s1-p14 .reader-slide .s1-review .d2s1-review}
-
-Close the AI responses and your partner's comments, and keep **H4-A (the difference-in-differences study summary) open**.
-
-::: {.ask}
-Write one interpretation that H4-A supports, in plain language, and one specific evidence request. How could the answer to your request change your advice?
-:::
-
-Use the **final box on page 4**. DiD compares changes; its causal reading depends on what would have changed without GreenWaste.
+The final box on **page 4** is extra: write one interpretation H4-A supports and one evidence request on your own if you like.
 
 Next, we use a different comparison: businesses on either side of the score cut-off.
 
 ::: {.notes}
-6 minutes. Three independent response, one pair purpose check, two feedback. Require comparison/units/conditional effect/decision limit plus useful request, not only more data. Request earlier periods, competing changes or measurement/composition evidence with reason. No claim DiD resolves selection automatically. Total90minutes; use this teaching source with its matching six-page worksheet.
+7 minutes. Four run, three compare; Snapshot total15. No account setup. Page6 prepared response is same-task paper alternative if delayed/unavailable. Ask questions first; source/correctness, not AI agreement, is check. No mandatory second chat or extra best-practice slide. Compare interaction interpretation, causal assumptions, uncheckable pre-trend claim and threshold. Transition: the final box on page 4 is optional extra work; move on to the score cut-off comparison (Session 2). The removed closing slide and the removed repeat-the-calculation slide free about 12 minutes; use them as buffer.
 :::

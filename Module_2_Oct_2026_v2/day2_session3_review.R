@@ -31,6 +31,7 @@ d6_balance <- function(title=NULL) {
       'Filtration (share of businesses)', 'Annual cost before GreenWaste (AED; not used for matching)'),
     'Participant businesses'=fmt(participant, 2),
     'All comparison businesses'=fmt(before, 2), 'Matched comparison businesses'=fmt(after, 2),
+    'Difference, participants minus matched'=fmt(participant-after, 2),
     'Gap in city standard deviations'=fmt((participant-after)/vapply(city[, columns], sd, 0), 2),
     check.names=FALSE), title)
 }
@@ -57,7 +58,7 @@ d6_reuse <- function() paste0(
   '<svg class="review-svg" viewBox="0 0 1100 220" role="img" aria-label="Illustration: three participant businesses can share one comparison business. In the GreenWaste data, 4,794 participant businesses were matched to 585 different comparison businesses, and one comparison business was used up to 440 times.">',
   '<g stroke="#7da1c4" stroke-width="4"><path d="M370 50L690 110M370 110L690 110M370 170L690 110"/></g>',
   '<g fill="#063360" font-size="28"><text x="20" y="58">Participant business A</text><text x="20" y="118">Participant business B</text><text x="20" y="178">Participant business C</text><text x="710" y="118">One comparison business</text></g>',
-  '<text x="550" y="215" text-anchor="middle" font-size="24">This illustration is not the seven-card activity.</text></svg>')
+  '</svg>')
 d6_interval <- function() {
   ci <- sort(-match_A$ci)
   x <- function(v) 120+v/1600*850
@@ -85,3 +86,32 @@ d6_prompt <- paste(
   'Separate the reuse of comparison businesses, the measured similarity and the unrecorded influences. Test our rule of at least a 1,000 AED reduction against the interval, not only the estimate.',
   'Ask me questions about missing information before you recommend action. Do not invent diagnostics, and do not treat matching as a lottery.',
   'Cite the paragraph or table for each fact. Here is H6-A: [paste page 1 of this worksheet and Table B from page 2].')
+
+# ---- End-of-day comparison of the four estimates -------------------------------------------------
+d6_forest <- function() {
+  # Each row is a reduction in annual cost, in AED (the sign of the regression coefficient is reversed).
+  rows <- list(
+    list(m='Lottery', who='Pilot district businesses', est=-case$rct, ci=-case$rct_ci),
+    list(m='Difference-in-differences', who='City participants', est=-case$did, ci=-did_ci),
+    list(m='Regression discontinuity', who='Businesses near score 58', est=-unname(rdd[1]), ci=-rdd_ci),
+    list(m='Matching', who='City participants', est=-match_A$est, ci=-match_A$ci))
+  x <- function(v) 400 + v/1400*640
+  yy <- c(80, 140, 200, 260)
+  body <- paste(vapply(seq_along(rows), function(i) {
+    r <- rows[[i]]; ci <- sort(r$ci); y <- yy[i]
+    sprintf('<text x="380" y="%.0f" text-anchor="end" font-size="26" font-weight="bold">%s</text><text x="380" y="%.0f" text-anchor="end" font-size="20" fill="#545860">%s</text><line x1="%.1f" x2="%.1f" y1="%.0f" y2="%.0f" stroke="#215a9e" stroke-width="8"/><circle cx="%.1f" cy="%.0f" r="9" fill="#063360"/><text x="%.1f" y="%.0f" text-anchor="middle" font-size="24">%s</text>',
+      y - 2, r$m, y + 22, r$who, x(ci[1]), x(ci[2]), y, y, x(r$est), y, x(r$est), y - 16, fmt(r$est))
+  }, ''), collapse = '')
+  ticks <- paste(vapply(seq(0, 1400, 200), function(v) sprintf('<text x="%.1f" y="320" text-anchor="middle" font-size="21">%s</text>', x(v), fmt(v)), ''), collapse = '')
+  paste0('<svg class="review-svg" viewBox="0 0 1100 365" role="img" aria-label="Estimated reductions in annual cost with 95 percent intervals: lottery in the pilot district ', fmt(-case$rct), ' AED, difference-in-differences ', fmt(-case$did), ', regression discontinuity ', fmt(-unname(rdd[1])), ', matching ', fmt(-match_A$est), '. Our rule is a reduction of at least 1,000 AED.">',
+    sprintf('<line x1="%.1f" x2="%.1f" y1="52" y2="292" stroke="#B8272C" stroke-width="3" stroke-dasharray="7 5"/><text x="%.1f" y="38" text-anchor="middle" font-size="24" fill="#B8272C">Our rule: 1,000</text>', x(1000), x(1000), x(1000)),
+    sprintf('<line x1="%.1f" x2="%.1f" y1="52" y2="292" stroke="#545860" stroke-width="3" stroke-dasharray="2 6" stroke-linecap="round"/><text x="%.1f" y="38" text-anchor="middle" font-size="24" fill="#545860">No change: 0</text>', x(0), x(0), x(0)),
+    '<line x1="400" x2="1040" y1="292" y2="292" stroke="#545860"/>', ticks, body,
+    '<text x="720" y="355" text-anchor="middle" font-size="22">Estimated reduction in annual waste management cost per business (AED), with 95% interval</text></svg>')
+}
+d6_methods <- function() d6_table(data.frame(
+  Method = c('Lottery', 'Difference-in-differences', 'Regression discontinuity', 'Matching'),
+  'What it compares' = c('Groups assigned by chance', 'The change in participants with the change in comparison businesses', 'Businesses to either side of the cut-off', 'Participants with similar non-participants'),
+  'What must be true' = c('The draw was fair and few dropped out', 'Costs would have moved in parallel without GreenWaste', 'Nothing else changes at the cut-off', 'Nothing important is unrecorded'),
+  'Who it describes' = c('Pilot district businesses', 'City participants', 'Businesses near score 58', 'City participants'),
+  check.names = FALSE))

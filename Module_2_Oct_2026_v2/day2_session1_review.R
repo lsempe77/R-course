@@ -21,11 +21,14 @@ d4_lines <- function(assumption=FALSE,blank=FALSE) {
     paste0(sprintf('<line x1="260" x2="795" y1="%.1f" y2="%.1f" stroke="%s" stroke-width="5"/>',y(a[1]),y(a[2]),col),
       paste(vapply(1:2,function(j)sprintf('<circle cx="%s" cy="%.1f" r="7" fill="%s"/><text x="%s" y="%.1f" text-anchor="middle" font-size="29" fill="%s">%s</text>',x[j],y(a[j]),col,x[j],y(a[j])+if(i==1&&j==2)32 else -14,col,fmt(a[j])),''),collapse=''))
   },''),collapse='')
+  rows <- if(!assumption||blank)'' else paste0(
+    sprintf('<line x1="300" x2="300" y1="%.1f" y2="%.1f" stroke="#111418" stroke-width="3"/><text x="312" y="%.1f" font-size="23" fill="#111418">%s AED gap</text>',y(d4_means[2,1]),y(d4_means[1,1]),(y(d4_means[2,1])+y(d4_means[1,1]))/2+8,fmt(coef(d4_fit)['took_part'])),
+    sprintf('<text x="560" y="86" text-anchor="middle" font-size="23" fill="#111418" stroke="white" stroke-width="6" paint-order="stroke">+%s AED change</text>',fmt(coef(d4_fit)['after'])))
   assumed <- if(!assumption||blank)'' else sprintf('<line x1="260" x2="795" y1="%.1f" y2="%.1f" stroke="#215a9e" stroke-width="4" stroke-dasharray="10 7"/><circle cx="795" cy="%.1f" r="7" fill="white" stroke="#215a9e" stroke-width="3"/><text x="795" y="%.1f" text-anchor="middle" font-size="27" fill="#215a9e">%s AED, assumed</text><line x1="850" x2="850" y1="%.1f" y2="%.1f" stroke="#B8272C" stroke-width="4"/><text x="870" y="%.1f" font-size="27" fill="#B8272C">%s AED</text>',
     y(d4_means[1,1]),y(d4_counterfactual),y(d4_counterfactual),y(d4_counterfactual)-14,
-    fmt(d4_counterfactual),y(d4_counterfactual),y(d4_means[1,2]),(y(d4_counterfactual)+y(d4_means[1,2]))/2+8,fmt(abs(case$did)))
+    fmt(d4_counterfactual),y(d4_counterfactual),y(d4_means[1,2]),(y(d4_counterfactual)+y(d4_means[1,2]))/2+8,fmt(coef(d4_fit)['after:took_part']))
   d4_svg(paste0('<text x="150" y="28" fill="#215a9e" font-size="26">Participant businesses (4,794)</text><text x="620" y="28" fill="#545860" font-size="26">Comparison businesses (5,206)</text>',axis,
-    '<line x1="500" x2="500" y1="60" y2="255" stroke="#7da1c4" stroke-dasharray="5 5"/><text x="500" y="54" text-anchor="middle" font-size="22">Programme starts</text>',lines,assumed,
+    '<line x1="500" x2="500" y1="60" y2="255" stroke="#7da1c4" stroke-dasharray="5 5"/><text x="500" y="54" text-anchor="middle" font-size="22">Programme starts</text>',lines,rows,assumed,
     '<text x="260" y="294" text-anchor="middle" font-size="26">Before</text><text x="795" y="294" text-anchor="middle" font-size="26">12 months after</text><text x="580" y="327" text-anchor="middle" font-size="25">Mean annual waste management cost per business (AED)</text>'),
     if(blank)'Blank city comparison axes: label the four group means, the changes and the assumed path without GreenWaste.' else
     if(assumption)'City means plus an assumed cost of 1,575 AED for participant businesses 12 months after, without GreenWaste, under the parallel trends assumption; the gap to the observed 763 AED is 812 AED.' else
@@ -60,6 +63,23 @@ d4_trend <- function(type=1) {
   d4_svg(paste0('<text x="80" y="22" fill="#215a9e" font-size="21">Participant businesses</text><text x="320" y="22" fill="#545860" font-size="21">Comparison businesses</text>',ticks,lines,
     '<line x1="80" x2="475" y1="205" y2="205" stroke="#545860"/><text x="80" y="238" text-anchor="middle" font-size="20">Earlier 2</text><text x="260" y="238" text-anchor="middle" font-size="20">Earlier 1</text><text x="440" y="238" text-anchor="middle" font-size="20">Before</text><text x="275" y="273" text-anchor="middle" font-size="21">Mean annual waste management cost (AED), all before the programme</text>'),
     if(type==1)'Hypothetical history A: the groups start at different levels and increase by the same amounts before the programme.' else 'Hypothetical history B: participant businesses were already falling while comparison businesses were rising before the programme.',550,285)
+}
+d4_scenario <- function(type = 1) {
+  # Hypothetical cost histories without GreenWaste, on identical axes. The numbers are fixed so every render matches.
+  shared <- c(0, 70, -40, 30, 330, 200, 170, 190)   # ups and downs that hit both groups; a spike when the charge starts, then it levels out
+  wig_c <- c(0, 15, -20, 10, -10, 25, -15, 5);wig_p <- c(0, -20, 15, -10, 20, -15, 10, -5)
+  comp <- 2260 + shared + wig_c
+  part <- if (type == 1) 1430 + shared + wig_p else 1430 + c(0, 70, -40, 30, 10, -15, 5, -10) + wig_p
+  xx <- seq(90, 510, length.out = 8);xm <- mean(xx[4:5]);y <- function(v) 205 - (v - 1000) / 1800 * 150
+  pts <- function(v) paste(paste(round(xx), round(y(v), 1), sep = ','), collapse = ' ')
+  dots <- function(v, col) paste(sprintf('<circle cx="%.0f" cy="%.1f" r="4.5" fill="%s"/>', xx, y(v), col), collapse = '')
+  ticks <- paste(vapply(seq(1000, 2500, 500), function(v) sprintf('<line x1="82" x2="520" y1="%.1f" y2="%.1f" stroke="#D5DEE8"/><text x="72" y="%.1f" text-anchor="end" font-size="20">%s</text>', y(v), y(v), y(v) + 6, fmt(v)), ''), collapse = '')
+  d4_svg(paste0('<text x="90" y="22" fill="#215a9e" font-size="21">Participant businesses</text><text x="540" y="22" text-anchor="end" fill="#545860" font-size="21">Comparison businesses</text>', ticks,
+    sprintf('<line x1="%.0f" x2="%.0f" y1="52" y2="205" stroke="#7da1c4" stroke-dasharray="5 5"/><text x="%.0f" y="46" text-anchor="middle" font-size="19">Programme starts</text>', xm, xm, xm),
+    sprintf('<polyline points="%s" fill="none" stroke="#545860" stroke-width="4"/>%s', pts(comp), dots(comp, '#545860')),
+    sprintf('<polyline points="%s" fill="none" stroke="#215a9e" stroke-width="4"/>%s', pts(part), dots(part, '#215a9e')),
+    '<line x1="82" x2="520" y1="205" y2="205" stroke="#545860"/><text x="195" y="232" text-anchor="middle" font-size="20">Before</text><text x="405" y="232" text-anchor="middle" font-size="20">After the start</text><text x="300" y="268" text-anchor="middle" font-size="19">Hypothetical annual cost (AED), no GreenWaste</text>'),
+    if (type == 1) 'Hypothetical shared change: both groups\' costs rise and fall together, spike at the same point after the programme start and then level out at a higher cost, with no GreenWaste.' else 'Hypothetical different change: both groups\' costs move together before the start. After it, only the comparison businesses\' costs spike and then level out at a higher cost, while participant businesses\' costs stay flat, with no GreenWaste.', 550, 285)
 }
 d4_timeline <- function() d4_svg(paste0('<line x1="250" x2="850" y1="125" y2="125" stroke="#7da1c4" stroke-width="4"/>',
   '<circle cx="250" cy="125" r="12" fill="#063360"/><circle cx="850" cy="125" r="12" fill="#063360"/>',

@@ -13,8 +13,9 @@ format:
     height: 720
     slide-level: 2
     embed-resources: true
-    include-after-body: [_reader_interactions.html, _session1_review_interactions.html]
+    include-after-body: [_reader_interactions.html, _session1_review_interactions.html, _day2_session3_review_interactions.html]
 webr:
+  packages: [estimatr]
   render-df: kable
   resources: [evaluation_data_GreenWaste_simple.csv]
 knitr:
@@ -141,7 +142,7 @@ Why are 4,794 matched pairs not 9,588 separate businesses?
 :::
 
 ::: {.notes}
-5 minutes. The diagram is an illustration; the counts come from the GreenWaste data. There are 9,588 rows in stacked matched sample but 5,379 unique businesses. Repeated controls contribute repeatedly to the comparison mean and require appropriate uncertainty accounting. Do not confuse a reused control with 440 separate measurements. Q2 page 3.
+5 minutes. OPTIONAL: this slide and the 'reused businesses count each time they are used' line on the next slide can be cut or shortened if time is short. If it comes up: 4,794 participant businesses were matched to only 585 different comparison businesses; the most-used one appears 440 times; the stacked sample has 9,588 rows but 5,379 unique businesses; each reuse counts again in the comparison mean; the interval uses clusters = business so the reuse is allowed for; matching with replacement is why the pairs are not independent. The diagram is an illustration; the counts come from the GreenWaste data. There are 9,588 rows in stacked matched sample but 5,379 unique businesses. Repeated controls contribute repeatedly to the comparison mean and require appropriate uncertainty accounting. Do not confuse a reused control with 440 separate measurements. Q2 page 3.
 :::
 
 ## Did matching make the measured features more alike? {#d2s3-p07 .reader-slide .s1-review .d2s3-review}
@@ -154,10 +155,12 @@ html_out(d6_balance())
 Q3 on page 4: which gaps became smaller, and which difference remains?
 :::
 
-Reused businesses count **each time they are used**. The gap is participant mean minus matched mean, in city standard deviations.
+::: {.fn}
+Difference = participant mean minus matched mean. The **city standard deviation (SD)** is the usual spread of that feature across city businesses. Dividing by it puts years, people, area and AED on one scale.
+:::
 
 ::: {.notes}
-7 minutes. Reference table is worksheet page 2. Full-city SD is descriptive scaling, not a universal pass/fail threshold or standard error. Filtration mean is the share of businesses with a filter. Age still differs by about 2.97 years; before-cost differs by about 161 AED. Cost was not matched on. Similar means are not identical distributions or evidence that all bias is absent.
+7 minutes. OPTIONAL TO SHORTEN: if time is short, show the table, read one row and move on; the reuse point is repeated in the clustered interval note on the result slide. Reference table is worksheet page 2. The raw difference column is in each feature's own units (years, people, 100 m2, share, AED); the SD column divides it by the full-city standard deviation of that feature. Why we show it: raw differences cannot be compared across features (is 0.3 staff bigger than 3 years?), and the SD scale shows which gaps are small relative to how much that feature varies. Full-city SD is descriptive scaling, not a universal pass/fail threshold or standard error. Filtration mean is the share of businesses with a filter. Age still differs by about 2.97 years; before-cost differs by about 161 AED. Cost was not matched on. Similar means are not identical distributions or evidence that all bias is absent.
 :::
 
 ## The closest available business may still be too different. {#d2s3-p08 .reader-slide .s1-review .d2s3-review}
@@ -178,6 +181,50 @@ Imagine a manager aged 45 matched to a manager aged 46, and another aged 45 matc
 7 minutes. The plot uses all comparison businesses, not only matched ones; see page 2. It is a one-feature marginal illustration, not a joint four-feature overlap diagnosis. The 45/46 and 45/70 cases are hypothetical, not claimed city pairs. Request distance distributions, weak-support regions and sensitivity to an acceptable-distance rule. No caliper was applied here. Q3 page 4.
 :::
 
+## We create the matched result in R. {#d2s3-p09b .reader-slide .s1-review .d2s3-review}
+
+```{webr}
+#| context: setup
+#| autorun: true
+#| include: false
+#| echo: false
+library(estimatr)
+gw <- read.csv('evaluation_data_GreenWaste_simple.csv')
+city <- subset(gw, setting == 'city')
+# Standardise the four matching characteristics, then pick the most similar comparison business for each participant.
+X <- scale(city[, c('manager_age','staff','area','filtration')])
+participants <- which(city$took_part == 1)
+controls <- which(city$took_part == 0)
+Xc <- t(X[controls, , drop=FALSE])
+twins <- controls[vapply(participants, function(i)
+  which.min(colSums((Xc-X[i, ])^2)), 1L)]
+```
+
+We pair each participant business with its most similar comparison business, then run the regression. The trainer runs the box and the table appears below it.
+
+```{webr}
+#| echo: true
+# twins: the comparison business selected for each participant (found in the hidden setup step).
+# matched stacks the participants and their twins. A comparison business can appear more than once.
+matched <- rbind(city[participants, ], city[twins, ])
+# took_part is 1 for participants and 0 for comparisons.
+# clusters = business allows for a comparison business being used more than once.
+fit <- lm_robust(cost_after ~ took_part, data = matched,
+  clusters = business, se_type = "stata")
+# The took_part row is participant businesses minus matched comparison businesses.
+summary(fit)
+```
+
+::: {.ask}
+What does the took_part row compare, and how does clusters = business deal with reused comparison businesses?
+:::
+
+You do not need to write or run R. Q2 on your worksheet asks you to read the table.
+
+::: {.notes}
+4 minutes. Prediction first, then one Run by the trainer. Walk through the comments, not the syntax; participants do not code. The matching step (standardise the four features, take the nearest comparison business for each participant, with replacement) runs in the hidden setup cell; the box shows how the pairs are stacked and the regression. The took_part row is the mean of the paired differences: -1,029 AED, interval -1,200 to -859, as in the printed table on the next slide. The hand version is the average of the 4,794 participant-minus-twin differences. If the runtime is slow or unavailable, go to the printed table on the next slide within the same time.
+:::
+
 ## Read the difference for the full city. {#d2s3-p09 .reader-slide .s1-review .d2s3-review}
 
 ```{r, results='asis'}
@@ -195,70 +242,7 @@ Q2: explain the sign, the comparison, the period and the units in one sentence.
 This is the difference in annual waste management cost **12 months after GreenWaste** between participant businesses and matched comparison businesses. It is not a before-and-after change, and it is not a lottery estimate.
 
 ::: {.notes}
-6 minutes. H6-A section 2, page 1. About 1,029 AED lower annual waste management cost 12 months after GreenWaste among city participant businesses than among selected comparison businesses. Business-clustered robust interval accommodates reuse, treating matches as given. It does not fully account for match selection or unmeasured bias. Population is the participants, not every national business.
-:::
-
-## We create the matched result in R. {#d2s3-p09b .reader-slide .s1-review .d2s3-review}
-
-We create the table in R. The box shows the **R code** and the numbers it produces.
-
-```{r, echo=TRUE}
-# matched: each participant business and the comparison business selected for it,
-# stacked into one table. A comparison business can appear more than once.
-# took_part is 1 for participant businesses and 0 for comparison businesses.
-fit <- estimatr::lm_robust(cost_after ~ took_part, data = matched,
-  clusters = business, se_type = "stata")
-# The took_part row is participant businesses minus matched comparison businesses.
-round(cbind(estimate = coef(fit), confint(fit))["took_part", ])
-```
-
-::: {.ask}
-What does the took_part row compare, and how does clusters = business deal with reused comparison businesses?
-:::
-
-You do not need to write or run R. Q2 on your worksheet asks you to read the table.
-
-::: {.notes}
-4 minutes. Walk through the comments, not the syntax; participants do not code. Match each printed row to a row of the table on the next slide. Estimate -1,029; interval -1,200 to -859, as in Table R.
-:::
-
-## We calculate the paired difference in R. {#d2s3-p10 .reader-slide .s1-review .d2s3-review}
-
-```{webr}
-#| context: setup
-#| autorun: true
-#| include: false
-#| echo: false
-gw <- read.csv('evaluation_data_GreenWaste_simple.csv')
-city <- subset(gw, setting == 'city')
-X <- scale(city[, c('manager_age','staff','area','filtration')])
-participants <- which(city$took_part == 1)
-controls <- which(city$took_part == 0)
-Xc <- t(X[controls, , drop=FALSE])
-paired_difference <- function() {
-  twins <- controls[vapply(participants, function(i)
-    which.min(colSums((Xc-X[i, ])^2)), 1L)]
-  mean(city$cost_after[participants]-city$cost_after[twins])
-}
-```
-
-We calculate the paired difference in R. The box shows the **R code**.
-
-```{webr}
-#| echo: true
-# Compare each participant business with its selected comparison business.
-# Average the differences in annual waste management cost 12 months after GreenWaste, in AED.
-round(paired_difference())
-```
-
-The result on paper is **-1,029 AED**. You do not need to run R.
-
-::: {.ask}
-Does this calculation give us a difference, or does it prove the causal assumption?
-:::
-
-::: {.notes}
-5 minutes. Predict, then one Run by the trainer. Hidden setup uses same standardisation, nearest neighbour and replacement as shared source. Calculation reproduces coefficient, not displayed robust interval. If browser is slow use paper result and maintain allocation. No participant coding.
+6 minutes. The table printed here is the one the box produced. H6-A section 2, page 1. About 1,029 AED lower annual waste management cost 12 months after GreenWaste among city participant businesses than among selected comparison businesses. Business-clustered robust interval accommodates reuse, treating matches as given. It does not fully account for match selection or unmeasured bias. Population is the participants, not every national business.
 :::
 
 ## What changes when matching leaves out manager age? {#d2s3-p11 .reader-slide .s1-review .d2s3-review}
@@ -365,21 +349,42 @@ If you are not using Copilot, read the **prepared response on page 6** after you
 7 minutes. Stage 2. Two paste/run, three verify one correction and note one missing evidence request, two share. Participants use Microsoft Copilot; no setup required. Use fictional source only, shared AI good-practice card; do not upload sensitive records. No second-chat task. The paper alternative was written for the exercise, not an expected exact response. Check source citations, the numeric interval and the questions asked before any recommendation.
 :::
 
-## Close the source. Make a request you can defend. {#d2s3-p17 .reader-slide .s1-review .d2s3-review}
+## Four methods, four estimates. Why do they differ? {#d2s3-p17 .reader-slide .s1-review .d2s3-review}
 
-Write in **Q6 on page 4**, without the study summary:
+```{r, results='asis'}
+html_out(d6_forest())
+```
 
-- One sentence interpreting the matched result.
-- One strength of the comparison and one concern that matters for the decision.
-- Your choice of Act, Act with conditions or Ask first, and your reason.
-- One request for evidence about the matching, and how the answer could change your decision.
+All four intervals sit away from 0, so each estimate is statistically different from no change. They still differ from each other because each method compares **different businesses** and rests on **a different assumption**. They are not four tries at the same number.
 
 ::: {.ask}
-Which method's comparison best answers the decision you face next?
+Which would you trust most for a decision about the whole city, and what would you ask first?
 :::
 
-**Lottery:** compares groups assigned by chance. **Difference-in-differences:** compares the difference between two changes. **Regression discontinuity:** compares businesses either side of the cut-off. **Matching:** compares businesses chosen because they look similar.
+::: {.notes}
+7 minutes. This is the first place the week's estimates sit side by side. All four show lower costs, roughly 700 to 1,030 AED a year. Lottery (pilot district): 1,014, interval 863 to 1,166. Difference-in-differences (city participants): 812, interval 792 to 833. Regression discontinuity (businesses near score 58): 721, interval 498 to 943. Matching (city participants): 1,029, interval 859 to 1,200. Two intervals lie wholly below our 1,000 AED rule (difference-in-differences, regression discontinuity); two include it (lottery, matching). Statistical significance versus our rule: all four intervals exclude 0, so each estimate is statistically different from zero, meaning GreenWaste lowered costs on every method. That is a different question from our rule of at least 1,000 AED. The lottery (863 to 1,166) and matching (859 to 1,200) intervals include 1,000, so the data cannot tell them apart from 1,000: the true reduction could be above or below the rule. The difference-in-differences (792 to 833) and regression discontinuity (498 to 943) intervals lie wholly below 1,000, so they are statistically below the rule, though close (difference-in-differences is about 19 percent short). If 1,000 AED is a hard minimum, these numbers alone do not support expanding. But every method shows a real reduction and all are fairly near the rule, so expanding may still be worth it once full costs and other benefits are weighed. The evaluation tells us what the data support; whether a reduction of roughly 800 to 1,000 AED is good enough is the commissioner's judgment. Keep the evaluation result and our judgment separate. Do not average the four and do not pick the one that suits. Differences come from three places: who is described (pilot district, city participants, businesses near the cut-off), what has to be true (next slide), and chance. Narrow intervals say nothing about the assumption: difference-in-differences has the narrowest interval and its key assumption cannot be checked with one earlier measurement. How to decide: start from the group the decision is about, then prefer the design whose key assumption is most believable for that group and ask what evidence would test it. The lottery is the benchmark only for the pilot district. Agreement across methods that fail in different ways is more reassuring than any single estimate.
+:::
+
+## What does each method have to assume? {#d2s3-p18 .reader-slide .s1-review .d2s3-review}
+
+```{r, results='asis'}
+html_out(d6_methods())
+```
+
+::: {.ask}
+Which assumption is easiest to check with the data we have? Which is hardest?
+:::
+
+Choose by the assumption, not by the size of the estimate. Worksheet Q6 on page 4 is extra: try it on your own if you like.
 
 ::: {.notes}
-8 minutes. Three individual, three pair challenge, two collect targeted feedback. Accept different reasonable actions. These methods answer different comparisons for different populations; do not average their estimates or call the pilot the truth for the city. Total 120 minutes; daily 14:45-15:00 wrap-up/buffer is separate and needs no additional material.
+6 minutes. Review slide for the whole day; one row per method, answers should come from the sessions. Lottery: assignment by chance held, few dropped out, no spillovers. Difference-in-differences: untreated costs would have changed by the same amount in both groups; one earlier measurement cannot test this. Regression discontinuity: nothing else changes at the cut-off and businesses cannot move across it; the estimate is local to businesses near score 58. Matching: no important unrecorded influence such as motivation; check match quality. Easiest to check with this file: matching balance on recorded features (partly). Hardest: unrecorded influences and parallel trends with one earlier measurement. Worksheet Q6 is optional extra work for participants, not a timed task.
+:::
+
+## Which method fits? Choose a path. {#d2s3-p19 .reader-slide .s1-review .d2s3-review}
+
+{{< include _methods_tree.qmd >}}
+
+::: {.notes}
+10 minutes. Interactive decision tree for the four methods in this module. Read the question aloud, let the room vote (hands or Menti), then press the answer button; the path lights up and the end of the path is revealed. Use Back for one step or Start over to try another route. Suggested runs: (1) After, before and after data, similar earlier paths: difference-in-differences. (2) After, no before data, a score cut-off: regression discontinuity. (3) After, no cut-off, recorded characteristics explain taking part: matching. (4) Before, randomising is possible: lottery. (5) After, nothing fits: no credible comparison yet. Ask where GreenWaste's city evaluation would land, and what it would take to move it to another box. A static copy of the tree is on the website (handouts/methods_decision_tree.html, with a PDF and SVG). The tree points to the assumption each method rests on; it does not show the method was done well.
 :::
