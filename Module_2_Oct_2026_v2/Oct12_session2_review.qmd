@@ -140,6 +140,38 @@ The two results look similar. How would you notice the mistake?
 4 minutes. Point: make sure the data are the subset and sample you want, with nothing extra. Including the pilot is wrong for three reasons: the pilot is a different population (all scores below 58, lottery assignment); the 200 pilot businesses that waited would sit in the city comparison group although they are not comparable with city businesses scoring above 58; the group sizes and answers change. The error is easy to miss because the result looks sensible. The group sizes (4,994 and 5,406 instead of 4,794 and 5,206) give it away. All course numbers use the city rows only.
 :::
 
+## Clean the data before calculating a mean. {#s2-p06c .reader-slide .s1-review .s2-review}
+
+These are **invented examples. They are not in the GreenWaste file.**
+
+```{r, results='asis'}
+html_out(s2_cleaning_flip(1))
+```
+
+::: {.ask}
+Look at the data first. What is wrong in each example, and how does it change the mean?
+:::
+
+::: {.notes}
+2 minutes. Show the data, ask for the problem, then press the button to show the words. Duplicate: B1 counted twice pulls the mean change from -440.0 to -450.0 AED. Missing code: -99 is a code, not a cost, so the mean drops from 1,550.0 to 1,220.2 AED. The numbers are computed in session2_review.R.
+:::
+
+## Two more problems that do not give an error message. {#s2-p06d .reader-slide .s1-review .s2-review}
+
+These are **invented examples. They are not in the GreenWaste file.**
+
+```{r, results='asis'}
+html_out(s2_cleaning_flip(2))
+```
+
+::: {.ask}
+Which of these four problems would give you an error message? Which would not?
+:::
+
+::: {.notes}
+3 minutes. None of the four examples produces an error message in R; the calculation runs and returns a plausible-looking number. Thousands: 1.7 was typed instead of 1,700, so the mean falls from 1,580.0 to 1,240.3 AED. Labels: four groups instead of two, so each group mean describes only some of the businesses (the counts are invented). LUCAS (not addressed here): 734 city businesses have a negative annual cost after GreenWaste; if those values are not intended, a further cleaning slide and a data recheck would be needed. Transition: "The data are clean enough to use. Now look at what costs look like before the programme."
+:::
+
 ## What do waste costs look like before the programme? {#s2-p04 .reader-slide .s1-review .s2-review}
 
 ```{r, results='asis'}
@@ -213,38 +245,6 @@ What does the mean change hide? Which line of the code shows it?
 
 ::: {.notes}
 3 minutes. The mean (1,862) is a little above the median (1,801). Mean change -669; 485 participant businesses had a rising cost. Link back to the histogram of changes.
-:::
-
-## Clean the data before calculating a mean. {#s2-p06c .reader-slide .s1-review .s2-review}
-
-These are **invented examples. They are not in the GreenWaste file.**
-
-```{r, results='asis'}
-html_out(s2_cleaning_flip(1))
-```
-
-::: {.ask}
-Look at the data first. What is wrong in each example, and how does it change the mean?
-:::
-
-::: {.notes}
-2 minutes. Show the data, ask for the problem, then press the button to show the words. Duplicate: B1 counted twice pulls the mean change from -440.0 to -450.0 AED. Missing code: -99 is a code, not a cost, so the mean drops from 1,550.0 to 1,220.2 AED. The numbers are computed in session2_review.R.
-:::
-
-## Two more problems that do not give an error message. {#s2-p06d .reader-slide .s1-review .s2-review}
-
-These are **invented examples. They are not in the GreenWaste file.**
-
-```{r, results='asis'}
-html_out(s2_cleaning_flip(2))
-```
-
-::: {.ask}
-Which of these four problems would give you an error message? Which would not?
-:::
-
-::: {.notes}
-3 minutes. None of the four examples produces an error message in R; the calculation runs and returns a plausible-looking number. Thousands: 1.7 was typed instead of 1,700, so the mean falls from 1,580.0 to 1,240.3 AED. Labels: four groups instead of two, so each group mean describes only some of the businesses (the counts are invented). LUCAS (not addressed here): 734 city businesses have a negative annual cost after GreenWaste; if those values are not intended, a further cleaning slide and a data recheck would be needed.
 :::
 
 ## What else could have changed costs? {#s2-p07 .reader-slide .s1-review .s2-review}
