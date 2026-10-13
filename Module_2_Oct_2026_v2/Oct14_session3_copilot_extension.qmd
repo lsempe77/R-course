@@ -1,0 +1,72 @@
+---
+title: "Optional Copilot extension: questions for the evaluator"
+format:
+  html:
+    embed-resources: true
+    toc: false
+    theme: none
+    css: day3_session3_print.css
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+```{r, include=FALSE}
+source('day3_session3_review.R', encoding='UTF-8')
+```
+
+<header><p>Optional 15-minute extension after the core Day 3 Session 3 recommendation. Use fictional course sources only. The supplied responses below are authored for this exercise, not live transcripts.</p><button onclick="window.print()">Print optional extension</button></header>
+
+<div class="sheet-page">
+
+## Page 1 | Stage 1: challenge the supplied response (8 minutes)
+
+**Prompt A:** An evaluation used a pilot lottery, city difference in differences, a score cut-off and matching. It reports annual savings in T9. What should a commissioner ask before acting?
+
+### Prepared response
+
+<div class="ai-source">
+```{r, results='asis'}
+html_out(paste(sprintf('<p>%s</p>',strsplit(d9_ai,"\n\n",fixed=TRUE)[[1]]),collapse=''))
+```
+</div>
+
+Keep one useful question, correct two unsupported assurances and add one missing **specific evidence request**. Cite H9-A/H9-B or E1–E8.
+
+**Useful sentence and source:** <div class="writing"></div>
+**Two corrections and their sources:** <div class="writing tall"></div>
+**Missing request and decision purpose:** <div class="writing tall"></div>
+
+<p class="caption">Do not discard a whole response because one sentence is wrong. Check independence of evidence, the 1,000 AED rule, national reach and what a complete synthetic file can establish.</p>
+
+</div>
+
+<div class="sheet-page">
+
+## Page 2 | Stage 2: ask, verify, decide (7 minutes)
+
+If Copilot is available and approved, use this prompt with H9-A/H9-B and E1–E8. Otherwise read the prepared alternative below. Neither response supplies new evidence.
+
+<div class="prompt">
+```{r, results='asis'}
+html_out(paste0('<p>',d9_prompt,'</p>'))
+```
+</div>
+
+### Prepared paper alternative
+
+<div class="ai-source">
+```{r, results='asis'}
+html_out(paste0('<p>',d9_fallback,'</p>'))
+```
+</div>
+
+**One useful revision, with source ID:** <div class="writing"></div>
+**One assertion or omission still to check:** <div class="writing"></div>
+**Would it change your independent advice on H9 page 5? Why?** <div class="writing"></div>
+
+<p class="caption">A fluent answer cannot establish an unavailable audit, a national effect or measured long-run costs.</p>
+
+</div>

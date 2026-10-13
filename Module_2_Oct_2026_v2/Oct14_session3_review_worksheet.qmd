@@ -1,5 +1,5 @@
 ---
-title: "GreenWaste: question the analyst"
+title: "GreenWaste: questions for the analyst"
 format:
   html:
     embed-resources: true
@@ -17,279 +17,140 @@ knitr:
 source('day3_session3_review.R', encoding='UTF-8')
 ```
 
-<header><p>Separate Day 3 Session 3 review. Begin with pages 1-5. The analyst releases source cards E1-E8 during the clinic; the full source bank becomes available afterwards. Use pages 6-7 for the Copilot Snapshot. Hold page 8 until Stage 1 is finished.</p><button onclick="window.print()">Print worksheet</button></header>
+<header><p>Day 3 Session 3 core worksheet, five pages. Read H9-A/H9-B first. The analyst releases E1-E8 only in response to questions; the evidence pack is supplied after the clinic. The Copilot extension is separate and optional.</p><button onclick="window.print()">Print worksheet</button></header>
 
 <div class="sheet-page" id="H9-A">
 
-## Page 1 | H9-A: draft decision note
+## Page 1 | H9-A: draft note for the director
 
-**To:** Director, programme investment  
-**Subject:** GreenWaste expansion decision  
+**To:** Director, programme investment<br>
+**Subject:** GreenWaste national expansion<br>
 **Status:** Draft for review; fictional training case
 
-Read the recommendation, its qualifications and Table T9 before recording your own advice. This note is separate from the report you will read on Day 4.
+Read the recommendation and Table T9. This note is separate from the Day 4 report.
 
 ```{r, results='asis'}
 html_out(d9_note_html())
 ```
 
-### Table T9 | Annual saving per business at 12 months
+### T9 | Annual waste-cost saving at 12 months
 
 ```{r, results='asis'}
 html_out(d9_results_table())
 ```
 
-**Units:** AED per business per year. Positive numbers mean reduced waste cost. Interval endpoints are sorted on that saving scale. **Decision rule:** minimum annual saving of **1,000 AED**.
+**Unit:** AED per business per year; positive = lower waste cost. Each row has a 95% interval on that saving scale. The policy rule is a **minimum annual saving of 1,000 AED**.
 
-The pilot is a separate district sample. The city difference between the two changes, the score cut-off and matching use the same city records; they make different comparisons. H9-B on page 2 describes them. Source IDs point to the analyst cards, supplied during the clinic.
+The pilot is a separate district sample. The three city methods reuse the same city records. The economic ratio in N3 is a partial RCT-linked model; its cost and later savings are assumed.
 
-<p class="caption">Paragraph IDs N1-N3; table ID T9. Source: GreenWaste data. Each interval is the 95% interval for that method. Do not substitute this draft for a verified national appraisal.</p>
+<p class="caption">Paragraph IDs N1–N3; table ID T9. These results concern different comparisons, not four independent estimates of one national effect.</p>
 
 </div>
 
 <div class="sheet-page" id="H9-B">
 
-## Page 2 | H9-B: what was compared?
+## Page 2 | H9-B: comparison and question map
 
-The four estimates concern annual waste cost at 12 months. A shared outcome and common sign do not make populations, comparisons or causal requirements interchangeable.
+An estimate becomes useful when its **comparison, population, assumption and uncertainty** fit the decision.
 
 ```{r, results='asis'}
 html_out(d9_table(d9_map))
 ```
 
-The city file has **10,000 businesses**, including **4,794 participants**. RDD uses a local subset; matching selects and may reuse city controls. City results are not independent replications of one national effect. The lottery pilot is a separate **400-business** sample.
+### Five places to look for a decision gap
 
-### Five families for useful questions
+1. **Comparison and reach:** who was compared, and does that population match national delivery?
+2. **Causal requirement:** what would challenge the lottery, trend, cut-off or matching interpretation?
+3. **Uncertainty and rule:** does the interval support the minimum-saving claim?
+4. **Data quality:** who was followed up, and how were outcomes measured?
+5. **Economic inputs:** what was spent, when, by whom, and how long might savings last?
 
-```{r, results='asis'}
-html_out(paste0('<ol>',paste(sprintf('<li>%s</li>',read_questions),collapse=''),'</ol>'))
-```
-
-Choose the questions that could change your decision. Specify the result or document you need, then say what you would do with the answer. A method name or a reassurance that the work is robust is not the requested evidence.
-
-<p class="caption">H9-B is a comparison map, not an assurance that these requirements hold. E1-E8 contain the supplied evidence and its limits. No fieldwork, prior-trend or score-manipulation records should be invented.</p>
+<p class="caption">The city file has 10,000 businesses, including 4,794 participants. The separate pilot has 400 businesses in one district. This map identifies questions; it does not certify that the requirements hold.</p>
 
 </div>
 
 <div class="sheet-page">
 
-## Page 3 | Opening decision and three questions
+## Page 3 | Opening call and two priority requests
 
-### Q1 | My opening advice, before discussion
+### My opening decision
 
-**Sign off / With conditions / Request evidence**  
-Reason and source: **N___ / T9 row ___**
-
-<div class="writing tall"></div>
-
-### Q2 | Our three specific evidence requests
-
-**Request 1:** what should the analyst show? How could it change our advice?
+**Sign / Sign with conditions / Request evidence**<br>
+**Claim and source:** N___ / T9 row ___
 
 <div class="writing tall"></div>
 
-Follow-up if the first answer is incomplete:
+### Our two questions for the analyst
 
-<div class="writing"></div>
+For each question: **what should the analyst send, what would it test, and how would the answer change our action?**
 
-**Request 2:** what should the analyst show? How could it change our advice?
-
+**Priority 1 — evidence or document requested:**
+<div class="writing tall"></div>
+**Claim tested and if/then consequence:**
 <div class="writing tall"></div>
 
-Follow-up if the first answer is incomplete:
-
-<div class="writing"></div>
-
-**Request 3:** what should the analyst show? How could it change our advice?
-
+**Priority 2 — evidence or document requested:**
+<div class="writing tall"></div>
+**Claim tested and if/then consequence:**
 <div class="writing tall"></div>
 
-Follow-up if the first answer is incomplete:
+**Spokesperson:** ____________   **Listener/source checker:** ____________
 
-<div class="writing"></div>
-
-**Our priority order:** ___ / ___ / ___  
-**Spokesperson:** __________ **Listener/source checker:** __________
+<p class="caption">“Is it robust?” is too vague. An analyst should know what to send and why it matters to the director's decision.</p>
 
 </div>
 
 <div class="sheet-page">
 
-## Page 4 | Q3: record and assess actual answers
+## Page 4 | What did the analyst actually answer?
 
-Log three substantial exchanges, including other groups' questions. Record what the analyst actually said, not what you hoped to hear.
+Log two substantial exchanges, including another group's question. A missing document is an honest answer, but it may leave the decision gap open.
 
 ### Exchange 1
 
-**Question asked:** ______________________________________________  
+**Question asked:** ______________________________________________<br>
 **Answer and source ID:** E___ / N___ / T9
-
 <div class="writing log-space"></div>
-
-**Supported / Partial / Unanswered:** why? What follow-up or action?
-
+**Supported / Partial / Unanswered — why?**
 <div class="writing tall"></div>
+**Useful follow-up or action:**
+<div class="writing"></div>
 
 ### Exchange 2
 
-**Question asked:** ______________________________________________  
+**Question asked:** ______________________________________________<br>
 **Answer and source ID:** E___ / N___ / T9
-
 <div class="writing log-space"></div>
-
-**Supported / Partial / Unanswered:** why? What follow-up or action?
-
+**Supported / Partial / Unanswered — why?**
 <div class="writing tall"></div>
+**Useful follow-up or action:**
+<div class="writing"></div>
 
-### Exchange 3
-
-**Question asked:** ______________________________________________  
-**Answer and source ID:** E___ / N___ / T9
-
-<div class="writing log-space"></div>
-
-**Supported / Partial / Unanswered:** why? What follow-up or action?
-
-<div class="writing tall"></div>
-
-<p class="caption">Rate the answer against its question. A stated limitation can be useful evidence without resolving the substantive request. "Not supplied" is preferable to an invented diagnostic.</p>
+<p class="caption">Rate the answer against the specific question. Supported evidence can have a limited scope; “not supplied” must not be filled with invented assurance.</p>
 
 </div>
 
 <div class="sheet-page">
 
-## Page 5 | Advice after the analyst clinic
+## Page 5 | Advice to the director
 
-### Q4 | The unresolved issue that matters most
+Work alone. Compare your answer with your opening decision on page 3.
 
-What evidence is needed? Cite the relevant source and explain its decision consequence.
-
+**1. Action:** sign, sign with conditions, or request evidence.
 <div class="writing tall"></div>
 
-**If it supports the claim, I would:**
-
-<div class="writing"></div>
-
-**If it challenges the claim, I would:**
-
-<div class="writing"></div>
-
-### Q5 | My final advice, before the AI exercise
-
-**Sign off / With conditions / Request evidence**  
-Give one evidence-based reason and one boundary or condition.
-
+**2. Basis:** cite one source and say precisely what it establishes.
 <div class="writing tall"></div>
 
-**Compared with Q1, my reason changed / stayed the same because:**
-
+**3. Boundary:** what does that source not establish for national expansion?
 <div class="writing tall"></div>
 
-### Q6 | My independent request at the end
-
-Close the AI output. Name the evidence to send, its purpose and how your advice could change. The original evidence may remain open; work alone.
-
-<div class="writing log-space"></div>
-
-<p class="caption">An unchanged decision can reflect better reasoning. Your evidence use and limits matter, not agreement with a room vote. Complete Q6 after the Snapshot debrief.</p>
-
-</div>
-
-<div class="sheet-page">
-
-## Page 6 | Copilot Snapshot, Stage 1
-
-**8 minutes:** mark up the supplied response, then compare with a partner. This response was written for the exercise. It is not a real AI answer.
-
-### The initial prompt
-
-```{r, results='asis'}
-html_out(paste0('<p class="prompt">',d9_ai_prompt_a,'</p>'))
-```
-
-### The supplied response
-
-```{r, results='asis'}
-html_out(paste0('<div class="ai-source">',paste(sprintf('<p>%s</p>',strsplit(d9_ai,'\n\n',fixed=TRUE)[[1]]),collapse=''),'</div>'))
-```
-
-### Your source-based markup
-
-Keep one useful question. Correct two unsupported assurances. Add one specific missing evidence request with a decision purpose. Cite H9-A/H9-B or E1-E8.
-
-<div class="writing log-space"></div>
-
-**One source ID and the claim it checks:**
-
-<div class="writing"></div>
-
-Do not open the paper alternative on page 8 until Stage 1 is finished.
-
-</div>
-
-<div class="sheet-page">
-
-## Page 7 | Copilot Snapshot, Stage 2
-
-**7 minutes:** use the improved prompt in Copilot if available and approved. Answer its clarifying questions briefly, then verify the output. Use only this fictional case, not workplace or personal data.
-
-### A decision-focused prompt
-
-```{r, results='asis'}
-html_out(paste0('<p class="prompt">',d9_prompt,'</p>'))
-```
-
-**Source bundle:** worksheet H9-A/H9-B, pages 1-2, plus analyst evidence bank E1-E8, pages 1-4, now supplied after the clinic. The draft note is a claim to review; the cards identify supplied evidence and unavailable checks.
-
-If access or response time fails, use the prepared paper alternative on page 8. The task and seven-minute limit stay the same. No second chat is required.
-
-### Compare with the supplied response
-
-**I used:** Copilot / prepared paper alternative  
-**One useful revision, with its source:**
-
+**4. Next step:** name one document/result and explain what you would do if it supports or challenges the claim.
 <div class="writing tall"></div>
 
-**One claim or omission I still need to check, and how:**
-
+**My decision changed / stayed the same because:**
 <div class="writing tall"></div>
 
-**Did the answer admit unavailable evidence and connect a request to advice?**
-
-<div class="writing"></div>
-
-<p class="caption">AI can help formulate questions or conditional advice. Its output is not an additional study, diagnostic or source of evidence. Use the shared AI good-practice card if needed.</p>
-
-</div>
-
-<div class="sheet-page">
-
-## Page 8 | Prepared paper alternative
-
-**Hold until Stage 1 is finished.** Use for Stage 2 when Copilot is unavailable, slow or not approved. This response was written for the exercise. It is not a real AI answer.
-
-### Possible clarifying questions
-
-What population and delivery conditions does expansion cover? What risk of failing to reach the 1,000 AED saving rule is acceptable? Is the main concern whether GreenWaste caused the change, national reach, data quality or total spending?
-
-### A conditional response after the sources are supplied
-
-```{r, results='asis'}
-html_out(paste0('<div class="ai-source"><p>',d9_fallback,'</p></div>'))
-```
-
-### Verify it, rather than accepting it
-
-Locate each cited source. Decide whether the selected evidence request addresses your group's main concern. A different provisional action can be defensible if it states its limits.
-
-**A useful revision compared with Stage 1:**
-
-<div class="writing tall"></div>
-
-**An omission or remaining claim I would check:**
-
-<div class="writing tall"></div>
-
-Record your comparison on page 7. Do not copy this response into the independent Q6 request.
+<p class="caption">A conditional next phase or a request for evidence can both be defensible. The quality of the reasoning matters more than which option was selected.</p>
 
 </div>

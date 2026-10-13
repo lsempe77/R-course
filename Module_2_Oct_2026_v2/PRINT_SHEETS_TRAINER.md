@@ -16,11 +16,11 @@ The selected teaching versions are deployed in `89c2577`. Use the [folder README
 | Day 2 S3 | 6 | Profile/cost cards = 2 |
 | Day 3 S1 | 6 | 5 scenario cards + board + results = 7 |
 | Day 3 S2 | 7 | No separate cards |
-| Day 3 S3 | 8 | Question bank = 2; evidence pack = 5 |
+| Day 3 S3 | 5 | Evidence pack = 4; question bank = 2; optional Copilot extension = 2 |
 | Day 4 S1 | 5 | Flawed report = 4; private trainer key = 5 |
 | Day 4 S2 | 7 | Corrected findings = 2; retries = 3; private trainer key = 4 |
 
-The two Day 4 S1 A1 wall sheets are separate from worksheet pages. Keep keys private. Give the Day 3 S3 question bank after independent work and its evidence pack to the analyst role, not as an advance answer sheet. Give Day 4 S2 retries after feedback; use corrected findings for drafting, not the earlier flawed report.
+The two Day 4 S1 A1 wall sheets are separate from worksheet pages. Keep keys private. For Day 3 S3, hold the four-page evidence pack until questions are asked, then give it for verification. The separate two-page Copilot extension is optional after the 120-minute core. Give the question bank after independent work. Give Day 4 S2 retries after feedback; use corrected findings for drafting, not the earlier flawed report.
 
 For Day 2 S2, use the on-screen scatterplot and fitted-line pair discussion, with Q1 on page 3 of the matching worksheet. No group cards or number-line board are required. Preserve the Day 1 S1/S3 hybrids' original printed sheets. Coordinate any Day 1 S2 old-sheet contingency with Fiona before changing a worksheet link or deck.
 

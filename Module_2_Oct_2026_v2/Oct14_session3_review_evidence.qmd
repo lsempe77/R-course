@@ -17,7 +17,7 @@ knitr:
 source('day3_session3_review.R', encoding='UTF-8')
 ```
 
-<header><p>Trainer-held bank for the separate Day 3 Session 3 review. Read/release the relevant ID only in response to questions. After the clinic, supply pages 1-4 for source checking and the AI task. Page 5 remains trainer-only.</p><button onclick="window.print()">Print evidence bank</button></header>
+<header><p>Analyst evidence bank for Day 3 Session 3. The trainer releases relevant IDs in response to questions. Give the full four-page bank to participants only after the clinic.</p><button onclick="window.print()">Print evidence bank</button></header>
 
 <div class="sheet-page">
 
@@ -33,7 +33,6 @@ html_out(d9_evidence_html(2))
 <p class="caption">Source: corrected synthetic file and shared case analysis. E1 uses the separate pilot; E2 uses city records. No national-effect estimate is supplied.</p>
 
 </div>
-
 <div class="sheet-page">
 
 ## Page 2 | Minimum saving and city trends
@@ -76,36 +75,6 @@ html_out(d9_evidence_html(7))
 html_out(d9_evidence_html(8))
 ```
 
-<p class="caption">E7: synthetic-record completeness is not a real-world fieldwork audit. E8: same provisional 812 AED DiD benefit and conditional 1.86 model as Day 3 Session 1. The saving rule and ratio above 1 answer different questions.</p>
-
-</div>
-
-<div class="sheet-page">
-
-## Page 5 | Trainer-only key and release order
-
-### Before and during the clinic
-
-Give worksheet pages 1-5 first. The participant note includes all four estimates and intervals; it does not include these card responses. Keep this bank hidden until the relevant question is asked. Answer briefly from the supplied evidence, cite the ID and say when a check is absent. Do not automatically read suggested follow-ups before learners have asked their own.
-
-Eight groups have about two minutes each in the 20-minute clinic, plus four minutes for the most consequential gap. Learners log three substantial exchanges on worksheet page 4. Afterwards give bank pages 1-4 for verification; retain this key.
-
-### Draft-note reading
-
-N1 correctly reads the pilot point estimate but does not settle the minimum-saving rule. N2 correctly identifies reductions in all methods, then overstates independent confirmation: city analyses share records and comparisons differ. N3 acknowledges local reach and model assumptions, then treats the point estimate as sufficient national approval evidence.
-
-Accept bounded next-phase advice or requests for further evidence if the source, uncertainty and decision consequences are clear. Do not score only the selected sign-off button.
-
-### Answer ratings and follow-ups
-
-E3 supports a request for the pilot interval limits; it only partly addresses national approval. E4 honestly discloses that earlier trends are unavailable. E5 supplies a genuine pre-programme comparability concern. E6 supplies reuse and residual gaps, but not a complete overlap or unmeasured-selection assessment. E7 cannot answer a real fieldwork-quality request.
-
-Rate against the actual question. Recognise supported comparisons, correctly read uncertainty and useful disclosure as strengths. A specific follow-up names a result/document and its decision purpose; it does not demand reassurance.
-
-### AI task and close
-
-Stage 1 is eight minutes, Stage 2 seven. Distribute worksheet page 6 at Stage 1; page 7 at Stage 2; page 8 only afterwards as needed. First AI paragraphs contain useful questions and correctly read results. Correct independent-study assurance (E2), settled national saving (E1/E3) and established data reliability (E7). Generic robustness confirmation does not resolve the missing evidence.
-
-Complete independent Q6 after debrief without AI. Supply the optional workplace question reference only afterwards. There is no additional in-session break: the role change occupies five minutes within the 120-minute script; fixed external breaks and the daily close remain separate.
+<p class="caption">E7: synthetic-record completeness is not a real-world fieldwork audit. E8 revisits the RCT-linked 2.44 partial model from Day 3 Session 1. Its cost and later savings are assumptions; the saving rule and a benefit-cost ratio answer different questions.</p>
 
 </div>

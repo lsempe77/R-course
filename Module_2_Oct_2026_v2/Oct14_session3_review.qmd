@@ -1,6 +1,6 @@
 ---
-title: "The analyst is in the room"
-subtitle: "Day 3 | Session 3: Request evidence and revise your advice"
+title: "What would you ask the evaluator?"
+subtitle: "Day 3 | Session 3: From evidence gaps to a decision"
 author: "3ie"
 always_allow_html: true
 format:
@@ -28,299 +28,182 @@ knitr:
 
 ```{r setup, include=FALSE}
 source('day3_session3_review.R', encoding='UTF-8')
+stopifnot(round(-case$rct)==1014, round(ratio(),2)==2.44)
 ```
 
-## Would you sign this note? {#d3s3-p01 .reader-slide .s1-review .d3s3-review}
+## Your job: question the recommendation {#d3s3-goal .reader-slide .s1-review .d3s3-review}
 
-Read **H9-A: draft decision note, worksheet page 1**, including Table T9.
+<div class="d9-goal"><strong>Before approving national expansion, ask the evaluator for evidence that could change your advice.</strong></div>
 
-The director is asked to approve **phased national expansion**.
+<div class="d9-three"><div><b>1</b><span>Find the claim and its source</span></div><div><b>2</b><span>Ask for a specific check</span></div><div><b>3</b><span>Make a conditional decision</span></div></div>
 
-```{=html}
-<div data-choices><button data-choice aria-pressed="false">Sign off</button><button data-choice aria-pressed="false">With conditions</button><button data-choice aria-pressed="false">Request evidence</button><p role="status" class="feedback"></p></div>
-```
-
-::: {.ask}
-Work alone: record your decision on page 3 and cite one paragraph or table row.
-:::
-
-```{webr}
-#| context: setup
-#| autorun: true
-#| echo: false
-#| include: false
-gw <- read.csv('evaluation_data_GreenWaste_simple.csv')
-pilot <- subset(gw, setting == 'pilot')
-```
+**Output:** two priority questions, an answer log and a short recommendation on H9 pages 2–5.
 
 ::: {.notes}
-6 minutes. Give worksheet pages 1-5 initially. H9-A is a one-page draft note, not the Day 4 report. Allow quiet reading before collecting choices; do not identify the overclaims. Record the individual opening reason, not a group vote. Warm webR in the background. Keep the analyst bank and AI fallback out of sight.
+**5 minutes. Main point:** this is practice in commissioning and using evidence, not a new lesson on four evaluation designs. Give H9 pages 1–5; hold the separate E1–E8 evidence pack. Day 4 asks learners to audit a full report independently. Today they can ask an analyst questions. The core script totals 120 minutes; the Copilot extension is separate and optional.
 :::
 
-## Follow the headline to Table T9 {#d3s3-p02 .reader-slide .s1-review .d3s3-review}
+## The director wants a signature {#d3s3-note .reader-slide .s1-review .d3s3-review}
+
+Read **H9-A on page 1**. Its three claims say the pilot clears the saving rule, four methods confirm success, and a benefit–cost ratio supports expansion.
+
+<div class="d9-claims"><div><b>N1</b><span>Pilot saving: 1,014 AED. Minimum rule: 1,000 AED.</span></div><div><b>N2</b><span>Pilot and three city methods point to savings.</span></div><div><b>N3</b><span>RCT-linked modelled ratio: 2.44.</span></div></div>
+
+::: {.ask}
+On **page 3**, choose: sign, sign with conditions, or request evidence. Cite N1, N2, N3 or T9. What would you need to know before a national commitment?
+:::
+
+::: {.notes}
+**8 minutes.** Allow four minutes of silent reading and writing before anyone speaks. H9-A is a deliberately contestable decision note, separate from tomorrow's report. The slide labels are shortened; participants must read the actual wording and Table T9. Record an individual opening reason, not a group vote. Do not reveal the weak claims yet. Transition: how far can each source speak?
+:::
+
+## One district is not the nation {#d3s3-reach .reader-slide .s1-review .d3s3-review}
+
+<div class="d9-reach"><div><span class="d9-tag">Pilot RCT</span><b>400 businesses</b><small>One district; 200 assigned support, 200 comparison</small></div><span class="d9-arrow">→</span><div><span class="d9-tag">City analyses</span><b>10,000 records</b><small>Different city comparisons; 4,794 participants</small></div><span class="d9-arrow">→</span><div><span class="d9-tag">Proposed decision</span><b>National expansion</b><small>Target businesses and delivery conditions not established</small></div></div>
+
+::: {.ask}
+Which arrow needs evidence before the director treats a pilot result as a national forecast?
+:::
+
+::: {.notes}
+**10 minutes. Main point:** a credible effect in the pilot district does not establish the effect under national delivery. Ask pairs what might differ: eligible businesses, take-up, implementers, costs or waste systems. H9-B on page 2 maps the comparisons. The city file is synthetic teaching data; no national transfer analysis is supplied. The city analyses do not automatically bridge the pilot-to-national gap. A bounded next phase remains an option.
+:::
+
+## Four methods; two sources of data {#d3s3-overlap .reader-slide .s1-review .d3s3-review}
+
+<div class="d9-data-line"><div class="d9-source"><b>Separate pilot sample</b><span>Lottery comparison</span></div><div class="d9-source"><b>One city file</b><span>Difference in differences · score cut-off · matching</span></div></div>
+
+<p class="d9-callout">The city methods reuse records and ask different comparison questions. Agreement in direction is useful; it is not four independent replications of a national effect.</p>
+
+::: {.ask}
+How would you rewrite N2 without counting the city analyses as separate votes?
+:::
+
+::: {.notes}
+**7 minutes.** Give two minutes for a pair rewrite, then compare one cautious sentence. Accept: the pilot and three city analyses estimate lower annual waste costs in their respective comparisons; city analyses share records, target different groups and have different assumptions. This is retrieval from Days 1–2, not a rapid new lesson on each design. H9-B provides a reminder.
+:::
+
+## A positive effect can miss a minimum rule {#d3s3-threshold .reader-slide .s1-review .d3s3-review}
 
 ```{r, results='asis'}
-html_out(d9_results_table())
+html_out(d9_threshold_plot())
 ```
 
-**Annual waste-cost reduction per business, AED, at 12 months.** Positive saving; sorted 95% limits.
+<div class="d9-twofacts"><span><b>Evidence of a reduction:</b> interval above zero</span><span><b>Minimum of 1,000 AED:</b> interval crosses the rule</span></div>
 
 ::: {.ask}
-Which result supports N1? Which results are being counted as agreement in N2?
+The point estimate is 1,014 AED. Can the note say the 1,000 AED minimum is settled?
 :::
 
 ::: {.notes}
-8 minutes. Read the estimate and interval separately. N1 selects the pilot point estimate, 1,014 AED. All four intervals are above zero, but that does not settle the 1,000 rule. Pilot and matching span it; DiD and RDD lie below it. City methods reuse the same 10,000-business file. These are not four independent votes or interchangeable estimates. The H9-A table supplies figures; H9-B on page 2 supplies the comparisons and main causal requirements. Sources E1-E6 will be released during the clinic.
+**10 minutes.** Ask for a prediction before tracing the interval. On a positive-saving scale, the pilot point estimate is about 1,014 AED per business per year at 12 months; its 95% interval is 862–1,167 AED. It lies above zero but spans the separate policy rule. A 95% interval is not a probability statement about a fixed effect; crossing a rule does not dictate risk tolerance. Day 3 Session 1 already calculated this result. Ask what evidence or risk tolerance could change the action.
 :::
 
-## A method name is not its comparison {#d3s3-p03 .reader-slide .s1-review .d3s3-review}
+## A ratio is an argument with assumptions {#d3s3-economics .reader-slide .s1-review .d3s3-review}
 
-<div class="review-grid">
-<div>
-
-### Pilot lottery
-200 assigned to support versus 200 assigned to comparison in one district. Check lottery and follow-up.
-
-### City: the difference between the two changes
-Participant businesses' change minus comparison businesses' change. Requires that, without GreenWaste, both groups would have changed by similar amounts (parallel trends).
-
-</div><div>
-
-### Jump near score 58
-Businesses close to the score cut-off of 58. Requires continuity without support; scrutinise sorting and other jumps.
-
-### Matched comparison
-Similar recorded pre-programme features. Requires adequate support and no remaining outcome-relevant selection.
-
-</div></div>
+<div class="d9-model"><div><span>RCT estimate</span><b>1,014 AED</b><small>Annual waste-cost saving at 12 months</small></div><div><span>Assumed delivery cost</span><b>1,800 AED</b><small>Per business at year 0</small></div><div><span>Assumed future</span><b>Years 1–5</b><small>Same saving each year; 5% rate</small></div><div class="d9-output"><span>Model result</span><b>2.44</b><small>Benefit–cost ratio under these inputs</small></div></div>
 
 ::: {.ask}
-H9-B, page 2: which comparison and population does your decision need?
+What actual cost or persistence evidence would you request before treating this as national value for money?
 :::
 
 ::: {.notes}
-7 minutes. Ask pairs to locate their chosen comparison in H9-B. Do not treat each design as resting on one sufficient assumption. These are main causal requirements, with measurement and delivery conditions still relevant. Pilot reach is one district; cut-off reach is local around 58; matching describes city participants with the available controls. Shared city data and different estimands explain why a common sign is not independent replication. No new calculation.
+**8 minutes.** Retrieve Session 1; do not recalculate. The RCT measured a 12-month cost outcome. Delivery cost, five equal saving years and rate are model inputs. The 2.44 ratio is a partial RCT-linked model, not a measured national return or complete appraisal. Invite requests about full incremental costs and persistence/transfer. The separate 1.86 city-study model appears in later materials; do not mix it into this clinic.
 :::
 
-## Will "is it robust?" get useful evidence? {#d3s3-p04 .reader-slide .s1-review .d3s3-review}
+## Turn a concern into an answerable request {#d3s3-question .reader-slide .s1-review .d3s3-review}
 
-**Weak request:** "Can you confirm the evaluation is reliable?"
+<p class="d9-weak">“Is the evaluation robust?”</p>
+
+<div class="d9-request"><div><b>Claim</b><span>The pilot saving will apply nationally.</span></div><div><b>Evidence to send</b><span>Compare pilot and national businesses, delivery and follow-up.</span></div><div><b>Decision consequence</b><span>If they differ materially, test a bounded next phase first.</span></div></div>
 
 ::: {.ask}
-Rewrite it: ask for a document or result, and state how you would use it.
-:::
-
-<button data-open="d9-question" data-closed="Show one worked request" data-opened="Hide the example" aria-controls="d9-question" aria-expanded="false">Show one worked request</button>
-<div id="d9-question" class="feedback" hidden>
-Send several earlier cost measures for city participant businesses and comparison businesses, and a record of concurrent changes. I would check whether the counterfactual trend is plausible. If these challenge it, I would not rely on the difference-in-differences estimate as evidence that GreenWaste caused the change.
-</div>
-
-::: {.notes}
-7 minutes. Individuals rewrite first, then compare with a partner before revealing. The example asks for specific evidence and links it to advice. Follow-up: if earlier costs are unavailable, what other comparison or next-phase design could address the uncertainty? Similar earlier trends inform plausibility; they do not prove the unobserved counterfactual. The source has one before measure, so do not imply the requested series is available.
-:::
-
-## Choose three questions before the analyst arrives {#d3s3-p05 .reader-slide .s1-review .d3s3-review}
-
-Use the **five question families on H9-B, page 2**.
-
-1. Individually propose questions; agree **three specific requests**.
-2. On **page 3**, record the evidence, decision purpose and a follow-up for each.
-3. Rank them; choose a spokesperson to ask your first question.
-
-::: {.ask}
-Which answer would most change your advice? What would you press for next?
+Improve a question about N1, N2 or N3. Would the analyst know what to send?
 :::
 
 ::: {.notes}
-12 minutes. Eight groups. Allow three minutes individual drafting, six minutes agreement and three minutes ranking/rehearsal. Families cover comparison, causal assumption, data quality, estimate/interval/rule and recommendation. Different groups can choose different priorities. Check that all three questions have room on page 3 and are not yes/no assurances. Tell listeners to record three substantial exchanges on page 4, including other groups' questions. Do not supply the evidence-bank answers during preparation.
+**9 minutes.** Give two minutes alone, three in pairs, four to hear examples. Model the difference between a judgement word and a document/result request. A useful question names the claim, needed evidence and how different answers affect action. Earlier trends could challenge city DiD; a score audit could address sorting; accounts could test cost. Do not imply missing checks exist. H9-B offers five families; groups will choose two priorities.
 :::
 
-## Change roles: the analyst answers your questions {#d3s3-p06 .reader-slide .s1-review .d3s3-review}
+## Two questions worth the analyst's time {#d3s3-prepare .reader-slide .s1-review .d3s3-review}
 
-Keep your questions and **answer log, page 4**, ready.
+On **H9 page 3**, agree two requests. For each, write:
 
-The analyst answers from **source cards E1-E8**.
+<div class="d9-three"><div><b>1</b><span>Evidence or document</span></div><div><b>2</b><span>What it tests</span></div><div><b>3</b><span>If/then action</span></div></div>
 
-If evidence is not supplied, the answer will say so.
+Rank them. Choose a spokesperson and a listener who will check the answer.
 
 ::: {.ask}
-Agree a listener who will check whether the answer addressed your actual question.
+Which answer has the greatest chance of changing your recommendation?
 :::
 
 ::: {.notes}
-5 minutes. This is an activity change, not an additional timetable break. Groups rehearse the question while the trainer opens the separate fixed bank. No extra analysis or invented assurances. Keep bank cards trainer-held, reveal or read the relevant ID only when requested. The director's note and general comparison map are already available, but the source cards and suggested follow-ups are not. Use the fixed external breaks and separate daily close/buffer.
+**8 minutes.** Two minutes alone, four to agree two questions, two to rank and assign roles. Eight groups may have different priorities. Avoid two near-identical requests and yes/no reassurance. Questions may target comparison, threshold, national reach, data quality or economics. Check that each could lead to a different action. The listener records the actual answer and source ID.
 :::
 
-## The analyst is here: ask, listen, follow up {#d3s3-p07 .reader-slide .s1-review .d3s3-review}
+## The analyst can say “not supplied” {#d3s3-role .reader-slide .s1-review .d3s3-review}
 
-Each group has **one question and one short follow-up**.
+<div class="d9-clinic-rule"><div><b>Ask</b><span>One priority question</span></div><div><b>Listen</b><span>Evidence and source ID E1–E8</span></div><div><b>Follow up</b><span>What is still missing?</span></div></div>
 
-Record three useful exchanges on **page 4**:
+The trainer releases only relevant evidence. Missing records stay missing.
 
-**Question → actual answer → source ID → rating → next action**
+::: {.notes}
+**5 minutes.** Switch roles and open the trainer-held pack. Keep E1–E8 out of participants' hands until the relevant question is asked. Answer briefly from supplied evidence, state its limit, then show or read the ID. The optional question bank is a reference after the activity, not a script first. If an audit is unavailable, say so; do not invent a clean or failed audit. Participants log two substantial exchanges on H9 page 4, including another group's question.
+:::
+
+## Analyst clinic: ask, listen, follow up {#d3s3-clinic .reader-slide .s1-review .d3s3-review}
+
+<div class="d9-clinic-board"><div><strong>Question asked</strong><span>What evidence could change the decision?</span></div><div><strong>Answer and source</strong><span>What was actually supplied?</span></div><div><strong>Still missing</strong><span>Which uncertainty remains?</span></div><div><strong>Next action</strong><span>Proceed, limit, test or defer?</span></div></div>
+
+**H9 page 4:** log two useful exchanges, including another group's question.
+
+::: {.notes}
+**30 minutes.** With eight groups, allow about three minutes each for a question, short answer and follow-up; use six minutes to revisit the biggest gap. Map requests to E1 pilot/reach, E2 shared city comparisons, E3 rule/interval, E4 earlier trends, E5 cut-off, E6 matching, E7 data quality, E8 economic inputs. Read only relevant supplied evidence and limits, then show the ID. Suggested follow-ups guide the trainer but are not automatic answers. Log two substantial exchanges, not eight hurried transcriptions. Afterwards distribute evidence pages 1–4 for verification; retain page 5.
+:::
+
+## Did the answer meet the request? {#d3s3-rating .reader-slide .s1-review .d3s3-review}
+
+<div class="d9-ratings"><div><b>Supported</b><span>The source answers the specific question.</span></div><div><b>Partial</b><span>It addresses one part; a relevant gap remains.</span></div><div><b>Unanswered</b><span>The check is absent or the reply changes topic.</span></div></div>
 
 ::: {.ask}
-Was that an answer to the question asked, or an assurance about something else?
+On **page 4**, rate one actual answer. Cite its source, name the gap and say what you would do next.
 :::
 
 ::: {.notes}
-20 minutes. Eight groups receive about two minutes each; reserve four minutes to revisit the most consequential missing evidence. Map questions to E1 headline/population, E2 shared comparisons, E3 threshold, E4 trends, E5 cut-off, E6 matching, E7 data quality or E8 economic inputs. Read only relevant supplied evidence and its limits first; release the source ID or card. Suggested follow-ups are prompts for the trainer, not automatic answers to unasked questions. Do not say a score audit, overlap analysis or fieldwork protocol exists. Collect three exchanges per participant, not eight rushed summaries. After the clinic distribute the full source-bank pages 1-4 for checking and the AI task; page 5 stays trainer-only.
+**10 minutes.** Three minutes alone, three in pairs, four for contrasting examples. Rate against the question actually asked, not whether GreenWaste looks promising. E3 supports a request for the pilot interval but only partly addresses national expansion. E7 honestly discloses that real fieldwork documentation is absent; that quality request remains unanswered. Recognise supported evidence as well. This links the clinic to action.
 :::
 
-## Pilot saving 1,014: what does the interval add? {#d3s3-p08 .reader-slide .s1-review .d3s3-review}
+## What would you tell the director now? {#d3s3-final .reader-slide .s1-review .d3s3-review}
 
-**E3:** compare the pilot's 95% interval with the **1,000 AED annual-saving rule**.
+On **H9 page 5**, write four sentences:
 
-Predict whether both limits clear it.
+1. **Action:** sign, sign with conditions, or request evidence.
+2. **Basis:** one source and what it establishes.
+3. **Boundary:** what it cannot yet establish.
+4. **Next step:** one request and how either answer changes the action.
 
-```{webr}
-#| echo: true
-#| autorun: false
-# Compare annual costs between pilot lottery groups.
-fit <- lm(cost_after ~ took_part, data = pilot)
-# Change the cost-difference interval to positive saving.
-limits <- confint(fit)['took_part', ]
-sort(round(-unname(limits)))
-```
-
-::: {.ask}
-How would you revise the claim that "the pilot clears the 1,000 AED rule"?
-:::
+<p class="d9-callout">Your choice may stay the same. Your reason should become more precise.</p>
 
 ::: {.notes}
-8 minutes. One trainer calculation, participants do not run or edit code. If the threshold question was asked, recall its answer; otherwise use this debrief to reveal E3. Run once: 862 and 1,167 AED. Show the printed E3 interval plot if live R is unavailable. Point estimate exceeds 1,000; interval spans it. The interval also lies above zero, so uncertainty about the minimum saving is not the same as no evidence of a reduction. Do not claim a 95% probability that the fixed effect lies in this particular interval. No national reach or value-for-money conclusion follows from this calculation alone.
+**10 minutes.** Five minutes independent writing, three to compare with opening reasons, two to hear different defensible decisions. A bounded next phase with evaluation and cost monitoring is plausible; requesting more evidence is also plausible. Do not require one button. Assess source fit, named uncertainty and accountable next action. Collect the advice before offering the optional Copilot extension. Day 4 uses a separate report without analyst access. **Core session ends at 120 minutes.**
 :::
 
-## Supported, partial or unanswered? {#d3s3-p09 .reader-slide .s1-review .d3s3-review}
+## Optional: does Copilot ask useful questions? {#d3s3-ai1 .reader-slide .s1-review .d3s3-review .d9-optional}
 
-Rate an answer **against the question it was meant to answer**.
+**15-minute extension outside the core session.** Use the separate Copilot handout.
 
-- **Supported:** relevant evidence addresses the request.
-- **Partial:** relevant evidence addresses only part.
-- **Unanswered:** the requested evidence is absent or the reply answers a different question.
-
-::: {.ask}
-On page 4, defend one rating with a source ID and one useful follow-up.
-:::
-
-<button data-open="d9-rating" data-closed="Check one example" data-opened="Hide the example" aria-controls="d9-rating" aria-expanded="false">Check one example</button>
-<div id="d9-rating" class="feedback" hidden>E3 supports the question "what are the pilot interval limits?" It only partly addresses "is national expansion justified?" E7 honestly says fieldwork documentation is unavailable; it does not establish reliable real-world follow-up.</div>
+Read a prepared response mixing sound checks with unsupported assurance. Keep one useful sentence, correct two claims, and add one decision-changing request.
 
 ::: {.notes}
-8 minutes. Pairs rate an actual logged answer before opening the example. Ask one pair with a supported rating and one with a partial/unanswered rating to explain. A transparent statement of missing evidence is useful, even when the substantive request remains unanswered. Rate answer quality separately from whether the programme looks favourable. Satisfactory answers include the source, population/comparison and relevant limitation; do not require every answer to be deficient.
+**Optional 8 minutes.** Use extension page 1 after collecting independent advice. The response was written for this exercise, not captured from a live model. Verify against H9-A/H9-B and E1–E8. The early paragraphs make useful points; the final paragraph overstates independent replication, national certainty and data reliability.
 :::
 
-## Which unresolved issue matters most? {#d3s3-p10 .reader-slide .s1-review .d3s3-review}
+## Optional: verify the revision {#d3s3-ai2 .reader-slide .s1-review .d3s3-review .d9-optional}
 
-On **page 5**, select **one issue**, not a catalogue of concerns.
+Use the better prompt on extension page 2. Check the answer against H9-A/H9-B and E1–E8.
 
-Write the evidence you need and two possible consequences:
-
-**If the evidence supports the claim, I would …**
-
-**If it challenges the claim, I would …**
-
-::: {.ask}
-Would this answer change the action, the conditions or how far the result can travel?
-:::
+<div class="d9-request"><div><b>Keep</b><span>One useful, sourced request</span></div><div><b>Challenge</b><span>One unsupported assertion</span></div><div><b>Decide</b><span>Would your advice change?</span></div></div>
 
 ::: {.notes}
-7 minutes. Two minutes alone, three minutes in pairs, two minutes sharing. Accept attribution, threshold risk, reach, data quality or full costs if the participant explains its decision consequence. Do not force the trainer's preferred issue. E1/E2 address population, E3 uncertainty, E4-E6 assumptions, E7 measurement and E8 spending. Ask for an actionable document or analysis, not assurance that more research will be done.
-:::
-
-## Now would you sign? {#d3s3-p11 .reader-slide .s1-review .d3s3-review}
-
-```{=html}
-<div data-choices><button data-choice aria-pressed="false">Sign off</button><button data-choice aria-pressed="false">With conditions</button><button data-choice aria-pressed="false">Request evidence</button><p role="status" class="feedback"></p></div>
-```
-
-::: {.ask}
-Work alone on page 5: give your final advice, one source and one boundary or condition.
-:::
-
-Compare with your opening reason on page 3. **An unchanged decision can have a better justification.**
-
-::: {.notes}
-7 minutes. Three minutes independent response, two minutes compare opening/final reasons, two minutes hear contrasting justified advice. Assess evidence use and proportionality separately from which button was selected. The note as written overstates independence, threshold certainty and sufficient national evidence. Participants may support a bounded next phase with specified conditions or request more evidence; require limits and an accountable action. Do not use room voting as the reading assessment. Complete this before the AI task.
-:::
-
-## Copilot Snapshot: review the questions it offers {#d3s3-p12 .reader-slide .s1-review .d3s3-review}
-
-**Stage 1: 8 minutes.** Read the supplied response on **worksheet page 6**.
-
-```{r, results='asis'}
-html_out(paste0('<div class="ai-reading"><p>',strsplit(d9_ai,'\n\n',fixed=TRUE)[[1]][3],'</p></div>'))
-```
-
-::: {.ask}
-Keep one useful question, correct two unsupported assurances and add one missing specific request. Cite H9-A or E1-E8.
-:::
-
-::: {.notes}
-8 minutes. Distribute page 6 with the complete three-paragraph response and Prompt A. This screen shows only its final paragraph; the first two include useful comparisons, correctly read results and requests about assumptions/costs. The response is prepared, not a captured live transcript. Four minutes markup, three minutes pair discussion, one minute share. Main corrections: independent confirmations, guaranteed national saving and complete data as reliability. Generic robust confirmation is not a specific evidence request. Do not flag the words or show the key before attempts. Shared AI good-practice card remains available; no account needed for Stage 1.
-:::
-
-## Ask Copilot for advice tied to the decision {#d3s3-p13 .reader-slide .s1-review .d3s3-review}
-
-**Stage 2: 7 minutes.** Use the improved prompt on **page 7** and the supplied sources.
-
-```{r, results='asis'}
-html_out(paste0('<div class="better-prompt"><p>',d9_prompt,'</p></div>'))
-```
-
-::: {.ask}
-Compare one useful revision and one claim you still need to check against a source.
-:::
-
-::: {.notes}
-7 minutes. Use Copilot if available and approved; paste only this fictional case, H9-A/H9-B and E1-E8. Allow two minutes prompt/context and brief answers to its clarifying questions, three minutes source checking, two minutes recording. The prompt adapts the older decision/assumption task without pretending one assumption establishes validity. No second-chat task. If devices, access or response time fail, distribute page 8 now as the prepared paper alternative and use the same comparison. Record the status on page 7; do not treat a plausible AI answer as new evidence. Timing stays within the fifteen-minute Snapshot.
-:::
-
-## Did the revision improve the evidence request? {#d3s3-p14 .reader-slide .s1-review .d3s3-review}
-
-Compare your revised output with your **three questions on page 3**.
-
-**Document or result requested? Decision purpose clear? Missing evidence admitted?**
-
-::: {.ask}
-Choose a sentence to keep and a sentence you would still challenge.
-:::
-
-<button data-open="d9-ai-key" data-closed="Open the source checks" data-opened="Hide the source checks" aria-controls="d9-ai-key" aria-expanded="false">Open the source checks</button>
-<div id="d9-ai-key" class="feedback" hidden>E2: city analyses share records. E3: pilot and matching span 1,000; all four intervals are above zero. E4-E6: checks and causal requirements differ. E7: synthetic completeness is not fieldwork assurance. E1/E8: reach and economic inputs still need evidence.</div>
-
-::: {.notes}
-5 minutes. Debrief is outside the fifteen-minute Snapshot, not an additional AI run. Ask pairs to offer a source check before opening feedback. The first AI paragraphs contained genuine strengths; do not discard all of them. National saving certainty and assumed persistence need evidence. If the model asks clarifying questions, that is useful behaviour, but no substitute for supplied sources. Different provisional actions are acceptable when bounded and justified.
-:::
-
-## Your independent request to the evaluator {#d3s3-p15 .reader-slide .s1-review .d3s3-review}
-
-Close the AI output. Work alone on **page 5**.
-
-Write one request containing:
-
-**The evidence to send → why you need it → how your advice could change**
-
-::: {.ask}
-Would an evaluator know what to send and what decision it informs?
-:::
-
-::: {.notes}
-3 minutes. Collect this independent close without AI; the original evidence remains available. Check specificity, a relevant source and the consequence for advice. Do not penalise unchanged judgement or a defensible alternative priority. Examples include earlier trends with concurrent-change records, pilot-to-national delivery/population comparison, full costs or a follow-up/measurement audit. A request for confirmation of robustness alone is insufficient. Provide brief targeted feedback for tomorrow's independent report reading.
-:::
-
-## Take the questions, not the assurances {#d3s3-p16 .reader-slide .s1-review .d3s3-review}
-
-The optional **Questions to ask an evaluator** reference has worked requests for the five families.
-
-Use it **after this session**, not as another compulsory worksheet.
-
-Tomorrow: read a separate report independently, then draft source-based advice.
-
-::: {.ask}
-Keep one question you can use in your own commissioning work.
-:::
-
-::: {.notes}
-2 minutes. Distribute the optional desk reference after collecting the independent request so its worked examples do not substitute for learner work. No extra end-of-day activity or materials: the fixed fifteen-minute daily close remains separate and can absorb overruns. Total content script is 120 minutes. Use this teaching source with its matching eight-page worksheet, question bank and analyst evidence pack.
+**Optional 7 minutes.** Use Copilot if available and approved, with only fictional sources. Otherwise use the prepared paper response. Require a source ID for a useful revision and a remaining claim. A fluent model response is not new evidence. The extension is not required for the 120-minute core.
 :::

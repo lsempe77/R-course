@@ -1,0 +1,37 @@
+---
+title: "Day 3 Session 3: trainer key"
+format:
+  html:
+    embed-resources: true
+    toc: false
+    theme: none
+    css: day3_session3_print.css
+---
+
+<header><p>Trainer only. Keep this key separate from the participant evidence pack.</p><button onclick="window.print()">Print trainer key</button></header>
+
+<div class="sheet-page">
+
+## Trainer key | Analyst clinic
+
+### Setup and release order
+
+Give H9 pages 1–5 first. Hold evidence cards E1–E8 until a relevant question is asked. Answer from the supplied source, name its limit, then show the ID. If a check is absent, say so; do not invent a clean audit. With eight groups, use roughly three minutes each for a question, answer and follow-up, then six minutes for the largest unresolved gap. Learners log two substantial exchanges on page 4. Give the four-page evidence pack after the clinic.
+
+### What the draft note gets wrong
+
+**N1:** The pilot point estimate is about 1,014 AED, but its interval of 862–1,167 AED spans the separate 1,000 AED minimum rule.<br>
+**N2:** The three city methods use the same 10,000-business file and different comparisons. Their positive direction is useful, but they are not independent replications of a national effect.<br>
+**N3:** The 2.44 benefit–cost ratio revisits the RCT-linked partial model from Session 1. It assumes 1,800 AED delivery cost, equal annual savings in years 1–5 and a 5% rate. These are not measured national returns or complete costs.
+
+### Judge answers against questions
+
+E3 answers the pilot interval question but not national reach. E4 honestly says earlier trends are unavailable. E5 gives a concrete pre-programme comparability concern near the cut-off. E6 gives reuse and residual gaps, not a full support or selection check. E7 cannot establish real-world fieldwork quality from a complete synthetic file. E8 identifies assumptions, not verified long-run savings.
+
+Accept a bounded next phase with specified evaluation and cost monitoring, or a request for further evidence, when the participant cites a source, states its boundary and names an accountable next step. A decision may remain unchanged while its justification improves. Collect the independent recommendation before offering the optional Copilot extension.
+
+### Optional 15-minute extension
+
+The supplied AI answer contains useful early observations. Its later assurances about independent studies, national savings and data reliability are unsupported. Stage 1 (8 minutes) is source-based markup; Stage 2 (7 minutes) uses the improved prompt or prepared paper alternative. Do not treat either response as new evidence.
+
+</div>

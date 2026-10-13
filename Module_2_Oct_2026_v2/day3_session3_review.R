@@ -1,5 +1,32 @@
 source('day3_session2_review.R', encoding='UTF-8')
 
+# Day 3 Session 3 revisits the RCT-linked model from Session 1.
+model$saving <- -case$rct
+model$lag <- 0
+
+d9_threshold_plot <- function() {
+  lo <- sort(-case$rct_ci)[1]
+  hi <- sort(-case$rct_ci)[2]
+  x <- function(v) 120 + (v-750)/500*900
+  sprintf(paste0(
+    '<svg class="d9-threshold" viewBox="0 0 1120 250" role="img" ',
+    'aria-label="Pilot annual saving estimate %s AED, 95 percent interval %s to %s AED; ',
+    'the interval crosses the 1,000 AED rule.">',
+    '<line x1="120" y1="155" x2="1020" y2="155" stroke="#aec2d6" stroke-width="4"/>',
+    '<line x1="%.1f" y1="55" x2="%.1f" y2="180" stroke="#b8272c" stroke-width="3" stroke-dasharray="8 6"/>',
+    '<text x="%.1f" y="40" text-anchor="middle" fill="#b8272c" font-size="27" font-weight="700">Rule: 1,000</text>',
+    '<line x1="%.1f" y1="105" x2="%.1f" y2="105" stroke="#215a9e" stroke-width="8"/>',
+    '<circle cx="%.1f" cy="105" r="13" fill="#063360"/>',
+    '<text x="%.1f" y="87" text-anchor="middle" font-size="26" font-weight="700">%s</text>',
+    '<text x="%.1f" y="205" text-anchor="middle" font-size="24">%s</text>',
+    '<text x="%.1f" y="205" text-anchor="middle" font-size="24">%s</text>',
+    '<text x="560" y="245" text-anchor="middle" font-size="23">Annual saving at 12 months, AED per pilot business | 95%% interval</text></svg>'),
+    fmt(-case$rct), fmt(lo), fmt(hi),
+    x(1000),x(1000),x(1000),
+    x(lo),x(hi),x(-case$rct),x(-case$rct),fmt(-case$rct),
+    x(lo),fmt(lo),x(hi),fmt(hi))
+}
+
 d9_ids <- paste0('E', 1:8)
 d9_results <- data.frame(
   Source=c('E1 / E3','E2 / E4','E2 / E5','E2 / E6'),
@@ -23,7 +50,7 @@ d9_map <- data.frame(
 d9_note <- c(
   sprintf('N1. Recommendation to the director: approve phased national expansion of GreenWaste. The programme subsidises business waste-management technology. In the pilot district, the lottery comparison estimated an annual saving of %s AED per business after 12 months, exceeding our %s AED minimum-saving rule. This is the clearest basis for proceeding.',fmt(-case$rct),fmt(decision_rule)),
   'N2. The city analyses also estimate lower costs for participants, using the difference between the two changes, the score cut-off and matched comparisons. Their figures differ, but the common direction across four methods provides independent confirmation that the programme works. Table T9 reports the estimates and their uncertainty.',
-  sprintf('N3. We recognise that the pilot is from one district and the cut-off result is local. The city model gives a benefit-cost ratio of %.2f under stated cost and duration assumptions. National delivery should monitor costs and implementation, but the pilot point estimate clears our rule of at least a 1,000 AED reduction, so no further evidence is needed before approving the expansion.',ratio()))
+  sprintf('N3. The RCT-linked model gives a benefit-cost ratio of %.2f, using the pilot effect and stated delivery-cost, duration and rate assumptions. This establishes value for money nationally. We should monitor costs during expansion, but no further evidence is needed before approval.',ratio()))
 d9_note_html <- function() paste(sprintf('<p>%s</p>',d9_note),collapse='')
 d9_bank <- data.frame(
   ID=d9_ids,
@@ -36,7 +63,7 @@ d9_bank <- data.frame(
     sprintf('Businesses with a score at or below 58 took part. The local result uses a two-point window and an HC2 robust interval. A separate five-point diagnostic shows pre-programme managers about %s years younger below the cut-off. This is a concrete comparability concern, not proof of which alternative cause explains the cost jump.',fmt(abs(case$age_jump),1)),
     sprintf('Matching uses manager age, staff, area (in 100 square metres) and filtration before support. Every participant gets a nearest neighbour, without a distance limit. %s distinct controls are used; one is reused %s times. Residual gaps in mean manager age and in waste cost before GreenWaste are %s years and %s AED. The reported business-clustered interval treats the chosen matches as given.',fmt(match_A$used),fmt(match_A$max_reuse),fmt(match_A$age_gap,1),fmt(match_A$base_gap)),
     'These are complete generated records in a synthetic training file. No real recruitment, fieldwork, attrition, measurement-validation or representativeness documents are supplied. Completeness of this file does not demonstrate those qualities in an actual evaluation.',
-    sprintf('The limited model gives a ratio of %.2f. Its annual benefit is the provisional city DiD saving of %s AED. It assumes 1,800 AED cost at year 0, no saving in year 1, five equal saving years in years 2-6 and a 5%% rate. This is a mixed-actor model, not a complete public-budget or social appraisal.',ratio(),fmt(model$saving))),
+    sprintf('The RCT-linked partial model gives a ratio of %.2f. Its annual benefit is the pilot saving estimate of %s AED at 12 months. It assumes 1,800 AED delivery cost at year 0, equal annual savings in years 1-5 and a 5%% rate. Delivery costs and later savings are not RCT measurements; this is not a complete national public-budget or social appraisal.',ratio(),fmt(model$saving))),
   Unavailable=c(
     'No national representativeness or implementation-transfer evidence is supplied.',
     'No common national effect or genuinely independent city replication is supplied.',
