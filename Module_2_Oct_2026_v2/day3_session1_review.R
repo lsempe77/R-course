@@ -128,6 +128,17 @@ d7_sensitivity_chart <- function() {
   d7_svg(paste0(rows,sprintf('<line x1="%.1f" x2="%.1f" y1="55" y2="325" stroke="#B8272C" stroke-width="2" stroke-dasharray="7 5"/><text x="%.1f" y="40" text-anchor="middle" font-size="21">Ratio 1</text>',x(1),x(1),x(1))),
     'Illustrative benefit-cost ratios: base 2.44; fading savings 1.40; 600 AED extra cost 1.83; eight percent discount 2.25; three saving years 1.53; fading savings plus 800 AED extra cost 0.97.',340)
 }
+d7_interactive_model <- function() paste0(
+  '<div class="d3-model-widget" data-saving="',sprintf('%.6f',model$saving),'" data-cost="',model$cost,'">',
+  '<div class="d3-sliders">',
+  '<label>How many saving years? <output data-d3-output="years">5</output><input type="range" min="1" max="5" step="1" value="5" data-d3-input="years"></label>',
+  '<label>Saving falls each year <output data-d3-output="fade">0%</output><input type="range" min="0" max="40" step="10" value="0" data-d3-input="fade"></label>',
+  '<label>Extra delivery cost <output data-d3-output="extra">0 AED</output><input type="range" min="0" max="1200" step="200" value="0" data-d3-input="extra"></label>',
+  '</div><div class="d3-live-bars">',
+  '<div class="d3-live-row"><span>Modelled savings</span><div class="d3-live-track"><span data-d3-bar="benefits" style="width:',round(d7_benefits/5200*100,1),'%"></span></div><b data-d3-output="benefits">',fmt(d7_benefits),' AED</b></div>',
+  '<div class="d3-live-row"><span>Assumed cost</span><div class="d3-live-track"><span data-d3-bar="cost" style="width:',round(model$cost/5200*100,1),'%"></span></div><b data-d3-output="cost">',fmt(model$cost),' AED</b></div>',
+  '</div><div class="d3-live-result"><span>Benefit-cost ratio</span><strong data-d3-output="ratio">',fmt(ratio(),2),'</strong><button type="button" data-d3-reset>Reset</button></div>',
+  '<p class="d3-live-message" data-d3-output="message">In this partial model, included savings exceed included costs.</p></div>')
 d7_break_even_chart <- function() {
   x<-function(v)90+v/1400*920
   lo<-min(-case$rct_ci); hi<-max(-case$rct_ci); point<-model$saving

@@ -13,8 +13,8 @@ d9_threshold_plot <- function() {
     'aria-label="Pilot annual saving estimate %s AED, 95 percent interval %s to %s AED; ',
     'the interval crosses the 1,000 AED rule.">',
     '<line x1="120" y1="155" x2="1020" y2="155" stroke="#aec2d6" stroke-width="4"/>',
-    '<line x1="%.1f" y1="55" x2="%.1f" y2="180" stroke="#b8272c" stroke-width="3" stroke-dasharray="8 6"/>',
-    '<text x="%.1f" y="40" text-anchor="middle" fill="#b8272c" font-size="27" font-weight="700">Rule: 1,000</text>',
+    '<line data-d3-rule-line x1="%.1f" y1="55" x2="%.1f" y2="180" stroke="#b8272c" stroke-width="3" stroke-dasharray="8 6"/>',
+    '<text data-d3-rule-label x="%.1f" y="40" text-anchor="middle" fill="#b8272c" font-size="27" font-weight="700">Rule: 1,000</text>',
     '<line x1="%.1f" y1="105" x2="%.1f" y2="105" stroke="#215a9e" stroke-width="8"/>',
     '<circle cx="%.1f" cy="105" r="13" fill="#063360"/>',
     '<text x="%.1f" y="87" text-anchor="middle" font-size="26" font-weight="700">%s</text>',
@@ -155,6 +155,38 @@ d9_evidence_html <- function(i) paste0(
   '<p><strong>Not supplied.</strong> ',d9_bank$Unavailable[i],'</p>',
   '<p><strong>A useful follow-up.</strong> ',d9_bank$Follow_up[i],'</p>',
   '<p><strong>Decision purpose.</strong> ',d9_bank$Purpose[i],'</p></article>')
+d9_screen_desk <- function() {
+  topics <- c('Pilot and reach','Shared city file','Saving rule','Earlier trends',
+              'Score cut-off','Matching','Data quality','Costs and duration')
+  supplied <- c(
+    'The pilot randomly assigned 400 businesses in one district. Annual waste cost was measured after 12 months.',
+    'Three city methods use the same 10,000-business teaching file. They are different comparisons, not independent studies.',
+    'Pilot saving: 1,014 AED per business per year. The 95% interval is 862 to 1,167 AED, crossing the 1,000 AED rule.',
+    'The city file has one measure before and one after. It cannot show whether the groups followed similar earlier trends.',
+    'The city cut-off is score 58. Manager age also changes near that score, raising a comparability question.',
+    'Matching reuses some comparison businesses and sets no maximum match distance.',
+    'The generated teaching file has complete rows; it does not document real recruitment, follow-up or measurement quality.',
+    'The partial model gives a ratio of 2.44 using the pilot effect, 1,800 AED assumed cost, five saving years and a 5% rate.')
+  missing <- c(
+    'How national businesses and delivery differ from this district.',
+    'A genuinely separate replication or one effect estimate for the national target group.',
+    'Evidence that a national programme would meet the minimum saving.',
+    'Several earlier cost measurements and a record of other changes affecting the groups.',
+    'A score-setting audit and checks that businesses on either side are otherwise comparable.',
+    'Match-distance, overlap and residual-balance checks; unmeasured differences remain possible.',
+    'Fieldwork, attrition and validation records from a real evaluation.',
+    'Audited full costs and follow-up showing whether savings persist.')
+  buttons <- paste(vapply(seq_along(topics), function(i) paste0(
+    '<button type="button" data-d3-evidence="E',i,'" aria-pressed="false">E',i,' ',topics[i],'</button>'),''),collapse='')
+  panels <- paste(vapply(seq_along(topics), function(i) paste0(
+    '<article class="d3-evidence-panel" data-d3-panel="E',i,'" hidden><h3>E',i,' ',topics[i],'</h3>',
+    '<p><strong>What we have:</strong> ',supplied[i],'</p>',
+    '<p><strong>What is missing:</strong> ',missing[i],'</p></article>'),''),collapse='')
+  paste0('<div class="d3-evidence-desk"><div class="d3-evidence-buttons">',buttons,
+         '</div><div class="d3-evidence-panel d3-evidence-prompt" data-d3-panel="prompt">',
+         'Ask a question first. The presenter then opens one relevant evidence card.',
+         '</div>',panels,'</div>')
+}
 d9_ai_prompt_a <- paste(
   'An evaluation of subsidised waste-management technology used a pilot lottery,',
   'city difference-in-differences, a score cut-off and matching. It reports annual savings in Table T9.',

@@ -1,0 +1,72 @@
+<script>
+(() => {
+  const money = value => Math.round(value).toLocaleString('en-US');
+  const updateModel = widget => {
+    const years = Number(widget.querySelector('[data-d3-input="years"]').value);
+    const fade = Number(widget.querySelector('[data-d3-input="fade"]').value);
+    const extra = Number(widget.querySelector('[data-d3-input="extra"]').value);
+    const saving = Number(widget.dataset.saving);
+    const baseCost = Number(widget.dataset.cost);
+    let benefits = 0;
+    for (let year = 1; year <= years; year++) {
+      benefits += saving * Math.pow(1 - fade / 100, year - 1) / Math.pow(1.05, year);
+    }
+    const cost = baseCost + extra;
+    const ratio = benefits / cost;
+    widget.querySelector('[data-d3-output="years"]').textContent = years;
+    widget.querySelector('[data-d3-output="fade"]').textContent = fade + '%';
+    widget.querySelector('[data-d3-output="extra"]').textContent = money(extra) + ' AED';
+    widget.querySelector('[data-d3-output="benefits"]').textContent = money(benefits) + ' AED';
+    widget.querySelector('[data-d3-output="cost"]').textContent = money(cost) + ' AED';
+    widget.querySelector('[data-d3-output="ratio"]').textContent = ratio.toFixed(2);
+    widget.querySelector('[data-d3-bar="benefits"]').style.width = Math.min(100, benefits / 5200 * 100) + '%';
+    widget.querySelector('[data-d3-bar="cost"]').style.width = Math.min(100, cost / 5200 * 100) + '%';
+    const message = widget.querySelector('[data-d3-output="message"]');
+    message.textContent = ratio >= 1
+      ? 'In this partial model, included savings exceed included costs.'
+      : 'In this partial model, included costs exceed included savings.';
+    message.classList.toggle('below-one', ratio < 1);
+  };
+  const updateRule = widget => {
+    const value = Number(widget.querySelector('[data-d3-input="rule"]').value);
+    const plot = widget.closest('section').querySelector('.d9-threshold');
+    const x = 120 + (value - 750) / 500 * 900;
+    plot.querySelector('[data-d3-rule-line]').setAttribute('x1', x);
+    plot.querySelector('[data-d3-rule-line]').setAttribute('x2', x);
+    const label = plot.querySelector('[data-d3-rule-label]');
+    label.setAttribute('x', x);
+    label.textContent = 'Rule: ' + money(value);
+    widget.querySelector('[data-d3-output="rule"]').textContent = money(value) + ' AED';
+    const answer = value < 862 ? 'The full pilot interval is above this rule.'
+      : value > 1167 ? 'The full pilot interval is below this rule.'
+      : 'The pilot interval crosses this rule; the minimum is not settled.';
+    widget.querySelector('[data-d3-output="rule-message"]').textContent = answer;
+  };
+  document.addEventListener('input', event => {
+    const model = event.target.closest('.d3-model-widget');
+    if (model) updateModel(model);
+    const rule = event.target.closest('.d3-rule-widget');
+    if (rule) updateRule(rule);
+  });
+  document.addEventListener('click', event => {
+    const reset = event.target.closest('[data-d3-reset]');
+    if (reset) {
+      const model = reset.closest('.d3-model-widget');
+      model.querySelector('[data-d3-input="years"]').value = 5;
+      model.querySelector('[data-d3-input="fade"]').value = 0;
+      model.querySelector('[data-d3-input="extra"]').value = 0;
+      updateModel(model);
+    }
+    const card = event.target.closest('[data-d3-evidence]');
+    if (card) {
+      const desk = card.closest('.d3-evidence-desk');
+      desk.querySelectorAll('[data-d3-evidence]').forEach(button => {
+        button.setAttribute('aria-pressed', String(button === card));
+      });
+      desk.querySelectorAll('[data-d3-panel]').forEach(panel => {
+        panel.hidden = panel.dataset.d3Panel !== card.dataset.d3Evidence;
+      });
+    }
+  });
+})();
+</script>

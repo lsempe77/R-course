@@ -1,0 +1,33 @@
+.reveal .d3-screen-instruction{font-size:25px;color:#063360;margin:12px 0 20px}
+.reveal .d3-method-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:28px 0 22px}
+.reveal .d3-method-cards details{border-top:5px solid #215a9e;background:#eef4fa;padding:18px 20px;min-height:170px;box-sizing:border-box}
+.reveal .d3-method-cards summary{font-size:26px;font-weight:700;color:#063360;cursor:pointer;line-height:1.2}
+.reveal .d3-method-cards details p{font-size:23px;line-height:1.25;margin:18px 0 0}
+.reveal .d3-method-cards details[open]{background:#e9f2e9;border-color:#3b824b}
+.reveal .d3-model-widget{margin:20px 0 10px}
+.reveal .d3-model-widget .d3-sliders{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.reveal .d3-model-widget label{font-size:22px;line-height:1.2;color:#063360;display:block}
+.reveal .d3-model-widget output,.reveal .d3-rule-widget output{font-weight:700}
+.reveal .d3-model-widget input[type=range],.reveal .d3-rule-widget input[type=range]{display:block;width:100%;margin:15px 0;accent-color:#215a9e;cursor:pointer}
+.reveal .d3-live-bars{margin:22px 0 12px}
+.reveal .d3-live-row{display:grid;grid-template-columns:180px 1fr 125px;align-items:center;gap:15px;margin:10px 0;font-size:22px}
+.reveal .d3-live-track{height:27px;background:#edf2f7}
+.reveal .d3-live-track span{height:100%;display:block;background:#215a9e;transition:width .15s}
+.reveal .d3-live-row:last-child .d3-live-track span{background:#b8272c}
+.reveal .d3-live-result{display:flex;align-items:center;gap:28px;border-top:1px solid #c9d9e8;padding-top:12px;font-size:25px;color:#063360}
+.reveal .d3-live-result strong{font-size:38px}
+.reveal .d3-live-result button{font-size:18px;margin-left:auto;padding:7px 13px;border:1px solid #215a9e;background:white;color:#063360;cursor:pointer}
+.reveal .d3-live-message{font-size:21px;margin:5px 0;color:#063360}
+.reveal .d3-live-message.below-one{color:#b8272c;font-weight:700}
+.reveal .d3-rule-widget{display:grid;grid-template-columns:285px 1fr 160px;align-items:center;gap:20px;font-size:24px;margin:0 0 10px}
+.reveal .d3-rule-widget p{grid-column:1/-1;margin:0;font-size:23px;color:#063360}
+.reveal .d3-evidence-desk{margin:20px 0}
+.reveal .d3-evidence-buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.reveal .d3-evidence-buttons button{font-size:22px;text-align:left;background:#eef4fa;border:2px solid #c9d9e8;color:#063360;padding:10px 14px;cursor:pointer}
+.reveal .d3-evidence-buttons button[aria-pressed=true],.reveal .d3-evidence-buttons button[aria-pressed=true]:focus{background:#dcebf8;border-color:#215a9e;color:#063360!important;font-weight:700}
+.reveal .d3-evidence-panel{margin:17px 0 0;padding:16px 23px;border-left:6px solid #215a9e;background:#f6f9fc;min-height:215px;box-sizing:border-box}
+.reveal .d3-evidence-panel[hidden]{display:none}
+.reveal .d3-evidence-panel h3{font-size:29px;color:#063360;margin:0 0 8px}
+.reveal .d3-evidence-panel p{font-size:23px;line-height:1.2;margin:9px 0}
+.reveal .d3-evidence-prompt{font-size:27px;color:#063360;padding:55px 20px;text-align:center}
+.reveal .d3-optional-quote{border-left:6px solid #b8272c;padding:10px 22px;margin:25px 0;font-size:27px;line-height:1.3}

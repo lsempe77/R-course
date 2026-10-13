@@ -6,14 +6,14 @@ always_allow_html: true
 format:
   live-revealjs:
     theme: [theme_dge.scss, theme_live.scss, theme_reader.scss]
-    css: [session1_review.css, day3_session1_review.css]
+    css: [session1_review.css, day3_session1_review.css, day3_screen.css]
     logo: assets/dge_logo_horizontal.svg
     slide-number: true
     width: 1280
     height: 720
     slide-level: 2
     embed-resources: true
-    include-after-body: [_reader_interactions.html, _session1_review_interactions.html]
+    include-after-body: [_reader_interactions.html, _session1_review_interactions.html, _day3_screen_interactions.html]
 webr:
   render-df: kable
   resources: [evaluation_data_GreenWaste_simple.csv]
@@ -32,7 +32,7 @@ stopifnot(round(model$saving)==1014, round(ratio(),2)==2.44,
           round(d7_benefits)==4392, round(d7_npv)==2592)
 ```
 
-## The pilot RCT gives us a cost outcome {#d3s1-p01 .reader-slide .s1-review .d3s1-review}
+## The pilot found lower waste costs {#d3s1-p01 .reader-slide .s1-review .d3s1-review}
 
 ```{r, results='asis'}
 html_out(interval_svg('trial'))
@@ -52,7 +52,7 @@ What does the interval tell us about the separate **1,000 AED annual-saving rule
 - Ask what the trial did not measure for today's spending question. It did not provide a full incremental programme cost or evidence that the effect persists for five years.
 :::
 
-## Effect estimate and delivery cost {#d3s1-p02 .reader-slide .s1-review .d3s1-review}
+## Measured saving, assumed programme cost {#d3s1-p02 .reader-slide .s1-review .d3s1-review}
 
 <div class="evidence-pair">
 <div><span class="evidence-label">RCT estimate at 12 months</span><strong>`r fmt(model$saving)` AED</strong><span>lower annual waste cost per pilot business</span></div>
@@ -70,7 +70,7 @@ Can we decide whether the programme pays for itself by comparing 1,014 with 1,80
 
 - Point left to the trial estimate and right to the assumed delivery cost. The trial compares outcomes under GreenWaste with outcomes under no GreenWaste. The 1,800 AED is fictional and has no cost audit behind it.
 - Ask why 1,014 divided by 1,800 would mislead: one is an annual rate at 12 months, the other a one-off year-0 cost. We need a time horizon, evidence on persistence and a common valuation date.
-- Use Q1 on worksheet page 3 to mark the source and status of each input. Do not imply that running R can turn an assumed cost into a measured cost.
+- Ask each table to name the source of both numbers: trial data for the saving; an assumption for delivery cost. Take one answer aloud before moving on. Running R cannot turn an assumed cost into a measured cost.
 :::
 
 ## Economic evaluation compares alternatives {#d3s1-p03 .reader-slide .s1-review .d3s1-review}
@@ -95,29 +95,31 @@ If control businesses also pay for waste collection, should their ordinary colle
 - Ask what changes when the decision shifts from the pilot to a citywide rollout. Costs, uptake and effects may all change. The pilot comparison alone cannot answer that larger question.
 :::
 
-## CEA, CUA and CBA use different outcome units {#d3s1-p04 .reader-slide .s1-review .d3s1-review}
+## Three ways to compare costs and results {#d3s1-p04 .reader-slide .s1-review .d3s1-review}
 
-| Approach | What the result says | Example unit |
-|---|---|---|
-| **Cost-effectiveness analysis (CEA)** | Extra cost per extra outcome in its natural unit | AED per tonne of landfill avoided |
-| **Cost-utility analysis (CUA)** | Extra cost per health-utility gain | AED per quality-adjusted life year (QALY) |
-| **Cost-benefit analysis (CBA)** | Costs and benefits expressed in money | Net benefit in AED or benefit-cost ratio |
+<p class="d3-screen-instruction">At your table, say what decision each result could help with. Open the cards to see the method names.</p>
 
-**CUA is a type of CEA.** Choice of method follows the decision question and the outcome evidence.
+<div class="d3-method-cards">
+<details><summary>AED per tonne of landfill avoided</summary><p><strong>CEA:</strong> cost per additional result, measured in its natural unit.</p></details>
+<details><summary>AED per year in good health</summary><p><strong>CUA:</strong> cost per QALY gained. A QALY combines years lived and health quality.</p></details>
+<details><summary>Net benefit in AED</summary><p><strong>CBA:</strong> put the included benefits and costs into money, then compare them.</p></details>
+</div>
+
+**CUA is a specialised form of CEA.** The question and available outcome data determine the method.
 
 ::: {.ask}
-Which approach can use GreenWaste's measured waste-cost outcome directly in a monetary model?
+Which approach can use GreenWaste's measured waste-cost outcome in a monetary model?
 :::
 
 ::: {.notes}
-**6 minutes. Main point:** The three approaches differ chiefly in how they express benefits, not in whether costs matter.
+**6 minutes. Main point:** The methods differ in the unit used for the result. All compare added costs and added outcomes against an alternative.
 
-- Read across each row: CEA keeps the outcome in a natural unit; CUA uses a preference-based health measure such as a QALY; CBA values benefits and costs in money. All require comparison with an alternative and suitable cost data.
+- Give tables one minute to discuss what each result could help decide, then open each card and introduce the name. CEA keeps the result in its natural unit; CUA uses a health measure called a QALY; CBA puts included benefits and costs in money.
 - GreenWaste's RCT outcome is already measured in AED, so it can be a candidate monetary benefit in a partial cost-benefit model after checking what the spending represents. A landfill outcome in tonnes would support a separate CEA if its causal effect and incremental costs were estimated. No QALY is in this case.
 - For definitions, see the [CDC's CEA guide](https://www.cdc.gov/polaris/php/economics/cost-effectiveness.html), [NICE's cost-utility guidance](https://www.nice.org.uk/process/pmg36/chapter/economic-evaluation-2/), and the [HM Treasury Green Book](https://www.gov.uk/government/publications/the-green-book--2/the-green-book-2026). These are methodological references; the case's 5% rate is an assumption, not official guidance.
 :::
 
-## CEA would ask: cost per tonne avoided {#d3s1-p05 .reader-slide .s1-review .d3s1-review}
+## Cost per tonne of landfill avoided {#d3s1-p05 .reader-slide .s1-review .d3s1-review}
 
 <div class="method-equation"><div class="fraction"><span>extra cost of GreenWaste</span><span>extra tonnes of landfill avoided</span></div><strong>= AED per tonne avoided</strong></div>
 
@@ -132,10 +134,10 @@ Would the RCT's 1,014 AED waste-cost saving fill the denominator of this CEA?
 
 - The denominator here is tonnes of landfill avoided relative to the no-GreenWaste alternative. The 1,014 AED RCT result concerns waste-management cost and cannot be relabelled as tonnes.
 - For some perspectives, avoided waste spending could lower the net incremental cost in the numerator. The evaluator must check whether that spending is a real resource saving or a transfer, and avoid including it again as a separate monetary benefit in the same calculation.
-- Ask Q2(a) on the worksheet: name the missing effect and cost records. Do not calculate an AED-per-tonne figure from invented landfill effects.
+- Give tables one minute to name the two missing records: landfill outcomes for both groups and complete programme costs. Do not calculate an AED-per-tonne figure from invented effects.
 :::
 
-## CUA would ask: cost per QALY gained {#d3s1-p06 .reader-slide .s1-review .d3s1-review}
+## Cost per QALY gained in a health study {#d3s1-p06 .reader-slide .s1-review .d3s1-review}
 
 ```{r, results='asis'}
 html_out(d7_qaly_chart())
@@ -152,16 +154,16 @@ Why would tonnes of landfill avoided and QALYs answer different policy questions
 
 - Read the shaded area: four years at a quality-of-life weight of 0.7 give 2.8 QALYs in this simplified health example. It is not a GreenWaste finding. Explain that CUA is a specialised CEA, usually expressed as incremental cost per QALY gained against an alternative.
 - The case has neither a measured health-utility outcome nor a credible causal pathway quantified into QALYs. Do not convert waste cost or landfill tonnes into QALYs by assertion.
-- Ask participants to match each unit to a policy question in Q2(b). [NICE's economic evaluation manual](https://www.nice.org.uk/process/pmg36/chapter/economic-evaluation-2/) gives a primary example of cost-utility analysis.
+- Ask tables why landfill tonnes and years in good health answer different questions. Take one example aloud. [NICE's economic evaluation manual](https://www.nice.org.uk/process/pmg36/chapter/economic-evaluation-2/) gives a primary example of cost-utility analysis.
 :::
 
-## CBA asks whether monetised benefits exceed costs {#d3s1-p07 .reader-slide .s1-review .d3s1-review}
+## Are the money benefits larger than the costs? {#d3s1-p07 .reader-slide .s1-review .d3s1-review}
 
-<div class="equation-row"><span>present value of benefits</span><strong>minus</strong><span>present value of costs</span><strong>= net benefit (AED)</strong></div>
+<div class="equation-row"><span>savings valued today</span><strong>minus</strong><span>costs valued today</span><strong>= net benefit (AED)</strong></div>
 
-Or divide benefits by costs to obtain a **benefit-cost ratio**. A ratio above **1** means the included, modelled benefits exceed the included costs.
+Or divide savings by costs to get a **benefit-cost ratio**. A ratio above **1** means the savings included in this model exceed its included costs.
 
-GreenWaste's waste-cost saving is in AED. Whether it is a **social benefit** depends on what the cost reduction represents and which perspective the appraisal takes.
+GreenWaste's waste-cost saving is in AED. A lower bill is a gain for society only if it reflects fewer real resources used, not just a payment moved from one group to another.
 
 ::: {.notes}
 **5 minutes. Main point:** A benefit-cost ratio is meaningful only for a stated boundary of monetised benefits and costs.
@@ -171,9 +173,9 @@ GreenWaste's waste-cost saving is in AED. Whether it is a **social benefit** dep
 - This is not a complete social CBA or an authority budget return. Use [HM Treasury's Green Book guidance on economic transfers and perspectives](https://www.gov.uk/government/publications/the-green-book--2/the-green-book-2026) as a methodological reference.
 :::
 
-## Perspective changes what belongs in the ledger {#d3s1-p08 .reader-slide .s1-review .d3s1-review}
+## Whose costs and savings count? {#d3s1-p08 .reader-slide .s1-review .d3s1-review}
 
-<div class="perspective-lines"><p><strong>Authority:</strong> equipment, delivery staff, administration and any public savings.</p><p><strong>Businesses:</strong> waste spending, time and maintenance.</p><p><strong>Society:</strong> real resource costs and benefits across both groups, including environmental effects; transfers need separate treatment.</p></div>
+<div class="perspective-lines"><p><strong>Authority:</strong> equipment, delivery staff, administration and any public savings.</p><p><strong>Businesses:</strong> waste spending, staff time and maintenance.</p><p><strong>Society:</strong> all real resources used or saved, plus environmental effects. A payment moved between groups is not a new social gain.</p></div>
 
 The current illustration includes **one assumed authority cost** and **one business financial saving**. It leaves other entries unmeasured.
 
@@ -186,10 +188,10 @@ Could the director call this ratio a return on the authority's budget?
 
 - Read the authority and business lines aloud. The model combines an authority delivery cost with a business waste-cost saving. The latter does not automatically return money to the authority's budget.
 - For a social analysis, determine whether reduced bills reflect saved collection resources or transfers to someone else. Ask for staff time, maintenance, implementation and environmental effects, with timing and ownership of each item.
-- Q3 on worksheet page 3 asks participants to identify one missing item and the record that would establish it. Avoid adding a guessed amount twice.
+- Ask each table to name one missing cost or benefit and the record that would establish it. Hear one authority item and one business item. Avoid adding a guessed amount twice.
 :::
 
-## The model extends one RCT year into five {#d3s1-p09 .reader-slide .s1-review .d3s1-review}
+## The model assumes five years of savings {#d3s1-p09 .reader-slide .s1-review .d3s1-review}
 
 ```{r, results='asis'}
 html_out(d7_timeline())
@@ -208,10 +210,10 @@ Which part of this timeline would follow-up data test?
 
 - The RCT measures annual waste cost at 12 months, not a five-year cash-flow series. For this teaching illustration, the model treats that annual difference as the saving in year 1 and repeats it in years 2 to 5.
 - The 1,800 AED cost occurs in year 0 as an assumption. No audited cost schedule or follow-up evidence for persistence is supplied.
-- Have participants mark observed input versus projection in H7-A on worksheet page 1. Ask what additional follow-up would reveal whether benefits fade or maintenance costs arise.
+- Ask tables which part was observed at 12 months and which years are projected. Follow-up data would test fading benefits; programme accounts would reveal maintenance costs.
 :::
 
-## Discounting puts different years on one scale {#d3s1-p10 .reader-slide .s1-review .d3s1-review}
+## A future saving has a lower value today {#d3s1-p10 .reader-slide .s1-review .d3s1-review}
 
 ```{r, results='asis'}
 html_out(d7_discount())
@@ -228,7 +230,7 @@ Does discounting tell us whether the forecast savings will actually happen?
 
 - Follow the plotted points from years 1 to 5. Each starts with the same assumed 1,014 AED annual saving, but its value at year 0 falls with time. Work the first point: 1,014.355 divided by 1.05 equals about 966 AED. The teaching calculation uses the unrounded RCT estimate; slides display whole AED.
 - The 5% rate is a case assumption, not a rate that we claim an authority must use. The first modelled saving is year 1, aligned with the 12-month annual-cost outcome; years 2 to 5 remain forecasts.
-- On worksheet page 2, Q4 asks participants to calculate the first present value before reading the total. Keep discounting separate from the assumption that benefits persist.
+- Ask tables to predict the year-1 value before showing the first plotted label. Work 1,014 divided by 1.05 on screen or aloud. Keep discounting separate from the assumption that benefits persist.
 :::
 
 ## Five modelled savings have a present value of 4,392 AED {#d3s1-p11 .reader-slide .s1-review .d3s1-review}
@@ -246,7 +248,7 @@ Add the **year-1 to year-5 present values**, using the unrounded RCT estimate. T
 
 - Point to year 0: delivery cost 1,800 AED. Each of years 1 to 5 uses the same annual saving assumption but a different discount factor. Read year 1 and year 5; participants can scan the middle rows.
 - Rounded displayed rows may differ by one AED from the rounded exact total. The helper calculates with the unrounded RCT estimate of 1,014.355 AED.
-- Have participants finish Q4 on worksheet page 3. Ask why multiplying 1,014 by five is not the present value and why five years cannot be inferred from a 12-month trial.
+- Ask one table why multiplying 1,014 by five is not the value today, and another why five saving years cannot be inferred from a 12-month trial.
 :::
 
 ## The partial model gives a ratio of 2.44 {#d3s1-p12 .reader-slide .s1-review .d3s1-review}
@@ -318,27 +320,27 @@ Does the RCT interval settle either threshold? Which part of the model could mov
 
 - The model break-even calculation is 1,800 divided by the five-year present-value factor, about 416 AED per year. It assumes all listed inputs and costs are correct. The pilot RCT interval of 862 to 1,167 AED is above this model threshold, but that is only partial uncertainty.
 - The interval crosses the policy's 1,000 AED annual-saving rule. It therefore does not establish that the rule is exceeded with 95% confidence. Raising costs or shortening persistence moves the economic break-even saving upward.
-- Do not turn the RCT confidence interval into a confidence interval for the ratio; model-input and transport uncertainty are also present. Use Q5 on worksheet page 3.
+- Do not turn the RCT confidence interval into a confidence interval for the ratio; cost, persistence and transfer beyond the pilot are also uncertain. Ask tables which threshold the interval crosses.
 :::
 
-## Changing assumptions changes the ratio {#d3s1-p15 .reader-slide .s1-review .d3s1-review}
+## Which assumption changes the result? {#d3s1-p15 .reader-slide .s1-review .d3s1-review}
 
 ```{r, results='asis'}
-html_out(d7_sensitivity_chart())
+html_out(d7_interactive_model())
 ```
 
-The single-input scenarios remain above **1**. Combining fading savings with **800 AED** of additional cost gives about **0.97**. These are examples, not measured outcomes.
+<p class="d3-screen-instruction">Predict first. Then move one slider at a time. Finally combine fading savings with extra costs.</p>
 
 ::: {.ask}
-Which assumption would you investigate first, and what record would help?
+Can you move the ratio below 1? Which input needs real evidence before a decision?
 :::
 
 ::: {.notes}
-**6 minutes. Main point:** Sensitivity results show dependence on chosen inputs and ranges, not which scenario will happen.
+**6 minutes. Main point:** The ratio changes when assumed cost or future savings change. The sliders test assumptions; they do not estimate what will happen.
 
-- Give pairs two minutes to predict which change lowers the ratio most. Then read the plotted values: base 2.44; 30% annual fading 1.40; 600 AED extra cost 1.83; 8% discount rate 2.25; three saving years 1.53; fading plus 800 AED extra cost 0.97.
-- The final row changes two inputs and falls below one. It is a stress test, not evidence that costs or fading have those values. Do not rank the importance of assumptions in general from arbitrarily chosen changes.
-- Ask for records: programme accounts and staff time for costs; follow-up waste-cost data for persistence; applicable local appraisal guidance for the rate. Participants record one evidence request in Q6 on worksheet page 4.
+- Ask tables to predict the direction of each slider before moving it. At the default, five years, no fading and no extra cost give 2.44. Three years give about 1.53; 30% annual fading gives about 1.40. Combining 30% fading and 800 AED extra cost gives about 0.97.
+- Point to both bars: the blue bar is modelled savings, the red bar is assumed cost. The 5% discount rate stays fixed on this slide. Reset after the combined example.
+- Ask for records: programme accounts and staff time for costs; follow-up waste-cost data for persistence. Each table names one record and how a different value would change its advice.
 :::
 
 ## A pilot result does not price a citywide rollout {#d3s1-p16 .reader-slide .s1-review .d3s1-review}
@@ -356,7 +358,7 @@ What would change if the same programme costs more per business at city scale?
 
 - Ask participants to name one way scale could change the numerator and one way it could change the denominator. New districts and businesses may respond differently; delivery capacity and input prices can also change.
 - The RCT has a strong assignment comparison within its pilot, but external validity remains a separate question. The city DiD, RDD and matching exercises ask other questions and do not supply automatic independent confirmation of this pilot model.
-- Use worksheet Q6 to turn a generic request for more evidence into a specific record and a decision consequence.
+- Ask each table for one specific record and how a different result would change its rollout advice.
 :::
 
 ## Check an overconfident recommendation {#d3s1-p17 .reader-slide .s1-review .d3s1-review}
@@ -367,7 +369,7 @@ What would change if the same programme costs more per business at city scale?
 Underline what the RCT supports. Cross out what the model assumes or what the pilot cannot establish.
 :::
 
-Use **Q7 on worksheet page 4**. Write a corrected, conditional sentence.
+At your table, replace the claim with one sentence that separates **what the RCT found** from **what the model assumes**.
 
 ::: {.notes}
 **5 minutes. Main point:** Correct arithmetic can sit inside an unsupported policy claim.
@@ -377,9 +379,9 @@ Use **Q7 on worksheet page 4**. Write a corrected, conditional sentence.
 - This written claim is an authored critical-reading exercise, not a real AI output. The same verification habit applies to an AI summary or a human briefing.
 :::
 
-## Your advice needs an evidence condition {#d3s1-p18 .reader-slide .s1-review .d3s1-review}
+## What would you recommend? {#d3s1-p18 .reader-slide .s1-review .d3s1-review}
 
-Write two sentences in **Q8 on worksheet page 4**:
+Give two sentences to your table:
 
 1. What the pilot-based model suggests **under its stated assumptions**.
 2. Your provisional action and the **specific evidence** that could change it.
@@ -391,7 +393,7 @@ The later mock report's **1.86** comes from a **different city-study model**. Ch
 ::: {.notes}
 **4 minutes. Main point:** Participants should leave able to use an economic model without overstating the trial or the forecast.
 
-- Give two minutes to write, one minute for a partner to check units and scope, and one minute to hear a contrasting decision. An answer may request audited delivery costs, follow-up data, or evidence on transfer to other districts.
+- Give two minutes for table discussion, one minute for a partner to check units and scope, and one minute to hear a contrasting decision. An answer may request audited delivery costs, follow-up data, or evidence on transfer to other districts.
 - Accept a conditional pilot extension, a delayed city decision, or another defensible action if the evidence request could realistically change it. Do not demand a single approve/reject answer.
 - Recap the three methods: CEA uses a natural outcome, CUA uses health utility, and CBA monetises both sides. The partial GreenWaste ratio is a CBA-style illustration. A later mock report uses a separate city DiD model with a ratio of 1.86 and different timing assumptions; that is a document to critique, not another calculation of this pilot model. These notes total 90 minutes.
 :::
