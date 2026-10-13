@@ -20,7 +20,7 @@ Counts include the title screen and refer to actual Reveal screens.
 | Day 2 S1 | [Oct13_session1_review.qmd](Oct13_session1_review.qmd) | [Oct13_session1](https://3ie.academy/Oct13_session1) | 15 |
 | Day 2 S2 | [Oct13_session2_review.qmd](Oct13_session2_review.qmd) | [Oct13_session2_live](https://3ie.academy/Oct13_session2_live) | 18 |
 | Day 2 S3 | [Oct13_session3_review.qmd](Oct13_session3_review.qmd) | [Oct13_session3](https://3ie.academy/Oct13_session3) | 21 |
-| Day 3 S1 | [Oct14_session1_review.qmd](Oct14_session1_review.qmd) | [Oct14_session1](https://3ie.academy/Oct14_session1) | 18 |
+| Day 3 S1 | [Oct14_session1_review.qmd](Oct14_session1_review.qmd) | [Oct14_session1](https://3ie.academy/Oct14_session1) | 19 |
 | Day 3 S2 | [Oct14_session2_review.qmd](Oct14_session2_review.qmd) | [Oct14_session2](https://3ie.academy/Oct14_session2) | 20 |
 | Day 3 S3 | [Oct14_session3_review.qmd](Oct14_session3_review.qmd) | [Oct14_session3](https://3ie.academy/Oct14_session3) | 17 |
 | Day 4 S1 | [Oct15_session1_review.qmd](Oct15_session1_review.qmd) | [Oct15_session1](https://3ie.academy/Oct15_session1) | 13 |

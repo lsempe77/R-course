@@ -1,5 +1,5 @@
 ---
-title: "GreenWaste: read the economic model"
+title: "GreenWaste: economic evaluation after the pilot RCT"
 format:
   html:
     embed-resources: true
@@ -8,10 +8,9 @@ format:
     include-in-header:
       text: |
         <style>
-        body{font:16px/1.4 Arial,sans-serif;color:#111418;margin:0;background:#eef2f6}main{max-width:850px;margin:auto}h1,h2,h3{color:#063360}h1{font-size:26px}h2{font-size:22px;margin:0 0 12px}h3{font-size:18px;margin:14px 0 6px}p{margin:8px 0}.sheet-page{background:white;padding:28px 40px;margin:20px 0;box-sizing:border-box;min-height:950px}.reading-table{width:100%;border-collapse:collapse;font-size:13px}.reading-table th,.reading-table td{padding:6px;border-bottom:1px solid #D5DEE8;text-align:left}.reading-table thead{background:#063360;color:white}.writing{height:45px;border-bottom:1px solid #c8d6e5;margin:6px 0}.writing.tall{height:70px}.review-svg{display:block;width:100%;height:130px}.caption{font-size:12px;color:#545860}.ai-source{border-left:3px solid #7da1c4;padding-left:16px}.prompt{border-top:2px solid #215a9e;padding-top:8px;font-size:14px}header button{font:inherit;padding:8px 15px;color:#063360;background:white;border:1px solid #215a9e;cursor:pointer}
-        @page{size:A4;margin:14mm}@media print{body{background:white;font-size:11pt;line-height:1.3}main{max-width:none}.sheet-page{padding:0;margin:0;min-height:0;break-after:page}.sheet-page:last-child{break-after:auto}header,#title-block-header{display:none}h2{font-size:17pt}h3{font-size:12pt}.writing{height:10mm}.writing.tall{height:16mm}.reading-table{font-size:9pt}.reading-table th,.reading-table td{padding:5px}.review-svg{height:115px}.caption{font-size:9pt}.prompt{font-size:10pt}}
+        body{font:16px/1.35 Arial,sans-serif;color:#111418;margin:0;background:#eef2f6}main{max-width:850px;margin:auto}h1,h2,h3{color:#063360}h2{font-size:22px;margin:0 0 10px}h3{font-size:17px;margin:12px 0 5px}p{margin:7px 0}.sheet-page{background:white;padding:28px 40px;margin:20px 0;box-sizing:border-box;min-height:950px}.reading-table{width:100%;border-collapse:collapse;font-size:13px}.reading-table th,.reading-table td{padding:5px;border-bottom:1px solid #D5DEE8;text-align:left}.reading-table thead{background:#063360;color:white}.writing{height:48px;border-bottom:1px solid #c8d6e5;margin:4px 0}.writing.tall{height:70px}.caption,.source-note{font-size:12px;color:#545860}.source-page{line-height:1.25}.source-page table{width:100%;border-collapse:collapse;font-size:13px}.source-page th,.source-page td{padding:5px;border-bottom:1px solid #D5DEE8;text-align:left}header button{font:inherit;padding:8px 15px;color:#063360;background:white;border:1px solid #215a9e;cursor:pointer}
+        @page{size:A4;margin:14mm}@media print{body{background:white;font-size:10.5pt;line-height:1.22}main{max-width:none}.sheet-page{padding:0;margin:0;min-height:0;break-after:page}.sheet-page:last-child{break-after:auto}header,#title-block-header{display:none}h2{font-size:17pt}h3{font-size:12pt;margin:8px 0 4px}p{margin:5px 0}.reading-table,.source-page table{font-size:9pt}.reading-table th,.reading-table td,.source-page th,.source-page td{padding:4px}.writing{height:9mm}.writing.tall{height:13mm}.caption,.source-note{font-size:8.5pt}}
         </style>
-        <style>.writing.part{height:30px;margin:2px 0}.table-title{margin:10px 0 4px}@media print{body{font-size:10.5pt;line-height:1.2}p{margin:6px 0}h3{margin:10px 0 5px}.writing.part{height:7mm}.source-page{line-height:1.15}.sheet-page table{width:100%;border-collapse:collapse;font-size:9pt;margin:4px 0}.sheet-page th,.sheet-page td{padding:5px;border-bottom:1px solid #D5DEE8}}</style>
 knitr:
   opts_chunk:
     echo: false
@@ -27,273 +26,155 @@ source('day3_session1_review.R', encoding='UTF-8')
 
 <div class="sheet-page source-page">
 
-## Page 1 | H7-A: The economic model summary
+## Page 1 | H7-A: Pilot evidence and model assumptions
 
-GreenWaste is a fictional training case. Use this model summary as your source for today's questions.
+GreenWaste is a fictional training case. Use this summary to check every claim made in the session.
 
-### §1 | Where does the benefit input come from?
+### §1 | The pilot RCT result
 
-The city difference-in-differences study compares annual waste-cost changes for 4,794 participant businesses and 5,206 comparison businesses without GreenWaste, at 12 months. The difference is a reduction of **`r fmt(model$saving)` AED per participant business**. A causal reading needs parallel trends and the other conditions for the comparison. This is a provisional estimate, not a guarantee. Other methods compare different groups in different ways.
+A lottery assigned **200 eligible businesses** in one pilot district to GreenWaste and **200** to a control group. Annual waste management cost was measured at 12 months. The treatment-minus-control estimate is **`r fmt(case$rct)` AED** per business (95% interval **`r fmt(case$rct_ci[1])` to `r fmt(case$rct_ci[2])` AED**). On a saving scale, the estimate is **`r fmt(model$saving)` AED per business per year**, with a 95% interval from **`r fmt(min(-case$rct_ci))` to `r fmt(max(-case$rct_ci))` AED**. Assignment supports a causal interpretation in the pilot if implementation and measurement remain credible. It does not establish effects in other districts or over five years.
 
-```{r, results='asis'}
-html_out(d7_inputs('Table I: Inputs to the model and where each comes from'))
-```
+### §2 | Which economic question?
 
-### §2 | How are future amounts combined?
-
-The model assumes that equipment delivery costs **1,800 AED per participant business now (year 0)**, that there is no saving in year 1, and that the same annual saving is made in each of **years 2 to 6**. Future savings are discounted at an assumed rate of 5% a year, so that every amount is shown at its value in year 0 (its value today). The city data do not show five years of savings. They show only the first 12 months. For year *t*, the value today of the saving is the annual saving divided by 1.05 raised to the power *t*. Table F and Table O are on page 2. The calculations use the exact inputs, and the figures shown are rounded.
-
-### §3 | Whose perspective, and which costs and benefits?
-
-This model mixes two points of view. It compares a cost to the authority (equipment delivery) with savings to businesses. It is not a full appraisal of the authority's budget, and it is not a full social cost-benefit analysis.
-
-**Table P: Who bears the costs and benefits, and what is included?**
-
-| Who and what | Included in the model? | Evidence we would need |
+| Method | Outcome unit | A question it can answer |
 |---|---|---|
-| Authority: equipment delivery | Yes, as an assumed cost at year 0 | Amounts and coverage from the programme's records |
-| Authority: staff and administration | Not known | What is already included, the amount and the timing |
-| Business time and maintenance; wider effects | Not known | The point of view, the resource costs and any transfers between actors |
+| Cost-effectiveness analysis (CEA) | Natural unit | AED per tonne of landfill avoided |
+| Cost-utility analysis (CUA) | Health utility, often QALYs | AED per QALY gained |
+| Cost-benefit analysis (CBA) | Money | Net benefit in AED or benefit-cost ratio |
 
-Check that a cost is not already counted before you add it. Financial savings are not automatically net benefits to society. Charges, transfers and wider effects need separate treatment.
+CUA is a form of CEA. The pilot's measured waste-cost outcome is in AED and can be considered as a monetary benefit, subject to a clear perspective and what the bill reduction represents. This handout works through a **partial monetary model**, not a complete social CBA. It has no causal landfill-effect or QALY calculation for CEA or CUA.
 
-### §4 | Sensitivity and the limits of the headline result
+### §3 | Inputs to the worked model
 
-The scenarios change the model's inputs. They do not change any observed fact about the programme. The settings for each scenario are on page 2. The scenario results table is given out after your group records its prediction. The results for Cards 1 to 4 depend on the ranges we tested, because each of those cards changes one input. Card 5 changes two inputs together. We have no evidence about how realistic these settings are.
+```{r, results='asis'}
+html_out(d7_inputs('Table I: Per pilot business'))
+```
 
-An extra check shows that a discount rate of 40% would give a ratio of **`r fmt(ratio(rate=.4),2)`**, with all other inputs unchanged. Delaying the savings by three more years (years 5 to 9) at 5% gives a ratio of **`r fmt(ratio()/1.05^3,2)`**, which is still above 1. These checks do not show which discount rate the government would use, or how long a delay is realistic. A ratio above 1, or a positive net present value, depends on the model and does not prove value for money. Our rule of at least a 1,000 AED reduction in annual waste management cost is a different test and is not a benefit-cost ratio threshold.
+The model treats the RCT's 12-month annual-cost difference as a **year-1 saving**, then assumes that the same saving persists in **years 2 to 5**. It assumes **1,800 AED** in delivery cost at year 0 and a **5%** annual discount rate. Only the 12-month difference is estimated from the RCT. The cost, persistence and discount rate are teaching assumptions, not audited or official inputs. Calculations use unrounded values; displayed amounts are rounded.
 
-<p class="caption">Source: synthetic GreenWaste city records and fictional economic assumptions. Inspect §§1 to 4, Tables I, P, F and O, and the scenario results table.</p>
+### §4 | Whose costs and benefits?
+
+The assumed cost is paid by the **authority**. The measured financial saving is for **businesses**. Staff time, business maintenance and wider environmental effects have not been valued. A lower bill may reflect saved resources or a transfer between actors. This ratio is neither an authority budget return nor a complete social benefit-cost analysis. Specify the perspective and check what is already counted before adding entries.
+
+<p class="source-note">Method references: CDC, Cost-Effectiveness Analysis; NICE, Health Technology Evaluations Manual; HM Treasury, The Green Book (2026). The fictional model does not claim to follow an official discount rate.</p>
+
+</div>
+
+<div class="sheet-page source-page">
+
+## Page 2 | H7-A: Timing, results and sensitivity
+
+### §5 | Cash flow per pilot business
+
+```{r, results='asis'}
+html_out(d7_cash_table('Table F: AED per business; each saving shown at its year-0 present value'))
+```
+
+For year 1, the value today of the annual saving is **`r fmt(model$saving)` / 1.05 = `r fmt(model$saving/1.05)` AED**. The savings in years 2 to 5 are divided by 1.05 raised to their respective year numbers. Their persistence is assumed, not observed in the RCT.
+
+```{r, results='asis'}
+html_out(d7_output('Table O: Worked model, per pilot business'))
+```
+
+The benefit-cost ratio is present-value benefits divided by present-value costs; it has **no units**. Net present benefit is the difference, in **AED**. Under this model, an annual saving of about **`r fmt(model$cost/pv_factor())` AED** gives a ratio of 1. That model break-even level differs from the separate policy rule of at least **1,000 AED annual waste-cost saving**. The RCT interval crosses the policy rule. It is not a confidence interval for the benefit-cost ratio.
+
+### §6 | Change the assumption, then check the result
+
+| Scenario | Modelled ratio |
+|---|---:|
+| Base model | `r fmt(ratio(),2)` |
+| Savings fade by 30% after the first saving year | `r fmt(ratio(decay=.3),2)` |
+| Add 600 AED to year-0 delivery cost | `r fmt(ratio(extra=600),2)` |
+| Discount at 8% instead of 5% | `r fmt(ratio(rate=.08),2)` |
+| Savings last three years rather than five | `r fmt(ratio(years=3),2)` |
+| Savings fade by 30% and add 800 AED cost | `r fmt(ratio(decay=.3,extra=800),2)` |
+
+These are hypothetical settings, not findings about GreenWaste. The final scenario changes two inputs. Their ranking depends on the values chosen. Programme accounts, follow-up data and applicable appraisal guidance would help determine realistic inputs.
 
 </div>
 
 <div class="sheet-page">
 
-## Page 2 | H7-A: Costs and savings by year, base case results and scenario settings
+## Page 3 | Work the economic question
 
-```{r, results='asis'}
-html_out(d7_timeline())
-```
+### Q1 | Separate evidence from assumptions (H7-A §1 and Table I)
 
-```{r, results='asis'}
-html_out(d7_cash_table('Table F: Delivery cost and annual saving per participant business in each year, with each saving converted to its value today (AED)'))
-```
+(a) What outcome did the pilot RCT estimate? Include unit, period and population.
+<div class="writing"></div>
 
-One-year example: 812 divided by 1.05 is about 774 AED. The first saving in the model is in year 2: 812 divided by 1.05² is about **`r fmt(model$saving/1.05^2)` AED**. Add the values today for years 2 to 6. The rounded figures in the table may not add up exactly to the exact total.
+(b) Where does the 1,800 AED delivery cost come from? What record would verify it?
+<div class="writing"></div>
 
-```{r, results='asis'}
-html_out(d7_output('Table O: Base case results per participant business: total benefits, cost, benefit-cost ratio and net present value (AED)'))
-```
+(c) Which modelled years have no RCT follow-up evidence?
+<div class="writing"></div>
 
-The benefit-cost ratio is benefits divided by costs. It has no units. The net present value is benefits minus costs, in AED per participant business. Neither number shows that GreenWaste caused the savings, that the savings will last, or that all costs are included.
+### Q2 | Choose the unit (H7-A §2)
 
-### Scenario settings: write your prediction before you see the results
+(a) To calculate AED per tonne of landfill avoided, which effect and cost would you need?
+<div class="writing"></div>
 
-- **Card 1: Savings fade.** After the first year of saving, each year's saving is 30% lower than the year before.
-- **Card 2: Hidden costs.** We add 600 AED of costs at year 0 that are not already counted.
-- **Card 3: A higher discount rate.** The rate is 8%.
-- **Card 4: A shorter life.** Savings last three years (years 2 to 4).
-- **Card 5: Savings fade and hidden costs.** This card changes the inputs of Cards 1 and 2 together.
+(b) What is the outcome unit in CUA? Why can we not calculate it here?
+<div class="writing"></div>
 
-On every card, all other inputs stay at the base values. Keep this page closed while your group makes its prediction. The scenario results table is given out after your group has recorded its prediction and its reason in Q4.
+(c) Which method expresses benefits and costs in AED? Why is our ratio only partial?
+<div class="writing"></div>
 
-</div>
+### Q3 | Choose a perspective (H7-A §4)
 
-<div class="sheet-page">
+(a) Who bears the included cost? Who receives the included financial saving?
+<div class="writing"></div>
 
-## Page 3 | Q1 to Q3: inputs, timing and whose point of view
+(b) Name one missing item and the source that could establish its amount and timing.
+<div class="writing"></div>
 
-### Q1 | What goes into the model? (§1 and §2, Table I)
+### Q4 | Read the arithmetic (Tables F and O)
 
-(a) Name one input that comes from the city study and one that is an assumption, and write where each appears.
+(a) The year-1 saving at its value today is 1,014 / ______ ≈ ______ AED.
 
-<div class="writing part"></div>
+(b) Present-value benefits are ______ AED; assumed delivery cost is ______ AED.
 
-(b) In which year does the cost occur? ______
+(c) Show the benefit-cost ratio: ____________________. Show net present benefit: ____________________.
 
-(c) In which year do savings start, and in which year do they end? Start: ______ End: ______
-
-(d) How many years of savings are there? ______
-
-(e) Is there a saving in year 1? ______
-
-(f) What evidence would you need before you trust the future savings?
-
-<div class="writing part"></div>
-
-### Q2 | Value today, ratio and net present value (Tables F and O)
-
-(a) Calculate the year 2 saving at its value today: 812 divided by __________ is about __________ AED.
-
-(b) Why can we not simply multiply the annual saving by five?
-
-<div class="writing part"></div>
-
-(c) Write the benefits at value today: __________ AED. Write the cost at value today: __________ AED.
-
-(d) Show how the ratio is calculated: ____________________
-
-(e) Show how the net present value is calculated: ____________________
-
-(f) Explain what each of these two numbers means, under the model's assumptions.
-
-<div class="writing part"></div>
-
-### Q3 | Whose point of view? (§3, Table P)
-
-(a) Whose decision is this?
-
-<div class="writing part"></div>
-
-(b) Which costs and benefits belong to that point of view?
-
-<div class="writing part"></div>
-
-(c) Name one cost that may be missing.
-
-<div class="writing part"></div>
-
-(d) What might already be counted in the model?
-
-<div class="writing part"></div>
-
-(e) What amount and timing would you request, without counting the cost twice?
-
-<div class="writing part"></div>
+(d) Why does multiplying 1,014 by five fail to give the model's present value?
+<div class="writing"></div>
 
 </div>
 
 <div class="sheet-page">
 
-## Page 4 | Q4 to Q6: scenarios and your recommendation
+## Page 4 | Question the result and advise
 
-### Q4 | Predict before you see the results
+### Q5 | Two thresholds (H7-A §5)
 
-(a) Write your card number and the input it changes. Card: ______ Input: ____________________
+The model breaks even at about **`r fmt(model$cost/pv_factor())` AED** annual saving. The policy minimum is **1,000 AED** annual saving.
 
-(b) Which inputs stay the same?
+(a) Does the pilot RCT interval of 862 to 1,167 AED sit entirely above either threshold? Explain the difference.
+<div class="writing tall"></div>
 
-<div class="writing part"></div>
+(b) Name an assumption that could move the model break-even level.
+<div class="writing"></div>
 
-(c) Predict the benefit-cost ratio. Will it be above or below 1? Give your reason. After your group has recorded its prediction, you will receive the scenario results table.
+### Q6 | Scenario and evidence (H7-A §6)
 
-Prediction: ________ Above or below 1? ________
+(a) Predict which single-input scenario will lower the ratio most. Then check the table: was your prediction right?
+<div class="writing"></div>
 
-<div class="writing part"></div>
+(b) What does the combined scenario of fading savings and 800 AED extra cost show? What does it **not** show?
+<div class="writing"></div>
 
-(d) Write the ratio in the table: ________. What explains the difference from your prediction?
+(c) Request one specific record that would help you choose a more realistic model input.
+<div class="writing"></div>
 
-<div class="writing part"></div>
+### Q7 | Correct the claim
 
-(e) What evidence would show whether this change is realistic?
+“The RCT proves GreenWaste saves 1,014 AED every year for five years. Its benefit-cost ratio of 2.44 proves citywide expansion is good value for money.”
 
-<div class="writing part"></div>
+Underline what the RCT supports. Cross out the unsupported steps. Write a corrected sentence.
+<div class="writing tall"></div>
 
-(f) Among Cards 1 to 4, which card lowers the ratio most? Why does this not give a ranking of the assumptions in general?
+### Q8 | Your provisional advice
 
-<div class="writing part"></div>
-
-### Q5 | Read the model yourself (H7-A, pages 1 and 2)
-
-(a) Write one input that comes from the city study and one assumption, and where each appears.
-
-<div class="writing part"></div>
-
-(b) What does the ratio support, under these assumptions?
-
-<div class="writing part"></div>
-
-(c) What does it not show?
-
-<div class="writing part"></div>
-
-### Q6 | Close the source and give a conditional recommendation
-
-(a) Explain what a benefit-cost ratio of 1.86 means.
-
-<div class="writing part"></div>
-
-(b) State your provisional action and one condition.
-
-<div class="writing part"></div>
-
-(c) Request one specific missing fact, and explain how its answer could change your decision.
-
-<div class="writing part"></div>
-
-</div>
-
-<div class="sheet-page">
-
-## Page 5 | AI exercise: check the scenario
-
-### Stage 1: Mark the response
-
-Naive prompt (a prompt with no context, as a busy person might type it): "Generate one plausible scenario where this programme's benefit-cost ratio falls below 1. Tell me whether it is realistic." Source: H7-A (the economic model summary). This response was written for the exercise. It is not a real AI answer.
-
-<div class="ai-source">
-```{r, results='asis'}
-html_out(paste0('<p>', gsub('\n\n', '</p><p>', d7_ai, fixed=TRUE), '</p>'))
-```
-</div>
-
-Keep the claims that H7-A supports. Cross out the arithmetic, timing or realism claims that it does not support. Write one source reference that changes the advice.
-
-<div class="writing part"></div>
-
-### Stage 2: Run the improved prompt in Microsoft Copilot
-
-<div class="prompt">
-```{r, results='asis'}
-html_out(paste0('<strong>Improved prompt</strong><p>', d7_prompt, '</p>'))
-```
-</div>
-
-Use only the information in H7-A, and keep your AI good-practice card beside you. If you are not using Copilot, read the prepared response on page 6 after you finish Stage 1.
-
-(a) Write one number you verified.
-
-<div class="writing part"></div>
-
-(b) Write one useful question that the response asked about missing evidence.
-
-<div class="writing part"></div>
-
-</div>
-
-<div class="sheet-page">
-
-## Page 6 | Prepared response
-
-Use this response if you are not using Copilot. Read it after you have marked the response on page 5. It was written for the exercise. It is not a real AI answer. An AI tool may answer differently.
-
-### Separate inputs from conclusions
-
-H7-A §1 and Table I use an **estimate from the city study** of about 812 AED, provisionally treated as a causal benefit. The cost, the one-year lag, the five-year stream of savings and the 5% rate are **assumptions**, not measured economic facts. Future benefits are modelled from them.
-
-Tables F and O put costs at year 0 and savings in years 2 to 6. The benefits at value today are about **3,350 AED**, the cost is **1,800 AED**, the ratio is **1.86** and the net present value is **1,550 AED per participant business**. These numbers do not verify that GreenWaste caused the savings, how long they last, or that all costs are covered. Table P has a limited boundary that mixes two points of view. It is not a complete appraisal of the authority's budget or of society.
-
-### Quantify the stated changes
-
-The scenario results table gives ratios of **1.07, 1.40, 1.67 and 1.17** for Cards 1 to 4. Compared with the base ratio of 1.86, the largest fall among those settings is the fading savings scenario (about **0.79** ratio units), then the shorter life (**0.69**), the added costs (**0.47**) and the rate of 8% (**0.19**). The ranking depends on the stated changes. Card 5 combines fading savings and added costs and gives **0.80**. It is not a test of one input.
-
-At 40% the arithmetic can produce a ratio below 1 (§4). The model summary does **not** show that this rate is used in government practice. A delay of three more years gives a ratio of about **`r fmt(ratio()/1.05^3,2)`**, which is not below 1. A stress test with a high rate does not show that the programme should be rejected. Suitable guidance and other evidence are needed.
-
-### Questions before recommending an input to investigate
-
-- Whose decision is this, and which point of view should the appraisal take?
-- What evidence on lasting results and maintenance supports five years of savings or a 30% fall each year?
-- What costs, timing and existing coverage support the extra 600 AED?
-- Which discount-rate guidance applies, and how credible is the provisional difference-in-differences benefit?
-
-### Verify this response yourself
-
-(a) Check one number against a named table.
-
-<div class="writing part"></div>
-
-(b) Write one request for evidence that could change the spending decision, and say why.
-
-<div class="writing part"></div>
+State what the pilot-based model suggests **under its assumptions**. Then give a provisional action and one evidence request that could change it.
+<div class="writing tall"></div>
 
 </div>

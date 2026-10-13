@@ -1,0 +1,78 @@
+---
+title: "Trainer key: Day 3 Session 1"
+format:
+  html:
+    embed-resources: true
+    toc: false
+    theme: none
+    include-in-header:
+      text: |
+        <style>
+        body{font:16px/1.35 Arial,sans-serif;color:#111418;margin:0;background:#eef2f6}main{max-width:850px;margin:auto}.key-page{background:white;padding:28px 40px;margin:20px 0;min-height:950px;box-sizing:border-box}h1,h2,h3{color:#063360}h2{font-size:24px}h3{font-size:17px;margin:14px 0 5px}p{margin:6px 0}ul{margin:5px 0 10px}li{margin:4px 0}.notice{color:#b8272c;font-weight:bold}.small{font-size:13px;color:#545860}@page{size:A4;margin:14mm}@media print{body{background:white;font-size:10.5pt;line-height:1.22}main{max-width:none}.key-page{padding:0;margin:0;min-height:0;break-after:page}.key-page:last-child{break-after:auto}#title-block-header{display:none}h2{font-size:17pt}h3{font-size:12pt;margin:10px 0 4px}p{margin:4px 0}li{margin:3px 0}}
+        </style>
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+```{r, include=FALSE}
+source('day3_session1_review.R', encoding='UTF-8')
+```
+
+<div class="key-page">
+
+## Trainer key | Pilot RCT and basic economic evaluation
+
+<p class="notice">Trainer copy. Do not distribute before participants complete the worksheet.</p>
+
+### Core model numbers
+
+The pilot RCT assigned **200 eligible businesses** to GreenWaste and **200** to control in one district. At 12 months, the treatment-minus-control difference in annual waste cost was **`r fmt(case$rct)` AED** (95% interval **`r fmt(case$rct_ci[1])` to `r fmt(case$rct_ci[2])` AED**). The model treats the corresponding **`r fmt(model$saving)` AED annual saving** as the year-1 benefit and assumes it persists through years 2 to 5. The **1,800 AED** year-0 delivery cost and **5%** rate are fictional assumptions.
+
+Present-value benefits **`r fmt(d7_benefits)` AED**; cost **`r fmt(model$cost)` AED**; benefit-cost ratio **`r fmt(ratio(),2)`**; net present benefit **`r fmt(d7_npv)` AED**. The ratio is a limited monetary comparison of an authority cost with a business financial saving. It is not a full social CBA or an authority budget return.
+
+### Q1 | Evidence and assumptions
+
+(a) The RCT estimates annual waste-management cost at **12 months** for eligible **pilot-district businesses**, relative to the lottery control group. Use -1,014 AED as a cost difference or +1,014 AED as a saving. (b) The 1,800 AED delivery cost is an **assumption**. Request programme accounts, scope, quantities and timing. (c) Years **2 to 5** have no RCT follow-up evidence in this case.
+
+### Q2 | Method and unit
+
+(a) CEA in AED per tonne requires a credible incremental **tonnes of landfill avoided** and complete incremental cost for the same alternative, perspective and period. The 1,014 AED waste-cost saving cannot become tonnes. (b) CUA typically uses **QALYs**; the case has no measured utility outcome. (c) CBA expresses benefits and costs in **money**. The worked ratio is partial because the perspective mixes actors and important entries remain unmeasured.
+
+### Q3 | Perspective
+
+The assumed delivery cost falls on the **authority**; the measured waste-cost saving accrues to **businesses**. Accept a specific missing resource or effect such as staff time, business maintenance or environmental impact, together with a plausible record and timing. Check for transfers and double counting.
+
+### Q4 | Calculation
+
+Year-1 present value: **`r fmt(model$saving)` / 1.05 = `r fmt(model$saving/1.05)` AED**. Benefits **`r fmt(d7_benefits)` AED**; cost **`r fmt(model$cost)` AED**; ratio **`r fmt(d7_benefits)` / `r fmt(model$cost)` ≈ `r fmt(ratio(),2)`**; net **`r fmt(d7_benefits)` - `r fmt(model$cost)` ≈ `r fmt(d7_npv)` AED**. Multiplication by five ignores discounting, and the later four years are projections rather than observations.
+
+</div>
+
+<div class="key-page">
+
+## Trainer key | Interpretation and advice
+
+### Q5 | Two thresholds
+
+The model breaks even at roughly **`r fmt(model$cost/pv_factor())` AED** annual saving under its assumed cost, duration and rate. The pilot RCT interval on a saving scale is **`r fmt(min(-case$rct_ci))` to `r fmt(max(-case$rct_ci))` AED**. It lies above the *fixed-model* break-even level but crosses the separate **1,000 AED policy minimum**. Higher costs, shorter persistence or a different discount rate can move the model threshold. The RCT interval is not an interval for the ratio.
+
+### Q6 | Scenarios and evidence
+
+Among one-input changes, **30% annual fading** lowers the ratio most under the stated settings: **2.44 to `r fmt(ratio(decay=.3),2)`**. Extra 600 AED cost gives **`r fmt(ratio(extra=600),2)`**; an 8% rate gives **`r fmt(ratio(rate=.08),2)`**; three saving years give **`r fmt(ratio(years=3),2)`**. Fading plus 800 AED extra cost gives **`r fmt(ratio(decay=.3,extra=800),2)`**, just below one. These are stress tests, not evidence about actual fading or costs. Useful requests include later cost outcomes, programme cost accounts, maintenance and staff-time records, and applicable local discount-rate guidance.
+
+### Q7 | Correct the claim
+
+Accept wording such as: “The pilot RCT estimates about **1,014 AED lower annual waste cost at 12 months** for eligible businesses in one district. A partial model using an **assumed 1,800 AED delivery cost**, five modelled saving years and a 5% rate gives a ratio of **2.44**. We need cost records, persistence evidence and a reason to expect the pilot effect elsewhere before using it for citywide approval.”
+
+The RCT does not prove the effect in every later year. The ratio does not establish full value for money or a citywide effect. The policy minimum remains uncertain because the RCT interval crosses 1,000 AED.
+
+### Q8 | Conditional advice
+
+Accept different actions if the evidence and consequence are clear. A strong answer states that the limited model favours GreenWaste under its assumptions, then asks for a **specific fact** that could change the decision. For example: “I would prepare a phased extension while auditing per-business delivery costs and collecting another year of follow-up. If costs rise materially or savings fade, I would recalculate the ratio before wider rollout.” Do not require that exact recommendation.
+
+<p class="small">The deck's presenter notes contain the 90-minute facilitation sequence. The later mock report uses a separate city DiD model with a ratio of 1.86 and different timing assumptions. Do not compare that ratio with 2.44 as though it were the same calculation. This key is for checking worksheet responses, not a substitute for H7-A.</p>
+
+</div>

@@ -6,3 +6,21 @@
 .reveal .d3s1-review .cash-table .reading-table td,.reveal .d3s1-review .cash-table .reading-table th{padding:6px 10px}
 .reveal #d3s1-p11 .reading-table{font-size:20px}
 .reveal #d3s1-p11 .reading-table th,.reveal #d3s1-p11 .reading-table td{padding:6px 10px}
+.reveal .d3s1-review .evidence-pair{display:grid;grid-template-columns:1fr 1fr;gap:56px;margin:46px 0 34px}
+.reveal .d3s1-review .evidence-pair>div{border-top:4px solid #215a9e;padding-top:14px;display:flex;flex-direction:column;gap:12px}
+.reveal .d3s1-review .evidence-pair>div+div{border-color:#b8272c}
+.reveal .d3s1-review .evidence-pair strong{font-size:58px;color:#063360}
+.reveal .d3s1-review .evidence-label{font-size:25px;color:#545860}
+.reveal .d3s1-review .method-equation{display:flex;align-items:center;gap:22px;margin:62px 0 46px;font-size:31px;color:#063360}
+.reveal .d3s1-review .method-equation .fraction{display:flex;flex-direction:column;text-align:center;min-width:620px}
+.reveal .d3s1-review .method-equation .fraction span:first-child{border-bottom:3px solid #063360;padding-bottom:9px}
+.reveal .d3s1-review .method-equation .fraction span+span{padding-top:9px}
+.reveal .d3s1-review .method-equation strong{font-size:32px}
+.reveal .d3s1-review .equation-row{display:flex;align-items:center;gap:18px;margin:55px 0 44px;font-size:29px;color:#063360}
+.reveal .d3s1-review .perspective-lines p,.reveal .d3s1-review .reach-lines p{border-bottom:1px solid #d5dee8;padding:11px 0;margin:0}
+.reveal .d3s1-review .perspective-lines{margin:30px 0;font-size:27px}
+.reveal .d3s1-review .reach-lines{margin:35px 0;font-size:28px}
+.reveal .d3s1-review blockquote.claim{font-size:31px;line-height:1.35;margin:55px 20px 45px;padding:0 0 0 25px;border-left:5px solid #b8272c;box-shadow:none;background:none;color:#111418}
+.reveal #d3s1-p04 table{font-size:25px;margin:35px auto}
+.reveal #d3s1-p04 table th,.reveal #d3s1-p04 table td{padding:10px 14px}
+.reveal #d3s1-p15 .review-svg{max-height:330px}

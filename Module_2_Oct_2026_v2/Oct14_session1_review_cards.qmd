@@ -31,7 +31,7 @@ cards_html <- vapply(seq_len(nrow(d7_scenarios)), function(i) paste0(
   '</p><h3>', d7_scenarios$name[i], '</h3><p>', d7_scenarios$story[i],
   '</p><p>All other inputs stay at the base values, which are on the board page.</p>',
   '<p><strong>Change:</strong> ', d7_scenarios$short[i], '</p>',
-  '<p><strong>Base ratio: 1.86.</strong> Write your prediction of the new ratio before you see the results.</p>',
+  '<p><strong>Base ratio: 2.44.</strong> Write your prediction of the new ratio before you see the results.</p>',
   '<p>Prediction and reason:</p><div class="writing"></div>',
   '<p>What evidence would show whether this change is realistic?</p><div class="writing"></div>',
   '<p class="caption">This is a fictional scenario. It does not show how the programme actually performed. Post your card number and prediction above the line. After the results are given out, post your card number and the result below the line.</p></div>'), '')
@@ -48,7 +48,7 @@ Post your predictions above the line before the results. After the results are g
 html_out(d7_board())
 ```
 
-The base case is a benefit-cost ratio of 1.86, using the base inputs: annual saving 812 AED, equipment delivery cost 1,800 AED at year 0, no saving in year 1, savings in years 2 to 6, and a discount rate of 5%.
+The base case is a benefit-cost ratio of 2.44, using the pilot RCT's 1,014 AED annual waste-cost saving at 12 months. The model assumes 1,800 AED delivery cost at year 0, the same saving in years 1 to 5, and a 5% discount rate. Only the 12-month outcome difference comes from the RCT.
 
 A ratio of 1 is the break-even point: the benefits at value today equal the costs. A result below 1 is conditional on the scenario. It does not show that the programme failed.
 
@@ -59,7 +59,7 @@ A ratio of 1 is the break-even point: the benefits at value today equal the cost
 ## Page 7 | Scenario results table
 
 ```{r, results='asis'}
-html_out(d7_scenario_table('Benefit-cost ratio in each scenario, compared with the base ratio of 1.86'))
+html_out(d7_scenario_table('Benefit-cost ratio in each scenario, compared with the base ratio of 2.44'))
 ```
 
 Only Card 5 is below 1. It combines fading savings and hidden costs. Among Cards 1 to 4, which each change one input, Card 1 lowers the ratio most. This compares only these settings. It is not a ranking of the assumptions in general, and it does not show that the settings are realistic.
@@ -68,6 +68,6 @@ Only Card 5 is below 1. It combines fading savings and hidden costs. Among Cards
 html_out(d7_board(TRUE))
 ```
 
-Write the results in Q4 on worksheet page 4. Keep your predictions visible above the line while you compare them with the results below it.
+Write the results in Q6 on worksheet page 4. Keep your predictions visible above the line while you compare them with the results below it.
 
 </div>
