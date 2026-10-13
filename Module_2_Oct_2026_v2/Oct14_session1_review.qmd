@@ -293,13 +293,13 @@ c(ratio = round(benefits / 1800, 2),
   net_AED = round(benefits - 1800))
 ```
 
-Paper result: **ratio 2.44; net present benefit 2,592 AED per pilot business**.
+**Measured in the trial:** 1,014 AED lower annual cost after 12 months. **Assumed for this model:** 1,800 AED delivery cost, five years of savings, and a 5% discount rate. R calculates a **2.44 ratio**; it cannot verify the assumptions.
 
 ::: {.notes}
 **5 minutes. Main point:** The code uses the RCT effect but cannot validate assumed costs or persistence.
 
 - Ask what comes from the file: the pilot's treatment and control mean annual costs at 12 months. The difference is the RCT estimate. The 1,800 AED delivery cost, five saving years and 5% rate are specified by us.
-- Run the code once; participants need not code. The output should show a ratio of 2.44 and net present benefit of 2,592 AED. If browser R is slow, use the printed answer.
+- Run the code once; participants need not code. Point to the measured-versus-assumed sentence below it. The output should show a ratio of 2.44 and net present benefit of 2,592 AED. If browser R is slow, state those results aloud.
 - The model is per pilot business. Do not multiply by all city participants or label the output an observed financial return.
 :::
 
@@ -387,8 +387,6 @@ Give two sentences to your table:
 2. Your provisional action and the **specific evidence** that could change it.
 
 A sound answer separates the **RCT effect**, the **assumed cost and persistence**, and the **decision at city scale**.
-
-The later mock report's **1.86** comes from a **different city-study model**. Check its benefit input and timing before comparing ratios.
 
 ::: {.notes}
 **4 minutes. Main point:** Participants should leave able to use an economic model without overstating the trial or the forecast.

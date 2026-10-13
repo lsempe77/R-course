@@ -161,12 +161,12 @@ The presenter opens a relevant evidence card only after the question. Missing re
 
 ## Analyst clinic: ask, listen, follow up {#d3s3-clinic .reader-slide .s1-review .d3s3-review}
 
-<div class="d9-clinic-board"><div><strong>Question asked</strong><span>What evidence could change the decision?</span></div><div><strong>Answer and source</strong><span>What was actually supplied?</span></div><div><strong>Still missing</strong><span>Which uncertainty remains?</span></div><div><strong>Next action</strong><span>Proceed, limit, test or defer?</span></div></div>
+<div class="d9-clinic-board"><div><strong>Question</strong><span>Do the savings last five years?</span></div><div><strong>Answer</strong><span>The pilot measured savings after one year only.</span></div><div><strong>Still missing</strong><span>Years 2–5 and ongoing delivery costs.</span></div><div><strong>Next action</strong><span>Test a smaller rollout; track savings and costs.</span></div></div>
 
-Each table tracks two exchanges: its own question and one from another table.
+Use the same four steps for your question and one asked by a different table.
 
 ::: {.notes}
-**5 minutes of the 30-minute clinic. Main point:** Model one exchange before opening the evidence desk. Ask a table for a priority question; identify the related topic, then move to the next slide and open its card. The four headings remain the listening checklist for every table. Do not answer from memory when an on-screen card can show the source and its limit.
+**5 minutes of the 30-minute clinic. Main point:** The example shows how a specific answer leads to a specific follow-up and conditional action. Explain that the pilot measured one year of savings, whereas five years is a model assumption. Ask a table for a priority question; identify the related topic, then move to the next slide and open its card. Use the four steps as the listening checklist for every table. Do not answer from memory when an on-screen card can show the source and its limit.
 :::
 
 ## Evidence desk: open a card after a question {#d3s3-evidence-desk .reader-slide .s1-review .d3s3-review}
@@ -186,6 +186,8 @@ After the card opens: what did it answer, what is still missing, and would eithe
 ## Did the answer meet the request? {#d3s3-rating .reader-slide .s1-review .d3s3-review}
 
 <div class="d9-ratings"><div><b>Supported</b><span>The source answers the specific question.</span></div><div><b>Partial</b><span>It addresses one part; a relevant gap remains.</span></div><div><b>Unanswered</b><span>The check is absent or the reply changes topic.</span></div></div>
+
+For example, a pilot savings estimate is **partial** evidence for a five-year city forecast.
 
 ::: {.ask}
 At your table, rate one answer you heard. Name the evidence card, the remaining gap and your next action.
