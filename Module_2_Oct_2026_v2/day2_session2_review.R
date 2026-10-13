@@ -6,6 +6,27 @@ d5_model <- function(width=2,outcome='cost_after') {
   d<-subset(city,abs(score-58)<=width);d$below<-as.integer(d$score<=58);d$distance<-d$score-58
   lm(reformulate('below * distance',outcome),data=d)
 }
+d5_poly_model <- function(degree) {
+  stopifnot(degree %in% 1:4)
+  d<-d5_near
+  d$below<-as.integer(d$score<=58)
+  d$distance<-d$score-58
+  powers<-paste0('I(distance^',seq_len(degree),')')
+  lm(as.formula(paste('cost_after ~ below * (',paste(powers,collapse=' + '),')')),data=d)
+}
+d5_poly_comparison <- function() {
+  estimates<-vapply(1:4,function(degree)round(unname(coef(d5_poly_model(degree))['below'])),numeric(1))
+  stopifnot(identical(as.integer(estimates),c(-721L,-731L,-629L,-395L)),nrow(d5_near)==545)
+  x<-function(v)390+(v+800)/500*555
+  rows<-paste(vapply(seq_along(estimates),function(i){
+    y<-36+(i-1)*55
+    sprintf('<text x="28" y="%.1f" font-size="27" font-weight="700">%s</text><text x="180" y="%.1f" font-size="21" fill="#545860">%s</text><line x1="390" x2="945" y1="%.1f" y2="%.1f" stroke="#d5dee8" stroke-width="2"/><circle cx="%.1f" cy="%.1f" r="9" fill="%s"/><text x="975" y="%.1f" font-size="27" font-weight="700" fill="%s">%s</text>',
+      y+8,c('Linear','Quadratic','Cubic','Quartic')[i],y+8,c('straight','one bend','two bends','three bends')[i],y,y,x(estimates[i]),y,if(i==1)'#215a9e' else '#B8272C',y+8,if(i==1)'#215a9e' else '#B8272C',fmt(estimates[i]))
+  },''),collapse='')
+  ticks<-paste(vapply(seq(-800,-300,100),function(v)sprintf('<line x1="%.1f" x2="%.1f" y1="227" y2="234" stroke="#545860"/><text x="%.1f" y="258" text-anchor="middle" font-size="20">%s</text>',x(v),x(v),x(v),fmt(v)),''),collapse='')
+  d5_svg(paste0(rows,'<line x1="390" x2="945" y1="227" y2="227" stroke="#545860"/>',ticks),
+    'Local fitted cost jump in AED for linear, quadratic, cubic and quartic side-specific fits, using the same 545 businesses within two score points of 58; estimates are minus 721, minus 731, minus 629 and minus 395 AED.',270)
+}
 d5_card <- function(seed) {
   set.seed(seed)
   b<-city[sample(which(city$score>57 & city$score<=58),6),]

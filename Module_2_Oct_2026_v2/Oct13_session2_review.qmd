@@ -182,7 +182,29 @@ Paper result: **-721 AED**. Participants do not need to write or run R.
 
 - Ask the room to predict whether the code will return a group-average gap or the fitted gap at the cut-off. Then run it once yourself. Participants do not need to code.
 - The output should be -721. The code reports the fitted coefficient; the robust interval shown on the previous slide comes from a separate uncertainty calculation, not from this `lm()` command.
-- If browser R is slow, use the printed -721 result on the slide and move on. Next, ask whether the answer changes when the evaluator includes businesses farther from 58.
+- If browser R is slow, use the printed -721 result on the slide and move on. Next, ask what must hold before calling this fitted difference a programme effect.
+:::
+
+## When could the jump be a programme effect? {#d2s2-p07b .reader-slide .s1-review .d2s2-review}
+
+The comparison is **local**: businesses just either side of score **58**.
+
+::: {.rdd-assumptions}
+1. **The rule changes participation.** Businesses at or below 58 took part; those above did not.
+2. **Without GreenWaste, costs would change smoothly through 58.** No other cause of cost should jump at the same score.
+3. **The scoring process must be credible.** Could businesses precisely place themselves on the participating side?
+:::
+
+::: {.ask}
+Which statement can H5-A verify, and which needs more evidence?
+:::
+
+::: {.notes}
+**4 minutes. Main point:** A cost jump at 58 is a programme effect only if the businesses would otherwise have had smoothly changing expected costs through that score.
+
+- The participation rule is documented in H5-A: every city business at or below 58 participated, and those above did not. This establishes a sharp cut-off, not a causal effect by itself.
+- The central assumption concerns what would have happened without GreenWaste. We cannot observe that counterfactual directly. Another change exactly at 58, or businesses selecting their side of the rule, would threaten the comparison.
+- Ask which claims the study supports. The rule is supported; the smooth counterfactual and score-setting process need scrutiny. The next slides check sensitivity to the window and curve, then examine pre-programme age and possible sorting. Further reading: [Cattaneo, Titiunik and Vazquez-Bare, 2019](https://arxiv.org/pdf/1906.04242).
 :::
 
 ## Change the window. Change the answer? {#d2s2-p08 .reader-slide .s1-review .d2s2-review}
@@ -204,7 +226,29 @@ Within 2 points: -721 AED, N=545. Within 5: -784 AED, N=1,260. What changes?
 
 - Show the two-point window first: 545 businesses, -721 AED. Click to show the five-point window: 1,260 businesses, -784 AED. The dots remain the same; the shaded range and fitted lines change. The wider 95% interval is -934 to -634 AED (worksheet page 2).
 - Ask what is gained and lost. More businesses may improve precision, but those farther from 58 may be less comparable, and straight-line fits may work less well over a wider span. Have participants answer the window question in Q3 on worksheet page 4.
-- Both estimates are below the 1,000 AED saving rule on a reduction scale. Similar direction does not establish causality. Next, inspect a characteristic measured before GreenWaste that should not jump if the two sides are otherwise alike.
+- Both estimates are below the 1,000 AED saving rule on a reduction scale. Similar direction does not establish causality. Next, keep the window fixed and change the shape of the fitted curve.
+:::
+
+## Change the curve. Change the estimate? {#d2s2-p08b .reader-slide .s1-review .d2s2-review}
+
+**Same 545 businesses. Same scores 56-60.** Only the fitted curve on each side changes.
+
+```{r, results='asis'}
+html_out(d5_poly_comparison())
+```
+
+::: {.ask}
+Linear: **-721 AED**. Quartic: **-395 AED**. What changed, and which result would you trust more?
+:::
+
+More bends do **not** automatically make a more credible answer.
+
+::: {.notes}
+**5 minutes. Main point:** Functional form is another modelling choice; changing only the degree moves this local estimate by 326 AED between linear and quartic fits.
+
+- All four fits use the same 545 city businesses within two score points of 58, with separate curves on either side. Read the fitted jump at 58: linear -721, quadratic -731, cubic -629, quartic -395 AED. These are fitted differences, not four known programme effects.
+- Ask what changed: the flexibility of the curve, not the cut-off, outcome, sample or window. In this example the quartic fit gives a much smaller apparent saving. Do not select a degree because it produces the desired answer or treat the quartic as preferred.
+- Local linear is the session's main specification. Ask the evaluator to justify the chosen fit and show sensible sensitivity checks; then move to the pre-programme age diagnostic. [Gelman and Imbens (2019)](https://stat.columbia.edu/~gelman/research/published/2018_gelman_jbes.pdf) explain why high-order polynomial RDD fits can be unreliable and favour local low-order fits.
 :::
 
 ## A difference that GreenWaste cannot explain {#d2s2-p09 .reader-slide .s1-review .d2s2-review}
@@ -342,5 +386,5 @@ Next: finding comparisons with similar recorded characteristics.
 
 - Give three minutes for independent writing in the final box of Q3 on worksheet page 4. Keep H5-A open, but close AI responses and peer comments. Allow one minute for a partner to check whether the request has a clear purpose, then use two minutes for feedback.
 - A strong answer identifies the fitted annual cost difference at 58, its units, the limit of its local reach, and the unresolved causal concern. A useful request asks about score setting, the age jump or other pre-programme checks, or evidence for businesses farther from 58, and explains how the answer could change the advice.
-- Do not describe the cut-off as a lottery or the estimate as citywide. The next session moves to matching businesses on recorded characteristics. These notes total 80 minutes; use the matching six-page worksheet.
+- Do not describe the cut-off as a lottery or the estimate as citywide. The next session moves to matching businesses on recorded characteristics. These notes total 89 minutes; use the matching six-page worksheet.
 :::

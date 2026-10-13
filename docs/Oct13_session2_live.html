@@ -498,6 +498,9 @@ margin: 0 0.8em 0.2em -1em;  vertical-align: middle;
 .reveal .d2s2-review .score-rule{font-size:23px;margin:12px 0}
 .reveal .d2s2-review .score-rule>div{padding:12px}
 .reveal .d2s2-review .exercise-editor .cm-editor{font-size:21px}
+.reveal .d2s2-review .rdd-assumptions{font-size:28px;line-height:1.28;margin:20px 0}
+.reveal .d2s2-review .rdd-assumptions ol{margin:0 0 0 1.3em}
+.reveal .d2s2-review .rdd-assumptions li{padding:0 0 13px 8px}
 </style>
   <style type="text/css">.reveal
 div.sourceCode
@@ -25369,7 +25372,39 @@ eyJhdHRyIjp7ImVjaG8iOnRydWUsImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBDb21w
 <ul>
 <li>Ask the room to predict whether the code will return a group-average gap or the fitted gap at the cut-off. Then run it once yourself. Participants do not need to code.</li>
 <li>The output should be -721. The code reports the fitted coefficient; the robust interval shown on the previous slide comes from a separate uncertainty calculation, not from this <code>lm()</code> command.</li>
-<li>If browser R is slow, use the printed -721 result on the slide and move on. Next, ask whether the answer changes when the evaluator includes businesses farther from 58.</li>
+<li>If browser R is slow, use the printed -721 result on the slide and move on. Next, ask what must hold before calling this fitted difference a programme effect.</li>
+</ul>
+<style type="text/css">
+span.MJX_Assistive_MathML {
+position:absolute!important;
+clip: rect(1px, 1px, 1px, 1px);
+padding: 1px 0 0 0!important;
+border: 0!important;
+height: 1px!important;
+width: 1px!important;
+overflow: hidden!important;
+display:block!important;
+}</style></aside>
+</section>
+<section id="d2s2-p07b" class="slide level2 reader-slide s1-review d2s2-review">
+<h2>When could the jump be a programme effect?</h2>
+<p>The comparison is <strong>local</strong>: businesses just either side of score <strong>58</strong>.</p>
+<div class="rdd-assumptions">
+<ol type="1">
+<li><strong>The rule changes participation.</strong> Businesses at or below 58 took part; those above did not.</li>
+<li><strong>Without GreenWaste, costs would change smoothly through 58.</strong> No other cause of cost should jump at the same score.</li>
+<li><strong>The scoring process must be credible.</strong> Could businesses precisely place themselves on the participating side?</li>
+</ol>
+</div>
+<div class="ask">
+<p>Which statement can H5-A verify, and which needs more evidence?</p>
+</div>
+<aside class="notes">
+<p><strong>4 minutes. Main point:</strong> A cost jump at 58 is a programme effect only if the businesses would otherwise have had smoothly changing expected costs through that score.</p>
+<ul>
+<li>The participation rule is documented in H5-A: every city business at or below 58 participated, and those above did not. This establishes a sharp cut-off, not a causal effect by itself.</li>
+<li>The central assumption concerns what would have happened without GreenWaste. We cannot observe that counterfactual directly. Another change exactly at 58, or businesses selecting their side of the rule, would threaten the comparison.</li>
+<li>Ask which claims the study supports. The rule is supported; the smooth counterfactual and score-setting process need scrutiny. The next slides check sensitivity to the window and curve, then examine pre-programme age and possible sorting. Further reading: <a href="https://arxiv.org/pdf/1906.04242">Cattaneo, Titiunik and Vazquez-Bare, 2019</a>.</li>
 </ul>
 <style type="text/css">
 span.MJX_Assistive_MathML {
@@ -25398,7 +25433,34 @@ Show the five-point window
 <ul>
 <li>Show the two-point window first: 545 businesses, -721 AED. Click to show the five-point window: 1,260 businesses, -784 AED. The dots remain the same; the shaded range and fitted lines change. The wider 95% interval is -934 to -634 AED (worksheet page 2).</li>
 <li>Ask what is gained and lost. More businesses may improve precision, but those farther from 58 may be less comparable, and straight-line fits may work less well over a wider span. Have participants answer the window question in Q3 on worksheet page 4.</li>
-<li>Both estimates are below the 1,000 AED saving rule on a reduction scale. Similar direction does not establish causality. Next, inspect a characteristic measured before GreenWaste that should not jump if the two sides are otherwise alike.</li>
+<li>Both estimates are below the 1,000 AED saving rule on a reduction scale. Similar direction does not establish causality. Next, keep the window fixed and change the shape of the fitted curve.</li>
+</ul>
+<style type="text/css">
+span.MJX_Assistive_MathML {
+position:absolute!important;
+clip: rect(1px, 1px, 1px, 1px);
+padding: 1px 0 0 0!important;
+border: 0!important;
+height: 1px!important;
+width: 1px!important;
+overflow: hidden!important;
+display:block!important;
+}</style></aside>
+</section>
+<section id="d2s2-p08b" class="slide level2 reader-slide s1-review d2s2-review">
+<h2>Change the curve. Change the estimate?</h2>
+<p><strong>Same 545 businesses. Same scores 56-60.</strong> Only the fitted curve on each side changes.</p>
+<svg class="review-svg" viewbox="0 0 1100 270" role="img" aria-label="Local fitted cost jump in AED for linear, quadratic, cubic and quartic side-specific fits, using the same 545 businesses within two score points of 58; estimates are minus 721, minus 731, minus 629 and minus 395 AED."><text x="28" y="44.0" font-size="27" font-weight="700">Linear</text><text x="180" y="44.0" font-size="21" fill="#545860">straight</text><line x1="390" x2="945" y1="36.0" y2="36.0" stroke="#d5dee8" stroke-width="2"></line><circle cx="477.7" cy="36.0" r="9" fill="#215a9e"></circle><text x="975" y="44.0" font-size="27" font-weight="700" fill="#215a9e">-721</text><text x="28" y="99.0" font-size="27" font-weight="700">Quadratic</text><text x="180" y="99.0" font-size="21" fill="#545860">one bend</text><line x1="390" x2="945" y1="91.0" y2="91.0" stroke="#d5dee8" stroke-width="2"></line><circle cx="466.6" cy="91.0" r="9" fill="#B8272C"></circle><text x="975" y="99.0" font-size="27" font-weight="700" fill="#B8272C">-731</text><text x="28" y="154.0" font-size="27" font-weight="700">Cubic</text><text x="180" y="154.0" font-size="21" fill="#545860">two bends</text><line x1="390" x2="945" y1="146.0" y2="146.0" stroke="#d5dee8" stroke-width="2"></line><circle cx="579.8" cy="146.0" r="9" fill="#B8272C"></circle><text x="975" y="154.0" font-size="27" font-weight="700" fill="#B8272C">-629</text><text x="28" y="209.0" font-size="27" font-weight="700">Quartic</text><text x="180" y="209.0" font-size="21" fill="#545860">three bends</text><line x1="390" x2="945" y1="201.0" y2="201.0" stroke="#d5dee8" stroke-width="2"></line><circle cx="839.5" cy="201.0" r="9" fill="#B8272C"></circle><text x="975" y="209.0" font-size="27" font-weight="700" fill="#B8272C">-395</text><line x1="390" x2="945" y1="227" y2="227" stroke="#545860"></line><line x1="390.0" x2="390.0" y1="227" y2="234" stroke="#545860"></line><text x="390.0" y="258" text-anchor="middle" font-size="20">-800</text><line x1="501.0" x2="501.0" y1="227" y2="234" stroke="#545860"></line><text x="501.0" y="258" text-anchor="middle" font-size="20">-700</text><line x1="612.0" x2="612.0" y1="227" y2="234" stroke="#545860"></line><text x="612.0" y="258" text-anchor="middle" font-size="20">-600</text><line x1="723.0" x2="723.0" y1="227" y2="234" stroke="#545860"></line><text x="723.0" y="258" text-anchor="middle" font-size="20">-500</text><line x1="834.0" x2="834.0" y1="227" y2="234" stroke="#545860"></line><text x="834.0" y="258" text-anchor="middle" font-size="20">-400</text><line x1="945.0" x2="945.0" y1="227" y2="234" stroke="#545860"></line><text x="945.0" y="258" text-anchor="middle" font-size="20">-300</text></svg>
+<div class="ask">
+<p>Linear: <strong>-721 AED</strong>. Quartic: <strong>-395 AED</strong>. What changed, and which result would you trust more?</p>
+</div>
+<p>More bends do <strong>not</strong> automatically make a more credible answer.</p>
+<aside class="notes">
+<p><strong>5 minutes. Main point:</strong> Functional form is another modelling choice; changing only the degree moves this local estimate by 326 AED between linear and quartic fits.</p>
+<ul>
+<li>All four fits use the same 545 city businesses within two score points of 58, with separate curves on either side. Read the fitted jump at 58: linear -721, quadratic -731, cubic -629, quartic -395 AED. These are fitted differences, not four known programme effects.</li>
+<li>Ask what changed: the flexibility of the curve, not the cut-off, outcome, sample or window. In this example the quartic fit gives a much smaller apparent saving. Do not select a degree because it produces the desired answer or treat the quartic as preferred.</li>
+<li>Local linear is the session’s main specification. Ask the evaluator to justify the chosen fit and show sensible sensitivity checks; then move to the pre-programme age diagnostic. <a href="https://stat.columbia.edu/~gelman/research/published/2018_gelman_jbes.pdf">Gelman and Imbens (2019)</a> explain why high-order polynomial RDD fits can be unreliable and favour local low-order fits.</li>
 </ul>
 <style type="text/css">
 span.MJX_Assistive_MathML {
@@ -25581,7 +25643,7 @@ display:block!important;
 <ul>
 <li>Give three minutes for independent writing in the final box of Q3 on worksheet page 4. Keep H5-A open, but close AI responses and peer comments. Allow one minute for a partner to check whether the request has a clear purpose, then use two minutes for feedback.</li>
 <li>A strong answer identifies the fitted annual cost difference at 58, its units, the limit of its local reach, and the unresolved causal concern. A useful request asks about score setting, the age jump or other pre-programme checks, or evidence for businesses farther from 58, and explains how the answer could change the advice.</li>
-<li>Do not describe the cut-off as a lottery or the estimate as citywide. The next session moves to matching businesses on recorded characteristics. These notes total 80 minutes; use the matching six-page worksheet.</li>
+<li>Do not describe the cut-off as a lottery or the estimate as citywide. The next session moves to matching businesses on recorded characteristics. These notes total 89 minutes; use the matching six-page worksheet.</li>
 </ul>
 <style type="text/css">
 span.MJX_Assistive_MathML {
