@@ -1,5 +1,11 @@
 # Handoff: moving Module 2 to the simple GreenWaste case
 
+## Day 2 Session 2 age-check explanation, 13 October 2026
+
+Slide 10 now explains its purpose directly: manager age was recorded before GreenWaste, yet the fitted ages differ by about 5.3 years at score 58 in the five-point window. That raises a comparability question for the cost result; it does not establish bias or its direction. The optional adjusted-cost reveal was removed to keep the diagnostic question in focus. The presenter notes now give the axes, window, interpretation, question and transition in teaching order. The matching worksheet page 2 uses the same explanation. The age plot has separate score and age axis labels.
+
+The deck and worksheet render successfully. At 1280x720 all 16 screens, opened controls and logo clearance pass; the R demonstration still returns -721. The worksheet remains exactly six A4 pages, and the updated slide and worksheet page were visually inspected. The canonical deck, preview, worksheet HTML/PDF and download ZIPs must be refreshed together before publishing.
+
 ## Day 2 Session 2 without participant cards, 13 October 2026
 
 Lucas requested replacing the card-dependent content slides 3-5 with a visual pair discussion. The selected source remains `Oct13_session2_review.qmd` and the teaching route remains `Oct13_session2_live`. The sequence now asks what comparison to make on the scatterplot, reveals each fitted slope separately without the jump, then identifies and interprets the -721 AED local jump using 545 businesses. The prediction and R-demo prompts no longer refer to cards.

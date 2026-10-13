@@ -88,7 +88,7 @@ html_out(d5_plot(5,TRUE,TRUE))
 ```
 </div>
 
-This age discontinuity is a credibility concern, not a GreenWaste effect on age. Optional extension: adding age to the two-point model gives **-632 AED**, HC2 interval **-857 to -407**. Adjustment alone does not establish a valid local comparison.
+Manager age was recorded before GreenWaste, so the programme cannot explain the difference at 58. The plot uses scores 53-63, within five points of the cut-off. Ask what other pre-programme characteristics might differ and whether the pattern persists in a narrower window. This is a credibility concern, not proof of a particular bias.
 
 </div>
 

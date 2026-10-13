@@ -44,7 +44,8 @@ d5_plot<-function(width=2,fit=FALSE,age=FALSE,jump=TRUE,steps=FALSE) {
   d5_svg(paste0(sprintf('<rect x="%.1f" y="60" width="%.1f" height="220" fill="#e3ebf5"/>',x(58-width),x(58+width)-x(58-width)),
     '<text x="130" y="26" font-size="25" fill="#215a9e">At/below 58: participant businesses</text><text x="620" y="26" font-size="25" fill="#545860">Above 58: comparison businesses</text>',axis,points,
     sprintf('<line x1="%.1f" x2="%.1f" y1="48" y2="280" stroke="#B8272C" stroke-dasharray="6 5"/><text x="%.1f" y="53" text-anchor="middle" font-size="22">Cut-off 58</text>',x(58),x(58),x(58)),lines,ticks,
-    sprintf('<text x="560" y="353" font-size="25" text-anchor="middle">Efficiency score (higher means more efficient); %s</text>',if(age)'pre-programme manager age (years)' else 'waste cost after GreenWaste (AED)')),
+    if(age)'<text x="35" y="180" font-size="18" text-anchor="middle" transform="rotate(-90 35 180)">Manager age before GreenWaste (years)</text>' else '',
+    sprintf('<text x="560" y="353" font-size="25" text-anchor="middle">%s</text>',if(age)'Efficiency score (cut-off 58)' else 'Efficiency score (higher means more efficient); waste cost after GreenWaste (AED)')),
     paste(if(age)'Pre-programme manager age' else 'Annual waste management cost 12 months after GreenWaste','against score; data shown from 53 to 63; shaded window plus/minus',width,'points; fitted lines',fit))
 }
 d5_table<-function() {

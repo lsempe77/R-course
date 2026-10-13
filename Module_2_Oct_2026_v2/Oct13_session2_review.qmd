@@ -175,21 +175,20 @@ Within 2 points: -721 AED, N=545. Within 5: -784 AED, N=1,260. What changes?
 6 minutes. Sameaxesandactualdots53-63; shadingandfittedlineschangewindow. Q3page4: localityversusinformation/modeldependence. Widerresultinterval-934to-634. Extraobservationsmayreduceuncertaintybutfurtherbusinessesmaybelesscomparable andlinearfitlesscredible. Stabilitydoesnotprovevalidity; bothpointandintervalbelowrule. Transition: lookatsomethingprogrammeshouldnotcause.
 :::
 
-## Waste costs jump. Manager age does too. {#d2s2-p09 .reader-slide .s1-review .d2s2-review}
+## A difference that GreenWaste cannot explain {#d2s2-p09 .reader-slide .s1-review .d2s2-review}
 
 ```{r, results='asis'}
 html_out(d5_plot(5,TRUE,TRUE))
 ```
 
-<button data-open="d5-adjust" data-closed="Optional: what if we adjust for age?" data-opened="Hide adjusted result" aria-controls="d5-adjust" aria-expanded="false">Optional: what if we adjust for age?</button>
-<p id="d5-adjust" class="feedback" hidden>With age adjustment, the two-point estimate is -632 AED (interval -857 to -407). Adjustment alone does not establish a valid local comparison.</p>
+**Before GreenWaste**, managers on the participating side were about **5 years younger** near score 58. This check uses scores **53-63**, within five points of the cut-off.
 
 ::: {.ask}
-Q3: why does a pre-programme age jump matter for a causal reading?
+If age differs before the programme, what else might differ? What would you ask the evaluator to check?
 :::
 
 ::: {.notes}
-6 minutes. Agejumpabout-5.3yearsusingfivepointwindow. Actualpreprogrammedata; do not confuse withprogrammeageeffect. Suggestsdifferentbusinesscompositionatcutoff/possibleotherexplanation; doesnotproveaspecificbiasdirection. Investigatescoresetting/ageconnection. Optionaladjustedestimate-632HC2interval-857to-407 within2, only ifuseful; not automaticrepair, avoids extra fittingdemo. Transition: compliancewithruleisnotproofbusinessescouldnotinfluencescores.
+6 minutes. First orient the room: the horizontal axis is the efficiency score, and the vertical axis is manager age recorded before GreenWaste. The plot uses the wider five-point window (scores 53-63); its fitted age difference at 58 is about -5.3 years, with younger managers on the participating side. This is a check on the comparison, not an effect of GreenWaste on age. Ask participants why a difference that predates the programme makes them question whether the cost jump is caused only by GreenWaste. Age may signal other pre-existing differences, but the plot alone neither proves bias nor tells us its direction. Request other characteristics measured before the programme, an explanation of how scores were set, and a check of whether this age pattern persists in narrower windows. Do not offer age adjustment as an automatic fix. Transition: the next slide examines whether businesses could influence which side of the score rule they landed on.
 :::
 
 ## Could businesses influence their score? {#d2s2-p10 .reader-slide .s1-review .d2s2-review}
