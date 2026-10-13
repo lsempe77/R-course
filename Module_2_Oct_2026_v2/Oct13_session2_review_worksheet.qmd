@@ -46,7 +46,7 @@ GreenWaste offers equipment subsidies, installation help and training. The city 
 
 ### §2 | What does the fitted result compare?
 
-The local model uses **545 businesses within two points of 58 (scores 56-60)**. The outcome is annual waste cost in AED per business, measured **12 months after**. Separate straight cost/score slopes are fitted on either side. The coefficient compares the fitted costs approaching 58 from the participating side versus the non-participating side. It is not the average gap across the whole city, or the small raw mean gap on a card.
+The local model uses **545 businesses within two points of 58 (scores 56-60)**. The outcome is annual waste cost in AED per business, measured **12 months after**. Separate straight cost/score slopes are fitted on either side. The coefficient compares the fitted costs approaching 58 from the participating side versus the non-participating side. It differs from comparing average costs across all scores on each side, and is not the average gap across the whole city.
 
 ```{r, results='asis'}
 html_out(d5_table())
@@ -94,26 +94,27 @@ This age discontinuity is a credibility concern, not a GreenWaste effect on age.
 
 <div class="sheet-page">
 
-## Page 3 | Q1-Q2: arithmetic and interpretation
+## Page 3 | Q1-Q2: visual comparison and interpretation
 
-### Q1 | Record your group's raw card gap
+### Q1 | What comparison should we make?
 
-Card letter: ______. Use your **separate A-H card**, six businesses per side. Costs are rounded to ten AED. Scores are displayed to one decimal, but each business is placed on its side using its exact score.
+Use the plot on screen and the reference figure on page 2. Discuss with a partner.
 
-| Calculation | At/below 58 | Above 58 |
-|---|---|---|
-| Sum of six costs | __________ | __________ |
-| Mean: sum divided by 6 | __________ | __________ |
+**(a)** Identify the cut-off and the shaded window. Which side participated?
 
-At/below mean minus above mean: __________________ AED.
+<div class="writing"></div>
 
-Place the letter and gap in the **raw-gap lane** on the number line. Why might other groups get different gaps?
+**(b)** Would comparing average costs on each side isolate the difference at 58? What else could affect that average gap?
 
-<div class="writing tall"></div>
+<div class="writing"></div>
+
+**(c)** Follow the two fitted lines towards 58. What comparison do they make that the group averages do not?
+
+<div class="writing"></div>
 
 ### Q2 | Read the fitted local jump
 
-Use H5-A §2/table (page 1) and the fitted plot on page 2. Label the gap at the cut-off. Why does the fitted estimate not equal your card gap?
+Use H5-A §2/table (page 1) and the fitted plot on page 2. Label the vertical gap at the cut-off. Which fitted cost is subtracted from which?
 
 <div class="writing tall"></div>
 

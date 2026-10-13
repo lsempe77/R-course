@@ -66,58 +66,58 @@ Will fitted costs just below 58 be lower? Would the reduction reach 1,000 AED?
 
 <div data-choices><button data-choice aria-pressed="false">Little difference</button><button data-choice aria-pressed="false">At least 1,000 lower</button><button data-choice aria-pressed="false">Need evidence</button><p class="feedback" role="status"></p></div>
 
-Give a reason before opening **Card A-H**. These buttons record a local choice; use labelled cards for room voting.
+Give a reason before seeing the fitted lines. These buttons record a local choice; collect room responses with a show of hands.
 
 ::: {.notes}
 4 minutes. One minute choose, two discuss reasons, one collect. Do not present cost patterns as proof of an effect. No fitted estimate revealed. Below-minus-above negative means lower cost. Transition: work with different small samples on either side.
 :::
 
-## Twelve nearby businesses. What do they show? {#d2s2-p03 .reader-slide .s1-review .d2s2-review}
-
-Each group receives a different **Card A-H**: six businesses on each side. Use **Q1, worksheet page 3**.
-
-1. Find each side's mean annual waste management cost 12 months after GreenWaste.
-2. Subtract: **at/below 58 minus above 58**.
-3. Put your card letter and gap on a sticky note.
-
-::: {.ask}
-What does your small raw mean gap suggest?
-:::
-
-::: {.notes}
-10 minutes. Preserve Fiona's seeds A4 B11 C37 D22 E9 F21 G33 H5 and costs rounded to ten AED. Calculators allowed. Eight minutes calculate/pair-check, two check one subtraction. Seeds sample six records score57-58 versus58-59; display scores roundedone decimal can show58.0 for records above the cut-off, side basedunrounded score. Cards state this. Answers from source objects, not obsolete values: `r paste(names(d5_cards), vapply(d5_cards,function(x)paste(fmt(x$below),'-',fmt(x$above),'=',fmt(x$below-x$above)),''),collapse='; ')`. Raw gap is not fitted RDD or established effect. Transition: compare samples on two-lane board.
-:::
-
-## Why did our groups get different gaps? {#d2s2-p04 .reader-slide .s1-review .d2s2-review}
+## What comparison should we make? {#d2s2-p03 .reader-slide .s1-review .d2s2-review}
 
 ```{r, results='asis'}
-html_out(d5_board(TRUE))
+html_out(d5_plot())
 ```
 
-<button data-open="raw-markers" data-closed="Compare the eight card gaps" data-opened="Hide card gaps" aria-controls="raw-markers" aria-expanded="false">Compare the eight card gaps</button>
+Discuss with a partner. The shaded window contains **545 businesses with scores 56-60**.
 
 ::: {.ask}
-Put raw gaps on the upper lane of the A1 line. Why are they spread out?
+Would comparing the average costs on each side tell us what happens at 58? What else could affect that gap?
 :::
 
 ::: {.notes}
-6 minutes. Three minutes one reporterpergroup, two discuss samples/slope/noise, one reveal keyedletterpositions. Keeplowerlaneempty untilfittedresult. H canpointopposite direction; cardsnotindependentidentical experiments. Use existingA1poster or newprintableboard/browserboard linkedcomparisonhub. Localbrowserboarddoesnotcollectroomvotes. Q1 recordcomparison. Transition: fittedlines answerdifferentquestion.
+4 minutes. One minute inspect the plot, two discuss in pairs, one collect explanations. Each dot is a business; blue is at or below 58, grey is above. Shading marks the two-point window. A raw mean gap also reflects where the businesses sit along the score scale and variation in costs. It does not isolate the fitted comparison at 58 or establish an effect. No cards, arithmetic or number-line poster are needed. Q1 on worksheet page 3 records the same reasoning. Transition: compare fitted costs as the score approaches 58 from each side.
 :::
 
-## A gap between averages is not the fitted jump {#d2s2-p05 .reader-slide .s1-review .d2s2-review}
+## Compare businesses at the same score. {#d2s2-p04 .reader-slide .s1-review .d2s2-review}
+
+```{r, results='asis'}
+html_out(d5_plot(fit=TRUE, jump=FALSE, steps=TRUE))
+```
+
+The two lines allow costs to slope differently on each side. Follow each line towards **58**.
+
+::: {.ask}
+Why might the gap between group averages differ from the gap where these lines reach 58?
+:::
+
+::: {.notes}
+4 minutes. Advance once to reveal the participating-side line, then again for the comparison-side line. Each uses businesses in the shaded window. Ask the room to follow both to 58 before describing the gap. We compare fitted limits at the same cut-off, rather than averages over different scores. There need not be a business observed exactly at 58. Keep the jump and number withheld until the next slide. Complete Q1 on worksheet page 3. Transition: identify and interpret the vertical gap.
+:::
+
+## Read the jump at 58. {#d2s2-p05 .reader-slide .s1-review .d2s2-review}
 
 ```{r, results='asis'}
 html_out(d5_plot(fit=TRUE))
 ```
 
 ::: {.ask}
-Where do the two fitted lines meet the cut-off? Which vertical gap is the reported jump?
+The fitted jump is **-721 AED**. Explain the comparison, sign and units to your partner.
 :::
 
-The fitted comparison allows costs to **slope differently on each side**. It uses **545 businesses**, not your card's twelve.
+This uses **545 businesses**. Negative means lower annual waste costs on the participating side, measured **12 months after GreenWaste**.
 
 ::: {.notes}
-6 minutes. Explain separate lines approaching58, redverticalgapnotoverallmean difference. Window56-60. No actual observation at exactly58 required: fittedlimitsestimated. Cardmeanincludesdistributionofscorewithinonesideandnoise; fitallows slopesanddifferentrecords. Q2 page3 label fittedjump onreferencefigurepage2. Transition: findcorrespondingrow, units, referenceandinterval.
+4 minutes. Point out the red vertical gap between the two fitted limits at 58. Give pairs two minutes to explain it, then hear and refine one interpretation: fitted annual waste cost immediately on the participating side is 721 AED lower than on the comparison side. This is a local comparison, not a citywide average. A causal reading still requires a credible design; the checks come later. Q2 on worksheet page 3 uses the reference figure on page 2. Transition: find the same jump, sample and interval in the regression table.
 :::
 
 ## Which number is the local jump? {#d2s2-p06 .reader-slide .s1-review .d2s2-review}
@@ -148,7 +148,7 @@ round(coef(fit)['below'])
 ```
 
 ::: {.ask}
-Does this calculate your card average, or a fitted gap at the cut-off?
+Does this calculate the average gap across the window, or a fitted gap at the cut-off?
 :::
 
 Paper result: **-721 AED**. Participants do not need to write or run R.
@@ -283,5 +283,5 @@ Use the **final box on worksheet page 4**.
 Next: finding comparisons with similar recorded characteristics.
 
 ::: {.notes}
-6 minutes. Threeindependentonepairpurposechecktwofeedback. Requirelocalfittedcomparisonat58,units,conditionalcausalreadingandthresholdlimit. Requestscoresetting/influence,agejump/otherpredeterminedchecks,windowortransportabilitywithreason. Noclaimcutoffislotteryorrepresentative. Total90. Use this teaching source with its matching six-page worksheet and eight group cards.
+6 minutes. Three independent, one pair purpose check, two feedback. Require a local fitted comparison at 58, units, conditional causal reading and threshold limit. Request score setting/influence, the age jump/other predetermined checks, the window or transportability, with a reason. Do not claim the cut-off is a lottery or representative. Total 80 minutes. Use this teaching source with its matching six-page worksheet; the visual pair discussion requires no group cards.
 :::

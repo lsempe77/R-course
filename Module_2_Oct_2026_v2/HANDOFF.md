@@ -1,5 +1,15 @@
 # Handoff: moving Module 2 to the simple GreenWaste case
 
+## Day 2 Session 2 without participant cards, 13 October 2026
+
+Lucas requested replacing the card-dependent content slides 3-5 with a visual pair discussion. The selected source remains `Oct13_session2_review.qmd` and the teaching route remains `Oct13_session2_live`. The sequence now asks what comparison to make on the scatterplot, reveals each fitted slope separately without the jump, then identifies and interprets the -721 AED local jump using 545 businesses. The prediction and R-demo prompts no longer refer to cards.
+
+Worksheet Q1 on page 3 now asks participants to identify the window and participation side, distinguish the raw average gap from the fitted comparison, and explain the limits at 58. The worksheet remains six A4 pages. The teaching guide, print instructions, comparison navigation and hub no longer require the obsolete group cards or number-line poster. The existing private trainer-key PDF's card arithmetic is superseded by the revised Q1 answers in `PRINT_SHEETS_TRAINER.md`. Historical card sources and assets are retained.
+
+Browser checks pass all 16 title/content screens at 1280x720, including expanded controls and logo clearance. Both SVG slope fragments reveal in order and reset when returning to the slide; the jump is withheld until the next slide. Actual webR execution still returns -721. The printable worksheet has exactly six pages and its revised task page was visually inspected. Canonical/preview HTML and worksheet copies match; the Days 1-2 deck ZIP and both participant-print ZIPs contain the updated outputs, with unrelated archive members preserved byte-for-byte.
+
+The three replacement activities take four minutes each, reducing the embedded session script from 90 to 80 minutes. This edit does not resolve the older catalogue's 60-minute allocation; use the embedded timings until the wider session is retimed. Deployment checks must be verified after pushing this revision.
+
 ## Deployment confirmed, 12 October 2026
 
 The complete teaching reconciliation below was committed and pushed as [`89c2577`](https://github.com/lsempe77/R-course/commit/89c25776e12aac9928d080bf7785f7ec5fe0336b); the remote `main` SHA matched. Cloudflare Workers `module2`, GitHub build, deploy and report-build-status checks all succeeded by 00:55:54 UAE (11 October, 20:55:54 UTC). The applied rollout safety stash was dropped only after the commit/push succeeded. Unrelated local files were not staged.

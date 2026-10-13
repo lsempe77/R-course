@@ -19,7 +19,7 @@ d5_jumps<-sapply(d5_cards,function(x)x$below-x$above)
 d5_escape<-function(x)gsub('<','&lt;',gsub('&','&amp;',x,fixed=TRUE),fixed=TRUE)
 d5_paragraphs<-function(x)paste0('<p>',gsub('\n\n','</p><p>',d5_escape(x),fixed=TRUE),'</p>')
 d5_svg<-function(body,label,h=360)paste0('<svg class="review-svg" viewBox="0 0 1100 ',h,'" role="img" aria-label="',label,'">',body,'</svg>')
-d5_plot<-function(width=2,fit=FALSE,age=FALSE) {
+d5_plot<-function(width=2,fit=FALSE,age=FALSE,jump=TRUE,steps=FALSE) {
   d<-d5_wide;v<-if(age)d$manager_age else d$cost_after
   ymax<-if(age)80 else ceiling(max(v)/1000)*1000
   y<-function(z)280-z/ymax*200;x<-function(z)130+(z-53)/10*850
@@ -32,7 +32,14 @@ d5_plot<-function(width=2,fit=FALSE,age=FALSE) {
     f<-d5_model(width,if(age)'manager_age' else 'cost_after');co<-coef(f)
     left<-function(z)co[1]+co['below']+(co['distance']+co['below:distance'])*(z-58)
     right<-function(z)co[1]+co['distance']*(z-58)
-    lines<-sprintf('<line x1="%.1f" x2="%.1f" y1="%.1f" y2="%.1f" stroke="#215a9e" stroke-width="5"/><line x1="%.1f" x2="%.1f" y1="%.1f" y2="%.1f" stroke="#545860" stroke-width="5"/><line x1="%.1f" x2="%.1f" y1="%.1f" y2="%.1f" stroke="#B8272C" stroke-width="5"/><text x="%.1f" y="%.1f" font-size="24" fill="#B8272C">Jump %s %s</text>',x(58-width),x(58),y(left(58-width)),y(left(58)),x(58),x(58+width),y(right(58)),y(right(58+width)),x(58)+10,x(58)+10,y(left(58)),y(right(58)),x(58)+28,(y(left(58))+y(right(58)))/2-8,fmt(co['below'],if(age)1 else 0),if(age)'years' else 'AED')
+    left_line<-sprintf('<line x1="%.1f" x2="%.1f" y1="%.1f" y2="%.1f" stroke="#215a9e" stroke-width="5"/>',x(58-width),x(58),y(left(58-width)),y(left(58)))
+    right_line<-sprintf('<line x1="%.1f" x2="%.1f" y1="%.1f" y2="%.1f" stroke="#545860" stroke-width="5"/>',x(58),x(58+width),y(right(58)),y(right(58+width)))
+    if(steps) {
+      left_line<-paste0('<g class="fragment" data-fragment-index="0">',left_line,'</g>')
+      right_line<-paste0('<g class="fragment" data-fragment-index="1">',right_line,'</g>')
+    }
+    gap<-if(!jump)'' else sprintf('<line x1="%.1f" x2="%.1f" y1="%.1f" y2="%.1f" stroke="#B8272C" stroke-width="5"/><text x="%.1f" y="%.1f" font-size="24" fill="#B8272C">Jump %s %s</text>',x(58)+10,x(58)+10,y(left(58)),y(right(58)),x(58)+28,(y(left(58))+y(right(58)))/2-8,fmt(co['below'],if(age)1 else 0),if(age)'years' else 'AED')
+    lines<-paste0(left_line,right_line,gap)
   }
   d5_svg(paste0(sprintf('<rect x="%.1f" y="60" width="%.1f" height="220" fill="#e3ebf5"/>',x(58-width),x(58+width)-x(58-width)),
     '<text x="130" y="26" font-size="25" fill="#215a9e">At/below 58: participant businesses</text><text x="620" y="26" font-size="25" fill="#545860">Above 58: comparison businesses</text>',axis,points,

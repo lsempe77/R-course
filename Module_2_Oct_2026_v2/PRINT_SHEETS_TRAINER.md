@@ -12,7 +12,7 @@ The selected teaching versions are deployed in `89c2577`. Use the [folder README
 | Day 1 S2 | 7, revised Word or HTML | 4 decision cards + board = 5 |
 | Day 1 S3 | 2, original Word | Retain original printed pack and age-slip activity |
 | Day 2 S1 | 6 | H4-A included in worksheet |
-| Day 2 S2 | 6 | 8 group cards + number line = 9 |
+| Day 2 S2 | 6 | On-screen visual pair discussion; no group cards |
 | Day 2 S3 | 6 | Profile/cost cards = 2 |
 | Day 3 S1 | 6 | 5 scenario cards + board + results = 7 |
 | Day 3 S2 | 7 | No separate cards |
@@ -22,7 +22,13 @@ The selected teaching versions are deployed in `89c2577`. Use the [folder README
 
 The two Day 4 S1 A1 wall sheets are separate from worksheet pages. Keep keys private. Give the Day 3 S3 question bank after independent work and its evidence pack to the analyst role, not as an advance answer sheet. Give Day 4 S2 retries after feedback; use corrected findings for drafting, not the earlier flawed report.
 
-For Day 2 S2, give one group card per group and use the A1 board or number line for the room activity. Preserve the Day 1 S1/S3 hybrids' original printed sheets. Coordinate any Day 1 S2 old-sheet contingency with Fiona before changing a worksheet link or deck.
+For Day 2 S2, use the on-screen scatterplot and fitted-line pair discussion, with Q1 on page 3 of the matching worksheet. No group cards or number-line board are required. Preserve the Day 1 S1/S3 hybrids' original printed sheets. Coordinate any Day 1 S2 old-sheet contingency with Fiona before changing a worksheet link or deck.
+
+Day 2 S2's revised Q1 supersedes the card arithmetic in the older trainer-key PDF. Accept equivalent wording:
+
+- (a) Cut-off 58; the shaded window is 56-60, with 545 businesses. Businesses at or below 58 participated.
+- (b) The raw average gap also reflects the distribution of scores within each side and variation in costs. It does not isolate the fitted difference at 58.
+- (c) The two fitted lines compare costs approaching the same cut-off from either side, allowing different slopes. The jump is the participating-side fitted limit minus the comparison-side fitted limit. This alone does not establish causality.
 
 ## Day 1 Session 2: decision cards (`Oct12_session2_review_cards.qmd`)
 
