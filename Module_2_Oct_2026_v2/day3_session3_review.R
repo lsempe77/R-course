@@ -27,6 +27,62 @@ d9_threshold_plot <- function() {
     x(lo),fmt(lo),x(hi),fmt(hi))
 }
 
+d9_four_intervals <- function() {
+  estimate <- -c(case$rct, case$did, rdd[1], match_A$est)
+  limits <- rbind(sort(-case$rct_ci), sort(-did_ci),
+                  sort(-rdd_ci), sort(-match_A$ci))
+  label <- c('Pilot RCT', 'City: DiD', 'City: cut-off', 'City: matching')
+  y <- c(80, 145, 210, 275)
+  x <- function(v) 365 + v / 1300 * 590
+  rows <- paste(vapply(seq_along(y), function(i) sprintf(
+    paste0('<text x="30" y="%s" font-size="25" fill="#063360">%s</text>',
+           '<line x1="%.1f" x2="%.1f" y1="%s" y2="%s" stroke="%s" stroke-width="7"/>',
+           '<circle cx="%.1f" cy="%s" r="11" fill="%s"/>',
+           '<text x="975" y="%s" font-size="24" font-weight="700">%s</text>'),
+    y[i]+8, label[i], x(limits[i,1]), x(limits[i,2]), y[i], y[i],
+    if(i==1)'#215a9e' else '#64839e',x(estimate[i]),y[i],
+    if(i==1)'#063360' else '#64839e',y[i]+8,fmt(estimate[i])), ''),collapse='')
+  ticks <- paste(vapply(c(0,500,1000,1300), function(v)
+    sprintf('<text x="%.1f" y="345" text-anchor="middle" font-size="21">%s</text>',
+            x(v),fmt(v)),''),collapse='')
+  sprintf(paste0(
+    '<svg class="d9-forest" viewBox="0 0 1120 390" role="img" ',
+    'aria-label="Four annual saving estimates with 95 percent intervals. Pilot: 1,014, 862 to 1,167. ',
+    'City DiD: 812, 792 to 833. City cut-off: 721, 498 to 943. City matching: 1,029, 859 to 1,200.">',
+    '<rect x="15" y="112" width="1080" height="195" fill="#f3f7fb"/>',
+    '<line x1="365" x2="955" y1="317" y2="317" stroke="#b5c8da" stroke-width="3"/>',
+    '<line x1="%.1f" x2="%.1f" y1="32" y2="317" stroke="#b8272c" stroke-width="3" stroke-dasharray="8 6"/>',
+    '<text x="%.1f" y="26" text-anchor="middle" font-size="22" fill="#b8272c">1,000 AED rule</text>',
+    '%s%s<text x="660" y="382" text-anchor="middle" font-size="21">Annual saving at 12 months (AED) | 95%% interval</text></svg>'),
+    x(1000),x(1000),x(1000),rows,ticks)
+}
+
+d9_sensitivity_plot <- function() {
+  value <- c(ratio(),ratio(years=3),ratio(decay=.3),
+             ratio(decay=.3,extra=800))
+  label <- c('Base: five years, 1,800 AED cost',
+             'Saving lasts three years',
+             'Saving fades 30% each year',
+             'Fade plus 800 AED extra cost')
+  y <- c(70,135,200,265)
+  x <- function(v) 520 + v/2.6*505
+  rows <- paste(vapply(seq_along(y),function(i)sprintf(
+    paste0('<text x="25" y="%s" font-size="23">%s</text>',
+           '<line x1="520" x2="1025" y1="%s" y2="%s" stroke="#d4e0eb" stroke-width="2"/>',
+           '<circle cx="%.1f" cy="%s" r="11" fill="%s"/>',
+           '<text x="%.1f" y="%s" font-size="24" font-weight="700">%s</text>'),
+    y[i]+8,label[i],y[i],y[i],x(value[i]),y[i],
+    if(i==4)'#b8272c' else '#215a9e',x(value[i])+17,y[i]+8,fmt(value[i],2)),''),collapse='')
+  sprintf(paste0(
+    '<svg class="d9-sensitivity" viewBox="0 0 1120 340" role="img" ',
+    'aria-label="Partial benefit-cost ratio: base model 2.44, three saving years 1.53, ',
+    '30 percent annual fading 1.40, fading plus 800 AED extra cost 0.97.">',
+    '<line x1="%.1f" x2="%.1f" y1="35" y2="295" stroke="#b8272c" stroke-width="3" stroke-dasharray="7 5"/>',
+    '<text x="%.1f" y="25" text-anchor="middle" font-size="21" fill="#b8272c">Ratio 1</text>',
+    '%s<text x="770" y="330" text-anchor="middle" font-size="22">Benefit-cost ratio under stated assumptions</text></svg>'),
+    x(1),x(1),x(1),rows)
+}
+
 d9_ids <- paste0('E', 1:8)
 d9_results <- data.frame(
   Source=c('E1 / E3','E2 / E4','E2 / E5','E2 / E6'),

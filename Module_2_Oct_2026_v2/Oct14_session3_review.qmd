@@ -69,18 +69,20 @@ Which arrow needs evidence before the director treats a pilot result as a nation
 **10 minutes. Main point:** a credible effect in the pilot district does not establish the effect under national delivery. Ask pairs what might differ: eligible businesses, take-up, implementers, costs or waste systems. H9-B on page 2 maps the comparisons. The city file is synthetic teaching data; no national transfer analysis is supplied. The city analyses do not automatically bridge the pilot-to-national gap. A bounded next phase remains an option.
 :::
 
-## Four methods; two sources of data {#d3s3-overlap .reader-slide .s1-review .d3s3-review}
+## Four estimates, not four votes {#d3s3-overlap .reader-slide .s1-review .d3s3-review}
 
-<div class="d9-data-line"><div class="d9-source"><b>Separate pilot sample</b><span>Lottery comparison</span></div><div class="d9-source"><b>One city file</b><span>Difference in differences · score cut-off · matching</span></div></div>
+```{r, results='asis'}
+html_out(d9_four_intervals())
+```
 
-<p class="d9-callout">The city methods reuse records and ask different comparison questions. Agreement in direction is useful; it is not four independent replications of a national effect.</p>
+<p class="d9-plot-note">Blue: separate pilot lottery. Grey: three methods using the <strong>same city file</strong>. Each row has its own comparison and causal requirements.</p>
 
 ::: {.ask}
 How would you rewrite N2 without counting the city analyses as separate votes?
 :::
 
 ::: {.notes}
-**7 minutes.** Give two minutes for a pair rewrite, then compare one cautious sentence. Accept: the pilot and three city analyses estimate lower annual waste costs in their respective comparisons; city analyses share records, target different groups and have different assumptions. This is retrieval from Days 1–2, not a rapid new lesson on each design. H9-B provides a reminder.
+**7 minutes.** Ask participants to read the four dots and intervals before discussing the colours. Pilot and matching intervals cross the 1,000 AED rule; DiD and cut-off intervals lie below it. All four intervals lie above zero. The blue row is a separate pilot sample; the three grey city rows reuse records and target different comparisons. Give two minutes for a pair rewrite of N2, then hear one cautious sentence. This is retrieval from Days 1–2, not a new lesson on each design. H9-B provides the method map.
 :::
 
 ## A positive effect can miss a minimum rule {#d3s3-threshold .reader-slide .s1-review .d3s3-review}
@@ -99,16 +101,20 @@ The point estimate is 1,014 AED. Can the note say the 1,000 AED minimum is settl
 **10 minutes.** Ask for a prediction before tracing the interval. On a positive-saving scale, the pilot point estimate is about 1,014 AED per business per year at 12 months; its 95% interval is 862–1,167 AED. It lies above zero but spans the separate policy rule. A 95% interval is not a probability statement about a fixed effect; crossing a rule does not dictate risk tolerance. Day 3 Session 1 already calculated this result. Ask what evidence or risk tolerance could change the action.
 :::
 
-## A ratio is an argument with assumptions {#d3s3-economics .reader-slide .s1-review .d3s3-review}
+## The ratio moves when assumptions change {#d3s3-economics .reader-slide .s1-review .d3s3-review}
 
-<div class="d9-model"><div><span>RCT estimate</span><b>1,014 AED</b><small>Annual waste-cost saving at 12 months</small></div><div><span>Assumed delivery cost</span><b>1,800 AED</b><small>Per business at year 0</small></div><div><span>Assumed future</span><b>Years 1–5</b><small>Same saving each year; 5% rate</small></div><div class="d9-output"><span>Model result</span><b>2.44</b><small>Benefit–cost ratio under these inputs</small></div></div>
+<p class="d9-plot-lead">Base model: <strong>1,014 AED</strong> annual saving from the pilot; <strong>1,800 AED</strong> assumed cost; five assumed saving years; 5% rate.</p>
+
+```{r, results='asis'}
+html_out(d9_sensitivity_plot())
+```
 
 ::: {.ask}
-What actual cost or persistence evidence would you request before treating this as national value for money?
+Which unmeasured input would you ask the analyst to check first, and what record could settle it?
 :::
 
 ::: {.notes}
-**8 minutes.** Retrieve Session 1; do not recalculate. The RCT measured a 12-month cost outcome. Delivery cost, five equal saving years and rate are model inputs. The 2.44 ratio is a partial RCT-linked model, not a measured national return or complete appraisal. Invite requests about full incremental costs and persistence/transfer. The separate 1.86 city-study model appears in later materials; do not mix it into this clinic.
+**8 minutes.** Retrieve Session 1; do not recalculate. Ask participants to identify what changes from the blue base case. The ratio is 2.44 in the base model; about 1.53 with only three saving years, 1.40 if savings fade 30% yearly, and 0.97 if they fade and cost rises by 800 AED. These are illustrative scenarios, not measured effects. The RCT measured one 12-month outcome; delivery cost, later savings and rate are assumptions. Invite a specific request for programme accounts or follow-up evidence. The separate 1.86 city-study model in later materials is not used here.
 :::
 
 ## Turn a concern into an answerable request {#d3s3-question .reader-slide .s1-review .d3s3-review}

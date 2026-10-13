@@ -18,6 +18,10 @@
 .reveal .d3s3-review .d9-source span { font-size:27px; }
 .reveal .d3s3-review .d9-callout { background:#f8f4ea; border-left:7px solid #bf8b1a; padding:18px 25px; color:var(--d9-blue); font-size:28px; }
 .reveal .d3s3-review .d9-threshold { display:block; width:100%; height:280px; margin:28px auto 14px; }
+.reveal .d3s3-review .d9-forest { display:block; width:100%; height:340px; margin:4px auto 0; }
+.reveal .d3s3-review .d9-sensitivity { display:block; width:100%; height:300px; margin:8px auto 0; }
+.reveal .d3s3-review .d9-plot-note { font-size:24px; color:var(--d9-blue); margin:5px 0 12px; }
+.reveal .d3s3-review .d9-plot-lead { font-size:25px; margin:5px 0 0; }
 .reveal .d3s3-review .d9-twofacts { display:flex; gap:22px; margin:20px 0; }
 .reveal .d3s3-review .d9-twofacts span { flex:1; background:var(--d9-light); padding:15px 20px; font-size:25px; }
 .reveal .d3s3-review .d9-model { display:grid; grid-template-columns:repeat(4,1fr); gap:15px; margin:48px 0 24px; }
