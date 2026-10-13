@@ -55,6 +55,32 @@ d7_cash_table <- function(title=NULL) {
 d7_svg <- function(body, label, height=250) paste0(
   '<svg class="review-svg" viewBox="0 0 1100 ', height,
   '" role="img" aria-label="', label, '">', body, '</svg>')
+d7_rct_means_chart <- function() {
+  vals <- c(mean(pilot$cost_after[pilot$took_part==0]),
+            mean(pilot$cost_after[pilot$took_part==1]))
+  x <- function(v) 335 + v/max(vals)*595
+  rows <- paste(vapply(1:2, function(i) sprintf(
+    '<text x="25" y="%s" font-size="27">%s</text><rect x="335" y="%s" width="%.1f" height="42" fill="%s"/><text x="%.1f" y="%s" font-size="27" font-weight="700">%s</text>',
+    c(103,185)[i],c('No GreenWaste','GreenWaste')[i],c(70,152)[i],
+    x(vals[i])-335,c('#7d8b99','#215a9e')[i],x(vals[i])+15,c(102,184)[i],fmt(vals[i])),''),collapse='')
+  d7_svg(paste0(rows,
+    '<text x="335" y="255" font-size="24">Mean annual waste cost at 12 months (AED per pilot business)</text>',
+    sprintf('<text x="335" y="297" font-size="26" fill="#063360">Difference: %s AED lower with GreenWaste</text>',fmt(vals[1]-vals[2]))),
+    paste('Pilot RCT means at 12 months: no GreenWaste',fmt(vals[1]),'AED; GreenWaste',fmt(vals[2]),
+          'AED. The difference is',fmt(vals[1]-vals[2]),'AED per business per year.'),320)
+}
+d7_qaly_chart <- function() d7_svg(paste0(
+  '<line x1="140" x2="975" y1="235" y2="235" stroke="#545860" stroke-width="3"/>',
+  '<line x1="140" x2="140" y1="32" y2="235" stroke="#545860" stroke-width="3"/>',
+  '<rect x="140" y="94" width="700" height="141" fill="#dcebf8"/>',
+  '<line x1="140" x2="840" y1="94" y2="94" stroke="#215a9e" stroke-width="5"/>',
+  '<line x1="840" x2="840" y1="94" y2="235" stroke="#215a9e" stroke-width="3"/>',
+  '<text x="85" y="105" font-size="25" text-anchor="end">0.7</text>',
+  '<text x="85" y="242" font-size="25" text-anchor="end">0</text>',
+  '<text x="840" y="270" font-size="25" text-anchor="middle">4 years</text>',
+  '<text x="505" y="177" font-size="30" text-anchor="middle" fill="#063360">0.7 x 4 = 2.8 QALYs</text>',
+  '<text x="140" y="305" font-size="23">Illustrative health example only: quality-of-life weight x time</text>'),
+  'Illustrative health example, not GreenWaste data: four years at a quality-of-life weight of 0.7 give 2.8 QALYs.',320)
 d7_timeline <- function() {
   x <- seq(90, 1010, length.out=6)
   dots <- paste(vapply(0:5, function(i) sprintf(
@@ -65,10 +91,20 @@ d7_timeline <- function() {
     dots, '<text x="550" y="210" text-anchor="middle" font-size="26">Assumed costs and savings by year: AED per participant business, before conversion to value today</text>'),
     paste('Model timeline for one pilot business: assumed cost of 1,800 AED now, then',fmt(model$saving),'AED annual saving in years 1 to 5. Persistence after the 12-month RCT is assumed.'))
 }
-d7_discount <- function() d7_svg(sprintf(
-  '<g fill="#063360" font-size="30"><text x="100" y="65">Year 1: %s AED</text><text x="630" y="65">Value today: %s AED</text></g><path d="M450 110L620 110" stroke="#7da1c4" stroke-width="5"/><text x="550" y="165" text-anchor="middle" font-size="30">%s / 1.05 = %s</text><text x="550" y="215" text-anchor="middle" font-size="24">Years 2 to 5 use the same logic, with larger discount factors.</text>',
-  fmt(model$saving), fmt(model$saving/1.05), fmt(model$saving), fmt(model$saving/1.05)),
-  paste('At the assumed 5 percent rate,',fmt(model$saving),'AED in year 1 has a year 0 present value of about',fmt(model$saving/1.05),'AED.'))
+d7_discount <- function() {
+  v <- model$saving/(1+model$rate)^(1:5)
+  x <- function(i) 185+(i-1)*175
+  y <- function(z) 238-z/1100*195
+  pts <- paste(vapply(1:5,function(i)sprintf('%.1f,%.1f',x(i),y(v[i])),''),collapse=' ')
+  marks <- paste(vapply(1:5,function(i)sprintf(
+    '<circle cx="%.1f" cy="%.1f" r="10" fill="#215a9e"/><text x="%.1f" y="274" text-anchor="middle" font-size="24">Year %s</text><text x="%.1f" y="%.1f" text-anchor="middle" font-size="23" font-weight="700">%s</text>',
+    x(i),y(v[i]),x(i),i,x(i),y(v[i])-17,fmt(v[i])),''),collapse='')
+  d7_svg(paste0('<line x1="185" x2="885" y1="238" y2="238" stroke="#545860" stroke-width="3"/>',
+    '<polyline points="',pts,'" fill="none" stroke="#215a9e" stroke-width="5"/>',marks,
+    '<text x="185" y="315" font-size="23">Value today (AED) of the same assumed annual saving in each year</text>'),
+    paste('At an assumed five percent discount rate, a saving of',fmt(model$saving),
+          'AED has present value',paste(fmt(v),collapse=', '),'AED in years one to five.'),330)
+}
 d7_value_chart <- function() {
   x <- function(v) 390+v/5000*500
   vals <- c(d7_benefits,model$cost,d7_npv)

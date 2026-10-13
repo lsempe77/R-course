@@ -75,22 +75,22 @@ Can we decide whether the programme pays for itself by comparing 1,014 with 1,80
 
 ## Economic evaluation compares alternatives {#d3s1-p03 .reader-slide .s1-review .d3s1-review}
 
-For this pilot, the comparison is **GreenWaste versus no GreenWaste** for eligible businesses in the pilot district.
+```{r, results='asis'}
+html_out(d7_rct_means_chart())
+```
 
-A useful appraisal keeps three things aligned:
+The RCT compares **GreenWaste versus no GreenWaste** in the pilot district. An appraisal then adds the **incremental programme cost**, for the same alternative, population and period.
 
-1. **Incremental effect:** what GreenWaste changes relative to the control condition.
-2. **Incremental cost:** resources used relative to that same control condition.
-3. **Perspective and period:** whose costs count, and over which years.
+The bars show the measured outcome; they do **not** include the cost of delivering GreenWaste.
 
 ::: {.ask}
 If control businesses also pay for waste collection, should their ordinary collection costs become a new GreenWaste programme cost?
 :::
 
 ::: {.notes}
-**4 minutes. Main point:** Both sides of an economic comparison must use the same alternative, population and time horizon.
+**4 minutes. Main point:** The trial comparison gives an outcome difference; the appraisal needs an incremental delivery-cost ledger for that same comparison.
 
-- The RCT control group represents the pilot's no-GreenWaste alternative. Count additional resources caused by GreenWaste, not every expense either group already had.
+- Point to the two 12-month group means: GreenWaste businesses had lower average annual waste cost. Their difference is 1,014 AED per business. The RCT control group represents the pilot's no-GreenWaste alternative. Count additional resources caused by GreenWaste, not every expense either group already had.
 - Ordinary waste-management costs are the measured outcome in this trial. A separate programme-cost ledger would show equipment, staff, administration, business time and maintenance as relevant to the chosen perspective, avoiding double counting.
 - Ask what changes when the decision shifts from the pilot to a citywide rollout. Costs, uptake and effects may all change. The pilot comparison alone cannot answer that larger question.
 :::
@@ -137,9 +137,11 @@ Would the RCT's 1,014 AED waste-cost saving fill the denominator of this CEA?
 
 ## CUA would ask: cost per QALY gained {#d3s1-p06 .reader-slide .s1-review .d3s1-review}
 
-<div class="method-equation"><div class="fraction"><span>extra cost of a health programme</span><span>extra quality-adjusted life years</span></div><strong>= AED per QALY</strong></div>
+```{r, results='asis'}
+html_out(d7_qaly_chart())
+```
 
-A **QALY** combines length of life and health-related quality of life. GreenWaste has no QALY outcome in this case, so this is a method to recognise, **not a calculation we can make here**.
+A **QALY** combines years lived and health-related quality of life. CUA divides extra cost by extra QALYs gained. This diagram is a separate health example: GreenWaste has **no measured QALY outcome**.
 
 ::: {.ask}
 Why would tonnes of landfill avoided and QALYs answer different policy questions?
@@ -148,7 +150,7 @@ Why would tonnes of landfill avoided and QALYs answer different policy questions
 ::: {.notes}
 **4 minutes. Main point:** CUA is useful when the decision turns on health-related quality and length of life measured on a common utility scale.
 
-- Define QALY in plain language. Explain that CUA is a specialised CEA, usually expressed as incremental cost per QALY gained against an alternative.
+- Read the shaded area: four years at a quality-of-life weight of 0.7 give 2.8 QALYs in this simplified health example. It is not a GreenWaste finding. Explain that CUA is a specialised CEA, usually expressed as incremental cost per QALY gained against an alternative.
 - The case has neither a measured health-utility outcome nor a credible causal pathway quantified into QALYs. Do not convert waste cost or landfill tonnes into QALYs by assertion.
 - Ask participants to match each unit to a policy question in Q2(b). [NICE's economic evaluation manual](https://www.nice.org.uk/process/pmg36/chapter/economic-evaluation-2/) gives a primary example of cost-utility analysis.
 :::
@@ -224,7 +226,7 @@ Does discounting tell us whether the forecast savings will actually happen?
 ::: {.notes}
 **5 minutes. Main point:** Discounting expresses future amounts in year-0 terms; it does not supply evidence that they will occur.
 
-- Work one line: 1,014.355 divided by 1.05 equals about 966 AED at year 0. The teaching calculation uses the unrounded RCT estimate; slides display whole AED.
+- Follow the plotted points from years 1 to 5. Each starts with the same assumed 1,014 AED annual saving, but its value at year 0 falls with time. Work the first point: 1,014.355 divided by 1.05 equals about 966 AED. The teaching calculation uses the unrounded RCT estimate; slides display whole AED.
 - The 5% rate is a case assumption, not a rate that we claim an authority must use. The first modelled saving is year 1, aligned with the 12-month annual-cost outcome; years 2 to 5 remain forecasts.
 - On worksheet page 2, Q4 asks participants to calculate the first present value before reading the total. Keep discounting separate from the assumption that benefits persist.
 :::
