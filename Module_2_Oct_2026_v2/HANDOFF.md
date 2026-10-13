@@ -1,5 +1,11 @@
 # Handoff: moving Module 2 to the simple GreenWaste case
 
+## Day 2 Session 2 presenter-note review, 13 October 2026
+
+All fifteen content-slide presenter notes in the selected `Oct13_session2_review.qmd` have been rewritten as a timed main point and three short teaching cues. The review repairs run-together text, removes obsolete number-line instructions, makes the fitted estimate and age diagnostic cautious, and gives a complete path through the AI exercise and final independent judgement. The visible slide text and activities are unchanged. The embedded timings still add to 80 minutes; the separate 60-minute catalogue discrepancy remains for a later session retiming.
+
+Quarto rendering succeeds. The HTML contains exactly fifteen presenter-note blocks, each with three list cues, and a comparison of rendered visible slide text with the preceding teaching deck found no changes. Publish the resulting `Oct13_session2_review.html` to `docs/Oct13_session2_live.html` and `docs/preview/Oct13_session2_review.html`, and replace that deck inside the Days 1-2 download ZIP. The matching worksheet remains unchanged.
+
 ## Day 2 Session 2 age-check explanation, 13 October 2026
 
 Slide 10 now explains its purpose directly: manager age was recorded before GreenWaste, yet the fitted ages differ by about 5.3 years at score 58 in the five-point window. That raises a comparability question for the cost result; it does not establish bias or its direction. The optional adjusted-cost reveal was removed to keep the diagnostic question in focus. The presenter notes now give the axes, window, interpretation, question and transition in teaching order. The matching worksheet page 2 uses the same explanation. The age plot has separate score and age axis labels.

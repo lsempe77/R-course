@@ -55,7 +55,11 @@ Why compare businesses close to the score cut-off of 58?
 :::
 
 ::: {.notes}
-5 minutes. Orient from DiD to local post-period comparison. Programme remains equipment subsidies/help/training; outcome annual waste management cost 12 months after GreenWaste. Higher score means more efficient. Plot shows actual records scores53-63, shaded56-60. Full city10000; shaded545. Explain score, threshold, local comparison in that order. Proximity alone does not establish random assignment. Start webR warming. Q2/source page1 later links population. Transition: predict a fitted jump before lines appear.
+**5 minutes. Main point:** RDD compares businesses close to a rule, rather than comparing changes over time as DiD did.
+
+- Orient the room: the efficiency score determines participation. Businesses scoring 58 or below received GreenWaste; those above 58 did not. The outcome is annual waste management cost 12 months later.
+- Each dot is a city business. The plot shows scores 53-63; the shaded two-point window (56-60) contains 545 of the city's 10,000 businesses. Ask why businesses close to 58 might be a useful comparison.
+- Proximity is a reason to investigate comparability, not proof of random assignment. Start the browser R setup now. Next, ask the room to predict the direction and size of the fitted jump before revealing any lines.
 :::
 
 ## What do you expect at score 58? {#d2s2-p02 .reader-slide .s1-review .d2s2-review}
@@ -69,7 +73,11 @@ Will fitted costs just below 58 be lower? Would the reduction reach 1,000 AED?
 Give a reason before seeing the fitted lines. These buttons record a local choice; collect room responses with a show of hands.
 
 ::: {.notes}
-4 minutes. One minute choose, two discuss reasons, one collect. Do not present cost patterns as proof of an effect. No fitted estimate revealed. Below-minus-above negative means lower cost. Transition: work with different small samples on either side.
+**4 minutes. Main point:** Make a prediction before showing the fitted result.
+
+- Give participants one minute to choose, two minutes to explain their reasoning in pairs, and one minute for a show of hands. The buttons record a choice only in the browser in front of you.
+- Do not treat the dots or the vote as evidence of a programme effect. Explain the sign convention: participating side minus comparison side; a negative jump would mean lower cost on the participating side.
+- Next, ask which comparison the plot can support. Do not reveal the fitted lines yet.
 :::
 
 ## What comparison should we make? {#d2s2-p03 .reader-slide .s1-review .d2s2-review}
@@ -85,7 +93,11 @@ Would comparing the average costs on each side tell us what happens at 58? What 
 :::
 
 ::: {.notes}
-4 minutes. One minute inspect the plot, two discuss in pairs, one collect explanations. Each dot is a business; blue is at or below 58, grey is above. Shading marks the two-point window. A raw mean gap also reflects where the businesses sit along the score scale and variation in costs. It does not isolate the fitted comparison at 58 or establish an effect. No cards, arithmetic or number-line poster are needed. Q1 on worksheet page 3 records the same reasoning. Transition: compare fitted costs as the score approaches 58 from each side.
+**4 minutes. Main point:** A difference between group averages is not the fitted difference at score 58.
+
+- Give pairs one minute to inspect the dots and two minutes to discuss the question. Blue businesses scored at or below 58; grey businesses scored above it. The shaded window contains the 545 businesses used in the main fit.
+- Ask one pair for an answer. An average over each side also reflects the different scores within that side and ordinary variation in costs. It does not isolate the comparison right at 58.
+- Use Q1 on worksheet page 3 to record the distinction. Next, reveal how the fitted lines approach the cut-off.
 :::
 
 ## Compare businesses at the same score. {#d2s2-p04 .reader-slide .s1-review .d2s2-review}
@@ -101,7 +113,11 @@ Why might the gap between group averages differ from the gap where these lines r
 :::
 
 ::: {.notes}
-4 minutes. Advance once to reveal the participating-side line, then again for the comparison-side line. Each uses businesses in the shaded window. Ask the room to follow both to 58 before describing the gap. We compare fitted limits at the same cut-off, rather than averages over different scores. There need not be a business observed exactly at 58. Keep the jump and number withheld until the next slide. Complete Q1 on worksheet page 3. Transition: identify and interpret the vertical gap.
+**4 minutes. Main point:** RDD compares where the two fitted lines reach the same cut-off.
+
+- Advance once to show the line for businesses at or below 58, then again to show the line above 58. Both fits use the shaded two-point window, but each side may have a different slope.
+- Ask participants to follow each line to 58. The comparison is between the two fitted limits there, not between averages taken over different scores. No business needs to sit exactly at the cut-off for the lines to give fitted limits.
+- Let pairs finish Q1 on worksheet page 3. Hold back the numeric jump until the next slide.
 :::
 
 ## Read the jump at 58. {#d2s2-p05 .reader-slide .s1-review .d2s2-review}
@@ -117,7 +133,11 @@ The fitted jump is **-721 AED**. Explain the comparison, sign and units to your 
 This uses **545 businesses**. Negative means lower annual waste costs on the participating side, measured **12 months after GreenWaste**.
 
 ::: {.notes}
-4 minutes. Point out the red vertical gap between the two fitted limits at 58. Give pairs two minutes to explain it, then hear and refine one interpretation: fitted annual waste cost immediately on the participating side is 721 AED lower than on the comparison side. This is a local comparison, not a citywide average. A causal reading still requires a credible design; the checks come later. Q2 on worksheet page 3 uses the reference figure on page 2. Transition: find the same jump, sample and interval in the regression table.
+**4 minutes. Main point:** The red gap is 721 AED lower fitted annual cost on the participating side of score 58.
+
+- Point to the vertical gap. Give pairs two minutes to explain the comparison, its negative sign, the AED units and the 12-month outcome. Hear one explanation and correct any claim that this is an average for all city businesses.
+- Say that the fitted comparison is local; whether it is a programme effect depends on the credibility checks later in the session. Q2 on worksheet page 3 uses the reference plot on page 2.
+- Next, find the same estimate, interval and sample in the result table.
 :::
 
 ## Which number is the local jump? {#d2s2-p06 .reader-slide .s1-review .d2s2-review}
@@ -133,7 +153,11 @@ Q2: explain -721 in one sentence. Who is compared, at what point, and in which u
 :::
 
 ::: {.notes}
-6 minutes. SourceH5-Apage1, Q2page3. Belowcoefficientcomparesfittedlimitsat58, notmeancostofallparticipants. Negativeis721AEDlower annualwaste cost 12 months after GreenWaste. HC2interval-943to-498; savingpositive498-943. Markfittedestimate/intervalinboardlowerlane. Uncertaintyunderlocalmodel; concernaboutcausalitystillopen. Transition: shorttrainerfit showsrowgeneratedfromindividualrecords.
+**6 minutes. Main point:** The coefficient is a local fitted difference, with uncertainty around it.
+
+- Use H5-A on worksheet page 1 and Q2 on page 3. Click the table controls to identify the coefficient (-721 AED), its 95% interval (-943 to -498 AED), and the sample (545 businesses).
+- Ask for one sentence: fitted annual waste cost 12 months after GreenWaste is 721 AED lower just on the participating side of score 58 than just on the comparison side. It is not the mean cost of every participant.
+- On a saving scale, the interval is 498-943 AED. It describes uncertainty under the fitted model; it does not settle whether the comparison is causal. Next, show how the coefficient is calculated from individual records.
 :::
 
 ## We fit the two local slopes in R. {#d2s2-p07 .reader-slide .s1-review .d2s2-review}
@@ -154,7 +178,11 @@ Does this calculate the average gap across the window, or a fitted gap at the cu
 Paper result: **-721 AED**. Participants do not need to write or run R.
 
 ::: {.notes}
-5 minutes. Predictthenone trainerRun. OLScoefficientidenticaltorobustcoefficient; displayedCIcomesHC2estimatr, notdefaultlmCI. Codecommentsdescribeunits/window/slopes/output. Noparticipantcoding. If delayedusepaperresultsame time. Transition: evaluatorchooseswindow; ask sensitivity.
+**5 minutes. Main point:** The R command fits two slopes and reports their difference at score 58.
+
+- Ask the room to predict whether the code will return a group-average gap or the fitted gap at the cut-off. Then run it once yourself. Participants do not need to code.
+- The output should be -721. The code reports the fitted coefficient; the robust interval shown on the previous slide comes from a separate uncertainty calculation, not from this `lm()` command.
+- If browser R is slow, use the printed -721 result on the slide and move on. Next, ask whether the answer changes when the evaluator includes businesses farther from 58.
 :::
 
 ## Change the window. Change the answer? {#d2s2-p08 .reader-slide .s1-review .d2s2-review}
@@ -172,7 +200,11 @@ Within 2 points: -721 AED, N=545. Within 5: -784 AED, N=1,260. What changes?
 **Bandwidth** is how far either side the evaluator looks. See both intervals on worksheet page 2.
 
 ::: {.notes}
-6 minutes. Sameaxesandactualdots53-63; shadingandfittedlineschangewindow. Q3page4: localityversusinformation/modeldependence. Widerresultinterval-934to-634. Extraobservationsmayreduceuncertaintybutfurtherbusinessesmaybelesscomparable andlinearfitlesscredible. Stabilitydoesnotprovevalidity; bothpointandintervalbelowrule. Transition: lookatsomethingprogrammeshouldnotcause.
+**6 minutes. Main point:** The window is a design choice; a similar result across windows is useful, but it does not prove the comparison is valid.
+
+- Show the two-point window first: 545 businesses, -721 AED. Click to show the five-point window: 1,260 businesses, -784 AED. The dots remain the same; the shaded range and fitted lines change. The wider 95% interval is -934 to -634 AED (worksheet page 2).
+- Ask what is gained and lost. More businesses may improve precision, but those farther from 58 may be less comparable, and straight-line fits may work less well over a wider span. Have participants answer the window question in Q3 on worksheet page 4.
+- Both estimates are below the 1,000 AED saving rule on a reduction scale. Similar direction does not establish causality. Next, inspect a characteristic measured before GreenWaste that should not jump if the two sides are otherwise alike.
 :::
 
 ## A difference that GreenWaste cannot explain {#d2s2-p09 .reader-slide .s1-review .d2s2-review}
@@ -188,7 +220,11 @@ If age differs before the programme, what else might differ? What would you ask 
 :::
 
 ::: {.notes}
-6 minutes. First orient the room: the horizontal axis is the efficiency score, and the vertical axis is manager age recorded before GreenWaste. The plot uses the wider five-point window (scores 53-63); its fitted age difference at 58 is about -5.3 years, with younger managers on the participating side. This is a check on the comparison, not an effect of GreenWaste on age. Ask participants why a difference that predates the programme makes them question whether the cost jump is caused only by GreenWaste. Age may signal other pre-existing differences, but the plot alone neither proves bias nor tells us its direction. Request other characteristics measured before the programme, an explanation of how scores were set, and a check of whether this age pattern persists in narrower windows. Do not offer age adjustment as an automatic fix. Transition: the next slide examines whether businesses could influence which side of the score rule they landed on.
+**6 minutes. Main point:** A difference that predates GreenWaste makes the local cost comparison less secure.
+
+- Orient the axes: efficiency score horizontally, manager age before GreenWaste vertically. This plot uses scores 53-63, the five-point window. At 58, fitted manager age is about 5.3 years lower on the participating side.
+- Ask why GreenWaste cannot have caused this earlier age difference. It may signal other pre-existing differences between the businesses. The plot alone does not prove bias or tell us its direction; simply controlling for age would not settle the concern.
+- Ask for other characteristics measured before the programme, how scores were set, and whether the age jump persists in a narrower window. Next, examine whether businesses could influence their score.
 :::
 
 ## Could businesses influence their score? {#d2s2-p10 .reader-slide .s1-review .d2s2-review}
@@ -204,7 +240,11 @@ Who set the scores, when, and could businesses appeal or alter them?
 **No score-setting or manipulation diagnostic is supplied.** A rule followed exactly can still yield a questionable comparison.
 
 ::: {.notes}
-5 minutes. HypotheticalcountsarenotGreenWastedataandnotatest. Illustratebunchingjustbeloweligibilitywhenpeoplecaninfluencescores; patternsalonecouldhaveotherexplanations. Q3requestdocumentedscoringprocess,timing,distributionnearcutoff andevaluatorinvestigation. No inventedpassorfail. Transition: classify suppliedchecks/sourceevidence.
+**5 minutes. Main point:** Following the eligibility rule is not enough if businesses could influence which side of it they reached.
+
+- Label this bar chart clearly as a hypothetical example, not GreenWaste data or a manipulation test. It illustrates what a pile-up just below 58 might look like if businesses could influence their scores. A pile-up could also have another explanation.
+- Ask who assigned the scores, when they were fixed, and whether businesses could appeal or change them. Q3 asks for evidence about the scoring process and the actual score distribution near 58. No such diagnostic is supplied, so do not claim that manipulation did or did not occur.
+- Next, sort what H5-A actually supports from what remains concerning or unknown.
 :::
 
 ## What does the cut-off study actually support? {#d2s2-p11 .reader-slide .s1-review .d2s2-review}
@@ -220,7 +260,11 @@ Which evidence request could most change your judgement?
 :::
 
 ::: {.notes}
-5 minutes. Threeindependenttwo paircheck. Rulefollowedsupported; windowdisclosed/localpopulationclear; ageconcern; manipulationunknown; citywideeffectnotestablished. Cross-referenceparagraphs1-4. Nosingleforcedpolicyanswer. Findreasonsnotonlyticks. Transition: separatecredibilityfromthedecisionminimum.
+**5 minutes. Main point:** Name the evidence behind each judgement, rather than treating every check as passed or failed.
+
+- Give participants three minutes to classify the five checks in Q3, then two minutes to compare reasons in pairs. Use H5-A paragraphs 1-4 and the figures on worksheet page 2.
+- Listen for: the score rule was followed and the local window is disclosed; the pre-programme age jump is a concern; score manipulation has not been investigated; a whole-city effect has not been established. Accept different advice if it follows from the cited evidence.
+- Ask which missing check would most change their view. Next, separate the credibility question from the 1,000 AED decision threshold.
 :::
 
 ## Does the local reduction meet our 1,000 AED rule? {#d2s2-p12 .reader-slide .s1-review .d2s2-review}
@@ -236,7 +280,11 @@ Q2: where are the estimate and interval relative to 1,000 AED?
 The interval is conditional on the fitted model. It does not settle the age concern or show what happens far from 58.
 
 ::: {.notes}
-5 minutes. 721and498-943below1000, allannualAEDperbusinesslocallyatcutoff. Negativeintervalbecomespositiveendpointsreversed. Do notclaimtrueeffectcertainbelowruleifdesignfails. AIexamplesnextcontainnumbersrightbutassurancewrong. Transition: sourcecheckingplausibleAIexplanation.
+**5 minutes. Main point:** Even taking the fitted local result at face value, it does not clear the 1,000 AED annual-saving rule.
+
+- Convert the negative cost difference to a positive saving: estimate 721 AED, 95% interval 498-943 AED per business per year near score 58. Both interval ends are below 1,000 AED. Let participants record this in Q2.
+- The interval reflects uncertainty under the fitted model. It does not repair the age concern or justify a claim about businesses far from 58. Avoid saying the true programme effect is certainly below the rule when the design itself remains in question.
+- Next, test whether a plausible explanation preserves these distinctions.
 :::
 
 ## Local evidence. A citywide recommendation? {#d2s2-p13 .reader-slide .s1-review .d2s2-review}
@@ -250,7 +298,11 @@ Page 5: underline support and cross out overclaims. Check H5-A and the plots.
 :::
 
 ::: {.notes}
-8 minutes. Fiveminutesmarkthreefeedback. Naivepromptcontextexplainwithoutjargonwhothisresultappliesto. Supportedcoefficient/interval/windowcomparison. Unsupportedproximityprovesinterchangeability, ageirrelevant/adjustmentremovesbias,stabilityconfirmscausality, localresulttypical/citywide,1000minimum. Plausiblecost/capacityqualificationdoesnotrepairclaims. No highlightedanswers. Transition: betterprompt sourceandmissingchecks.
+**8 minutes. Main point:** A fluent explanation can quote the right numbers and still give unsupported advice.
+
+- Explain that the response on worksheet page 5 was written for this exercise. Give participants five minutes to underline claims supported by H5-A and cross out overclaims; use three minutes for feedback. Keep the answers hidden until they have checked the source.
+- Supported: the -721 AED fitted gap, its interval, and the wider-window comparison. Overclaims: proximity proves the businesses interchangeable; age is irrelevant or adjustment removes bias; similar windows prove causality; the local result represents typical participants or supports citywide expansion; the 1,000 AED minimum is met.
+- A sensible caveat about implementation costs does not rescue those claims. Next, try a prompt that supplies the study details and explicitly asks for limits and missing checks.
 :::
 
 ## Ask for an explanation you can verify {#d2s2-p14 .reader-slide .s1-review .d2s2-review}
@@ -266,7 +318,11 @@ What improved? What still needs checking against the source?
 :::
 
 ::: {.notes}
-7 minutes. Fourrunthreecompare;Snapshot15total. Noaccountsetup. Page6preparedresponse same-taskpaperalternativeifdelayed. Copilotaskquestionsfirstbutnotautomaticsecondchat. Checklocalpopulation,interval,age/manipulationunknowns,rule. Do not relyonAIagreement. Transition: ownreadingwithsourceavailablebutAIclosed.
+**7 minutes. Main point:** Better context may improve an AI explanation, but the source remains the test.
+
+- Give participants four minutes to paste H5-A and the prompt from worksheet page 5 into Copilot, then three minutes to compare its answer with the source. If Copilot asks clarifying questions first, give it the relevant H5-A information and ask it to continue; do not treat the questions alone as a finished explanation.
+- If Copilot is unavailable, use the prepared response on worksheet page 6 for the same comparison. Check the local population, estimate and interval, age concern, missing score-setting evidence, and the 1,000 AED rule. Agreement between AI responses is not independent evidence.
+- Next, close the AI responses so each participant writes their own judgement.
 :::
 
 ## Which check would change your advice? {#d2s2-p15 .reader-slide .s1-review .d2s2-review}
@@ -282,5 +338,9 @@ Use the **final box on worksheet page 4**.
 Next: finding comparisons with similar recorded characteristics.
 
 ::: {.notes}
-6 minutes. Three independent, one pair purpose check, two feedback. Require a local fitted comparison at 58, units, conditional causal reading and threshold limit. Request score setting/influence, the age jump/other predetermined checks, the window or transportability, with a reason. Do not claim the cut-off is a lottery or representative. Total 80 minutes. Use this teaching source with its matching six-page worksheet; the visual pair discussion requires no group cards.
+**6 minutes. Main point:** Participants should leave with a defensible local interpretation and one evidence request that could change their advice.
+
+- Give three minutes for independent writing in the final box of Q3 on worksheet page 4. Keep H5-A open, but close AI responses and peer comments. Allow one minute for a partner to check whether the request has a clear purpose, then use two minutes for feedback.
+- A strong answer identifies the fitted annual cost difference at 58, its units, the limit of its local reach, and the unresolved causal concern. A useful request asks about score setting, the age jump or other pre-programme checks, or evidence for businesses farther from 58, and explains how the answer could change the advice.
+- Do not describe the cut-off as a lottery or the estimate as citywide. The next session moves to matching businesses on recorded characteristics. These notes total 80 minutes; use the matching six-page worksheet.
 :::
