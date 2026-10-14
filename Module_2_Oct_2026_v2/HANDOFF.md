@@ -1,5 +1,13 @@
 # Handoff: moving Module 2 to the simple GreenWaste case
 
+## Methods decision tree rework and export check, 14 October 2026
+
+`make_methods_tree.py` now builds a tree that asks Before or After, then Lottery (Before only), cut-off (regression discontinuity), before and after data with similar paths (difference-in-differences), then recorded characteristics (matching), so difference-in-differences can be planned before any data exist. "Costs" and "businesses" wording is removed so it fits any evaluation. A disclaimer sits under the tree (starting guide; order follows usual credibility; other methods can still be possible; every method needs enough data and a large enough sample; evaluations are best planned before data exist). A side-by-side card table (needs, rules it out, can still be planned if) follows the tree as a new slide and as page 2 of the handout.
+
+Outputs: `docs/handouts/methods_decision_tree.html/.svg/.pdf` (PDF now two pages), `_methods_tree.qmd`, `_methods_cards.qmd`, `_day2_session3_review_interactions.html`, and `Oct13_session3_review.qmd` (new slide `d2s3-p20`, notes updated, README count 22). `docs/Oct13_session3.html` was patched directly because Quarto was not available; re-render it with `quarto render Oct13_session3_review.qmd` to confirm. Nothing is committed.
+
+All twelve `docs/exports/*.pptx` and `.pdf` were dated 5 October and stale against every deck. They are browser snapshots, so they must be re-captured after any deck change. New `export_tools/check_stale.py` lists the stale ones (exit 1 if any); it is now a step in the README publishing checklist and CLAUDE.md. Still to do: re-run the capture and `build_exports.py` for the decks once they are final.
+
 ## Day 2 Session 2 presenter-note review, 13 October 2026
 
 All fifteen content-slide presenter notes in the selected `Oct13_session2_review.qmd` have been rewritten as a timed main point and three short teaching cues. The review repairs run-together text, removes obsolete number-line instructions, makes the fitted estimate and age diagnostic cautious, and gives a complete path through the AI exercise and final independent judgement. The visible slide text and activities are unchanged. The embedded timings still add to 80 minutes; the separate 60-minute catalogue discrepancy remains for a later session retiming.
