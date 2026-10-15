@@ -1,0 +1,22 @@
+<script>
+// Trim the empty margins inside each recap figure so it fills its column.
+(function () {
+  function fit(slide) {
+    if (!slide) return;
+    slide.querySelectorAll('.recap-figure svg').forEach(function (svg) {
+      if (svg.dataset.fitted) return;
+      var b;
+      try { b = svg.getBBox(); } catch (e) { return; }
+      if (!b || !b.width || !b.height) return;
+      var pad = 8;
+      svg.setAttribute('viewBox', [b.x - pad, b.y - pad, b.width + 2 * pad, b.height + 2 * pad].join(' '));
+      svg.dataset.fitted = '1';
+    });
+  }
+  function current() { if (window.Reveal) { fit(Reveal.getCurrentSlide()); Reveal.layout(); } }
+  if (window.Reveal) {
+    Reveal.on('ready', current);
+    Reveal.on('slidechanged', current);
+  }
+})();
+</script>
