@@ -35,3 +35,7 @@ Module_2_Oct_2026_v2/*.html
 # DGE brand kit (118 MB of fonts and artwork). Decks use only the two SVGs
 # copied into Module_2_Oct_2026_v2/assets/; fonts load from Google Fonts.
 Module_2_Oct_2026_v2/DGE_theme/
+
+# Large local-only materials (zipped bundles and Module 1 PowerPoint decks)
+Module2_materials_*.zip
+Module_2_Oct_2026_v2/Module 1/
