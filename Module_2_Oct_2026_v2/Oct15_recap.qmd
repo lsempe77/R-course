@@ -1,0 +1,253 @@
+---
+title: "What have we learned so far?"
+subtitle: "Recap of Days 1 and 2, and economic evaluation"
+author: "3ie"
+always_allow_html: true
+format:
+  revealjs:
+    theme: [theme_dge.scss, theme_live.scss, theme_reader.scss]
+    css: [session1_review.css, recap.css]
+    logo: assets/dge_logo_horizontal.svg
+    slide-number: true
+    width: 1280
+    height: 720
+    slide-level: 2
+    embed-resources: true
+    include-after-body: [_reader_interactions.html]
+knitr:
+  opts_chunk:
+    echo: false
+    warning: false
+    message: false
+---
+
+```{r setup, include=FALSE}
+source('recap_review.R', encoding='UTF-8')
+```
+
+## One case all week: GreenWaste {#rc-case .reader-slide .s1-review .recap data-kicker="The case"}
+
+```{r, include=FALSE}
+map_highlight <- "none"
+```
+
+::: {.case-map}
+{{< include _case_map.qmd >}}
+:::
+
+<div class="terms">
+<div><h3>Outcome</h3><p class="fragment">Annual waste management cost per business, in AED, measured before GreenWaste and 12 months after.</p></div>
+<div><h3>Two ways of choosing</h3><p class="fragment">In the pilot district a <strong>lottery</strong> chose 200 of 400 businesses. In the rest of the city, businesses scoring <strong>58 or below</strong> took part: 4,794 of 10,000.</p></div>
+<div><h3>Decision rule</h3><p class="fragment">The authority wants a saving of <strong>at least 1,000 AED</strong> per business per year, caused by GreenWaste.</p></div>
+</div>
+
+::: {.notes}
+2 minutes. Ask the room to name the outcome and the two ways businesses were chosen before revealing each term. Every number in this recap comes from the same file. Each later slide follows the same pattern: one picture, then two or three terms. Ask for a definition before each click.
+:::
+
+## Regression reports a mean and a change {#rc-coef .reader-slide .s1-review .recap data-kicker="Day 1 | Sessions 1 and 2"}
+
+```{r, results='asis'}
+html_out(s1$hy_regression_plot())
+```
+
+<div class="terms">
+<div><h3>Mean</h3><p class="fragment">Total divided by the number of businesses. Participants: <strong>`r fmt(v$before)` AED</strong> before, <strong>`r fmt(v$after)` AED</strong> 12 months after.</p></div>
+<div><h3>Median</h3><p class="fragment">The middle value. Large costs pull the mean up more: city costs before GreenWaste had mean `r fmt(v$city_mean)` and median `r fmt(v$city_median)` AED.</p></div>
+<div><h3>Coefficient</h3><p class="fragment">An estimated number in one row of a model. Intercept: the starting mean. Slope: the change, <strong>`r fmt(v$ba)` AED</strong>.</p></div>
+</div>
+
+::: {.notes}
+2 minutes. Ask: where is the intercept on the picture, and where is the slope? The two dots are the before and after means of the same 4,794 participant businesses. The line joins two means; it is not a time trend. A mean does not describe every business: 485 participants saw their costs rise.
+:::
+
+## The fall is precise, but it is below our rule {#rc-ci .reader-slide .s1-review .recap data-kicker="Day 1 | Session 1"}
+
+```{r, results='asis'}
+html_out(s1$review_interval_svg())
+```
+
+<div class="terms">
+<div><h3>95% confidence interval</h3><p class="fragment">The range of values for the mean change that fit the data under the model: a saving of <strong>`r saving_ci(v$ba_ci)` AED</strong>. It is not the range for individual businesses.</p></div>
+<div><h3>P-value</h3><p class="fragment">How unusual these data would be if the true mean change were zero. Here p &lt; 0.001. It is not the probability that GreenWaste works.</p></div>
+<div><h3>Significant or large enough?</h3><p class="fragment">A result can be clearly different from zero and still too small for the decision. 669 AED is both.</p></div>
+</div>
+
+::: {.notes}
+2 minutes. Ask: does the whole interval sit above or below the 1,000 AED rule? Below. Then ask what the p-value does not tell us: cause, and whether the saving is large enough. This is still a before-and-after change, not a programme effect.
+:::
+
+## Neither simple comparison shows what GreenWaste caused {#rc-cf .reader-slide .s1-review .recap data-kicker="Day 1 | Session 2"}
+
+```{r, results='asis'}
+html_out(s2$s2_lines())
+```
+
+<div class="terms">
+<div><h3>Treatment effect</h3><p class="fragment">The outcome with GreenWaste minus the outcome without it, for the same businesses at the same time.</p></div>
+<div><h3>Counterfactual</h3><p class="fragment">The outcome without GreenWaste. We never observe it for participants; every method builds a stand-in for it.</p></div>
+<div><h3>Before–after and with–without</h3><p class="fragment"><strong>`r fmt(v$ba)` AED</strong> misses what else changed that year. <strong>`r fmt(v$ww)` AED</strong> misses that participants already started `r fmt(-v$gap_before)` AED lower.</p></div>
+</div>
+
+::: {.notes}
+2 minutes. Ask which line each number comes from. Before and after uses the blue line only. With and without compares the two right-hand dots. Comparison businesses' costs rose by `r fmt(v$others_change)` AED, and the groups were chosen by the score rule, so they were not alike to begin with.
+:::
+
+## A lottery gives a fair comparison: `r fmt(-v$rct)` AED lower {#rc-rct .reader-slide .s1-review .recap data-kicker="Day 1 | Session 3"}
+
+```{r, results='asis'}
+html_out(s3$s3_after())
+```
+
+<div class="terms">
+<div><h3>Random assignment</h3><p class="fragment">Chance, not the business, decides who takes part. Before the programme the groups differ only by chance, in recorded and unrecorded features.</p></div>
+<div><h3>Treatment and control groups</h3><p class="fragment">200 drawn to join, 200 to wait. After 12 months: <strong>`r fmt(v$rct)` AED</strong>, a saving of `r saving_ci(v$rct_ci)` AED. The interval spans the 1,000 AED rule.</p></div>
+<div><h3>External validity</h3><p class="fragment">Whether the result holds elsewhere. The pilot covers one district, with all scores below 58, under pilot delivery.</p></div>
+</div>
+
+::: {.notes}
+2 minutes. Ask: why is the control group a better stand-in than the comparison businesses on the previous slide? Because a lottery, not the score, decided who joined. The point estimate is just above 1,000 AED, but the interval includes values below it. A strong design inside the pilot does not make the pilot represent the city.
+:::
+
+## DiD subtracts the comparison group's change {#rc-did .reader-slide .s1-review .recap data-kicker="Day 2 | Session 1"}
+
+```{r, results='asis'}
+html_out(d4$d4_lines(TRUE))
+```
+
+<div class="terms">
+<div><h3>Difference-in-differences</h3><p class="fragment">Participants' change minus comparison businesses' change: `r fmt(v$ba)` − (+`r fmt(v$others_change)`) = <strong>`r fmt(v$did)` AED</strong>, a saving of `r saving_ci(v$did_ci)` AED.</p></div>
+<div><h3>Parallel trends</h3><p class="fragment">Without GreenWaste, both groups' costs would have changed by the same amount. The dashed line is assumed, not observed.</p></div>
+<div><h3>Earlier trends</h3><p class="fragment">Several measurements before the programme, in both groups, help judge the assumption. GreenWaste has only one, so the trend cannot be checked.</p></div>
+</div>
+
+::: {.notes}
+2 minutes. Ask: which line on the picture is an assumption? The dashed one, at about 1,575 AED. In the regression this estimate is the after × took part row. The estimate is precise and below the 1,000 AED rule, but precision does not show that parallel trends holds.
+:::
+
+## Regression discontinuity reads the jump at score 58 {#rc-rdd .reader-slide .s1-review .recap data-kicker="Day 2 | Session 2"}
+
+```{r, results='asis'}
+html_out(d5$d5_plot(fit=TRUE))
+```
+
+<div class="terms">
+<div><h3>Running variable</h3><p class="fragment">The score that decides who takes part: here, the efficiency score.</p></div>
+<div><h3>Cut-off</h3><p class="fragment">Score 58. Every business at or below it took part and none above it did, so the rule is sharp.</p></div>
+<div><h3>Local effect</h3><p class="fragment">The fitted jump at 58: <strong>`r fmt(v$rdd2[['estimate']])` AED</strong>, a saving of `r saving_ci(v$rdd2[2:3])` AED, from `r fmt(v$rdd2[['businesses']])` businesses scoring 56 to 60. It describes businesses near 58, not the whole city.</p></div>
+</div>
+
+::: {.notes}
+2 minutes. Ask: why compare businesses close to 58 instead of everyone on each side? Near the cut-off, businesses should be similar apart from taking part. The red gap is where the two fitted lines meet the cut-off, not a difference between group averages.
+:::
+
+## The estimate moves, and manager age jumps too {#rc-rdd-checks .reader-slide .s1-review .recap data-kicker="Day 2 | Session 2"}
+
+```{r, results='asis'}
+html_out(d5$d5_plot(5, TRUE, TRUE))
+```
+
+<div class="terms">
+<div><h3>Bandwidth</h3><p class="fragment">How far either side of 58 we look. Two points: `r fmt(v$rdd2[['estimate']])` AED from `r fmt(v$rdd2[['businesses']])` businesses. Five points: `r fmt(v$rdd5[['estimate']])` AED from `r fmt(v$rdd5[['businesses']])`.</p></div>
+<div><h3>Functional form</h3><p class="fragment">The shape of the fitted lines. Straight: `r fmt(v$rdd2[['estimate']])` AED. Four bends (quartic): `r fmt(v$quartic)` AED. More bends do not mean a more credible answer.</p></div>
+<div><h3>Balance at the cut-off</h3><p class="fragment">Features fixed before GreenWaste should not jump at 58. Manager age does: about <strong>`r fmt(abs(v$age_jump))` years</strong> younger on the participating side.</p></div>
+</div>
+
+::: {.notes}
+2 minutes. Ask: GreenWaste cannot have changed manager age, so what does this jump suggest? Other differences may also exist at 58. We also have no evidence on how scores were set or whether businesses could influence them. The plot shows manager age before GreenWaste, within five points of the cut-off.
+:::
+
+## Matching makes the recorded features similar {#rc-match .reader-slide .s1-review .recap data-kicker="Day 2 | Session 3"}
+
+```{r, results='asis'}
+html_out(recap_balance())
+```
+
+<div class="terms">
+<div><h3>Nearest-neighbour matching</h3><p class="fragment">Each participant is paired with the most similar non-participant on manager age, staff, area and filtration. Difference: <strong>`r fmt(v$match$est)` AED</strong>, a saving of `r saving_ci(v$match$ci)` AED.</p></div>
+<div><h3>Balance</h3><p class="fragment">How alike the groups are after matching. Gaps shrink, but managers still differ by `r fmt(v$match$age_gap, 1)` years. Leave age out and the estimate moves to `r fmt(v$match_no_age$est)` AED.</p></div>
+<div><h3>Unobserved confounder</h3><p class="fragment">Something unrecorded, such as motivation, that affects both taking part and costs. Matching on recorded features cannot remove it.</p></div>
+</div>
+
+::: {.notes}
+2 minutes. Ask: which feature is still unbalanced after matching? Manager age. Cost before GreenWaste was not used for matching and still differs. `r fmt(v$match$used)` different comparison businesses were reused to match all `r fmt(nrow(tp))` participants. Better measured balance cannot show that nothing important is unrecorded.
+:::
+
+## Four methods give four different estimates {#rc-four .reader-slide .s1-review .recap data-kicker="Day 2 | Session 3"}
+
+```{r, results='asis'}
+html_out(d6$d6_forest())
+```
+
+<div class="terms two">
+<div><h3>Identifying assumption</h3><p class="fragment">What must hold for the comparison to show the effect. Lottery: the draw was fair. DiD: parallel trends. RDD: nothing else jumps at 58. Matching: nothing important is unrecorded.</p></div>
+<div><h3>Who the estimate describes</h3><p class="fragment">Pilot district businesses, city participants, or businesses near score 58. Different groups can have different effects, so the numbers are not four tries at one answer.</p></div>
+</div>
+
+::: {.notes}
+2 minutes. Ask: which assumption is easiest to check with the data we have, and which is hardest? Choose a method by its assumption, not by the size of its estimate. Only the lottery and matching estimates are above 1,000 AED, and both intervals include values below it.
+:::
+
+## Economic evaluation puts costs next to results {#rc-ee .reader-slide .s1-review .recap data-kicker="Day 3 | Session 1"}
+
+```{r, results='asis'}
+html_out(recap_methods())
+```
+
+<div class="terms">
+<div><h3>Cost-effectiveness analysis (CEA)</h3><p class="fragment">Extra cost per extra unit of a natural outcome, such as AED per tonne of landfill avoided.</p></div>
+<div><h3>Cost-utility analysis (CUA)</h3><p class="fragment">A CEA for health, per QALY gained. A QALY combines years lived and quality of life. GreenWaste has no QALY outcome.</p></div>
+<div><h3>Cost-benefit analysis (CBA)</h3><p class="fragment">Benefits and costs both in money. GreenWaste's outcome, a cost saving in AED, fits here.</p></div>
+</div>
+
+::: {.notes}
+2 minutes. Ask: which approach could use a result in tonnes of landfill, and which needs both sides in AED? All three compare added costs with added results against an alternative, here no GreenWaste. The methods differ in the unit of the result.
+:::
+
+## A saving next year is worth less today {#rc-pv .reader-slide .s1-review .recap data-kicker="Day 3 | Session 1"}
+
+```{r, results='asis'}
+html_out(d7$d7_discount())
+```
+
+<div class="terms">
+<div><h3>Incremental cost</h3><p class="fragment">The extra resources GreenWaste uses compared with no GreenWaste. The model assumes <strong>`r fmt(v$cost)` AED</strong> per business at year 0. It is not an RCT result.</p></div>
+<div><h3>Discount rate</h3><p class="fragment">How much less a future amount counts today: an assumed `r 100*v$rate`% a year. The year-1 saving of `r fmt(v$saving)` AED is worth `r fmt(v$pv1)` AED today.</p></div>
+<div><h3>Present value</h3><p class="fragment">The five discounted savings added up: <strong>`r fmt(v$benefits)` AED</strong>. The RCT measured 12 months; five years of savings is an assumption.</p></div>
+</div>
+
+::: {.notes}
+2 minutes. Ask: why is 1,014 × 5 not the value today? Later savings are discounted more, and only the first year was measured. Discounting converts amounts to year-0 values; it gives no evidence that the savings will happen.
+:::
+
+## The partial model gives a benefit-cost ratio of `r fmt(v$ratio, 2)` {#rc-bcr .reader-slide .s1-review .recap data-kicker="Day 3 | Session 1"}
+
+```{r, results='asis'}
+html_out(d7$d7_value_chart())
+```
+
+<div class="terms">
+<div><h3>Net present benefit</h3><p class="fragment">Benefits minus costs, both valued today: `r fmt(v$benefits)` − `r fmt(v$cost)` = <strong>`r fmt(v$npv)` AED</strong> per pilot business.</p></div>
+<div><h3>Benefit-cost ratio</h3><p class="fragment">Benefits divided by costs: `r fmt(v$benefits)` / `r fmt(v$cost)` = <strong>`r fmt(v$ratio, 2)`</strong>. Above 1, the included savings exceed the included costs.</p></div>
+<div><h3>Perspective</h3><p class="fragment">Whose costs and savings count. This model adds an authority cost to a business saving. It is not a full social CBA or a return on the authority's budget.</p></div>
+</div>
+
+::: {.notes}
+2 minutes. Ask: what does a ratio above 1 leave unproved? The cost, the five-year persistence, the uncertainty in the RCT estimate and whether the pilot result transfers to the city. A lower business bill is a gain for society only if it reflects fewer real resources used.
+:::
+
+## Break-even is not the same as the 1,000 AED rule {#rc-be .reader-slide .s1-review .recap data-kicker="Day 3 | Session 1"}
+
+```{r, results='asis'}
+html_out(d7$d7_break_even_chart())
+```
+
+<div class="terms">
+<div><h3>Break-even</h3><p class="fragment">The annual saving that gives a ratio of 1: about <strong>`r fmt(v$break_even)` AED</strong> under this model's cost, years and rate. The policy rule asks for 1,000 AED.</p></div>
+<div><h3>Sensitivity analysis</h3><p class="fragment">Change the assumptions and watch the result. Three years of savings: `r fmt(v$ratio_3y, 2)`. Savings fade 30% a year and cost rises 800 AED: `r fmt(v$ratio_combo, 2)`.</p></div>
+<div><h3>Measured or assumed</h3><p class="fragment">The RCT measured the 12-month saving. The cost, the five years and the 5% rate are assumptions that need programme accounts and follow-up data.</p></div>
+</div>
+
+::: {.notes}
+2 minutes. Ask: the RCT interval is above the break-even point but crosses the 1,000 AED rule. Which question does each threshold answer? Break-even asks whether included savings cover included costs under the model; the rule asks whether the saving is large enough for the policy. Close by asking each table for one record they would request before a citywide decision.
+:::
