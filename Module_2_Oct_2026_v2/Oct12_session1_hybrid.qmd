@@ -257,7 +257,7 @@ Discuss with your neighbour. There is no question for this slide on the workshee
 
 ## P-value: what does it tell us? {#s1-h11 .reader-slide .s1-review}
 
-For the change row, **p < 0.001**. The p-value starts from the assumption that the mean change is zero. If that assumption and the model's other assumptions hold, data as extreme as these would be unusual.
+For the change row, **p < 0.001**. The p-value starts with what we want to prove wrong, for example, an assumption that the mean change is zero. If that assumption and the model's other assumptions hold, data as extreme as these would be unusual. In other words, the data give us good reason to doubt that the change is zero.
 
 ```{r, results='asis'}
 html_out(review_null())
@@ -268,7 +268,7 @@ html_out(review_null())
 :::
 
 ::: {.notes}
-5 minutes. WORKSHEET section 5: one minute individually. Explain the hypothetical illustration first: zero mean change at the centre; the p-value counts outcomes at least as extreme in both directions. The example p of 0.012 is hypothetical and is not the p < 0.001 in the GreenWaste table. Key: it is neither the probability that GreenWaste works nor proof of cause. Do not say it is the probability that the result happened by chance. Transition: "A small p-value and a large effect are different things."
+5 minutes. WORKSHEET section 5: one minute individually. Explain the hypothetical illustration first: zero mean change at the centre; the p-value counts outcomes at least as extreme in both directions. The example p of 0.012 is hypothetical and is not the p < 0.001 in the GreenWaste table. Key: it is neither the probability that GreenWaste works nor proof of cause. A small p-value also does not show that the estimate is the true effect; the interval shows the plausible range. Do not say it is the probability that the result happened by chance. Transition: "A small p-value and a large effect are different things."
 :::
 
 ## Statistically significant. Large enough to matter? {#s1-h12 .reader-slide .s1-review}

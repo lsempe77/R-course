@@ -51,8 +51,18 @@ Participants interpret outputs; they do not need to write or debug R. Trainer Ru
 
 **Do not run the historical [publish_live.py](review_2026_10_06/publish_live.py), [switch_session.py](review_2026_10_06/switch_session.py) reverts or blanket legacy print generators to publish the revised week.** They can restore obsolete decks, hub links or Word packs. The final rollout's validation/package scripts were session artifacts, not a checked-in publisher.
 
+## As delivered: live AI activities (October 2026)
+
+The decks and worksheets in the table above are the prepared plan. These notes record how the AI parts were actually run in Abu Dhabi, so the sources can be reconciled with them later. Participants' own work always came first; the AI came second and was then critiqued.
+
+- **Day 3 S2, charts ([Oct14_session2_review.qmd](Oct14_session2_review.qmd)).** The final AI worksheet task (the prepared "which chart is fairer?" response and Copilot step) was replaced by a live exercise. Participants ran an AI tool on the GreenWaste data uploaded on the course website and asked it to create graphs. They critiqued the output, using the [AI good practice card](../docs/handouts/AI_good_practice_review.html) as the reference. The trainer then shared their screen and showed two prompts: a basic prompt, where the group discussed what they liked and disliked about the resulting charts, and a better prompt. In the better prompt the AI first asked questions about the data, and the prompt asked for clear labels and a simple comparison of change in the two groups.
+- **Day 4 S1-S2, report review and brief writing ([Oct15_session1_review.qmd](Oct15_session1_review.qmd), [Oct15_session2_review.qmd](Oct15_session2_review.qmd)).** Participants first reviewed the report themselves. They then used AI to draft a brief, giving it the communications guidelines and a list of AI pet peeves, and discussed the drafts.
+
+Ideas for next time are in [FUTURE_IMPROVEMENTS.md](FUTURE_IMPROVEMENTS.md).
+
 ## Documentation and history
 
+- [FUTURE_IMPROVEMENTS.md](FUTURE_IMPROVEMENTS.md): notes from delivery and changes to make next time.
 - [HANDOFF.md](HANDOFF.md): implementation, validation and deployment record.
 - [SLIDE_HANDOUT_REVIEW_PLAN.md](SLIDE_HANDOUT_REVIEW_PLAN.md): current rollout status followed by historical review decisions.
 - [SESSION_BUILD_GUIDE.md](SESSION_BUILD_GUIDE.md): rendering/layout techniques; older case-building examples are historical.

@@ -233,7 +233,7 @@ html_out(review_intervals(rep(1100,3),c(1080,900,400),c(1120,1300,1800),c('A: na
 
 ## What does a small p-value tell us? {#s1-p11 .reader-slide .s1-review}
 
-For the reported change, **p < 0.001**. The p-value starts from the assumption that the mean change is zero. If that assumption and the model's other assumptions hold, data as extreme as these would be unusual.
+For the reported change, **p < 0.001**. The p-value starts with what we want to prove wrong, for example, an assumption that the mean change is zero. If that assumption and the model's other assumptions hold, data as extreme as these would be unusual. In other words, the data give us good reason to doubt that the change is zero.
 
 ```{r, results='asis'}
 html_out(review_null())
